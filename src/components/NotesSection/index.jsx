@@ -1,0 +1,121 @@
+import makeApiRequest from "../../api";
+
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+
+import { NoteModal } from "../NoteModal";
+import NoteCard from "../NoteCard";
+import { MainContext } from '../../contexts/mainContext';
+import { useContext } from 'react';
+import BaseHeading from '../BaseHeading';
+import NoData from "../NoData";
+import SavedNote from '../SavedNote';
+
+const NotesSection = ({
+    setNoteIndex,
+    noteIndex,
+}) => {
+
+    const { showNoteModal,
+        setShowNoteModal,
+        setNotes,
+        setIsNewNote,
+        setSelectedNote,
+        notes,
+        isNewNote,
+        selectedNote } = useContext(MainContext);
+
+    console.log(notes);
+
+
+    const handleAddNote = (event) => {
+        event.preventDefault();
+        setIsNewNote(true);
+        setShowNoteModal(true);
+    };
+
+    const handleDelete = async () => {
+        console.log("deleting note...");
+        try {
+            const response = await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
+            if (response.status === 200) {
+                console.log('selectedNote deleted !');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        onHide();
+    };
+
+
+
+    const onHide = async () => {
+        setShowNoteModal(false);
+        try {
+            const data = await makeApiRequest("/notes", "post");
+            setNotes(data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setSelectedNote({
+                note_id: "",
+                text: [{ content: "", model: null, color: "#000" }],
+                images: [],
+                note_name: "Note " + parseInt(notes.length + 1),
+            });
+
+            setIsNewNote(false);
+        }
+
+    };
+
+    return (
+        <div className="mt-7">
+            {/* New Note */}
+            <div
+                className="flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100 mb-11"
+                onClick={handleAddNote}
+            >
+                <AddOutlinedIcon />
+                <span className='font-medium text-textColor-300'>New Note</span>
+            </div>
+
+            {showNoteModal && <NoteModal
+                onHide={onHide}
+                existingNote={noteIndex}
+                className="modal"
+                show={showNoteModal}
+                note={selectedNote}
+                setSelectedNote={setSelectedNote}
+                handleDelete={handleDelete}
+                notes={notes}
+                isNewNote={isNewNote}
+                key={selectedNote.note_name}
+            />}
+
+            <BaseHeading text='Saved notes' />
+            {notes.length > 0 ? (
+                <div>
+                    <div className="flex flex-col gap-10 px-1 pb-5 mr-2 ">
+                        {notes.map((note, i) => (
+                            <SavedNote
+                                note={note}
+                                key={i}
+                                index={i}
+                                setNoteIndex={setNoteIndex}
+                                handleDelete={handleDelete}
+                                onHide={onHide}
+                            />
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <NoData />
+            )}
+        </div>
+    );
+};
+
+export default NotesSection;

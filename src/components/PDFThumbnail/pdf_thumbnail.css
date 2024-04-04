@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@300;400&display=swap');
+
+.tooltip-inner {
+    font-family: 'Geologica';
+    font-weight: 200;
+}
+
+.pdf-thumbnail-img {
+    width: 200px;
+    height: 300px;
+}
