@@ -45,6 +45,15 @@ const MainWorkspace = () => {
 
   const [summary, setSummary] = useState("");
 
+  useEffect(() => {
+    setSelectedNote({
+      note_id: "",
+      text: [{ content: "", model: null, color: "#000" }],
+      images: [],
+      note_name: "",
+    });
+  }, [notes]);
+
   // create value object with all the states
   const value = {
     currentResource,
@@ -89,7 +98,7 @@ const MainWorkspace = () => {
           note_id: "",
           text: [{ content: "", model: null, color: "#000" }],
           images: [],
-          note_name: "Note " + (data.length + 1),
+          note_name: "",
         });
       } catch (error) {
         console.error(error);

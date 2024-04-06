@@ -58,6 +58,7 @@
 
 //   const pdfCategoryOptions = [
 //     { value: 'all', label: 'All' },
+// { value: "generic", label: "Generic"; },
 //     { value: 'investment', label: 'Investment' },
 //     { value: 'human resources', label: 'Human Resources' },
 //     { value: 'customer interaction', label: 'Customer Interaction' },

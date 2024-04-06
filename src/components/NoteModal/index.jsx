@@ -8,21 +8,24 @@ import './note_modal.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { MainContext } from '../../contexts/mainContext';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import CustomInput from '../CustomInput';
 
 export function NoteModal({ onHide,
   existingNote,
-  show, }) {
+  show, isEditingTitle }) {
 
   const {
     selectedNote,
     setSelectedNote,
     notes,
+    setNotes,
     isNewNote, } = useContext(MainContext);
 
   const [HTMLToDisplay, setHTMLToDisplay] = useState('');
 
   useEffect(() => {
-    console.log(selectedNote.text);
     if (selectedNote.text) {
       const htmlString = selectedNote.text.map(item => `<span style="color: ${item.color};">${item.content}</span>`).join('');
       setHTMLToDisplay(htmlString);
@@ -48,15 +51,14 @@ export function NoteModal({ onHide,
       if (response.status === 200) {
         console.log('selectedNote saved !');
       }
+
+      // fetch updated version of notes
+      const data = await makeApiRequest("/notes", "post");
+      setNotes(data);
+
     } catch (error) {
       console.log(error);
     } finally {
-      setSelectedNote({
-        note_id: "",
-        text: [{ content: "", model: null, color: "#000" }],
-        images: [],
-        note_name: "Note " + parseInt(notes.length + 1),
-      });
       onHide();
     }
   };
@@ -88,9 +90,21 @@ export function NoteModal({ onHide,
       className="note-modal"
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          {selectedNote.note_name}
-        </Modal.Title>
+        {/* <Modal.Title id="contained-modal-title-vcenter"> */}
+        {
+          isEditingTitle ? (
+            <div className="flex items-center gap-3">
+              {/* <CustomInput placeholder='Note title' value={selectedNote.note_name} onChange={(event) => setSelectedNote({ ...selectedNote, note_name: event.target.value })} /> */}
+              <CheckOutlinedIcon />
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <p>{selectedNote.note_name}</p>
+              <EditOutlinedIcon />
+            </div>
+          )
+        }
+        {/* </Modal.Title> */}
       </Modal.Header>
       <Modal.Body>
         {<ReactQuill className='#editor' theme="snow" value={HTMLToDisplay} onChange={(newHtmlContent) => handleTextChange(newHtmlContent)} />}

@@ -32,10 +32,11 @@ const CategoriesModal = (props) => {
                 <div className='flex flex-col items-start justify-start gap-3'>
                     {
                         props.categoryOptions.map(({ value, label }, index) => (
-                            (value !== 'all' && <div key={index} className='flex items-center justify-center gap-2 cursor-pointer' onClick={() => handleCategoryClick(value)}>
+                            value !== 'all' &&
+                            <div key={index} className='flex items-center justify-center gap-2 cursor-pointer' onClick={() => handleCategoryClick(value)}>
                                 <FolderOpenOutlinedIcon />
                                 <span>{label}</span>
-                            </div>)
+                            </div>
                         ))
                     }
                 </div>

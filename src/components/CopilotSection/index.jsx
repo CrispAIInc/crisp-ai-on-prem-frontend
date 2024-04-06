@@ -203,7 +203,8 @@ const CopilotSection = () => {
     ];
 
     const categoryOptions = [
-        // { value: 'all', label: 'All' },
+        { value: 'all', label: 'All' },
+        { value: "generic", label: "Generic" },
         { value: "investment", label: "Investment" },
         { value: "human resources", label: "Human Resources" },
         { value: "customer interaction", label: "Customer Interaction" },
@@ -516,7 +517,6 @@ const CopilotSection = () => {
                     setExistingNote={setExistingNote}
                     // notesOptions={notesOptions}
                     existingNote={existingNote}
-                    existingNoteRef={existingNoteRef}
                     onHide={onHide}
                     isNewNote={isNewNote}
                     setShowNoteModal={setShowNoteModal}
@@ -652,6 +652,10 @@ const CopilotSection = () => {
         setIsNewNote(true);
     };
 
+    useEffect(() => {
+        existingNoteRef.current = existingNote;
+    }, [setExistingNote, existingNote]);
+
     const addToExistingNote = (newTextContent) => {
         const newNoteTextEntry = {
             content: newTextContent,
@@ -665,15 +669,15 @@ const CopilotSection = () => {
         let updatedNote = { ...notes[existingNoteIndex] };
 
         // Check if 'text' in the note is already an array and append the new text entry
-        if (Array.isArray(updatedNote.text)) {
-            updatedNote.text = [...updatedNote.text, newNoteTextEntry];
+        if (Array.isArray(notes[existingNoteIndex].text)) {
+            notes[existingNoteIndex].text.push(newNoteTextEntry);
         } else {
             // If for some reason 'text' is not an array, initialize it with the new text entry
-            updatedNote.text = [newNoteTextEntry];
+            notes[existingNoteIndex].text = [newNoteTextEntry];
         }
 
         // Update the selectedNote with the updated note
-        setSelectedNote(updatedNote);
+        setSelectedNote(notes[existingNoteIndex]);
         setIsNewNote(false); // Since we are updating an existing note, it's not a new note
         setShowNoteModal(true); // Show the modal with the updated note
     };
@@ -684,7 +688,7 @@ const CopilotSection = () => {
             note_id: "",
             text: [{ content: "", model: null, color: "#000" }],
             images: [],
-            note_name: "Note " + parseInt(notes.length + 1),
+            note_name: "",
         });
         fetch(`${API_ENDPOINT}/notes`, {
             method: "POST",
@@ -832,7 +836,7 @@ const CopilotSection = () => {
                 note={selectedNote}
                 setSelectedNote={setSelectedNote}
                 className="modal"
-                existingNote={existingNoteRef.current}
+                existingNote={existingNote}
                 isNewNote={isNewNote}
                 key={selectedNote.note_name}
             />

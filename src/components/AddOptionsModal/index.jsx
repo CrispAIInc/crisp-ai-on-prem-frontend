@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNote, notes, showNoteModal }) => {
+const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNote, notes }) => {
   console.log("text", text);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -36,10 +36,9 @@ const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNot
           <Button onClick={() => { addToNewNote(text); handleClose(); }}>Add to a new note</Button>
           <Button onClick={() => { addToExistingNote(text); handleClose(); }}>Add to an existing note</Button>
           <Select className='note-select'
-            defaultValue={1} onChange={(e) => { setExistingNote(e.value); console.log('existing note', e.value); }} options={notes.map((note, i) => ({ value: i, label: note.note_name }))} />
+            defaultValue={1} onChange={(e) => { setExistingNote(e.value); }} options={notes.map((note, i) => ({ value: i, label: note.note_name }))} />
         </Box>
       </Modal>
-      {console.log(showNoteModal)}
     </div>
   );
 };

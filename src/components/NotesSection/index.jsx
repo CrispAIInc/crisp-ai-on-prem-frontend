@@ -8,7 +8,7 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { NoteModal } from "../NoteModal";
 import NoteCard from "../NoteCard";
 import { MainContext } from '../../contexts/mainContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import BaseHeading from '../BaseHeading';
 import NoData from "../NoData";
 import SavedNote from '../SavedNote';
@@ -27,12 +27,13 @@ const NotesSection = ({
         isNewNote,
         selectedNote } = useContext(MainContext);
 
-    console.log(notes);
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
 
 
     const handleAddNote = (event) => {
         event.preventDefault();
         setIsNewNote(true);
+        setIsEditingTitle(true);
         setShowNoteModal(true);
     };
 
@@ -59,12 +60,12 @@ const NotesSection = ({
         } catch (error) {
             console.log(error);
         } finally {
-            setSelectedNote({
-                note_id: "",
-                text: [{ content: "", model: null, color: "#000" }],
-                images: [],
-                note_name: "Note " + parseInt(notes.length + 1),
-            });
+            // setSelectedNote({
+            //     note_id: "",
+            //     text: [{ content: "", model: null, color: "#000" }],
+            //     images: [],
+            //     note_name: "Note " + parseInt(notes.length + 1),
+            // });
 
             setIsNewNote(false);
         }
@@ -82,7 +83,7 @@ const NotesSection = ({
                 <span className='font-medium text-textColor-300'>New Note</span>
             </div>
 
-            {showNoteModal && <NoteModal
+            <NoteModal
                 onHide={onHide}
                 existingNote={noteIndex}
                 className="modal"
@@ -93,7 +94,8 @@ const NotesSection = ({
                 notes={notes}
                 isNewNote={isNewNote}
                 key={selectedNote.note_name}
-            />}
+                isEditingTitle={isEditingTitle}
+            />
 
             <BaseHeading text='Saved notes' />
             {notes.length > 0 ? (
