@@ -6,7 +6,7 @@ import SearchSection from '../SearchSection';
 
 const ChatPanel = () => {
   return (
-    <div className="h-full px-3 chat-panel">
+    <div className="h-full px-2 chat-panel">
       {/* toggler */}
       <Toggler components={[
         <CopilotSection key={0} name="Copilot" />,
