@@ -40,6 +40,7 @@ const ContentSection = ({
         setSelectedSources,
         selectedAll,
         setSelectedAll,
+        theme
     } = useContext(MainContext);
 
     const categoryOptions = [
@@ -221,22 +222,22 @@ const ContentSection = ({
                     {
                         isUploading ? <LoadingSpinner videoSpinner={true} /> :
                             <div
-                                className="flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100"
+                                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                                 onClick={handleAddNewResource}
                             >
                                 <AddOutlinedIcon />
-                                <span className='font-medium text-textColor-300'>New Source</span>
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Source</span>
                             </div>
                     }
                 </div>
 
                 {/* resource explorer */}
                 <div
-                    className="flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100"
+                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={handleExploreSources}
                 >
                     <SearchOutlinedIcon />
-                    <span className='font-medium text-textColor-300'>Source Explorer</span>
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Source Explorer</span>
                 </div>
             </div>
 

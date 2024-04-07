@@ -12,7 +12,7 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
 
     const { setSelectedNote,
         setIsNewNote,
-        setShowNoteModal, } = useContext(MainContext);
+        setShowNoteModal, theme } = useContext(MainContext);
 
     const showSelectedNote = (event, note, index) => {
         event.preventDefault();
@@ -36,12 +36,12 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
 
     return (
         <div
-            className="p-2 bg-white rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)] cursor-pointer user-select-none  3xl:w-5/6 4xl:w-4/6"
+            className={`p-2 ${theme === 'light' ? 'bg-white' : 'bg-background_workspace'} rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)] cursor-pointer user-select-none  3xl:w-5/6 4xl:w-4/6`}
             onClick={(event) => showSelectedNote(event, note, index)}
         >
             {/* top */}
             <div className="flex items-center justify-between mb-1">
-                <p className="mb-0 text-sm font-semibold text-textColor-200">
+                <p className={`mb-0 text-sm font-semibold ${theme === 'light' ? 'text-textColor-200' : 'text-white'}`}>
                     {note.note_name}
                 </p>
                 <span onClick={(e) => {
@@ -50,15 +50,15 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
                     setSelectedNote(note);
                     handleDelete();
                 }}>
-                    <DeleteIcon color='#444' />
+                    <DeleteIcon color={`${theme === 'light' ? '#444' : 'error'}`} />
                 </span>
             </div>
             {
-                Array.isArray(note.text) && <p className="my-0 text-xs text-textColor-200 line-clamp-2">{parseHtmlToText(note.text[0]?.content || note.text[1]?.content)}</p>
+                Array.isArray(note.text) && <p className={`my-0 text-xs ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} line-clamp-2`}>{parseHtmlToText(note.text[0]?.content || note.text[1]?.content)}</p>
             }
 
             {/* list of models used */}
-            <div className="flex items-center gap-3 mt-2">
+            <div className="flex items-center gap-3 mt-3">
                 {
                     Array.isArray(note.text) && note.text?.map((content, index) => {
                         if (content.model && !previousModels.includes(content.model)) {

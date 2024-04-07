@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+.dark {
+  --background-color: #171717;
+  --background-workspace-color: #242424;
+  --separator-color: #1e1e1e;
+}
+
+.light {
+  --background-color: #ffffff;
+  --background-workspace-color: #fafafa;
+  --separator-color: #e3e3e4;
+}
+
 * {
   margin: 0;
   padding: 0;

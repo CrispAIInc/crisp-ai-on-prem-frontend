@@ -13,10 +13,12 @@ import ImageModal from "../ImageModal";
 import { LLMModal } from "../LLMModal";
 import LoadingSpinner from "../LoadingSpinner";
 import { NoteModal } from "../NoteModal";
+import ReplayOutlinedIcon from '@mui/icons-material/ReplayOutlined';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = () => {
     const {
+        theme,
         currentResource,
         setCurrentResource,
         resourceURL,
@@ -334,8 +336,9 @@ const CopilotSection = () => {
         }
     }, [isPlayerReady]);
 
-    const SendMessage = async () => {
+    const sendMessage = async () => {
         setShowCursor(true);
+        console.log(input);
 
         let userMessage = "";
 
@@ -347,6 +350,7 @@ const CopilotSection = () => {
             );
             userMessage = data.translatedText;
         } else userMessage = input;
+
 
         setOriginalQueries([...originalQueries, userMessage]);
         setMessages([
@@ -844,7 +848,7 @@ const CopilotSection = () => {
                 <CustomSelect
                     title="Category"
                     defaultValue={selectedCategory}
-                    options={categoryOptions}
+                    options={categoryOptions.filter(category => category.value !== 'all')}
                     onChange={(e) => handleChatCategorySelectChange(e.value)}
                 />
                 <CustomSelect
@@ -856,7 +860,7 @@ const CopilotSection = () => {
 
                 <div>
                     <Button
-                        className="px-3 py-1 bg-white border text-dark text-capitalize"
+                        className={`px-3 py-1 text-capitalize ${theme === 'light' ? 'bg-white text-dark border border-textColor-100' : ' !text-textColor-100 !border !border-textColor-300'}`}
                         style={{ width: "100%" }}
                         onClick={selectLLMModels}
                     >
@@ -877,7 +881,7 @@ const CopilotSection = () => {
                 <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} />
             </div>
 
-            <div className="flex flex-col flex-1 flex-grow h-full gap-3 pt-3 overflow-y-auto border chat-window" ref={chatAppRef}>
+            <div className={`flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === 'light' ? '!border' : '!border !border-textColor-300'}`} ref={chatAppRef}>
                 {chatLoaded ? (
                     messages.map((message, index) =>
                         index % 2 == 0 ? (
@@ -885,8 +889,17 @@ const CopilotSection = () => {
                                 <div
                                     className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
                                 >
-                                    <b className="">You: </b>
-                                    <div className="">{message.text}</div>
+                                    <div className="flex items-center justify-between">
+                                        <b className="">You: </b>
+                                        <div className="cursor-pointer" onClick={() => {
+                                            console.log(originalQueries[originalQueries.length - 1]);
+                                            setInput(message);
+                                            sendMessage();
+                                        }}>
+                                            <ReplayOutlinedIcon />
+                                        </div>
+                                    </div>
+                                    <div className="">{message.text || originalQueries[originalQueries.length - 1]}</div>
                                 </div>
                             </div>
                         ) : (
@@ -894,11 +907,10 @@ const CopilotSection = () => {
                                 <div key={index} className="">
                                     <div className={`message bot-message h-full`}>
                                         {/* <b className="text-textColor-200">Chatbot: </b> */}
-                                        <div className="flex flex-col h-full p-2 m-2 rounded-md bg-separator text-textColor-200">
+                                        <div className={`flex flex-col h-full p-2 m-2 rounded-md ${theme === 'light' ? 'bg-separator text-textColor-200' : 'bg-background_workspace'}`}>
                                             {selectedLLMs[0] === "dall-e-3" ? (
                                                 <>
-                                                    {console.log(message.img)}
-                                                    <b className="text-textColor-300">Chatbot: </b>
+                                                    <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Chatbot: </b>
                                                     <div>
                                                         <img
                                                             src={message.img}
@@ -918,8 +930,8 @@ const CopilotSection = () => {
                                                 </>
                                             ) : (
                                                 <>
-                                                    <b className="">Chatbot: </b>
-                                                    <div className="">{message.text}</div>
+                                                    <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Chatbot: </b>
+                                                    <div className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{message.text}</div>
                                                     {showCursor && index == responseIndex ? (
                                                         <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
                                                     ) : null}
@@ -932,11 +944,11 @@ const CopilotSection = () => {
                         )
                     )
                 ) : (
-                    <div className="loading-container">
+                    <div className="flex flex-col items-center justify-center h-full loading-container">
                         <div className="chat-spinner">
                             <LoadingSpinner />
                         </div>
-                        <p className="text-sm loading-text text-textColor-200">
+                        <p className="text-sm text-center loading-text text-textColor-200">
                             Loading Knowledge Base, Please wait a few seconds...
                         </p>
                     </div>
@@ -950,13 +962,13 @@ const CopilotSection = () => {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            SendMessage();
+                            sendMessage();
                         }
                     }}
                 />
                 <div
-                    className="p-2 border rounded-md cursor-pointer"
-                    onClick={SendMessage}
+                    className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? 'border' : '!border !border-textColor-200'}`}
+                    onClick={sendMessage}
                 >
                     <SendIcon color="primary" />
                 </div>

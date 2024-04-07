@@ -25,9 +25,9 @@ const NotesSection = ({
         setSelectedNote,
         notes,
         isNewNote,
-        selectedNote } = useContext(MainContext);
+        selectedNote, theme, setIsEditingTitle } = useContext(MainContext);
 
-    const [isEditingTitle, setIsEditingTitle] = useState(false);
+
 
 
     const handleAddNote = (event) => {
@@ -76,11 +76,11 @@ const NotesSection = ({
         <div className="mt-7">
             {/* New Note */}
             <div
-                className="flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100 mb-11"
+                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit mb-4 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                 onClick={handleAddNote}
             >
                 <AddOutlinedIcon />
-                <span className='font-medium text-textColor-300'>New Note</span>
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Note</span>
             </div>
 
             <NoteModal
@@ -94,7 +94,6 @@ const NotesSection = ({
                 notes={notes}
                 isNewNote={isNewNote}
                 key={selectedNote.note_name}
-                isEditingTitle={isEditingTitle}
             />
 
             <BaseHeading text='Saved notes' />

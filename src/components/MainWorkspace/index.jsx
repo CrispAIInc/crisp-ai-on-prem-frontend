@@ -12,7 +12,7 @@ import MetadataPanel from "../MetadataPanel";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./main-workspace.css";
 
-const MainWorkspace = () => {
+const MainWorkspace = ({ theme }) => {
   const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace
   const [resourceURL, setResourceURL] = useState(null); // The Selected Resource Direct URL
 
@@ -42,6 +42,7 @@ const MainWorkspace = () => {
     note_name: "Note " + parseInt(notes.length + 1),
   });
   const [isNewNote, setIsNewNote] = useState(false); // Flag indicating if the selected note is new or not
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   const [summary, setSummary] = useState("");
 
@@ -56,6 +57,8 @@ const MainWorkspace = () => {
 
   // create value object with all the states
   const value = {
+    theme,
+    isEditingTitle, setIsEditingTitle,
     currentResource,
     setCurrentResource,
     resourceURL,
@@ -111,14 +114,14 @@ const MainWorkspace = () => {
   return (
     <MainContext.Provider value={value}>
       <div className="flex h-full divide-x divide-separator main-workspace-container">
-        <div className="w-1/4 h-full pl-3 bg-white">
+        <div className="w-1/4 h-full pl-3 bg-background">
           <ContentPanel />
         </div>
-        <div className="w-1/2 h-full overflow-y-auto bg-white">
+        <div className="w-1/2 h-full overflow-y-auto bg-background_workspace">
           <Workspace />
         </div>
 
-        <div className="w-1/4 h-full bg-white">
+        <div className="w-1/4 h-full bg-background">
           {/* <MetadataPanel /> */}
           <ChatPanel />
         </div>

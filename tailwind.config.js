@@ -72,6 +72,8 @@ export default {
         blink: 'blink 1s step-start infinite',
       },
       colors: {
+        background: "var(--background-color)",
+        background_workspace: "var(--background-workspace-color)",
         primary: {
           100: "#BBD1F5",
           200: "#77A8F9",
@@ -86,7 +88,7 @@ export default {
           100: "#F8F8F8",
           200: "#E3E3E4",
         },
-        separator: "#E3E3E4",
+        separator: "var(--separator-color)",
         'GPT-4': {
           100: "#F8D4F1",
           200: "#D163DA",

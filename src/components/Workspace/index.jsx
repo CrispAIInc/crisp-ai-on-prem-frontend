@@ -18,7 +18,8 @@ const Workspace = () => {
         setResourceURL,
         player,
         setIsPlayerReady,
-        summary
+        summary,
+        theme
     } = useContext(MainContext);
 
     const [pageNumber, setPageNumber] = useState(1); // The page number where is the references. Comes from search results.
@@ -70,8 +71,8 @@ const Workspace = () => {
                             />
                             {/* video summary */}
                             <div className='flex flex-col gap-2 px-2 pt-6'>
-                                <h3 className="text-md text-textColor-300 font-semiBold">Summary</h3>
-                                <p className="text-sm text-textColor-300">{summary}</p>
+                                <h3 className={`text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Summary</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{summary}</p>
                             </div>
                         </div>
                     )}
@@ -93,8 +94,8 @@ const Workspace = () => {
                             </div>
                             {/* PDF summary */}
                             <div className='flex flex-col gap-2 px-2 pt-6'>
-                                <h3 className="text-md text-textColor-300 font-semiBold">Summary</h3>
-                                <p className="text-sm text-textColor-300">{summary}</p>
+                                <h3 className={`text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Summary</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{summary}</p>
                             </div>
                         </div>
                     )}
@@ -104,8 +105,8 @@ const Workspace = () => {
                             <img className="source-img w-[70%] h-72 mx-auto pt-2 rounded-lg" src={resourceURL} />
                             {/* Image Caption */}
                             <div className='flex flex-col gap-2 px-2 pt-6'>
-                                <h3 className="text-md text-textColor-300 font-semiBold">Caption</h3>
-                                <p className="text-sm text-textColor-300">{currentResource?.caption ?? 'no caption!'}</p>
+                                <h3 className={`text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Caption</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource?.caption ?? 'no caption!'}</p>
                             </div>
                         </div>
                     )}

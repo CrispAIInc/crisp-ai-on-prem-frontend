@@ -14,14 +14,13 @@ import CustomInput from '../CustomInput';
 
 export function NoteModal({ onHide,
   existingNote,
-  show, isEditingTitle }) {
+  show }) {
 
   const {
     selectedNote,
     setSelectedNote,
-    notes,
     setNotes,
-    isNewNote, } = useContext(MainContext);
+    isNewNote, isEditingTitle } = useContext(MainContext);
 
   const [HTMLToDisplay, setHTMLToDisplay] = useState('');
 
@@ -79,6 +78,16 @@ export function NoteModal({ onHide,
     onHide();
   };
 
+  const distinctModels = [];
+  const modelSet = new Set();
+
+  selectedNote.text?.forEach(item => {
+    if (item.model && !modelSet.has(item.model)) {
+      modelSet.add(item.model);
+      distinctModels.push(item.model);
+    }
+  });
+
   return (
     <Modal
       show={show}
@@ -87,29 +96,41 @@ export function NoteModal({ onHide,
       aria-labelledby="contained-modal-title-vcenter"
       scrollable={true}
       centered
-      className="note-modal"
+
     >
-      <Modal.Header closeButton>
-        {/* <Modal.Title id="contained-modal-title-vcenter"> */}
-        {
-          isEditingTitle ? (
-            <div className="flex items-center gap-3">
-              {/* <CustomInput placeholder='Note title' value={selectedNote.note_name} onChange={(event) => setSelectedNote({ ...selectedNote, note_name: event.target.value })} /> */}
-              <CheckOutlinedIcon />
-            </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <p>{selectedNote.note_name}</p>
-              <EditOutlinedIcon />
-            </div>
-          )
-        }
-        {/* </Modal.Title> */}
+      <Modal.Header closeButton className="!bg-background_workspace">
+        <Modal.Title id="contained-modal-title-vcenter">
+          {
+            isEditingTitle ? (
+              <div className="flex items-center gap-3">
+                <CustomInput className="py-0" placeholder='Note title' value={selectedNote.note_name} onChange={(event) => setSelectedNote({ ...selectedNote, note_name: event.target.value })} />
+                <CheckOutlinedIcon />
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <p>{selectedNote.note_name}</p>
+                <EditOutlinedIcon />
+              </div>
+            )
+          }
+        </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="!bg-background_workspace">
         {<ReactQuill className='#editor' theme="snow" value={HTMLToDisplay} onChange={(newHtmlContent) => handleTextChange(newHtmlContent)} />}
+        <div className="flex flex-wrap items-center gap-4 my-3">
+          {
+            distinctModels?.map((model, index) => {
+              const modelColor = `bg-${model?.toUpperCase()}-200`;
+              return (
+                <div key={index} className="flex items-center gap-1">
+                  <span className={`w-3 h-3 ${modelColor}`}></span><span>{model?.toUpperCase()}</span>
+                </div>
+              );
+            })
+          }
+        </div>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className="!bg-background_workspace">
         {<Button className='delete-note-btn' onClick={handleDelete}><DeleteIcon /></Button>}
         <Button onClick={handleSave}> <SaveIcon /> </Button>
       </Modal.Footer>

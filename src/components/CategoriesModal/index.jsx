@@ -5,7 +5,7 @@ import { MainContext } from '../../contexts/mainContext';
 
 const CategoriesModal = (props) => {
 
-    const { setSelectedCategory } = useContext(MainContext);
+    const { setSelectedCategory, theme } = useContext(MainContext);
 
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
@@ -22,6 +22,10 @@ const CategoriesModal = (props) => {
             scrollable={true}
             centered
             dialogClassName='text-left'
+            style={{
+                backgroundColor: theme === 'light' ? '#F00' : '#808'
+            }}
+
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
