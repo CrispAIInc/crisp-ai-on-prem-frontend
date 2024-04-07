@@ -35,15 +35,11 @@ const SearchSection = () => {
         event.preventDefault();
         setIsSearching(true);
         try {
-            console.log(currentResource);
             const response = await axios.post(`${API_ENDPOINT}/process-query`, { selectedCategory, searchQuestion, currentResource, selectedFormat });
-            console.log(response);
             if (response.status === 200) {
-                console.log(response.data);
                 if (response.data.file_type == 'video') {
                     const resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(response.data.source_path)}`;
                     const timestamp = response.data.timestamp;
-                    console.log(timestamp);
                     setCurrentResource(response.data);
                     setResourceURL(resourceURL);
                     setIsSearching(false);
@@ -55,7 +51,6 @@ const SearchSection = () => {
                     setResourceURL(resourceURL);
                     setIsSearching(false);
                 }
-                console.log(response.data.additional_sources);
                 setAdditionalSources(response.data.additional_sources);
                 setShowSearchModal(true);
             }
@@ -81,7 +76,11 @@ const SearchSection = () => {
         <div className='search-wrapper 2xl:w-3/6 2xl:mx-auto'>
             <div>
                 {/* <input className='search-input' type="text" placeholder="Search for a source by asking questions" value={searchQuestion} onChange={handleSearchQuestionChange} /> */}
-                <CustomInput placeholder='Search for a source by asking questions' value={searchQuestion} onChange={handleSearchQuestionChange} />
+                <CustomInput placeholder='Search for a source by asking questions' value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        handleSubmitQuestion(e);
+                    }
+                }} />
                 <CustomButton onClick={handleSubmitQuestion} className='w-full text-white bg-primary-300'>
                     {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Search'}
                 </CustomButton>
