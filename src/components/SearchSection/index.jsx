@@ -82,7 +82,7 @@ const SearchSection = () => {
             <div>
                 {/* <input className='search-input' type="text" placeholder="Search for a source by asking questions" value={searchQuestion} onChange={handleSearchQuestionChange} /> */}
                 <CustomInput placeholder='Search for a source by asking questions' value={searchQuestion} onChange={handleSearchQuestionChange} />
-                <CustomButton onClick={handleSubmitQuestion}>
+                <CustomButton onClick={handleSubmitQuestion} className='w-full text-white bg-primary-300'>
                     {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Search'}
                 </CustomButton>
             </div>

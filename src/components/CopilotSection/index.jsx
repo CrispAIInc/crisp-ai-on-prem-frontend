@@ -14,6 +14,7 @@ import { LLMModal } from "../LLMModal";
 import LoadingSpinner from "../LoadingSpinner";
 import { NoteModal } from "../NoteModal";
 import ReplayOutlinedIcon from '@mui/icons-material/ReplayOutlined';
+import CustomButton from '../CustomButton';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = () => {
@@ -844,7 +845,7 @@ const CopilotSection = () => {
                 isNewNote={isNewNote}
                 key={selectedNote.note_name}
             />
-            <div className="flex flex-col gap-3 3xl:flex-row 3xl:items-center 3xl:justify-center">
+            <div className="flex flex-wrap gap-3 3xl:flex-row 3xl:items-center 3xl:justify-center">
                 <CustomSelect
                     title="Category"
                     defaultValue={selectedCategory}
@@ -858,23 +859,21 @@ const CopilotSection = () => {
                     onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage)}
                 />
 
-                <div>
-                    <Button
-                        className={`px-3 py-1 text-capitalize ${theme === 'light' ? 'bg-white text-dark border border-textColor-100' : ' !text-textColor-100 !border !border-textColor-300'}`}
-                        style={{ width: "100%" }}
-                        onClick={selectLLMModels}
-                    >
-                        Models
-                    </Button>
-                    <LLMModal
-                        show={showLLMModal}
-                        onHide={onHideLLMModal}
-                        selectedLLMs={selectedLLMs}
-                        setSelectedLLMs={setSelectedLLMs}
-                        llmModels={llmModels}
-                        className="modal"
-                    />
-                </div>
+                <CustomButton
+                    className={`my-0 ${theme === 'light' ? 'bg-white !text-dark border border-textColor-100' : ' !text-textColor-100 !border !border-textColor-300'}`}
+                    style={{ width: "100%" }}
+                    onClick={selectLLMModels}
+                >
+                    Models
+                </CustomButton>
+                <LLMModal
+                    show={showLLMModal}
+                    onHide={onHideLLMModal}
+                    selectedLLMs={selectedLLMs}
+                    setSelectedLLMs={setSelectedLLMs}
+                    llmModels={llmModels}
+                    className="modal"
+                />
             </div>
 
             <div className="mx-2 mt-1">

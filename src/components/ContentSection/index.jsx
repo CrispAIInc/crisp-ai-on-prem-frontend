@@ -214,7 +214,7 @@ const ContentSection = ({
     };
 
     return (
-        <div className='flex flex-col items-start relative'>
+        <div className='relative flex flex-col items-start'>
 
             <div className="mb-11">
                 {/* New resource */}
@@ -298,7 +298,7 @@ const ContentSection = ({
             {
                 knowledgeBase.some((item) => item.is_selected) > 0 ?
                     <div className="sticky left-[25%] bottom-5">
-                        <CustomButton onClick={commitSelectedSources}>Update sources</CustomButton>
+                        <CustomButton onClick={commitSelectedSources} className="text-white bg-primary-300">Update sources</CustomButton>
                     </div> : <NoData />
             }
         </div>

@@ -16,7 +16,7 @@ const CustomSelect = ({ title, options, onChange, defaultValue = '' }) => {
     };
 
     return (
-        <select value={selectedValue} onChange={handleSelectChange} className={`px-1 cursor-pointer py-1 rounded-md outline-none ${theme === 'light' ? 'bg-white border border-textColor-100' : 'bg-transparent text-textColor-100  !border !border-textColor-300'}`}>
+        <select value={selectedValue} onChange={handleSelectChange} className={`px-1 cursor-pointer py-1 rounded-md outline-none w-fit ${theme === 'light' ? 'bg-white border border-textColor-100' : 'bg-transparent text-textColor-100  !border !border-textColor-300'}`}>
             <option value={defaultValue} disabled className={`${theme === 'dark' && 'bg-background text-textColor-100'}`}>{title}</option>
             {options.map((option) => (
                 <option key={option.value} value={option.value} className={`${theme === 'dark' && 'bg-background text-textColor-100 border'}`}>
