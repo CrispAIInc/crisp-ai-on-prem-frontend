@@ -335,9 +335,8 @@ const CopilotSection = () => {
         }
     }, [isPlayerReady]);
 
-    const sendMessage = async () => {
+    const sendMessage = async (message) => {
         setShowCursor(true);
-        console.log(input);
 
         let userMessage = "";
 
@@ -345,10 +344,10 @@ const CopilotSection = () => {
             const data = await makeApiRequest(
                 `/translate`,
                 "post",
-                JSON.stringify({ text: input, language: selectedLanguage })
+                JSON.stringify({ text: input || message, language: selectedLanguage })
             );
             userMessage = data.translatedText;
-        } else userMessage = input;
+        } else userMessage = input || message;
 
 
         setOriginalQueries([...originalQueries, userMessage]);
@@ -831,6 +830,11 @@ const CopilotSection = () => {
         setSelectedCategoryChat(e.value);
     };
 
+    const handleRepeatQuestion = (message) => {
+        // setInput(message);
+        sendMessage(message);
+    };
+
     return (
         <div className="relative flex flex-col flex-1 overflow-y-auto">
             <NoteModal
@@ -888,15 +892,11 @@ const CopilotSection = () => {
                                 >
                                     <div className="flex items-center justify-between">
                                         <b className="">You: </b>
-                                        <div className="cursor-pointer" onClick={() => {
-                                            console.log(originalQueries[originalQueries.length - 1]);
-                                            setInput(message);
-                                            sendMessage();
-                                        }}>
+                                        <div className="cursor-pointer" onClick={() => { handleRepeatQuestion(message.text); }}>
                                             <ReplayOutlinedIcon />
                                         </div>
                                     </div>
-                                    <div className="">{message.text || originalQueries[originalQueries.length - 1]}</div>
+                                    <div className="">{message.text}</div>
                                 </div>
                             </div>
                         ) : (
