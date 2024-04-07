@@ -287,11 +287,9 @@ const CopilotSection = () => {
 
     // scroll chatAppRef to bottom whenever a new message is added to the chat
     useEffect(() => {
-        if (!showCursor) {
-            // chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
-            chatAppRef.current.scrollTop = chatAppRef.current?.scrollHeight;
-        }
-    }, [showCursor, messages]);
+        // chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
+        chatAppRef.current.scrollTop = chatAppRef.current?.scrollHeight;
+    }, [messages]);
 
     useEffect(() => {
         setChatLoaded("");
