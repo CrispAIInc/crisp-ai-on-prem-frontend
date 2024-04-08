@@ -224,13 +224,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const [isSearching, setIsSearching] = useState(false);
 
     const llmModels = [
+        { value: "gpt-4", label: "GPT-4", type: "llm", color: "#D163DA" },
         {
             value: "dall-e-3",
             label: "Dall-e-3",
             type: "image-generation",
             color: "#3F51B5",
         },
-        { value: "gpt-4", label: "GPT-4", type: "llm", color: "#D163DA" },
         {
             value: "gpt-4-vision",
             label: "GPT-4-Vision",
@@ -268,7 +268,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const [isUploadingVisionImg, setIsUploadingVisionImg] = useState(false);
 
     // For LLM Model Selction from the popup modal
-    const [selectedLLMs, setSelectedLLMs] = useState([]); // State to track multiple selected LLMs
+    const [selectedLLMs, setSelectedLLMs] = useState([llmModels[0].value]); // State to track multiple selected LLMs
     const [showLLMModal, setShowLLMModal] = useState(false);
 
     // This one could be a derived state
@@ -290,6 +290,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         // chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
         chatAppRef.current.scrollTop = chatAppRef.current?.scrollHeight;
     }, [messages]);
+
+    // useEffect(() => {
+    //     console.log(selectedLLMs);
+    // }, [selectedLLMs]);
 
     useEffect(() => {
         setChatLoaded("");
