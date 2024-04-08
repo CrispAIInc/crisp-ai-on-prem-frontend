@@ -4,10 +4,11 @@ import axios from 'axios';
 import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
+import BaseHeading from '../BaseHeading';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-const SearchSection = () => {
+const SearchSection = ({ chatLoaded }) => {
 
     const { currentResource, setCurrentResource, resourceURL, setResourceURL, player, isPlayerReady,
         selectedCategory, selectedFormat,
@@ -32,6 +33,7 @@ const SearchSection = () => {
     }, [isPlayerReady]);
 
     const handleSubmitQuestion = async (event) => {
+        console.log("submit serch");
         event.preventDefault();
         setIsSearching(true);
         try {
@@ -75,15 +77,23 @@ const SearchSection = () => {
     return (
         <div className='search-wrapper 2xl:w-3/6 2xl:mx-auto'>
             <div>
-                {/* <input className='search-input' type="text" placeholder="Search for a source by asking questions" value={searchQuestion} onChange={handleSearchQuestionChange} /> */}
-                <CustomInput placeholder='Search for a source by asking questions' value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        handleSubmitQuestion(e);
-                    }
-                }} />
-                <CustomButton onClick={handleSubmitQuestion} className='w-full text-white bg-primary-300'>
-                    {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Search'}
-                </CustomButton>
+                {
+                    chatLoaded ?
+                        (
+                            <>
+                                <CustomInput placeholder='Search for a source by asking questions' value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSubmitQuestion(e);
+                                    }
+                                }} />
+                                <CustomButton disabled={chatLoaded === "" ? true : false} onClick={handleSubmitQuestion} className='w-full text-white bg-primary-300'>
+                                    {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Search'}
+                                </CustomButton>
+                            </>
+                        ) : <div className='text-center'>
+                            <BaseHeading text='Please wait for data to load...' />
+                        </div>
+                }
             </div>
         </div>
     );

@@ -17,7 +17,7 @@ import ReplayOutlinedIcon from '@mui/icons-material/ReplayOutlined';
 import CustomButton from '../CustomButton';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-const CopilotSection = () => {
+const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const {
         theme,
         currentResource,
@@ -50,7 +50,7 @@ const CopilotSection = () => {
 
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
-    const [chatLoaded, setChatLoaded] = useState("");
+    // const [chatLoaded, setChatLoaded] = useState("");
 
     const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
@@ -878,8 +878,17 @@ const CopilotSection = () => {
                 />
             </div>
 
-            <div className="mx-2 mt-1">
-                <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} />
+            <div className="flex items-center gap-1 mx-2 my-3">
+                <span className={`text-xs ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`}>Selected models: </span>
+                <div className={`flex items-center divide-x  ${theme === 'light' ? 'divide-textColor-100' : 'divide-textColor-300'}`}>
+                    {
+                        selectedLLMs.length === 0 ? <span className={`text-xs ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`}>none</span> :
+                            selectedLLMs.map((model, index) => (
+                                <span key={index} className={`text-xs ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`}>{model.toUpperCase()} </span>
+                            ))
+                    }
+                </div>
+                {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
             </div>
 
             <div className={`flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === 'light' ? '!border' : '!border !border-textColor-300'}`} ref={chatAppRef}>
@@ -929,6 +938,14 @@ const CopilotSection = () => {
                                                 <>
                                                     <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Chatbot: </b>
                                                     <div className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{message.text}</div>
+                                                    <div className="flex flex-wrap items-center gap-1">
+                                                        <span className={`text-xs ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`}>Models: </span>
+                                                        {
+                                                            selectedLLMs.map((item, index) => (
+                                                                <span key={index} className={`text-xs divide-x ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`}>{item.toUpperCase()}</span>
+                                                            ))
+                                                        }
+                                                    </div>
                                                     {showCursor && index == responseIndex ? (
                                                         <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
                                                     ) : null}
