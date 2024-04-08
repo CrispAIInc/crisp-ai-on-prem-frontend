@@ -4,7 +4,7 @@ import makeApiRequest from "../../api";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import "./content_panel.css";
+// import "./content_panel.css";
 
 import SearchModal from "../SearchModal";
 

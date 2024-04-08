@@ -6,7 +6,7 @@ import MetadataSection from '../MetadataSection';
 import SearchSection from '../SearchSection';
 
 const ChatPanel = () => {
-  const [chatLoaded, setChatLoaded] = useState("");
+  const [chatLoaded, setChatLoaded] = useState(false);
 
   return (
     <div className="h-full px-2 chat-panel">

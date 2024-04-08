@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
-import "./workspace.css";
+// import "./workspace.css";
 import { MainContext } from "../../contexts/mainContext";
 
 import { Document, Page } from 'react-pdf';

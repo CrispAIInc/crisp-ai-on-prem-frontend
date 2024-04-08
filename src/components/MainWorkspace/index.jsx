@@ -10,7 +10,7 @@ import ChatPanel from "../ChatPanel";
 import MetadataPanel from "../MetadataPanel";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./main-workspace.css";
+// import "./main-workspace.css";
 
 const MainWorkspace = ({ theme }) => {
   const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace

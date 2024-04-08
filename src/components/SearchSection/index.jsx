@@ -14,6 +14,7 @@ const SearchSection = ({ chatLoaded }) => {
         selectedCategory, selectedFormat,
         setAdditionalSources,
         setShowSearchModal,
+        setSummary,
     } = useContext(MainContext);
 
     const [fromChat, setFromChat] = useState(false);
@@ -33,26 +34,28 @@ const SearchSection = ({ chatLoaded }) => {
     }, [isPlayerReady]);
 
     const handleSubmitQuestion = async (event) => {
-        console.log("submit serch");
         event.preventDefault();
         setIsSearching(true);
         try {
             const response = await axios.post(`${API_ENDPOINT}/process-query`, { selectedCategory, searchQuestion, currentResource, selectedFormat });
             if (response.status === 200) {
+                let resourceURL = '';
+                let timestamp;
                 if (response.data.file_type == 'video') {
-                    const resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(response.data.source_path)}`;
-                    const timestamp = response.data.timestamp;
-                    setCurrentResource(response.data);
-                    setResourceURL(resourceURL);
-                    setIsSearching(false);
-                    if (isPlayerReady) player.current.seekTo(timestamp);
+                    resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(response.data.source_path)}`;
+                    timestamp = response.data.timestamp;
                 }
                 else if (response.data.file_type == 'pdf') {
-                    const resourceURL = `${API_ENDPOINT}/pdf/${selectedCategoryChat}/${encodeURIComponent(response.data.source_path)}`;
-                    setCurrentResource(response.data);
-                    setResourceURL(resourceURL);
-                    setIsSearching(false);
+                    resourceURL = `${API_ENDPOINT}/pdf/${selectedCategoryChat}/${encodeURIComponent(response.data.source_path)}`;
                 }
+                else if (response.data.file_type == 'img') {
+                    resourceURL = `${API_ENDPOINT}/img/${selectedCategoryChat}/${encodeURIComponent(response.data.source_path)}`;
+                }
+                setCurrentResource(response.data);
+                setResourceURL(resourceURL);
+                setIsSearching(false);
+                setSummary(response.data.caption);
+                if (isPlayerReady) player.current.seekTo(timestamp);
                 setAdditionalSources(response.data.additional_sources);
                 setShowSearchModal(true);
             }
@@ -86,7 +89,7 @@ const SearchSection = ({ chatLoaded }) => {
                                         handleSubmitQuestion(e);
                                     }
                                 }} />
-                                <CustomButton disabled={chatLoaded === "" ? true : false} onClick={handleSubmitQuestion} className='w-full text-white bg-primary-300'>
+                                <CustomButton disabled={chatLoaded} onClick={handleSubmitQuestion} className='w-full text-white bg-primary-300'>
                                     {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Search'}
                                 </CustomButton>
                             </>

@@ -7,7 +7,7 @@ import ImageThumbnail from '../ImageThumbnail';
 import LoadingSpinner from '../LoadingSpinner';
 import Checkbox from '@mui/material/Checkbox';
 
-import './search_modal.css';
+// import './search_modal.css';
 import { MainContext } from '../../contexts/mainContext';
 
 export function SearchModal(props) {

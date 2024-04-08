@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import './llm_modal.css';
+// import './llm_modal.css';
 
 export function LLMModal(props) {
     const [selectionCategory, setSelectionCategory] = useState(null); // State to track the selected category

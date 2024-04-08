@@ -308,7 +308,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     selectedAll,
                 })
             );
-            setChatLoaded(data);
+            setChatLoaded(data?.chat_is_initialized);
         }
 
         fetchChat();
@@ -672,20 +672,23 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
         // Assuming existingNoteRef.current points to the index of the note in the notes array
         const existingNoteIndex = parseInt(existingNoteRef.current);
-        let updatedNote = { ...notes[existingNoteIndex] };
 
         // Check if 'text' in the note is already an array and append the new text entry
         if (Array.isArray(notes[existingNoteIndex].text)) {
+
             notes[existingNoteIndex].text.push(newNoteTextEntry);
         } else {
             // If for some reason 'text' is not an array, initialize it with the new text entry
             notes[existingNoteIndex].text = [newNoteTextEntry];
         }
 
+        console.log(newNoteTextEntry);
+        console.log(notes[existingNoteIndex]);
+
         // Update the selectedNote with the updated note
-        setSelectedNote(notes[existingNoteIndex]);
-        setIsNewNote(false); // Since we are updating an existing note, it's not a new note
-        setShowNoteModal(true); // Show the modal with the updated note
+        // setSelectedNote(notes[existingNoteIndex]);
+        // setIsNewNote(false); // Since we are updating an existing note, it's not a new note
+        // setShowNoteModal(true); // Show the modal with the updated note
     };
 
     const onHide = () => {
