@@ -46,7 +46,8 @@ export function NoteModal({ onHide,
       selectedNote.note_id = dateTimeStr;
     }
     try {
-      const response = await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote: selectedNote, noteName: 'note_json', noteNumber: parseInt(existingNote + 1), isNewNote: isNewNote });
+      // setSelectedNote({ ...selectedNote, note_name: currentNoteTitle });
+      const response = await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote: { ...selectedNote, note_name: currentNoteTitle }, noteName: 'note_json', noteNumber: parseInt(existingNote + 1), isNewNote: isNewNote });
       if (response.status === 200) {
         console.log('selectedNote saved !');
       }
@@ -58,6 +59,7 @@ export function NoteModal({ onHide,
     } catch (error) {
       console.log(error);
     } finally {
+      setCurrentNoteTitle(selectedNote.note_name);
       onHide();
     }
   };
@@ -88,6 +90,12 @@ export function NoteModal({ onHide,
     }
   });
 
+  const [currentNoteTitle, setCurrentNoteTitle] = useState(selectedNote.note_name);
+
+  function updateNoteTitle() {
+    setSelectedNote({ ...selectedNote, note_name: currentNote });
+  }
+
   return (
     <Modal
       show={show}
@@ -103,13 +111,15 @@ export function NoteModal({ onHide,
           {
             isEditingTitle ? (
               <div className="flex items-center gap-3">
-                <CustomInput className="py-0" placeholder='Note title' value={selectedNote.note_name} onChange={(event) => setSelectedNote({ ...selectedNote, note_name: event.target.value })} />
-                <CheckOutlinedIcon />
+                {/* <input placeholder='Note title' value={currentNote} onChange={(event) => { currentNote = event.target.value; }} /> */}
+                <CustomInput className="py-0" placeholder='Note title' value={currentNoteTitle} onChange={(e) => setCurrentNoteTitle(e.target.value)} />
+                {/* <CheckOutlinedIcon className='cursor-pointer' onClick={updateNoteTitle} /> */}
               </div>
             ) : (
               <div className="flex items-center gap-3">
-                <p>{selectedNote.note_name}</p>
-                <EditOutlinedIcon />
+                {/* <p className='m-0'>{selectedNote.note_name}</p> */}
+                <CustomInput className="py-0" placeholder='Note title' value={currentNoteTitle} onChange={(e) => setCurrentNoteTitle(e.target.value)} />
+                {/* <EditOutlinedIcon /> */}
               </div>
             )
           }

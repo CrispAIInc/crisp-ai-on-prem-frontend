@@ -12,12 +12,13 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
 
     const { setSelectedNote,
         setIsNewNote,
-        setShowNoteModal, theme } = useContext(MainContext);
+        setShowNoteModal, theme, setIsEditingTitle } = useContext(MainContext);
 
     const showSelectedNote = (event, note, index) => {
         event.preventDefault();
         setNoteIndex(index);
         setSelectedNote(note);
+        setIsEditingTitle(false);
         setIsNewNote(false);
         setShowNoteModal(true);
     };
