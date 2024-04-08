@@ -281,9 +281,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         }
     }, [selectedNote, isNewNote]);
     //!this is mostly an infinite func => stack overflow exception
-    useEffect(() => {
-        setSelectedNote(selectedNote);
-    }, [selectedNote, setSelectedNote]);
+    // useEffect(() => {
+    //     setSelectedNote(selectedNote);
+    // }, [selectedNote, setSelectedNote]);
 
     // scroll chatAppRef to bottom whenever a new message is added to the chat
     useEffect(() => {
