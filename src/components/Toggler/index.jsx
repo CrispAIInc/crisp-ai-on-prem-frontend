@@ -1,5 +1,9 @@
 import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import {
+    Provider,
+    KeepAlive,
+} from 'react-keep-alive';
 
 const Toggler = ({ components }) => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -19,7 +23,12 @@ const Toggler = ({ components }) => {
                     </button>
                 ))}
             </div>
-            {components[activeIndex]}
+            <Provider>
+                <KeepAlive name={components[activeIndex].props.name}>
+                    {components[activeIndex]}
+                </KeepAlive>
+            </Provider>
+
         </div>
     );
 };

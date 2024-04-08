@@ -295,8 +295,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     //     console.log(selectedLLMs);
     // }, [selectedLLMs]);
 
+    useEffect(() => { console.log("testing useeffect!"); }, []);
     useEffect(() => {
-        setChatLoaded("");
+        setChatLoaded(false);
+        console.log('enter');
 
         async function fetchChat() {
             const data = await makeApiRequest(

@@ -25,6 +25,7 @@
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-keep-alive": "^2.5.2",
     "react-loader-spinner": "^5.3.4",
     "react-pdf": "^7.7.1",
     "react-player": "^2.12.0",
