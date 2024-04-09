@@ -54,7 +54,7 @@ const SearchSection = ({ chatLoaded }) => {
                 setCurrentResource(response.data);
                 setResourceURL(resourceURL);
                 setIsSearching(false);
-                setSummary(response.data.caption);
+                response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
                 if (isPlayerReady) player.current.seekTo(timestamp);
                 setAdditionalSources(response.data.additional_sources);
                 setShowSearchModal(true);
