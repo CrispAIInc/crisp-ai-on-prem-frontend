@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Select from 'react-select';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { MainContext } from '../../contexts/mainContext';
 
 const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNote, notes }) => {
   console.log("text", text);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const { theme } = useContext(MainContext);
 
   const style = {
     position: 'absolute',
@@ -32,9 +35,20 @@ const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNot
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <Button onClick={() => { addToNewNote(text); handleClose(); }}>Add to a new note</Button>
-          <Button onClick={() => { addToExistingNote(text); handleClose(); }}>Add to an existing note</Button>
+        <Box sx={style} className={`${theme === 'light' ? '!border-none' : '!bg-textColor-300 !text-white !border-b-none'}`}>
+          <div
+            className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+            onClick={() => { addToNewNote(text); handleClose(); }}
+          >
+            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to a new note</span>
+          </div>
+
+          <div
+            className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+            onClick={() => { addToExistingNote(text); handleClose(); }}
+          >
+            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} mb-4`}>Add to an existing note</span>
+          </div>
           <Select className='note-select'
             defaultValue={1} onChange={(e) => { setExistingNote(e.value); }} options={notes.map((note, i) => ({ value: i, label: note.note_name }))} />
         </Box>
