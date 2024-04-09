@@ -23,11 +23,11 @@ const Toggler = ({ components }) => {
                     </button>
                 ))}
             </div>
-            <Provider>
+            {components[activeIndex]}
+            {/* <Provider>
                 <KeepAlive name={components[activeIndex].props.name}>
-                    {components[activeIndex]}
                 </KeepAlive>
-            </Provider>
+            </Provider> */}
 
         </div>
     );
