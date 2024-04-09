@@ -42,7 +42,7 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
         >
             {/* top */}
             <div className="flex items-center justify-between mb-1">
-                <p className={`mb-0 text-sm font-semibold ${theme === 'light' ? 'text-textColor-200' : 'text-white'}`}>
+                <p className={`mb-0 text-sm font-semibold truncate ${theme === 'light' ? 'text-textColor-200' : 'text-white'}`}>
                     {note.note_name}
                 </p>
                 <span onClick={(e) => {

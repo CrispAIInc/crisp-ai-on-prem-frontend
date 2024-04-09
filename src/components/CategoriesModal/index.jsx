@@ -22,17 +22,15 @@ const CategoriesModal = (props) => {
             scrollable={true}
             centered
             dialogClassName='text-left'
-            style={{
-                backgroundColor: theme === 'light' ? '#F00' : '#808'
-            }}
+
 
         >
-            <Modal.Header closeButton>
+            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white border-b-none'}`}>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Category
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
                 <div className='flex flex-col items-start justify-start gap-3'>
                     {
                         props.categoryOptions.map(({ value, label }, index) => (

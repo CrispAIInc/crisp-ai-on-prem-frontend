@@ -990,7 +990,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     }}
                 />
                 <div
-                    className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? 'border' : '!border !border-textColor-200'}`}
+                    className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? 'border' : '!border !border-textColor-300'}`}
                     onClick={sendMessage}
                 >
                     <SendIcon color="primary" />

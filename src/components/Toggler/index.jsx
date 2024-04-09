@@ -23,6 +23,11 @@ const Toggler = ({ components }) => {
                     </button>
                 ))}
             </div>
+            {/* {components.map((Component, index) => (
+                <div key={index} className={`${(activeIndex === index) ? 'd-block' : 'd-none'}`}>
+                    {Component}
+                </div>
+            ))} */}
             {components[activeIndex]}
             {/* <Provider>
                 <KeepAlive name={components[activeIndex].props.name}>

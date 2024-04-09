@@ -41,7 +41,7 @@ const FORMATS = [
 
 function FileFormatsModal(props) {
 
-    const { setSelectedFormat } = useContext(MainContext);
+    const { setSelectedFormat, theme } = useContext(MainContext);
 
     const fileFormatInputRefs = useRef([]);
 
@@ -66,12 +66,12 @@ function FileFormatsModal(props) {
             centered
             dialogClassName='text-left'
         >
-            <Modal.Header closeButton>
+            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white border-b-none'}`}>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Upload from
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
                 <div className='flex flex-col items-start justify-start gap-3'>
                     {
                         FORMATS.map((format, index) => (

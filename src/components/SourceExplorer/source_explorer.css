@@ -1,52 +1,56 @@
 .folders-wrapper {
-    display: flex;
-    flex-direction: row;
-    column-gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  column-gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
 }
 .folder {
-    width: 100px;
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-wrap: wrap;
-    text-align: center;
-    cursor: pointer;
+  width: 100px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+  text-align: center;
+  cursor: pointer;
 }
 .file {
-    width: 150px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: hidden;
-    /* line-break: auto; */
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  /* line-break: auto; */
 }
-.file > img{
-    width: 100%;
+.file > img {
+  width: 100%;
 }
 .file-name {
-    overflow: hidden;
+  overflow: hidden;
 }
 .current-path {
-    margin: 0px 10px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 18px;
-    padding: 0;
+  margin: 0px 10px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  padding: 0;
 }
 .back-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 100%;
-    background-color: #000;
-    border: none ;
-    margin: 0;
-    color: #fff;
-    line-height: normal;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  background-color: #000;
+  border: none;
+  margin: 0;
+  color: #fff;
+  line-height: normal;
 }
 .current-path-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.modal-header {
+  /* border-bottom: none !important; */
 }

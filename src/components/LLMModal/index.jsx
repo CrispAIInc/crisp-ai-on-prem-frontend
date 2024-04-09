@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import { MainContext } from '../../contexts/mainContext';
 // import './llm_modal.css';
 
 export function LLMModal(props) {
+
+    const { theme } = useContext(MainContext);
+
     const [selectionCategory, setSelectionCategory] = useState(null); // State to track the selected category
 
     const handleCheckboxChange = (model) => {
@@ -39,17 +43,17 @@ export function LLMModal(props) {
             centered
             className="note-modal"
         >
-            <Modal.Header closeButton>
+            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Select LLM Models
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body className='overflow-hidden'>
+            <Modal.Body className={`overflow-hidden ${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
                 <Form className='me-auto d-sm-inline-block'>
                     <ul className='list-unstyled ms-5'>
                         <li>
-                            <h3 className='fs-5'>Large Language Models</h3>
-                            <div className="border-start ps-3 ms-3 w-auto">
+                            <h3 className={`fs-5 ${theme == 'dark' && 'text-textColor-100'}`}>Large Language Models</h3>
+                            <div className="w-auto border-start ps-3 ms-3">
                                 {props.llmModels.map((model, index) => (
                                     model.type === "llm" &&
                                     <Form.Check
@@ -58,13 +62,14 @@ export function LLMModal(props) {
                                         label={model.label}
                                         disabled={isCheckboxDisabled(model.type)}
                                         checked={props.selectedLLMs.includes(model.value)}
-                                        onChange={() => handleCheckboxChange(model)} />
+                                        onChange={() => handleCheckboxChange(model)}
+                                        className={`${theme === 'dark' && 'text-textColor-100'}`} />
                                 ))}
                             </div>
                         </li>
                         <li>
-                            <h3 className='mt-4 fs-5'>Large Vision Models</h3>
-                            <div className="border-start ps-3 ms-3 w-auto">
+                            <h3 className={`mt-4 fs-5 ${theme == 'dark' && 'text-textColor-100'}`}>Large Vision Models</h3>
+                            <div className="w-auto border-start ps-3 ms-3">
                                 {props.llmModels.map((model, index) => (
                                     model.type === "lvm" &&
                                     <Form.Check
@@ -74,13 +79,14 @@ export function LLMModal(props) {
                                         disabled={isCheckboxDisabled(model.type)}
                                         checked={props.selectedLLMs.includes(model.value)}
                                         onChange={() => handleCheckboxChange(model)}
+                                        className={`${theme === 'dark' && 'text-textColor-100'}`}
                                     />
                                 ))}
                             </div>
                         </li>
                         <li>
-                            <h3 className='mt-4 fs-5'>Image Generation Models</h3>
-                            <div className="border-start ps-3 ms-3 w-auto">
+                            <h3 className={`mt-4 fs-5 ${theme == 'dark' && 'text-textColor-100'}`}>Image Generation Models</h3>
+                            <div className="w-auto border-start ps-3 ms-3">
                                 {props.llmModels.map((model, index) => (
                                     model.type === "image-generation" &&
                                     <Form.Check
@@ -90,6 +96,7 @@ export function LLMModal(props) {
                                         disabled={isCheckboxDisabled(model.type)}
                                         checked={props.selectedLLMs.includes(model.value)}
                                         onChange={() => handleCheckboxChange(model)}
+                                        className={`${theme === 'dark' && 'text-textColor-100'}`}
                                     />
                                 ))}
                             </div>

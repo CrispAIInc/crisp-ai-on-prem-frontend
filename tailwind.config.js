@@ -55,6 +55,8 @@ export default {
     'bg-GPT-4-VISION-200',
     'bg-DALL-E-3-100',
     'bg-DALL-E-3-200',
+    'bg-background',
+    'bg-background_workspace',
   ],
   theme: {
     extend: {
