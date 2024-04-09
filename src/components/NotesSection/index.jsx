@@ -1,14 +1,8 @@
 import makeApiRequest from "../../api";
-
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-
 import { NoteModal } from "../NoteModal";
-import NoteCard from "../NoteCard";
 import { MainContext } from '../../contexts/mainContext';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import BaseHeading from '../BaseHeading';
 import NoData from "../NoData";
 import SavedNote from '../SavedNote';
@@ -60,13 +54,6 @@ const NotesSection = ({
         } catch (error) {
             console.log(error);
         } finally {
-            // setSelectedNote({
-            //     note_id: "",
-            //     text: [{ content: "", model: null, color: "#000" }],
-            //     images: [],
-            //     note_name: "Note " + parseInt(notes.length + 1),
-            // });
-
             setIsNewNote(false);
         }
 

@@ -1,7 +1,6 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
-// import "./workspace.css";
 import { MainContext } from "../../contexts/mainContext";
 
 import { Document, Page } from 'react-pdf';
@@ -22,7 +21,6 @@ const Workspace = () => {
         theme
     } = useContext(MainContext);
 
-    const [pageNumber, setPageNumber] = useState(1); // The page number where is the references. Comes from search results.
     const [numPages, setNumPages] = useState();
 
     const closeVideo = (event) => {

@@ -1,11 +1,10 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useRef } from "react";
 
 import Modal from 'react-bootstrap/Modal';
 
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
-import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import { MainContext } from '../../contexts/mainContext';
 
 /**

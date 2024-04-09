@@ -8,8 +8,6 @@ import './note_modal.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { MainContext } from '../../contexts/mainContext';
-import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CustomInput from '../CustomInput';
 
 export function NoteModal({ onHide,
@@ -18,9 +16,8 @@ export function NoteModal({ onHide,
 
   const {
     selectedNote,
-    setSelectedNote,
     setNotes,
-    isNewNote, isEditingTitle } = useContext(MainContext);
+    isNewNote } = useContext(MainContext);
 
   const [HTMLToDisplay, setHTMLToDisplay] = useState('');
 
@@ -64,10 +61,6 @@ export function NoteModal({ onHide,
     }
   };
 
-  // const handleClose = () => {
-  //   onHide();
-  // };
-
   const handleDelete = async () => {
     try {
       const response = await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
@@ -92,10 +85,6 @@ export function NoteModal({ onHide,
 
   const [currentNoteTitle, setCurrentNoteTitle] = useState(selectedNote.note_name);
 
-  function updateNoteTitle() {
-    setSelectedNote({ ...selectedNote, note_name: currentNote });
-  }
-
   return (
     <Modal
       show={show}
@@ -108,21 +97,9 @@ export function NoteModal({ onHide,
     >
       <Modal.Header closeButton className="!bg-background_workspace">
         <Modal.Title id="contained-modal-title-vcenter">
-          {
-            isEditingTitle ? (
-              <div className="flex items-center gap-3">
-                {/* <input placeholder='Note title' value={currentNote} onChange={(event) => { currentNote = event.target.value; }} /> */}
-                <CustomInput className="py-0" placeholder='Note title' value={currentNoteTitle} onChange={(e) => setCurrentNoteTitle(e.target.value)} />
-                {/* <CheckOutlinedIcon className='cursor-pointer' onClick={updateNoteTitle} /> */}
-              </div>
-            ) : (
-              <div className="flex items-center gap-3">
-                {/* <p className='m-0'>{selectedNote.note_name}</p> */}
-                <CustomInput className="py-0" placeholder='Note title' value={currentNoteTitle} onChange={(e) => setCurrentNoteTitle(e.target.value)} />
-                {/* <EditOutlinedIcon /> */}
-              </div>
-            )
-          }
+          <div className="flex items-center gap-3">
+            <CustomInput className="py-0" placeholder='Note title' value={currentNoteTitle} onChange={(e) => setCurrentNoteTitle(e.target.value)} />
+          </div>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="!bg-background_workspace">

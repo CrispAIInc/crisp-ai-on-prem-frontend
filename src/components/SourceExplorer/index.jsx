@@ -1,7 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
 import VideoThumbnail from "../VideoThumbnail";
@@ -10,19 +8,13 @@ import ImageThumbnail from "../ImageThumbnail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
-
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-
-import "./source_explorer.css";
 import { MainContext } from "../../contexts/mainContext";
-import Tooltip from "react-bootstrap/Tooltip";
-import CustomTooltip from "../CustomTooltip";
+import "./source_explorer.css";
 
 export function SourceExplorer(props) {
     const {
         selectedAll,
         setSelectedFormat,
-        selectedFormat,
         selectedCategory,
         setSelectedCategory,
         theme,
@@ -107,10 +99,6 @@ export function SourceExplorer(props) {
             ));
         }
     };
-
-    // const renderTooltip = (props) => (
-    //     <Tooltip className='tooltip' {...props}>{}</Tooltip>
-    // );
 
     const renderFiles = () => {
         if (viewModes[viewModes.length - 1] === "files") {

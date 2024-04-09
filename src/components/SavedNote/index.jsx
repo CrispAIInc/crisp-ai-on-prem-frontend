@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -46,7 +46,6 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
                     {note.note_name}
                 </p>
                 <span onClick={(e) => {
-                    // e.preventDefault();
                     e.stopPropagation();
                     setSelectedNote(note);
                     handleDelete();

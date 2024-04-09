@@ -17,7 +17,7 @@ const SearchSection = ({ chatLoaded }) => {
         setSummary,
     } = useContext(MainContext);
 
-    const [fromChat, setFromChat] = useState(false);
+    const [, setFromChat] = useState(false);
     const [selectedCategoryChat] = useState('all');
     const [searchQuestion, setSearchQuestion] = useState('');
     const [isSearching, setIsSearching] = useState(false);
@@ -62,15 +62,6 @@ const SearchSection = ({ chatLoaded }) => {
         } catch (error) {
             console.log(error);
         }
-    };
-
-    const timeToSeconds = (time) => {
-        const parts = time.split(':');
-        const hours = parseInt(parts[0], 10);
-        const minutes = parseInt(parts[1], 10);
-        const seconds = parseInt(parts[2], 10);
-
-        return hours * 3600 + minutes * 60 + seconds;
     };
 
     const handleSearchQuestionChange = (event) => {

@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-// import './metadata_panel.css';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { useContext } from 'react';
 import NoData from "../NoData";
 import { MainContext } from "../../contexts/mainContext.js";
-
 
 const MetadataPanel = () => {
 
@@ -40,17 +37,8 @@ const MetadataPanel = () => {
                     )
                     :
                     <NoData />
-                // <div className='metadata-icon-container'>
-                //     <ErrorOutlineIcon className='workspace-icon'/>
-                //     <p>No selected source in the workspace</p>
-                // </div>
             }
         </div>
     );
 };
-
-
-
-
-
 export default MetadataPanel;

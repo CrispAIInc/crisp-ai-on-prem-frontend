@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Modal from "react-bootstrap/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VideoThumbnail from "../VideoThumbnail";

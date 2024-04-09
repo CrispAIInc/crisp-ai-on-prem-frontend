@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { MainContext } from '../../contexts/mainContext';
-// import './llm_modal.css';
 
 export function LLMModal(props) {
 
