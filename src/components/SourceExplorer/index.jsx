@@ -245,6 +245,14 @@ export function SourceExplorer(props) {
                     </span>
                 </div>
             </Modal.Body>
+            <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+                <div
+                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                    onClick={props.onHide}
+                >
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Ok</span>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 }
