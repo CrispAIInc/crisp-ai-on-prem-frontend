@@ -856,13 +856,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 isNewNote={isNewNote}
                 key={selectedNote.note_name}
             />
-            <div className="flex flex-wrap gap-3 3xl:flex-row 3xl:items-center 3xl:justify-center">
-                <CustomSelect
+            <div className="flex flex-wrap items-center justify-center gap-3">
+                {/* <CustomSelect
                     title="Category"
                     defaultValue={selectedCategory}
                     options={categoryOptions.filter(category => category.value !== 'all')}
                     onChange={(e) => handleChatCategorySelectChange(e.value)}
-                />
+                /> */}
                 <CustomSelect
                     title="Language"
                     defaultValue={languageOptions[0]}
