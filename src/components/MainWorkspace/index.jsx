@@ -41,7 +41,7 @@ const MainWorkspace = ({ theme }) => {
   });
   const [isNewNote, setIsNewNote] = useState(false); // Flag indicating if the selected note is new or not
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-
+  const [chatLoaded, setChatLoaded] = useState(false);
   const [summary, setSummary] = useState("");
 
   useEffect(() => {
@@ -56,6 +56,7 @@ const MainWorkspace = ({ theme }) => {
   // create value object with all the states
   const value = {
     theme,
+    chatLoaded, setChatLoaded,
     isEditingTitle, setIsEditingTitle,
     currentResource,
     setCurrentResource,

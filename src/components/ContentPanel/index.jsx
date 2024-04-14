@@ -12,12 +12,14 @@ import NotesSection from "../NotesSection";
 import ContentSection from "../ContentSection";
 import { MainContext } from '../../contexts/mainContext';
 import Toggler from '../Toggler';
+import SearchSection from '../SearchSection';
 
 const ContentPanel = () => {
 
     const { currentResource,
         setCurrentResource,
         resourceURL,
+        chatLoaded,
         setResourceURL,
         player,
         isPlayerReady,
@@ -120,10 +122,11 @@ const ContentPanel = () => {
                     name="Sources"
                     key={0}
                 />,
+                <SearchSection chatLoaded={chatLoaded} key={1} name="Search" />,
                 <NotesSection
                     setNoteIndex={setNoteIndex}
                     nodeIndex={noteIndex}
-                    key={1}
+                    key={2}
                     name="Notes"
                 />
             ]} />
