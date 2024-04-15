@@ -7,6 +7,8 @@ import { Document, Page } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
+import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
+
 import NoData from "../NoData";
 
 const Workspace = () => {
@@ -18,7 +20,11 @@ const Workspace = () => {
         player,
         setIsPlayerReady,
         summary,
-        theme
+        theme,
+        setIsLeftSidebarOpen,
+        setIsRightSidebarOpen,
+        isRightSidebarOpen,
+        isLeftSidebarOpen,
     } = useContext(MainContext);
 
     const [numPages, setNumPages] = useState();
@@ -47,7 +53,17 @@ const Workspace = () => {
     }
 
     return (
-        <div className="h-full px-3 media-container position-relative">
+        <div className="relative flex-1 h-full px-3 overflow-y-auto media-container bg-background_workspace">
+            {/* <div className={`flex items-center justify-between ${currentResource ? 'mb-5' : 'absolute top-0 left-0 w-full'}`}> */}
+            {/* left sidebar collapser */}
+            <div
+                className={`px-2 py-2 rounded-md  w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'} absolute left-0 h-full flex flex-col justify-center items-center`}
+            >
+                <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
+            </div>
+            {/* <span className="ml-3">expand</span>
+                <span className="mr-3">expand</span> */}
+            {/* </div> */}
             {!currentResource ? (
                 <div className="pt-10">
                     <NoData />
@@ -110,6 +126,13 @@ const Workspace = () => {
                     )}
                 </>
             )}
+
+            {/* right sidebar collapser */}
+            <div
+                className={`px-2 py-2 rounded-md  w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'} absolute right-0 h-full flex flex-col justify-center items-center top-0`}
+            >
+                <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)} />
+            </div>
         </div>
     );
 };

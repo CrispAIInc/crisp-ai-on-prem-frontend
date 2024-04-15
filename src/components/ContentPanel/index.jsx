@@ -44,6 +44,7 @@ const ContentPanel = () => {
         setShowSearchModal,
         isNewNote,
         setIsNewNote,
+        isLeftSidebarOpen,
         setSummary } = useContext(MainContext);
 
 
@@ -112,7 +113,7 @@ const ContentPanel = () => {
     };
 
     return (
-        <div className="h-full content-panel">
+        <div className={`h-full content-panel w-1/4 pl-3 bg-background !transition-all ${!isLeftSidebarOpen && 'hidden'}`}>
             <Toggler components={[
                 <ContentSection
                     knowledgeBase={knowledgeBase}

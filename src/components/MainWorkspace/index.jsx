@@ -44,6 +44,9 @@ const MainWorkspace = ({ theme }) => {
   const [chatLoaded, setChatLoaded] = useState(false);
   const [summary, setSummary] = useState("");
 
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
+
   useEffect(() => {
     setSelectedNote({
       note_id: "",
@@ -57,6 +60,8 @@ const MainWorkspace = ({ theme }) => {
   const value = {
     theme,
     chatLoaded, setChatLoaded,
+    isLeftSidebarOpen, setIsLeftSidebarOpen,
+    isRightSidebarOpen, setIsRightSidebarOpen,
     isEditingTitle, setIsEditingTitle,
     currentResource,
     setCurrentResource,
@@ -113,17 +118,11 @@ const MainWorkspace = ({ theme }) => {
   return (
     <MainContext.Provider value={value}>
       <div className="flex h-full divide-x divide-separator main-workspace-container">
-        <div className="w-1/4 h-full pl-3 bg-background">
-          <ContentPanel />
-        </div>
-        <div className="w-1/2 h-full overflow-y-auto bg-background_workspace">
-          <Workspace />
-        </div>
-
-        <div className="w-1/4 h-full bg-background">
-          {/* <MetadataPanel /> */}
-          <ChatPanel />
-        </div>
+        <ContentPanel />
+        {/* <div className="w-1/2 h-full overflow-y-auto bg-background_workspace"> */}
+        <Workspace />
+        {/* </div> */}
+        <ChatPanel />
       </div>
     </MainContext.Provider>
   );

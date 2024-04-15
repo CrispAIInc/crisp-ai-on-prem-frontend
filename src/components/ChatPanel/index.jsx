@@ -8,10 +8,10 @@ import { MainContext } from '../../contexts/mainContext';
 
 const ChatPanel = () => {
 
-  const { chatLoaded, setChatLoaded } = useContext(MainContext);
+  const { chatLoaded, setChatLoaded, isRightSidebarOpen } = useContext(MainContext);
 
   return (
-    <div className="h-full px-2 chat-panel">
+    <div className={`w-1/4 h-full px-2 bg-background ${!isRightSidebarOpen && 'hidden'}`}>
       {/* toggler */}
       <Toggler components={[
         <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} key={0} name="Copilot" />,
