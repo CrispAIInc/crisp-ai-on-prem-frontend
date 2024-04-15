@@ -60,6 +60,9 @@ export default {
   ],
   theme: {
     extend: {
+      transitionProperty: {
+        'width': 'width'
+      },
       screens: {
         '3xl': '1800px',
         '4xl': '2100px',

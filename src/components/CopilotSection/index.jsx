@@ -845,7 +845,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     };
 
     return (
-        <div className="relative flex flex-col flex-1 overflow-y-auto">
+        <div className="relative flex flex-col flex-1 overflow-y-auto h-full">
             <NoteModal
                 show={showNoteModal}
                 onHide={onHide}

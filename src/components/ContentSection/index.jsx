@@ -214,7 +214,7 @@ const ContentSection = ({
     };
 
     return (
-        <div className='relative flex flex-col items-start'>
+        <div className='relative flex flex-col items-start h-full'>
 
             <div className="mb-11">
                 {/* New resource */}
@@ -278,7 +278,7 @@ const ContentSection = ({
             <BaseHeading text='Selected sources' />
 
             {
-                <div className="flex flex-col w-4/5 max-w-full gap-8 overflow-y-auto">
+                <div className="flex flex-col w-4/5 max-w-full w-full gap-8 overflow-y-auto">
                     {knowledgeBase.map((item, index) => {
                         if (canRenderSourceThumbnail(item)) {
                             return (<ContentPanelThumbnail

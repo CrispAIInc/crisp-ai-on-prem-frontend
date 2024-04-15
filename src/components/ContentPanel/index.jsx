@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 
 import makeApiRequest from "../../api";
 
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 // import "./content_panel.css";
@@ -13,6 +16,8 @@ import ContentSection from "../ContentSection";
 import { MainContext } from '../../contexts/mainContext';
 import Toggler from '../Toggler';
 import SearchSection from '../SearchSection';
+
+import './content-panel.css';
 
 const ContentPanel = () => {
 
@@ -113,8 +118,8 @@ const ContentPanel = () => {
     };
 
     return (
-        <div className={`h-full content-panel w-1/4 pl-3 bg-background !transition-all ${!isLeftSidebarOpen && 'hidden'}`}>
-            <Toggler components={[
+        <div className={`h-full content-panel w-1/4 pl-3 bg-background transition-width duration-500 ${!isLeftSidebarOpen && '!w-0 !p-0'} flex flex-col`}>
+            {/* <Toggler components={[
                 <ContentSection
                     knowledgeBase={knowledgeBase}
                     setKnowledgeBase={setKnowledgeBase}
@@ -130,7 +135,36 @@ const ContentPanel = () => {
                     key={2}
                     name="Notes"
                 />
-            ]} />
+            ]} /> */}
+
+            <Tabs
+                transition={false}
+                defaultActiveKey="sources"
+                id="uncontrolled-tab-example"
+                className="my-3 text-center flex justify-center items-center !border-b-0"
+            >
+                <Tab eventKey="sources" title="Sources" className='flex-1 overflow-y-auto h-full'>
+                    <ContentSection
+                        knowledgeBase={knowledgeBase}
+                        setKnowledgeBase={setKnowledgeBase}
+                        onThumbnailClick={onThumbnailClick}
+                        handleCheckboxChange={handleCheckboxChange}
+                        name="Sources"
+                        key={0}
+                    />
+                </Tab>
+                <Tab eventKey="search" title="Search" className='flex-1 overflow-y-auto h-full'>
+                    <SearchSection chatLoaded={chatLoaded} key={1} name="Search" />
+                </Tab>
+                <Tab eventKey="notes" title="Notes" className='flex-1 overflow-y-auto h-full'>
+                    <NotesSection
+                        setNoteIndex={setNoteIndex}
+                        nodeIndex={noteIndex}
+                        key={2}
+                        name="Notes"
+                    />
+                </Tab>
+            </Tabs>
 
             <SearchModal
                 show={showSearchModal}
