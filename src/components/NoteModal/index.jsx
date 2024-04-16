@@ -16,6 +16,7 @@ export function NoteModal({ onHide,
 
   const {
     selectedNote,
+    theme,
     setNotes,
     isNewNote } = useContext(MainContext);
 
@@ -95,14 +96,14 @@ export function NoteModal({ onHide,
       centered
 
     >
-      <Modal.Header closeButton className="!bg-background_workspace">
+      <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
         <Modal.Title id="contained-modal-title-vcenter">
           <div className="flex items-center gap-3">
             <CustomInput className="py-0" placeholder='Note title' value={currentNoteTitle} onChange={(e) => setCurrentNoteTitle(e.target.value)} />
           </div>
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className="!bg-background_workspace">
+      <Modal.Body className={`overflow-hidden ${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
         {<ReactQuill className='#editor' theme="snow" value={HTMLToDisplay} onChange={(newHtmlContent) => handleTextChange(newHtmlContent)} />}
         <div className="flex flex-wrap items-center gap-4 my-3">
           {
@@ -117,7 +118,7 @@ export function NoteModal({ onHide,
           }
         </div>
       </Modal.Body>
-      <Modal.Footer className="!bg-background_workspace">
+      <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
         {<Button className='delete-note-btn' onClick={handleDelete}><DeleteIcon /></Button>}
         <Button onClick={handleSave}> <SaveIcon /> </Button>
       </Modal.Footer>

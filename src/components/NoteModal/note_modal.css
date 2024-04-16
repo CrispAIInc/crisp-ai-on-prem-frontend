@@ -14,3 +14,14 @@
   max-height: 250px;
   overflow: auto;
 }
+
+.quill,
+#editor {
+  height: 200px;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
