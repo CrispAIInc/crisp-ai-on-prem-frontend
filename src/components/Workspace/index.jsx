@@ -92,13 +92,13 @@ const Workspace = () => {
                     )}
                     {currentResource.file_type === "pdf" && (
                         <div>
-                            <div className="relative h-[80vh] overflow-y-auto">
+                            <div className="relative h-[80vh] w-fit mx-auto overflow-y-auto">
                                 <CancelIcon onClick={closePDF} className="absolute right-1 top-[15px] cursor-pointer z-50" />
-                                <Document className='mx-auto' file={resourceURL} onLoadSuccess={onDocumentLoadSuccess}>
+                                <Document className='!w-full mx-auto' file={resourceURL} onLoadSuccess={onDocumentLoadSuccess}>
                                     {Array.from(new Array(numPages), (el, index) => (
                                         <Page
-                                            _className='mx-auto'
-                                            className="mx-auto"
+                                            _className='mx-auto !w-full'
+                                            className="!w-full mx-auto"
                                             key={`page_${index + 1}`}
                                             pageNumber={index + 1}
                                         />
