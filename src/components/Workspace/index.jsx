@@ -53,11 +53,11 @@ const Workspace = () => {
     }
 
     return (
-        <div className="relative flex-1 h-full px-3 overflow-y-auto media-container bg-background_workspace">
+        <div className="relative flex-1 h-full px-10 overflow-y-auto media-container bg-background_workspace">
             {/* <div className={`flex items-center justify-between ${currentResource ? 'mb-5' : 'absolute top-0 left-0 w-full'}`}> */}
             {/* left sidebar collapser */}
             <div
-                className={`px-2 py-2 rounded-md  w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'} absolute left-0 h-full flex flex-col justify-center items-center`}
+                className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
             </div>
@@ -65,13 +65,13 @@ const Workspace = () => {
                 <span className="mr-3">expand</span> */}
             {/* </div> */}
             {!currentResource ? (
-                <div className="pt-10">
+                <div className="mt-10">
                     <NoData />
                 </div>
             ) : (
-                <>
+                <div className="max-w-4xl pt-10 mx-auto">
                     {currentResource.file_type === "video" && (
-                        <div className="video-container">
+                        <div className="relative">
                             <CancelIcon onClick={closeVideo} color='error' className="absolute z-50 cursor-pointer right-4 top-2" />
                             <ReactPlayer
                                 id="react-player"
@@ -92,7 +92,7 @@ const Workspace = () => {
                     )}
                     {currentResource.file_type === "pdf" && (
                         <div>
-                            <div className="relative pdf-container h-[80vh] overflow-y-auto">
+                            <div className="relative h-[80vh] overflow-y-auto">
                                 <CancelIcon onClick={closePDF} className="absolute right-1 top-[15px] cursor-pointer z-50" />
                                 <Document className='mx-auto' file={resourceURL} onLoadSuccess={onDocumentLoadSuccess}>
                                     {Array.from(new Array(numPages), (el, index) => (
@@ -124,12 +124,12 @@ const Workspace = () => {
                             </div>
                         </div>
                     )}
-                </>
+                </div>
             )}
 
             {/* right sidebar collapser */}
             <div
-                className={`px-2 py-2 rounded-md  w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'} absolute right-0 h-full flex flex-col justify-center items-center top-0`}
+                className={`px-2 py-2 rounded-md z-50 w-fit absolute right-0 h-full flex flex-col justify-center items-center top-0`}
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)} />
             </div>
