@@ -49,7 +49,12 @@ const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNot
           >
             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} mb-4`}>Add to an existing note</span>
           </div>
-          <Select className='note-select'
+          <Select className='note-select' styles={{
+            option: provided => ({
+              ...provided,
+              color: '#333333'
+            }),
+          }}
             defaultValue={1} onChange={(e) => { setExistingNote(e.value); }} options={notes.map((note, i) => ({ value: i, label: note.note_name }))} />
         </Box>
       </Modal>
