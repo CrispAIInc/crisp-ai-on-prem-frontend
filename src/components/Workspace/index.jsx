@@ -11,6 +11,22 @@ import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
 import NoData from "../NoData";
 
+import './workspace.css';
+
+function calculateDivWidth() {
+    // Get the screen width
+    var screenWidth = window.innerWidth;
+
+    // Calculate the width of the div based on the screen size
+    var calculatedWidth = screenWidth * 0.9; // Adjust this percentage as needed
+
+    // Ensure the width doesn't exceed the maximum width
+    var maxWidth = 800;
+    var finalWidth = Math.min(calculatedWidth, maxWidth);
+
+    return finalWidth;
+}
+
 const Workspace = () => {
     const {
         currentResource,
@@ -92,12 +108,12 @@ const Workspace = () => {
                     )}
                     {currentResource.file_type === "pdf" && (
                         <div>
-                            <div className="relative h-[80vh] w-fit mx-auto overflow-y-auto">
+                            <div className="relative h-[80vh] w-full mx-auto overflow-x-hidden overflow-y-auto">
                                 <CancelIcon onClick={closePDF} className="absolute right-1 top-[15px] cursor-pointer z-50" />
                                 <Document className='!w-full mx-auto' file={resourceURL} onLoadSuccess={onDocumentLoadSuccess}>
                                     {Array.from(new Array(numPages), (el, index) => (
                                         <Page
-                                            _className='mx-auto !w-full'
+                                            _className='mx-auto !w-full !min-w-0'
                                             className="!w-full mx-auto"
                                             key={`page_${index + 1}`}
                                             pageNumber={index + 1}
