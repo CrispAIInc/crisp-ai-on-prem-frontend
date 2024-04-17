@@ -2,3 +2,18 @@
   flex: 1;
   overflow-y: auto;
 }
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-item .nav-link.active {
+  color: var(--color-primary-200) !important;
+  background-color: var(--background-color) !important;
+  border-color: var(--separator-color) !important;
+}
+
+.nav-tabs {
+  border-bottom: none !important;
+}
+
+.nav-tabs .nav-link {
+  color: gray !important;
+}

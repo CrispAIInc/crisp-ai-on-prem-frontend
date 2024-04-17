@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-primary-200: #77a8f9;
+}
+
 .dark {
   --background-color: #171717;
   --background-workspace-color: #242424;
