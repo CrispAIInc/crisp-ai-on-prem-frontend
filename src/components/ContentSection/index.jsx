@@ -21,6 +21,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import BaseHeading from '../BaseHeading';
 import NoData from '../NoData';
 import CustomButton from '../CustomButton';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import SearchSection from '../SearchSection';
 
 const ContentSection = ({
     onThumbnailClick,
@@ -40,7 +42,8 @@ const ContentSection = ({
         setSelectedSources,
         selectedAll,
         setSelectedAll,
-        theme
+        theme,
+        chatLoaded
     } = useContext(MainContext);
 
     const categoryOptions = [
@@ -63,6 +66,8 @@ const ContentSection = ({
         { value: "pdf", label: "PDFs" },
         { value: "img", label: "Images" },
     ];
+
+    const [isSearching, setIsSearching] = useState(false);
 
     const [showSourceExplorer, setShowSourceExplorer] = useState(false);
     const [isAtLeastOneSourceSelected, setIsAtLeastOneSourceSelected] = useState(selectedSources.length > 0);
@@ -216,7 +221,7 @@ const ContentSection = ({
     return (
         <div className='relative flex flex-col items-start h-full'>
 
-            <div className="mb-11">
+            <div className="w-full max-w-4xl pr-3 mb-11">
                 {/* New resource */}
                 <div>
                     {
@@ -236,8 +241,27 @@ const ContentSection = ({
                     className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={handleExploreSources}
                 >
-                    <SearchOutlinedIcon />
+                    <FolderOpenIcon />
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Source Explorer</span>
+                </div>
+
+                {/* Search */}
+                <div>
+                    <div
+                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        onClick={() => setIsSearching(!isSearching)}
+                    >
+                        <SearchOutlinedIcon />
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Search</span>
+                    </div>
+                    {
+                        isSearching && (
+                            <div className="flex items-center gap-2">
+                                <span className={`cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>&times;</span>
+                                <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                            </div>
+                        )
+                    }
                 </div>
             </div>
 
@@ -278,7 +302,7 @@ const ContentSection = ({
             <BaseHeading text='Selected sources' />
 
             {
-                <div className="flex flex-col w-4/5 max-w-full w-full gap-8 overflow-y-auto">
+                <div className="flex flex-col w-4/5 w-full max-w-full gap-8 overflow-y-auto">
                     {knowledgeBase.map((item, index) => {
                         if (canRenderSourceThumbnail(item)) {
                             return (<ContentPanelThumbnail

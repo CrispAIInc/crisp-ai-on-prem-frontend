@@ -143,7 +143,7 @@ const ContentPanel = () => {
                 id="uncontrolled-tab-example"
                 className="my-3 text-center flex justify-center items-center !border-b-0"
             >
-                <Tab eventKey="sources" title="Sources" className='flex-1 overflow-y-auto h-full'>
+                <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'>
                     <ContentSection
                         knowledgeBase={knowledgeBase}
                         setKnowledgeBase={setKnowledgeBase}
@@ -153,10 +153,7 @@ const ContentPanel = () => {
                         key={0}
                     />
                 </Tab>
-                <Tab eventKey="search" title="Search" className='flex-1 overflow-y-auto h-full'>
-                    <SearchSection chatLoaded={chatLoaded} key={1} name="Search" />
-                </Tab>
-                <Tab eventKey="notes" title="Notes" className='flex-1 overflow-y-auto h-full'>
+                <Tab eventKey="notes" title="Notes" className='flex-1 h-full overflow-y-auto'>
                     <NotesSection
                         setNoteIndex={setNoteIndex}
                         nodeIndex={noteIndex}

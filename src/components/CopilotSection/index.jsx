@@ -295,10 +295,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     //     console.log(selectedLLMs);
     // }, [selectedLLMs]);
 
-    useEffect(() => { console.log("testing useeffect!"); }, []);
     useEffect(() => {
         setChatLoaded(false);
-        console.log('enter');
 
         async function fetchChat() {
             const data = await makeApiRequest(
@@ -845,7 +843,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     };
 
     return (
-        <div className="relative flex flex-col flex-1 overflow-y-auto h-full">
+        <div className="relative flex flex-col flex-1 h-full overflow-y-auto">
             <NoteModal
                 show={showNoteModal}
                 onHide={onHide}

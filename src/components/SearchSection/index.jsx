@@ -8,7 +8,7 @@ import BaseHeading from '../BaseHeading';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-const SearchSection = ({ chatLoaded }) => {
+const SearchSection = ({ chatLoaded, className = '' }) => {
 
     const { currentResource, setCurrentResource, resourceURL, setResourceURL, player, isPlayerReady,
         selectedCategory, selectedFormat,
@@ -69,26 +69,24 @@ const SearchSection = ({ chatLoaded }) => {
     };
 
     return (
-        <div className='search-wrapper 2xl:w-3/6 2xl:mx-auto'>
-            <div>
-                {
-                    chatLoaded ?
-                        (
-                            <>
-                                <CustomInput placeholder='Search for a source by asking questions' value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        handleSubmitQuestion(e);
-                                    }
-                                }} />
-                                <CustomButton disabled={chatLoaded} onClick={handleSubmitQuestion} className='w-full text-white bg-primary-300'>
-                                    {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Search'}
-                                </CustomButton>
-                            </>
-                        ) : <div className='text-center'>
-                            <BaseHeading text='Please wait for data to load...' />
+        <div className={`search-wrapper ${className}`}>
+            {
+                chatLoaded ?
+                    (
+                        <div className="flex items-center gap-3">
+                            <CustomInput placeholder='Search for a source by asking questions' value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSubmitQuestion(e);
+                                }
+                            }} />
+                            <CustomButton disabled={chatLoaded} onClick={handleSubmitQuestion} className='w-full p-2 text-white bg-primary-300'>
+                                {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Search'}
+                            </CustomButton>
                         </div>
-                }
-            </div>
+                    ) : <div className='text-center'>
+                        <BaseHeading text='Please wait for data to load...' />
+                    </div>
+            }
         </div>
     );
 };
