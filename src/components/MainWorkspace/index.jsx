@@ -50,11 +50,21 @@ const MainWorkspace = ({ theme }) => {
   useEffect(() => {
     setSelectedNote({
       note_id: "",
-      text: [{ content: "", model: null, color: "#000" }],
+      text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
       images: [],
       note_name: "",
     });
   }, [notes]);
+
+  useEffect(() => {
+    setSelectedNote(prevNote => ({
+      ...prevNote,
+      text: prevNote.text.map(item => ({
+        ...item,
+        color: item.color === '#333' || item.color === '#fff' ? (theme === 'light' ? '#333' : '#fff') : item.color
+      }))
+    }));
+  }, [theme, theme.text]);
 
   // create value object with all the states
   const value = {
