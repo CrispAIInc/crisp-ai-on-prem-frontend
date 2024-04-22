@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import Toggler from '../Toggler';
+import GenStories from '../GenStories';
 
 import CopilotSection from '../CopilotSection';
 import MetadataSection from '../MetadataSection';
@@ -25,12 +25,15 @@ const ChatPanel = () => {
 
       <Tabs
         transition={false}
-        defaultActiveKey="copilot"
+        defaultActiveKey="genInsights"
         id="uncontrolled-tab-example"
         className="my-3 text-center flex justify-center items-center !border-b-0"
       >
-        <Tab eventKey="copilot" title="Copilot" className='flex-1 h-full overflow-y-auto'>
-          <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} key={0} name="Copilot" />
+        <Tab eventKey="genInsights" title="GenInsights" className='flex-1 h-full overflow-y-auto'>
+          <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} key={0} name="genInsights" />
+        </Tab>
+        <Tab eventKey="genStories" title="GenStories" className='flex-1 h-full overflow-y-auto'>
+          <GenStories key={2} name="genStories" />
         </Tab>
         <Tab eventKey="metadata" title="Metadata" className='flex-1 h-full overflow-y-auto'>
           <MetadataSection key={2} name="Metadata" />
