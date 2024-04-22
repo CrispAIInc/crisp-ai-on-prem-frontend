@@ -45,9 +45,9 @@ const ContentPanelThumbnail = ({
           />
         </div>
       </div>
-      <span className="text-xs leading-none break-words text-textColor-200">
+      {/* <span className="text-xs leading-none break-words text-textColor-200">
         {item.source_path}
-      </span>
+      </span> */}
     </div>
   );
 };
