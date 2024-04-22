@@ -213,9 +213,9 @@ const ContentSection = ({
      * Function to indicate wether a source thumbnail can be rendered in the selected sources section or not
      */
     const canRenderSourceThumbnail = (source) => {
-        return (source.category.includes(selectedCategory) || selectedCategory === "all") &&
-            (source.file_type === selectedFormat || selectedFormat === "all") &&
-            source.is_selected;
+        // return (source.category.includes(selectedCategory) || selectedCategory === "all") &&
+        //     (source.file_type === selectedFormat || selectedFormat === "all") &&
+        return source.is_selected;
     };
 
     return (
@@ -302,7 +302,7 @@ const ContentSection = ({
             <BaseHeading text='Selected sources' />
 
             {
-                <div className="flex flex-col items-center w-4/5 w-full max-w-full gap-8 mx-auto overflow-y-auto bg-red-600">
+                <div className="flex flex-col items-center w-4/5 w-full max-w-full gap-8 mx-auto overflow-y-auto">
                     {knowledgeBase.map((item, index) => {
                         if (canRenderSourceThumbnail(item)) {
                             return (<ContentPanelThumbnail
