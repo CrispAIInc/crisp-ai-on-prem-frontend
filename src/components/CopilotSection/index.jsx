@@ -275,6 +275,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     // const currentLLMColor = currentLLM.color;
     const [currentLLMColor, setCurrentLLMColor] = useState("#E56B6F");
 
+    // the model used for a particular message in copilot
+    const [modelsUsed, setModelsUsed] = useState(["gpt-4"]);
+
     useEffect(() => {
         if (isNewNote) {
             setShowNoteModal(true);
@@ -296,22 +299,22 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     // }, [selectedLLMs]);
 
     useEffect(() => {
-        setChatLoaded(false);
+        setChatLoaded(true);
 
-        async function fetchChat() {
-            const data = await makeApiRequest(
-                `/chat/${selectedCategoryChat}`,
-                "post",
-                JSON.stringify({
-                    sources: selectedSources,
-                    category: selectedCategoryChat,
-                    selectedAll,
-                })
-            );
-            setChatLoaded(data?.chat_is_initialized);
-        }
+        // async function fetchChat() {
+        //     const data = await makeApiRequest(
+        //         `/chat/${selectedCategoryChat}`,
+        //         "post",
+        //         JSON.stringify({
+        //             sources: selectedSources,
+        //             category: selectedCategoryChat,
+        //             selectedAll,
+        //         })
+        //     );
+        //     setChatLoaded(data?.chat_is_initialized);
+        // }
 
-        fetchChat();
+        // fetchChat();
     }, [selectedCategoryChat, selectedSources]);
 
     function timeToSeconds(time) {
@@ -339,7 +342,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         }
     }, [isPlayerReady]);
 
-    const sendMessage = async (message) => {
+    // useEffect(() => {
+    //     setModelsUsed(selectedLLMs);
+    // }, [selectedLLMs]);
+
+    const sendMessage = async (message, models = selectedLLMs) => {
         setShowCursor(true);
 
         let userMessage = "";
@@ -357,8 +364,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         setOriginalQueries([...originalQueries, userMessage]);
         setMessages([
             ...messages,
-            { sender: "user", text: userMessage },
-            { sender: "bot", text: "" },
+            { sender: "user", text: userMessage, models },
+            { sender: "bot", text: "", models },
         ]);
         setInput("");
         setResponseIndex((responseIndex) => responseIndex + 2);
@@ -489,15 +496,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             </li>
         ));
 
-        console.log(
-            "videoLinks",
-            videoLinks,
-            "pdfLinks",
-            pdfLinks,
-            "imgLinks",
-            imgLinks
-        );
-
         let newData = null;
 
         // Append the references to the botMessage
@@ -589,7 +587,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         let botIndex = 0;
 
         setMessages(
-            messages.map((message) => {
+            messages.map((message, index) => {
                 if (message.sender === "user") {
                     const updatedMessage = {
                         ...message,
@@ -599,7 +597,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     return updatedMessage;
                 } else if (message.sender === "bot") {
                     const botMessage = (
-                        <div>
+                        <div key={index}>
                             <div className="coorg-response">
                                 {data.translated_responses[botIndex]}
                             </div>
@@ -837,9 +835,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         setSelectedCategoryChat(e.value);
     };
 
-    const handleRepeatQuestion = (message) => {
+    const handleRepeatQuestion = (message, models) => {
         // setInput(message);
-        sendMessage(message);
+        sendMessage(message, models);
     };
 
     return (
@@ -908,7 +906,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                 >
                                     <div className="flex items-center justify-between">
                                         <b className="">You: </b>
-                                        <div className="cursor-pointer" onClick={() => { handleRepeatQuestion(message.text); }}>
+                                        <div className="cursor-pointer" onClick={() => { handleRepeatQuestion(message.text, message.models); }}>
                                             <ReplayOutlinedIcon />
                                         </div>
                                     </div>
@@ -921,7 +919,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                     <div className={`message bot-message h-full`}>
                                         {/* <b className="text-textColor-200">Chatbot: </b> */}
                                         <div className={`flex flex-col h-full p-2 m-2 rounded-md ${theme === 'light' ? 'bg-separator text-textColor-200' : 'bg-background_workspace'}`}>
-                                            {selectedLLMs[0] === "dall-e-3" ? (
+                                            {selectedLLMs[0] === "dall-e-3" && message.img ? (
                                                 <>
                                                     <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Chatbot: </b>
                                                     <div>
@@ -945,17 +943,18 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                                 <>
                                                     <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Chatbot: </b>
                                                     <div className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{message.text}</div>
+                                                    {showCursor && index == responseIndex ? (
+                                                        <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
+                                                    ) : null}
                                                     <div className="flex flex-wrap items-center gap-1">
                                                         <span className={`text-xs ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`}>Models: </span>
                                                         {
-                                                            selectedLLMs.map((item, index) => (
+
+                                                            message.models.map((item, index) => (
                                                                 <span key={index} className={`text-xs divide-x ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`}>{item.toUpperCase()}</span>
                                                             ))
                                                         }
                                                     </div>
-                                                    {showCursor && index == responseIndex ? (
-                                                        <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
-                                                    ) : null}
                                                 </>
                                             )}
                                         </div>
@@ -983,13 +982,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            sendMessage();
+                            sendMessage(input);
                         }
                     }}
                 />
                 <div
                     className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? 'border' : '!border !border-textColor-300'}`}
-                    onClick={sendMessage}
+                    onClick={() => sendMessage(input)}
                 >
                     <SendIcon color="primary" />
                 </div>
