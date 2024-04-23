@@ -10,27 +10,55 @@ export function LLMModal(props) {
     const [selectionCategory, setSelectionCategory] = useState(null); // State to track the selected category
 
     const handleCheckboxChange = (model) => {
+        console.log(model);
         const category = model.type; // Determine the category of the selected model
         props.setSelectedLLMs(prev => {
-            // If the model is already selected, remove it and potentially clear the selection category
+            // only accept one model to be checked, and when one model is check, disable all other models
+            // If no category is selected, allow all categories
+            // if (!selectionCategory) {
+            //     return [...prev, model.value];
+            // }
             if (prev.includes(model.value)) {
-                const newSelection = prev.filter(m => m !== model.value);
-                // If after removing the model, no other model of the same category is selected, allow all categories again
-                if (!newSelection.some(m => props.llmModels.find(model => model.value === m).type === category)) {
-                    setSelectionCategory(null);
-                }
-                return newSelection;
+                setSelectionCategory(null);
+                return [];
             } else {
-                // Add the model and restrict selection to this category
                 setSelectionCategory(category);
-                return [...prev, model.value];
+                return [model.value];
             }
+
+
+            // If the model is already selected, remove it and potentially clear the selection category
+            // if (prev.includes(model.value)) {
+            //     const newSelection = prev.filter(m => m !== model.value);
+            //     // If after removing the model, no other model of the same category is selected, allow all categories again
+            //     if (!newSelection.some(m => props.llmModels.find(model => model.value === m).type === category)) {
+            //         setSelectionCategory(null);
+            //     }
+            //     return newSelection;
+            // } else {
+            //     // Add the model and restrict selection to this category
+            //     setSelectionCategory(category);
+            //     return [...prev, model.value];
+            // }
         });
     };
 
-    const isCheckboxDisabled = (modelType) => {
-        // Disable checkboxes not matching the selected category, if a category has been selected
-        return selectionCategory && modelType !== selectionCategory;
+    const isCheckboxDisabled = (modelType, modelValue) => {
+        // Ensure there's a selected LLM
+        const selectedLLM = props.selectedLLMs.length > 0 ? props.selectedLLMs[0] : null;
+
+        // If there's a selected category, disable checkboxes that do not match the category
+        if (selectionCategory && modelType !== selectionCategory) {
+            return true;
+        }
+
+        // If there's a selected LLM, disable checkboxes that do not match the selected LLM
+        if (selectedLLM && modelValue !== selectedLLM) {
+            return true;
+        }
+
+        // Otherwise, keep the checkbox enabled
+        return false;
     };
 
     return (
@@ -59,7 +87,7 @@ export function LLMModal(props) {
                                         key={index}
                                         type="checkbox"
                                         label={model.label}
-                                        disabled={isCheckboxDisabled(model.type)}
+                                        disabled={isCheckboxDisabled(model.type, model.value)}
                                         checked={props.selectedLLMs.includes(model.value)}
                                         onChange={() => handleCheckboxChange(model)}
                                         className={`${theme === 'dark' && 'text-textColor-100'}`} />
@@ -75,7 +103,7 @@ export function LLMModal(props) {
                                         key={index}
                                         type="checkbox"
                                         label={model.label}
-                                        disabled={isCheckboxDisabled(model.type)}
+                                        disabled={isCheckboxDisabled(model.type, model.value)}
                                         checked={props.selectedLLMs.includes(model.value)}
                                         onChange={() => handleCheckboxChange(model)}
                                         className={`${theme === 'dark' && 'text-textColor-100'}`}
@@ -92,7 +120,7 @@ export function LLMModal(props) {
                                         key={index}
                                         type="checkbox"
                                         label={model.label}
-                                        disabled={isCheckboxDisabled(model.type)}
+                                        disabled={isCheckboxDisabled(model.type, model.value)}
                                         checked={props.selectedLLMs.includes(model.value)}
                                         onChange={() => handleCheckboxChange(model)}
                                         className={`${theme === 'dark' && 'text-textColor-100'}`}
