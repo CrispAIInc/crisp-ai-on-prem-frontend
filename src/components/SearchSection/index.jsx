@@ -34,6 +34,7 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
     }, [isPlayerReady]);
 
     const handleSubmitQuestion = async (event) => {
+        console.log("entered");
         event.preventDefault();
         setIsSearching(true);
         try {
@@ -79,7 +80,7 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
                                     handleSubmitQuestion(e);
                                 }
                             }} />
-                            <CustomButton disabled={chatLoaded} onClick={handleSubmitQuestion} className='w-full p-2 text-white bg-primary-300'>
+                            <CustomButton onClick={handleSubmitQuestion} className='w-full p-2 text-white bg-primary-300'>
                                 {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Search'}
                             </CustomButton>
                         </div>
