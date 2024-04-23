@@ -351,6 +351,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   // }, [selectedLLMs]);
 
   const sendMessage = async (message, models = selectedLLMs) => {
+    if (message === "" || input === "") return;
+
     setShowCursor(true);
 
     let userMessage = "";
