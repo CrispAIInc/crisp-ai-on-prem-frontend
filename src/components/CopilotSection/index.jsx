@@ -15,6 +15,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import { NoteModal } from "../NoteModal";
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import CustomButton from "../CustomButton";
+import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
@@ -46,7 +47,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setSummaries,
   } = useContext(MainContext);
 
-  
+
   const chatAppRef = useRef();
 
   const [messages, setMessages] = useState([]);
@@ -279,6 +280,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   // the model used for a particular message in copilot
   const [modelsUsed, setModelsUsed] = useState(["gpt-4"]);
 
+  const imageGenRefInput = useRef(null);
+
   useEffect(() => {
     if (isNewNote) {
       setShowNoteModal(true);
@@ -300,22 +303,22 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   // }, [selectedLLMs]);
 
   useEffect(() => {
-    setChatLoaded(true);
+    setChatLoaded(false);
 
-    // async function fetchChat() {
-    //     const data = await makeApiRequest(
-    //         `/chat/${selectedCategoryChat}`,
-    //         "post",
-    //         JSON.stringify({
-    //             sources: selectedSources,
-    //             category: selectedCategoryChat,
-    //             selectedAll,
-    //         })
-    //     );
-    //     setChatLoaded(data?.chat_is_initialized);
-    // }
+    async function fetchChat() {
+      const data = await makeApiRequest(
+        `/chat/${selectedCategoryChat}`,
+        "post",
+        JSON.stringify({
+          sources: selectedSources,
+          category: selectedCategoryChat,
+          selectedAll,
+        })
+      );
+      setChatLoaded(data?.chat_is_initialized);
+    }
 
-    // fetchChat();
+    fetchChat();
   }, [selectedCategoryChat, selectedSources]);
 
   function timeToSeconds(time) {
@@ -373,6 +376,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     var botMessage = "";
 
     if (selectedLLMs[0] === "dall-e-3") {
+      console.log("dalle3 selected, now maknig req...");
       const data = await makeApiRequest(
         `/image-generation/${encodeURIComponent(
           selectedCategoryChat
@@ -382,6 +386,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         "post"
       );
       botMessage = data.image_url;
+      console.log(data.image_url);
 
       setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
@@ -448,9 +453,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   const handleVideoLinkClick = (event, video) => {
     event.preventDefault();
     setFromChat(true);
-    const resourceURL = `${API_ENDPOINT}/${
-      video.file_type
-    }/all/${encodeURIComponent(video.source_path)}`;
+    const resourceURL = `${API_ENDPOINT}/${video.file_type
+      }/all/${encodeURIComponent(video.source_path)}`;
     setCurrentResource(video);
     setResourceURL(resourceURL);
     setSummary(video.summary);
@@ -461,9 +465,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   const handlePDFLinkClick = (event, pdf) => {
     event.preventDefault();
     console.log(pdf.source_path);
-    const resourceURL = `${API_ENDPOINT}/${
-      pdf.file_type
-    }/all/${encodeURIComponent(pdf.source_path)}`;
+    const resourceURL = `${API_ENDPOINT}/${pdf.file_type
+      }/all/${encodeURIComponent(pdf.source_path)}`;
     setCurrentResource(pdf);
     setResourceURL(resourceURL);
     setSummary(pdf.summary);
@@ -473,9 +476,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   const fetchReferences = async (botMessage) => {
     const response = await axios.get(`${API_ENDPOINT}/references`);
     const data = response.data;
-    console.log(response);
-    // Assuming handleVideoLinkClick and handlePDFLinkClick are already defined
-    console.log(data);
     const videoLinks = data.video_references.map((video) => (
       <li key={video.source_path} className="ml-0">
         <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -767,21 +767,35 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setShowImageModal(false);
   };
 
-  const handleVisionUpload = async (event) => {
+  const fetchBlobAndRecreateFile = async (blob) => {
+    if (blob) {
+      const response = await fetch(blob);
+      const newBlob = await response.blob();
+      const newFile = new File([newBlob], 'recreated-file.jpg', {
+        type: newBlob.type,
+        lastModified: Date.now(),
+      });
+      return newFile;
+    }
+  };
+
+  const handleVisionUpload = async (event, blob) => {
     setIsUploadingVisionImg(true);
 
     // Function to handle file selection and upload
-    const file = event.target.files[0];
+    const file = event === null ? fetchBlobAndRecreateFile(blob) : event.target.files[0];
+    console.log(file);
     if (file) {
       const formData = new FormData();
       formData.append("image", file);
       setShowCursor(true);
-      let userMessage = "";
+      const userMessage = URL.createObjectURL(file);
+      console.log("url img: ", userMessage);
       setOriginalQueries([...originalQueries, userMessage]);
       setMessages([
         ...messages,
-        { sender: "user", text: userMessage },
-        { sender: "bot", text: "" },
+        { sender: "user", text: userMessage, models: selectedLLMs },
+        { sender: "bot", text: "", models: selectedLLMs },
       ]);
       setInput("");
       setResponseIndex((responseIndex) => responseIndex + 2);
@@ -798,7 +812,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         );
 
         // Assuming the response contains the caption
-        const caption = response.data.caption;
+        const caption = response?.data.caption;
+        console.log("response ==> ", response?.data);
 
         setMessages((prevMessages) => {
           const newMessages = [...prevMessages];
@@ -838,6 +853,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const handleRepeatQuestion = (message, models) => {
     // setInput(message);
+    if (models[0] === 'gpt-4-vision') {
+      handleVisionUpload(null, message);
+      return;
+    }
     sendMessage(message, models);
   };
 
@@ -868,11 +887,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         />
 
         <CustomButton
-          className={`my-0 ${
-            theme === "light"
-              ? "bg-white !text-dark border border-textColor-100"
-              : " !text-textColor-100 !border !border-textColor-300"
-          }`}
+          className={`my-0 ${theme === "light"
+            ? "bg-white !text-dark border border-textColor-100"
+            : " !text-textColor-100 !border !border-textColor-300"
+            }`}
           style={{ width: "100%" }}
           onClick={selectLLMModels}
         >
@@ -890,22 +908,19 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
       <div className="flex items-center gap-1 mx-2 my-3">
         <span
-          className={`text-xs ${
-            theme === "light" ? "text-textColor-300" : "text-textColor-200"
-          }`}
+          className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+            }`}
         >
           Selected models:{" "}
         </span>
         <div
-          className={`flex items-center divide-x  ${
-            theme === "light" ? "divide-textColor-100" : "divide-textColor-300"
-          }`}
+          className={`flex items-center divide-x  ${theme === "light" ? "divide-textColor-100" : "divide-textColor-300"
+            }`}
         >
           {selectedLLMs.length === 0 ? (
             <span
-              className={`text-xs ${
-                theme === "light" ? "text-textColor-300" : "text-textColor-200"
-              }`}
+              className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                }`}
             >
               none
             </span>
@@ -913,11 +928,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             selectedLLMs.map((model, index) => (
               <span
                 key={index}
-                className={`text-xs ${
-                  theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-200"
-                }`}
+                className={`text-xs ${theme === "light"
+                  ? "text-textColor-300"
+                  : "text-textColor-200"
+                  }`}
               >
                 {model.toUpperCase()}{" "}
               </span>
@@ -928,9 +942,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       </div>
 
       <div
-        className={`flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${
-          theme === "light" ? "!border" : "!border !border-textColor-300"
-        }`}
+        className={`flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
+          }`}
         ref={chatAppRef}
       >
         {chatLoaded ? (
@@ -951,7 +964,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                       <ReplayOutlinedIcon />
                     </div>
                   </div>
-                  <div className="">{message.text}</div>
+                  {
+                    message.text.startsWith('blob') ? <img src={message.text} alt='uploaded image' /> : <p>{message.text}</p>
+                  }
                 </div>
               </div>
             ) : (
@@ -960,20 +975,18 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                   <div className={`message bot-message h-full`}>
                     {/* <b className="text-textColor-200">Chatbot: </b> */}
                     <div
-                      className={`flex flex-col h-full p-2 m-2 rounded-md ${
-                        theme === "light"
-                          ? "bg-separator text-textColor-200"
-                          : "bg-background_workspace"
-                      }`}
+                      className={`flex flex-col h-full p-2 m-2 rounded-md ${theme === "light"
+                        ? "bg-separator text-textColor-200"
+                        : "bg-background_workspace"
+                        }`}
                     >
                       {selectedLLMs[0] === "dall-e-3" && message.img ? (
                         <>
                           <b
-                            className={`${
-                              theme === "light"
-                                ? "text-textColor-300"
-                                : "text-textColor-100"
-                            }`}
+                            className={`${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-100"
+                              }`}
                           >
                             Chatbot:{" "}
                           </b>
@@ -997,44 +1010,59 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                       ) : (
                         <>
                           <b
-                            className={`${
-                              theme === "light"
-                                ? "text-textColor-300"
-                                : "text-textColor-100"
-                            }`}
+                            className={`${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-100"
+                              }`}
                           >
                             Chatbot:{" "}
                           </b>
                           <div
-                            className={`${
-                              theme === "light"
-                                ? "text-textColor-300"
-                                : "text-textColor-100"
-                            }`}
+                            className={`${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-100"
+                              }`}
                           >
                             {message.text}
                           </div>
                           {showCursor && index == responseIndex ? (
                             <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
                           ) : null}
+
+                          {/* add to note */}
+                          <AddOptionsModal
+                            text={message.text}
+                            addToNewNote={addToNewNote}
+                            addToExistingNote={addToExistingNote}
+                            setExistingNote={setExistingNote}
+                            // notesOptions={notesOptions}
+                            existingNote={existingNote}
+                            onHide={onHide}
+                            isNewNote={isNewNote}
+                            setShowNoteModal={setShowNoteModal}
+                            updateSelectedNote={setSelectedNote}
+                            showNoteModal={showNoteModal}
+                            selectedNote={selectedNote}
+                            notes={notes}
+                          />
+
+
                           <div className="flex flex-wrap items-center gap-1">
                             <span
-                              className={`text-xs ${
-                                theme === "light"
-                                  ? "text-textColor-300"
-                                  : "text-textColor-200"
-                              }`}
+                              className={`text-xs ${theme === "light"
+                                ? "text-textColor-300"
+                                : "text-textColor-200"
+                                }`}
                             >
                               Models:{" "}
                             </span>
                             {message.models.map((item, index) => (
                               <span
                                 key={index}
-                                className={`text-xs divide-x ${
-                                  theme === "light"
-                                    ? "text-textColor-300"
-                                    : "text-textColor-200"
-                                }`}
+                                className={`text-xs divide-x ${theme === "light"
+                                  ? "text-textColor-300"
+                                  : "text-textColor-200"
+                                  }`}
                               >
                                 {item.toUpperCase()}
                               </span>
@@ -1060,25 +1088,45 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         )}
       </div>
       <div className="flex items-center gap-2 input-area">
-        {/* <input className='message-input-field' value={input} onChange={e => setInput(e.target.value)} /> */}
-        <CustomInput
-          placeholder="Message model..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              sendMessage(input);
-            }
-          }}
-        />
-        <div
-          className={`p-2 rounded-md cursor-pointer ${
-            theme === "light" ? "border" : "!border !border-textColor-300"
-          }`}
-          onClick={() => sendMessage(input)}
-        >
-          <SendIcon color="primary" />
-        </div>
+
+        {
+          selectedLLMs[0] === 'gpt-4-vision'
+            ?
+            <CustomButton className='flex items-center justify-center w-3/4 mx-auto text-white bg-primary-300' onClick={() => imageGenRefInput.current.click()}>
+              {/* <div
+                className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
+                  }`}
+              > */}
+              <AttachFileOutlinedIcon color="white" />
+              {/* render file input and hide it */}
+              <input type='file' accept='.png,.jpg,.jpeg,.svg' ref={imageGenRefInput} name='image-generation' className='hidden' onChange={(e) => handleVisionUpload(e)} />
+              {/* </div> */}
+              <p className="m-0">Upload an image</p>
+            </CustomButton>
+            :
+            <>
+              <CustomInput
+                placeholder="Message model..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    sendMessage(input);
+                  }
+                }}
+              />
+              <div
+                className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
+                  }`}
+                onClick={() => sendMessage(input)}
+              >
+                <SendIcon color="primary" />
+              </div>
+            </>}
+
+
+        {/* </div>} */}
+
       </div>
     </div>
   );
