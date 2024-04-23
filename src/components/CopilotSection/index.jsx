@@ -783,7 +783,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setIsUploadingVisionImg(true);
 
     // Function to handle file selection and upload
-    const file = event === null ? fetchBlobAndRecreateFile(blob) : event.target.files[0];
+    const file = event === null ? await fetchBlobAndRecreateFile(blob) : event.target.files[0];
     console.log(file);
     if (file) {
       const formData = new FormData();
