@@ -75,7 +75,7 @@ export function LLMModal(props) {
                     Select LLM Models
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body className={`overflow-hidden ${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
+            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
                 <Form className='me-auto d-sm-inline-block'>
                     <ul className='list-unstyled ms-5'>
                         <li>

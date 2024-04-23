@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import MainWorkspace from './components/MainWorkspace';
 import { useState, useEffect, useLayoutEffect } from 'react';
+import Resizable from './components/Resizable';
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/" element={<MainWorkspace theme={theme} />} />
         </Routes>
       </Router>
+      {/* <Resizable /> */}
     </div>
   );
 }
