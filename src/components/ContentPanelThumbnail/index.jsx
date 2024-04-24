@@ -22,7 +22,7 @@ const ContentPanelThumbnail = ({
   const { theme } = useContext(MainContext);
 
   return (
-    <div className={`relative pt-4 rounded-md cursor-pointer ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} 2xl:w-44 2xl:h-2/3`} onClick={(event) => onThumbnailClick(event, item)}>
+    <div className={`relative pt-4 rounded-md cursor-pointer ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} w-44 h-auto`} onClick={(event) => onThumbnailClick(event, item)}>
       <>
         {isDeleting && clickedIndex === index ? (
           <div className="thumbnail-loader">
