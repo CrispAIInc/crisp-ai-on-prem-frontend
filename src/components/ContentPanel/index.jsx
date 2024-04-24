@@ -1,54 +1,28 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 
 import makeApiRequest from "../../api";
 
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-// import "./content_panel.css";
-
 import SearchModal from "../SearchModal";
 
 import NotesSection from "../NotesSection";
 import ContentSection from "../ContentSection";
 import { MainContext } from '../../contexts/mainContext';
-import Toggler from '../Toggler';
-import SearchSection from '../SearchSection';
 
 import './content-panel.css';
+import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 const ContentPanel = () => {
+    const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown } = useResizableSidebar(200, true);
 
-    const { currentResource,
-        setCurrentResource,
-        resourceURL,
-        chatLoaded,
+    const { setCurrentResource,
         setResourceURL,
-        player,
-        isPlayerReady,
-        setIsPlayerReady,
-        notes,
         setNotes,
-        selectedNote,
-        setSelectedNote,
-        showNoteModal,
-        setShowNoteModal,
-        selectedSources,
-        setSelectedSources,
-        selectedAll,
         setSelectedAll,
-        selectedCategory,
-        setSelectedCategory,
-        setSelectedFormat,
-        selectedFormat,
-        additionalSources,
-        setAdditionalSources,
         showSearchModal,
         setShowSearchModal,
-        isNewNote,
-        setIsNewNote,
         isLeftSidebarOpen,
         setSummary } = useContext(MainContext);
 
@@ -58,8 +32,6 @@ const ContentPanel = () => {
     // const [currentResource, setCurrentResource] = useState('');
     const [, setTranscription] = useState("");
     const [, setSummaries] = useState("");
-
-    const [contentType, setContentType] = React.useState("sources"); // Could either be "Sources" or "Notes"
 
     const [noteIndex, setNoteIndex] = useState(0);
     const noteIndexRef = useRef(noteIndex);
@@ -80,11 +52,6 @@ const ContentPanel = () => {
 
         makeRequest();
     }, []);
-
-    const handleContentType = (event, newContentType) => {
-        event.preventDefault();
-        setContentType(newContentType);
-    };
 
     const onThumbnailClick = (event, file) => {
         event.preventDefault();
@@ -118,24 +85,14 @@ const ContentPanel = () => {
     };
 
     return (
-        <div className={`h-full content-panel w-1/4 pl-3 bg-background transition-width duration-500 ${!isLeftSidebarOpen && '!w-0 !p-0'} flex flex-col`}>
-            {/* <Toggler components={[
-                <ContentSection
-                    knowledgeBase={knowledgeBase}
-                    setKnowledgeBase={setKnowledgeBase}
-                    onThumbnailClick={onThumbnailClick}
-                    handleCheckboxChange={handleCheckboxChange}
-                    name="Sources"
-                    key={0}
-                />,
-                <SearchSection chatLoaded={chatLoaded} key={1} name="Search" />,
-                <NotesSection
-                    setNoteIndex={setNoteIndex}
-                    nodeIndex={noteIndex}
-                    key={2}
-                    name="Notes"
-                />
-            ]} /> */}
+        <div className={`user-select-none h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
+            width: leftWidth
+        }}>
+            <div
+                className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
+                style={{ left: leftWidth }}
+                onMouseDown={handleLeftMouseDown}
+            ></div>
 
             <Tabs
                 transition={false}

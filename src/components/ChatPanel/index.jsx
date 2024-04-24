@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import GenStories from '../GenStories';
 
 import CopilotSection from '../CopilotSection';
@@ -9,19 +9,22 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
 import './chat-panel.css';
+import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 const ChatPanel = () => {
+  const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown } = useResizableSidebar(200, false);
 
   const { chatLoaded, setChatLoaded, isRightSidebarOpen } = useContext(MainContext);
 
   return (
-    <div className={`w-1/4 h-full bg-background transition-width duration-500 ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`}>
-      {/* toggler */}
-      {/* <Toggler components={[
-        <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} key={0} name="Copilot" />,
-
-        <MetadataSection key={2} name="Metadata" />
-      ]} /> */}
+    <div className={`relative user-select-none w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
+      width: rightWidth
+    }}>
+      <div
+        className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
+        style={{ right: rightWidth }}
+        onMouseDown={handleRightMouseDown}
+      ></div>
 
       <Tabs
         transition={false}
