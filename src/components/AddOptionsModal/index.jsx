@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Select from 'react-select';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -6,13 +6,13 @@ import Box from '@mui/material/Box';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { MainContext } from '../../contexts/mainContext';
 
-const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNote, notes }) => {
+const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNote }) => {
   console.log("text", text);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const { theme } = useContext(MainContext);
+  const { theme, notes } = useContext(MainContext);
 
   const style = {
     position: 'absolute',
