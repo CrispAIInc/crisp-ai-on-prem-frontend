@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 
 export const useResizableSidebar = (minWidth, isLeft) => {
+    const maxWidth = 500;
     const [sidebarWidth, setSidebarWidth] = useState(window.innerWidth * 0.25);
     const [isResizing, setIsResizing] = useState(false);
 
@@ -13,8 +14,8 @@ export const useResizableSidebar = (minWidth, isLeft) => {
         if (isResizing) {
             // Calculate the new sidebar width based on the mouse's position
             const newWidth = isLeft
-                ? Math.max(minWidth, e.clientX)
-                : Math.max(minWidth, window.innerWidth - e.clientX);
+                ? Math.min(maxWidth, Math.max(minWidth, e.clientX))
+                : Math.min(maxWidth, Math.max(minWidth, window.innerWidth - e.clientX));
             setSidebarWidth(newWidth);
         }
     };
