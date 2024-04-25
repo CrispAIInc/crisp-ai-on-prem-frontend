@@ -139,7 +139,7 @@ export function SourceExplorer(props) {
                                 </div>
                                 <DeleteIcon
                                     color="error"
-                                    onClick={(event) => props.deleteResource(event, index)}
+                                    onClick={(event) => props.deleteResource(event, file)}
                                     className="absolute top-0 right-0 delete-icon"
                                 />
                             </div>
@@ -182,7 +182,7 @@ export function SourceExplorer(props) {
                                 </div>
                                 <DeleteIcon
                                     color="error"
-                                    onClick={(event) => props.deleteResource(event, index)}
+                                    onClick={(event) => props.deleteResource(event, file)}
                                     className="absolute top-0 right-0 delete-icon"
                                 />
                             </div>

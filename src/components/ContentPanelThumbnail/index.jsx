@@ -1,9 +1,7 @@
 import LoadingSpinner from "../LoadingSpinner";
 import { Checkbox } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import VideoThumbnail from "../VideoThumbnail";
 import PDFThumbnail from "../PDFThumbnail";
-import ImageThumbnail from "../ImageThumbnail";
 import StagedImageThumbnail from '../StagedImageThumbnail';
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import { useContext } from 'react';
@@ -40,7 +38,7 @@ const ContentPanelThumbnail = ({
         {item.file_type === "pdf" && <PDFThumbnail item={item} />}
         {item.file_type === "img" && <StagedImageThumbnail item={item} />}
         <DeleteIcon
-          onClick={(event) => { event.stopPropagation(); deleteResource(event, index); }}
+          onClick={(event) => { event.stopPropagation(); deleteResource(event, item); }}
           color="error"
           className="absolute cursor-pointer !top-0 !left-[calc(100%-24px)] mr-1"
         />
@@ -49,4 +47,4 @@ const ContentPanelThumbnail = ({
   );
 };
 
-export default ContentPanelThumbnail;;
+export default ContentPanelThumbnail;
