@@ -130,9 +130,11 @@ const Workspace = () => {
                         </div>
                     )}
                     {currentResource.file_type === "img" && (
-                        <div className="relative">
-                            <CancelIcon onClick={closeImage} className="absolute right-[17%] top-[15px] cursor-pointer" />
-                            <img className="source-img w-[70%] h-72 mx-auto pt-2 rounded-lg" src={resourceURL} />
+                        <div className="">
+                            <div className="relative w-[70%] h-72 w-full h-full max-w-lg mx-auto">
+                                <CancelIcon onClick={closeImage} className="absolute right-[1%] top-[15px] cursor-pointer" />
+                                <img className="w-full h-full pt-2 rounded-lg source-img" src={resourceURL} />
+                            </div>
                             {/* Image Caption */}
                             <div className='flex flex-col gap-2 px-2 pt-6'>
                                 <h3 className={`text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Caption</h3>
