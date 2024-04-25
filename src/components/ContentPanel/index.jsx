@@ -24,7 +24,7 @@ const ContentPanel = () => {
         showSearchModal,
         setShowSearchModal,
         isLeftSidebarOpen,
-        setSummary } = useContext(MainContext);
+        setSummary, setSelectedNote, theme } = useContext(MainContext);
 
 
     const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
@@ -47,6 +47,13 @@ const ContentPanel = () => {
                 setNotes(data);
             } catch (error) {
                 console.warn(error);
+            } finally {
+                setSelectedNote({
+                    note_id: "",
+                    text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+                    images: [],
+                    note_name: "",
+                });
             }
         };
 
@@ -88,11 +95,13 @@ const ContentPanel = () => {
         <div className={`user-select-none h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
             width: leftWidth
         }}>
-            <div
-                className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
-                style={{ left: leftWidth }}
-                onMouseDown={handleLeftMouseDown}
-            ></div>
+            {
+                isLeftSidebarOpen && <div
+                    className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
+                    style={{ left: leftWidth }}
+                    onMouseDown={handleLeftMouseDown}
+                ></div>
+            }
 
             <Tabs
                 transition={false}
