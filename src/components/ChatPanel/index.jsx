@@ -30,15 +30,15 @@ const ChatPanel = () => {
         transition={false}
         defaultActiveKey="genInsights"
         id="uncontrolled-tab-example"
-        className="my-3 text-center flex justify-center items-center !border-b-0"
+        className={`my-3 text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
       >
-        <Tab eventKey="genInsights" title="GenInsights" className='flex-1 h-full overflow-y-auto'>
+        <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} style={{}}>
           <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} key={0} name="genInsights" />
         </Tab>
-        <Tab eventKey="genStories" title="GenStories" className='flex-1 h-full overflow-y-auto'>
+        <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`} style={{}}>
           <GenStories key={2} name="genStories" />
         </Tab>
-        <Tab eventKey="metadata" title="Metadata" className='flex-1 h-full overflow-y-auto'>
+        <Tab eventKey="metadata" title="Metadata" className={`flex-1 h-full overflow-y-auto`} style={{}}>
           <MetadataSection key={2} name="Metadata" />
         </Tab>
       </Tabs>
