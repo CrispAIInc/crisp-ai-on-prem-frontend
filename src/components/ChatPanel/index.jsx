@@ -38,9 +38,9 @@ const ChatPanel = () => {
         <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`} style={{}}>
           <GenStories key={2} name="genStories" />
         </Tab>
-        <Tab eventKey="metadata" title="Metadata" className={`flex-1 h-full overflow-y-auto`} style={{}}>
+        {/* <Tab eventKey="metadata" title="Metadata" className={`flex-1 h-full overflow-y-auto`} style={{}}>
           <MetadataSection key={2} name="Metadata" />
-        </Tab>
+        </Tab> */}
       </Tabs>
     </div>
   );

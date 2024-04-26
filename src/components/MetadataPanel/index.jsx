@@ -19,8 +19,9 @@ const MetadataPanel = () => {
 
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Topic by Topic Summary</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.topic_summaries}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{currentResource.file_type == 'video' ? 'Video Transcript' : 'PDF Transcript'}</h3>
+                                    {currentResource.file_type == 'video' ? 'Video Transcript' : 'PDF Transcript'}</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.transcript}</p>
 
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Key Topics</h3>
