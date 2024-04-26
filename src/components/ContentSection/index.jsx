@@ -116,15 +116,15 @@ const ContentSection = ({
         setSelectedAll(allSelected);
     }, [knowledgeBase]);
 
-    const deleteResource = async (event, idx) => {
+    const deleteResource = async (event, item) => {
         try {
             setIsDeleting(true);
-            setClickedIndex(idx);
+            // setClickedIndex(idx
 
             const requestBody = {
-                category: selectedCategory,
-                fileName: knowledgeBase[idx].source_path,
-                fileType: knowledgeBase[idx].file_type,
+                category: item.category,
+                fileName: item.source_path,
+                fileType: item.file_type,
             };
 
             await makeApiRequest(`/delete`, "post", requestBody);
@@ -145,6 +145,7 @@ const ContentSection = ({
     };
     const handleUpload = async (event, fileFormat) => {
         try {
+            console.log(selectedCategory);
             setIsUploading(true);
             const files = Array.from(event.target.files);
             const formData = new FormData();
