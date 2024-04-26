@@ -37,7 +37,7 @@ const ContentSection = ({
         setCurrentResource,
         player,
         selectedCategory,
-        selectedFormat,
+        setChatLoaded,
         selectedSources,
         setSelectedSources,
         selectedAll,
@@ -129,6 +129,18 @@ const ContentSection = ({
 
             await makeApiRequest(`/delete`, "post", requestBody);
             setIsDeleting(false);
+
+            setChatLoaded(false);
+            const { chat_is_initialized } = await makeApiRequest(
+                `/chat/${selectedCategory}`,
+                "post",
+                JSON.stringify({
+                    sources: selectedSources,
+                    category: selectedCategory,
+                    selectedAll,
+                })
+            );
+            setChatLoaded(chat_is_initialized);
 
             const data = await makeApiRequest(
                 `/content`,
