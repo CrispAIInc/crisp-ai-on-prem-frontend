@@ -55,6 +55,12 @@ const NotesSection = ({
             console.log(error);
         } finally {
             setIsNewNote(false);
+            setSelectedNote({
+                note_id: "",
+                text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+                images: [],
+                note_name: "",
+            });
         }
 
     };

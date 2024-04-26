@@ -287,10 +287,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       setShowNoteModal(true);
     }
   }, [selectedNote, isNewNote]);
-  //!this is mostly an infinite func => stack overflow exception
-  // useEffect(() => {
-  //     setSelectedNote(selectedNote);
-  // }, [selectedNote, setSelectedNote]);
 
   // scroll chatAppRef to bottom whenever a new message is added to the chat
   useEffect(() => {
@@ -671,6 +667,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       color:
         llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
     };
+    newNoteTextEntry.content = `<p style="color: ${newNoteTextEntry.color}">${newTextContent}</p>`;
 
     // Assuming existingNoteRef.current points to the index of the note in the notes array
     const existingNoteIndex = parseInt(existingNoteRef.current);
@@ -694,12 +691,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const onHide = () => {
     setShowNoteModal(false);
-    setSelectedNote({
-      note_id: "",
-      text: [{ content: "", model: null, color: "#000" }],
-      images: [],
-      note_name: "",
-    });
+
     fetch(`${API_ENDPOINT}/notes`, {
       method: "POST",
       headers: {
@@ -709,9 +701,16 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       .then((response) => response.json())
       .then((data) => {
         setNotes(data);
-        console.log(data);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+      .finally(() => {
+        setSelectedNote({
+          note_id: "",
+          text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+          images: [],
+          note_name: "",
+        });
+      });
     setIsNewNote(false);
   };
 
@@ -967,7 +966,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     </div>
                   </div>
                   {
-                    message.text.startsWith('blob') ? <img src={message.text} alt='uploaded image' /> : <p>{message.text}</p>
+                    message.text.startsWith('blob') ? <img src={message.text} alt='uploaded image' /> : <p className="m-0">{message.text}</p>
                   }
                 </div>
               </div>
@@ -1032,7 +1031,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                           ) : null}
 
                           {/* add to note */}
-                          <AddOptionsModal
+                          {selectedLLMs[0] === "gpt-4-vision" && <AddOptionsModal
                             text={message.text}
                             addToNewNote={addToNewNote}
                             addToExistingNote={addToExistingNote}
@@ -1046,7 +1045,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                             showNoteModal={showNoteModal}
                             selectedNote={selectedNote}
                             notes={notes}
-                          />
+                          />}
 
 
                           <div className="flex flex-wrap items-center gap-1">

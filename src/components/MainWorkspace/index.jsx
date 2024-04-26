@@ -35,7 +35,7 @@ const MainWorkspace = ({ theme }) => {
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState({
     note_id: "",
-    text: [{ content: "", model: null, color: "#000" }],
+    text: [{ content: "", model: null, color: theme === "light" ? "#333" : "#fff" }],
     images: [],
     note_name: "Note " + parseInt(notes.length + 1),
   });
@@ -47,14 +47,14 @@ const MainWorkspace = ({ theme }) => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
 
-  useEffect(() => {
-    setSelectedNote({
-      note_id: "",
-      text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
-      images: [],
-      note_name: "",
-    });
-  }, [notes]);
+  // useEffect(() => {
+  //   setSelectedNote({
+  //     note_id: "",
+  //     text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+  //     images: [],
+  //     note_name: "",
+  //   });
+  // }, [notes]);
 
   useEffect(() => {
     setSelectedNote(prevNote => ({
@@ -113,7 +113,7 @@ const MainWorkspace = ({ theme }) => {
         setNotes(data);
         setSelectedNote({
           note_id: "",
-          text: [{ content: "", model: null, color: "#000" }],
+          text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
           images: [],
           note_name: "",
         });
