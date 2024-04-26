@@ -1,7 +1,10 @@
 import Modal from 'react-bootstrap/Modal';
-import './image_modal.css';
+import { useContext } from 'react';
+import { MainContext } from '../../contexts/mainContext';
 
 export function ImageModal(props) {
+
+    const { theme } = useContext(MainContext);
 
     const handleClose = () => {
         props.onHide();
@@ -17,13 +20,14 @@ export function ImageModal(props) {
             centered
             className="search-results-modal"
         >
-            <Modal.Header closeButton>
+            <Modal.Header closeButton className={`${theme === "light" ? "" : "bg-textColor-300 text-white !border-b-textColor-200"
+                }`}>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Generated Image
+                    <h2 className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-200'}`}>Generated Image</h2>
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                {<img className='modal-image' src={props.imageURL} alt='Image is Loading ...' />}
+            <Modal.Body className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} max-h-[300px]`}>
+                {<img className='w-full h-full' src={props.imageURL} alt='Image is Loading ...' />}
             </Modal.Body>
         </Modal>
     );

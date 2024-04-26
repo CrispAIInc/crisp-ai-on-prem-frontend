@@ -374,7 +374,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     var botMessage = "";
 
     if (selectedLLMs[0] === "dall-e-3") {
-      console.log("dalle3 selected, now maknig req...");
       const data = await makeApiRequest(
         `/image-generation/${encodeURIComponent(
           selectedCategoryChat
@@ -999,6 +998,16 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                 setShowImageModal(true);
                               }}
                             />
+                            <div className="flex flex-wrap items-center gap-1 mt-3">
+                              <span
+                                className={`text-xs ${theme === "light"
+                                  ? "text-textColor-300"
+                                  : "text-textColor-200"
+                                  }`}
+                              >
+                                Models: Dall-e-3
+                              </span>
+                            </div>
                             <ImageModal
                               show={showImageModal}
                               onHide={onHideImageModal}
