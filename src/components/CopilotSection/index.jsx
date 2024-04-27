@@ -783,6 +783,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const handleVisionUpload = async (event, blob) => {
     setIsUploadingVisionImg(true);
+    const selectedVisionLLMs = ['gpt-4-vision'];
 
     // Function to handle file selection and upload
     const file = event === null ? await fetchBlobAndRecreateFile(blob) : event.target.files[0];
@@ -796,8 +797,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       setOriginalQueries([...originalQueries, userMessage]);
       setMessages([
         ...messages,
-        { sender: "user", text: userMessage, models: selectedLLMs },
-        { sender: "bot", text: "", models: selectedLLMs },
+        { sender: "user", text: userMessage, models: selectedVisionLLMs },
+        { sender: "bot", text: "", models: selectedVisionLLMs },
       ]);
       setInput("");
       setResponseIndex((responseIndex) => responseIndex + 2);
