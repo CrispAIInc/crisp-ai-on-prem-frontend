@@ -130,6 +130,7 @@ const ContentSection = ({
                     sources: selectedSources,
                     category: selectedCategory,
                     selectedAll,
+                    reinitialize: true,
                 })
             );
             setChatLoaded(chat_is_initialized);
