@@ -1,12 +1,10 @@
 import SendIcon from "@mui/icons-material/Send";
-import Button from "@mui/material/Button";
 import axios from "axios";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
 import AddOptionsModal from "../AddOptionsModal";
-import BaseHeading from "../BaseHeading";
 import CustomInput from "../CustomInput";
 import CustomSelect from "../CustomSelect";
 import ImageModal from "../ImageModal";
@@ -34,16 +32,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     showNoteModal,
     setShowNoteModal,
     selectedSources,
-    selectedCategory,
-    selectedFormat,
-    setAdditionalSources,
     selectedAll,
-    setShowSearchModal,
     isNewNote,
     setIsNewNote,
-    summary,
     setSummary,
-    summaries,
     setSummaries,
     setShowNoteDetails
   } = useContext(MainContext);
@@ -66,7 +58,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   // const [clickedIndex, setClickedIndex] = useState(0);
   const [responseIndex, setResponseIndex] = useState(-1);
   // const [gptModel, setGptModel] = useState('gpt-4');
-  const [selectedCategoryChat, setSelectedCategoryChat] = useState("all");
+  const [selectedCategoryChat] = useState("all");
   const [fromChat, setFromChat] = useState(false);
   const [existingNote, setExistingNote] = useState(0);
 
@@ -208,23 +200,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     { value: "zu", label: "Zulu" },
   ];
 
-  const categoryOptions = [
-    { value: "all", label: "All" },
-    { value: "generic", label: "Generic" },
-    { value: "investment", label: "Investment" },
-    { value: "human resources", label: "Human Resources" },
-    { value: "customer interaction", label: "Customer Interaction" },
-    { value: "documentaries", label: "Documentaries" },
-    { value: "entertainment", label: "Entertainment" },
-    { value: "insurance", label: "Insurance" },
-    { value: "technical content", label: "Technical Content" },
-  ];
-
   const [showCursor, setShowCursor] = useState(false);
-
-  const [serviceType, setServiceType] = useState("search");
-  const [searchQuestion, setSearchQuestion] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
 
   const llmModels = [
     { value: "gpt-4", label: "GPT-4", type: "llm", color: "#D163DA" },
@@ -262,24 +238,14 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     { value: "gemini", label: "Gemini", type: "llm", color: "#00796B" },
   ];
 
-  const [currentLLM, setCurrentLLM] = useState("gpt-4");
-
   const [showImageModal, setShowImageModal] = useState(false);
 
   // For GPT-4-Vision
-  const visionFileInputRef = useRef(null); // Create a ref for the hidden file input
-  const [isUploadingVisionImg, setIsUploadingVisionImg] = useState(false);
+  const [, setIsUploadingVisionImg] = useState(false);
 
   // For LLM Model Selction from the popup modal
   const [selectedLLMs, setSelectedLLMs] = useState([llmModels[0].value]); // State to track multiple selected LLMs
   const [showLLMModal, setShowLLMModal] = useState(false);
-
-  // This one could be a derived state
-  // const currentLLMColor = currentLLM.color;
-  const [currentLLMColor, setCurrentLLMColor] = useState("#E56B6F");
-
-  // the model used for a particular message in copilot
-  const [modelsUsed, setModelsUsed] = useState(["gpt-4"]);
 
   const imageGenRefInput = useRef(null);
 
@@ -433,7 +399,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         }
       };
 
-      eventSource.onerror = function (event) {
+      eventSource.onerror = function () {
         console.log("EventSource closed.");
         setShowCursor(false);
         eventSource.close();
@@ -644,10 +610,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     );
   };
 
-  const handleLLMChange = (llm) => {
-    setCurrentLLM(llm);
-  };
-
   const addToNewNote = (textToAdd) => {
     const newText = {
       content: textToAdd,
@@ -716,56 +678,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         });
       });
     setIsNewNote(false);
-  };
-
-  const handleServiceTypeToggle = (event, newServiceType) => {
-    event.preventDefault();
-    setServiceType(newServiceType);
-  };
-
-  const handleSearchQuestionChange = (event) => {
-    setSearchQuestion(event.target.value);
-  };
-
-  const handleSubmitQuestion = async (event) => {
-    event.preventDefault();
-    setIsSearching(true);
-    try {
-      console.log(currentResource);
-      const response = await axios.post(`${API_ENDPOINT}/process-query`, {
-        selectedCategory,
-        searchQuestion,
-        currentResource,
-        selectedFormat,
-      });
-      console.log(response);
-      if (response.status === 200) {
-        console.log(response.data);
-        if (response.data.file_type == "video") {
-          const resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(
-            response.data.source_path
-          )}`;
-          const timestamp = response.data.timestamp;
-          console.log(timestamp);
-          if (isPlayerReady) player.current.seekTo(timestamp);
-          setCurrentResource(response.data);
-          setResourceURL(resourceURL);
-          setIsSearching(false);
-        } else if (response.data.file_type == "pdf") {
-          const resourceURL = `${API_ENDPOINT}/pdf/${selectedCategoryChat}/${encodeURIComponent(
-            response.data.source_path
-          )}`;
-          setCurrentResource(response.data);
-          setResourceURL(resourceURL);
-          setIsSearching(false);
-        }
-        console.log(response.data.additional_sources);
-        setAdditionalSources(response.data.additional_sources);
-        setShowSearchModal(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const onHideImageModal = () => {
@@ -851,10 +763,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const onHideLLMModal = () => {
     setShowLLMModal(false);
-  };
-
-  const handleChatCategorySelectChange = (e) => {
-    setSelectedCategoryChat(e.value);
   };
 
   const handleRepeatQuestion = (message, models) => {

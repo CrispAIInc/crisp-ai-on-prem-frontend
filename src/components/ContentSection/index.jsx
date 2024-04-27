@@ -2,22 +2,15 @@ import { useContext, useEffect, useState } from "react";
 
 import makeApiRequest from "../../api";
 
-import SearchIcon from "@mui/icons-material/Search";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
-import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 import FileFormatsModal from "../FileFormatsModal";
 import CategoriesModal from "../CategoriesModal";
 import ContentPanelThumbnail from "../ContentPanelThumbnail";
 import { MainContext } from "../../contexts/mainContext";
-import VideoThumbnail from "../VideoThumbnail";
-import PDFThumbnail from "../PDFThumbnail";
-import ImageThumbnail from "../ImageThumbnail";
-import { Checkbox } from "@mui/material";
 import LoadingSpinner from "../LoadingSpinner";
-import DeleteIcon from "@mui/icons-material/Delete";
 import BaseHeading from '../BaseHeading';
 import NoData from '../NoData';
 import CustomButton from '../CustomButton';
@@ -70,12 +63,11 @@ const ContentSection = ({
     const [isSearching, setIsSearching] = useState(false);
 
     const [showSourceExplorer, setShowSourceExplorer] = useState(false);
-    const [isAtLeastOneSourceSelected, setIsAtLeastOneSourceSelected] = useState(selectedSources.length > 0);
     const [showFileFormatsModal, setShowFileFormatsModal] = useState(false);
     const [showCategoriesModal, setShowCategoriesModal] = useState(false);
     // const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
     const [isDeleting, setIsDeleting] = useState(false); // True when a resource is being deleted
-    const [clickedIndex, setClickedIndex] = useState(0);
+    const [clickedIndex] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
     // Flag indicating weather source Explorer modal was opened by clicking the "Source Explorer" button
     // or not
