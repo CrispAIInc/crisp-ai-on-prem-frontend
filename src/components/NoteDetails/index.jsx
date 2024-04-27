@@ -1,12 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
 import makeApiRequest from '../../api';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from '@mui/icons-material/Save';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
+import BaseHeading from '../BaseHeading';
 
 function NoteDetails() {
 
@@ -15,7 +17,7 @@ function NoteDetails() {
         setSelectedNote,
         noteIndex,
         setNotes,
-        isNewNote, theme } = useContext(MainContext);
+        isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
 
@@ -84,6 +86,10 @@ function NoteDetails() {
 
     return (
         <div className="max-w-3xl mx-auto">
+            {/* <CancelIcon onClick={() => setShowNoteDetails(false)} color='error' className="ml-auto text-right" /> */}
+            <div className='flex items-center justify-end mt-3' onClick={() => setShowNoteDetails(false)}>
+                <BaseHeading text='close' className='cursor-pointer user-select-none' />
+            </div>
             <div className="my-4">
                 <CustomInput className="py-2" placeholder='Note title' value={selectedNote.note_name} onChange={(e) => setSelectedNote(prev => ({ ...prev, note_name: e.target.value }))} />
             </div>
