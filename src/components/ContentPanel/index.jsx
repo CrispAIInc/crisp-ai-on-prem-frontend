@@ -24,7 +24,7 @@ const ContentPanel = () => {
         showSearchModal,
         setShowSearchModal,
         isLeftSidebarOpen,
-        setSummary, setSelectedNote, theme } = useContext(MainContext);
+        setSummary, setSelectedNote, theme, noteIndex, setNoteIndex, setShowNoteDetails } = useContext(MainContext);
 
 
     const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
@@ -33,7 +33,7 @@ const ContentPanel = () => {
     const [, setTranscription] = useState("");
     const [, setSummaries] = useState("");
 
-    const [noteIndex, setNoteIndex] = useState(0);
+
     const noteIndexRef = useRef(noteIndex);
 
     useEffect(() => {
@@ -71,6 +71,7 @@ const ContentPanel = () => {
             setSummary(file.summary);
             setSummaries(file.topic_summaries);
         }
+        setShowNoteDetails(false);
     };
     /**
      * Function to toggle 'isSelected' of an item inside 'knowledgeBase' array when the checkbox is clicked

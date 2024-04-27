@@ -21,6 +21,7 @@ const MainWorkspace = ({ theme }) => {
   const [notes, setNotes] = useState([]);
   // const [isAddingNote, setIsAddingNote] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false); // Flag indicating whether or not to show the Note Modal
+  const [showNoteDetails, setShowNoteDetails] = useState(false);
 
   const [selectedSources, setSelectedSources] = useState([]); // Selected Sources to stage before commiting into the current Knowledge Base
   const [selectedAll, setSelectedAll] = useState(false); // Flag to handle selecting all sources (all categories, all formats)
@@ -39,6 +40,7 @@ const MainWorkspace = ({ theme }) => {
     images: [],
     note_name: "Note " + parseInt(notes.length + 1),
   });
+  const [noteIndex, setNoteIndex] = useState(0);
   const [isNewNote, setIsNewNote] = useState(false); // Flag indicating if the selected note is new or not
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [chatLoaded, setChatLoaded] = useState(false);
@@ -56,15 +58,15 @@ const MainWorkspace = ({ theme }) => {
   //   });
   // }, [notes]);
 
-  useEffect(() => {
-    setSelectedNote(prevNote => ({
-      ...prevNote,
-      text: prevNote.text.map(item => ({
-        ...item,
-        color: item.color === '#333' || item.color === '#fff' ? (theme === 'light' ? '#333' : '#fff') : item.color
-      }))
-    }));
-  }, [theme, theme.text]);
+  // useEffect(() => {
+  //   setSelectedNote(prevNote => ({
+  //     ...prevNote,
+  //     text: prevNote.text.map(item => ({
+  //       ...item,
+  //       color: item.color === '#333' || item.color === '#fff' ? (theme === 'light' ? '#333' : '#fff') : item.color
+  //     }))
+  //   }));
+  // }, [theme, theme.text]);
 
   // create value object with all the states
   const value = {
@@ -82,6 +84,7 @@ const MainWorkspace = ({ theme }) => {
     player,
     isPlayerReady,
     setIsPlayerReady,
+    showNoteDetails, setShowNoteDetails,
     notes,
     setNotes,
     showNoteModal,
@@ -103,7 +106,8 @@ const MainWorkspace = ({ theme }) => {
     isNewNote,
     setIsNewNote,
     summary,
-    setSummary
+    setSummary,
+    noteIndex, setNoteIndex
   };
 
   useEffect(() => {

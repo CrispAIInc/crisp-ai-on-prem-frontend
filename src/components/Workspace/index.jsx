@@ -10,22 +10,9 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
 import NoData from "../NoData";
+import NoteDetails from "../NoteDetails";
 
 import './workspace.css';
-
-function calculateDivWidth() {
-    // Get the screen width
-    var screenWidth = window.innerWidth;
-
-    // Calculate the width of the div based on the screen size
-    var calculatedWidth = screenWidth * 0.9; // Adjust this percentage as needed
-
-    // Ensure the width doesn't exceed the maximum width
-    var maxWidth = 800;
-    var finalWidth = Math.min(calculatedWidth, maxWidth);
-
-    return finalWidth;
-}
 
 const Workspace = () => {
     const {
@@ -35,7 +22,7 @@ const Workspace = () => {
         setResourceURL,
         player,
         setIsPlayerReady,
-        summary,
+        showNoteDetails,
         theme,
         setIsLeftSidebarOpen,
         setIsRightSidebarOpen,
@@ -80,11 +67,11 @@ const Workspace = () => {
             {/* <span className="ml-3">expand</span>
                 <span className="mr-3">expand</span> */}
             {/* </div> */}
-            {!currentResource ? (
+            {!currentResource && !showNoteDetails ? (
                 <div className="mt-10">
                     <NoData />
                 </div>
-            ) : (
+            ) : currentResource ? (
                 <div className="max-w-4xl pt-10 mx-auto">
                     {currentResource.file_type === "video" && (
                         <div className="relative">
@@ -161,6 +148,10 @@ const Workspace = () => {
                             </div>
                         </div>
                     )}
+                </div>
+            ) : (
+                <div>
+                    <NoteDetails />
                 </div>
             )}
 

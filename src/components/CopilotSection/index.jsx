@@ -45,6 +45,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setSummary,
     summaries,
     setSummaries,
+    setShowNoteDetails
   } = useContext(MainContext);
 
 
@@ -458,6 +459,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setResourceURL(resourceURL);
     setSummary(video.summary);
     setSummaries(video.topic_summaries);
+    setShowNoteDetails(false);
     // console.log(video);
   };
 
@@ -470,6 +472,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setResourceURL(resourceURL);
     setSummary(pdf.summary);
     setSummaries(pdf.topic_summaries);
+    setShowNoteDetails(false);
   };
 
   const fetchReferences = async (botMessage) => {

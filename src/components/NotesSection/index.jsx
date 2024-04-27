@@ -7,10 +7,7 @@ import BaseHeading from '../BaseHeading';
 import NoData from "../NoData";
 import SavedNote from '../SavedNote';
 
-const NotesSection = ({
-    setNoteIndex,
-    noteIndex,
-}) => {
+const NotesSection = () => {
 
     const { showNoteModal,
         setShowNoteModal,
@@ -19,10 +16,7 @@ const NotesSection = ({
         setSelectedNote,
         notes,
         isNewNote,
-        selectedNote, theme, setIsEditingTitle } = useContext(MainContext);
-
-
-
+        selectedNote, theme, setIsEditingTitle, noteIndex, setNoteIndex } = useContext(MainContext);
 
     const handleAddNote = (event) => {
         event.preventDefault();
