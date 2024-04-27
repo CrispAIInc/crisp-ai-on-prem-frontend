@@ -771,7 +771,16 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       handleVisionUpload(null, message);
       return;
     }
-    sendMessage(message, models);
+
+    if (models[0] === 'dall-e-3') {
+      sendMessage(message, models);
+      return;
+    }
+
+    if (selectedLLMs[0] !== 'dall-e-3' && selectedLLMs[0] !== 'gpt-4-vision') {
+      sendMessage(message);
+      return;
+    }
   };
 
   return (
@@ -894,7 +903,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                         : "bg-background_workspace"
                         }`}
                     >
-                      {selectedLLMs[0] === "dall-e-3" && message.img ? (
+                      {message.models.includes("dall-e-3") && message.img ? (
                         <>
                           <b
                             className={`${theme === "light"
