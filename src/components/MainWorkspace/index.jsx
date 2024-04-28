@@ -30,6 +30,10 @@ const MainWorkspace = ({ theme }) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFormat, setSelectedFormat] = useState("all");
 
+  // can either be 'resource', 'note' or null
+  // indicates wether the user is viewing a resource or a note in workspace
+  const [activeView, setActiveView] = useState(null);
+
   // Additional Sources to show in the search modal (second most relevant, third most relevant, etc).
   // In the search modal, we show n videos, n pdfs, n images, in total. For now n = 3 (can be changed later).
   const [additionalSources, setAdditionalSources] = useState([]);
@@ -49,28 +53,29 @@ const MainWorkspace = ({ theme }) => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
 
-  // useEffect(() => {
-  //   setSelectedNote({
-  //     note_id: "",
-  //     text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
-  //     images: [],
-  //     note_name: "",
-  //   });
-  // }, [notes]);
+  useEffect(() => {
+    setSelectedNote({
+      note_id: "",
+      text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+      images: [],
+      note_name: "",
+    });
+    setShowNoteDetails(false);
+  }, [notes]);
 
-  // useEffect(() => {
-  //   setSelectedNote(prevNote => ({
-  //     ...prevNote,
-  //     text: prevNote.text.map(item => ({
-  //       ...item,
-  //       color: item.color === '#333' || item.color === '#fff' ? (theme === 'light' ? '#333' : '#fff') : item.color
-  //     }))
-  //   }));
-  // }, [theme, theme.text]);
+  useEffect(() => {
+    setSelectedNote(prevNote => ({
+      ...prevNote,
+      text: prevNote.text.map(item => ({
+        ...item,
+        color: item.color === '#333' || item.color === '#fff' ? (theme === 'light' ? '#333' : '#fff') : item.color
+      }))
+    }));
+  }, [theme]);
 
   // create value object with all the states
   const value = {
-    theme,
+    theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
     isLeftSidebarOpen, setIsLeftSidebarOpen,
     isRightSidebarOpen, setIsRightSidebarOpen,

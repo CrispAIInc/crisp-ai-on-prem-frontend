@@ -22,12 +22,14 @@ const Workspace = () => {
         setResourceURL,
         player,
         setIsPlayerReady,
+        activeView, setActiveView,
         showNoteDetails,
         theme,
         setIsLeftSidebarOpen,
         setIsRightSidebarOpen,
         isRightSidebarOpen,
         isLeftSidebarOpen,
+        selectedNote,
     } = useContext(MainContext);
 
     const [numPages, setNumPages] = useState();
@@ -37,18 +39,36 @@ const Workspace = () => {
         setCurrentResource(null);
         setResourceURL(null);
         setIsPlayerReady(false);
+        setActiveView(() => {
+            if (selectedNote.note_id !== '') {
+                return 'note';
+            }
+            return null;
+        });
     };
 
     const closePDF = (event) => {
         event.preventDefault();
         setCurrentResource(null);
         setResourceURL(null);
+        setActiveView(() => {
+            if (selectedNote.note_id !== '') {
+                return 'note';
+            }
+            return null;
+        });
     };
 
     const closeImage = (event) => {
         event.preventDefault();
         setCurrentResource(null);
         setResourceURL(null);
+        setActiveView(() => {
+            if (selectedNote.note_id !== '') {
+                return 'note';
+            }
+            return null;
+        });
     };
 
     function onDocumentLoadSuccess({ numPages }) {
@@ -67,11 +87,11 @@ const Workspace = () => {
             {/* <span className="ml-3">expand</span>
                 <span className="mr-3">expand</span> */}
             {/* </div> */}
-            {!currentResource && !showNoteDetails ? (
+            {!activeView ? (
                 <div className="mt-10">
                     <NoData />
                 </div>
-            ) : currentResource ? (
+            ) : activeView === 'resource' ? (
                 <div className="max-w-4xl pt-10 mx-auto">
                     {currentResource.file_type === "video" && (
                         <div className="relative">
@@ -149,11 +169,11 @@ const Workspace = () => {
                         </div>
                     )}
                 </div>
-            ) : (
+            ) : showNoteDetails ? (
                 <div>
                     <NoteDetails />
                 </div>
-            )}
+            ) : null}
 
             {/* right sidebar collapser */}
             <div

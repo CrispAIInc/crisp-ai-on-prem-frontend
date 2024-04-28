@@ -11,7 +11,7 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
     const previousModels = [];
 
     const { setSelectedNote,
-        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setCurrentResource } = useContext(MainContext);
+        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setCurrentResource, setActiveView } = useContext(MainContext);
 
     const showSelectedNote = (event, note, index) => {
         event.preventDefault();
@@ -20,7 +20,8 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
         setIsEditingTitle(false);
         setIsNewNote(false);
         setShowNoteDetails(true);
-        setCurrentResource(null);
+        setActiveView('note');
+        // setCurrentResource(null);
     };
 
     const handleDelete = async () => {

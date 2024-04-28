@@ -17,6 +17,8 @@ function NoteDetails() {
         setSelectedNote,
         noteIndex,
         setNotes,
+        setActiveView,
+        currentResource,
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
@@ -87,7 +89,21 @@ function NoteDetails() {
     return (
         <div className="max-w-3xl mx-auto">
             {/* <CancelIcon onClick={() => setShowNoteDetails(false)} color='error' className="ml-auto text-right" /> */}
-            <div className='flex items-center justify-end mt-3' onClick={() => setShowNoteDetails(false)}>
+            <div className='flex items-center justify-end mt-3' onClick={() => {
+                setShowNoteDetails(false);
+                setSelectedNote({
+                    note_id: "",
+                    text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+                    images: [],
+                    note_name: "",
+                });
+                setActiveView(() => {
+                    if (currentResource) {
+                        return 'resource';
+                    }
+                    return null;
+                });
+            }}>
                 <BaseHeading text='close' className='cursor-pointer user-select-none' />
             </div>
             <div className="my-4">
