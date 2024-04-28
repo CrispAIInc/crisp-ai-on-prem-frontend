@@ -26,16 +26,58 @@ function NoteDetails() {
     useEffect(() => {
         if (selectedNote.text) {
             const htmlString = selectedNote.text.map(item => `<span style="color: ${item.color};">${item.content}</span>`).join('');
-            console.log(htmlString);
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedNote.text]);
+    }, [selectedNote]);
 
-    // const handleTextChange = (newHtmlContent) => {
-    //     // Update the local state or prepare the content for saving
-    //     setHTMLToDisplay(newHtmlContent);
-    //     Array.isArray(selectedNote.text) ? selectedNote.text[selectedNote.text.length - 1].content = newHtmlContent : selectedNote.text = newHtmlContent;
-    // };
+    const handleTextChange = (newHtmlContent) => {
+        console.log(newHtmlContent);
+        // console.log(newHtmlContent);
+        // const htmlString = selectedNote?.text?.map(item => `<span style="color: ${item.color};">${item.content}</span>`).join('');
+        // setHTMLToDisplay(htmlString);
+        // console.log(newHtmlContent);
+        // Update the local state or prepare the content for saving
+        // setHTMLToDisplay(newHtmlContent);
+        // Array.isArray(selectedNote.text) ? selectedNote.text[selectedNote.text.length - 1].content = newHtmlContent : selectedNote.text = newHtmlContent;
+    };
+
+    const modules = {
+        toolbar: [
+            [{ header: [1, 2, false] }],
+            [{ color: [] }, { background: [] }], // Add color options
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image'],
+        ],
+    };
+
+    const formats = [
+        'header',
+        'color', // Ensure color is included in the formats
+        'background',
+        'bold',
+        'italic',
+        'underline',
+        'list',
+        'bullet',
+        'link',
+        'image',
+    ];
+
+    const parseLastElement = (htmlContent) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        const childElements = Array.from(doc.body.children);
+
+        // Get the last child element
+        const lastElement = childElements[childElements.length - 1];
+
+        if (!lastElement) {
+            return null; // Return null if there's no element
+        }
+
+        return childElements.map((item) => item.outerHTML).join('');
+    };
 
 
     const handleSave = async (event) => {
@@ -59,19 +101,26 @@ function NoteDetails() {
         } catch (error) {
             console.log(error);
         } finally {
-            setCurrentNoteTitle(selectedNote.note_name);
+            // setCurrentNoteTitle(selectedNote.note_name);
         }
     };
 
     const handleDelete = async () => {
         try {
-            const response = await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
-            if (response.status === 200) {
-                console.log('selectedNote deleted !');
-            }
+            await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
+            // send request to update notes
+            const data = await makeApiRequest("/notes", "post");
+            setNotes(data);
+            // setSelectedNote({
+            //     note_id: "",
+            //     text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+            //     images: [],
+            //     note_name: "",
+            // });
         } catch (error) {
             console.log(error);
         }
+        // onHide();
     };
 
     const distinctModels = [];
@@ -110,7 +159,9 @@ function NoteDetails() {
                 <CustomInput className="py-2" placeholder='Note title' value={selectedNote.note_name} onChange={(e) => setSelectedNote(prev => ({ ...prev, note_name: e.target.value }))} />
             </div>
 
-            <ReactQuill className='#editor h-auto' theme="snow" value={HTMLToDisplay} />
+            <ReactQuill className='#editor h-auto' theme="snow" value={HTMLToDisplay} onChange={handleTextChange}
+                modules={modules}
+                formats={formats} />
             <div className="flex flex-wrap items-center gap-4 my-1">
                 {
                     distinctModels?.map((model, index) => {

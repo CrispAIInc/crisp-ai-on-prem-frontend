@@ -11,7 +11,7 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
     const previousModels = [];
 
     const { setSelectedNote,
-        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setCurrentResource, setActiveView } = useContext(MainContext);
+        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setNotes, setActiveView } = useContext(MainContext);
 
     const showSelectedNote = (event, note, index) => {
         event.preventDefault();
@@ -26,14 +26,20 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
 
     const handleDelete = async () => {
         try {
-            const response = await makeApiRequest(`/delete-note`, 'post', { noteID: note.note_id, noteName: note.note_name });
-            if (response.status === 200) {
-                console.log('selectedNote deleted !');
-            }
+            await makeApiRequest(`/delete-note`, 'post', { noteID: note.note_id, noteName: note.note_name });
+            // send request to update notes
+            const data = await makeApiRequest("/notes", "post");
+            setNotes(data);
+            // setSelectedNote({
+            //     note_id: "",
+            //     text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+            //     images: [],
+            //     note_name: "",
+            // });
         } catch (error) {
             console.log(error);
         }
-        onHide();
+        // onHide();
     };
 
     return (
@@ -59,7 +65,7 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
             }
 
             {/* list of models used */}
-            <div className="flex items-center gap-3 mt-3">
+            <div className="flex flex-wrap items-center gap-1 mt-3">
                 {
                     Array.isArray(note.text) && note.text?.map((content, index) => {
                         if (content.model && !previousModels.includes(content.model)) {

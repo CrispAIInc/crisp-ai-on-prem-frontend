@@ -14,6 +14,7 @@ import { NoteModal } from "../NoteModal";
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import CustomButton from "../CustomButton";
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
+import { hexToRGBString } from '../../utils';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
@@ -37,7 +38,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setIsNewNote,
     setSummary,
     setSummaries,
-    setShowNoteDetails
+    setShowNoteDetails,
+    setActiveView
   } = useContext(MainContext);
 
 
@@ -249,11 +251,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const imageGenRefInput = useRef(null);
 
-  useEffect(() => {
-    if (isNewNote) {
-      setShowNoteModal(true);
-    }
-  }, [selectedNote, isNewNote]);
+  // useEffect(() => {
+  //   if (isNewNote) {
+  //     setShowNoteModal(true);
+  //   }
+  // }, [selectedNote, isNewNote]);
 
   // scroll chatAppRef to bottom whenever a new message is added to the chat
   useEffect(() => {
@@ -612,14 +614,16 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const addToNewNote = (textToAdd) => {
     const newText = {
-      content: textToAdd,
+      content: `<p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd}</p>`,
       model: selectedLLMs[0],
       color:
         llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
     };
-    const newNote = { ...selectedNote, text: [...selectedNote.text, newText] };
+    const newNote = { ...selectedNote, text: [newText] };
     setSelectedNote(newNote);
     setIsNewNote(true);
+    setShowNoteDetails(true);
+    setActiveView('note');
   };
 
   useEffect(() => {
@@ -628,12 +632,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const addToExistingNote = (newTextContent) => {
     const newNoteTextEntry = {
-      content: newTextContent,
+      content: `<p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p>`,
       model: selectedLLMs[0],
       color:
         llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
     };
-    newNoteTextEntry.content = `<p style="color: ${newNoteTextEntry.color}">${newTextContent}</p>`;
 
     // Assuming existingNoteRef.current points to the index of the note in the notes array
     const existingNoteIndex = parseInt(existingNoteRef.current);
@@ -652,7 +655,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     // Update the selectedNote with the updated note
     setSelectedNote(notes[existingNoteIndex]);
     setIsNewNote(false); // Since we are updating an existing note, it's not a new note
-    setShowNoteModal(true); // Show the modal with the updated note
+    setShowNoteDetails(true);
+    setActiveView('note');
+    // setShowNoteModal(true); // Show the modal with the updated note
   };
 
   const onHide = () => {

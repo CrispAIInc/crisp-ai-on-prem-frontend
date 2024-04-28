@@ -22,18 +22,18 @@ export function NoteModal({ onHide,
 
   const [HTMLToDisplay, setHTMLToDisplay] = useState('');
 
-  useEffect(() => {
-    if (selectedNote.text) {
-      const htmlString = selectedNote.text.map(item => `<span style="color: ${item.color};">${item.content}</span>`).join('');
-      setHTMLToDisplay(htmlString);
-    }
-  }, [selectedNote.text]);
+  // useEffect(() => {
+  //   if (selectedNote.text) {
+  //     const htmlString = selectedNote.text.map(item => `<span style="color: ${item.color};">${item.content}</span>`).join('');
+  //     setHTMLToDisplay(htmlString);
+  //   }
+  // }, [selectedNote.text]);
 
-  const handleTextChange = (newHtmlContent) => {
-    // Update the local state or prepare the content for saving
-    setHTMLToDisplay(newHtmlContent);
-    Array.isArray(selectedNote.text) ? selectedNote.text[selectedNote.text.length - 1].content = newHtmlContent : selectedNote.text = newHtmlContent;
-  };
+  // const handleTextChange = (newHtmlContent) => {
+  //   // Update the local state or prepare the content for saving
+  //   setHTMLToDisplay(newHtmlContent);
+  //   Array.isArray(selectedNote.text) ? selectedNote.text[selectedNote.text.length - 1].content = newHtmlContent : selectedNote.text = newHtmlContent;
+  // };
 
 
   const handleSave = async (event) => {

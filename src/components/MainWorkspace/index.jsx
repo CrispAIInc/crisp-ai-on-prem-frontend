@@ -60,7 +60,7 @@ const MainWorkspace = ({ theme }) => {
       images: [],
       note_name: "",
     });
-    setShowNoteDetails(false);
+    // setShowNoteDetails(false);
   }, [notes]);
 
   useEffect(() => {

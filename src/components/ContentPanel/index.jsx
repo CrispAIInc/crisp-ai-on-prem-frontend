@@ -121,7 +121,7 @@ const ContentPanel = () => {
                         key={0}
                     />
                 </Tab>
-                <Tab eventKey="notes" title="Notes" className='flex-1 h-full overflow-y-auto'>
+                <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
                     <NotesSection
                         setNoteIndex={setNoteIndex}
                         nodeIndex={noteIndex}

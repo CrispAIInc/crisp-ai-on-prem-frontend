@@ -16,13 +16,21 @@ const NotesSection = () => {
         setSelectedNote,
         notes,
         isNewNote,
-        selectedNote, theme, setIsEditingTitle, noteIndex, setNoteIndex } = useContext(MainContext);
+        selectedNote, theme, setIsEditingTitle, noteIndex, setActiveView, setNoteIndex, setShowNoteDetails } = useContext(MainContext);
 
     const handleAddNote = (event) => {
         event.preventDefault();
         setIsNewNote(true);
         setIsEditingTitle(true);
-        setShowNoteModal(true);
+        // setShowNoteModal(true);
+        setSelectedNote({
+            note_id: "",
+            text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+            images: [],
+            note_name: "",
+        });
+        setShowNoteDetails(true);
+        setActiveView('note');
     };
 
     const handleDelete = async () => {
@@ -35,29 +43,29 @@ const NotesSection = () => {
         } catch (error) {
             console.log(error);
         }
-        onHide();
+        // onHide();
     };
 
 
 
-    const onHide = async () => {
-        setShowNoteModal(false);
-        try {
-            const data = await makeApiRequest("/notes", "post");
-            setNotes(data);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsNewNote(false);
-            setSelectedNote({
-                note_id: "",
-                text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
-                images: [],
-                note_name: "",
-            });
-        }
+    // const onHide = async () => {
+    //     setShowNoteModal(false);
+    //     try {
+    //         const data = await makeApiRequest("/notes", "post");
+    //         setNotes(data);
+    //     } catch (error) {
+    //         console.log(error);
+    //     } finally {
+    //         setIsNewNote(false);
+    //         setSelectedNote({
+    //             note_id: "",
+    //             text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+    //             images: [],
+    //             note_name: "",
+    //         });
+    //     }
 
-    };
+    // };
 
     return (
         <div className="mt-7">
@@ -67,10 +75,10 @@ const NotesSection = () => {
                 onClick={handleAddNote}
             >
                 <AddOutlinedIcon />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Note</span>
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Insight</span>
             </div>
 
-            <NoteModal
+            {/* <NoteModal
                 onHide={onHide}
                 existingNote={noteIndex}
                 className="modal"
@@ -81,7 +89,7 @@ const NotesSection = () => {
                 notes={notes}
                 isNewNote={isNewNote}
                 key={selectedNote.note_name}
-            />
+            /> */}
 
             <BaseHeading text='Saved notes' />
             {notes.length > 0 ? (
@@ -94,13 +102,15 @@ const NotesSection = () => {
                                 index={i}
                                 setNoteIndex={setNoteIndex}
                                 handleDelete={handleDelete}
-                                onHide={onHide}
+                            // onHide={onHide}
                             />
                         ))}
                     </div>
                 </div>
             ) : (
-                <NoData />
+                <div className="mt-4">
+                    <NoData />
+                </div>
             )}
         </div>
     );
