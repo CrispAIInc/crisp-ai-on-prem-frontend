@@ -16,6 +16,7 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
         setShowSearchModal,
         setSummary,
         setActiveView,
+        activeView
     } = useContext(MainContext);
 
     const [, setFromChat] = useState(false);
@@ -60,7 +61,9 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
                 response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
                 if (isPlayerReady) player.current.seekTo(timestamp);
                 setAdditionalSources(response.data.additional_sources);
-                setShowSearchModal(true);
+                if (activeView !== 'resource') {
+                    setShowSearchModal(true);
+                }
             }
         } catch (error) {
             console.log(error);

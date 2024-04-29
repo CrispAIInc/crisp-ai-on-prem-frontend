@@ -44,7 +44,7 @@ export function SearchModal(props) {
                 <Modal.Body className={`${theme === "light" ? "" : "bg-textColor-300 text-white"}`}>
                     <div className="thumbnails">
                         {filteredKnowledgeBase.map((item, index) => (
-                            <div className={`!border ${theme === 'dark' && '!border-textColor-200'} !h-fit relative`} key={index}>
+                            <div className={`!border ${theme === 'dark' && '!border-textColor-200'} !h-fit relative cursor-pointer`} key={index}>
                                 {props.isDeleting && props.clickedIndex === index ? (
                                     <div className="thumbnail-loader">
                                         <LoadingSpinner />
