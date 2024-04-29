@@ -85,9 +85,9 @@ export function LLMModal(props) {
                                     model.type === "llm" &&
                                     <Form.Check
                                         key={index}
-                                        type="checkbox"
+                                        type="radio"
                                         label={model.label}
-                                        disabled={isCheckboxDisabled(model.type, model.value)}
+                                        // disabled={isCheckboxDisabled(model.type, model.value)}
                                         checked={props.selectedLLMs.includes(model.value)}
                                         onChange={() => handleCheckboxChange(model)}
                                         className={`${theme === 'dark' && 'text-textColor-100'}`} />
@@ -101,9 +101,9 @@ export function LLMModal(props) {
                                     model.type === "lvm" &&
                                     <Form.Check
                                         key={index}
-                                        type="checkbox"
+                                        type="radio"
                                         label={model.label}
-                                        disabled={isCheckboxDisabled(model.type, model.value)}
+                                        // disabled={isCheckboxDisabled(model.type, model.value)}
                                         checked={props.selectedLLMs.includes(model.value)}
                                         onChange={() => handleCheckboxChange(model)}
                                         className={`${theme === 'dark' && 'text-textColor-100'}`}
@@ -118,9 +118,9 @@ export function LLMModal(props) {
                                     model.type === "image-generation" &&
                                     <Form.Check
                                         key={index}
-                                        type="checkbox"
+                                        type="radio"
                                         label={model.label}
-                                        disabled={isCheckboxDisabled(model.type, model.value)}
+                                        // disabled={isCheckboxDisabled(model.type, model.value)}
                                         checked={props.selectedLLMs.includes(model.value)}
                                         onChange={() => handleCheckboxChange(model)}
                                         className={`${theme === 'dark' && 'text-textColor-100'}`}
