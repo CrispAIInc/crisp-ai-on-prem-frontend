@@ -15,6 +15,7 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
         setAdditionalSources,
         setShowSearchModal,
         setSummary,
+        setActiveView,
     } = useContext(MainContext);
 
     const [, setFromChat] = useState(false);
@@ -34,7 +35,6 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
     }, [isPlayerReady]);
 
     const handleSubmitQuestion = async (event) => {
-        console.log("entered");
         event.preventDefault();
         setIsSearching(true);
         try {
@@ -52,8 +52,10 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
                 else if (response.data.file_type == 'img') {
                     resourceURL = `${API_ENDPOINT}/img/${selectedCategoryChat}/${encodeURIComponent(response.data.source_path)}`;
                 }
+                console.log(response.data);
                 setCurrentResource(response.data);
                 setResourceURL(resourceURL);
+                setActiveView('resource');
                 setIsSearching(false);
                 response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
                 if (isPlayerReady) player.current.seekTo(timestamp);
