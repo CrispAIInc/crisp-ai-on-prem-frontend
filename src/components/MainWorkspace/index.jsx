@@ -49,6 +49,7 @@ const MainWorkspace = ({ theme }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [chatLoaded, setChatLoaded] = useState(false);
   const [summary, setSummary] = useState("");
+  const [summaries, setSummaries] = useState("");
 
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
@@ -84,6 +85,7 @@ const MainWorkspace = ({ theme }) => {
     setCurrentResource,
     resourceURL,
     setResourceURL,
+    summaries, setSummaries,
     videoTimestamp,
     setVideoTimestamp,
     player,

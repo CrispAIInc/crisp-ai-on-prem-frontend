@@ -169,7 +169,7 @@ const Workspace = () => {
                         </div>
                     )}
                 </div>
-            ) : showNoteDetails ? (
+            ) : showNoteDetails || activeView === 'note' ? (
                 <div>
                     <NoteDetails />
                 </div>

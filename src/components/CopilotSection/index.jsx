@@ -427,7 +427,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setResourceURL(resourceURL);
     setSummary(video.summary);
     setSummaries(video.topic_summaries);
-    setShowNoteDetails(false);
+    setActiveView('resource');
+    // setShowNoteDetails(false);
     // console.log(video);
   };
 
@@ -440,7 +441,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setResourceURL(resourceURL);
     setSummary(pdf.summary);
     setSummaries(pdf.topic_summaries);
-    setShowNoteDetails(false);
+    setActiveView('resource');
+    // setShowNoteDetails(false);
   };
 
   const fetchReferences = async (botMessage) => {

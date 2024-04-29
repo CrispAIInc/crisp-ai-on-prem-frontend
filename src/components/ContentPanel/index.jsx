@@ -24,14 +24,13 @@ const ContentPanel = () => {
         showSearchModal,
         setShowSearchModal,
         isLeftSidebarOpen,
-        setSummary, setSelectedNote, theme, noteIndex, setNoteIndex, setShowNoteDetails, setActiveView } = useContext(MainContext);
+        setSummary, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
 
 
     const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
 
     // const [currentResource, setCurrentResource] = useState('');
     const [, setTranscription] = useState("");
-    const [, setSummaries] = useState("");
 
 
     const noteIndexRef = useRef(noteIndex);
@@ -91,6 +90,7 @@ const ContentPanel = () => {
 
     const onHideSearchModal = () => {
         setShowSearchModal(false);
+        // setCurrentResource(null);
     };
 
     return (
