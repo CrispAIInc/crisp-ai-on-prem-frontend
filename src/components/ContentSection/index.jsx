@@ -335,19 +335,19 @@ const ContentSection = ({
 
             {
                 <div className="flex flex-col items-center w-4/5 w-full max-w-full gap-8 mx-auto mt-4 overflow-y-auto">
-                    {knowledgeBase.map((item, index) => {
-                        if (canRenderSourceThumbnail(item)) {
-                            return (<ContentPanelThumbnail
-                                key={index}
-                                index={index}
-                                isDeleting={isDeleting}
-                                clickedIndex={clickedIndex}
-                                item={item}
-                                handleCheckboxChange={handleCheckboxChange}
-                                onThumbnailClick={onThumbnailClick}
-                                deleteResource={deleteResource}
-                            />);
-                        }
+                    {selectedSources.map((item, index) => {
+                        // if (canRenderSourceThumbnail(item)) {
+                        return (<ContentPanelThumbnail
+                            key={index}
+                            index={index}
+                            isDeleting={isDeleting}
+                            clickedIndex={clickedIndex}
+                            item={item}
+                            handleCheckboxChange={handleCheckboxChange}
+                            onThumbnailClick={onThumbnailClick}
+                            deleteResource={deleteResource}
+                        />);
+                        // }
                     })}
                 </div>
             }

@@ -23,6 +23,7 @@ const ContentPanel = () => {
         setSelectedAll,
         showSearchModal,
         setShowSearchModal,
+        setSelectedSources,
         isLeftSidebarOpen,
         setSummary, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
 
@@ -77,6 +78,17 @@ const ContentPanel = () => {
      * Function to toggle 'isSelected' of an item inside 'knowledgeBase' array when the checkbox is clicked
      */
     const handleCheckboxChange = (file) => {
+        console.log(file);
+        // add or remove file from selectedSources array based on the checkbox status of the file
+        if (file.is_selected) {
+            setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
+        }
+        else {
+            setSelectedSources((prev) => [{ ...file, is_selected: true }, ...prev]);
+        }
+        console.log(file);
+
+
         // Create a new array with updated items
         const updatedKnowledgeBase = knowledgeBase.map((item) => {
             if (item.source_path === file.source_path) {
