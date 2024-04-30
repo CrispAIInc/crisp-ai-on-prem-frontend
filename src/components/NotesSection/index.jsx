@@ -94,7 +94,7 @@ const NotesSection = () => {
             <BaseHeading text='Saved notes' />
             {notes.length > 0 ? (
                 <div>
-                    <div className="flex flex-col gap-10 px-1 pb-5 mr-2 ">
+                    <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
                         {notes.map((note, i) => (
                             <SavedNote
                                 note={note}
