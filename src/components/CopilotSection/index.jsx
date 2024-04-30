@@ -930,12 +930,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                           >
                             Chatbot:{" "}
                           </b>
-                          <div>
+                          <div className="flex flex-col flex-1">
                             <img
                               src={message.img}
                               alt="Image is Loading ..."
                               onClick={openLightbox}
-                              className="cursor-pointer"
+                              className="flex-1 cursor-pointer"
                             />
                             <div className="flex flex-wrap items-center gap-1 mt-3">
                               <span
