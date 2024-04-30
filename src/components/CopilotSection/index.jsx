@@ -790,6 +790,16 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     }
   };
 
+  const [isLightboxOpen, setLightboxOpen] = useState(false);
+
+  const openLightbox = () => {
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
   return (
     <div className="relative flex flex-col flex-1 h-full overflow-y-auto">
       <NoteModal
@@ -924,9 +934,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                             <img
                               src={message.img}
                               alt="Image is Loading ..."
-                              onClick={() => {
-                                setShowImageModal(true);
-                              }}
+                              onClick={openLightbox}
+                              className="cursor-pointer"
                             />
                             <div className="flex flex-wrap items-center gap-1 mt-3">
                               <span
@@ -938,13 +947,33 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                 Models: Dall-e-3
                               </span>
                             </div>
-                            <ImageModal
+                            {isLightboxOpen && (
+                              <div
+                                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+                                onClick={closeLightbox} // Close on click outside or click on lightbox
+                              >
+                                <div className="relative"> {/* Wrap lightbox content */}
+                                  <button
+                                    className="absolute text-2xl text-primary-300 top-4 right-4"
+                                    onClick={closeLightbox} // Close on button click
+                                  >
+                                    &times;
+                                  </button>
+                                  <img
+                                    src={message.img}
+                                    alt="Image is Loading ..."
+                                    className="w-80 h-80 max-w-95% max-h-95% object-cover"
+                                  />
+                                </div>
+                              </div>
+                            )}
+                            {/* <ImageModal
                               show={showImageModal}
                               onHide={onHideImageModal}
                               imageURL={message.img}
                               className="modal"
                               key={message.img}
-                            />
+                            /> */}
                           </div>
                         </>
                       ) : (
