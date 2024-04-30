@@ -952,7 +952,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                 className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
                                 onClick={closeLightbox} // Close on click outside or click on lightbox
                               >
-                                <div className="relative"> {/* Wrap lightbox content */}
+                                <div className="relative w-96 h-96 max-w-[90vw] max-h-[90vh]"> {/* Wrap lightbox content */}
                                   <button
                                     className="absolute text-2xl text-primary-300 top-4 right-4"
                                     onClick={closeLightbox} // Close on button click
@@ -962,7 +962,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                   <img
                                     src={message.img}
                                     alt="Image is Loading ..."
-                                    className="w-80 h-80 max-w-95% max-h-95% object-cover"
+                                    className="object-fill w-full h-full"
                                   />
                                 </div>
                               </div>
