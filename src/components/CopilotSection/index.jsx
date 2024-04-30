@@ -218,7 +218,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       type: "lvm",
       color: "#4527A0",
     },
-    { value: "llama-2", label: "LLAMA-2", type: "llm", color: "#388E3C" },
+    // { value: "llama-2", label: "LLAMA-2", type: "llm", color: "#388E3C" },
     {
       value: "mistral-8x7b",
       label: "Mistral LLM",
@@ -237,7 +237,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       type: "llm",
       color: "#616161",
     },
-    { value: "gemini", label: "Gemini", type: "llm", color: "#00796B" },
+    // { value: "gemini", label: "Gemini", type: "llm", color: "#00796B" },
   ];
 
   const [showImageModal, setShowImageModal] = useState(false);
