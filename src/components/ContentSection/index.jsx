@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 
 import makeApiRequest from "../../api";
-
+import Form from 'react-bootstrap/Form';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
@@ -224,6 +224,13 @@ const ContentSection = ({
         return source.is_selected;
     };
 
+    const handleUnselectAllCheckboxChange = () => {
+        const updatedKnowledgeBase = knowledgeBase.map((item) => {
+            return { ...item, is_selected: false };
+        });
+        setKnowledgeBase(updatedKnowledgeBase);
+    };
+
     return (
         <div className='relative flex flex-col items-start h-full'>
 
@@ -306,6 +313,25 @@ const ContentSection = ({
             />
 
             <BaseHeading text='Selected sources' />
+
+            {
+                knowledgeBase.some((item) => item.is_selected) > 0 && (
+                    // checkbox to unselect all sources
+                    <div className="flex items-center">
+                        {/* <input
+                            type="checkbox"
+                            className="mr-2"
+                            onChange={handleUnselectAllCheckboxChange}
+                        /> */}
+                        <Form.Check
+                            type="checkbox"
+                            label="Unselect all"
+                            onChange={handleUnselectAllCheckboxChange}
+                            className={`${theme === 'dark' && 'text-textColor-100'}`} />
+                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Unselect all</span> */}
+                    </div>
+                )
+            }
 
             {
                 <div className="flex flex-col items-center w-4/5 w-full max-w-full gap-8 mx-auto mt-4 overflow-y-auto">
