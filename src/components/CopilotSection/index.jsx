@@ -905,7 +905,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     </div>
                   </div>
                   {
-                    message.text.startsWith('blob') ? <img src={message.text} alt='uploaded image' /> : <p className="m-0">{message.text}</p>
+                    message.text.startsWith('blob') ? <img src={message.text} alt='uploaded image' className='flex-1' /> : <p className="m-0">{message.text}</p>
                   }
                 </div>
               </div>
