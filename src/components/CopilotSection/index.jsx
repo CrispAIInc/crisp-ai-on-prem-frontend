@@ -314,7 +314,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   // useEffect(() => {
   //     setModelsUsed(selectedLLMs);
   // }, [selectedLLMs]);
-
+  // const [noteQuestion, setNoteQuestion] = useState("");
+  let noteQuestion = "";
   const sendMessage = async (message, models = selectedLLMs) => {
     if (message === "" && input === "") {
       return;
@@ -332,6 +333,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       );
       userMessage = data.translatedText;
     } else userMessage = input || message;
+
+    noteQuestion = userMessage;
 
     setOriginalQueries([...originalQueries, userMessage]);
     setMessages([
@@ -615,8 +618,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   };
 
   const addToNewNote = (textToAdd) => {
+    console.log(noteQuestion);
     const newText = {
-      content: `<p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd}</p>`,
+      content: `<div><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd}</p></div>`,
       model: selectedLLMs[0],
       color:
         llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
@@ -633,8 +637,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   }, [setExistingNote, existingNote]);
 
   const addToExistingNote = (newTextContent) => {
+    console.log(newTextContent);
     const newNoteTextEntry = {
-      content: `<p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p>`,
+      content: `<div><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p></div>`,
       model: selectedLLMs[0],
       color:
         llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
