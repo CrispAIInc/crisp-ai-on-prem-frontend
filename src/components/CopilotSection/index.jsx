@@ -639,7 +639,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   const addToExistingNote = (newTextContent) => {
     console.log(newTextContent);
     const newNoteTextEntry = {
-      content: `<div><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p></div>`,
+      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p></div>`,
       model: selectedLLMs[0],
       color:
         llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
