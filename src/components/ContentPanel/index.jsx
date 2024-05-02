@@ -23,7 +23,7 @@ const ContentPanel = () => {
         setSelectedAll,
         showSearchModal,
         setShowSearchModal,
-        setSelectedSources,
+        setJumpToPage,
         isLeftSidebarOpen,
         setSummary, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
 
@@ -70,6 +70,11 @@ const ContentPanel = () => {
         if (file.file_type != "img") {
             setSummary(file.summary);
             setSummaries(file.topic_summaries);
+        }
+
+        // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page life the case when clicking on a reference
+        if (file.file_type === "pdf") {
+            setJumpToPage({ page: -1 });
         }
         setActiveView('resource');
         // setShowNoteDetails(false);

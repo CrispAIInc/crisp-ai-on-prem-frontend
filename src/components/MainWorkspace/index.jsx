@@ -54,6 +54,8 @@ const MainWorkspace = ({ theme }) => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
 
+  const [jumpToPage, setJumpToPage] = useState({ page: -1 });
+
   useEffect(() => {
     setSelectedNote({
       note_id: "",
@@ -85,6 +87,7 @@ const MainWorkspace = ({ theme }) => {
     setCurrentResource,
     resourceURL,
     setResourceURL,
+    jumpToPage, setJumpToPage,
     summaries, setSummaries,
     videoTimestamp,
     setVideoTimestamp,

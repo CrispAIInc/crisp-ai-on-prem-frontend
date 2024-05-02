@@ -37,6 +37,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     isNewNote,
     setIsNewNote,
     setSummary,
+    setJumpToPage,
     setSummaries,
     setShowNoteDetails,
     setActiveView
@@ -251,6 +252,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const imageGenRefInput = useRef(null);
 
+
+
   // useEffect(() => {
   //   if (isNewNote) {
   //     setShowNoteModal(true);
@@ -437,7 +440,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const handlePDFLinkClick = (event, pdf) => {
     event.preventDefault();
-    console.log(pdf.source_path);
     const resourceURL = `${API_ENDPOINT}/${pdf.file_type
       }/all/${encodeURIComponent(pdf.source_path)}`;
     setCurrentResource(pdf);
@@ -445,6 +447,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setSummary(pdf.summary);
     setSummaries(pdf.topic_summaries);
     setActiveView('resource');
+    setJumpToPage({ page: parseInt(pdf.page) + 1 });
     // setShowNoteDetails(false);
   };
 
