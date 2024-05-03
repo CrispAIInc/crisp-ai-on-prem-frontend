@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import makeApiRequest from '../../api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -25,20 +25,21 @@ function NoteDetails() {
 
     useEffect(() => {
         if (selectedNote.text) {
+            // setSelectedNote(prev => ({ ...prev, text: [...selectedNote.text, [{ content: "", model: null, color: theme === "light" ? "#333" : "#fff" }]] }));
             const htmlString = selectedNote.text.map(item => `<span style="color: ${item.color};">${item.content}</span>`).join('');
             setHTMLToDisplay(htmlString);
         }
     }, [selectedNote]);
 
-    const handleTextChange = (newHtmlContent) => {
-        console.log(newHtmlContent);
-        // console.log(newHtmlContent);
-        // const htmlString = selectedNote?.text?.map(item => `<span style="color: ${item.color};">${item.content}</span>`).join('');
-        // setHTMLToDisplay(htmlString);
-        // console.log(newHtmlContent);
-        // Update the local state or prepare the content for saving
-        // setHTMLToDisplay(newHtmlContent);
-        // Array.isArray(selectedNote.text) ? selectedNote.text[selectedNote.text.length - 1].content = newHtmlContent : selectedNote.text = newHtmlContent;
+
+    const handleContentChange = (newContent) => {
+        const selectedNoteBackup = { ...selectedNote };
+        // add new content to the selected note
+        selectedNote.text = [{
+            content: newContent,
+            model: null,
+            color: theme === 'light' ? "#333" : '#fff'
+        }];
     };
 
     const modules = {
@@ -63,21 +64,6 @@ function NoteDetails() {
         'link',
         'image',
     ];
-
-    const parseLastElement = (htmlContent) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlContent, 'text/html');
-        const childElements = Array.from(doc.body.children);
-
-        // Get the last child element
-        const lastElement = childElements[childElements.length - 1];
-
-        if (!lastElement) {
-            return null; // Return null if there's no element
-        }
-
-        return childElements.map((item) => item.outerHTML).join('');
-    };
 
 
     const handleSave = async (event) => {
@@ -133,8 +119,6 @@ function NoteDetails() {
         }
     });
 
-    // const [currentNoteTitle, setCurrentNoteTitle] = useState(selectedNote.note_name);
-
     return (
         <div className="max-w-3xl mx-auto">
             {/* <CancelIcon onClick={() => setShowNoteDetails(false)} color='error' className="ml-auto text-right" /> */}
@@ -159,7 +143,7 @@ function NoteDetails() {
                 <CustomInput className="py-2" placeholder='Note title' value={selectedNote.note_name} onChange={(e) => setSelectedNote(prev => ({ ...prev, note_name: e.target.value }))} />
             </div>
 
-            <ReactQuill className='#editor h-auto' theme="snow" value={HTMLToDisplay} onChange={handleTextChange}
+            <ReactQuill className='#editor h-auto' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
                 modules={modules}
                 formats={formats} />
             <div className="flex flex-wrap items-center gap-4 my-1">
