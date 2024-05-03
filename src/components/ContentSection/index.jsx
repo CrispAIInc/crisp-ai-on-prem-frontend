@@ -352,10 +352,13 @@ const ContentSection = ({
                 </div>
             }
             {
-                knowledgeBase.some((item) => item.is_selected) > 0 ?
-                    <div className="sticky left-[25%] bottom-5">
+                knowledgeBase.some((item) => item.is_selected) > 0
+                    ?
+                    <div className="sticky mx-auto bottom-5">
                         <CustomButton onClick={commitSelectedSources} className="text-white bg-primary-300">Update sources</CustomButton>
-                    </div> : <NoData />
+                    </div>
+                    :
+                    <NoData />
             }
         </div>
     );
