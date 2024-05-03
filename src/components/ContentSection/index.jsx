@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 
 import makeApiRequest from "../../api";
-import Form from 'react-bootstrap/Form';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
@@ -315,25 +314,6 @@ const ContentSection = ({
             <BaseHeading text='Selected sources' />
 
             {
-                knowledgeBase.some((item) => item.is_selected) > 0 && (
-                    // checkbox to unselect all sources
-                    <div className="flex items-center">
-                        {/* <input
-                            type="checkbox"
-                            className="mr-2"
-                            onChange={handleUnselectAllCheckboxChange}
-                        /> */}
-                        <Form.Check
-                            type="checkbox"
-                            label="Unselect all"
-                            onChange={handleUnselectAllCheckboxChange}
-                            className={`${theme === 'dark' && 'text-textColor-100'}`} />
-                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Unselect all</span> */}
-                    </div>
-                )
-            }
-
-            {
                 <div className="flex flex-col items-center w-4/5 w-full max-w-full gap-8 mx-auto mt-4 overflow-y-auto">
                     {knowledgeBase.slice(0).reverse().map((item, index) => {
                         if (canRenderSourceThumbnail(item)) {
@@ -354,9 +334,14 @@ const ContentSection = ({
             {
                 knowledgeBase.some((item) => item.is_selected) > 0
                     ?
-                    <div className="sticky mx-auto bottom-5">
-                        <CustomButton onClick={commitSelectedSources} className="text-white bg-primary-300">Update sources</CustomButton>
-                    </div>
+                    <>
+                        <div className="sticky mx-auto bottom-5">
+                            <CustomButton onClick={commitSelectedSources} className="text-white bg-primary-300">Update sources</CustomButton>
+                        </div>
+                        <div className="sticky mx-auto bottom-6">
+                            <CustomButton onClick={handleUnselectAllCheckboxChange} className="text-primary-300">Unselect all sources</CustomButton>
+                        </div>
+                    </>
                     :
                     <NoData />
             }
