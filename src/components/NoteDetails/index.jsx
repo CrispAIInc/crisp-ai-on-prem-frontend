@@ -9,9 +9,9 @@ import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
+import { hexToRgb } from '@mui/material';
 
 function NoteDetails() {
-
     const {
         selectedNote,
         setSelectedNote,
@@ -22,15 +22,27 @@ function NoteDetails() {
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
+    const [editorContent, setEditorContent] = useState('');
 
     useEffect(() => {
         if (selectedNote.text) {
             // setSelectedNote(prev => ({ ...prev, text: [...selectedNote.text, [{ content: "", model: null, color: theme === "light" ? "#333" : "#fff" }]] }));
-            const htmlString = selectedNote.text.map(item => `<span style="color: ${item.color};">${item.content}</span>`).join('');
+            const htmlString = selectedNote.text.map(item => `<p style="color: ${hexToRgb(item.color)} !important;">${item.content}</p>`).join('');
             setHTMLToDisplay(htmlString);
         }
     }, [selectedNote]);
 
+    useEffect(() => {
+        if (selectedNote.text.length > 0) {
+            const updatedText = selectedNote.text.map((text) => {
+                if (!text.model) {
+                    text.color = theme === 'light' ? "#333" : "#fff";
+                }
+                return text;
+            });
+            setSelectedNote({ ...selectedNote, text: updatedText });
+        }
+    }, [theme]);
 
     const handleContentChange = (newContent) => {
         const selectedNoteBackup = { ...selectedNote };
@@ -75,10 +87,7 @@ function NoteDetails() {
         }
         try {
             // setSelectedNote({ ...selectedNote, note_name: currentNoteTitle });
-            const response = await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex + 1), isNewNote: isNewNote });
-            if (response.status === 200) {
-                console.log('selectedNote saved !');
-            }
+            await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex + 1), isNewNote: isNewNote });
 
             // fetch updated version of notes
             const data = await makeApiRequest("/notes", "post");
