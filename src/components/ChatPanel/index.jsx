@@ -16,7 +16,7 @@ const ChatPanel = () => {
   const { chatLoaded, setChatLoaded, isRightSidebarOpen } = useContext(MainContext);
 
   return (
-    <div className={`relative user-select-none w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
+    <div className={`relative w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
       width: rightWidth
     }}>
       {isRightSidebarOpen && <div
@@ -29,7 +29,7 @@ const ChatPanel = () => {
         transition={false}
         defaultActiveKey="genInsights"
         id="uncontrolled-tab-example"
-        className={`my-3 text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
+        className={`my-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
       >
         <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} style={{}}>
           <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} key={0} name="genInsights" />
