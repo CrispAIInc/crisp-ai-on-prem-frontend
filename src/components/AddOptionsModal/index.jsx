@@ -7,7 +7,6 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { MainContext } from '../../contexts/mainContext';
 
 const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNote }) => {
-  console.log("text", text);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

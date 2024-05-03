@@ -161,7 +161,7 @@ const Workspace = () => {
                         </div>
                     )}
                     {currentResource.file_type === "pdf" && (
-                        <div>
+                        <>
                             <div className="relative h-[80vh] w-full mx-auto overflow-x-hidden overflow-y-auto" ref={PdfContainer}>
                                 <CancelIcon onClick={closePDF} className="absolute right-1 top-[15px] cursor-pointer z-50" />
                                 <Document className='!w-full mx-auto' file={resourceURL} onLoadSuccess={onDocumentLoadSuccess} >
@@ -195,7 +195,7 @@ const Workspace = () => {
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Key Topics</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.keywords}</p>
                             </div>
-                        </div>
+                        </>
                     )}
                     {currentResource.file_type === "img" && (
                         <div className="">
