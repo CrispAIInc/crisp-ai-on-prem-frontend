@@ -252,23 +252,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const imageGenRefInput = useRef(null);
 
-
-
-  // useEffect(() => {
-  //   if (isNewNote) {
-  //     setShowNoteModal(true);
-  //   }
-  // }, [selectedNote, isNewNote]);
-
   // scroll chatAppRef to bottom whenever a new message is added to the chat
   useEffect(() => {
     // chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
     chatAppRef.current.scrollTop = chatAppRef.current?.scrollHeight;
   }, [messages]);
-
-  // useEffect(() => {
-  //     console.log(selectedLLMs);
-  // }, [selectedLLMs]);
 
   useEffect(() => {
     setChatLoaded(false);
@@ -320,8 +308,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       currentResource.file_type === "video"
     ) {
       const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
-      console.log("timestamp", timestamp);
-      console.log("timestamp to seconds", timeToSeconds(timestamp));
       if (timestamp) player.current.seekTo(timeToSeconds(timestamp));
       else;
       setFromChat(false);
@@ -374,7 +360,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         "post"
       );
       botMessage = data.image_url;
-      console.log(data.image_url);
 
       setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
@@ -403,7 +388,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
         if (data.type === "SESSION_ID") {
           sessionID = data.session_id;
-          console.log("Received session ID:", sessionID);
         } else if (data.type === "MESSAGE") {
           const newToken = data.text;
           botMessage += " " + newToken;
@@ -422,7 +406,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       };
 
       eventSource.onerror = function () {
-        console.log("EventSource closed.");
         setShowCursor(false);
         eventSource.close();
 
@@ -430,7 +413,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           // Extract session ID from the eventSource's URL
           fetchReferences(botMessage); // Function to fetch references
           setOriginalResponses([...originalResponses, botMessage]);
-          console.log("Connection was closed normally.");
         } else {
           console.error("Connection was closed due to an error.");
         }
@@ -449,7 +431,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setSummaries(video.topic_summaries);
     setActiveView('resource');
     // setShowNoteDetails(false);
-    // console.log(video);
   };
 
   const handlePDFLinkClick = (event, pdf) => {
@@ -635,7 +616,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   };
 
   const addToNewNote = (textToAdd) => {
-    console.log(noteQuestion);
     const newText = {
       content: `<div><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd}</p></div>`,
       model: selectedLLMs[0],
@@ -654,7 +634,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   }, [setExistingNote, existingNote]);
 
   const addToExistingNote = (newTextContent) => {
-    console.log(newTextContent);
     const newNoteTextEntry = {
       content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p></div>`,
       model: selectedLLMs[0],
@@ -672,10 +651,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       // If for some reason 'text' is not an array, initialize it with the new text entry
       notes[existingNoteIndex].text = [newNoteTextEntry];
     }
-
-    console.log(newNoteTextEntry);
-    console.log(notes[existingNoteIndex]);
-
     // Update the selectedNote with the updated note
     setSelectedNote(notes[existingNoteIndex]);
     setIsNewNote(false); // Since we are updating an existing note, it's not a new note
@@ -731,13 +706,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     // Function to handle file selection and upload
     const file = event === null ? await fetchBlobAndRecreateFile(blob) : event.target.files[0];
-    console.log(file);
     if (file) {
       const formData = new FormData();
       formData.append("image", file);
       setShowCursor(true);
       const userMessage = URL.createObjectURL(file);
-      console.log("url img: ", userMessage);
       setOriginalQueries([...originalQueries, userMessage]);
       setMessages([
         ...messages,
@@ -760,7 +733,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
         // Assuming the response contains the caption
         const caption = response?.data.caption;
-        console.log("response ==> ", response?.data);
 
         setMessages((prevMessages) => {
           const newMessages = [...prevMessages];

@@ -45,11 +45,7 @@ export function NoteModal({ onHide,
     }
     try {
       // setSelectedNote({ ...selectedNote, note_name: currentNoteTitle });
-      const response = await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote: { ...selectedNote, note_name: currentNoteTitle }, noteName: 'note_json', noteNumber: parseInt(existingNote + 1), isNewNote: isNewNote });
-      if (response.status === 200) {
-        console.log('selectedNote saved !');
-      }
-
+      await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote: { ...selectedNote, note_name: currentNoteTitle }, noteName: 'note_json', noteNumber: parseInt(existingNote + 1), isNewNote: isNewNote });
       // fetch updated version of notes
       const data = await makeApiRequest("/notes", "post");
       setNotes(data);
@@ -64,10 +60,7 @@ export function NoteModal({ onHide,
 
   const handleDelete = async () => {
     try {
-      const response = await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
-      if (response.status === 200) {
-        console.log('selectedNote deleted !');
-      }
+      await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
     } catch (error) {
       console.log(error);
     }

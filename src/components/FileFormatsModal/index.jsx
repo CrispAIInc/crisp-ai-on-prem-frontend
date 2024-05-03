@@ -50,7 +50,6 @@ function FileFormatsModal(props) {
 
     const handleOnChange = (e, format) => {
         setSelectedFormat(format);
-        // console.log("format: ", props.selectedFormat);
         props.handleupload(e, format);
         props.onHide();
     };

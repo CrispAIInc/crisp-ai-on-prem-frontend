@@ -27,8 +27,6 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
     useEffect(() => {
         if (isPlayerReady && resourceURL && currentResource.file_type === 'video') {
             const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
-            console.log("timestamp", timestamp);
-            console.log("timestamp to seconds", timestamp);
             if (timestamp) player.current.seekTo(timestamp);
             else;
             setFromChat(false);
@@ -53,7 +51,6 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
                 else if (response.data.file_type == 'img') {
                     resourceURL = `${API_ENDPOINT}/img/${selectedCategoryChat}/${encodeURIComponent(response.data.source_path)}`;
                 }
-                console.log(response.data);
                 setCurrentResource(response.data);
                 setResourceURL(resourceURL);
                 setActiveView('resource');

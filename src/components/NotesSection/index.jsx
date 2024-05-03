@@ -34,12 +34,8 @@ const NotesSection = () => {
     };
 
     const handleDelete = async () => {
-        console.log("deleting note...");
         try {
-            const response = await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
-            if (response.status === 200) {
-                console.log('selectedNote deleted !');
-            }
+            await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
         } catch (error) {
             console.log(error);
         }

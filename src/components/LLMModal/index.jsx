@@ -10,7 +10,6 @@ export function LLMModal(props) {
     const [selectionCategory, setSelectionCategory] = useState(null); // State to track the selected category
 
     const handleCheckboxChange = (model) => {
-        console.log(model);
         const category = model.type; // Determine the category of the selected model
         props.setSelectedLLMs(prev => {
             // only accept one model to be checked, and when one model is check, disable all other models
