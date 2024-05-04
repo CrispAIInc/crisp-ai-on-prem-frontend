@@ -27,7 +27,7 @@ function NoteDetails() {
     useEffect(() => {
         if (selectedNote.text) {
             // setSelectedNote(prev => ({ ...prev, text: [...selectedNote.text, [{ content: "", model: null, color: theme === "light" ? "#333" : "#fff" }]] }));
-            const htmlString = selectedNote.text.map(item => `<p style="color: ${hexToRgb(item.color)} !important;">${item.content}</p>`).join('');
+            const htmlString = selectedNote.text.map(item => `<span style="color: ${hexToRgb(item.color)} !important;">${item.content}</span>`).join('');
             setHTMLToDisplay(htmlString);
         }
     }, [selectedNote]);
@@ -47,11 +47,13 @@ function NoteDetails() {
     const handleContentChange = (newContent) => {
         const selectedNoteBackup = { ...selectedNote };
         // add new content to the selected note
-        selectedNote.text = [{
-            content: newContent,
-            model: null,
-            color: theme === 'light' ? "#333" : '#fff'
-        }];
+        if (isNewNote) {
+            selectedNote.text = [{
+                content: newContent,
+                model: null,
+                color: theme === 'light' ? "#333" : '#fff'
+            }];
+        }
     };
 
     const modules = {
