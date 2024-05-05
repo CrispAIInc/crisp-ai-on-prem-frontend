@@ -15,6 +15,7 @@ import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import CustomButton from "../CustomButton";
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import { hexToRGBString } from '../../utils';
+import { renderToString } from 'react-dom/server';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
@@ -23,6 +24,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     currentResource,
     setCurrentResource,
     resourceURL,
+    noteReferences, setNoteReferences,
     setResourceURL,
     player,
     isPlayerReady,
@@ -446,30 +448,48 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     // setShowNoteDetails(false);
   };
 
+
   const fetchReferences = async (botMessage) => {
     const response = await axios.get(`${API_ENDPOINT}/references`);
     const data = response.data;
-    const videoLinks = data.video_references.map((video) => (
-      <li key={video.source_path} className="ml-0">
-        <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-          {video.source_path + " | Timestamp: " + video.timestamp}
-        </Link>
-      </li>
-    ));
-    const pdfLinks = data.pdf_references.map((pdf) => (
-      <li key={pdf.source_path} className="ml-0">
-        <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
-          {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
-        </Link>
-      </li>
-    ));
-    const imgLinks = data.img_references.map((img) => (
-      <li key={img.source_path} className="ml-0">
-        <Link onClick={(event) => handlePDFLinkClick(event, img)}>
-          {img.source_path}
-        </Link>
-      </li>
-    ));
+    const videoLinks = data.video_references.map((video) => {
+      noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
+      return (
+        <li key={video.source_path} className="ml-0">
+          <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+            {video.source_path + " | Timestamp: " + video.timestamp}
+          </Link>
+        </li>
+      );
+    });
+    const pdfLinks = data.pdf_references.map((pdf) => {
+      noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
+      return (
+        <li key={pdf.source_path} className="ml-0">
+          <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
+            {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
+          </Link>
+        </li>
+      );
+    });
+
+    const imgLinks = data.img_references.map((img) => {
+      noteReferences.imageLinks.push(img.source_path);
+      return (
+        <li key={img.source_path} className="ml-0">
+          <Link onClick={(event) => handlePDFLinkClick(event, img)}>
+            {img.source_path}
+          </Link>
+        </li>
+      );
+    });
+
+    // set note references to videosLinks, pdfLinks and imgLinks
+    // setNoteReferences({
+    //   videoLinks,
+    //   pdfLinks,
+    //   imgLinks,
+    // });
 
     let newData = null;
 
@@ -616,12 +636,35 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   };
 
   const addToNewNote = (textToAdd) => {
+
+    setNoteReferences({
+      videoLinks: [],
+      pdfLinks: [],
+      imageLinks: [],
+    });
+
+    const videoLinks = noteReferences.videoLinks.map((video) => {
+      return (
+        `<li><a href="${video}" target="_blank">${video}</a></li>`
+      );
+    });
+    const pdfLinks = noteReferences.pdfLinks.map((pdf) => {
+      return (
+        `<li><a href="${pdf}" target="_blank">${pdf}</a></li>`
+      );
+    });
+    const imageLinks = noteReferences.imageLinks.map((img) => {
+      return (
+        `<li><a href="${img}" target="_blank">${img}</a></li>`
+      );
+    });
     const newText = {
-      content: `<div><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd}</p></div>`,
+      content: `<div><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h2><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd}</p><p style="margin-bottom: 0px;"><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style="list-style-type: none;">${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p></div>`,
       model: selectedLLMs[0],
       color:
         llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
     };
+    console.log(newText.content);
     const newNote = { ...selectedNote, text: [newText] };
     setSelectedNote(newNote);
     setIsNewNote(true);
@@ -635,7 +678,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const addToExistingNote = (newTextContent) => {
     const newNoteTextEntry = {
-      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p></div>`,
+      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p><p>references:<br />${noteReferences.videoLinks}</p></div>`,
       model: selectedLLMs[0],
       color:
         llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color

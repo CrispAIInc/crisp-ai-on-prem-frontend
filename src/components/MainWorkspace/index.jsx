@@ -55,6 +55,11 @@ const MainWorkspace = ({ theme }) => {
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
 
   const [jumpToPage, setJumpToPage] = useState({ page: -1 });
+  const [noteReferences, setNoteReferences] = useState({
+    videoLinks: [],
+    pdfLinks: [],
+    imageLinks: [],
+  });
 
   useEffect(() => {
     setSelectedNote({
@@ -85,6 +90,7 @@ const MainWorkspace = ({ theme }) => {
     isEditingTitle, setIsEditingTitle,
     currentResource,
     setCurrentResource,
+    noteReferences, setNoteReferences,
     resourceURL,
     setResourceURL,
     jumpToPage, setJumpToPage,

@@ -10,6 +10,7 @@ import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
 import { hexToRgb } from '@mui/material';
+import { renderToString } from "react-dom/server";
 
 function NoteDetails() {
     const {
@@ -18,16 +19,20 @@ function NoteDetails() {
         noteIndex,
         setNotes,
         setActiveView,
+        noteReferences,
         currentResource,
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
     const [editorContent, setEditorContent] = useState('');
 
+    console.log(noteReferences);
+
     useEffect(() => {
         if (selectedNote.text) {
             // setSelectedNote(prev => ({ ...prev, text: [...selectedNote.text, [{ content: "", model: null, color: theme === "light" ? "#333" : "#fff" }]] }));
             const htmlString = selectedNote.text.map(item => `<span style="color: ${hexToRgb(item.color)} !important;">${item.content}</span>`).join('');
+            // console.log(htmlString);
             setHTMLToDisplay(htmlString);
         }
     }, [selectedNote]);
