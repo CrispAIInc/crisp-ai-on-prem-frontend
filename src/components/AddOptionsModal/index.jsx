@@ -24,9 +24,9 @@ const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNot
     boxShadow: 24,
     p: 4,
   };
-
   return (
     <div>
+
       <Button onClick={handleOpen}><AddCircleIcon /></Button>
       <Modal
         open={open}

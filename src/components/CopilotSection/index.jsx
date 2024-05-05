@@ -339,6 +339,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       userMessage = data.translatedText;
     } else userMessage = input || message;
 
+    console.log(userMessage);
+
     noteQuestion = userMessage;
 
     setOriginalQueries([...originalQueries, userMessage]);
@@ -658,11 +660,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         `<li><a href="${img}" target="_blank">${img}</a></li>`
       );
     });
+
+    const canRenderNoteRefs = (videoLinks.length > 0 || pdfLinks.length > 0 || imageLinks.length > 0);
     const newText = {
-      content: `<div><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h2><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd}</p><p style="margin-bottom: 0px;"><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style="list-style-type: none;">${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p></div>`,
+      content: `<div><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h2><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${textToAdd}' width="1000" />` : textToAdd}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
       model: selectedLLMs[0],
       color:
-        llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
+        llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || theme === 'light' ? '#333' : "fff", // Default color
     };
     console.log(newText.content);
     const newNote = { ...selectedNote, text: [newText] };
@@ -974,6 +978,29 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                               onClick={openLightbox}
                               className="flex-1 cursor-pointer"
                             />
+                            <div className="flex flex-wrap items-center gap-1 mt-3">
+                              <span
+                                className={`text-xs ${theme === "light"
+                                  ? "text-textColor-300"
+                                  : "text-textColor-200"
+                                  }`}
+                              >
+                                <AddOptionsModal
+                                  text={message.img}
+                                  addToNewNote={addToNewNote}
+                                  addToExistingNote={addToExistingNote}
+                                  setExistingNote={setExistingNote}
+                                  // notesOptions={notesOptions}
+                                  existingNote={existingNote}
+                                  onHide={onHide}
+                                  isNewNote={isNewNote}
+                                  setShowNoteModal={setShowNoteModal}
+                                  updateSelectedNote={setSelectedNote}
+                                  showNoteModal={showNoteModal}
+                                  selectedNote={selectedNote}
+                                  notes={notes} />
+                              </span>
+                            </div>
                             <div className="flex flex-wrap items-center gap-1 mt-3">
                               <span
                                 className={`text-xs ${theme === "light"

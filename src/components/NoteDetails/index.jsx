@@ -3,7 +3,7 @@ import makeApiRequest from '../../api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from '@mui/icons-material/Save';
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
@@ -11,6 +11,12 @@ import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
 import { hexToRgb } from '@mui/material';
 import { renderToString } from "react-dom/server";
+import ImageResize from 'quill-image-resize-module-react';
+
+
+import './note-details.css';
+
+Quill.register('modules/imageResize', ImageResize);
 
 function NoteDetails() {
     const {
@@ -25,8 +31,6 @@ function NoteDetails() {
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
     const [editorContent, setEditorContent] = useState('');
-
-    console.log(noteReferences);
 
     useEffect(() => {
         if (selectedNote.text) {
@@ -69,6 +73,10 @@ function NoteDetails() {
             [{ list: 'ordered' }, { list: 'bullet' }],
             ['link', 'image'],
         ],
+        imageResize: {
+            parchment: Quill.import('parchment'),
+            modules: ['Resize', 'DisplaySize']
+        }
     };
 
     const formats = [
