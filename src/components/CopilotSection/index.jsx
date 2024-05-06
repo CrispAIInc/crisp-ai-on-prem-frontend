@@ -662,13 +662,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     });
 
     const canRenderNoteRefs = (videoLinks.length > 0 || pdfLinks.length > 0 || imageLinks.length > 0);
+    const llmColor = llmModels.find((llm) => llm.value === selectedLLMs[0])?.color;
+    const fallbackColor = theme === 'light' ? '#333' : '#fff';
     const newText = {
       content: `<div><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h2><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${textToAdd}' width="1000" />` : textToAdd}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
       model: selectedLLMs[0],
-      color:
-        llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || theme === 'light' ? '#333' : "fff", // Default color
+      color: llmColor || fallbackColor
     };
-    console.log(newText.content);
     const newNote = { ...selectedNote, text: [newText] };
     setSelectedNote(newNote);
     setIsNewNote(true);
