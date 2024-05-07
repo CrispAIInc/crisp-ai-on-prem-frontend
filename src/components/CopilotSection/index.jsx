@@ -685,11 +685,34 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const addToExistingNote = (newTextContent, question = '', models = selectedLLMs) => {
 
+    setNoteReferences({
+      videoLinks: [],
+      pdfLinks: [],
+      imageLinks: [],
+    });
+
+    const videoLinks = noteReferences.videoLinks.map((video) => {
+      return (
+        `<li><a href="${video}" target="_blank">${video}</a></li>`
+      );
+    });
+    const pdfLinks = noteReferences.pdfLinks.map((pdf) => {
+      return (
+        `<li><a href="${pdf}" target="_blank">${pdf}</a></li>`
+      );
+    });
+    const imageLinks = noteReferences.imageLinks.map((img) => {
+      return (
+        `<li><a href="${img}" target="_blank">${img}</a></li>`
+      );
+    });
+    const canRenderNoteRefs = (videoLinks.length > 0 || pdfLinks.length > 0 || imageLinks.length > 0);
+
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
     const newNoteTextEntry = {
-      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${newTextContent.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${newTextContent}' width="1000" />` : newTextContent}</p><p>references:<br />${noteReferences.videoLinks}</p></div>`,
+      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${newTextContent.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${newTextContent}' width="1000" />` : newTextContent}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
       model: models[0],
       color: llmColor || fallbackColor
     };
