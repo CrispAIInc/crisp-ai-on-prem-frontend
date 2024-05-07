@@ -39,14 +39,14 @@ const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNot
             className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
             onClick={() => { addToNewNote(text, question, models); handleClose(); }}
           >
-            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to a new note</span>
+            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to a new insight</span>
           </div>
 
           <div
             className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
             onClick={() => { addToExistingNote(text, question, models); handleClose(); }}
           >
-            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} mb-4`}>Add to an existing note</span>
+            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} mb-4`}>Add to an existing insight</span>
           </div>
           <Select className='note-select' styles={{
             option: provided => ({
