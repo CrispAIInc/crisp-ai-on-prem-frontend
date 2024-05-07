@@ -320,7 +320,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   //     setModelsUsed(selectedLLMs);
   // }, [selectedLLMs]);
   // const [noteQuestion, setNoteQuestion] = useState("");
-  let noteQuestion = "";
+  let noteQuestion = useRef('');
   const sendMessage = async (message, models = selectedLLMs) => {
     if (message === "" && input === "") {
       return;
@@ -339,15 +339,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       userMessage = data.translatedText;
     } else userMessage = input || message;
 
-    console.log(userMessage);
-
-    noteQuestion = userMessage;
+    noteQuestion.current = userMessage;
 
     setOriginalQueries([...originalQueries, userMessage]);
     setMessages([
       ...messages,
-      { sender: "user", text: userMessage, models },
-      { sender: "bot", text: "", models },
+      { sender: "user", text: userMessage, models, question: userMessage },
+      { sender: "bot", text: "", models, question: userMessage },
     ]);
     setInput("");
     setResponseIndex((responseIndex) => responseIndex + 2);
@@ -516,7 +514,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           addToNewNote={addToNewNote}
           addToExistingNote={addToExistingNote}
           setExistingNote={setExistingNote}
-          // notesOptions={notesOptions}
+          question={noteQuestion.current}
           existingNote={existingNote}
           onHide={onHide}
           isNewNote={isNewNote}
@@ -637,7 +635,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     );
   };
 
-  const addToNewNote = (textToAdd) => {
+  const addToNewNote = (textToAdd, question = '', models = selectedLLMs) => {
 
     setNoteReferences({
       videoLinks: [],
@@ -662,11 +660,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     });
 
     const canRenderNoteRefs = (videoLinks.length > 0 || pdfLinks.length > 0 || imageLinks.length > 0);
-    const llmColor = llmModels.find((llm) => llm.value === selectedLLMs[0])?.color;
+    const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
+
     const newText = {
-      content: `<div><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h2><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${textToAdd.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${textToAdd}' width="1000" />` : textToAdd}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
-      model: selectedLLMs[0],
+      content: `<div><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h2><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${textToAdd.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${textToAdd}' width="1000" />` : textToAdd}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
+      model: models[0],
       color: llmColor || fallbackColor
     };
     const newNote = { ...selectedNote, text: [newText] };
@@ -680,9 +679,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     existingNoteRef.current = existingNote;
   }, [setExistingNote, existingNote]);
 
+  useEffect(() => {
+    noteQuestion.ref = input;
+  }, [input]);
+
   const addToExistingNote = (newTextContent) => {
     const newNoteTextEntry = {
-      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p><p>references:<br />${noteReferences.videoLinks}</p></div>`,
+      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion.current}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p><p>references:<br />${noteReferences.videoLinks}</p></div>`,
       model: selectedLLMs[0],
       color:
         llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
@@ -986,11 +989,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                   }`}
                               >
                                 <AddOptionsModal
+                                  models={["dall-e-3"]}
                                   text={message.img}
                                   addToNewNote={addToNewNote}
                                   addToExistingNote={addToExistingNote}
                                   setExistingNote={setExistingNote}
-                                  // notesOptions={notesOptions}
+                                  question={message.question}
                                   existingNote={existingNote}
                                   onHide={onHide}
                                   isNewNote={isNewNote}
@@ -1065,10 +1069,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                           {/* add to note */}
                           {selectedLLMs[0] === "gpt-4-vision" && <AddOptionsModal
                             text={message.text}
+                            models={["gpt-4-vision"]}
                             addToNewNote={addToNewNote}
-                            addToExistingNote={addToExistingNote}
+                            addToExistingNote={addToExistingNote} D
                             setExistingNote={setExistingNote}
-                            // notesOptions={notesOptions}
+                            question={message.question}
                             existingNote={existingNote}
                             onHide={onHide}
                             isNewNote={isNewNote}

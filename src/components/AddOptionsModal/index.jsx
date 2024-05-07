@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { MainContext } from '../../contexts/mainContext';
 
-const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNote }) => {
+const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNote, question, models }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -37,7 +37,7 @@ const AddOptionsModal = ({ text, addToNewNote, addToExistingNote, setExistingNot
         <Box sx={style} className={`${theme === 'light' ? '!border-none' : '!bg-textColor-300 !text-white !border-b-none'}`}>
           <div
             className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-            onClick={() => { addToNewNote(text); handleClose(); }}
+            onClick={() => { addToNewNote(text, question, models); handleClose(); }}
           >
             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to a new note</span>
           </div>
