@@ -71,15 +71,15 @@ const MainWorkspace = ({ theme }) => {
     // setShowNoteDetails(false);
   }, [notes]);
 
-  useEffect(() => {
-    setSelectedNote(prevNote => ({
-      ...prevNote,
-      text: prevNote.text.map(item => ({
-        ...item,
-        color: item.color === '#333' || item.color === '#fff' ? (theme === 'light' ? '#333' : '#fff') : item.color
-      }))
-    }));
-  }, [theme]);
+  // useEffect(() => {
+  //   setSelectedNote(prevNote => ({
+  //     ...prevNote,
+  //     text: prevNote.text.map(item => ({
+  //       ...item,
+  //       color: item.color === '#333' || item.color === '#fff' ? (theme === 'light' ? '#333' : '#fff') : item.color
+  //     }))
+  //   }));
+  // }, [theme]);
 
   // create value object with all the states
   const value = {

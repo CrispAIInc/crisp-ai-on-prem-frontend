@@ -280,17 +280,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   }, [selectedCategoryChat, selectedSources]);
 
   // whenever theme changes, change the color of notes that have a text with no model to either #FFF or #333
-  useEffect(() => {
-    if (selectedNote.text.length > 0) {
-      const updatedText = selectedNote.text.map((text) => {
-        if (!text.model) {
-          text.color = theme === 'light' ? "#333" : "#fff";
-        }
-        return text;
-      });
-      setSelectedNote({ ...selectedNote, text: updatedText });
-    }
-  }, [theme]);
+  // useEffect(() => {
+  //   if (selectedNote.text.length > 0) {
+  //     const updatedText = selectedNote.text.map((text) => {
+  //       if (!text.model) {
+  //         text.color = theme === 'light' ? "#333" : "#fff";
+  //       }
+  //       return text;
+  //     });
+  //     setSelectedNote({ ...selectedNote, text: updatedText });
+  //   }
+  // }, [theme]);
 
 
   function timeToSeconds(time) {

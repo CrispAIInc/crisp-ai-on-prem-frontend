@@ -35,17 +35,29 @@ function NoteDetails() {
         }
     }, [selectedNote]);
 
-    useEffect(() => {
-        if (selectedNote.text.length > 0) {
-            const updatedText = selectedNote.text.map((text) => {
-                if (!text.model) {
-                    text.color = theme === 'light' ? "#333" : "#fff";
-                }
-                return text;
-            });
-            setSelectedNote({ ...selectedNote, text: updatedText });
-        }
-    }, [theme]);
+    // useEffect(() => {
+    //     if (selectedNote.text?.length > 0) {
+    //         // const updatedText = selectedNote.text.map((text) => {
+    //         //     if (!text.model) {
+    //         //         text.color = theme === 'light' ? "#333" : "#fff";
+    //         //     }
+    //         //     return text;
+    //         // });
+    //         // setSelectedNote({ ...selectedNote, text: updatedText });
+    //         setSelectedNote((prev) => {
+    //             return {
+    //                 ...prev,
+    //                 text: prev.text.map((text) => {
+    //                     if (!text.model) {
+    //                         text.color = theme === 'light' ? "#333" : "#fff";
+    //                     }
+    //                     return text;
+    //                 }),
+    //             };
+
+    //         });
+    //     }
+    // }, [theme]);
 
     const handleContentChange = (newContent) => {
         const selectedNoteBackup = { ...selectedNote };
