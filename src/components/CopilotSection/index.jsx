@@ -683,16 +683,20 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     noteQuestion.ref = input;
   }, [input]);
 
-  const addToExistingNote = (newTextContent) => {
+  const addToExistingNote = (newTextContent, question = '', models = selectedLLMs) => {
+
+    const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
+    const fallbackColor = theme === 'light' ? '#333' : '#fff';
+
     const newNoteTextEntry = {
-      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${noteQuestion.current}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000")}">${newTextContent}</p><p>references:<br />${noteReferences.videoLinks}</p></div>`,
-      model: selectedLLMs[0],
-      color:
-        llmModels.find((llm) => llm.value === selectedLLMs[0])?.color || "#000", // Default color
+      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${newTextContent.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${newTextContent}' width="1000" />` : newTextContent}</p><p>references:<br />${noteReferences.videoLinks}</p></div>`,
+      model: models[0],
+      color: llmColor || fallbackColor
     };
 
     // Assuming existingNoteRef.current points to the index of the note in the notes array
     const existingNoteIndex = parseInt(existingNoteRef.current);
+    console.log(notes[existingNoteIndex]);
 
     // Check if 'text' in the note is already an array and append the new text entry
     if (Array.isArray(notes[existingNoteIndex].text)) {
