@@ -32,3 +32,7 @@ export function hexToRGBString(hex) {
     // Return the formatted RGB string.
     return `rgb(${r},${g},${b})`;
 }
+
+export function isNoteFull(noteTextArray) {
+    return noteTextArray.some((item) => item.content !== '' && item.content !== '<p><br></p>');
+}

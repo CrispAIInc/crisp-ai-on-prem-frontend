@@ -12,6 +12,7 @@ import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
 import { hexToRgb } from '@mui/material';
 import { renderToString } from "react-dom/server";
+import { isNoteFull } from '../../utils';
 
 function NoteDetails() {
     const {
@@ -136,6 +137,8 @@ function NoteDetails() {
         // onHide();
     };
 
+    const aggregateInsight = () => { return console.log(isNoteFull(selectedNote.text)); };
+
     const distinctModels = [];
     const modelSet = new Set();
 
@@ -171,6 +174,7 @@ function NoteDetails() {
             {/* aggregated insights */}
             <div
                 className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                onClick={() => aggregateInsight()}
             >
                 <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Aggregate insight</span>

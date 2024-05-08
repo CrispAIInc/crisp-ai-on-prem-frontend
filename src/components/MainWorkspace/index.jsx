@@ -53,13 +53,49 @@ const MainWorkspace = ({ theme }) => {
 
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
-
+  const [selectedGenStoriesModels, setSelectedGenStoriesModels] = useState(['gpt-4']);
   const [jumpToPage, setJumpToPage] = useState({ page: -1 });
   const [noteReferences, setNoteReferences] = useState({
     videoLinks: [],
     pdfLinks: [],
     imageLinks: [],
   });
+
+  const llmModels = [
+    { value: "gpt-4", label: "GPT-4", type: "llm", color: "#D163DA" },
+    {
+      value: "dall-e-3",
+      label: "Dall-e-3",
+      type: "image-generation",
+      color: "#3F51B5",
+    },
+    {
+      value: "gpt-4-vision",
+      label: "GPT-4-Vision",
+      type: "lvm",
+      color: "#4527A0",
+    },
+    // { value: "llama-2", label: "LLAMA-2", type: "llm", color: "#388E3C" },
+    {
+      value: "mistral-8x7b",
+      label: "Mistral LLM",
+      type: "llm",
+      color: "#EF6C00",
+    },
+    {
+      value: "claude-3-opus",
+      label: "Claude-3 (Opus)",
+      type: "llm",
+      color: "#FBC02D",
+    },
+    {
+      value: "claude-3-sonnet",
+      label: "Claude-3 (Sonnet)",
+      type: "llm",
+      color: "#616161",
+    },
+    // { value: "gemini", label: "Gemini", type: "llm", color: "#00796B" },
+  ];
 
   useEffect(() => {
     setSelectedNote({
@@ -94,7 +130,9 @@ const MainWorkspace = ({ theme }) => {
     resourceURL,
     setResourceURL,
     jumpToPage, setJumpToPage,
+    selectedGenStoriesModels, setSelectedGenStoriesModels,
     summaries, setSummaries,
+    llmModels,
     videoTimestamp,
     setVideoTimestamp,
     player,
