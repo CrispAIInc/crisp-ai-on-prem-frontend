@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState, useRef } from 'react';
 import makeApiRequest from '../../api';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from '@mui/icons-material/Save';
 import ReactQuill, { Quill } from 'react-quill';
@@ -165,6 +166,17 @@ function NoteDetails() {
             }}>
                 <BaseHeading text='close' className='cursor-pointer user-select-none' />
             </div>
+
+
+            {/* aggregated insights */}
+            <div
+                className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+            >
+                <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Aggregate insight</span>
+            </div>
+
+
             <div className="my-4">
                 <CustomInput className="py-2" placeholder='Note title' value={selectedNote.note_name} onChange={(e) => setSelectedNote(prev => ({ ...prev, note_name: e.target.value }))} />
             </div>
