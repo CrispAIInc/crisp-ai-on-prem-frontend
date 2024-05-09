@@ -100,7 +100,7 @@ const MainWorkspace = ({ theme }) => {
   useEffect(() => {
     setSelectedNote({
       note_id: "",
-      text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+      text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: [] }],
       images: [],
       note_name: "",
     });
@@ -171,7 +171,7 @@ const MainWorkspace = ({ theme }) => {
         setNotes(data);
         setSelectedNote({
           note_id: "",
-          text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+          text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: [] }],
           images: [],
           note_name: "",
         });

@@ -718,7 +718,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       .finally(() => {
         setSelectedNote({
           note_id: "",
-          text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
+          text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: [] }],
           images: [],
           note_name: "",
         });
