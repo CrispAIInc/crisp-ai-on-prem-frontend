@@ -140,7 +140,42 @@ function NoteDetails() {
         // onHide();
     };
 
-    const aggregateInsight = () => { return console.log(isNoteFull(selectedNote.text)); };
+    function extractUniqueAttributes(dataArray) {
+        // Initialize empty sets to store unique questions, references, and models
+        const questions = new Set();
+        const references = new Set();
+        const models = new Set();
+
+        dataArray.forEach((item) => {
+            if (item.question) {
+                questions.add(item.question);
+            }
+
+            if (item.model) {
+                models.add(item.model);
+            }
+
+            if (Array.isArray(item.references)) {
+                item.references.forEach((refGroup) => {
+                    refGroup.forEach((ref) => {
+                        references.add(ref);
+                    });
+                });
+            }
+        });
+
+        // Convert sets to arrays and return them
+        return {
+            questions: Array.from(questions),
+            references: Array.from(references),
+            models: Array.from(models),
+        };
+    }
+
+    const aggregateInsight = () => {
+        console.log(isNoteFull(selectedNote.text));
+        console.log(extractUniqueAttributes(selectedNote.text));
+    };
 
     const distinctModels = [];
     const modelSet = new Set();

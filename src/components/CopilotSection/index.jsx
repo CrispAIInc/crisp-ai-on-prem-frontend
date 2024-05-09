@@ -689,7 +689,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       model: models[0],
       color: llmColor || fallbackColor,
       question,
-      references: [videoLinks, pdfLinks, imageLinks]
+      references: [noteReferences.videoLinks, noteReferences.pdfLinks, noteReferences.imageLinks]
     };
 
     // Assuming existingNoteRef.current points to the index of the note in the notes array
