@@ -15,6 +15,7 @@ const NotesSection = () => {
         setIsNewNote,
         setSelectedNote,
         notes,
+        setIsManualNote,
         isNewNote,
         selectedNote, theme, setIsEditingTitle, noteIndex, setActiveView, setNoteIndex, setShowNoteDetails } = useContext(MainContext);
 
@@ -29,6 +30,7 @@ const NotesSection = () => {
             images: [],
             note_name: "",
         });
+        setIsManualNote(true);
         setShowNoteDetails(true);
         setActiveView('note');
     };

@@ -97,6 +97,8 @@ const MainWorkspace = ({ theme }) => {
     // { value: "gemini", label: "Gemini", type: "llm", color: "#00796B" },
   ];
 
+  const [isManualNote, setIsManualNote] = useState(false);
+
   useEffect(() => {
     setSelectedNote({
       note_id: "",
@@ -140,6 +142,7 @@ const MainWorkspace = ({ theme }) => {
     setIsPlayerReady,
     showNoteDetails, setShowNoteDetails,
     notes,
+    isManualNote, setIsManualNote,
     setNotes,
     showNoteModal,
     setShowNoteModal,

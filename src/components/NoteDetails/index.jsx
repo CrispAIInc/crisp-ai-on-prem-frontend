@@ -18,6 +18,7 @@ function NoteDetails() {
     const {
         selectedNote,
         setSelectedNote,
+        isManualNote, setIsManualNote,
         noteIndex,
         setNotes,
         setActiveView,
@@ -64,11 +65,13 @@ function NoteDetails() {
     const handleContentChange = (newContent) => {
         const selectedNoteBackup = { ...selectedNote };
         // add new content to the selected note
-        if (isNewNote) {
+        if (isNewNote && isManualNote) {
             selectedNote.text = [{
                 content: newContent,
                 model: null,
-                color: theme === 'light' ? "#333" : '#fff'
+                color: theme === 'light' ? "#333" : '#fff',
+                question: '',
+                references: []
             }];
         }
     };

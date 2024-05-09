@@ -41,6 +41,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setIsNewNote,
     setSummary,
     setJumpToPage,
+    isManualNote, setIsManualNote,
     setSummaries,
     setShowNoteDetails,
     setActiveView
@@ -631,11 +632,19 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const newText = {
       content: `<div><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h2><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${textToAdd.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${textToAdd}' width="1000" />` : textToAdd}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
       model: models[0],
-      color: llmColor || fallbackColor
+      color: llmColor || fallbackColor,
+      question,
+      references: [noteReferences.videoLinks, noteReferences.pdfLinks, noteReferences.imageLinks]
     };
-    const newNote = { ...selectedNote, text: [newText] };
+    const newNote = {
+      ...selectedNote, text: [{
+        ...newText
+      }]
+    };
+    console.log(newNote);
     setSelectedNote(newNote);
     setIsNewNote(true);
+    setIsManualNote(false);
     setShowNoteDetails(true);
     setActiveView('note');
   };
@@ -679,7 +688,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const newNoteTextEntry = {
       content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${newTextContent.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${newTextContent}' width="1000" />` : newTextContent}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
       model: models[0],
-      color: llmColor || fallbackColor
+      color: llmColor || fallbackColor,
+      question,
+      references: [videoLinks, pdfLinks, imageLinks]
     };
 
     // Assuming existingNoteRef.current points to the index of the note in the notes array
