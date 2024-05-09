@@ -641,7 +641,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         ...newText
       }]
     };
-    console.log(newNote);
     setSelectedNote(newNote);
     setIsNewNote(true);
     setIsManualNote(false);
@@ -686,7 +685,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
     const newNoteTextEntry = {
-      content: `<div><br /><h3 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${newTextContent.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${newTextContent}' width="1000" />` : newTextContent}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
+      content: `<div><br /><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${newTextContent.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${newTextContent}' width="1000" />` : newTextContent}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
       model: models[0],
       color: llmColor || fallbackColor,
       question,
@@ -695,7 +694,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     // Assuming existingNoteRef.current points to the index of the note in the notes array
     const existingNoteIndex = parseInt(existingNoteRef.current);
-    console.log(notes[existingNoteIndex]);
 
     // Check if 'text' in the note is already an array and append the new text entry
     if (Array.isArray(notes[existingNoteIndex].text)) {
@@ -707,6 +705,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     // Update the selectedNote with the updated note
     setSelectedNote(notes[existingNoteIndex]);
     setIsNewNote(false); // Since we are updating an existing note, it's not a new note
+    setIsManualNote(false);
     setShowNoteDetails(true);
     setActiveView('note');
     // setShowNoteModal(true); // Show the modal with the updated note
