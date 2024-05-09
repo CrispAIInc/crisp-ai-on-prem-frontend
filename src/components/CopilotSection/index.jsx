@@ -634,6 +634,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       model: models[0],
       color: llmColor || fallbackColor,
       question,
+      answer: textToAdd,
       references: [noteReferences.videoLinks, noteReferences.pdfLinks, noteReferences.imageLinks]
     };
     const newNote = {
@@ -689,6 +690,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       model: models[0],
       color: llmColor || fallbackColor,
       question,
+      answer: newTextContent,
       references: [noteReferences.videoLinks, noteReferences.pdfLinks, noteReferences.imageLinks]
     };
 

@@ -143,12 +143,17 @@ function NoteDetails() {
     function extractUniqueAttributes(dataArray) {
         // Initialize empty sets to store unique questions, references, and models
         const questions = new Set();
+        const answers = new Set();
         const references = new Set();
         const models = new Set();
 
         dataArray.forEach((item) => {
             if (item.question) {
                 questions.add(item.question);
+            }
+
+            if (item.answer) {
+                answers.add(item.answer);
             }
 
             if (item.model) {
@@ -167,6 +172,7 @@ function NoteDetails() {
         // Convert sets to arrays and return them
         return {
             questions: Array.from(questions),
+            answers: Array.from(answers),
             references: Array.from(references),
             models: Array.from(models),
         };
