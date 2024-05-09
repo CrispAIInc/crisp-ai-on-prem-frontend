@@ -30,6 +30,8 @@ function NoteDetails() {
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
     const [editorContent, setEditorContent] = useState('');
 
+    const [isPending, setIsPending] = useState(false);
+
     useEffect(() => {
         if (selectedNote.text) {
             // setSelectedNote(prev => ({ ...prev, text: [...selectedNote.text, [{ content: "", model: null, color: theme === "light" ? "#333" : "#fff" }]] }));
@@ -156,8 +158,7 @@ function NoteDetails() {
     }
 
     const aggregateInsight = async () => {
-        console.log(isNoteFull(selectedNote.text));
-        console.log(extractUniqueAttributes(selectedNote.text));
+        setIsPending(true);
 
         const { questions, answers, references, llm } = extractUniqueAttributes(selectedNote.text);
 
@@ -167,28 +168,32 @@ function NoteDetails() {
         formData.append('references', references);
         formData.append('llm', llm);
 
-        const data = await makeApiRequest("/aggregate", "post", formData, { 'Content-type': "multipart/form-data" });
+        try {
+            const data = await makeApiRequest("/aggregate", "post", formData, { 'Content-type': "multipart/form-data" });
 
-        console.log(data);
-
-        setNotes(prev => {
-            // add data to notes
-            return [...prev, {
-                note_id: new Date().getTime().toString().substring(0, 4),
-                note_name: "aggregated insight",
-                text: [
-                    {
-                        content: `<div><h3>${data.questions[0]}</h3><p>${data.aggregated_answer}</p></div>`,
-                        answer: data.aggregated_answer,
-                        model: null,
-                        color: theme === 'light' ? "#333" : '#fff',
-                        question: data.questions[0],
-                        references: data.references[0]
-                    }
-                ],
-                images: [],
-            }];
-        });
+            setNotes(prev => {
+                // add data to notes
+                return [...prev, {
+                    note_id: new Date().getTime().toString().substring(0, 4),
+                    note_name: "aggregated insight",
+                    text: [
+                        {
+                            content: `<div><h3>${data.questions[0]}</h3><p>${data.aggregated_answer}</p></div>`,
+                            answer: data.aggregated_answer,
+                            model: null,
+                            color: theme === 'light' ? "#333" : '#fff',
+                            question: data.questions[0],
+                            references: data.references[0]
+                        }
+                    ],
+                    images: [],
+                }];
+            });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsPending(false);
+        }
     };
 
     const distinctModels = [];
@@ -229,7 +234,9 @@ function NoteDetails() {
                 onClick={() => aggregateInsight()}
             >
                 <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Aggregate insight</span>
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    {isPending ? "Aggregating insight..." : "Aggregate Insight"}
+                </span>
             </div>
 
 
