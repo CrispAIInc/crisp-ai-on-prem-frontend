@@ -698,7 +698,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const existingNoteIndex = parseInt(existingNoteRef.current);
 
     // Check if 'text' in the note is already an array and append the new text entry
-    if (Array.isArray(notes[existingNoteIndex].text)) {
+    if (Array.isArray(notes[existingNoteIndex]?.text)) {
       notes[existingNoteIndex].text.push(newNoteTextEntry);
     } else {
       // If for some reason 'text' is not an array, initialize it with the new text entry

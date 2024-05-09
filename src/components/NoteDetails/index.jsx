@@ -21,6 +21,7 @@ function NoteDetails() {
         isManualNote, setIsManualNote,
         noteIndex,
         setNotes,
+        notes,
         setActiveView,
         noteReferences,
         currentResource,
@@ -37,30 +38,6 @@ function NoteDetails() {
             setHTMLToDisplay(htmlString);
         }
     }, [selectedNote]);
-
-    // useEffect(() => {
-    //     if (selectedNote.text?.length > 0) {
-    //         // const updatedText = selectedNote.text.map((text) => {
-    //         //     if (!text.model) {
-    //         //         text.color = theme === 'light' ? "#333" : "#fff";
-    //         //     }
-    //         //     return text;
-    //         // });
-    //         // setSelectedNote({ ...selectedNote, text: updatedText });
-    //         setSelectedNote((prev) => {
-    //             return {
-    //                 ...prev,
-    //                 text: prev.text.map((text) => {
-    //                     if (!text.model) {
-    //                         text.color = theme === 'light' ? "#333" : "#fff";
-    //                     }
-    //                     return text;
-    //                 }),
-    //             };
-
-    //         });
-    //     }
-    // }, [theme]);
 
     const handleContentChange = (newContent) => {
         const selectedNoteBackup = { ...selectedNote };
@@ -174,13 +151,44 @@ function NoteDetails() {
             questions: Array.from(questions),
             answers: Array.from(answers),
             references: Array.from(references),
-            models: Array.from(models),
+            llm: Array.from(models),
         };
     }
 
-    const aggregateInsight = () => {
+    const aggregateInsight = async () => {
         console.log(isNoteFull(selectedNote.text));
         console.log(extractUniqueAttributes(selectedNote.text));
+
+        const { questions, answers, references, llm } = extractUniqueAttributes(selectedNote.text);
+
+        let formData = new FormData();
+        formData.append('questions', questions);
+        formData.append('answers', answers);
+        formData.append('references', references);
+        formData.append('llm', llm);
+
+        const data = await makeApiRequest("/aggregate", "post", formData, { 'Content-type': "multipart/form-data" });
+
+        console.log(data);
+
+        setNotes(prev => {
+            // add data to notes
+            return [...prev, {
+                note_id: new Date().getTime().toString().substring(0, 4),
+                note_name: "aggregated insight",
+                text: [
+                    {
+                        content: `<div><h3>${data.questions[0]}</h3><p>${data.aggregated_answer}</p></div>`,
+                        answer: data.aggregated_answer,
+                        model: null,
+                        color: theme === 'light' ? "#333" : '#fff',
+                        question: data.questions[0],
+                        references: data.references[0]
+                    }
+                ],
+                images: [],
+            }];
+        });
     };
 
     const distinctModels = [];
