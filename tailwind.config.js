@@ -111,8 +111,8 @@ export default {
           200: "#FBC02D",
         },
         'CLAUDE-3-SONNET': {
-          100: "#F5F5F5",
-          200: "#616161",
+          100: "#c2f6ff",
+          200: "#1de9f0",
         },
         'GEMINI': {
           100: "#B2DFDB",

@@ -92,7 +92,7 @@ const MainWorkspace = ({ theme }) => {
       value: "claude-3-sonnet",
       label: "Claude-3 (Sonnet)",
       type: "llm",
-      color: "#616161",
+      color: "#1de9f0",
     },
     // { value: "gemini", label: "Gemini", type: "llm", color: "#00796B" },
   ];

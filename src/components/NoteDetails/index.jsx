@@ -12,7 +12,7 @@ import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
 import { hexToRgb } from '@mui/material';
 import { renderToString } from "react-dom/server";
-import { isNoteFull } from '../../utils';
+import { hexToRGBString, isNoteFull } from '../../utils';
 
 function NoteDetails() {
     const {
@@ -22,27 +22,27 @@ function NoteDetails() {
         noteIndex,
         setNotes,
         notes,
+        llmModels,
         setActiveView,
         noteReferences,
         currentResource,
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
-    const [editorContent, setEditorContent] = useState('');
 
     const [isPending, setIsPending] = useState(false);
 
     useEffect(() => {
         if (selectedNote.text) {
-            // setSelectedNote(prev => ({ ...prev, text: [...selectedNote.text, [{ content: "", model: null, color: theme === "light" ? "#333" : "#fff" }]] }));
             const htmlString = selectedNote.text.map(item => `<span style="color: ${hexToRgb(item.color)} !important;">${item.content}</span>`).join('');
-            // console.log(htmlString);
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedNote]);
+    }, [selectedNote, selectedNote.text.length]);
+
+
 
     const handleContentChange = (newContent) => {
-        const selectedNoteBackup = { ...selectedNote };
+        // const selectedNoteBackup = { ...selectedNote };
         // add new content to the selected note
         if (isNewNote && isManualNote) {
             selectedNote.text = [{
@@ -168,22 +168,40 @@ function NoteDetails() {
         formData.append('references', references);
         formData.append('llm', llm);
 
-        try {
-            const data = await makeApiRequest("/aggregate", "post", formData, { 'Content-type': "multipart/form-data" });
 
+        const payload = {
+            questions,
+            answers,
+            llm: llm[0],
+        };
+
+        const llmColor = llmModels.find((model) => model.value === llm[0])?.color;
+        const fallbackColor = theme === 'light' ? '#333' : '#fff';
+
+        try {
+            const { aggregated_answer } = await makeApiRequest("/aggregate", "post", { ...payload });
             setNotes(prev => {
                 // add data to notes
                 return [...prev, {
-                    note_id: new Date().getTime().toString().substring(0, 4),
+                    note_id: new Date().toISOString().replace(/:/g, '-').split('.')[0],
                     note_name: "aggregated insight",
                     text: [
                         {
-                            content: `<div><h3>${data.questions[0]}</h3><p>${data.aggregated_answer}</p></div>`,
-                            answer: data.aggregated_answer,
+                            content: `<div style='color: ${hexToRGBString(llmModels.find((model) => model.value === llm[0])?.color || "#333333")}'>
+                                        ${questions.map((question, index) => `<h2 key=${index} style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h2>`).join('')}
+                                        <p>${aggregated_answer}</p>
+                                        <p style='margin-bottom: 0px;'>
+                                            <h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3>
+                                            <ul style='list-style-type: none;'>
+                                                ${references.map((ref, index) => `<li key=${index}>${ref}</li>`).join('')}
+                                            </ul>
+                                        </p>
+                                    </div>`,
+                            answer: aggregated_answer,
                             model: null,
-                            color: theme === 'light' ? "#333" : '#fff',
-                            question: data.questions[0],
-                            references: data.references[0]
+                            color: llmColor || fallbackColor,
+                            question: questions[0],
+                            references: references[0]
                         }
                     ],
                     images: [],
