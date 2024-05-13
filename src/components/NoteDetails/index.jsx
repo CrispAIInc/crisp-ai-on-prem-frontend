@@ -13,6 +13,7 @@ import BaseHeading from '../BaseHeading';
 import { hexToRgb } from '@mui/material';
 import { renderToString } from "react-dom/server";
 import { hexToRGBString, isNoteFull } from '../../utils';
+import AggregationLlmModal from '../AggregationLlmModal';
 
 function NoteDetails() {
     const {
@@ -29,7 +30,8 @@ function NoteDetails() {
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
-
+    const [llmAggregation, setLlmAggregation] = useState('gpt-4');
+    const [isLlmAggregationModalOpen, setIsAggregationModalOpen] = useState(false);
     const [isPending, setIsPending] = useState(false);
 
     useEffect(() => {
@@ -160,22 +162,15 @@ function NoteDetails() {
     const aggregateInsight = async () => {
         setIsPending(true);
 
-        const { questions, answers, references, llm } = extractUniqueAttributes(selectedNote.text);
-
-        let formData = new FormData();
-        formData.append('questions', questions);
-        formData.append('answers', answers);
-        formData.append('references', references);
-        formData.append('llm', llm);
-
+        const { questions, answers, references } = extractUniqueAttributes(selectedNote.text);
 
         const payload = {
             questions,
             answers,
-            llm: llm[0],
+            llm: llmAggregation,
         };
 
-        const llmColor = llmModels.find((model) => model.value === llm[0])?.color;
+        const llmColor = llmModels.find((model) => model.value === llmAggregation)?.color;
         const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
         try {
@@ -187,7 +182,7 @@ function NoteDetails() {
                     note_name: "aggregated insight",
                     text: [
                         {
-                            content: `<div style='color: ${hexToRGBString(llmModels.find((model) => model.value === llm[0])?.color || "#333333")}'>
+                            content: `<div style='color: ${hexToRGBString(llmColor || "#333333")}'>
                                         ${questions.map((question, index) => `<h2 key=${index} style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h2>`).join('')}
                                         <p>${aggregated_answer}</p>
                                         <p style='margin-bottom: 0px;'>
@@ -198,10 +193,10 @@ function NoteDetails() {
                                         </p>
                                     </div>`,
                             answer: aggregated_answer,
-                            model: null,
+                            model: llmAggregation,
                             color: llmColor || fallbackColor,
-                            question: questions[0],
-                            references: references[0]
+                            question: questions.join(','),
+                            references: references.join(',')
                         }
                     ],
                     images: [],
@@ -211,8 +206,13 @@ function NoteDetails() {
             console.log(error);
         } finally {
             setIsPending(false);
+            setIsAggregationModalOpen(false);
         }
     };
+
+    function onHide() {
+        setIsAggregationModalOpen(false);
+    }
 
     const distinctModels = [];
     const modelSet = new Set();
@@ -249,13 +249,15 @@ function NoteDetails() {
             {/* aggregated insights */}
             <div
                 className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                onClick={() => aggregateInsight()}
+                onClick={() => setIsAggregationModalOpen(true)}
             >
                 <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                     {isPending ? "Aggregating insight..." : "Aggregate Insight"}
                 </span>
             </div>
+
+            <AggregationLlmModal llmAggregation={llmAggregation} setLlmAggregation={setLlmAggregation} isLlmAggregationModalOpen={isLlmAggregationModalOpen} setIsAggregationModalOpen={setIsAggregationModalOpen} aggregateInsight={aggregateInsight} isPending={isPending} />
 
 
             <div className="my-4">
