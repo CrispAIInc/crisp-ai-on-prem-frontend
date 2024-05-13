@@ -196,7 +196,8 @@ function NoteDetails() {
                             model: llmAggregation,
                             color: llmColor || fallbackColor,
                             question: questions.join(','),
-                            references: references.join(',')
+                            references: references.join(','),
+                            isAggregated: true,
                         }
                     ],
                     images: [],
