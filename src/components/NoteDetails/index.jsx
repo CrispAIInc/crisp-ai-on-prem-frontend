@@ -41,9 +41,29 @@ function NoteDetails() {
         }
     }, [selectedNote, selectedNote.text.length]);
 
+    function extractAdditionalContent(firstHTML, secondHTML) {
+        // Parse the HTML strings into DOM elements
+        const parser = new DOMParser();
+        const firstDoc = parser.parseFromString(firstHTML, 'text/html');
+        const secondDoc = parser.parseFromString(secondHTML, 'text/html');
+
+        // Extract the content that is in secondDoc but not in firstDoc
+        const additionalContent = Array.from(secondDoc.body.childNodes).filter(node => !firstDoc.body.contains(node));
+
+        // Convert the additional content back to HTML string
+        const tempDiv = document.createElement('div');
+        additionalContent.forEach(node => tempDiv.appendChild(node.cloneNode(true)));
+
+        console.log(tempDiv.innerHTML);
+
+        return tempDiv.innerHTML;
+    }
 
 
     const handleContentChange = (newContent) => {
+        // console.log(HTMLToDisplay);
+        // console.log(newContent);
+        extractAdditionalContent(HTMLToDisplay, newContent);
         // const selectedNoteBackup = { ...selectedNote };
         // add new content to the selected note
         if (isNewNote && isManualNote) {
@@ -52,7 +72,11 @@ function NoteDetails() {
                 model: null,
                 color: theme === 'light' ? "#333" : '#fff',
                 question: '',
-                references: []
+                references: {
+                    videoLinks: [],
+                    pdfLinks: [],
+                    imageLinks: [],
+                }
             }];
         }
     };
@@ -165,7 +189,24 @@ function NoteDetails() {
     const aggregateInsight = async () => {
         setIsPending(true);
 
-        const { questions, answers, references } = extractUniqueAttributes(selectedNote.text);
+        let { questions, answers, references } = extractUniqueAttributes(selectedNote.text);
+
+        // insight referencesto be stored inside insight
+        let _refs = {
+            videoLinks: [],
+            pdfLinks: [],
+            imageLinks: [],
+        };
+
+        references.map((ref) => {
+            if (ref.includes('.mp4')) {
+                _refs.videoLinks.push(ref);
+            } else if (ref.includes('.pdf')) {
+                _refs.pdfLinks.push(ref);
+            } else if (ref.includes('.png') || ref.includes('.jpg') || ref.includes('.jpeg') || ref.includes('.svg')) {
+                _refs.imageLinks.push(ref);
+            }
+        });
 
         const payload = {
             questions,
@@ -201,7 +242,7 @@ function NoteDetails() {
                             model: llmAggregation,
                             color: llmColor || fallbackColor,
                             question: questions.join(','),
-                            references,
+                            references: _refs,
                             isAggregated: true,
                         }
                     ],
@@ -238,7 +279,13 @@ function NoteDetails() {
                     setShowNoteDetails(false);
                     setSelectedNote({
                         note_id: "",
-                        text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: [] }],
+                        text: [{
+                            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+                                videoLinks: [],
+                                pdfLinks: [],
+                                imageLinks: [],
+                            }
+                        }],
                         images: [],
                         note_name: "",
                     });

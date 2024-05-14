@@ -26,7 +26,13 @@ const NotesSection = () => {
         // setShowNoteModal(true);
         setSelectedNote({
             note_id: "",
-            text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: [] }],
+            text: [{
+                content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+                    videoLinks: [],
+                    pdfLinks: [],
+                    imageLinks: [],
+                }
+            }],
             images: [],
             note_name: "",
         });

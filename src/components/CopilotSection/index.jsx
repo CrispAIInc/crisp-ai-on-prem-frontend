@@ -635,7 +635,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       color: llmColor || fallbackColor,
       question,
       answer: textToAdd,
-      references: [noteReferences.videoLinks, noteReferences.pdfLinks, noteReferences.imageLinks]
+      references: {
+        videoLinks: noteReferences.videoLinks,
+        pdfLinks: noteReferences.pdfLinks,
+        imageLinks: noteReferences.imageLinks
+      }
     };
     const newNote = {
       ...selectedNote,
@@ -693,7 +697,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       color: llmColor || fallbackColor,
       question,
       answer: newTextContent,
-      references: [noteReferences.videoLinks, noteReferences.pdfLinks, noteReferences.imageLinks]
+      references: { videoLinks: noteReferences.videoLinks, pdfLinks: noteReferences.pdfLinks, imageLinks: noteReferences.imageLinks }
     };
 
     // Assuming existingNoteRef.current points to the index of the note in the notes array
@@ -732,7 +736,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       .finally(() => {
         setSelectedNote({
           note_id: "",
-          text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: [] }],
+          text: [{
+            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+              videoLinks: [],
+              pdfLinks: [],
+              imageLinks: [],
+            }
+          }],
           images: [],
           note_name: "",
         });
