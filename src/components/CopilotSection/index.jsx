@@ -638,7 +638,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       references: [noteReferences.videoLinks, noteReferences.pdfLinks, noteReferences.imageLinks]
     };
     const newNote = {
-      ...selectedNote, text: [{
+      ...selectedNote,
+      note_name: "",
+      text: [{
         ...newText
       }]
     };

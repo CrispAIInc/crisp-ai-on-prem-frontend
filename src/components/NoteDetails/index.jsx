@@ -141,6 +141,9 @@ function NoteDetails() {
                 models.add(item.model);
             }
 
+            // for references, they can be either in pdf array, video array or image array 
+
+
             if (Array.isArray(item.references)) {
                 item.references.forEach((refGroup) => {
                     refGroup.forEach((ref) => {
@@ -174,7 +177,9 @@ function NoteDetails() {
         const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
         try {
-            const { aggregated_answer } = await makeApiRequest("/aggregate", "post", { ...payload });
+            const { aggregated_answer } = await makeApiRequest("/aggregate", "post", { ...payload }, {
+                'Content-Type': 'application/json',
+            });
             setNotes(prev => {
                 // add data to notes
                 return [...prev, {
@@ -196,7 +201,7 @@ function NoteDetails() {
                             model: llmAggregation,
                             color: llmColor || fallbackColor,
                             question: questions.join(','),
-                            references: references.join(','),
+                            references,
                             isAggregated: true,
                         }
                     ],
@@ -261,6 +266,7 @@ function NoteDetails() {
             <AggregationLlmModal llmAggregation={llmAggregation} setLlmAggregation={setLlmAggregation} isLlmAggregationModalOpen={isLlmAggregationModalOpen} setIsAggregationModalOpen={setIsAggregationModalOpen} aggregateInsight={aggregateInsight} isPending={isPending} />
 
 
+            {/* note title */}
             <div className="my-4">
                 <CustomInput className="py-2" placeholder='Note title' value={selectedNote.note_name} onChange={(e) => setSelectedNote(prev => ({ ...prev, note_name: e.target.value }))} />
             </div>
