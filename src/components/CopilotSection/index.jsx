@@ -750,11 +750,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       references: { videoLinks: noteReferences.videoLinks, pdfLinks: noteReferences.pdfLinks, imageLinks: noteReferences.imageLinks }
     };
 
-    const existingNoteIndex = parseInt(existingNoteRef.current);
-
-    console.log("===========================");
-    console.log(notes);
-
     if (Array.isArray(notes[existingNoteRef.current]?.text)) {
       notes[existingNoteRef.current].text.push(newNoteTextEntry);
     } else {
