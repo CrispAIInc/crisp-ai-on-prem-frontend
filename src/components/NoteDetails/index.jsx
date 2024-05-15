@@ -36,7 +36,7 @@ function NoteDetails() {
 
     useEffect(() => {
         if (selectedNote.text) {
-            const htmlString = selectedNote.text.map(item => `<span style="color: ${hexToRgb(item.color)} !important;">${item.content}</span>`).join('');
+            const htmlString = selectedNote.text.map(item => item.content).join('<br />');
             setHTMLToDisplay(htmlString);
         }
     }, [selectedNote, selectedNote.text.length]);
