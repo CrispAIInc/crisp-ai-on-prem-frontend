@@ -630,7 +630,32 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
     const newText = {
-      content: `<div><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h2><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${textToAdd.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${textToAdd}' width="1000" />` : textToAdd}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
+      content:
+        `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">
+
+        <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
+          ${question}
+        </h2>
+
+        <p style='margin-bottom: 0px;'>
+          ${textToAdd.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${textToAdd}' width="1000" />` : textToAdd}
+        </p>
+        
+        ${canRenderNoteRefs ?
+          `<p style='margin-bottom: 0px;'>
+
+            <h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
+              references:
+            </h3>
+            
+            <ul style='list-style-type: none;'>
+              ${videoLinks.join('')}
+              ${pdfLinks.join('')}
+              ${imageLinks.join('')}
+            </ul>
+            
+          </p>` : ''}
+      </span>`,
       model: models[0],
       color: llmColor || fallbackColor,
       question,
@@ -657,7 +682,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   useEffect(() => {
     existingNoteRef.current = existingNote;
-  }, [setExistingNote, existingNote]);
+    setNotes(notes);
+  }, [setExistingNote, existingNote, notes, setNotes]);
 
   useEffect(() => {
     noteQuestion.ref = input;
@@ -692,7 +718,31 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
     const newNoteTextEntry = {
-      content: `<div><br /><h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h3><p style="color: ${hexToRGBString(llmModels.find((llm) => llm.value === models[0])?.color || "#000")}">${newTextContent.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${newTextContent}' width="1000" />` : newTextContent}</p>${canRenderNoteRefs ? `<p style='margin- bottom: 0px;'><h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3><ul style='list-style-type: none;'>${videoLinks.join('')}${pdfLinks.join('')}${imageLinks.join('')}</ul></p>` : ''}</div>`,
+      content:
+        `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">
+          <br />
+          
+          <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
+            ${question}
+          </h2>
+          
+          <p>
+            ${newTextContent.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${newTextContent}' width="1000" />` : newTextContent}
+          </p>
+
+          ${canRenderNoteRefs ?
+          `<p style='margin- bottom: 0px;'>
+              <h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
+                references:
+              </h3>
+            
+              <ul style='list-style-type: none;'>
+                ${videoLinks.join('')}
+                ${pdfLinks.join('')}
+                ${imageLinks.join('')}
+              </ul>
+            </p>` : ''}
+        </span>`,
       model: models[0],
       color: llmColor || fallbackColor,
       question,
@@ -700,18 +750,18 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       references: { videoLinks: noteReferences.videoLinks, pdfLinks: noteReferences.pdfLinks, imageLinks: noteReferences.imageLinks }
     };
 
-    // Assuming existingNoteRef.current points to the index of the note in the notes array
     const existingNoteIndex = parseInt(existingNoteRef.current);
 
-    // Check if 'text' in the note is already an array and append the new text entry
-    if (Array.isArray(notes[existingNoteIndex]?.text)) {
-      notes[existingNoteIndex].text.push(newNoteTextEntry);
+    console.log("===========================");
+    console.log(notes);
+
+    if (Array.isArray(notes[existingNoteRef.current]?.text)) {
+      notes[existingNoteRef.current].text.push(newNoteTextEntry);
     } else {
-      // If for some reason 'text' is not an array, initialize it with the new text entry
-      notes[existingNoteIndex].text = [newNoteTextEntry];
+      notes[existingNoteRef.current].text = [newNoteTextEntry];
     }
     // Update the selectedNote with the updated note
-    setSelectedNote(notes[existingNoteIndex]);
+    setSelectedNote(notes[existingNoteRef.current]);
     setIsNewNote(false); // Since we are updating an existing note, it's not a new note
     setIsManualNote(false);
     setShowNoteDetails(true);
@@ -862,7 +912,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   return (
     <div className="relative flex flex-col flex-1 h-full overflow-y-auto">
-      <NoteModal
+      {/* <NoteModal
         show={showNoteModal}
         onHide={onHide}
         note={selectedNote}
@@ -871,7 +921,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         existingNote={existingNote}
         isNewNote={isNewNote}
         key={selectedNote.note_name}
-      />
+      /> */}
       <div className="flex flex-wrap items-center justify-center gap-3">
         {/* <CustomSelect
                     title="Category"
