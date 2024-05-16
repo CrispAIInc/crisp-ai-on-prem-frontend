@@ -13,6 +13,7 @@ import { MainContext } from '../../contexts/mainContext';
 
 import './content-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
+import StoriesSection from '../StoriesSection';
 
 const ContentPanel = () => {
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown } = useResizableSidebar(200, true);
@@ -139,6 +140,10 @@ const ContentPanel = () => {
                         nodeIndex={noteIndex}
                         key={2}
                         name="Notes"
+                    />
+                </Tab>
+                <Tab eventKey="stories" title="Stories" className='flex-1 h-full overflow-y-auto'>
+                    <StoriesSection
                     />
                 </Tab>
             </Tabs>
