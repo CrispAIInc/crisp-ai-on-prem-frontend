@@ -230,7 +230,7 @@ function NoteDetails() {
                     note_name: "aggregated insight",
                     text: [
                         {
-                            content: `<div style='color: ${hexToRGBString(llmColor || "#333333")}'>
+                            content: `<span style='color: ${hexToRGBString(llmColor || fallbackColor)}'>
                                         ${questions.map((question, index) => `<h2 key=${index} style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h2>`).join('')}
                                         <p>${aggregated_answer}</p>
                                         <p style='margin-bottom: 0px;'>
@@ -239,7 +239,7 @@ function NoteDetails() {
                                                 ${references.map((ref, index) => `<li key=${index}>${ref}</li>`).join('')}
                                             </ul>
                                         </p>
-                                    </div>`,
+                                    </span>`,
                             answer: aggregated_answer,
                             model: llmAggregation,
                             color: llmColor || fallbackColor,
@@ -303,7 +303,7 @@ function NoteDetails() {
 
             {/* aggregated insights */}
             <div
-                className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                 onClick={() => setIsAggregationModalOpen(true)}
             >
                 <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
@@ -314,7 +314,7 @@ function NoteDetails() {
 
             {/* add to story */}
             <div
-                className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
             >
                 <SummarizeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
