@@ -699,15 +699,18 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setActiveView('note');
   };
 
-  useEffect(() => {
-    existingNoteRef.current = existingNote;
-    setNotes(notes);
-  }, [setExistingNote, existingNote, notes, setNotes]);
+
 
   useEffect(() => {
     noteQuestion.ref = input;
   }, [input]);
 
+  useEffect(() => {
+    existingNoteRef.current = existingNote;
+  }, [setExistingNote, existingNote]);
+  useEffect(() => {
+    setNotes(notes);
+  }, [notes]);
   const addToExistingNote = (newTextContent, question = '', models = selectedLLMs, references) => {
 
     setNoteReferences({
