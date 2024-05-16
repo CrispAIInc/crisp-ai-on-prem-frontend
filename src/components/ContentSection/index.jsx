@@ -241,7 +241,7 @@ const ContentSection = ({
                                 className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                                 onClick={handleAddNewResource}
                             >
-                                <AddOutlinedIcon />
+                                <AddOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Source</span>
                             </div>
                     }
@@ -252,7 +252,7 @@ const ContentSection = ({
                     className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={handleExploreSources}
                 >
-                    <FolderOpenIcon />
+                    <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Source Explorer</span>
                 </div>
 
@@ -262,7 +262,7 @@ const ContentSection = ({
                         className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                         onClick={() => setIsSearching(!isSearching)}
                     >
-                        <SearchOutlinedIcon />
+                        <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Search</span>
                     </div>
                     {
