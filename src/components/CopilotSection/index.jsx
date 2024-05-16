@@ -418,6 +418,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   const fetchReferences = async (botMessage) => {
     const response = await axios.get(`${API_ENDPOINT}/references`);
     const data = response.data;
+    noteReferences.videoLinks = [];
+    noteReferences.pdfLinks = [];
+    noteReferences.imageLinks = [];
+
     const videoLinks = data.video_references.map((video) => {
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
       return (
@@ -449,6 +453,24 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         </li>
       );
     });
+    // `<li><a href="${video}" target="_blank">${video}</a></li>`
+    const references = {
+      videoLinks: data.video_references.map((video) => {
+        return (
+          `<li><a href="${video.source_path + " | Timestamp: " + video.timestamp}" target="_blank">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
+        );
+      }),
+      pdfLinks: data.pdf_references.map((pdf) => {
+        return (
+          `<li><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
+        );
+      }),
+      imageLinks: data.img_references.map((img) => {
+        return (
+          `<li><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
+        );
+      }),
+    };
 
     // set note references to videosLinks, pdfLinks and imgLinks
     // setNoteReferences({
@@ -486,6 +508,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           isNewNote={isNewNote}
           setShowNoteModal={setShowNoteModal}
           updateSelectedNote={setSelectedNote}
+          references={references}
           showNoteModal={showNoteModal}
           selectedNote={selectedNote}
           notes={notes}
@@ -601,31 +624,31 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     );
   };
 
-  const addToNewNote = (textToAdd, question = '', models = selectedLLMs) => {
+  const addToNewNote = (textToAdd, question = '', models = selectedLLMs, references) => {
+    console.log(references);
+    // setNoteReferences({
+    //   videoLinks: [],
+    //   pdfLinks: [],
+    //   imageLinks: [],
+    // });
 
-    setNoteReferences({
-      videoLinks: [],
-      pdfLinks: [],
-      imageLinks: [],
-    });
+    // const videoLinks = noteReferences.videoLinks.map((video) => {
+    //   return (
+    //     `<li><a href="${video}" target="_blank">${video}</a></li>`
+    //   );
+    // });
+    // const pdfLinks = noteReferences.pdfLinks.map((pdf) => {
+    //   return (
+    //     `<li><a href="${pdf}" target="_blank">${pdf}</a></li>`
+    //   );
+    // });
+    // const imageLinks = noteReferences.imageLinks.map((img) => {
+    //   return (
+    //     `<li><a href="${img}" target="_blank">${img}</a></li>`
+    //   );
+    // });
 
-    const videoLinks = noteReferences.videoLinks.map((video) => {
-      return (
-        `<li><a href="${video}" target="_blank">${video}</a></li>`
-      );
-    });
-    const pdfLinks = noteReferences.pdfLinks.map((pdf) => {
-      return (
-        `<li><a href="${pdf}" target="_blank">${pdf}</a></li>`
-      );
-    });
-    const imageLinks = noteReferences.imageLinks.map((img) => {
-      return (
-        `<li><a href="${img}" target="_blank">${img}</a></li>`
-      );
-    });
-
-    const canRenderNoteRefs = (videoLinks.length > 0 || pdfLinks.length > 0 || imageLinks.length > 0);
+    const canRenderNoteRefs = (references.videoLinks.length > 0 || references.pdfLinks.length > 0 || references.imageLinks.length > 0);
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
@@ -649,9 +672,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             </h3>
             
             <ul style='list-style-type: none;'>
-              ${videoLinks.join('')}
-              ${pdfLinks.join('')}
-              ${imageLinks.join('')}
+              ${references.videoLinks.join('')}
+              ${references.pdfLinks.join('')}
+              ${references.imageLinks.join('')}
             </ul>
             
           </p>` : ''}
@@ -660,11 +683,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       color: llmColor || fallbackColor,
       question,
       answer: textToAdd,
-      references: {
-        videoLinks: noteReferences.videoLinks,
-        pdfLinks: noteReferences.pdfLinks,
-        imageLinks: noteReferences.imageLinks
-      }
+      references,
     };
     const newNote = {
       ...selectedNote,
@@ -689,7 +708,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     noteQuestion.ref = input;
   }, [input]);
 
-  const addToExistingNote = (newTextContent, question = '', models = selectedLLMs) => {
+  const addToExistingNote = (newTextContent, question = '', models = selectedLLMs, references) => {
 
     setNoteReferences({
       videoLinks: [],
@@ -747,7 +766,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       color: llmColor || fallbackColor,
       question,
       answer: newTextContent,
-      references: { videoLinks: noteReferences.videoLinks, pdfLinks: noteReferences.pdfLinks, imageLinks: noteReferences.imageLinks }
+      references,
     };
 
     if (Array.isArray(notes[existingNoteRef.current]?.text)) {
