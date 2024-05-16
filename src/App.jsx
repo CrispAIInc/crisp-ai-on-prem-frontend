@@ -6,6 +6,10 @@ import {
 } from "react-router-dom";
 import MainWorkspace from './components/MainWorkspace';
 import { useState, useEffect, useLayoutEffect } from 'react';
+import { toastConfig } from 'react-simple-toasts';
+import 'react-simple-toasts/dist/theme/dark.css';
+
+toastConfig({ theme: 'dark' });
 
 function App() {
 
