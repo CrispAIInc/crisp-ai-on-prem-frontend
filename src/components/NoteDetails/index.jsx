@@ -2,6 +2,7 @@ import { useContext, useEffect, useState, useRef } from 'react';
 import makeApiRequest from '../../api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from '@mui/icons-material/Save';
 import ReactQuill, { Quill } from 'react-quill';
@@ -103,7 +104,7 @@ function NoteDetails() {
 
             // fetch updated version of notes
             const data = await makeApiRequest("/notes", "post");
-            setNotes(data);
+            setNotes(() => data);
 
         } catch (error) {
             console.log(error);
@@ -308,6 +309,16 @@ function NoteDetails() {
                 <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                     {isPending ? "Aggregating insight..." : "Aggregate Insight"}
+                </span>
+            </div>
+
+            {/* add to story */}
+            <div
+                className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+            >
+                <SummarizeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    Add to Story
                 </span>
             </div>
 
