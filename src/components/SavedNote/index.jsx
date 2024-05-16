@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { parseHtmlToText } from '../../utils';
 import ModelChip from '../ModelChip';
 import makeApiRequest from '../../api';
+import SideCard from '../../layouts/SideCard';
 
 const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
 
@@ -43,10 +44,8 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
     };
 
     return (
-        <div
-            className={`p-2 ${theme === 'light' ? 'bg-white' : 'bg-background_workspace'} rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)] cursor-pointer user-select-none max-w-96`}
-            onClick={(event) => showSelectedNote(event, note, index)}
-        >
+
+        <SideCard onClick={(event) => showSelectedNote(event, note, index)}>
             {/* top */}
             <div className="flex items-center justify-between mb-1">
                 <p className={`mb-0 text-sm font-semibold truncate ${theme === 'light' ? 'text-textColor-200' : 'text-white'}`}>
@@ -76,7 +75,7 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
                     })
                 }
             </div>
-        </div>
+        </SideCard>
     );
 };
 
