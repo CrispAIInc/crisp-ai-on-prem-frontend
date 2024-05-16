@@ -14,6 +14,7 @@ import { hexToRgb } from '@mui/material';
 import { renderToString } from "react-dom/server";
 import { hexToRGBString, isNoteFull } from '../../utils';
 import AggregationLlmModal from '../AggregationLlmModal';
+import toast from 'react-simple-toasts';
 
 function NoteDetails() {
     const {
@@ -86,6 +87,11 @@ function NoteDetails() {
 
     const handleSave = async (event) => {
         event.preventDefault();
+        if (selectedNote.note_name === "") {
+            // add shadow to toast classnames
+            toast('Note title cannot be empty', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
+            return;
+        }
         if (isNewNote) {
             const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0];
             // const noteFilename = `${dateTimeStr}.json`;
