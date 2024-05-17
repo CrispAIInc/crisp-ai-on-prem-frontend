@@ -6,13 +6,32 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import { parseHtmlToText } from '../../utils';
 
+import makeApiRequest from '../../api';
+
 function SavedStory({ story }) {
 
-    const { theme, setSelectedStory, setActiveView } = useContext(MainContext);
+    const { theme, setSelectedStory, selectedStory, setActiveView, setStories } = useContext(MainContext);
 
     const showStory = () => {
         setSelectedStory(story);
         setActiveView('story');
+    };
+
+    const deleteStory = async (id) => {
+        try {
+            await makeApiRequest(`/stories/${id}`, 'delete');
+            setSelectedStory({
+                story_id: "",
+                text: [],
+                story_name: "",
+            });
+
+            // fetch stories
+            const data = await makeApiRequest("/stories", "get");
+            setStories(data);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -25,6 +44,7 @@ function SavedStory({ story }) {
                 <span onClick={(e) => {
                     e.stopPropagation();
                     setSelectedStory(story);
+                    deleteStory(selectedStory.story_id);
                 }}>
                     <DeleteIcon color={`${theme === 'light' ? '#444' : 'error'}`} />
                 </span>
