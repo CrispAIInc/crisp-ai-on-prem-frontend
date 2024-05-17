@@ -8,9 +8,15 @@ import { parseHtmlToText } from '../../utils';
 
 function SavedStory({ story }) {
 
-    const { theme, setSelectedStory } = useContext(MainContext);
+    const { theme, setSelectedStory, setActiveView } = useContext(MainContext);
+
+    const showStory = () => {
+        setSelectedStory(story);
+        setActiveView('story');
+    };
+
     return (
-        <SideCard>
+        <SideCard onClick={showStory}>
             {/* top */}
             <div className="flex items-center justify-between mb-1">
                 <p className={`mb-0 text-sm font-semibold truncate ${theme === 'light' ? 'text-textColor-200' : 'text-white'}`}>
