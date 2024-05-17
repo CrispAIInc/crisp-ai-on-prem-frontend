@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
  * Generic function for calling the backend API
  */
 
-const makeApiRequest = async (endpoint, method = 'get', data = null, headers = { 'Content-type': 'application/json' }, config = {}) => {
+const makeApiRequest = async (endpoint, method = 'get', data = null, headers = { 'Content-Type': 'application/json' }, config = {}) => {
 
     try {
         const response = await axiosInstance({

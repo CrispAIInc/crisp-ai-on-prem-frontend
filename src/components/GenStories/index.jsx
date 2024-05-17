@@ -6,6 +6,7 @@ import GenStoriesLLMModal from '../GenStoriesLLMModal';
 import CustomInput from '../CustomInput';
 
 import SendIcon from "@mui/icons-material/Send";
+import makeApiRequest from '../../api';
 
 const GenStories = () => {
 
@@ -19,6 +20,10 @@ const GenStories = () => {
 
     const onHideLLMModal = () => {
         setShowLLMModal(false);
+    };
+
+    const sendQuery = async (query) => {
+        const data = await makeApiRequest(`/llm-chat/${selectedGenStoriesModels}`, 'post', { query });
     };
 
     return (
@@ -96,10 +101,16 @@ const GenStories = () => {
                     placeholder="Message model..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                            sendQuery(input);
+                        }
+                    }}
                 />
                 <div
                     className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
                         }`}
+                    onClick={() => sendQuery(input)}
                 >
                     <SendIcon color="primary" />
                 </div>
