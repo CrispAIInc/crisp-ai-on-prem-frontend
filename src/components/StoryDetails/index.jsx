@@ -7,12 +7,13 @@ import CustomButton from '../CustomButton';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import makeApiRequest from '../../api';
 
 function StoryDetails() {
 
-    const { theme, setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
+    const { setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
         modules,
-        formats, } = useContext(MainContext);
+        formats, setStories } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
 
@@ -24,7 +25,22 @@ function StoryDetails() {
     }, [selectedStory, selectedStory.text.length]);
 
     const handleContentChange = () => { };
-    const handleDelete = () => { };
+    const deleteStory = async (id) => {
+        try {
+            await makeApiRequest(`/stories/${id}`, 'delete');
+            setSelectedStory({
+                story_id: "",
+                text: [],
+                story_name: "",
+            });
+
+            // fetch stories
+            const data = await makeApiRequest("/stories", "get");
+            setStories(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     const handleSave = () => { };
 
     return (
@@ -60,7 +76,7 @@ function StoryDetails() {
                 formats={formats} />
 
             <div className="flex items-center justify-end gap-2 mt-2">
-                <CustomButton className='bg-primary-300 !my-0' onClick={handleDelete}><DeleteIcon className='text-white' /></CustomButton>
+                <CustomButton className='bg-primary-300 !my-0' onClick={() => deleteStory(selectedStory.story_id)}><DeleteIcon className='text-white' /></CustomButton>
                 <CustomButton onClick={handleSave} className="bg-primary-300 !my-0"> <SaveIcon className='text-white' /> </CustomButton>
             </div>
         </div>
