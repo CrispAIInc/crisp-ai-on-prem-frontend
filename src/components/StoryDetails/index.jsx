@@ -12,17 +12,27 @@ import makeApiRequest from '../../api';
 function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
-        modules,
+        modules, theme,
         formats, setStories } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
 
     useEffect(() => {
         if (selectedStory.text) {
-            const htmlString = selectedStory.text.map(item => item.content).join('<br />');
+            const htmlString = selectedStory.text.map(item => {
+                const outlineHtml = `<h2 style='font-style: italic; font-weight: 700;'>${item.outline.name}</h2>`;
+                const contentHtml = item.content;
+
+                return `
+                        <span style="color: ${theme === 'light' ? '#333' : '#ABAEB4'};">
+                            ${outlineHtml}
+                            ${contentHtml}
+                        </span>
+                    `;
+            }).join('<br />');
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedStory, selectedStory.text.length]);
+    }, [selectedStory, selectedStory.text.length, theme]);
 
     const handleContentChange = () => { };
     const deleteStory = async (id) => {
@@ -57,7 +67,8 @@ function StoryDetails() {
                         if (currentResource) {
                             return 'resource';
                         }
-                        if (selectedNote.story_id !== '') {
+                        if (selectedNote.note_id !== '') {
+                            console.log("hehe");
                             return 'note';
                         }
                         return null;
