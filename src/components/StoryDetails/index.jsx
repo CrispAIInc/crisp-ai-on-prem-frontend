@@ -8,6 +8,7 @@ import CustomButton from '../CustomButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import makeApiRequest from '../../api';
+import toast from 'react-simple-toasts';
 
 function StoryDetails() {
 
@@ -34,7 +35,17 @@ function StoryDetails() {
         }
     }, [selectedStory, selectedStory.text.length, theme]);
 
-    const handleContentChange = () => { };
+    const handleContentChange = (newContent) => {
+        console.log(newContent);
+    };
+
+    const handleSave = () => {
+        if (selectedStory.story_name === "") {
+            toast('Note title cannot be empty', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
+            return;
+        }
+    };
+
     const deleteStory = async (id) => {
         try {
             await makeApiRequest(`/stories/${id}`, 'delete');
@@ -51,7 +62,6 @@ function StoryDetails() {
             console.log(error);
         }
     };
-    const handleSave = () => { };
 
     return (
         <div className="max-w-3xl mx-auto">
