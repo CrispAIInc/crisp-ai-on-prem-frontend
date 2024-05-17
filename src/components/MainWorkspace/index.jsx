@@ -224,6 +224,24 @@ const MainWorkspace = ({ theme }) => {
     getNotes();
   }, []);
 
+  useEffect(() => {
+    const getStories = async () => {
+      try {
+        const data = await makeApiRequest("/stories", "get");
+        setStories(data);
+        setSelectedStory({
+          story_id: "",
+          text: [],
+          story_name: "",
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getStories();
+  }, []);
+
   return (
     <MainContext.Provider value={value}>
       <div className="flex h-full divide-x divide-separator main-workspace-container">

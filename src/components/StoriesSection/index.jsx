@@ -3,10 +3,13 @@ import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import BaseHeading from '../BaseHeading';
+import SavedStory from '../SavedStory';
+import NoData from "../NoData";
 
 function StoriesSection() {
 
-  const { theme, setActiveView } = useContext(MainContext);
+  const { theme, setActiveView, stories } = useContext(MainContext);
 
   function handleNewStoryClick() {
     setActiveView('story');
@@ -22,6 +25,24 @@ function StoriesSection() {
         <AddOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Story</span>
       </div>
+
+      <BaseHeading text='Saved stories' />
+      {stories.length > 0 ? (
+        <div>
+          <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
+            {stories.map((story, i) => (
+              <SavedStory
+                key={i}
+                story={story}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="mt-4">
+          <NoData />
+        </div>
+      )}
     </div>
   );
 }

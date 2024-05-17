@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import CustomInput from '../CustomInput';
@@ -16,6 +16,12 @@ function StoryDetails() {
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
 
+    useEffect(() => {
+        if (selectedStory.text.length > 0 && selectedStory) {
+            const htmlString = selectedStory.text.map(item => item.content).join('<br />');
+            setHTMLToDisplay(htmlString);
+        }
+    }, [selectedStory, selectedStory.text.length]);
 
     const handleContentChange = () => { };
     const handleDelete = () => { };
