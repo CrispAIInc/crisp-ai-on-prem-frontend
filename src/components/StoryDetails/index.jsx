@@ -41,7 +41,7 @@ function StoryDetails() {
 
     const handleSave = () => {
         if (selectedStory.story_name === "") {
-            toast('Note title cannot be empty', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
+            toast('Story title cannot be empty', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
             return;
         }
     };
