@@ -13,6 +13,7 @@ import NoData from "../NoData";
 import NoteDetails from "../NoteDetails";
 
 import './workspace.css';
+import StoryDetails from '../StoryDetails';
 
 const Workspace = () => {
     const {
@@ -214,10 +215,12 @@ const Workspace = () => {
                         </div>
                     )}
                 </div>
-            ) : showNoteDetails || activeView === 'note' ? (
+            ) : activeView === 'note' ? (
                 <div>
                     <NoteDetails />
                 </div>
+            ) : activeView === 'story' ? (
+                <StoryDetails />
             ) : null}
 
             {/* right sidebar collapser */}

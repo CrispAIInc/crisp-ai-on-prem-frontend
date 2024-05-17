@@ -61,6 +61,14 @@ const MainWorkspace = ({ theme }) => {
     imageLinks: [],
   });
 
+  const [stories, setStories] = useState([]);
+  const [selectedStory, setSelectedStory] = useState({
+    story_id: "",
+    text: [],
+    story_name: ""
+  });
+  const [showStoryDetails, setShowStoryDetails] = useState(false);
+
   const llmModels = [
     { value: "gpt-4", label: "GPT-4", type: "llm", color: "#D163DA" },
     {
@@ -97,6 +105,29 @@ const MainWorkspace = ({ theme }) => {
     // { value: "gemini", label: "Gemini", type: "llm", color: "#00796B" },
   ];
 
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      [{ color: [] }, { background: [] }], // Add color options
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link', 'image'],
+    ],
+  };
+
+  const formats = [
+    'header',
+    'color', // Ensure color is included in the formats
+    'background',
+    'bold',
+    'italic',
+    'underline',
+    'list',
+    'bullet',
+    'link',
+    'image',
+  ];
+
   const [isManualNote, setIsManualNote] = useState(false);
 
   useEffect(() => {
@@ -115,22 +146,14 @@ const MainWorkspace = ({ theme }) => {
     // setShowNoteDetails(false);
   }, [notes]);
 
-  // useEffect(() => {
-  //   setSelectedNote(prevNote => ({
-  //     ...prevNote,
-  //     text: prevNote.text.map(item => ({
-  //       ...item,
-  //       color: item.color === '#333' || item.color === '#fff' ? (theme === 'light' ? '#333' : '#fff') : item.color
-  //     }))
-  //   }));
-  // }, [theme]);
-
   // create value object with all the states
   const value = {
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
     isLeftSidebarOpen, setIsLeftSidebarOpen,
     isRightSidebarOpen, setIsRightSidebarOpen,
+    modules,
+    formats,
     isEditingTitle, setIsEditingTitle,
     currentResource,
     setCurrentResource,
@@ -170,7 +193,10 @@ const MainWorkspace = ({ theme }) => {
     setIsNewNote,
     summary,
     setSummary,
-    noteIndex, setNoteIndex
+    noteIndex, setNoteIndex,
+    stories, setStories,
+    selectedStory, setSelectedStory,
+    showStoryDetails, setShowStoryDetails,
   };
 
   useEffect(() => {

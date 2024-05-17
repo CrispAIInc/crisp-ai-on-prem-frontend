@@ -28,6 +28,8 @@ function NoteDetails() {
         llmModels,
         setActiveView,
         noteReferences,
+        modules,
+        formats,
         currentResource,
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
@@ -62,28 +64,7 @@ function NoteDetails() {
         }
     };
 
-    const modules = {
-        toolbar: [
-            [{ header: [1, 2, false] }],
-            [{ color: [] }, { background: [] }], // Add color options
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image'],
-        ],
-    };
 
-    const formats = [
-        'header',
-        'color', // Ensure color is included in the formats
-        'background',
-        'bold',
-        'italic',
-        'underline',
-        'list',
-        'bullet',
-        'link',
-        'image',
-    ];
 
 
     const handleSave = async (event) => {
