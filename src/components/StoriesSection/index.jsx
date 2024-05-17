@@ -9,9 +9,14 @@ import NoData from "../NoData";
 
 function StoriesSection() {
 
-  const { theme, setActiveView, stories } = useContext(MainContext);
+  const { theme, setActiveView, stories, setSelectedStory } = useContext(MainContext);
 
   function handleNewStoryClick() {
+    setSelectedStory({
+      story_id: "",
+      text: [],
+      story_name: "",
+    });
     setActiveView('story');
   }
 

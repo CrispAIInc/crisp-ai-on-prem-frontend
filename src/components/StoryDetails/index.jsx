@@ -17,7 +17,7 @@ function StoryDetails() {
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
 
     useEffect(() => {
-        if (selectedStory.text.length > 0 && selectedStory) {
+        if (selectedStory.text) {
             const htmlString = selectedStory.text.map(item => item.content).join('<br />');
             setHTMLToDisplay(htmlString);
         }
