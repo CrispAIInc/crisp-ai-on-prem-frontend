@@ -18,6 +18,8 @@ const GenStories = () => {
     const [showLLMModal, setShowLLMModal] = useState(false);
     const [input, setInput] = useState("");
     const [outlinesAnswers, setOutlinesAnswers] = useState([]);
+    const [showCursor, setShowCursor] = useState(false);
+    const [responseIndex, setResponseIndex] = useState(-1);
 
     const chatAppRef = useRef();
 
@@ -32,10 +34,59 @@ const GenStories = () => {
     };
 
     const sendQuery = async (query) => {
+
+        setShowCursor(true);
+
+        // let botMessage = '';
+        // let sessionID = null; // Variable to store the session ID
+
+        // const eventSource = new EventSource(`/llm-chat/${selectedGenStoriesModels}`, 'post', { query });
+        // const eventSource = new EventSource(`/llm-chat/${selectedGenStoriesModels}?query=${encodeURIComponent(query)}`);
+
+        // eventSource.onmessage = function (event) {
+        //     console.log("event: ", event);
+        //     const data = JSON.parse(event.data);
+
+        //     if (data.type === "SESSION_ID") {
+        //         sessionID = data.session_id;
+        //     } else if (data.type === "MESSAGE") {
+        //         const newToken = data.text;
+        //         botMessage += " " + newToken;
+        //         // setMessages((prevMessages) => {
+        //         //     const newMessages = [...prevMessages];
+        //         //     if (newMessages.length > 0) {
+        //         //         const lastMessageIndex = newMessages.length - 1;
+        //         //         newMessages[lastMessageIndex] = {
+        //         //             ...newMessages[lastMessageIndex],
+        //         //             text: botMessage,
+        //         //         };
+        //         //     }
+        //         //     return newMessages;
+        //         // });
+        //         console.log(botMessage);
+        //     }
+        // };
+
+        // eventSource.onerror = function () {
+        //     setShowCursor(false);
+        //     eventSource.close();
+
+        //     if (eventSource.readyState === EventSource.CLOSED) {
+        //         console.log("connection closed, fetching refs...");
+        //         // Extract session ID from the eventSource's URL
+        //         // fetchReferences(botMessage); // Function to fetch references
+        //         // setOriginalResponses([...originalResponses, botMessage]);
+        //     } else {
+        //         console.error("Connection was closed due to an error.");
+        //     }
+        // };
+
+        setOutlinesAnswers(prev => [...prev, { query: input, models: selectedGenStoriesModels }]);
         const { answer } = await makeApiRequest(`/llm-chat/${selectedGenStoriesModels}`, 'post', { query });
-        setOutlinesAnswers(prev => [...prev, { query: input, answer, models: selectedGenStoriesModels }]);
-        console.log(answer);
-        console.log(outlinesAnswers);
+        setOutlinesAnswers(prev => [...prev, { answer, models: selectedGenStoriesModels }]);
+        setResponseIndex((responseIndex) => responseIndex + 1);
+
+        setInput('');
     };
 
     return (
@@ -107,105 +158,114 @@ const GenStories = () => {
                 ref={chatAppRef}
             >
                 {/* list all outline answers here as a chat */}
-                {outlinesAnswers.length > 0 ? (
-                    outlinesAnswers.map((outline, index) => (
-                        <div key={index}>
-                            {/* user input message */}
-                            <div className="my-2 w-fit">
-                                <div
-                                    className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <b className="">You: </b>
+                {outlinesAnswers.length > 0
+                    ? (
+                        outlinesAnswers.map((outline, index) =>
+
+                            outline.query ? (
+                                <>
+                                    <div key={index} className="my-2 w-fit">
                                         <div
-                                            className="cursor-pointer"
-                                        // onClick={() => {
-                                        //     handleRepeatQuestion(message.text, message.models);
-                                        // }}
+                                            className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
                                         >
-                                            {/* <ReplayOutlinedIcon /> */}
-                                            replay
+                                            <div className="flex items-center justify-between">
+                                                <b className="">You: </b>
+                                                <div
+                                                    className="cursor-pointer"
+                                                // onClick={() => {
+                                                //     handleRepeatQuestion(message.text, message.models);
+                                                // }}
+                                                >
+                                                    {/* <ReplayOutlinedIcon /> */}
+                                                    replay
+                                                </div>
+                                            </div>
+                                            {
+                                                <p className="m-0">{outline.query}</p>
+                                            }
                                         </div>
                                     </div>
-                                    {
-                                        <p className="m-0">{outline.query}</p>
-                                    }
-                                </div>
-                            </div>
-                            {/* chatbot answer */}
-                            <div className="">
-                                <div className={`message bot-message h-full`}>
-                                    {/* <b className="text-textColor-200">Chatbot: </b> */}
-                                    <div
-                                        className={`flex flex-col h-full p-2 m-2 rounded-md ${theme === "light"
-                                            ? "bg-separator text-textColor-200"
-                                            : "bg-background_workspace"
-                                            }`}
-                                    >
-                                        <>
-                                            <b
-                                                className={`${theme === "light"
-                                                    ? "text-textColor-300"
-                                                    : "text-textColor-100"
-                                                    }`}
-                                            >
-                                                Chatbot:{" "}
-                                            </b>
-                                            <div
-                                                className={`${theme === "light"
-                                                    ? "text-textColor-300"
-                                                    : "text-textColor-100"
-                                                    }`}
-                                            // dangerouslySetInnerHTML={{ _html: parsedOutlineString }}
-                                            >
-                                                {/* {outline.answer} */}
-                                                <ReactMarkdown remarkPlugins={[remarkGfm]} >
-                                                    {outline.answer}
-                                                </ReactMarkdown>
-                                            </div>
-                                            {/* {showCursor && index == responseIndex ? (
-                                                        <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
-                                                    ) : null} */}
-
-                                            {/* add to report */}
-
-
-
-                                            <div className="flex flex-wrap items-center gap-1">
-                                                <span
-                                                    className={`text-xs ${theme === "light"
-                                                        ? "text-textColor-300"
-                                                        : "text-textColor-200"
+                                </>
+                            )
+                                :
+                                (
+                                    <>
+                                        <div key={index}>
+                                            <div className={`message bot-message h-full`}>
+                                                {/* <b className="text-textColor-200">Chatbot: </b> */}
+                                                <div
+                                                    className={`flex flex-col h-full p-2 m-2 rounded-md ${theme === "light"
+                                                        ? "bg-separator text-textColor-200"
+                                                        : "bg-background_workspace"
                                                         }`}
                                                 >
-                                                    Models:{" "}
-                                                </span>
-                                                {outline.models.map((item, index) => (
-                                                    <span
-                                                        key={index}
-                                                        className={`text-xs divide-x ${theme === "light"
-                                                            ? "text-textColor-300"
-                                                            : "text-textColor-200"
-                                                            }`}
-                                                    >
-                                                        {item.toUpperCase()}
-                                                    </span>
-                                                ))}
+                                                    <>
+                                                        <b
+                                                            className={`${theme === "light"
+                                                                ? "text-textColor-300"
+                                                                : "text-textColor-100"
+                                                                }`}
+                                                        >
+                                                            Chatbot:{" "}
+                                                        </b>
+                                                        <div
+                                                            className={`${theme === "light"
+                                                                ? "text-textColor-300"
+                                                                : "text-textColor-100"
+                                                                }`}
+                                                        // dangerouslySetInnerHTML={{ _html: parsedOutlineString }}
+                                                        >
+                                                            {/* {outline.answer} */}
+                                                            <ReactMarkdown remarkPlugins={[remarkGfm]} >
+                                                                {outline.answer}
+                                                            </ReactMarkdown>
+                                                        </div>
+                                                        {showCursor && index == responseIndex ? (
+                                                            <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
+                                                        ) : null}
+
+                                                        {/* add to report */}
+
+
+
+                                                        <div className="flex flex-wrap items-center gap-1">
+                                                            <span
+                                                                className={`text-xs ${theme === "light"
+                                                                    ? "text-textColor-300"
+                                                                    : "text-textColor-200"
+                                                                    }`}
+                                                            >
+                                                                Models:{" "}
+                                                            </span>
+                                                            {outline.models.map((item, index) => (
+                                                                <span
+                                                                    key={index}
+                                                                    className={`text-xs divide-x ${theme === "light"
+                                                                        ? "text-textColor-300"
+                                                                        : "text-textColor-200"
+                                                                        }`}
+                                                                >
+                                                                    {item.toUpperCase()}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </>
+                                                </div>
                                             </div>
-                                        </>
-                                    </div>
-                                </div>
+                                        </div>
+                                    </>
+                                )
+
+                        )
+                    )
+                    : (
+                        <div className="flex flex-col items-center justify-center h-full loading-container">
+                            <div className="chat-spinner">
+                                <NoData />
                             </div>
                         </div>
                     )
-                    )
-                ) : (
-                    <div className="flex flex-col items-center justify-center h-full loading-container">
-                        <div className="chat-spinner">
-                            <NoData />
-                        </div>
-                    </div>
-                )}
+                }
 
             </div>
 

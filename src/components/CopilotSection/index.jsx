@@ -1038,7 +1038,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
               </div>
             ) : (
               <>
-                <div key={index} className="">
+                <div key={index}>
                   <div className={`message bot-message h-full`}>
                     {/* <b className="text-textColor-200">Chatbot: </b> */}
                     <div
