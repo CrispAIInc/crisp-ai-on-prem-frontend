@@ -12,6 +12,7 @@ import SendIcon from "@mui/icons-material/Send";
 import makeApiRequest from '../../api';
 
 import NoData from '../NoData';
+import AddToReportModal from '../AddToReportModal';
 
 const GenStories = () => {
 
@@ -82,11 +83,11 @@ const GenStories = () => {
         // };
 
         setOutlinesAnswers(prev => [...prev, { query: input, models: selectedGenStoriesModels }]);
+        setInput('');
         const { answer } = await makeApiRequest(`/llm-chat/${selectedGenStoriesModels}`, 'post', { query });
         setOutlinesAnswers(prev => [...prev, { answer, models: selectedGenStoriesModels }]);
         setResponseIndex((responseIndex) => responseIndex + 1);
 
-        setInput('');
     };
 
     return (
@@ -225,7 +226,7 @@ const GenStories = () => {
                                                         ) : null}
 
                                                         {/* add to report */}
-
+                                                        <AddToReportModal />
 
 
                                                         <div className="flex flex-wrap items-center gap-1">
@@ -275,11 +276,12 @@ const GenStories = () => {
                     placeholder="Message model..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={(e) => {
+                    onKeyDown={(e) => {
                         if (e.key === "Enter") {
                             sendQuery(input);
                         }
                     }}
+
                 />
                 <div
                     className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
