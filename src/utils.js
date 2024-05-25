@@ -36,3 +36,19 @@ export function hexToRGBString(hex) {
 export function isNoteFull(noteTextArray) {
     return noteTextArray.some((item) => item.content !== '' && item.content !== '<p><br></p>');
 }
+
+export function extractSections(responseString) {
+    // Regular expression to match sections labeled with "Section" or roman numerals
+    const sectionRegex = /(####\sSection\s\d+:\s.+|####\s[IVXLCDM]+\.\s.+|###\s[IVXLCDM]+\.\s.+)/g;
+
+    // Array to hold the extracted sections
+    const sections = [];
+    let match;
+
+    // Extract each section using the regular expression
+    while ((match = sectionRegex.exec(responseString)) !== null) {
+        sections.push(match[1]);
+    }
+
+    return sections;
+}
