@@ -1,4 +1,7 @@
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
 import CustomButton from "../CustomButton";
 
 import { MainContext } from "../../contexts/mainContext";
@@ -8,22 +11,31 @@ import CustomInput from '../CustomInput';
 import SendIcon from "@mui/icons-material/Send";
 import makeApiRequest from '../../api';
 
+import NoData from '../NoData';
+
 const GenStories = () => {
 
     const [showLLMModal, setShowLLMModal] = useState(false);
     const [input, setInput] = useState("");
+    const [outlinesAnswers, setOutlinesAnswers] = useState([]);
 
     const chatAppRef = useRef();
 
     const { theme, selectedGenStoriesModels, setSelectedGenStoriesModels, llmModels } = useContext(MainContext);
 
+    useEffect(() => {
+        chatAppRef.current.scrollTop = chatAppRef.current?.scrollHeight;
+    }, [outlinesAnswers, outlinesAnswers.length]);
 
     const onHideLLMModal = () => {
         setShowLLMModal(false);
     };
 
     const sendQuery = async (query) => {
-        const data = await makeApiRequest(`/llm-chat/${selectedGenStoriesModels}`, 'post', { query });
+        const { answer } = await makeApiRequest(`/llm-chat/${selectedGenStoriesModels}`, 'post', { query });
+        setOutlinesAnswers(prev => [...prev, { query: input, answer, models: selectedGenStoriesModels }]);
+        console.log(answer);
+        console.log(outlinesAnswers);
     };
 
     return (
@@ -88,14 +100,116 @@ const GenStories = () => {
                 {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
             </div>
 
+            {/* chat container */}
             <div
                 className={`flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
                     }`}
                 ref={chatAppRef}
             >
-                genstories copilot
+                {/* list all outline answers here as a chat */}
+                {outlinesAnswers.length > 0 ? (
+                    outlinesAnswers.map((outline, index) => (
+                        <div key={index}>
+                            {/* user input message */}
+                            <div className="my-2 w-fit">
+                                <div
+                                    className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <b className="">You: </b>
+                                        <div
+                                            className="cursor-pointer"
+                                        // onClick={() => {
+                                        //     handleRepeatQuestion(message.text, message.models);
+                                        // }}
+                                        >
+                                            {/* <ReplayOutlinedIcon /> */}
+                                            replay
+                                        </div>
+                                    </div>
+                                    {
+                                        <p className="m-0">{outline.query}</p>
+                                    }
+                                </div>
+                            </div>
+                            {/* chatbot answer */}
+                            <div className="">
+                                <div className={`message bot-message h-full`}>
+                                    {/* <b className="text-textColor-200">Chatbot: </b> */}
+                                    <div
+                                        className={`flex flex-col h-full p-2 m-2 rounded-md ${theme === "light"
+                                            ? "bg-separator text-textColor-200"
+                                            : "bg-background_workspace"
+                                            }`}
+                                    >
+                                        <>
+                                            <b
+                                                className={`${theme === "light"
+                                                    ? "text-textColor-300"
+                                                    : "text-textColor-100"
+                                                    }`}
+                                            >
+                                                Chatbot:{" "}
+                                            </b>
+                                            <div
+                                                className={`${theme === "light"
+                                                    ? "text-textColor-300"
+                                                    : "text-textColor-100"
+                                                    }`}
+                                            // dangerouslySetInnerHTML={{ _html: parsedOutlineString }}
+                                            >
+                                                {/* {outline.answer} */}
+                                                <ReactMarkdown remarkPlugins={[remarkGfm]} >
+                                                    {outline.answer}
+                                                </ReactMarkdown>
+                                            </div>
+                                            {/* {showCursor && index == responseIndex ? (
+                                                        <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
+                                                    ) : null} */}
+
+                                            {/* add to report */}
+
+
+
+                                            <div className="flex flex-wrap items-center gap-1">
+                                                <span
+                                                    className={`text-xs ${theme === "light"
+                                                        ? "text-textColor-300"
+                                                        : "text-textColor-200"
+                                                        }`}
+                                                >
+                                                    Models:{" "}
+                                                </span>
+                                                {outline.models.map((item, index) => (
+                                                    <span
+                                                        key={index}
+                                                        className={`text-xs divide-x ${theme === "light"
+                                                            ? "text-textColor-300"
+                                                            : "text-textColor-200"
+                                                            }`}
+                                                    >
+                                                        {item.toUpperCase()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                    )
+                ) : (
+                    <div className="flex flex-col items-center justify-center h-full loading-container">
+                        <div className="chat-spinner">
+                            <NoData />
+                        </div>
+                    </div>
+                )}
+
             </div>
 
+            {/* message input container */}
             <div className="flex items-center gap-2 input-area">
                 <CustomInput
                     placeholder="Message model..."

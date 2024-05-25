@@ -40,10 +40,13 @@ function NoteDetails() {
 
     useEffect(() => {
         if (selectedNote.text) {
-            const htmlString = selectedNote.text.map(item => item.content).join('<br />');
+            const htmlString = selectedNote.text.map(item => {
+                const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
+                return `<span style="color: ${llmColor || theme === 'light' ? '#333' : '#ABAEB4'};">${item.content}</span>`;
+            }).join('<br />');
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedNote, selectedNote.text.length]);
+    }, [selectedNote, selectedNote.text.length, theme]);
 
 
     const handleContentChange = (newContent) => {
