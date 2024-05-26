@@ -41,10 +41,16 @@ function StoryDetails() {
         // console.log(newContent);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (selectedStory.story_name === "") {
             toast('Story title cannot be empty', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
             return;
+        }
+
+        try {
+            await makeApiRequest('/stories', 'post', selectedStory);
+        } catch (error) {
+            console.log(error);
         }
     };
 
