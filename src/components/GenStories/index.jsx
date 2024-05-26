@@ -33,6 +33,8 @@ const GenStories = () => {
         llmModels,
         stories,
         setStories,
+        setSelectedStory,
+        setActiveView,
     } = useContext(MainContext);
 
     useEffect(() => {
@@ -111,8 +113,6 @@ const GenStories = () => {
     };
 
     function addOutlineToStory(outline) {
-        console.log(outline);
-        console.log(extractSections(outline));
         const sections = extractSections(outline);
         const text = sections.map((section) => {
             return {
@@ -123,12 +123,18 @@ const GenStories = () => {
                 content: '',
             };
         });
-        setStories(prev => [...prev, {
+        const newStory = {
             story_id: new Date().getTime().toString(),
             story_name: extractTitle(outline),
-            text: text
-        }]);
-        console.log(stories);
+            text
+        };
+        setStories(prev => [...prev, newStory]);
+        displayStory(newStory);
+    }
+
+    function displayStory(story) {
+        setSelectedStory(story);
+        setActiveView('story');
     }
 
     return (

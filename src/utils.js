@@ -66,3 +66,22 @@ export function extractTitle(responseString) {
         return null;
     }
 }
+
+export function getLevelOfSection(section) {
+    const indicator = section.split('. ')[0];
+    if (isRomanNumber(indicator)) return 1;
+    if (isNumber(indicator) || !isNaN(indicator)) return 3;
+    if (isString(indicator)) return 2;
+}
+
+export function isRomanNumber(string) {
+    return /^(?=[MLXVI])M{0,4}(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/.test(string);
+}
+
+export function isNumber(value) {
+    return typeof value === 'number' && isFinite(value);
+}
+
+export function isString(value) {
+    return typeof value === 'string';
+}

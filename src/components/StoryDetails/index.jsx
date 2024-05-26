@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
+import { getLevelOfSection } from '../../utils';
 
 function StoryDetails() {
 
@@ -21,7 +22,8 @@ function StoryDetails() {
     useEffect(() => {
         if (selectedStory.text) {
             const htmlString = selectedStory.text.map(item => {
-                const outlineHtml = `<h2 style='font-style: italic; font-weight: 700;'>${item.outline.name}</h2>`;
+                const headingLevel = getLevelOfSection(item.outline.name);
+                const outlineHtml = `<h${headingLevel} style='font-style: italic; font-weight: 700;'>${item.outline.name}</h${headingLevel}>`;
                 const contentHtml = item.content;
 
                 return `
@@ -36,7 +38,7 @@ function StoryDetails() {
     }, [selectedStory, selectedStory.text.length, theme]);
 
     const handleContentChange = (newContent) => {
-        console.log(newContent);
+        // console.log(newContent);
     };
 
     const handleSave = () => {
