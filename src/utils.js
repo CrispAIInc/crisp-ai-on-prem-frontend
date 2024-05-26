@@ -85,3 +85,13 @@ export function isNumber(value) {
 export function isString(value) {
     return typeof value === 'string';
 }
+
+export function generateRandomHash(length) {
+    const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$%!§?@|';
+    let hash = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        hash += characters[randomIndex];
+    }
+    return hash;
+}

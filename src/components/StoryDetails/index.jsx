@@ -49,6 +49,13 @@ function StoryDetails() {
 
         try {
             await makeApiRequest('/stories', 'post', selectedStory);
+            const data = await makeApiRequest("/stories", "get");
+            setStories(data);
+            setSelectedStory({
+                story_id: "",
+                text: [],
+                story_name: "",
+            });
         } catch (error) {
             console.log(error);
         }

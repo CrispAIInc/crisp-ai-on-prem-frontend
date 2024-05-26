@@ -14,7 +14,7 @@ import CustomInput from "../CustomInput";
 import NoData from "../NoData";
 
 import { MainContext } from "../../contexts/mainContext";
-import { extractSections, extractTitle } from '../../utils';
+import { extractSections, extractTitle, generateRandomHash } from '../../utils';
 import makeApiRequest from "../../api";
 
 const GenStories = () => {
@@ -117,7 +117,7 @@ const GenStories = () => {
         const text = sections.map((section) => {
             return {
                 outline: {
-                    id: new Date().getTime().toString(),
+                    id: generateRandomHash(10),
                     name: section
                 },
                 content: '',
@@ -128,7 +128,7 @@ const GenStories = () => {
             story_name: extractTitle(outline),
             text
         };
-        setStories(prev => [...prev, newStory]);
+        // setStories(prev => [...prev, newStory]);
         displayStory(newStory);
     }
 
