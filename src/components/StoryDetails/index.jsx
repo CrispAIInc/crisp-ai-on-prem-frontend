@@ -14,7 +14,7 @@ import { getLevelOfSection } from '../../utils';
 function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
-        modules, theme,
+        modules, theme, stories,
         formats, setStories } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
@@ -48,7 +48,12 @@ function StoryDetails() {
         }
 
         try {
-            await makeApiRequest('/stories', 'post', selectedStory);
+            const isStoryAlreadyExist = stories.find(story => story.id === selectedStory.id);
+            if (!isStoryAlreadyExist) {
+                await makeApiRequest('/stories', 'post', selectedStory);
+            } else {
+                await makeApiRequest(`/stories/${selectedStory.story_id}`, 'put', selectedStory);
+            }
             const data = await makeApiRequest("/stories", "get");
             setStories(data);
             setSelectedStory({

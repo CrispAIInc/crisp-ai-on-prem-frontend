@@ -16,6 +16,7 @@ import { renderToString } from "react-dom/server";
 import { hexToRGBString, isNoteFull } from '../../utils';
 import AggregationLlmModal from '../AggregationLlmModal';
 import toast from 'react-simple-toasts';
+import AddToStoryModal from '../AddToStoryModal';
 
 function NoteDetails() {
     const {
@@ -37,6 +38,10 @@ function NoteDetails() {
     const [llmAggregation, setLlmAggregation] = useState('gpt-4');
     const [isLlmAggregationModalOpen, setIsAggregationModalOpen] = useState(false);
     const [isPending, setIsPending] = useState(false);
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     useEffect(() => {
         if (selectedNote.text) {
@@ -299,12 +304,15 @@ function NoteDetails() {
             {/* add to story */}
             <div
                 className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                onClick={handleOpen}
             >
                 <SummarizeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                     Add to Story
                 </span>
+
             </div>
+            <AddToStoryModal open={open} setOpen={setOpen} handleOpen={handleOpen} handleClose={handleClose} />
 
             <AggregationLlmModal llmAggregation={llmAggregation} setLlmAggregation={setLlmAggregation} isLlmAggregationModalOpen={isLlmAggregationModalOpen} setIsAggregationModalOpen={setIsAggregationModalOpen} aggregateInsight={aggregateInsight} isPending={isPending} />
 
