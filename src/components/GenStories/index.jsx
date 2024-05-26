@@ -119,7 +119,8 @@ const GenStories = () => {
                 outline: {
                     id: new Date().getTime().toString(),
                     name: section
-                }
+                },
+                content: '',
             };
         });
         setStories(prev => [...prev, {
