@@ -37,18 +37,32 @@ export function isNoteFull(noteTextArray) {
     return noteTextArray.some((item) => item.content !== '' && item.content !== '<p><br></p>');
 }
 
-export function extractSections(responseString) {
-    // Regular expression to match sections labeled with "Section" or roman numerals
-    const sectionRegex = /(####\sSection\s\d+:\s.+|####\s[IVXLCDM]+\.\s.+|###\s[IVXLCDM]+\.\s.+)/g;
-
-    // Array to hold the extracted sections
-    const sections = [];
+export function extractSections(outlineText) {
+    const sectionRegex = /^(?:####\s*)?(?:\*\*)?(I{1,3}|IV|V|X|IX|C|D|M|VI{1,3}|I{1,3})\.\s+(.+?)(?:\*\*)?$|^\s{3}(A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z)\.\s+(.+)|^\s{6}(\d+)\.\s+(.+)/gm;
     let match;
+    const sections = [];
 
-    // Extract each section using the regular expression
-    while ((match = sectionRegex.exec(responseString)) !== null) {
-        sections.push(match[1]);
+    while ((match = sectionRegex.exec(outlineText)) !== null) {
+        if (match[1]) {
+            sections.push(match[1] + ". " + match[2].trim());
+        } else if (match[3]) {
+            sections.push(match[3] + ". " + match[4].trim());
+        } else if (match[5]) {
+            sections.push(match[5] + ". " + match[6].trim());
+        }
     }
 
     return sections;
+}
+
+export function extractTitle(responseString) {
+    // Regular expression to match the title of the outline
+    const titleRegex = /(\*\*Outline.*?\*\*)|(### Outline.*)/;
+    const match = responseString.match(titleRegex);
+
+    if (match) {
+        return match[0] || match[1];
+    } else {
+        return null;
+    }
 }

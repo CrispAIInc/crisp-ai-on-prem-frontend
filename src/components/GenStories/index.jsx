@@ -14,7 +14,7 @@ import CustomInput from "../CustomInput";
 import NoData from "../NoData";
 
 import { MainContext } from "../../contexts/mainContext";
-import { extractSections } from '../../utils';
+import { extractSections, extractTitle } from '../../utils';
 import makeApiRequest from "../../api";
 
 const GenStories = () => {
@@ -31,6 +31,8 @@ const GenStories = () => {
         selectedGenStoriesModels,
         setSelectedGenStoriesModels,
         llmModels,
+        stories,
+        setStories,
     } = useContext(MainContext);
 
     useEffect(() => {
@@ -109,7 +111,23 @@ const GenStories = () => {
     };
 
     function addOutlineToStory(outline) {
+        console.log(outline);
+        console.log(extractSections(outline));
         const sections = extractSections(outline);
+        const text = sections.map((section) => {
+            return {
+                outline: {
+                    id: new Date().getTime().toString(),
+                    name: section
+                }
+            };
+        });
+        setStories(prev => [...prev, {
+            story_id: new Date().getTime().toString(),
+            story_name: extractTitle(outline),
+            text: text
+        }]);
+        console.log(stories);
     }
 
     return (
