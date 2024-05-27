@@ -48,8 +48,8 @@ function StoryDetails() {
         }
 
         try {
-            const isStoryAlreadyExist = stories.find(story => story.id === selectedStory.id);
-            if (!isStoryAlreadyExist) {
+            const story = stories.find(story => story.story_id === selectedStory.story_id);
+            if (!story) {
                 await makeApiRequest('/stories', 'post', selectedStory);
             } else {
                 await makeApiRequest(`/stories/${selectedStory.story_id}`, 'put', selectedStory);
