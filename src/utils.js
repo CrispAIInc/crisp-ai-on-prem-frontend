@@ -57,7 +57,7 @@ export function extractSections(outlineText) {
 
 export function extractTitle(responseString) {
     // Regular expression to match the title of the outline
-    const titleRegex = /(\*\*Outline.*?\*\*)|(### Outline.*)/;
+    const titleRegex = /(\*\*Outline.*?\*\*)|(### Outline.*)|(\*\*Title.*?\*\*)/;
     const match = responseString.match(titleRegex);
 
     if (match) {
