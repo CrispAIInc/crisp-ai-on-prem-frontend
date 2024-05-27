@@ -80,6 +80,8 @@ const GenStories = () => {
 
     function addOutlineToStory(outline) {
         const sections = extractSections(outline);
+        console.log(outline);
+        console.log(extractTitle(outline));
         const text = sections.map((section) => {
             return {
                 outline: {
