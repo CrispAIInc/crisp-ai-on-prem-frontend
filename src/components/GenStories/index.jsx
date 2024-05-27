@@ -22,7 +22,7 @@ const GenStories = () => {
     const [input, setInput] = useState("");
     const [outlinesAnswers, setOutlinesAnswers] = useState([]);
     const [showCursor, setShowCursor] = useState(false);
-    const [responseIndex, setResponseIndex] = useState(-1);
+    const [currentOutlineCursorId, setCurrentOutlineCursorId] = useState("");
 
     const chatAppRef = useRef();
 
@@ -45,71 +45,37 @@ const GenStories = () => {
         setShowLLMModal(false);
     };
 
+    useEffect(() => {
+        setCurrentOutlineCursorId(outlinesAnswers.at(-1)?.id);
+    }, [outlinesAnswers]);
+
     const sendQuery = async (query, _models = []) => {
-        setShowCursor(true);
+        try {
+            setShowCursor(true);
+            let selectedModels = _models.length > 0 ? _models : selectedGenStoriesModels;
 
-        // let botMessage = '';
-        // let sessionID = null; // Variable to store the session ID
+            setOutlinesAnswers((prev) => [
+                ...prev,
+                { query: input || query, models: selectedModels },
+                { id: generateRandomHash(10), answer: '', models: selectedModels },
+            ]);
+            setInput("");
+            const { answer } = await makeApiRequest(
+                `/llm-chat/${selectedModels}`,
+                "post",
+                { query }
+            );
 
-        // const eventSource = new EventSource(`/llm-chat/${selectedGenStoriesModels}`, 'post', { query });
-        // const eventSource = new EventSource(`/llm-chat/${selectedGenStoriesModels}?query=${encodeURIComponent(query)}`);
-
-        // eventSource.onmessage = function (event) {
-        //     console.log("event: ", event);
-        //     const data = JSON.parse(event.data);
-
-        //     if (data.type === "SESSION_ID") {
-        //         sessionID = data.session_id;
-        //     } else if (data.type === "MESSAGE") {
-        //         const newToken = data.text;
-        //         botMessage += " " + newToken;
-        //         // setMessages((prevMessages) => {
-        //         //     const newMessages = [...prevMessages];
-        //         //     if (newMessages.length > 0) {
-        //         //         const lastMessageIndex = newMessages.length - 1;
-        //         //         newMessages[lastMessageIndex] = {
-        //         //             ...newMessages[lastMessageIndex],
-        //         //             text: botMessage,
-        //         //         };
-        //         //     }
-        //         //     return newMessages;
-        //         // });
-        //         console.log(botMessage);
-        //     }
-        // };
-
-        // eventSource.onerror = function () {
-        //     setShowCursor(false);
-        //     eventSource.close();
-
-        //     if (eventSource.readyState === EventSource.CLOSED) {
-        //         console.log("connection closed, fetching refs...");
-        //         // Extract session ID from the eventSource's URL
-        //         // fetchReferences(botMessage); // Function to fetch references
-        //         // setOriginalResponses([...originalResponses, botMessage]);
-        //     } else {
-        //         console.error("Connection was closed due to an error.");
-        //     }
-        // };
-
-        let selectedModels = _models.length > 0 ? _models : selectedGenStoriesModels;
-
-        setOutlinesAnswers((prev) => [
-            ...prev,
-            { query: input || query, models: selectedModels },
-        ]);
-        setInput("");
-        const { answer } = await makeApiRequest(
-            `/llm-chat/${selectedModels}`,
-            "post",
-            { query }
-        );
-
-        setOutlinesAnswers((prev) => [
-            ...prev,
-            { answer, models: selectedModels },
-        ]);
-        setResponseIndex((responseIndex) => responseIndex + 1);
+            setOutlinesAnswers((prev) => {
+                const updatedOutlines = [...prev];
+                updatedOutlines[prev.length - 1].answer = answer;
+                return updatedOutlines;
+            });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setShowCursor(false);
+        }
     };
 
     function addOutlineToStory(outline) {
@@ -259,7 +225,7 @@ const GenStories = () => {
                                                         {outline.answer}
                                                     </ReactMarkdown>
                                                 </div>
-                                                {showCursor && index == responseIndex ? (
+                                                {showCursor && outline.id === currentOutlineCursorId ? (
                                                     <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
                                                 ) : null}
 
