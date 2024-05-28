@@ -60,6 +60,7 @@ function NoteDetails() {
         if (isNewNote && isManualNote) {
             selectedNote.text = [{
                 content: newContent,
+                answer: newContent,
                 model: null,
                 color: theme === 'light' ? "#333" : '#fff',
                 question: '',
@@ -88,7 +89,6 @@ function NoteDetails() {
             selectedNote.note_id = dateTimeStr;
         }
         try {
-            // setSelectedNote({ ...selectedNote, note_name: currentNoteTitle });
             await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex + 1), isNewNote: isNewNote });
 
             // fetch updated version of notes
