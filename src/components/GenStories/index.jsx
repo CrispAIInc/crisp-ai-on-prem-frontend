@@ -201,7 +201,7 @@ const GenStories = () => {
                                     <div className={`message bot-message h-full`}>
                                         {/* <b className="text-textColor-200">Chatbot: </b> */}
                                         <div
-                                            className={`flex flex-col h-full p-2 m-2 rounded-md ${theme === "light"
+                                            className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
                                                 ? "bg-separator text-textColor-200"
                                                 : "bg-background_workspace"
                                                 }`}
