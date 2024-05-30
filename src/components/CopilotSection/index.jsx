@@ -14,7 +14,7 @@ import { NoteModal } from "../NoteModal";
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import CustomButton from "../CustomButton";
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import { hexToRGBString } from '../../utils';
+import { hexToRGBString, toBase64 } from '../../utils';
 import { renderToString } from 'react-dom/server';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -624,26 +624,23 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     );
   };
 
-  const addToNewNote = (textToAdd, file, question = '', models = selectedLLMs, references) => {
+  const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, references) => {
 
     const canRenderNoteRefs = (references?.videoLinks.length > 0 || references?.pdfLinks.length > 0 || references?.imageLinks.length > 0);
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
-    const getImg = (_file) => {
-      const imgUrl = URL.createObjectURL(_file);
-      console.log(imgUrl[0]);
-      return (
-        `<img src=${imgUrl} />`
-      );
-    };
+    let imgUrl;
+    if (file) {
+      imgUrl = await toBase64(file);
+    }
 
     const newText = {
       content:
         `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">
 
         <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
-          ${models.includes('gpt-4-vision') ? getImg(file) : question}
+          ${file ? `<img src='${imgUrl}' />` : question}
         </h2>
 
         <p style='margin-bottom: 0px;'>
@@ -697,7 +694,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   useEffect(() => {
     setNotes(notes);
   }, [notes]);
-  const addToExistingNote = (newTextContent, question = '', models = selectedLLMs, references) => {
+  const addToExistingNote = async (newTextContent, file, question = '', models = selectedLLMs, references) => {
 
     setNoteReferences({
       videoLinks: [],
@@ -720,10 +717,15 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         `<li><a href="${img}" target="_blank">${img}</a></li>`
       );
     });
-    const canRenderNoteRefs = (videoLinks.length > 0 || pdfLinks.length > 0 || imageLinks.length > 0);
+    const canRenderNoteRefs = (videoLinks?.length > 0 || pdfLinks?.length > 0 || imageLinks?.length > 0);
 
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
+
+    let imgUrl;
+    if (file) {
+      imgUrl = await toBase64(file);
+    }
 
     const newNoteTextEntry = {
       content:
@@ -731,7 +733,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           <br />
           
           <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
-            ${question}
+            ${file ? `<img src='${imgUrl}' />` : question}
           </h2>
           
           <p>
@@ -831,6 +833,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       setShowCursor(true);
       const userMessage = URL.createObjectURL(file);
       setOriginalQueries([...originalQueries, userMessage]);
+
       setMessages([
         ...messages,
         { sender: "user", text: userMessage, models: selectedVisionLLMs, file },
@@ -852,14 +855,35 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
         // Assuming the response contains the caption
         const caption = response?.data.caption;
-
+        const botMessage = (
+          <div>
+            <p>{caption}</p>
+            <AddOptionsModal
+              text={caption}
+              file={file}
+              models={["gpt-4-vision"]}
+              addToNewNote={addToNewNote}
+              addToExistingNote={addToExistingNote}
+              setExistingNote={setExistingNote}
+              question={noteQuestion.current}
+              existingNote={existingNote}
+              onHide={onHide}
+              isNewNote={isNewNote}
+              setShowNoteModal={setShowNoteModal}
+              updateSelectedNote={setSelectedNote}
+              showNoteModal={showNoteModal}
+              selectedNote={selectedNote}
+              notes={notes}
+            />
+          </div>
+        );
         setMessages((prevMessages) => {
           const newMessages = [...prevMessages];
           if (newMessages.length > 0) {
             const lastMessageIndex = newMessages.length - 1;
             newMessages[lastMessageIndex] = {
               ...newMessages[lastMessageIndex],
-              text: caption,
+              text: botMessage,
             };
           }
           return newMessages;
@@ -1136,7 +1160,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                           ) : null}
 
                           {/* add to note */}
-                          {selectedLLMs[0] === "gpt-4-vision" && <AddOptionsModal
+                          {/* <AddOptionsModal
                             text={message.text}
                             file={message.file}
                             models={["gpt-4-vision"]}
@@ -1152,7 +1176,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                             showNoteModal={showNoteModal}
                             selectedNote={selectedNote}
                             notes={notes}
-                          />}
+                          /> */}
 
 
                           <div className="flex flex-wrap items-center gap-1">
