@@ -43,11 +43,16 @@ function NoteDetails() {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    var Image = Quill.import('formats/image');
+    Image.sanitize = function (url) {
+        return url; // You can modify the URL here
+    };
+
     useEffect(() => {
         if (selectedNote.text) {
             const htmlString = selectedNote.text.map(item => {
-                const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
-                return `<span style="color: ${llmColor || theme === 'light' ? '#333' : '#ABAEB4'};">${item.content}</span>`;
+                // const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
+                return `${item.content}`;
             }).join('<br />');
             setHTMLToDisplay(htmlString);
         }
@@ -70,6 +75,7 @@ function NoteDetails() {
                     imageLinks: [],
                 }
             }];
+            return;
         }
     };
 

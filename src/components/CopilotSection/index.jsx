@@ -624,40 +624,26 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     );
   };
 
-  const addToNewNote = (textToAdd, question = '', models = selectedLLMs, references) => {
-    console.log(references);
-    // setNoteReferences({
-    //   videoLinks: [],
-    //   pdfLinks: [],
-    //   imageLinks: [],
-    // });
+  const addToNewNote = (textToAdd, file, question = '', models = selectedLLMs, references) => {
 
-    // const videoLinks = noteReferences.videoLinks.map((video) => {
-    //   return (
-    //     `<li><a href="${video}" target="_blank">${video}</a></li>`
-    //   );
-    // });
-    // const pdfLinks = noteReferences.pdfLinks.map((pdf) => {
-    //   return (
-    //     `<li><a href="${pdf}" target="_blank">${pdf}</a></li>`
-    //   );
-    // });
-    // const imageLinks = noteReferences.imageLinks.map((img) => {
-    //   return (
-    //     `<li><a href="${img}" target="_blank">${img}</a></li>`
-    //   );
-    // });
-
-    const canRenderNoteRefs = (references.videoLinks.length > 0 || references.pdfLinks.length > 0 || references.imageLinks.length > 0);
+    const canRenderNoteRefs = (references?.videoLinks.length > 0 || references?.pdfLinks.length > 0 || references?.imageLinks.length > 0);
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
+
+    const getImg = (_file) => {
+      const imgUrl = URL.createObjectURL(_file);
+      console.log(imgUrl[0]);
+      return (
+        `<img src=${imgUrl} />`
+      );
+    };
 
     const newText = {
       content:
         `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">
 
         <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
-          ${question}
+          ${models.includes('gpt-4-vision') ? getImg(file) : question}
         </h2>
 
         <p style='margin-bottom: 0px;'>
@@ -847,8 +833,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       setOriginalQueries([...originalQueries, userMessage]);
       setMessages([
         ...messages,
-        { sender: "user", text: userMessage, models: selectedVisionLLMs },
-        { sender: "bot", text: "", models: selectedVisionLLMs },
+        { sender: "user", text: userMessage, models: selectedVisionLLMs, file },
+        { sender: "bot", text: "", models: selectedVisionLLMs, file },
       ]);
       setInput("");
       setResponseIndex((responseIndex) => responseIndex + 2);
@@ -1152,6 +1138,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                           {/* add to note */}
                           {selectedLLMs[0] === "gpt-4-vision" && <AddOptionsModal
                             text={message.text}
+                            file={message.file}
                             models={["gpt-4-vision"]}
                             addToNewNote={addToNewNote}
                             addToExistingNote={addToExistingNote} D
