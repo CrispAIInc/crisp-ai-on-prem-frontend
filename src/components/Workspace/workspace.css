@@ -3,3 +3,7 @@
 .react-pdf__Document > .annotationLayer {
   width: 100% !important;
 }
+
+.ql-editor img {
+  height: auto;
+}
