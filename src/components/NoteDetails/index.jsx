@@ -50,13 +50,15 @@ function NoteDetails() {
 
     useEffect(() => {
         if (selectedNote.text) {
+            console.log("run usefeecr");
             const htmlString = selectedNote.text.map(item => {
-                // const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
-                return `${item.content}`;
+                const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
+                const fallbackColor = theme === 'light' ? '#333' : '#fff';
+                return `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">${item.content}</span>`;
             }).join('<br />');
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedNote, selectedNote.text.length, theme]);
+    }, [selectedNote, selectedNote.text.length]);
 
 
     const handleContentChange = (newContent) => {

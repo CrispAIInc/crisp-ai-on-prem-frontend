@@ -131,6 +131,21 @@ const MainWorkspace = ({ theme }) => {
   const [isManualNote, setIsManualNote] = useState(false);
 
   useEffect(() => {
+    // update the color of the text in the note editor based on the theme
+    setSelectedNote((prev) => {
+      // update all text where model is null
+      const updatedText = prev.text.map((item) => {
+        if (item.model === null) {
+          return { ...item, color: theme === 'light' ? "#333" : '#fff' };
+        }
+        return item;
+      });
+
+      return { ...prev, text: updatedText };
+    });
+  }, [theme]);
+
+  useEffect(() => {
     setSelectedNote({
       note_id: "",
       text: [{
