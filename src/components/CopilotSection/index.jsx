@@ -691,11 +691,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   useEffect(() => {
     existingNoteRef.current = existingNote;
   }, [setExistingNote, existingNote]);
-  useEffect(() => {
-    setNotes(notes);
-  }, [notes]);
-  const addToExistingNote = async (newTextContent, file, question = '', models = selectedLLMs, references) => {
 
+  const latestNotes = useRef(notes);
+  useEffect(() => {
+    latestNotes.current = notes;
+  }, [notes]);
+
+  const addToExistingNote = async (newTextContent, file, question = '', models = selectedLLMs, references) => {
     setNoteReferences({
       videoLinks: [],
       pdfLinks: [],
@@ -760,18 +762,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       references,
     };
 
-    if (Array.isArray(notes[existingNoteRef.current]?.text)) {
-      notes[existingNoteRef.current].text.push(newNoteTextEntry);
+    if (Array.isArray(latestNotes.current[existingNoteRef.current]?.text)) {
+      latestNotes.current[existingNoteRef.current].text.push(newNoteTextEntry);
     } else {
-      notes[existingNoteRef.current].text = [newNoteTextEntry];
+      latestNotes.current[existingNoteRef.current].text = [newNoteTextEntry];
     }
     // Update the selectedNote with the updated note
-    setSelectedNote(notes[existingNoteRef.current]);
+    setSelectedNote(latestNotes.current[existingNoteRef.current]);
     setIsNewNote(false); // Since we are updating an existing note, it's not a new note
     setIsManualNote(false);
     setShowNoteDetails(true);
     setActiveView('note');
-    // setShowNoteModal(true); // Show the modal with the updated note
   };
 
   const onHide = () => {
@@ -950,6 +951,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         key={selectedNote.note_name}
       /> */}
       <div className="flex flex-wrap items-center justify-center gap-3">
+        {
+          notes.map((note, i) => {
+            <p key={i}>{note.note_name}</p>;
+          })
+        }
         {/* <CustomSelect
                     title="Category"
                     defaultValue={selectedCategory}
