@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
-import { getLevelOfSection } from '../../utils';
+import { generateRandomHash, getLevelOfSection } from '../../utils';
 
 function StoryDetails() {
 
@@ -38,7 +38,14 @@ function StoryDetails() {
     }, [selectedStory, selectedStory.text.length, theme]);
 
     const handleContentChange = (newContent) => {
-        // console.log(newContent);
+        // selectedStory.text = [{
+        //     outline: {
+        //         name: 'Story',
+        //         id: generateRandomHash(10)
+        //     },
+        //     content: newContent,
+        // }];
+        // return;
     };
 
     const handleSave = async () => {

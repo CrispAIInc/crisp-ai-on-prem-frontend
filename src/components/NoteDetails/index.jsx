@@ -61,8 +61,6 @@ function NoteDetails() {
 
 
     const handleContentChange = (newContent) => {
-        // const selectedNoteBackup = { ...selectedNote };
-        // add new content to the selected note
         if (isNewNote && isManualNote) {
             selectedNote.text = [{
                 content: newContent,
