@@ -75,15 +75,15 @@ const MainWorkspace = ({ theme }) => {
       value: "dall-e-3",
       label: "Dall-e-3",
       type: "image-generation",
-      color: "#3F51B5",
+      color: "#1C1678",
     },
     {
       value: "gpt-4-vision",
       label: "GPT-4-Vision",
       type: "lvm",
-      color: "#4527A0",
+      color: "#AF8F6F",
     },
-    // { value: "llama-2", label: "LLAMA-2", type: "llm", color: "#388E3C" },
+    { value: "llama-2", label: "LLAMA-2", type: "llm", color: "#388E3C" },
     {
       value: "mistral-8x7b",
       label: "Mistral LLM",
@@ -100,9 +100,15 @@ const MainWorkspace = ({ theme }) => {
       value: "claude-3-sonnet",
       label: "Claude-3 (Sonnet)",
       type: "llm",
-      color: "#1de9f0",
+      color: "#5BBCFF",
     },
-    // { value: "gemini", label: "Gemini", type: "llm", color: "#00796B" },
+    {
+      value: "claude-3-haiku",
+      label: "Claude-3 (Haiku)",
+      type: "llm",
+      color: "#00796B",
+    },
+    { value: "gemini-pro", label: "Gemini Pro", type: "llm", color: "#D10363" },
   ];
 
   const modules = {
