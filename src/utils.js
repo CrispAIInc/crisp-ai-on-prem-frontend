@@ -74,6 +74,13 @@ export function getLevelOfSection(section) {
     if (isString(indicator)) return 2;
 }
 
+export function getLevelOfSectionInGenStories(section) {
+    const indicator = section.split('. ')[0];
+    if (isRomanNumber(indicator)) return 3;
+    if (isNumber(indicator) || !isNaN(indicator)) return 5;
+    if (isString(indicator)) return 4;
+}
+
 export function isRomanNumber(string) {
     return /^(?=[MLXVI])M{0,4}(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/.test(string);
 }

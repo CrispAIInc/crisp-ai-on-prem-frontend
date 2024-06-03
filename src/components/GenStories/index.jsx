@@ -14,7 +14,7 @@ import CustomInput from "../CustomInput";
 import NoData from "../NoData";
 
 import { MainContext } from "../../contexts/mainContext";
-import { extractSections, extractTitle, generateRandomHash } from '../../utils';
+import { extractSections, extractTitle, generateRandomHash, getLevelOfSection, getLevelOfSectionInGenStories } from '../../utils';
 import makeApiRequest from "../../api";
 
 const GenStories = () => {
@@ -66,9 +66,18 @@ const GenStories = () => {
                 { query }
             );
 
+            // make answer to be well formatted with correct HTML headings and paragraphs
+            const sections = extractSections(answer);
+            const htmlContent = sections.map((section) => {
+                const headingLevel = getLevelOfSectionInGenStories(section, true);
+                return `<h${headingLevel} style='font-style: italic; font-weight: 700;'>${section}</h${headingLevel}>`;
+            });
+
+
             setOutlinesAnswers((prev) => {
                 const updatedOutlines = [...prev];
                 updatedOutlines[prev.length - 1].answer = answer;
+                updatedOutlines[prev.length - 1].htmlContent = htmlContent.join('');
                 return updatedOutlines;
             });
         } catch (error) {
@@ -80,8 +89,6 @@ const GenStories = () => {
 
     function addOutlineToStory(outline) {
         const sections = extractSections(outline);
-        console.log(outline);
-        console.log(extractTitle(outline));
         const text = sections.map((section) => {
             return {
                 outline: {
@@ -223,9 +230,10 @@ const GenStories = () => {
                                                 // dangerouslySetInnerHTML={{ _html: parsedOutlineString }}
                                                 >
                                                     {/* {outline.answer} */}
-                                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                        {outline.answer}
-                                                    </ReactMarkdown>
+                                                    <div dangerouslySetInnerHTML={{ __html: outline.htmlContent }}></div>
+                                                    {/* <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                        {outline.htmlContent}
+                                                    </ReactMarkdown> */}
                                                 </div>
                                                 {showCursor && outline.id === currentOutlineCursorId ? (
                                                     <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
