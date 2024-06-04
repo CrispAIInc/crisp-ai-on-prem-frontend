@@ -76,9 +76,9 @@ export function getLevelOfSection(section) {
 
 export function getLevelOfSectionInGenStories(section) {
     const indicator = section.split('. ')[0];
-    if (isRomanNumber(indicator)) return 3;
-    if (isNumber(indicator) || !isNaN(indicator)) return 5;
-    if (isString(indicator)) return 4;
+    if (isRomanNumber(indicator)) return 4;
+    if (isNumber(indicator) || !isNaN(indicator)) return 6;
+    if (isString(indicator)) return 5;
 }
 
 export function isRomanNumber(string) {
