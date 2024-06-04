@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import { generateRandomHash, getLevelOfSection } from '../../utils';
 
 function StoryDetails() {
@@ -35,7 +36,7 @@ function StoryDetails() {
             }).join('<br />');
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedStory, selectedStory.text.length, theme]);
+    }, [selectedStory, selectedStory.text, selectedStory.text.length, theme]);
 
     const handleContentChange = (newContent) => {
         // selectedStory.text = [{
@@ -72,6 +73,42 @@ function StoryDetails() {
             console.log(error);
         }
     };
+
+    function generateIntroConclusion() {
+        // get text of selectedStory except for introduction and conclusion sections
+        let content = "";
+        for (let i = 0; i < selectedStory.text.length; i++) {
+            if (selectedStory.text[i].outline.name.toLowerCase().includes('introduction')) continue;
+            if (selectedStory.text[i].outline.name.toLowerCase().includes('conclusion')) break;
+            content += '\n' + selectedStory.text[i].outline.name + '\n' + selectedStory.text[i].content;
+        }
+
+        const httpPayload = {
+            content
+        };
+
+        // make http request...
+        const response = {
+            introduction: "generated intro goes here...",
+            conclusion: "generated conclusion goes here..."
+        };
+
+        setSelectedStory((prev) => {
+            const updatedStory = { ...prev };
+
+            updatedStory.text[0] = { ...updatedStory.text[0], content: response.introduction };
+
+            // Loop through the text array and update content where outline.name contains "conclusion"
+            updatedStory.text = updatedStory.text.map((textItem) => {
+                if (textItem.outline?.name?.toLowerCase().includes("conclusion")) {
+                    return { ...textItem, content: response.conclusion };
+                }
+                return textItem;
+            });
+
+            return updatedStory;
+        });
+    }
 
     const deleteStory = async (id) => {
         try {
@@ -114,6 +151,16 @@ function StoryDetails() {
             </div>
 
             {/* story editor */}
+            {/* aggregated insights */}
+            <div
+                className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                onClick={generateIntroConclusion}
+            >
+                <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    Generate Introduction/Conclusion
+                </span>
+            </div>
             {/* story title */}
             <div className="my-4">
                 <CustomInput className="py-2" placeholder='story title' value={selectedStory.story_name} onChange={(e) => setSelectedStory(prev => ({ ...prev, story_name: e.target.value }))} />
