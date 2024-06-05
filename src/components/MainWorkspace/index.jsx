@@ -68,6 +68,7 @@ const MainWorkspace = ({ theme }) => {
     story_name: ""
   });
   const [showStoryDetails, setShowStoryDetails] = useState(false);
+  const [isNewStory, setIsNewStory] = useState(false);
 
   const llmModels = [
     { value: "gpt-4", label: "GPT-4", type: "llm", color: "#D163DA" },
@@ -182,6 +183,7 @@ const MainWorkspace = ({ theme }) => {
     resourceURL,
     setResourceURL,
     jumpToPage, setJumpToPage,
+    isNewStory, setIsNewStory,
     selectedGenStoriesModels, setSelectedGenStoriesModels,
     summaries, setSummaries,
     llmModels,

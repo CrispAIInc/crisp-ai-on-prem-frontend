@@ -9,7 +9,7 @@ import NoData from "../NoData";
 
 function StoriesSection() {
 
-  const { theme, setActiveView, stories, setSelectedStory } = useContext(MainContext);
+  const { theme, setActiveView, stories, setSelectedStory, setIsNewStory } = useContext(MainContext);
 
   function handleNewStoryClick() {
     setSelectedStory({
@@ -17,6 +17,7 @@ function StoriesSection() {
       text: [],
       story_name: "",
     });
+    setIsNewStory(true);
     setActiveView('story');
   }
 

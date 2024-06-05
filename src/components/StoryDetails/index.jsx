@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import CustomInput from '../CustomInput';
@@ -10,15 +10,18 @@ import SaveIcon from '@mui/icons-material/Save';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import { generateRandomHash, getLevelOfSection } from '../../utils';
+import { generateRandomHash, getLevelOfSection, transformString } from '../../utils';
 
 function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
         modules, theme, stories,
-        formats, setStories } = useContext(MainContext);
+        formats, setStories, isNewStory } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
+    // const [newStoryContent, setNewStoryContent] = useState('');
+    const newStoryContent = useRef('');
+
 
     useEffect(() => {
         if (selectedStory.text) {
@@ -39,14 +42,9 @@ function StoryDetails() {
     }, [selectedStory, selectedStory.text, selectedStory.text.length, theme]);
 
     const handleContentChange = (newContent) => {
-        // selectedStory.text = [{
-        //     outline: {
-        //         name: 'Story',
-        //         id: generateRandomHash(10)
-        //     },
-        //     content: newContent,
-        // }];
-        // return;
+        if (isNewStory) {
+            newStoryContent.current = newContent;
+        }
     };
 
     const handleSave = async () => {
@@ -55,10 +53,16 @@ function StoryDetails() {
             return;
         }
 
+        let text = null;
+        if (isNewStory) {
+            text = transformString(newStoryContent.current);
+            setSelectedStory((prev) => ({ ...prev, text }));
+        }
+
         try {
             const story = stories.find(story => story.story_id === selectedStory.story_id);
             if (!story) {
-                await makeApiRequest('/stories', 'post', selectedStory);
+                await makeApiRequest('/stories', 'post', { ...selectedStory, text: text || selectedStory.text });
             } else {
                 await makeApiRequest(`/stories/${selectedStory.story_id}`, 'put', selectedStory);
             }

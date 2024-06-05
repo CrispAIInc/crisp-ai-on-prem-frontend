@@ -109,3 +109,20 @@ export const toBase64 = async file => new Promise((resolve, reject) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
 });
+
+export function transformString(inputString) {
+    // Regular expression to find all <p>...</p> tags
+    const pTags = inputString.match(/<p>(.*?)<\/p>/g);
+
+    // Create the desired structure
+    const result = pTags.map(tag => {
+        // Extract the content inside the <p> tag
+        const content = tag.match(/<p>(.*?)<\/p>/)[1];
+        return {
+            outline: { name: content, id: generateRandomHash(10) },
+            content: tag
+        };
+    });
+
+    return result;
+}
