@@ -10,11 +10,12 @@ import makeApiRequest from '../../api';
 
 function SavedStory({ story }) {
 
-    const { theme, setSelectedStory, selectedStory, setActiveView, setStories } = useContext(MainContext);
+    const { theme, setSelectedStory, selectedStory, setActiveView, setStories, setIsNewStory } = useContext(MainContext);
 
     const showStory = () => {
         setSelectedStory(story);
         setActiveView('story');
+        setIsNewStory(false);
     };
 
     const deleteStory = async (id) => {

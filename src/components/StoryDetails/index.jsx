@@ -16,7 +16,7 @@ function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
         modules, theme, stories,
-        formats, setStories, isNewStory } = useContext(MainContext);
+        formats, setStories, isNewStory, setIsNewStory } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
     // const [newStoryContent, setNewStoryContent] = useState('');
@@ -79,39 +79,41 @@ function StoryDetails() {
     };
 
     function generateIntroConclusion() {
-        // get text of selectedStory except for introduction and conclusion sections
-        let content = "";
-        for (let i = 0; i < selectedStory.text.length; i++) {
-            if (selectedStory.text[i].outline.name.toLowerCase().includes('introduction')) continue;
-            if (selectedStory.text[i].outline.name.toLowerCase().includes('conclusion')) break;
-            content += '\n' + selectedStory.text[i].outline.name + '\n' + selectedStory.text[i].content;
-        }
+        if (!isNewStory) {
+            // get text of selectedStory except for introduction and conclusion sections
+            let content = "";
+            for (let i = 0; i < selectedStory.text.length; i++) {
+                if (selectedStory.text[i].outline.name.toLowerCase().includes('introduction')) continue;
+                if (selectedStory.text[i].outline.name.toLowerCase().includes('conclusion')) break;
+                content += '\n' + selectedStory.text[i].outline.name + '\n' + selectedStory.text[i].content;
+            }
 
-        const httpPayload = {
-            content
-        };
+            const httpPayload = {
+                content
+            };
 
-        // make http request...
-        const response = {
-            introduction: "generated intro goes here...",
-            conclusion: "generated conclusion goes here..."
-        };
+            // make http request...
+            const response = {
+                introduction: "generated intro goes here...",
+                conclusion: "generated conclusion goes here..."
+            };
 
-        setSelectedStory((prev) => {
-            const updatedStory = { ...prev };
+            setSelectedStory((prev) => {
+                const updatedStory = { ...prev };
 
-            updatedStory.text[0] = { ...updatedStory.text[0], content: response.introduction };
+                updatedStory.text[0] = { ...updatedStory.text[0], content: response.introduction };
 
-            // Loop through the text array and update content where outline.name contains "conclusion"
-            updatedStory.text = updatedStory.text.map((textItem) => {
-                if (textItem.outline?.name?.toLowerCase().includes("conclusion")) {
-                    return { ...textItem, content: response.conclusion };
-                }
-                return textItem;
+                // Loop through the text array and update content where outline.name contains "conclusion"
+                updatedStory.text = updatedStory.text.map((textItem) => {
+                    if (textItem.outline?.name?.toLowerCase().includes("conclusion")) {
+                        return { ...textItem, content: response.conclusion };
+                    }
+                    return textItem;
+                });
+
+                return updatedStory;
             });
-
-            return updatedStory;
-        });
+        }
     }
 
     const deleteStory = async (id) => {
@@ -131,27 +133,30 @@ function StoryDetails() {
         }
     };
 
+    const handleCloseStory = () => {
+        setSelectedStory({
+            story_id: "",
+            text: [],
+            story_name: "",
+        });
+        setActiveView(() => {
+            if (currentResource) {
+                return 'resource';
+            }
+            if (selectedNote.note_id !== '') {
+                console.log("hehe");
+                return 'note';
+            }
+            return null;
+        });
+        setIsNewStory(false);
+    };
+
     return (
         <div className="max-w-3xl mx-auto">
             {/* close button */}
             <div className='flex items-center justify-end mt-3'>
-                <BaseHeading text='close' className='cursor-pointer user-select-none' onClick={() => {
-                    setSelectedStory({
-                        story_id: "",
-                        text: [],
-                        story_name: "",
-                    });
-                    setActiveView(() => {
-                        if (currentResource) {
-                            return 'resource';
-                        }
-                        if (selectedNote.note_id !== '') {
-                            console.log("hehe");
-                            return 'note';
-                        }
-                        return null;
-                    });
-                }} />
+                <BaseHeading text='close' className='cursor-pointer user-select-none' onClick={handleCloseStory} />
             </div>
 
             {/* story editor */}
