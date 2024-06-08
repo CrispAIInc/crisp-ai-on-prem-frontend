@@ -7,6 +7,7 @@ import makeApiRequest from "../../api";
 import ContentPanel from "../ContentPanel";
 import Workspace from "../Workspace";
 import ChatPanel from "../ChatPanel";
+import AppHeader from "../AppHeader";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -267,6 +268,7 @@ const MainWorkspace = ({ theme }) => {
 
   return (
     <MainContext.Provider value={value}>
+      <AppHeader />
       <div className="flex h-full divide-x divide-separator main-workspace-container">
         <ContentPanel />
         {/* <div className="w-1/2 h-full overflow-y-auto bg-background_workspace"> */}
