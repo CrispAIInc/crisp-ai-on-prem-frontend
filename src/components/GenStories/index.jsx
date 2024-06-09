@@ -31,8 +31,6 @@ const GenStories = () => {
         selectedGenStoriesModels,
         setSelectedGenStoriesModels,
         llmModels,
-        stories,
-        setStories,
         setSelectedStory,
         setActiveView,
     } = useContext(MainContext);
@@ -87,7 +85,7 @@ const GenStories = () => {
         }
     };
 
-    function addOutlineToStory(outline) {
+    function addOutlineToStory(outline, models = selectedGenStoriesModels) {
         const sections = extractSections(outline);
         const text = sections.map((section) => {
             return {
@@ -101,7 +99,8 @@ const GenStories = () => {
         const newStory = {
             story_id: new Date().getTime().toString(),
             story_name: extractTitle(outline),
-            text
+            text,
+            models,
         };
         // setStories(prev => [...prev, newStory]);
         displayStory(newStory);
@@ -240,7 +239,7 @@ const GenStories = () => {
                                                 ) : null}
 
                                                 {/* add to report => show in editor */}
-                                                <Button onClick={() => addOutlineToStory(outline.answer)}><AddCircleIcon /></Button>
+                                                <Button onClick={() => addOutlineToStory(outline.answer, outline.models)}><AddCircleIcon /></Button>
 
                                                 <div className="flex flex-wrap items-center gap-1">
                                                     <span

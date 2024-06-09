@@ -25,6 +25,7 @@ function SavedStory({ story }) {
                 story_id: "",
                 text: [],
                 story_name: "",
+                models: [],
             });
 
             // fetch stories

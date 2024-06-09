@@ -66,7 +66,8 @@ const MainWorkspace = ({ theme }) => {
   const [selectedStory, setSelectedStory] = useState({
     story_id: "",
     text: [],
-    story_name: ""
+    story_name: "",
+    models: [],
   });
   const [showStoryDetails, setShowStoryDetails] = useState(false);
   const [isNewStory, setIsNewStory] = useState(false);
@@ -257,6 +258,7 @@ const MainWorkspace = ({ theme }) => {
           story_id: "",
           text: [],
           story_name: "",
+          models: [],
         });
       } catch (error) {
         console.error(error);
@@ -268,7 +270,7 @@ const MainWorkspace = ({ theme }) => {
 
   return (
     <MainContext.Provider value={value}>
-      <AppHeader />
+      {/* <AppHeader /> */}
       <div className="flex h-full divide-x divide-separator main-workspace-container">
         <ContentPanel />
         {/* <div className="w-1/2 h-full overflow-y-auto bg-background_workspace"> */}

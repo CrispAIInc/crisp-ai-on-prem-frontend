@@ -16,6 +16,7 @@ function StoriesSection() {
       story_id: "",
       text: [],
       story_name: "",
+      models: [],
     });
     setIsNewStory(true);
     setActiveView('story');

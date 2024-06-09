@@ -10,16 +10,16 @@ import SaveIcon from '@mui/icons-material/Save';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import { generateRandomHash, getLevelOfSection, transformString } from '../../utils';
+import { getLevelOfSection, transformString } from '../../utils';
 
 function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
         modules, theme, stories,
-        formats, setStories, isNewStory, setIsNewStory } = useContext(MainContext);
+        formats, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
-    // const [newStoryContent, setNewStoryContent] = useState('');
+    const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] = useState(false);
     const newStoryContent = useRef('');
 
 
@@ -72,14 +72,16 @@ function StoryDetails() {
                 story_id: "",
                 text: [],
                 story_name: "",
+                models: [],
             });
         } catch (error) {
             console.log(error);
         }
     };
 
-    function generateIntroConclusion() {
+    async function generateIntroConclusion() {
         if (!isNewStory) {
+            setIsGeneratingIntroConlusion(true);
             // get text of selectedStory except for introduction and conclusion sections
             let content = "";
             for (let i = 0; i < selectedStory.text.length; i++) {
@@ -91,28 +93,29 @@ function StoryDetails() {
             const httpPayload = {
                 content
             };
+            try {
+                const { introduction, conclusion } = await makeApiRequest(`/generate-intro-outro/${selectedStory.models[0]}`, 'post', httpPayload);
 
-            // make http request...
-            const response = {
-                introduction: "generated intro goes here...",
-                conclusion: "generated conclusion goes here..."
-            };
+                setSelectedStory((prev) => {
+                    const updatedStory = { ...prev };
 
-            setSelectedStory((prev) => {
-                const updatedStory = { ...prev };
+                    updatedStory.text[0] = { ...updatedStory.text[0], content: introduction + '<br />' };
 
-                updatedStory.text[0] = { ...updatedStory.text[0], content: response.introduction };
+                    // Loop through the text array and update content where outline.name contains "conclusion"
+                    updatedStory.text = updatedStory.text.map((textItem) => {
+                        if (textItem.outline?.name?.toLowerCase().includes("conclusion")) {
+                            return { ...textItem, content: conclusion + '<br />' };
+                        }
+                        return textItem;
+                    });
 
-                // Loop through the text array and update content where outline.name contains "conclusion"
-                updatedStory.text = updatedStory.text.map((textItem) => {
-                    if (textItem.outline?.name?.toLowerCase().includes("conclusion")) {
-                        return { ...textItem, content: response.conclusion };
-                    }
-                    return textItem;
+                    return updatedStory;
                 });
-
-                return updatedStory;
-            });
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsGeneratingIntroConlusion(false);
+            }
         }
     }
 
@@ -123,6 +126,7 @@ function StoryDetails() {
                 story_id: "",
                 text: [],
                 story_name: "",
+                models: []
             });
 
             // fetch stories
@@ -138,6 +142,7 @@ function StoryDetails() {
             story_id: "",
             text: [],
             story_name: "",
+            models: []
         });
         setActiveView(() => {
             if (currentResource) {
@@ -163,11 +168,11 @@ function StoryDetails() {
             {/* aggregated insights */}
             <div
                 className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                onClick={generateIntroConclusion}
+                onClick={() => generateIntroConclusion()}
             >
                 <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                    Generate Introduction/Conclusion
+                    {isGeneratingIntroConclusion ? 'Generating...' : 'Generate Introduction/Conclusion'}
                 </span>
             </div>
             {/* story title */}
