@@ -24,21 +24,28 @@ export const useResizableSidebar = (minWidth, isLeft) => {
         setIsResizing(false);
     };
 
+    const handleDoubleClick = () => {
+        setSidebarWidth(window.innerWidth * 0.25);
+    };
+
     useEffect(() => {
         if (isResizing) {
             window.addEventListener('mousemove', handleMouseMove);
             window.addEventListener('mouseup', handleMouseUp);
+            window.addEventListener('dblclick', handleDoubleClick);
         } else {
             // Clean up event listeners
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('dblclick', handleDoubleClick);
         }
 
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('dblclick', handleDoubleClick);
         };
     }, [isResizing]);
 
-    return { sidebarWidth, handleMouseDown };
+    return { sidebarWidth, handleMouseDown, handleDoubleClick };
 };

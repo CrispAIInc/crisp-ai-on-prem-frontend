@@ -11,7 +11,7 @@ import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 const ChatPanel = () => {
-  const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown } = useResizableSidebar(200, false);
+  const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick } = useResizableSidebar(200, false);
 
   const { chatLoaded, setChatLoaded, isRightSidebarOpen } = useContext(MainContext);
 
@@ -23,6 +23,7 @@ const ChatPanel = () => {
         className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
         style={{ right: rightWidth }}
         onMouseDown={handleRightMouseDown}
+        onDoubleClick={handleDoubleClick}
       ></div>}
 
       <Tabs

@@ -16,7 +16,7 @@ import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import StoriesSection from '../StoriesSection';
 
 const ContentPanel = () => {
-    const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown } = useResizableSidebar(200, true);
+    const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick } = useResizableSidebar(200, true);
 
     const { setCurrentResource,
         setResourceURL,
@@ -115,6 +115,7 @@ const ContentPanel = () => {
                     className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
                     style={{ left: leftWidth }}
                     onMouseDown={handleLeftMouseDown}
+                    onDoubleClick={handleDoubleClick}
                 ></div>
             }
 
