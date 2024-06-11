@@ -154,21 +154,21 @@ const MainWorkspace = ({ theme }) => {
     });
   }, [theme]);
 
-  useEffect(() => {
-    setSelectedNote({
-      note_id: "",
-      text: [{
-        content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
-          videoLinks: [],
-          pdfLinks: [],
-          imageLinks: [],
-        }
-      }],
-      images: [],
-      note_name: "",
-    });
-    // setShowNoteDetails(false);
-  }, [notes]);
+  // useEffect(() => {
+    // setSelectedNote({
+    //   note_id: "",
+    //   text: [{
+    //     content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+    //       videoLinks: [],
+    //       pdfLinks: [],
+    //       imageLinks: [],
+    //     }
+    //   }],
+    //   images: [],
+    //   note_name: "",
+    // });
+  //   // setShowNoteDetails(false);
+  // }, [notes]);
 
   // create value object with all the states
   const value = {

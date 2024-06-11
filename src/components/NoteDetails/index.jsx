@@ -59,6 +59,10 @@ function NoteDetails() {
         }
     }, [selectedNote, selectedNote.text.length]);
 
+    // useEffect(() => {
+    //     setSelectedNote(notes.at(-1));
+    // }, [notes]);
+
 
     const handleContentChange = (newContent) => {
         if (isNewNote && isManualNote) {
@@ -78,9 +82,6 @@ function NoteDetails() {
         }
     };
 
-
-
-
     const handleSave = async (event) => {
         event.preventDefault();
         if (selectedNote.note_name === "") {
@@ -99,11 +100,9 @@ function NoteDetails() {
             // fetch updated version of notes
             const data = await makeApiRequest("/notes", "post");
             setNotes(() => data);
-
+            toast('Insight saved successfully', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
         } catch (error) {
             console.log(error);
-        } finally {
-            // setCurrentNoteTitle(selectedNote.note_name);
         }
     };
 
@@ -113,16 +112,23 @@ function NoteDetails() {
             // send request to update notes
             const data = await makeApiRequest("/notes", "post");
             setNotes(data);
-            // setSelectedNote({
-            //     note_id: "",
-            //     text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
-            //     images: [],
-            //     note_name: "",
-            // });
+            toast('Insight deleted successfully', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
         } catch (error) {
             console.log(error);
+        } finally {
+            setSelectedNote({
+                note_id: "",
+                text: [{
+                    content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+                        videoLinks: [],
+                        pdfLinks: [],
+                        imageLinks: [],
+                    }
+                }],
+                images: [],
+                note_name: "",
+            });
         }
-        // onHide();
     };
 
     function extractUniqueAttributes(dataArray) {
@@ -217,14 +223,13 @@ function NoteDetails() {
             const { aggregated_answer } = await makeApiRequest("/aggregate", "post", { ...payload }, {
                 'Content-Type': 'application/json',
             });
-            setNotes(prev => {
-                // add data to notes
-                return [...prev, {
-                    note_id: new Date().toISOString().replace(/:/g, '-').split('.')[0],
-                    note_name: "aggregated insight",
-                    text: [
-                        {
-                            content: `<span style='color: ${hexToRGBString(llmColor || fallbackColor)}'>
+
+            const newNote = {
+                note_id: new Date().toISOString().replace(/:/g, '-').split('.')[0],
+                note_name: "aggregated insight",
+                text: [
+                    {
+                        content: `<span style='color: ${hexToRGBString(llmColor || fallbackColor)}'>
                                         ${questions.map((question, index) => `<h2 key=${index} style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h2>`).join('')}
                                         <p>${aggregated_answer}</p>
                                         <p style='margin-bottom: 0px;'>
@@ -234,16 +239,21 @@ function NoteDetails() {
                                             </ul>
                                         </p>
                                     </span>`,
-                            answer: aggregated_answer,
-                            model: llmAggregation,
-                            color: llmColor || fallbackColor,
-                            question: questions.join(','),
-                            references: _refs,
-                            isAggregated: true,
-                        }
-                    ],
-                    images: [],
-                }];
+                        answer: aggregated_answer,
+                        model: llmAggregation,
+                        color: llmColor || fallbackColor,
+                        question: questions.join(','),
+                        references: _refs,
+                        isAggregated: true,
+                    }
+                ],
+                images: [],
+            };
+
+            setNotes((prev) => {
+                const updatedNotes = [...prev, newNote];
+                setSelectedNote(newNote);
+                return updatedNotes;
             });
         } catch (error) {
             console.log(error);
@@ -252,10 +262,6 @@ function NoteDetails() {
             setIsAggregationModalOpen(false);
         }
     };
-
-    function onHide() {
-        setIsAggregationModalOpen(false);
-    }
 
     const distinctModels = [];
     const modelSet = new Set();
