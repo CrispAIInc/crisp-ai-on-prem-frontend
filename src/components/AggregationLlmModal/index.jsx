@@ -3,6 +3,7 @@ import { MainContext } from '../../contexts/mainContext';
 
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import LoadingSpinner from '../LoadingSpinner';
 
 function AggregationLlmModal(props) {
 
@@ -53,7 +54,7 @@ function AggregationLlmModal(props) {
                     onClick={() => props.aggregateInsight()}
                 >
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                        {props.isPending ? 'Aggregating...' : 'Aggregate'}
+                        {props.isPending ? <LoadingSpinner videoSpinner={true} /> : 'Aggregate'}
                     </span>
                 </div>
             </Modal.Footer>
