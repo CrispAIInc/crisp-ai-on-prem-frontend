@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import makeApiRequest from '../../api';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -20,33 +20,17 @@ export function NoteModal({ onHide,
     setNotes,
     isNewNote } = useContext(MainContext);
 
-  const [HTMLToDisplay, setHTMLToDisplay] = useState('');
-
-  // useEffect(() => {
-  //   if (selectedNote.text) {
-  //     const htmlString = selectedNote.text.map(item => `<span style="color: ${item.color};">${item.content}</span>`).join('');
-  //     setHTMLToDisplay(htmlString);
-  //   }
-  // }, [selectedNote.text]);
-
-  // const handleTextChange = (newHtmlContent) => {
-  //   // Update the local state or prepare the content for saving
-  //   setHTMLToDisplay(newHtmlContent);
-  //   Array.isArray(selectedNote.text) ? selectedNote.text[selectedNote.text.length - 1].content = newHtmlContent : selectedNote.text = newHtmlContent;
-  // };
+  const [HTMLToDisplay] = useState('');
 
 
   const handleSave = async (event) => {
     event.preventDefault();
     if (isNewNote) {
       const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0];
-      // const noteFilename = `${dateTimeStr}.json`;
       selectedNote.note_id = dateTimeStr;
     }
     try {
-      // setSelectedNote({ ...selectedNote, note_name: currentNoteTitle });
       await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote: { ...selectedNote, note_name: currentNoteTitle }, noteName: 'note_json', noteNumber: parseInt(existingNote + 1), isNewNote: isNewNote });
-      // fetch updated version of notes
       const data = await makeApiRequest("/notes", "post");
       setNotes(data);
 

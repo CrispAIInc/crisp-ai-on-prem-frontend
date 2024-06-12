@@ -16,7 +16,7 @@ function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
         modules, theme, stories,
-        formats, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels } = useContext(MainContext);
+        formats, setStories, isNewStory, setIsNewStory } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
     const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] = useState(false);

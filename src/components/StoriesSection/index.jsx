@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-// import SideCard from "../../layouts/SideCard";
 import { MainContext } from '../../contexts/mainContext';
 
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';

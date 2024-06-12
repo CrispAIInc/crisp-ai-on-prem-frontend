@@ -22,7 +22,6 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
         setIsNewNote(false);
         setShowNoteDetails(true);
         setActiveView('note');
-        // setCurrentResource(null);
     };
 
     const handleDelete = async () => {
@@ -31,16 +30,9 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
             // send request to update notes
             const data = await makeApiRequest("/notes", "post");
             setNotes(data);
-            // setSelectedNote({
-            //     note_id: "",
-            //     text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
-            //     images: [],
-            //     note_name: "",
-            // });
         } catch (error) {
             console.log(error);
         }
-        // onHide();
     };
 
     return (

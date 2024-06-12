@@ -7,7 +7,6 @@ import makeApiRequest from "../../api";
 import ContentPanel from "../ContentPanel";
 import Workspace from "../Workspace";
 import ChatPanel from "../ChatPanel";
-import AppHeader from "../AppHeader";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -154,22 +153,6 @@ const MainWorkspace = ({ theme }) => {
     });
   }, [theme]);
 
-  // useEffect(() => {
-    // setSelectedNote({
-    //   note_id: "",
-    //   text: [{
-    //     content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
-    //       videoLinks: [],
-    //       pdfLinks: [],
-    //       imageLinks: [],
-    //     }
-    //   }],
-    //   images: [],
-    //   note_name: "",
-    // });
-  //   // setShowNoteDetails(false);
-  // }, [notes]);
-
   // create value object with all the states
   const value = {
     theme, activeView, setActiveView,
@@ -270,12 +253,9 @@ const MainWorkspace = ({ theme }) => {
 
   return (
     <MainContext.Provider value={value}>
-      {/* <AppHeader /> */}
       <div className="flex h-full divide-x divide-separator main-workspace-container">
         <ContentPanel />
-        {/* <div className="w-1/2 h-full overflow-y-auto bg-background_workspace"> */}
         <Workspace />
-        {/* </div> */}
         <ChatPanel />
       </div>
     </MainContext.Provider>

@@ -8,15 +8,12 @@ import { MainContext } from "../../contexts/mainContext";
 import AddOptionsModal from "../AddOptionsModal";
 import CustomInput from "../CustomInput";
 import CustomSelect from "../CustomSelect";
-import ImageModal from "../ImageModal";
 import { LLMModal } from "../LLMModal";
 import LoadingSpinner from "../LoadingSpinner";
-import { NoteModal } from "../NoteModal";
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import CustomButton from "../CustomButton";
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import { hexToRGBString, toBase64 } from '../../utils';
-import { renderToString } from 'react-dom/server';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
@@ -53,19 +50,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  // const [chatLoaded, setChatLoaded] = useState("");
 
   const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
-  // const [coorgToLanguage, setCoorgToLanguage] = useState('afrikaans');
-  // const [userToLanguage, setUserToLanguage] = useState('afrikaans');
   const [originalQueries, setOriginalQueries] = useState([]);
   const [originalResponses, setOriginalResponses] = useState([]);
-  // const [isTranslatingUser, setIsTranslatingUser] = useState(false);
-  // const [isTranslatingCoorg, setIsTranslatingCoorg] = useState(false);
-  // const [clickedIndex, setClickedIndex] = useState(0);
   const [responseIndex, setResponseIndex] = useState(-1);
-  // const [gptModel, setGptModel] = useState('gpt-4');
   const [selectedCategoryChat] = useState("all");
   const [fromChat, setFromChat] = useState(false);
   const [existingNote, setExistingNote] = useState(0);
@@ -210,7 +200,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const [showCursor, setShowCursor] = useState(false);
 
-  const [showImageModal, setShowImageModal] = useState(false);
+  const [, setShowImageModal] = useState(false);
 
   // For GPT-4-Vision
   const [, setIsUploadingVisionImg] = useState(false);
@@ -246,20 +236,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     fetchChat();
   }, [selectedCategoryChat, selectedSources]);
 
-  // whenever theme changes, change the color of notes that have a text with no model to either #FFF or #333
-  // useEffect(() => {
-  //   if (selectedNote.text.length > 0) {
-  //     const updatedText = selectedNote.text.map((text) => {
-  //       if (!text.model) {
-  //         text.color = theme === 'light' ? "#333" : "#fff";
-  //       }
-  //       return text;
-  //     });
-  //     setSelectedNote({ ...selectedNote, text: updatedText });
-  //   }
-  // }, [theme]);
-
-
   function timeToSeconds(time) {
     const parts = time.split(":");
     const hours = parseInt(parts[0], 10);
@@ -283,10 +259,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     }
   }, [isPlayerReady]);
 
-  // useEffect(() => {
-  //     setModelsUsed(selectedLLMs);
-  // }, [selectedLLMs]);
-  // const [noteQuestion, setNoteQuestion] = useState("");
   let noteQuestion = useRef('');
   const sendMessage = async (message, models = selectedLLMs) => {
     if (message === "" && input === "") {
@@ -684,8 +656,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setActiveView('note');
   };
 
-
-
   useEffect(() => {
     noteQuestion.ref = input;
   }, [input]);
@@ -806,10 +776,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         });
       });
     setIsNewNote(false);
-  };
-
-  const onHideImageModal = () => {
-    setShowImageModal(false);
   };
 
   const fetchBlobAndRecreateFile = async (blob) => {
@@ -942,16 +908,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   return (
     <div className="relative flex flex-col flex-1 h-full overflow-y-auto">
-      {/* <NoteModal
-        show={showNoteModal}
-        onHide={onHide}
-        note={selectedNote}
-        setSelectedNote={setSelectedNote}
-        className="modal"
-        existingNote={existingNote}
-        isNewNote={isNewNote}
-        key={selectedNote.note_name}
-      /> */}
       <div className="flex flex-wrap items-center justify-center gap-3">
         {
           notes.map((note, i) => {
@@ -1058,7 +1014,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
               <>
                 <div key={index}>
                   <div className={`message bot-message h-full`}>
-                    {/* <b className="text-textColor-200">Chatbot: </b> */}
                     <div
                       className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
                         ? "bg-separator text-textColor-200"
@@ -1263,9 +1218,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 <SendIcon color="primary" />
               </div>
             </>}
-
-
-        {/* </div>} */}
 
       </div>
     </div>

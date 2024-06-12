@@ -1,4 +1,4 @@
-import { createRef, useState, useContext, useRef, useEffect } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { MainContext } from "../../contexts/mainContext";
@@ -24,7 +24,6 @@ const Workspace = () => {
         player,
         setIsPlayerReady,
         activeView, setActiveView,
-        showNoteDetails,
         theme,
         setIsLeftSidebarOpen,
         setIsRightSidebarOpen,
@@ -75,23 +74,14 @@ const Workspace = () => {
     };
 
     const [isPdfLoaded, setIsPdfLoaded] = useState(false);
-    // function onDocumentLoadSuccess({ numPages }) {
-    //     setNumPages(numPages);
-    //     setIsPdfLoaded(true);
-    // }
     const pageRefs = useRef({});
     const onDocumentLoadSuccess = ({ numPages }) => {
         setNumPages(numPages);
         setIsPdfLoaded(true);
-        // Initialize refs for each page
-        // pageRefs.current = Array.from({ length: numPages }, (_, i) => pageRefs.current[i] || createRef());
     };
 
-    // const onItemClick = ({ pageNumber }) =>
-    //     pageRefs.current[pageNumber].scrollIntoView({ behavior: 'smooth' });
     useEffect(() => {
         if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
-            // pageRefs.current[jumpToPage - 1].scrollIntoView({ behavior: 'smooth' });
             setTimeout(() => {
                 const targetRef = pageRefs.current[jumpToPage.page - 1];
                 if (targetRef && targetRef.scrollIntoView) {
@@ -101,32 +91,13 @@ const Workspace = () => {
         }
     }, [jumpToPage, numPages, isPdfLoaded]);
 
-    // useEffect(() => {
-    //     // Scroll to the specific page
-    //     if (PdfContainer.current && jumpToPage > 0) {
-    //         const container = PdfContainer.current;
-    //         const pageHeight = container.scrollHeight / numPages;
-    //         const scrollToPosition = (jumpToPage - 1) * pageHeight;
-
-    //         container.scrollTo({
-    //             top: scrollToPosition,
-    //             behavior: 'smooth', // Smooth scrolling for better user experience
-    //         });
-    //     }
-    // }, [jumpToPage, numPages]);
-
     return (
         <div className="relative flex-1 h-full px-10 overflow-y-auto media-container bg-background_workspace">
-            {/* <div className={`flex items-center justify-between ${currentResource ? 'mb-5' : 'absolute top-0 left-0 w-full'}`}> */}
-            {/* left sidebar collapser */}
             <div
                 className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
             </div>
-            {/* <span className="ml-3">expand</span>
-                <span className="mr-3">expand</span> */}
-            {/* </div> */}
             {!activeView ? (
                 <div className="mt-10">
                     <NoData />
@@ -170,8 +141,6 @@ const Workspace = () => {
                                         Array.from(new Array(numPages), (el, index) => (
                                             <div key={`page_${index + 1}`} ref={el => { pageRefs.current[index] = el; }}>
                                                 <Page
-                                                    // ref={el => { pageRefs.current[index + 1] = el; }}
-                                                    // inputRef={el => pageRefs.current[index] = el}
                                                     _className='mx-auto !w-full !min-w-0'
                                                     className="!w-full mx-auto"
 

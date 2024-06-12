@@ -1,6 +1,5 @@
 const CustomButton = ({ children, onClick, className, disabled = false }) => {
     return (
-        // <div className={`px-2 py-1 my-6 text-center text-white rounded-md cursor-pointer select-sources-container bg-primary-300 ${className}`}>
         <button
             className={`px-2 py-1 my-6 text-center !w-fit rounded-md cursor-pointer select-sources-container  ${className}`}
             type="button"
@@ -9,7 +8,6 @@ const CustomButton = ({ children, onClick, className, disabled = false }) => {
         >
             {children}
         </button>
-        // </div>
     );
 };
 

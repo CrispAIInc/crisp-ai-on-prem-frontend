@@ -31,7 +31,6 @@ const ContentPanel = () => {
 
     const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
 
-    // const [currentResource, setCurrentResource] = useState('');
     const [, setTranscription] = useState("");
 
 
@@ -84,7 +83,6 @@ const ContentPanel = () => {
             setJumpToPage({ page: -1 });
         }
         setActiveView('resource');
-        // setShowNoteDetails(false);
     };
     /**
      * Function to toggle 'isSelected' of an item inside 'knowledgeBase' array when the checkbox is clicked
@@ -103,7 +101,6 @@ const ContentPanel = () => {
 
     const onHideSearchModal = () => {
         setShowSearchModal(false);
-        // setCurrentResource(null);
     };
 
     return (

@@ -34,7 +34,6 @@ function AggregationLlmModal(props) {
                                     key={index}
                                     type="radio"
                                     label={llm.label}
-                                    // disabled={isCheckboxDisabled(model.type, model.value)}
                                     checked={llm.value === props.llmAggregation}
                                     onChange={() => {
                                         // if the used checked this llm, then set is to be the selected llm otherwide not

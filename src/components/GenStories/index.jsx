@@ -105,7 +105,6 @@ const GenStories = () => {
             text,
             models,
         };
-        // setStories(prev => [...prev, newStory]);
         displayStory(newStory);
     }
 
@@ -171,7 +170,6 @@ const GenStories = () => {
                         ))
                     )}
                 </div>
-                {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
             </div>
 
             {/* chat container */}
@@ -208,7 +206,6 @@ const GenStories = () => {
                             <>
                                 <div key={index}>
                                     <div className={`message bot-message h-full`}>
-                                        {/* <b className="text-textColor-200">Chatbot: </b> */}
                                         <div
                                             className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
                                                 ? "bg-separator text-textColor-200"
@@ -229,13 +226,9 @@ const GenStories = () => {
                                                         ? "text-textColor-300"
                                                         : "text-textColor-100"
                                                         }`}
-                                                // dangerouslySetInnerHTML={{ _html: parsedOutlineString }}
                                                 >
                                                     {/* {outline.answer} */}
                                                     <div dangerouslySetInnerHTML={{ __html: outline.htmlContent }}></div>
-                                                    {/* <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                        {outline.htmlContent}
-                                                    </ReactMarkdown> */}
                                                 </div>
                                                 {showCursor && outline.id === currentOutlineCursorId ? (
                                                     <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>

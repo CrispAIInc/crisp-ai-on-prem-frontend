@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import makeApiRequest from '../../api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
-import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from '@mui/icons-material/Save';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -11,9 +10,7 @@ import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
-import { hexToRgb } from '@mui/material';
-import { renderToString } from "react-dom/server";
-import { hexToRGBString, isNoteFull } from '../../utils';
+import { hexToRGBString } from '../../utils';
 import AggregationLlmModal from '../AggregationLlmModal';
 import toast from 'react-simple-toasts';
 import AddToStoryModal from '../AddToStoryModal';
@@ -22,13 +19,11 @@ function NoteDetails() {
     const {
         selectedNote,
         setSelectedNote,
-        isManualNote, setIsManualNote,
+        isManualNote,
         noteIndex,
         setNotes,
-        notes,
         llmModels,
         setActiveView,
-        noteReferences,
         modules,
         formats,
         currentResource,
@@ -58,10 +53,6 @@ function NoteDetails() {
             setHTMLToDisplay(htmlString);
         }
     }, [selectedNote, selectedNote.text.length]);
-
-    // useEffect(() => {
-    //     setSelectedNote(notes.at(-1));
-    // }, [notes]);
 
 
     const handleContentChange = (newContent) => {
@@ -275,7 +266,6 @@ function NoteDetails() {
 
     return (
         <div className="max-w-3xl mx-auto">
-            {/* <CancelIcon onClick={() => setShowNoteDetails(false)} color='error' className="ml-auto text-right" /> */}
             <div className='flex items-center justify-end mt-3'>
                 <BaseHeading text='close' className='cursor-pointer user-select-none' onClick={() => {
                     setShowNoteDetails(false);
@@ -333,7 +323,7 @@ function NoteDetails() {
                 <CustomInput className="py-2" placeholder='Note title' value={selectedNote.note_name} onChange={(e) => setSelectedNote(prev => ({ ...prev, note_name: e.target.value }))} />
             </div>
 
-            <ReactQuill className='#editor h-auto' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
+            <ReactQuill className='#editor h-[300px]' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
                 modules={modules}
                 formats={formats} />
             <div className="flex flex-wrap items-center gap-4 my-1">

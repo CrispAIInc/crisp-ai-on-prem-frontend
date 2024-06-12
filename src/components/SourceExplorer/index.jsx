@@ -111,9 +111,6 @@ export function SourceExplorer(props) {
                 return props.knowledgeBase
                     .filter((file) => file.file_type === format || format === "all")
                     .map((file, index) => (
-                        // turn them into component (SourceExplorerThumbnail)
-                        // <OverlayTrigger key={index} className='tooltip' placement="right" overlay={() => renderTooltip(file.source_path)}>
-                        // <CustomTooltip text={file.source_path} key={index}>
                         <div
                             className={`!border rounded-md thumbnail-container file ${theme === "dark" && "!border-textColor-200"
                                 }`}
@@ -143,10 +140,7 @@ export function SourceExplorer(props) {
                                     className="absolute top-0 right-0 delete-icon"
                                 />
                             </div>
-                            {/* <p>{file.source_path}</p> */}
                         </div>
-                        // </CustomTooltip>
-                        // </OverlayTrigger>
                     ));
             } else {
                 return props.knowledgeBase
@@ -156,7 +150,6 @@ export function SourceExplorer(props) {
                             file.category[1] === category
                     )
                     .map((file, index) => (
-                        // turn them into component (SourceExplorerThumbnail)
                         <div
                             className={`border rounded-md thumbnail-container file ${theme === "dark" && "!border-textColor-300"
                                 }`}
@@ -186,7 +179,6 @@ export function SourceExplorer(props) {
                                     className="absolute top-0 right-0 delete-icon"
                                 />
                             </div>
-                            {/* <p>{file.source_path}</p> */}
                         </div>
                     ));
             }

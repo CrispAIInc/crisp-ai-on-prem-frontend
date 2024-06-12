@@ -1,6 +1,5 @@
 import makeApiRequest from "../../api";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import { NoteModal } from "../NoteModal";
 import { MainContext } from '../../contexts/mainContext';
 import { useContext } from 'react';
 import BaseHeading from '../BaseHeading';
@@ -9,21 +8,17 @@ import SavedNote from '../SavedNote';
 
 const NotesSection = () => {
 
-    const { showNoteModal,
-        setShowNoteModal,
-        setNotes,
+    const {
         setIsNewNote,
         setSelectedNote,
         notes,
         setIsManualNote,
-        isNewNote,
-        selectedNote, theme, setIsEditingTitle, noteIndex, setActiveView, setNoteIndex, setShowNoteDetails } = useContext(MainContext);
+        selectedNote, theme, setIsEditingTitle, setActiveView, setNoteIndex, setShowNoteDetails } = useContext(MainContext);
 
     const handleAddNote = (event) => {
         event.preventDefault();
         setIsNewNote(true);
         setIsEditingTitle(true);
-        // setShowNoteModal(true);
         setSelectedNote({
             note_id: "",
             text: [{
@@ -47,29 +42,7 @@ const NotesSection = () => {
         } catch (error) {
             console.log(error);
         }
-        // onHide();
     };
-
-
-
-    // const onHide = async () => {
-    //     setShowNoteModal(false);
-    //     try {
-    //         const data = await makeApiRequest("/notes", "post");
-    //         setNotes(data);
-    //     } catch (error) {
-    //         console.log(error);
-    //     } finally {
-    //         setIsNewNote(false);
-    //         setSelectedNote({
-    //             note_id: "",
-    //             text: [{ content: "", model: null, color: theme === 'light' ? "#333" : '#fff' }],
-    //             images: [],
-    //             note_name: "",
-    //         });
-    //     }
-
-    // };
 
     return (
         <div className="mt-7">
@@ -81,19 +54,6 @@ const NotesSection = () => {
                 <AddOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Insight</span>
             </div>
-
-            {/* <NoteModal
-                onHide={onHide}
-                existingNote={noteIndex}
-                className="modal"
-                show={showNoteModal}
-                note={selectedNote}
-                setSelectedNote={setSelectedNote}
-                handleDelete={handleDelete}
-                notes={notes}
-                isNewNote={isNewNote}
-                key={selectedNote.note_name}
-            /> */}
 
             <BaseHeading text='Saved notes' />
             {notes.length > 0 ? (

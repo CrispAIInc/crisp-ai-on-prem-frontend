@@ -64,7 +64,6 @@ const ContentSection = ({
     const [showSourceExplorer, setShowSourceExplorer] = useState(false);
     const [showFileFormatsModal, setShowFileFormatsModal] = useState(false);
     const [showCategoriesModal, setShowCategoriesModal] = useState(false);
-    // const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
     const [isDeleting, setIsDeleting] = useState(false); // True when a resource is being deleted
     const [clickedIndex] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
@@ -110,8 +109,6 @@ const ContentSection = ({
     const deleteResource = async (event, item) => {
         try {
             setIsDeleting(true);
-            // setClickedIndex(idx
-
             const requestBody = {
                 category: item.category,
                 fileName: item.source_path,
@@ -140,7 +137,6 @@ const ContentSection = ({
                 JSON.stringify(categoryValues)
             );
             setKnowledgeBase(data);
-            // remove resource from workspace after deleting it
             setCurrentResource(null);
         } catch (error) {
             setIsDeleting(false);
@@ -217,8 +213,6 @@ const ContentSection = ({
      * Function to indicate wether a source thumbnail can be rendered in the selected sources section or not
      */
     const canRenderSourceThumbnail = (source) => {
-        // return (source.category.includes(selectedCategory) || selectedCategory === "all") &&
-        //     (source.file_type === selectedFormat || selectedFormat === "all") &&
         return source.is_selected;
     };
 
