@@ -1,5 +1,6 @@
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
+import { escape } from 'validator';
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
@@ -292,6 +293,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       return;
     }
 
+    const validatedInput = escape(input);
     setShowCursor(true);
 
     let userMessage = "";
@@ -300,10 +302,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       const data = await makeApiRequest(
         `/translate`,
         "post",
-        JSON.stringify({ text: input || message, language: selectedLanguage })
+        JSON.stringify({ text: validatedInput || message, language: selectedLanguage })
       );
       userMessage = data.translatedText;
-    } else userMessage = input || message;
+    } else userMessage = validatedInput || message;
 
     noteQuestion.current = userMessage;
 
@@ -1032,7 +1034,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         {chatLoaded ? (
           messages.map((message, index) =>
             index % 2 == 0 ? (
-              <div key={index} className="my-2 w-fit">
+              <div key={index} className="my-2 break-all w-fit">
                 <div
                   className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
                 >
