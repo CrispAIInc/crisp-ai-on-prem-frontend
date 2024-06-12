@@ -1,6 +1,5 @@
 import { useContext, useState, useRef, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { escape } from 'validator';
 
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -11,10 +10,9 @@ import Button from '@mui/material/Button';
 import CustomButton from "../CustomButton";
 import GenStoriesLLMModal from "../GenStoriesLLMModal";
 import CustomInput from "../CustomInput";
-import NoData from "../NoData";
 
 import { MainContext } from "../../contexts/mainContext";
-import { extractSections, extractTitle, generateRandomHash, getLevelOfSection, getLevelOfSectionInGenStories } from '../../utils';
+import { extractSections, extractTitle, generateRandomHash, getLevelOfSectionInGenStories } from '../../utils';
 import makeApiRequest from "../../api";
 
 const GenStories = () => {
@@ -51,10 +49,15 @@ const GenStories = () => {
         try {
             setShowCursor(true);
             let selectedModels = _models.length > 0 ? _models : selectedGenStoriesModels;
-
+            let validatedInput;
+            if (query) {
+                validatedInput = escape(query);
+            } else {
+                validatedInput = escape(input);
+            }
             setOutlinesAnswers((prev) => [
                 ...prev,
-                { query: input || query, models: selectedModels },
+                { query: validatedInput, models: selectedModels },
                 { id: generateRandomHash(10), answer: '', models: selectedModels },
             ]);
             setInput("");
@@ -66,9 +69,9 @@ const GenStories = () => {
 
             // make answer to be well formatted with correct HTML headings and paragraphs
             const sections = extractSections(answer);
-            const htmlContent = sections.map((section) => {
+            const htmlContent = sections.map((section, index) => {
                 const headingLevel = getLevelOfSectionInGenStories(section, true);
-                return `<h${headingLevel} style='font-style: italic; font-weight: 700;'>${section}</h${headingLevel}>`;
+                return `<h${headingLevel} key="${index}" style='font-style: italic; font-weight: 700;'>${section}</h${headingLevel}>`;
             });
 
 
@@ -182,7 +185,7 @@ const GenStories = () => {
                     outlinesAnswers.map((outline, index) =>
                         outline.query ? (
                             <>
-                                <div key={index} className="my-2 w-fit">
+                                <div key={index} className="my-2 break-all w-fit">
                                     <div
                                         className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
                                     >
