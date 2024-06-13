@@ -47,6 +47,7 @@ const GenStories = () => {
 
     const sendQuery = async (query, _models = []) => {
         try {
+            if (!query && !input) return;
             setShowCursor(true);
             let selectedModels = _models.length > 0 ? _models : selectedGenStoriesModels;
             let validatedInput;
