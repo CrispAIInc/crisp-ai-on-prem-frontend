@@ -323,7 +323,7 @@ function NoteDetails() {
                 <CustomInput className="py-2" placeholder='Note title' value={selectedNote.note_name} onChange={(e) => setSelectedNote(prev => ({ ...prev, note_name: e.target.value }))} />
             </div>
 
-            <ReactQuill className='#editor h-[300px]' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
+            <ReactQuill className='#editor h-auto' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
                 modules={modules}
                 formats={formats} />
             <div className="flex flex-wrap items-center gap-4 my-1">
