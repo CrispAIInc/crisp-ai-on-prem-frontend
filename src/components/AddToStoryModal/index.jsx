@@ -35,7 +35,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
         const joinedAnswers = selectedNote.text.map((item) => item.answer).join('<br />');
         const sectionToBeModified = stories[selectedStoryIndex].text.find(({ outline }) => outline.id === selectedSectionId);
 
-        sectionToBeModified.content = joinedAnswers;
+        sectionToBeModified.content = joinedAnswers + '<br />';
 
         setOpen(false);
     };
