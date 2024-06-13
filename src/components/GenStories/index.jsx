@@ -1,5 +1,5 @@
 import { useContext, useState, useRef, useEffect } from "react";
-import { escape } from 'validator';
+import { escape, blacklist } from 'validator';
 
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -52,9 +52,9 @@ const GenStories = () => {
             let selectedModels = _models.length > 0 ? _models : selectedGenStoriesModels;
             let validatedInput;
             if (query) {
-                validatedInput = escape(query);
+                validatedInput = blacklist(query);
             } else {
-                validatedInput = escape(input);
+                validatedInput = blacklist(input, '<>/');
             }
             setOutlinesAnswers((prev) => [
                 ...prev,

@@ -1,6 +1,6 @@
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
-import { escape } from 'validator';
+import { escape, blacklist } from 'validator';
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
@@ -266,7 +266,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       return;
     }
 
-    const validatedInput = escape(input);
+    const validatedInput = blacklist(input, '<>/');
     setShowCursor(true);
 
     let userMessage = "";
