@@ -221,6 +221,7 @@ const ContentSection = ({
             return { ...item, is_selected: false };
         });
         setKnowledgeBase(updatedKnowledgeBase);
+        setSelectedSources([]);
     };
 
     return (

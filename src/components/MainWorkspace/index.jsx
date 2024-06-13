@@ -137,6 +137,7 @@ const MainWorkspace = ({ theme }) => {
   ];
 
   const [isManualNote, setIsManualNote] = useState(false);
+  const [isFoundationLlm, setIsFoundationLlm] = useState(true);
 
   useEffect(() => {
     // update the color of the text in the note editor based on the theme
@@ -152,6 +153,11 @@ const MainWorkspace = ({ theme }) => {
       return { ...prev, text: updatedText };
     });
   }, [theme]);
+
+  useEffect(() => {
+    // set isFoundationLlm to true if there is no selectedSources, otherwise false
+    setIsFoundationLlm(selectedSources.length === 0);
+  }, [selectedSources]);
 
   // create value object with all the states
   const value = {
@@ -204,7 +210,7 @@ const MainWorkspace = ({ theme }) => {
     noteIndex, setNoteIndex,
     stories, setStories,
     selectedStory, setSelectedStory,
-    showStoryDetails, setShowStoryDetails,
+    showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
   };
 
   useEffect(() => {

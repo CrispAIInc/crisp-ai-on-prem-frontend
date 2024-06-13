@@ -22,6 +22,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     currentResource,
     llmModels,
     setCurrentResource,
+    isFoundationLlm,
     resourceURL,
     noteReferences, setNoteReferences,
     setResourceURL,
@@ -322,7 +323,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           selectedCategoryChat
         )}/${encodeURIComponent(userMessage)}/${encodeURIComponent(
           selectedLLMs[0]
-        )}`
+        )}/${isFoundationLlm}`
       );
 
       eventSource.onmessage = function (event) {
