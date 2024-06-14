@@ -32,7 +32,12 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
     };
 
     const saveToStory = async () => {
-        const joinedAnswers = selectedNote.text.map((item) => item.answer).join('<br />');
+        const joinedAnswers = selectedNote.text.map((item) => {
+            if (item.answer.includes('https://oaidalleapiprodscus.blob')) {
+                return `<img src="${item.answer}" alt="image" />`;
+            }
+            return item.answer;
+        }).join('<br />');
         const sectionToBeModified = stories[selectedStoryIndex].text.find(({ outline }) => outline.id === selectedSectionId);
 
         sectionToBeModified.content = joinedAnswers + '<br />';
