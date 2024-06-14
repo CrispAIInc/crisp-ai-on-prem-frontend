@@ -14,6 +14,7 @@ import NoteDetails from "../NoteDetails";
 
 import './workspace.css';
 import StoryDetails from '../StoryDetails';
+import CustomSelect from '../CustomSelect';
 
 const Workspace = () => {
     const {
@@ -22,6 +23,7 @@ const Workspace = () => {
         resourceURL,
         setResourceURL,
         player,
+        languageOptions,
         setIsPlayerReady,
         activeView, setActiveView,
         theme,
@@ -33,6 +35,7 @@ const Workspace = () => {
         selectedNote,
     } = useContext(MainContext);
 
+    console.log(currentResource);
     const [numPages, setNumPages] = useState();
     const PdfContainer = useRef();
 
@@ -91,6 +94,28 @@ const Workspace = () => {
         }
     }, [jumpToPage, numPages, isPdfLoaded]);
 
+    function translateMetadata(chosenLanguage) {
+        let httpRequestBody = {
+            lang: chosenLanguage
+        };
+        const TRANSLATABLE_KEYS = [
+            'summary',
+            'topic_summaries',
+            'keywords',
+            'transcript',
+            'caption'
+        ];
+        // extract keys/values from currentResource (summary, topic_summary, keywords, transcript and caption)
+        for (const [key, value] of Object.entries(currentResource)) {
+            if (TRANSLATABLE_KEYS.includes(key)) {
+                httpRequestBody[key] = value;
+            }
+        }
+        console.log("httpRequestBody: ", httpRequestBody);
+        // Make api request
+        // update state with the translated version of metadata
+    }
+
     return (
         <div className="relative flex-1 h-full px-10 overflow-y-auto media-container bg-background_workspace">
             <div
@@ -118,12 +143,19 @@ const Workspace = () => {
                                 controls
                             />
                             {/* video summary */}
-                            <div className='metadata-container'>
+                            <div className='mt-10 metadata-container'>
+                                <CustomSelect
+                                    title="Language"
+                                    defaultValue={languageOptions[0]}
+                                    options={languageOptions}
+                                    onChange={(chosenLanguage) => translateMetadata(chosenLanguage)}
+                                />
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Summary</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.summary}</p>
 
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Detailed summary</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.topic_summaries}</p>
+
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Video Transcript</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.transcript}</p>
 
@@ -153,12 +185,19 @@ const Workspace = () => {
 
                             </div>
                             {/* PDF summary */}
-                            <div className='metadata-container'>
+                            <div className='mt-10 metadata-container'>
+                                <CustomSelect
+                                    title="Language"
+                                    defaultValue={languageOptions[0]}
+                                    options={languageOptions}
+                                    onChange={(chosenLanguage) => translateMetadata(chosenLanguage)}
+                                />
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Summary</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.summary}</p>
 
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Detailed summary</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.topic_summaries}</p>
+
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>PDF Transcript</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.transcript}</p>
 
@@ -168,13 +207,19 @@ const Workspace = () => {
                         </>
                     )}
                     {currentResource.file_type === "img" && (
-                        <div className="">
+                        <div>
                             <div className="relative w-[70%] h-72 w-full h-full max-w-lg mx-auto">
                                 <CancelIcon onClick={closeImage} className="absolute right-[1%] top-[15px] cursor-pointer" />
                                 <img className="w-full h-full pt-2 rounded-lg source-img" src={resourceURL} />
                             </div>
                             {/* Image Caption */}
-                            <div className='metadata-container'>
+                            <div className='mt-10 metadata-container'>
+                                <CustomSelect
+                                    title="Language"
+                                    defaultValue={languageOptions[0]}
+                                    options={languageOptions}
+                                    onChange={(chosenLanguage) => translateMetadata(chosenLanguage)}
+                                />
                                 <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Caption</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.caption}</p>
 
