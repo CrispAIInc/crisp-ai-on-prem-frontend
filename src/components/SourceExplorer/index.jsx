@@ -187,7 +187,7 @@ export function SourceExplorer(props) {
 
     return (
         <Modal
-            {...props}
+            show={props.show}
             onHide={handleClose}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
