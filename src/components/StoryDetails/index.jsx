@@ -165,8 +165,8 @@ function StoryDetails() {
             </div>
 
             {/* story editor */}
-            {/* aggregated insights */}
-            <div
+            {/*intro/conc generation */}
+            {selectedStory.text.length > 0 && <div
                 className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                 onClick={() => generateIntroConclusion()}
             >
@@ -174,7 +174,7 @@ function StoryDetails() {
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                     {isGeneratingIntroConclusion ? 'Generating...' : 'Generate Introduction/Conclusion'}
                 </span>
-            </div>
+            </div>}
             {/* story title */}
             <div className="my-4">
                 <CustomInput className="py-2" placeholder='story title' value={selectedStory.story_name} onChange={(e) => setSelectedStory(prev => ({ ...prev, story_name: e.target.value }))} />
