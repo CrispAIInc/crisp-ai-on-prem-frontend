@@ -35,7 +35,8 @@ const Workspace = () => {
         selectedNote,
     } = useContext(MainContext);
 
-    console.log(currentResource);
+    // const translatedResource = useRef(currentResource);
+    const [translatedResource, setTranslatedResource] = useState(currentResource);
     const [numPages, setNumPages] = useState();
     const PdfContainer = useRef();
 
@@ -94,26 +95,81 @@ const Workspace = () => {
         }
     }, [jumpToPage, numPages, isPdfLoaded]);
 
-    function translateMetadata(chosenLanguage) {
+    useEffect(() => {
+        setTranslatedResource(currentResource);
+        if (currentResource) translateMetadata('en', currentResource);
+    }, [currentResource]);
+
+    function translateMetadata(chosenLanguage, object) {
+        console.log('translateMetadata running...');
+        // make sure response body is also like httpRequestBody (w/o lang)
+        // the response body object must contain keys in English
         let httpRequestBody = {
-            lang: chosenLanguage
+            lang: chosenLanguage,
+            summary: {
+                title: '',
+                content: ''
+            },
+            topic_summaries: {
+                title: '',
+                content: ''
+            },
+            transcript: {
+                title: '',
+                content: ''
+            },
+            caption: {
+                title: '',
+                content: ''
+            },
+            keywords: {
+                title: '',
+                content: ''
+            },
         };
         const TRANSLATABLE_KEYS = [
             'summary',
             'topic_summaries',
-            'keywords',
             'transcript',
-            'caption'
+            'caption',
+            'keywords'
         ];
-        // extract keys/values from currentResource (summary, topic_summary, keywords, transcript and caption)
-        for (const [key, value] of Object.entries(currentResource)) {
+        // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
+        for (const [key, value] of Object.entries(object)) {
             if (TRANSLATABLE_KEYS.includes(key)) {
-                httpRequestBody[key] = value;
+                httpRequestBody[key].title = key === 'topic_summaries' ? 'Detailed summary' : key.charAt(0).toUpperCase() + key.slice(1);
+                httpRequestBody[key].content = value;
             }
         }
+        // setTranslatedResource(httpRequestBody);
         console.log("httpRequestBody: ", httpRequestBody);
+        console.log("translatedResource: ", translatedResource);
         // Make api request
+        // const response = await makeApiRequest('/translate', 'post', httpRequestBody);
+        const httpResponseBody = {
+            summary: {
+                title: 'Sommaire',
+                content: 'Ceci est un résumé'
+            },
+            topic_summaries: {
+                title: 'Résumé détaillé',
+                content: 'Ceci est un résumé détaillé'
+            },
+            transcript: {
+                title: 'Transcription',
+                content: 'Ceci est une transcription'
+            },
+            caption: {
+                title: 'Légende',
+                content: 'Ceci est une légende'
+            },
+            keywords: {
+                title: 'Mots-clés',
+                content: 'Ceci sont des mots-clés'
+            }
+        };
         // update state with the translated version of metadata
+        setTranslatedResource(httpResponseBody);
     }
 
     return (
@@ -148,19 +204,19 @@ const Workspace = () => {
                                     title="Language"
                                     defaultValue={languageOptions[0]}
                                     options={languageOptions}
-                                    onChange={(chosenLanguage) => translateMetadata(chosenLanguage)}
+                                    onChange={(chosenLanguage) => translateMetadata(chosenLanguage, translatedResource)}
                                 />
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Summary</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.summary}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.summary?.title || 'Summary'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.summary?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Detailed summary</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.topic_summaries}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.topic_summaries?.title || 'Detailed summary'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.topic_summaries?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Video Transcript</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.transcript}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.transcript?.title || 'Video Transcript'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.transcript?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Key Topics</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.keywords}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.keywords?.title || 'Key Topics'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.keywords?.content}</p>
                             </div>
                         </div>
                     )}
@@ -192,17 +248,17 @@ const Workspace = () => {
                                     options={languageOptions}
                                     onChange={(chosenLanguage) => translateMetadata(chosenLanguage)}
                                 />
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Summary</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.summary}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.summary?.title || 'Summary'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.summary?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Detailed summary</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.topic_summaries}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.topic_summaries?.title || 'Detailed summary'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.topic_summaries?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>PDF Transcript</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.transcript}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.transcript?.title || 'PDF Transcript'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.transcript?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Key Topics</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.keywords}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.keywords?.title || 'Key Topics'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.keywords?.content}</p>
                             </div>
                         </>
                     )}
@@ -220,11 +276,11 @@ const Workspace = () => {
                                     options={languageOptions}
                                     onChange={(chosenLanguage) => translateMetadata(chosenLanguage)}
                                 />
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Caption</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.caption}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.caption?.title || 'Caption'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.caption?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>Key Topics</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{currentResource.keywords}</p>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.keywords?.title || 'Key Topics'}</h3>
+                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.keywords?.content}</p>
                             </div>
                         </div>
                     )}
