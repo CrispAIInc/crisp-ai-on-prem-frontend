@@ -96,8 +96,10 @@ const Workspace = () => {
     }, [jumpToPage, numPages, isPdfLoaded]);
 
     useEffect(() => {
-        setTranslatedResource(currentResource);
-        if (currentResource) translateMetadata('en', currentResource);
+        if (activeView === 'resource') {
+            setTranslatedResource(currentResource);
+            if (currentResource) translateMetadata('en', currentResource);
+        }
     }, [currentResource]);
 
     function translateMetadata(chosenLanguage, object) {
