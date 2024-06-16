@@ -137,6 +137,8 @@ const MainWorkspace = ({ theme }) => {
   ];
 
   const [isManualNote, setIsManualNote] = useState(false);
+  // this indicates wether the user is using the model in the wild (MiW)
+  // or using models for the selected sourcesonly
   const [isFoundationLlm, setIsFoundationLlm] = useState(true);
 
   useEffect(() => {
