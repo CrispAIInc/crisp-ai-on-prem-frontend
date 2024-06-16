@@ -255,6 +255,44 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
 
   const fetchReferences = async (botMessage) => {
+    if (isFoundationLlm) {
+      botMessage = (
+        <div>
+          <div className="coorg-response">
+            {botMessage}
+          </div>
+          <AddOptionsModal
+            text={botMessage}
+            addToNewNote={addToNewNote}
+            addToExistingNote={addToExistingNote}
+            setExistingNote={setExistingNote}
+            question={noteQuestion.current}
+            existingNote={existingNote}
+            onHide={onHide}
+            isNewNote={isNewNote}
+            setShowNoteModal={setShowNoteModal}
+            updateSelectedNote={setSelectedNote}
+            showNoteModal={showNoteModal}
+            selectedNote={selectedNote}
+            notes={notes}
+          />
+        </div>
+      );
+
+      // Update the messages with the references
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        if (newMessages.length > 0) {
+          const lastMessageIndex = newMessages.length - 1;
+          newMessages[lastMessageIndex] = {
+            ...newMessages[lastMessageIndex],
+            text: botMessage,
+          };
+        }
+        return newMessages;
+      });
+      return;
+    }
     const response = await axios.get(`${API_ENDPOINT}/references`);
     const data = response.data;
     noteReferences.videoLinks = [];
