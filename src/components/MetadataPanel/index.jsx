@@ -281,13 +281,10 @@ const MetadataPanel = () => {
                     {/* PDF summary */}
                     {!isTranslationLoading ? (
                         <div className="mt-10 metadata-container">
-                            <CustomSelect
-                                title="Language"
-                                defaultValue={languageOptions[0]}
+                            <CustomSelectTwo
                                 options={languageOptions}
-                                onChange={(chosenLanguage) =>
-                                    translateMetadata(chosenLanguage, translatedResource)
-                                }
+                                onChange={(lang) => translateMetadata(lang.value, translatedResource)}
+                                placeholder="Select a language"
                             />
                             <h3
                                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
@@ -369,13 +366,10 @@ const MetadataPanel = () => {
                     {/* Image Caption */}
                     {!isTranslationLoading ? (
                         <div className="mt-10 metadata-container">
-                            <CustomSelect
-                                title="Language"
-                                defaultValue={languageOptions[0]}
+                            <CustomSelectTwo
                                 options={languageOptions}
-                                onChange={(chosenLanguage) =>
-                                    translateMetadata(chosenLanguage, translatedResource)
-                                }
+                                onChange={(lang) => translateMetadata(lang.value, translatedResource)}
+                                placeholder="Select a language"
                             />
                             <h3
                                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
