@@ -9,6 +9,7 @@ import LoadingSpinner from "../LoadingSpinner";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import CustomSelectTwo from '../CustomSelectTwo';
 
 const MetadataPanel = () => {
     const {
@@ -29,6 +30,7 @@ const MetadataPanel = () => {
     const [isTranslationLoading, setIsTranslationLoading] = useState(false);
     const [numPages, setNumPages] = useState();
     const [isPdfLoaded, setIsPdfLoaded] = useState(false);
+    const [chosenLanguage, setChosenLanguage] = useState('en');
     const PdfContainer = useRef();
 
     useEffect(() => {
@@ -94,6 +96,7 @@ const MetadataPanel = () => {
     const pageRefs = useRef({});
 
     async function translateMetadata(chosenLanguage, object) {
+        setChosenLanguage(chosenLanguage);
         setIsTranslationLoading(true);
         // make sure response body is also like httpRequestBody (w/o lang)
         // the response body object must contain keys in English
@@ -128,7 +131,6 @@ const MetadataPanel = () => {
             "keywords",
         ];
         // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
-        console.log(object);
         for (const [key, value] of Object.entries(object)) {
             if (TRANSLATABLE_KEYS.includes(key)) {
                 httpRequestBody[key].title =
@@ -145,7 +147,7 @@ const MetadataPanel = () => {
                 "post",
                 httpRequestBody
             );
-            setTranslatedResource(httpResponseBody);
+            setTranslatedResource({ ...httpResponseBody, lang: chosenLanguage });
         } catch (error) {
             console.log(error);
         } finally {
@@ -175,13 +177,10 @@ const MetadataPanel = () => {
                     {/* video summary */}
                     {!isTranslationLoading ? (
                         <div className="mt-10 metadata-container">
-                            <CustomSelect
-                                title="Language"
-                                defaultValue={languageOptions[0]}
+                            <CustomSelectTwo
                                 options={languageOptions}
-                                onChange={(chosenLanguage) =>
-                                    translateMetadata(chosenLanguage, translatedResource)
-                                }
+                                onChange={(lang) => translateMetadata(lang.value, translatedResource)}
+                                placeholder="Select a language"
                             />
                             <h3
                                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
