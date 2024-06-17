@@ -68,14 +68,16 @@ function StoryDetails() {
             }
             const data = await makeApiRequest("/stories", "get");
             setStories(data);
-            setSelectedStory({
-                story_id: "",
-                text: [],
-                story_name: "",
-                models: [],
-            });
+            // setSelectedStory({
+            //     story_id: "",
+            //     text: [],
+            //     story_name: "",
+            //     models: [],
+            // });
+            toast('Story saved successfully', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)' });
         } catch (error) {
             console.log(error);
+            toast('An error occurred while saving story', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)' });
         }
     };
 
@@ -132,8 +134,10 @@ function StoryDetails() {
             // fetch stories
             const data = await makeApiRequest("/stories", "get");
             setStories(data);
+            toast('Story deleted successfully', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)' });
         } catch (error) {
             console.log(error);
+            toast('An error occurred while deleting story', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)' });
         }
     };
 
