@@ -15,6 +15,8 @@ import NoteDetails from "../NoteDetails";
 import './workspace.css';
 import StoryDetails from '../StoryDetails';
 import CustomSelect from '../CustomSelect';
+import makeApiRequest from '../../api';
+import LoadingSpinner from '../LoadingSpinner';
 
 const Workspace = () => {
     const {
@@ -37,6 +39,7 @@ const Workspace = () => {
 
     // const translatedResource = useRef(currentResource);
     const [translatedResource, setTranslatedResource] = useState(currentResource);
+    const [isTranslationLoading, setIsTranslationLoading] = useState(false);
     const [numPages, setNumPages] = useState();
     const PdfContainer = useRef();
 
@@ -102,8 +105,8 @@ const Workspace = () => {
         }
     }, [currentResource]);
 
-    function translateMetadata(chosenLanguage, object) {
-        console.log('translateMetadata running...');
+    async function translateMetadata(chosenLanguage, object) {
+        setIsTranslationLoading(true);
         // make sure response body is also like httpRequestBody (w/o lang)
         // the response body object must contain keys in English
         let httpRequestBody = {
@@ -137,41 +140,21 @@ const Workspace = () => {
             'keywords'
         ];
         // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
+        console.log(object);
         for (const [key, value] of Object.entries(object)) {
             if (TRANSLATABLE_KEYS.includes(key)) {
                 httpRequestBody[key].title = key === 'topic_summaries' ? 'Detailed summary' : key.charAt(0).toUpperCase() + key.slice(1);
-                httpRequestBody[key].content = value;
+                httpRequestBody[key].content = typeof value === 'object' ? value.content : value;
             }
         }
-        // setTranslatedResource(httpRequestBody);
-        console.log("httpRequestBody: ", httpRequestBody);
-        console.log("translatedResource: ", translatedResource);
-        // Make api request
-        // const response = await makeApiRequest('/translate', 'post', httpRequestBody);
-        const httpResponseBody = {
-            summary: {
-                title: 'Sommaire',
-                content: 'Ceci est un résumé'
-            },
-            topic_summaries: {
-                title: 'Résumé détaillé',
-                content: 'Ceci est un résumé détaillé'
-            },
-            transcript: {
-                title: 'Transcription',
-                content: 'Ceci est une transcription'
-            },
-            caption: {
-                title: 'Légende',
-                content: 'Ceci est une légende'
-            },
-            keywords: {
-                title: 'Mots-clés',
-                content: 'Ceci sont des mots-clés'
-            }
-        };
-        // update state with the translated version of metadata
-        setTranslatedResource(httpResponseBody);
+        try {
+            const httpResponseBody = await makeApiRequest('/translate-metadata', 'post', httpRequestBody);
+            setTranslatedResource(httpResponseBody);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsTranslationLoading(false);
+        }
     }
 
     return (
@@ -201,25 +184,30 @@ const Workspace = () => {
                                 controls
                             />
                             {/* video summary */}
-                            <div className='mt-10 metadata-container'>
+                            {!isTranslationLoading ? (<div className='mt-10 metadata-container'>
                                 <CustomSelect
                                     title="Language"
                                     defaultValue={languageOptions[0]}
                                     options={languageOptions}
                                     onChange={(chosenLanguage) => translateMetadata(chosenLanguage, translatedResource)}
                                 />
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.summary?.title || 'Summary'}</h3>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.summary?.title}</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.summary?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.topic_summaries?.title || 'Detailed summary'}</h3>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.topic_summaries?.title}</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.topic_summaries?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.transcript?.title || 'Video Transcript'}</h3>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.transcript?.title}</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.transcript?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.keywords?.title || 'Key Topics'}</h3>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.keywords?.title}</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.keywords?.content}</p>
-                            </div>
+                            </div>) : ((
+                                <div className='mt-10 flex items-center gap-3'>
+                                    <LoadingSpinner isSmall={true} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Loading translated metadata...</span>
+                                </div>
+                            ))}
                         </div>
                     )}
                     {currentResource.file_type === "pdf" && (
@@ -243,25 +231,30 @@ const Workspace = () => {
 
                             </div>
                             {/* PDF summary */}
-                            <div className='mt-10 metadata-container'>
+                            {!isTranslationLoading ? (<div className='mt-10 metadata-container'>
                                 <CustomSelect
                                     title="Language"
                                     defaultValue={languageOptions[0]}
                                     options={languageOptions}
-                                    onChange={(chosenLanguage) => translateMetadata(chosenLanguage)}
+                                    onChange={(chosenLanguage) => translateMetadata(chosenLanguage, translatedResource)}
                                 />
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.summary?.title || 'Summary'}</h3>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.summary?.title}</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.summary?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.topic_summaries?.title || 'Detailed summary'}</h3>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.topic_summaries?.title}</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.topic_summaries?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.transcript?.title || 'PDF Transcript'}</h3>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.transcript?.title}</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.transcript?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.keywords?.title || 'Key Topics'}</h3>
+                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.keywords?.title}</h3>
                                 <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.keywords?.content}</p>
-                            </div>
+                            </div>) : ((
+                                <div className='mt-10 flex items-center gap-3'>
+                                    <LoadingSpinner isSmall={true} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Loading translated metadata...</span>
+                                </div>
+                            ))}
                         </>
                     )}
                     {currentResource.file_type === "img" && (
@@ -271,19 +264,31 @@ const Workspace = () => {
                                 <img className="w-full h-full pt-2 rounded-lg source-img" src={resourceURL} />
                             </div>
                             {/* Image Caption */}
-                            <div className='mt-10 metadata-container'>
-                                <CustomSelect
-                                    title="Language"
-                                    defaultValue={languageOptions[0]}
-                                    options={languageOptions}
-                                    onChange={(chosenLanguage) => translateMetadata(chosenLanguage)}
-                                />
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.caption?.title || 'Caption'}</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.caption?.content}</p>
+                            {!isTranslationLoading
+                                ?
+                                (
+                                    <div className='mt-10 metadata-container'>
+                                        <CustomSelect
+                                            title="Language"
+                                            defaultValue={languageOptions[0]}
+                                            options={languageOptions}
+                                            onChange={(chosenLanguage) => translateMetadata(chosenLanguage, translatedResource)}
+                                        />
+                                        <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.caption?.title}</h3>
+                                        <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.caption?.content}</p>
 
-                                <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.keywords?.title || 'Key Topics'}</h3>
-                                <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.keywords?.content}</p>
-                            </div>
+                                        <h3 className={`mt-4 text-md font-semiBold ${theme === 'light' ? 'text-textColor-300' : 'text-white'}`}>{translatedResource?.keywords?.title}</h3>
+                                        <p className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{translatedResource?.keywords?.content}</p>
+                                    </div>
+                                )
+                                :
+                                (
+                                    <div className='mt-10 flex items-center gap-3'>
+                                        <LoadingSpinner isSmall={true} />
+                                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Loading translated metadata...</span>
+                                    </div>
+                                )
+                            }
                         </div>
                     )}
                 </div>
