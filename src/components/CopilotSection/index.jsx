@@ -14,6 +14,7 @@ import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import CustomButton from "../CustomButton";
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import { hexToRGBString, toBase64 } from '../../utils';
+import CustomSelectTwo from '../CustomSelectTwo';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
@@ -785,11 +786,16 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     options={categoryOptions.filter(category => category.value !== 'all')}
                     onChange={(e) => handleChatCategorySelectChange(e.value)}
                 /> */}
-        <CustomSelect
+        {/* <CustomSelect
           title="Language"
           defaultValue={languageOptions[0]}
           options={languageOptions}
           onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage)}
+        /> */}
+        <CustomSelectTwo
+          options={languageOptions}
+          onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage.value)}
+          placeholder="Select a language"
         />
 
         <CustomButton
