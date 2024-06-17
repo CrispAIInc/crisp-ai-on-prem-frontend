@@ -557,6 +557,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         `<li><a href="${img}" target="_blank">${img}</a></li>`
       );
     });
+
     const canRenderNoteRefs = (videoLinks?.length > 0 || pdfLinks?.length > 0 || imageLinks?.length > 0);
 
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
@@ -780,18 +781,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             <p key={i}>{note.note_name}</p>;
           })
         }
-        {/* <CustomSelect
-                    title="Category"
-                    defaultValue={selectedCategory}
-                    options={categoryOptions.filter(category => category.value !== 'all')}
-                    onChange={(e) => handleChatCategorySelectChange(e.value)}
-                /> */}
-        {/* <CustomSelect
-          title="Language"
-          defaultValue={languageOptions[0]}
-          options={languageOptions}
-          onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage)}
-        /> */}
         <CustomSelectTwo
           options={languageOptions}
           onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage.value)}
