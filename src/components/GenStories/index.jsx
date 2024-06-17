@@ -50,15 +50,15 @@ const GenStories = () => {
             if (!query && !input) return;
             setShowCursor(true);
             let selectedModels = _models.length > 0 ? _models : selectedGenStoriesModels;
-            let validatedInput;
-            if (query) {
-                validatedInput = blacklist(query);
-            } else {
-                validatedInput = blacklist(input, '<>/');
-            }
+            // let validatedInput;
+            // if (query) {
+            //     validatedInput = blacklist(query);
+            // } else {
+            //     validatedInput = blacklist(input, '<>/');
+            // }
             setOutlinesAnswers((prev) => [
                 ...prev,
-                { query: validatedInput, models: selectedModels },
+                { query: input || query, models: selectedModels },
                 { id: generateRandomHash(10), answer: '', models: selectedModels },
             ]);
             setInput("");
