@@ -353,7 +353,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           selectedNote={selectedNote}
           notes={notes}
         />
-        {videoLinks && pdfLinks && (
+        {!isFoundationLlm && videoLinks && pdfLinks && (
           <div>
             <p className="m-0">References:</p>
             {videoLinks && (
