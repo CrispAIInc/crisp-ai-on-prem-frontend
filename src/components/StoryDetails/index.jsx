@@ -9,6 +9,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
+import 'react-simple-toasts/dist/theme/dark.css';
+import 'react-simple-toasts/dist/theme/light.css';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import { getLevelOfSection, transformString } from '../../utils';
 
@@ -49,7 +51,7 @@ function StoryDetails() {
 
     const handleSave = async () => {
         if (!selectedStory.story_name) {
-            toast('Story title cannot be empty', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
+            toast('Story title cannot be empty', { className: 'p-2 rounded-md', theme });
             return;
         }
 
@@ -74,10 +76,10 @@ function StoryDetails() {
             //     story_name: "",
             //     models: [],
             // });
-            toast('Story saved successfully', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)' });
+            toast('Story saved successfully', { className: 'p-2 rounded-md', theme });
         } catch (error) {
             console.log(error);
-            toast('An error occurred while saving story', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)' });
+            toast('An error occurred while saving story', { className: 'p-2 rounded-md', theme });
         }
     };
 
@@ -134,10 +136,10 @@ function StoryDetails() {
             // fetch stories
             const data = await makeApiRequest("/stories", "get");
             setStories(data);
-            toast('Story deleted successfully', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)' });
+            toast('Story deleted successfully', { className: 'p-2 rounded-md', theme });
         } catch (error) {
             console.log(error);
-            toast('An error occurred while deleting story', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)' });
+            toast('An error occurred while deleting story', { className: 'p-2 rounded-md', theme });
         }
     };
 

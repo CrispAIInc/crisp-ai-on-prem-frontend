@@ -14,7 +14,6 @@ import { hexToRGBString } from '../../utils';
 import AggregationLlmModal from '../AggregationLlmModal';
 import toast from 'react-simple-toasts';
 import AddToStoryModal from '../AddToStoryModal';
-import { hexToRgb } from '@mui/material';
 
 function NoteDetails() {
     const {
@@ -78,7 +77,7 @@ function NoteDetails() {
         event.preventDefault();
         if (selectedNote.note_name === "") {
             // add shadow to toast classnames
-            toast('Note title cannot be empty', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
+            toast('Note title cannot be empty', { className: `p-2 rounded-md`, theme });
             return;
         }
         if (isNewNote) {
@@ -92,7 +91,7 @@ function NoteDetails() {
             // fetch updated version of notes
             const data = await makeApiRequest("/notes", "post");
             setNotes(() => data);
-            toast('Insight saved successfully', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
+            toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });
         } catch (error) {
             console.log(error);
         }
@@ -104,7 +103,7 @@ function NoteDetails() {
             // send request to update notes
             const data = await makeApiRequest("/notes", "post");
             setNotes(data);
-            toast('Insight deleted successfully', { className: 'p-2 rounded-md shadow-[0_0px_8px_0px_rgba(0,0,0,0.15)]' });
+            toast('Insight deleted successfully', { className: 'p-2 rounded-md', theme });
         } catch (error) {
             console.log(error);
         } finally {
