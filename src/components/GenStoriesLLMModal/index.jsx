@@ -6,6 +6,10 @@ import { MainContext } from '../../contexts/mainContext';
 function GenStoriesLLMModal(props) {
 
     const { theme, setSelectedGenStoriesModels } = useContext(MainContext);
+    const isCheckboxDisabled = (model) => {
+        // disable if model.value is llama-2, gemini-pro
+        return model.value === 'llama-2' || model.value === 'gemini-pro';
+    };
 
     return (
         <Modal
@@ -34,6 +38,7 @@ function GenStoriesLLMModal(props) {
                                         key={index}
                                         type="radio"
                                         label={model.label}
+                                        disabled={isCheckboxDisabled(model)}
                                         checked={props.selectedGenStoriesModels.includes(model.value)}
                                         onChange={() => setSelectedGenStoriesModels([model.value])}
                                         className={`${theme === 'dark' && 'text-textColor-100'}`} />

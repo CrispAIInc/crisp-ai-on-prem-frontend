@@ -42,22 +42,25 @@ export function LLMModal(props) {
         });
     };
 
-    const isCheckboxDisabled = (modelType, modelValue) => {
-        // Ensure there's a selected LLM
-        const selectedLLM = props.selectedLLMs.length > 0 ? props.selectedLLMs[0] : null;
+    const isCheckboxDisabled = (model) => {
+        // disable if model.value is llama-2, gemini-pro
+        return model.value === 'llama-2' || model.value === 'gemini-pro';
 
-        // If there's a selected category, disable checkboxes that do not match the category
-        if (selectionCategory && modelType !== selectionCategory) {
-            return true;
-        }
+        // // Ensure there's a selected LLM
+        // const selectedLLM = props.selectedLLMs.length > 0 ? props.selectedLLMs[0] : null;
 
-        // If there's a selected LLM, disable checkboxes that do not match the selected LLM
-        if (selectedLLM && modelValue !== selectedLLM) {
-            return true;
-        }
+        // // If there's a selected category, disable checkboxes that do not match the category
+        // if (selectionCategory && modelType !== selectionCategory) {
+        //     return true;
+        // }
 
-        // Otherwise, keep the checkbox enabled
-        return false;
+        // // If there's a selected LLM, disable checkboxes that do not match the selected LLM
+        // if (selectedLLM && modelValue !== selectedLLM) {
+        //     return true;
+        // }
+
+        // // Otherwise, keep the checkbox enabled
+        // return false;
     };
 
     return (
@@ -87,7 +90,7 @@ export function LLMModal(props) {
                                         key={index}
                                         type="radio"
                                         label={model.label}
-                                        // disabled={isCheckboxDisabled(model.type, model.value)}
+                                        disabled={isCheckboxDisabled(model)}
                                         checked={props.selectedLLMs.includes(model.value)}
                                         onChange={() => handleCheckboxChange(model)}
                                         className={`${theme === 'dark' && 'text-textColor-100'}`} />

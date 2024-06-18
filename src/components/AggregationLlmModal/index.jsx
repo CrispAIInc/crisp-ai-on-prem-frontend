@@ -10,6 +10,11 @@ function AggregationLlmModal(props) {
     const { theme, llmModels } = useContext(MainContext);
     const AGGREGATE_LLMS = llmModels.filter((llm) => llm.type === 'llm');
 
+    const isCheckboxDisabled = (model) => {
+        // disable if model.value is llama-2, gemini-pro
+        return model.value === 'llama-2' || model.value === 'gemini-pro';
+    };
+
     return (
         <Modal
             show={props.isLlmAggregationModalOpen}
@@ -41,6 +46,7 @@ function AggregationLlmModal(props) {
                                             return prev === llm.value ? '' : llm.value;
                                         });
                                     }}
+                                    disabled={isCheckboxDisabled(llm) || props.isPending}
                                     className={`${theme === 'dark' && 'text-textColor-100'}`} />
                             </div>
                         ))
