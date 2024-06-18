@@ -46,6 +46,7 @@ function StoryDetails() {
     const handleContentChange = (newContent) => {
         if (isNewStory) {
             newStoryContent.current = newContent;
+            selectedStory.text = transformString(newContent);
         }
     };
 
