@@ -39,7 +39,7 @@ function StoryDetails() {
             }).join('<br />');
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedStory, selectedStory.text, selectedStory.text.length, theme]);
+    }, [selectedStory.text, selectedStory.text.length, theme]);
 
     const handleContentChange = (newContent) => {
         if (isNewStory) {
