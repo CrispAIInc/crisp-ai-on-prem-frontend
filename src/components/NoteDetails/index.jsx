@@ -14,6 +14,7 @@ import { hexToRGBString } from '../../utils';
 import AggregationLlmModal from '../AggregationLlmModal';
 import toast from 'react-simple-toasts';
 import AddToStoryModal from '../AddToStoryModal';
+import { hexToRgb } from '@mui/material';
 
 function NoteDetails() {
     const {
@@ -47,18 +48,18 @@ function NoteDetails() {
         if (selectedNote.text) {
             const htmlString = selectedNote.text.map(item => {
                 const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
-                const fallbackColor = theme === 'light' ? '#333' : '#fff';
+                const fallbackColor = isManualNote ? item.color : theme === 'light' ? "#333333" : "#FFFFFF";
                 return `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">${item.content}</span>`;
             }).join('<br />');
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedNote, selectedNote.text.length]);
+    }, [selectedNote.text, selectedNote.text.length, theme]);
 
 
     const handleContentChange = (newContent) => {
         if (isNewNote && isManualNote) {
             selectedNote.text = [{
-                content: newContent,
+                content: `<span style="color: ${hexToRGBString(theme === 'light' ? "#333" : '#fff')}">${newContent}</span>`,
                 answer: newContent,
                 model: null,
                 color: theme === 'light' ? "#333" : '#fff',
