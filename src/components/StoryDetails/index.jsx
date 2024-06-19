@@ -56,6 +56,12 @@ function StoryDetails() {
             return;
         }
 
+        const story = stories.find((story) => story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase());
+        if (story) {
+            toast('Story already exists', { className: 'p-2 rounded-md', theme });
+            return;
+        }
+
         let text = null;
         if (isNewStory) {
             text = transformString(newStoryContent.current);
