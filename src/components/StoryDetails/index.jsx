@@ -12,7 +12,7 @@ import toast from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import 'react-simple-toasts/dist/theme/light.css';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import { getLevelOfSection, transformString } from '../../utils';
+import { areArraysEqual, getLevelOfSection, transformString } from '../../utils';
 
 function StoryDetails() {
 
@@ -56,22 +56,22 @@ function StoryDetails() {
             return;
         }
 
-        const story = stories.find((story) => story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase());
-        if (story) {
-            toast('Story already exists', { className: 'p-2 rounded-md', theme });
-            return;
-        }
+        // let text = null;
+        // if (isNewStory) {
+        //     text = transformString(newStoryContent.current);
+        //     setSelectedStory((prev) => ({ ...prev, text }));
+        // }
 
-        let text = null;
-        if (isNewStory) {
-            text = transformString(newStoryContent.current);
-            setSelectedStory((prev) => ({ ...prev, text }));
-        }
+        // const story = stories.find((story) => story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase());
+        // if (story) {
+        //     toast('Story already exists', { className: 'p-2 rounded-md', theme });
+        //     return;
+        // }
 
         try {
             const story = stories.find(story => story.story_id === selectedStory.story_id);
             if (!story) {
-                await makeApiRequest('/stories', 'post', { ...selectedStory, text: text || selectedStory.text });
+                await makeApiRequest('/stories', 'post', { ...selectedStory });
             } else {
                 await makeApiRequest(`/stories/${selectedStory.story_id}`, 'put', selectedStory);
             }

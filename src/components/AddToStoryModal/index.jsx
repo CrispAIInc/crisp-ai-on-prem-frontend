@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
 function AddToStoryModal({ open, handleClose, setOpen }) {
-    const { theme, selectedNote, stories } = useContext(MainContext);
+    const { theme, selectedNote, stories, selectedStory, setSelectedStory } = useContext(MainContext);
     const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
     const [selectedSectionId, setSelectedSectionId] = useState("");
 
@@ -23,6 +23,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
 
     const handleStoryChange = (selectedOption) => {
         setSelectedStoryIndex(selectedOption.value);
+        setSelectedStory(stories[selectedOption.value]);
     };
 
     const sections = stories[selectedStoryIndex].text.map(({ outline }) => ({ value: outline.id, label: outline.name }));
@@ -55,9 +56,16 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                     </p>` : ''}
             </div>`;
         }).join('<br />');
-        const sectionToBeModified = stories[selectedStoryIndex].text.find(({ outline }) => outline.id === selectedSectionId);
 
-        sectionToBeModified.content = joinedAnswers + '<br />';
+        // add joinedAnswers to the selected section of the selected story
+        // selectedStory.text.find(({ outline }) => outline.id === selectedSectionId).content = joinedAnswers + '<br />';
+        setSelectedStory(prev => {
+            const newStory = { ...prev };
+            newStory.text.find(({ outline }) => outline.id === selectedSectionId).content = joinedAnswers + '<br />';
+            return newStory;
+
+        });
+        // sectionToBeModified.content = joinedAnswers + '<br />';
 
         setOpen(false);
     };

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export function parseHtmlToText(html) {
     let parser = new DOMParser();
     let doc = parser.parseFromString(html, 'text/html');
@@ -125,4 +127,12 @@ export function transformString(inputString) {
     });
 
     return result;
+}
+
+export function isArrayEqual(x, y) {
+    return _(x).xorWith(y, _.isEqual).isEmpty();
+}
+
+export function areArraysEqual(arr1, arr2) {
+    return arr1.every((item, index) => item.content === arr2[index].content);
 }

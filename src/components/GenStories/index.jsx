@@ -101,7 +101,7 @@ const GenStories = () => {
             };
         });
         const newStory = {
-            story_id: new Date().getTime().toString(),
+            story_id: new Date().getTime().toString() + Math.random().toString(36).substr(2, 9),
             story_name: extractTitle(outline),
             text,
             models,

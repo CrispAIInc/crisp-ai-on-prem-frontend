@@ -62,7 +62,7 @@ const NotesSection = () => {
                         {notes.map((note, i) => (
                             <SavedNote
                                 note={note}
-                                key={i}
+                                key={note.note_id}
                                 index={i}
                                 setNoteIndex={setNoteIndex}
                                 handleDelete={handleDelete}

@@ -18,7 +18,8 @@ function SavedStory({ story }) {
         setIsNewStory(false);
     };
 
-    const deleteStory = async (id) => {
+    const deleteStory = async (e, id) => {
+        e.stopPropagation();
         try {
             await makeApiRequest(`/stories/${id}`, 'delete');
             setSelectedStory({
@@ -44,9 +45,7 @@ function SavedStory({ story }) {
                     {story.story_name}
                 </p>
                 <span onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedStory(story);
-                    deleteStory(selectedStory.story_id);
+                    deleteStory(e, selectedStory.story_id);
                 }}>
                     <DeleteIcon color={`${theme === 'light' ? '#444' : 'error'}`} />
                 </span>
