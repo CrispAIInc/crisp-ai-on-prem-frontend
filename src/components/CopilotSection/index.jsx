@@ -602,12 +602,24 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     };
 
     if (Array.isArray(latestNotes.current[existingNoteRef.current]?.text)) {
-      latestNotes.current[existingNoteRef.current].text.push(newNoteTextEntry);
+      // latestNotes.current[existingNoteRef.current].text.push(newNoteTextEntry);
+      setSelectedNote(prev => {
+        return {
+          ...prev,
+          text: [...prev.text, newNoteTextEntry]
+        };
+      });
     } else {
-      latestNotes.current[existingNoteRef.current].text = [newNoteTextEntry];
+      // latestNotes.current[existingNoteRef.current].text = [newNoteTextEntry];
+      setSelectedNote(prev => {
+        return {
+          ...prev,
+          text: [newNoteTextEntry]
+        };
+      });
     }
     // Update the selectedNote with the updated note
-    setSelectedNote(latestNotes.current[existingNoteRef.current]);
+    // setSelectedNote(latestNotes.current[existingNoteRef.current]);
     setIsNewNote(false); // Since we are updating an existing note, it's not a new note
     setIsManualNote(false);
     setShowNoteDetails(true);

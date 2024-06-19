@@ -11,7 +11,7 @@ const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, setExist
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const { theme, notes } = useContext(MainContext);
+  const { theme, notes, setSelectedNote } = useContext(MainContext);
 
   const style = {
     position: 'absolute',
@@ -24,6 +24,12 @@ const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, setExist
     boxShadow: 24,
     p: 4,
   };
+
+  function handleNoteChange(e) {
+    // setExistingNote(e.value);
+    const insight = notes[e.value];
+    setSelectedNote(insight);
+  }
   return (
     <div>
 
@@ -54,7 +60,7 @@ const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, setExist
               color: '#333333'
             }),
           }}
-            defaultValue={1} onChange={(e) => { setExistingNote(e.value); }} options={notes.map((note, i) => ({ value: i, label: note.note_name }))} />
+            defaultValue={1} onChange={(e) => { handleNoteChange(e); }} options={notes.map((note, i) => ({ value: i, label: note.note_name }))} />
         </Box>
       </Modal>
     </div>

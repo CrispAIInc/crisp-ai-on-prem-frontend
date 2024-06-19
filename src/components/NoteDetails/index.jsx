@@ -82,12 +82,12 @@ function NoteDetails() {
             return;
         }
         if (isNewNote) {
-            const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0];
+            const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
             // const noteFilename = `${dateTimeStr}.json`;
             selectedNote.note_id = dateTimeStr;
         }
         const insight = notes.find((note) => note.note_name.trim().toLowerCase() === selectedNote.note_name.trim().toLowerCase());
-        if (insight) {
+        if (insight && insight.text.length === selectedNote.text.length) {
             toast('Insight already exists', { className: 'p-2 rounded-md', theme });
             return;
         }
