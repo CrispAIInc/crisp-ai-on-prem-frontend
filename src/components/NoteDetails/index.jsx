@@ -86,8 +86,8 @@ function NoteDetails() {
             // const noteFilename = `${dateTimeStr}.json`;
             selectedNote.note_id = dateTimeStr;
         }
-        const insight = notes.find((note) => note.note_name.trim().toLowerCase() === selectedNote.note_name.trim().toLowerCase());
-        if (insight && insight.text.length === selectedNote.text.length) {
+        const insight = notes.find((note) => note.note_name.trim().toLowerCase() === selectedNote.note_name.trim().toLowerCase() && note.text.length === selectedNote.text.length);
+        if (insight) {
             toast('Insight already exists', { className: 'p-2 rounded-md', theme });
             return;
         }

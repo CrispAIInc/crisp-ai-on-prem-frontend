@@ -254,6 +254,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     // setShowNoteDetails(false);
   };
 
+  function handleEditorClick() {
+    console.log('refs inside editor has been clicked!');
+  }
 
   const fetchReferences = async (botMessage) => {
     const response = await axios.get(`${API_ENDPOINT}/references`);
@@ -295,19 +298,19 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     });
     // `<li><a href="${video}" target="_blank">${video}</a></li>`
     const references = {
-      videoLinks: data.video_references.map((video) => {
+      videoLinks: data.video_references.map((video, index) => {
         return (
-          `<li><a href="${video.source_path + " | Timestamp: " + video.timestamp}" target="_blank">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
+          `<li key='${index}' onclick='${handleEditorClick}'><a href="${video.source_path + " | Timestamp: " + video.timestamp}" target="_blank">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
         );
       }),
-      pdfLinks: data.pdf_references.map((pdf) => {
+      pdfLinks: data.pdf_references.map((pdf, index) => {
         return (
-          `<li><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
+          `<li key='${index}' onclick='${handleEditorClick}'><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
         );
       }),
-      imageLinks: data.img_references.map((img) => {
+      imageLinks: data.img_references.map((img, index) => {
         return (
-          `<li><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
+          `<li key='${index}' onclick='${handleEditorClick}'><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
         );
       }),
     };
