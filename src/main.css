@@ -33,7 +33,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.ql-container .ql-snow {
+.ql-container {
   height: 300px !important;
 }
 

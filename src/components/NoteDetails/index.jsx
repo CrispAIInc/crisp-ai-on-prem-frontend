@@ -329,9 +329,11 @@ function NoteDetails() {
                 <CustomInput className="py-2" placeholder='Note title' value={selectedNote.note_name} onChange={(e) => setSelectedNote(prev => ({ ...prev, note_name: e.target.value }))} />
             </div>
 
-            <ReactQuill className='#editor h-auto' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
-                modules={modules}
-                formats={formats} />
+            <div className=''>
+                <ReactQuill className='#editor h-full' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
+                    modules={modules}
+                    formats={formats} />
+            </div>
             <div className="flex flex-wrap items-center gap-4 my-1">
                 {
                     distinctModels?.map((model, index) => {
