@@ -36,7 +36,24 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
             if (item.answer.includes('https://oaidalleapiprodscus.blob')) {
                 return `<img src="${item.answer}" alt="image" />`;
             }
-            return item.answer;
+            const canRenderNoteRefs = (item.references?.videoLinks.length > 0 || item.references?.pdfLinks.length > 0 || item.references?.imageLinks.length > 0);
+            return `<div>
+                ${item.answer}
+                ${canRenderNoteRefs ?
+                    `<p style='margin-bottom: 0px;'>
+
+                        <h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
+                        references:
+                        </h3>
+                        
+                        <ul style='list-style-type: none;'>
+                        ${item.references.videoLinks.join('')}
+                        ${item.references.pdfLinks.join('')}
+                        ${item.references.imageLinks.join('')}
+                        </ul>
+                        
+                    </p>` : ''}
+            </div>`;
         }).join('<br />');
         const sectionToBeModified = stories[selectedStoryIndex].text.find(({ outline }) => outline.id === selectedSectionId);
 
