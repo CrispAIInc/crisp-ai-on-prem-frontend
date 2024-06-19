@@ -23,6 +23,7 @@ function NoteDetails() {
         noteIndex,
         setNotes,
         llmModels,
+        notes,
         setActiveView,
         modules,
         formats,
@@ -84,6 +85,11 @@ function NoteDetails() {
             const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0];
             // const noteFilename = `${dateTimeStr}.json`;
             selectedNote.note_id = dateTimeStr;
+        }
+        const insight = notes.find((note) => note.note_name.trim().toLowerCase() === selectedNote.note_name.trim().toLowerCase());
+        if (insight) {
+            toast('Insight already exists', { className: 'p-2 rounded-md', theme });
+            return;
         }
         try {
             await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex + 1), isNewNote: isNewNote });
