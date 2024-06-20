@@ -276,6 +276,7 @@ const GenStories = () => {
                 <CustomInput
                     placeholder="Message model..."
                     value={input}
+                    disabled={showCursor}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
@@ -285,7 +286,7 @@ const GenStories = () => {
                 />
                 <div
                     className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
-                        }`}
+                        } ${showCursor ? "cursor-not-allowed pointer-events-none" : ""}`}
                     onClick={() => sendQuery(input)}
                 >
                     <SendIcon color="primary" />
