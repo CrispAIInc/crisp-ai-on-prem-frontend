@@ -129,6 +129,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   let noteQuestion = useRef('');
   const sendMessage = async (message, models = selectedLLMs) => {
+    if (!chatLoaded) return;
+
     if (message === "" && input === "") {
       return;
     }
@@ -1064,7 +1066,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
               <CustomInput
                 placeholder="Message model..."
                 value={input}
-                disabled={showCursor}
+                disabled={showCursor || !chatLoaded}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
