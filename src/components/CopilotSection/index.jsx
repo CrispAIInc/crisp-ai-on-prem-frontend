@@ -16,6 +16,7 @@ import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import { hexToRGBString, toBase64 } from '../../utils';
 import CustomSelectTwo from '../CustomSelectTwo';
 import ImageUpload from '../ImageUpload';
+import PreviewModal from '../PreviewModal';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
@@ -948,24 +949,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                               </span>
                             </div>
                             {isLightboxOpen && (
-                              <div
-                                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-                                onClick={closeLightbox} // Close on click outside or click on lightbox
-                              >
-                                <div className="relative w-96 h-96 max-w-[90vw] max-h-[90vh]"> {/* Wrap lightbox content */}
-                                  <button
-                                    className="absolute text-2xl text-primary-300 top-4 right-4"
-                                    onClick={closeLightbox} // Close on button click
-                                  >
-                                    &times;
-                                  </button>
-                                  <img
-                                    src={message.img}
-                                    alt="Image is Loading ..."
-                                    className="object-fill w-full h-full"
-                                  />
-                                </div>
-                              </div>
+                              <PreviewModal closeLightbox={closeLightbox} content={message.img} />
                             )}
                             {/* <ImageModal
                               show={showImageModal}

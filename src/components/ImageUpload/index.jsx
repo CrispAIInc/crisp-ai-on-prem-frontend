@@ -5,6 +5,7 @@ import SendIcon from "@mui/icons-material/Send";
 import './image-upload.css';
 import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
+import PreviewModal from '../PreviewModal';
 
 const ImageUpload = () => {
     const { theme } = useContext(MainContext);
@@ -54,24 +55,7 @@ const ImageUpload = () => {
                 ))}
             </div>
             {isLightboxOpen && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-                    onClick={closeLightbox} // Close on click outside or click on lightbox
-                >
-                    <div className="relative w-96 h-96 max-w-[90vw] max-h-[90vh]"> {/* Wrap lightbox content */}
-                        <button
-                            className="absolute text-2xl text-primary-300 top-4 right-4"
-                            onClick={closeLightbox} // Close on button click
-                        >
-                            &times;
-                        </button>
-                        <img
-                            src={selectedImageInModal}
-                            alt="Image is Loading ..."
-                            className="object-fill w-full h-full"
-                        />
-                    </div>
-                </div>
+                <PreviewModal closeLightbox={closeLightbox} content={selectedImageInModal} />
             )}
             {/* main area for uploading and writing query */}
             <div className='flex items-center gap-2'>
