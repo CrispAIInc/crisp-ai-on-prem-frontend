@@ -15,6 +15,7 @@ import CustomButton from "../CustomButton";
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import { hexToRGBString, toBase64 } from '../../utils';
 import CustomSelectTwo from '../CustomSelectTwo';
+import ImageUpload from '../ImageUpload';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
@@ -300,17 +301,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const references = {
       videoLinks: data.video_references.map((video, index) => {
         return (
-          `<li key='${index}' onclick='${handleEditorClick}'><a href="${video.source_path + " | Timestamp: " + video.timestamp}" target="_blank">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
+          `<li key='${index}' onClick='{handleEditorClick}'><a href="${video.source_path + " | Timestamp: " + video.timestamp}" target="_blank">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
         );
       }),
       pdfLinks: data.pdf_references.map((pdf, index) => {
         return (
-          `<li key='${index}' onclick='${handleEditorClick}'><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
+          `<li key='${index}' onClick='{handleEditorClick}'><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
         );
       }),
       imageLinks: data.img_references.map((img, index) => {
         return (
-          `<li key='${index}' onclick='${handleEditorClick}'><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
+          `<li key='${index}' onClick='{handleEditorClick}'><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
         );
       }),
     };
@@ -480,7 +481,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     const newText = {
       content:
-        `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">
+        `<p style="margin-top: 0px; color: ${hexToRGBString(llmColor || fallbackColor)}">
 
         <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
           ${file ? `<img src='${imgUrl}' />` : question}
@@ -504,7 +505,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             </ul>
             
           </p>` : ''}
-      </span>`,
+      </p>`,
       model: models[0],
       color: llmColor || fallbackColor,
       question,
@@ -573,7 +574,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     const newNoteTextEntry = {
       content:
-        `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">
+        `<p style="margin-top: 0px; color: ${hexToRGBString(llmColor || fallbackColor)}">
           <br />
           
           <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
@@ -596,7 +597,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 ${imageLinks.join('')}
               </ul>
             </p>` : ''}
-        </span>`,
+        </p>`,
       model: models[0],
       color: llmColor || fallbackColor,
       question,
@@ -1062,17 +1063,18 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
-            <CustomButton className='flex items-center justify-center w-3/4 mx-auto text-white bg-primary-300' onClick={() => imageGenRefInput.current.click()}>
-              {/* <div
-                className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
-                  }`}
-              > */}
-              <AttachFileOutlinedIcon color="white" />
-              {/* render file input and hide it */}
-              <input type='file' accept='.png,.jpg,.jpeg,.svg' ref={imageGenRefInput} name='image-generation' className='hidden' onChange={(e) => handleVisionUpload(e)} />
-              {/* </div> */}
-              <p className="m-0">Upload an image</p>
-            </CustomButton>
+            // <CustomButton className='flex items-center justify-center w-3/4 mx-auto text-white bg-primary-300' onClick={() => imageGenRefInput.current.click()}>
+            //   <div
+            //     className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
+            //       }`}
+            //   >
+            //     <AttachFileOutlinedIcon color="white" />
+            //     {/* render file input and hide it */}
+            //     <input type='file' accept='.png,.jpg,.jpeg,.svg' ref={imageGenRefInput} name='image-generation' className='hidden' onChange={(e) => handleVisionUpload(e)} />
+            //   </div>
+            //   <p className="m-0">Upload an image</p>
+            // </CustomButton>
+            <ImageUpload />
             :
             <>
               <CustomInput
