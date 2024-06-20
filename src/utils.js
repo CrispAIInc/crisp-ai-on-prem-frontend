@@ -136,3 +136,12 @@ export function isArrayEqual(x, y) {
 export function areArraysEqual(arr1, arr2) {
     return arr1.every((item, index) => item.content === arr2[index].content);
 }
+
+export function extractTextFromHTML(html) {
+    // Create a new DOM element to parse the HTML
+    let tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    // Extract and return the text content
+    return tempDiv.textContent || tempDiv.innerText || "";
+}

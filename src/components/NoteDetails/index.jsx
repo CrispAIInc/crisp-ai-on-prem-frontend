@@ -10,7 +10,7 @@ import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
-import { hexToRGBString } from '../../utils';
+import { hexToRGBString, extractTextFromHTML } from '../../utils';
 import AggregationLlmModal from '../AggregationLlmModal';
 import toast from 'react-simple-toasts';
 import AddToStoryModal from '../AddToStoryModal';
@@ -60,7 +60,7 @@ function NoteDetails() {
         if (isNewNote && isManualNote) {
             selectedNote.text = [{
                 content: `<span style="color: ${hexToRGBString(theme === 'light' ? "#333" : '#fff')}">${newContent}</span>`,
-                answer: newContent,
+                answer: extractTextFromHTML(newContent),
                 model: null,
                 color: theme === 'light' ? "#333" : '#fff',
                 question: '',
