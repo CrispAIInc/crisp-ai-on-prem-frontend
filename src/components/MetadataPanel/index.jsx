@@ -33,6 +33,8 @@ const MetadataPanel = () => {
     const [chosenLanguage, setChosenLanguage] = useState('en');
     const PdfContainer = useRef();
 
+    let currentResourceType = currentResource.file_type;
+
     useEffect(() => {
         if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
             setTimeout(() => {
@@ -96,6 +98,7 @@ const MetadataPanel = () => {
     const pageRefs = useRef({});
 
     async function translateMetadata(chosenLanguage, object) {
+        console.log(object);
         setChosenLanguage(chosenLanguage);
         setIsTranslationLoading(true);
         // make sure response body is also like httpRequestBody (w/o lang)
@@ -132,7 +135,7 @@ const MetadataPanel = () => {
         ];
         // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
         for (const [key, value] of Object.entries(object)) {
-            if (TRANSLATABLE_KEYS.includes(key)) {
+            if (TRANSLATABLE_KEYS.includes(key) && (key !== 'transcript' || currentResourceType !== 'pdf')) {
                 httpRequestBody[key].title =
                     key === "topic_summaries"
                         ? "Detailed summary"
@@ -312,7 +315,7 @@ const MetadataPanel = () => {
                                 {translatedResource?.topic_summaries?.content}
                             </p>
 
-                            <h3
+                            {/* <h3
                                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                                     }`}
                             >
@@ -323,7 +326,7 @@ const MetadataPanel = () => {
                                     }`}
                             >
                                 {translatedResource?.transcript?.content}
-                            </p>
+                            </p> */}
 
                             <h3
                                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
