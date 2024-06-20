@@ -69,20 +69,18 @@ function StoryDetails() {
         // }
 
         try {
-            const story = stories.find(story => story.story_id === selectedStory.story_id);
+            const story = stories.find(story => story.story_id === selectedStory.story_id || story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase());
             if (!story) {
                 await makeApiRequest('/stories', 'post', { ...selectedStory });
             } else {
+                if (stories.find(story => story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase())) {
+                    toast('Story with the same title already exists', { className: 'p-2 rounded-md', theme });
+                    return;
+                }
                 await makeApiRequest(`/stories/${selectedStory.story_id}`, 'put', selectedStory);
             }
             const data = await makeApiRequest("/stories", "get");
             setStories(data);
-            // setSelectedStory({
-            //     story_id: "",
-            //     text: [],
-            //     story_name: "",
-            //     models: [],
-            // });
             toast('Story saved successfully', { className: 'p-2 rounded-md', theme });
         } catch (error) {
             console.log(error);
