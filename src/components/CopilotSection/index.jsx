@@ -1064,6 +1064,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
               <CustomInput
                 placeholder="Message model..."
                 value={input}
+                disabled={showCursor}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
