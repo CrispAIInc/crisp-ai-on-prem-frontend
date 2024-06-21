@@ -676,83 +676,93 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     }
   };
 
-  const handleVisionUpload = async (event, blob) => {
-    setIsUploadingVisionImg(true);
-    const selectedVisionLLMs = ['gpt-4-vision'];
+  const handleVisionUpload = async (images, query) => {
+    console.log("from parent copilot");
+    console.log(images);
+    console.log(query);
+    // setIsUploadingVisionImg(true);
+    // const selectedVisionLLMs = ['gpt-4-vision'];
 
-    // Function to handle file selection and upload
-    const file = event === null ? await fetchBlobAndRecreateFile(blob) : event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("image", file);
-      setShowCursor(true);
-      const userMessage = URL.createObjectURL(file);
+    // // Function to handle file selection and upload
+    // const file = event === null ? await fetchBlobAndRecreateFile(blob) : event.target.files[0];
+    // if (file) {
+    //   const formData = new FormData();
+    //   formData.append("image", file);
+    //   setShowCursor(true);
+    //TODO:change user message so that it store the images as well as the query
+    const userMessage = {
+      query,
+      images
+    };
+
+    //   const userMessage = URL.createObjectURL(file);
       setOriginalQueries([...originalQueries, userMessage]);
 
       setMessages([
         ...messages,
-        { sender: "user", text: userMessage, models: selectedVisionLLMs, file },
-        { sender: "bot", text: "", models: selectedVisionLLMs, file },
+      { sender: "user", text: userMessage, models: ['gpt-4-vision'] },
+      { sender: "bot", text: "", models: ['gpt-4-vision'] },
       ]);
-      setInput("");
+    //   setInput("");
       setResponseIndex((responseIndex) => responseIndex + 2);
 
-      try {
-        const response = await axios.post(
-          `${API_ENDPOINT}/upload-and-caption`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+    //   try {
+    //     const response = await axios.post(
+    //       `${API_ENDPOINT}/upload-and-caption`,
+    //       formData,
+    //       {
+    //         headers: {
+    //           "Content-Type": "multipart/form-data",
+    //         },
+    //       }
+    //     );
 
-        // Assuming the response contains the caption
-        const caption = response?.data.caption;
-        const botMessage = (
-          <div>
-            <p>{caption}</p>
-            <AddOptionsModal
-              text={caption}
-              file={file}
-              models={["gpt-4-vision"]}
-              addToNewNote={addToNewNote}
-              addToExistingNote={addToExistingNote}
-              setExistingNote={setExistingNote}
-              question={noteQuestion.current}
-              existingNote={existingNote}
-              onHide={onHide}
-              isNewNote={isNewNote}
-              setShowNoteModal={setShowNoteModal}
-              updateSelectedNote={setSelectedNote}
-              showNoteModal={showNoteModal}
-              selectedNote={selectedNote}
-              notes={notes}
-            />
-          </div>
-        );
-        setMessages((prevMessages) => {
-          const newMessages = [...prevMessages];
-          if (newMessages.length > 0) {
-            const lastMessageIndex = newMessages.length - 1;
-            newMessages[lastMessageIndex] = {
-              ...newMessages[lastMessageIndex],
-              text: botMessage,
-            };
-          }
-          return newMessages;
-        });
+    //     // Assuming the response contains the caption
+    //     const caption = response?.data.caption;
+    //     const botMessage = (
+    //       <div>
+    //          list of images as <div flex><img><img>...</div>
+    //         <p>{caption}</p>
+    //         <AddOptionsModal
+    //           text={caption}
+    //           file={file}
+    //           models={["gpt-4-vision"]}
+    //           addToNewNote={addToNewNote}
+    //           addToExistingNote={addToExistingNote}
+    //           setExistingNote={setExistingNote}
+    //           question={noteQuestion.current}
+    //           existingNote={existingNote}
+    //           onHide={onHide}
+    //           isNewNote={isNewNote}
+    //           setShowNoteModal={setShowNoteModal}
+    //           updateSelectedNote={setSelectedNote}
+    //           showNoteModal={showNoteModal}
+    //           selectedNote={selectedNote}
+    //           notes={notes}
+    //         />
+    //       </div>
+    //     );
+    //     setMessages((prevMessages) => {
+    //       const newMessages = [...prevMessages];
+    //       if (newMessages.length > 0) {
+    //         const lastMessageIndex = newMessages.length - 1;
+    //         newMessages[lastMessageIndex] = {
+    //           ...newMessages[lastMessageIndex],
+    //           text: botMessage,
+    //         };
+    //       }
+    //       return newMessages;
+    //     });
 
-        // Update your chat messages state here to include the new caption
-        // setMessages([...messages, { sender: 'bot', text: caption }]);
-        // setMessages([...messages, { sender: 'user', text: userMessage }, { sender: 'bot', text: '' }]);
-      } catch (error) {
-        console.error("Error uploading and captioning image:", error);
-      }
-    }
-    setShowCursor(false);
-    setIsUploadingVisionImg(false);
+    //     // Update your chat messages state here to include the new caption
+    //     // setMessages([...messages, { sender: 'bot', text: caption }]);
+    //     // setMessages([...messages, { sender: 'user', text: userMessage }, { sender: 'bot', text: '' }]);
+    //   } catch (error) {
+    //     console.error("Error uploading and captioning image:", error);
+    //   }
+    // }
+    // setShowCursor(false);
+    // setIsUploadingVisionImg(false);
   };
 
   const selectLLMModels = (event) => {
@@ -873,19 +883,48 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 <div
                   className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
                 >
+                  {
+                    message.models.includes('gpt-4-vision')
+                      ? (
+                        <>
                   <div className="flex items-center justify-between">
                     <b className="">You: </b>
                     <div
                       className="cursor-pointer"
                       onClick={() => {
-                        handleRepeatQuestion(message.text, message.models);
+                                handleVisionUpload(message.text.images, message.text.query);
                       }}
                     >
                       <ReplayOutlinedIcon />
                     </div>
                   </div>
-                  {
-                    message.text.startsWith('blob') ? <img src={message.text} alt='uploaded image' className='flex-1' /> : <p className="m-0">{message.text}</p>
+                          <div>
+                            {
+                              message.text.images.map((img) => {
+                                return (
+                                  <img src={img} key={img} alt='uploaded image' className='flex-1 mb-2' />
+                                );
+                              })
+                            }
+                            <p>{message.text.query}</p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="flex items-center justify-between">
+                            <b className="">You: </b>
+                            <div
+                              className="cursor-pointer"
+                              onClick={() => {
+                                handleRepeatQuestion(message.text, message.models);
+                              }}
+                            >
+                              <ReplayOutlinedIcon />
+                            </div>
+                          </div>
+                          <div>{message.text.startsWith('blob') ? (<img src={message.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0">{message.text}</p>)}</div>
+                        </>
+                      )
                   }
                 </div>
               </div>
@@ -1060,13 +1099,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             //   </div>
             //   <p className="m-0">Upload an image</p>
             // </CustomButton>
-            <ImageUpload />
+            <ImageUpload handleUpload={handleVisionUpload} />
             :
             <>
               <CustomInput
                 placeholder="Message model..."
                 value={input}
-                disabled={showCursor || !chatLoaded}
+                disabled={showCursor}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {

@@ -6,8 +6,9 @@ import './image-upload.css';
 import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
 import PreviewModal from '../PreviewModal';
+import toast from 'react-simple-toasts';
 
-const ImageUpload = () => {
+const ImageUpload = ({ handleUpload }) => {
     const { theme } = useContext(MainContext);
     const [selectedImages, setSelectedImages] = useState([]);
     const [selectedImageInModal, setselectedImageInModal] = useState('');
@@ -16,8 +17,8 @@ const ImageUpload = () => {
 
     const imageGenRefInput = useRef(null);
 
-    function onQueryChange(e) {
-        setQuery(e.target.value);
+    function onQueryChange(value) {
+        setQuery(value);
     }
 
     function onImageChange(e) {
@@ -40,6 +41,20 @@ const ImageUpload = () => {
     const closeLightbox = () => {
         setisLightboxOpen(false);
     };
+
+    function sendQuery() {
+        if (query.trim() === '') {
+            toast('Query cannot be empty', { className: `p-2 rounded-md`, theme });
+            return;
+        }
+        if (selectedImages.length === 0) {
+            toast('Please upload an image', { className: `p-2 rounded-md`, theme });
+            return;
+        }
+        handleUpload(selectedImages, query);
+        setQuery('');
+        setSelectedImages([]);
+    }
 
     return (
         <div
@@ -70,12 +85,14 @@ const ImageUpload = () => {
                     placeholder="Message model..."
                     value={query}
                     onChange={(e) => onQueryChange(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && sendQuery()}
                 />
                 {/* render file input and hide it */}
                 <input multiple type='file' ref={imageGenRefInput} accept='.png,.jpg,.jpeg,.svg' name='image-generation' className='hidden' onChange={(e) => onImageChange(e)} />
                 <div
                     className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
                         }`}
+                    onClick={sendQuery}
                 >
                     <SendIcon color="primary" />
                 </div>
