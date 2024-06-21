@@ -802,6 +802,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setLightboxOpen(false);
   };
 
+  const [imagePreviewIndex, setImagePreviewIndex] = useState(-1);
+  const showImageInPreview = (index) => {
+    setLightboxOpen(true);
+    setImagePreviewIndex(index);
+  };
+
   return (
     <div className="relative flex flex-col flex-1 h-full overflow-y-auto">
       <div className="flex flex-wrap items-center justify-center gap-3">
@@ -900,14 +906,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                   </div>
                           <div>
                             {
-                              message.text.images.map((img) => {
+                              message.text.images.map((img, index) => {
                                 return (
-                                  <img src={img} key={img} alt='uploaded image' className='flex-1 mb-2' />
+                                  <img src={img} key={img} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
                                 );
                               })
                             }
                             <p>{message.text.query}</p>
                           </div>
+                          {isLightboxOpen && (
+                            <PreviewModal closeLightbox={closeLightbox} content={message.text.images[imagePreviewIndex]} />
+                          )}
                         </>
                       ) : (
                         <>
