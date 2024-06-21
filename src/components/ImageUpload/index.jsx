@@ -85,7 +85,7 @@ const ImageUpload = ({ handleUpload }) => {
                     placeholder="Message model..."
                     value={query}
                     onChange={(e) => onQueryChange(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && sendQuery()}
+                    onKeyDown={(e) => e.key === 'Enter' && sendQuery()}
                 />
                 {/* render file input and hide it */}
                 <input multiple type='file' ref={imageGenRefInput} accept='.png,.jpg,.jpeg,.svg' name='image-generation' className='hidden' onChange={(e) => onImageChange(e)} />
