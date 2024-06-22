@@ -77,7 +77,7 @@ const MainWorkspace = ({ theme }) => {
       value: "dall-e-3",
       label: "Dall-e-3",
       type: "image-generation",
-      color: "#1C1678",
+      color: "#FF0000",
     },
     {
       value: "gpt-4-vision",
