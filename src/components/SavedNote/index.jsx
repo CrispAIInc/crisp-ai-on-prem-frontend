@@ -32,6 +32,19 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
             setNotes(data);
         } catch (error) {
             console.log(error);
+        } finally {
+            setSelectedNote({
+                note_id: "",
+                text: [{
+                    content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+                        videoLinks: [],
+                        pdfLinks: [],
+                        imageLinks: [],
+                    }
+                }],
+                images: [],
+                note_name: "",
+            });
         }
     };
 

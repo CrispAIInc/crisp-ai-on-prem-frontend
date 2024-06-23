@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
-const CustomInput = ({ placeholder = '', type = 'text', value, onChange, onKeyDown, className = '' }) => {
+const CustomInput = ({ placeholder = '', type = 'text', value, disabled, onChange, onKeyDown, className = '' }) => {
 
     const { theme } = useContext(MainContext);
 
@@ -13,6 +13,7 @@ const CustomInput = ({ placeholder = '', type = 'text', value, onChange, onKeyDo
             value={value}
             onChange={onChange}
             onKeyDown={onKeyDown}
+            disabled={disabled}
         />
     );
 };
