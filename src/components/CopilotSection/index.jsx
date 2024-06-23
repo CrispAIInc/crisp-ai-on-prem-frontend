@@ -304,17 +304,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const references = {
       videoLinks: data.video_references.map((video, index) => {
         return (
-          `<li key='${index}' onClick='{handleEditorClick}'><a href="${video.source_path + " | Timestamp: " + video.timestamp}" target="_blank">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
+          `<li key='${index}'><a href="${video.source_path + " | Timestamp: " + video.timestamp}" target="_blank">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
         );
       }),
       pdfLinks: data.pdf_references.map((pdf, index) => {
         return (
-          `<li key='${index}' onClick='{handleEditorClick}'><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
+          `<li key='${index}'><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
         );
       }),
       imageLinks: data.img_references.map((img, index) => {
         return (
-          `<li key='${index}' onClick='{handleEditorClick}'><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
+          `<li key='${index}'><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
         );
       }),
     };
@@ -484,20 +484,18 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     const newText = {
       content:
-        `<p style="margin-top: 0px; color: ${hexToRGBString(llmColor || fallbackColor)}">
+        `<span style="margin-top: 0px; color: ${hexToRGBString(llmColor || fallbackColor)}">
 
         <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
           ${file ? `<img src='${imgUrl}' />` : question}
         </h2>
 
-        <p style='margin-bottom: 0px;'>
+        <p>
           ${textToAdd.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${textToAdd}' width="1000" />` : textToAdd}
         </p>
         
         ${canRenderNoteRefs ?
-          `<p style='margin-bottom: 0px;'>
-
-            <h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
+          `<h3 onclick='alert("hello")' style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
               references:
             </h3>
             
@@ -505,10 +503,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
               ${references.videoLinks.join('')}
               ${references.pdfLinks.join('')}
               ${references.imageLinks.join('')}
-            </ul>
-            
-          </p>` : ''}
-      </p>`,
+            </ul>` : ''}
+      </span>`,
       model: models[0],
       color: llmColor || fallbackColor,
       question,
@@ -577,7 +573,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     const newNoteTextEntry = {
       content:
-        `<p style="margin-top: 0px; color: ${hexToRGBString(llmColor || fallbackColor)}">
+        `<span style="margin-top: 0px; color: ${hexToRGBString(llmColor || fallbackColor)}">
           <br />
           
           <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
@@ -589,8 +585,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           </p>
 
           ${canRenderNoteRefs ?
-          `<p style='margin- bottom: 0px;'>
-              <h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
+          `<h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
                 references:
               </h3>
             
@@ -598,9 +593,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 ${videoLinks.join('')}
                 ${pdfLinks.join('')}
                 ${imageLinks.join('')}
-              </ul>
-            </p>` : ''}
-        </p>`,
+              </ul>` : ''}
+        </span>`,
       model: models[0],
       color: llmColor || fallbackColor,
       question,
@@ -696,15 +690,15 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     };
 
     //   const userMessage = URL.createObjectURL(file);
-      setOriginalQueries([...originalQueries, userMessage]);
+    setOriginalQueries([...originalQueries, userMessage]);
 
-      setMessages([
-        ...messages,
+    setMessages([
+      ...messages,
       { sender: "user", text: userMessage, models: ['gpt-4-vision'] },
       { sender: "bot", text: "", models: ['gpt-4-vision'] },
-      ]);
+    ]);
     //   setInput("");
-      setResponseIndex((responseIndex) => responseIndex + 2);
+    setResponseIndex((responseIndex) => responseIndex + 2);
 
     //   try {
     //     const response = await axios.post(
@@ -893,17 +887,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     message.models.includes('gpt-4-vision')
                       ? (
                         <>
-                  <div className="flex items-center justify-between">
-                    <b className="">You: </b>
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => {
+                          <div className="flex items-center justify-between">
+                            <b className="">You: </b>
+                            <div
+                              className="cursor-pointer"
+                              onClick={() => {
                                 handleVisionUpload(message.text.images, message.text.query);
-                      }}
-                    >
-                      <ReplayOutlinedIcon />
-                    </div>
-                  </div>
+                              }}
+                            >
+                              <ReplayOutlinedIcon />
+                            </div>
+                          </div>
                           <div>
                             {
                               message.text.images.map((img, index) => {

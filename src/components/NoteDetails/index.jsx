@@ -50,10 +50,10 @@ function NoteDetails() {
                 const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
                 const fallbackColor = isManualNote ? item.color : theme === 'light' ? "#333333" : "#FFFFFF";
                 return `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">${item.content}</span>`;
-            }).join('<br />');
+            }).join('');
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedNote.text, selectedNote.text.length, theme]);
+    }, [selectedNote, selectedNote.text, selectedNote.text.length, theme]);
 
 
     const handleContentChange = (newContent) => {
