@@ -990,7 +990,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                   : "text-textColor-200"
                                   }`}
                               >
-                                Models: Dall-e-3
+                                {message.models.map((item, index) => (
+                                  <span
+                                    key={index}
+                                    className={`text-xs divide-x ${theme === "light"
+                                      ? "text-textColor-300"
+                                      : "text-textColor-200"
+                                      }`}
+                                  >
+                                    {item.toUpperCase()}
+                                  </span>
+                                ))}
                               </span>
                             </div>
                             {isLightboxOpen && (
