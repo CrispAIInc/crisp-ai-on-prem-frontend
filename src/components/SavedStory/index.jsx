@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { parseHtmlToText } from '../../utils';
 
 import makeApiRequest from '../../api';
+import toast from 'react-simple-toasts';
 
 function SavedStory({ story }) {
 
@@ -20,6 +21,8 @@ function SavedStory({ story }) {
 
     const deleteStory = async (e, id) => {
         e.stopPropagation();
+        console.log(e);
+        console.log(id);
         try {
             await makeApiRequest(`/stories/${id}`, 'delete');
             setSelectedStory({
@@ -34,6 +37,7 @@ function SavedStory({ story }) {
             setStories(data);
         } catch (error) {
             console.log(error);
+            toast('An error occurred while deleting story', { className: 'p-2 rounded-md', theme });
         }
     };
 
@@ -45,7 +49,7 @@ function SavedStory({ story }) {
                     {story.story_name}
                 </p>
                 <span onClick={(e) => {
-                    deleteStory(e, selectedStory.story_id);
+                    deleteStory(e, story.story_id);
                 }}>
                     <DeleteIcon color={`${theme === 'light' ? '#444' : 'error'}`} />
                 </span>
