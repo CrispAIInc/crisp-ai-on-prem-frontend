@@ -184,6 +184,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         }
         return newMessages;
       });
+      setShowCursor(false);
     } else {
       let sessionID = null; // Variable to store the session ID
 
@@ -539,29 +540,29 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   }, [notes]);
 
   const addToExistingNote = async (newTextContent, file, question = '', models = selectedLLMs, references) => {
-    setNoteReferences({
-      videoLinks: [],
-      pdfLinks: [],
-      imageLinks: [],
-    });
+    // setNoteReferences({
+    //   videoLinks: [],
+    //   pdfLinks: [],
+    //   imageLinks: [],
+    // });
 
-    const videoLinks = noteReferences.videoLinks.map((video) => {
-      return (
-        `<li><a href="${video}" target="_blank">${video}</a></li>`
-      );
-    });
-    const pdfLinks = noteReferences.pdfLinks.map((pdf) => {
-      return (
-        `<li><a href="${pdf}" target="_blank">${pdf}</a></li>`
-      );
-    });
-    const imageLinks = noteReferences.imageLinks.map((img) => {
-      return (
-        `<li><a href="${img}" target="_blank">${img}</a></li>`
-      );
-    });
+    // const videoLinks = noteReferences.videoLinks.map((video) => {
+    //   return (
+    //     `<li><a href="${video}" target="_blank">${video}</a></li>`
+    //   );
+    // });
+    // const pdfLinks = noteReferences.pdfLinks.map((pdf) => {
+    //   return (
+    //     `<li><a href="${pdf}" target="_blank">${pdf}</a></li>`
+    //   );
+    // });
+    // const imageLinks = noteReferences.imageLinks.map((img) => {
+    //   return (
+    //     `<li><a href="${img}" target="_blank">${img}</a></li>`
+    //   );
+    // });
 
-    const canRenderNoteRefs = (videoLinks?.length > 0 || pdfLinks?.length > 0 || imageLinks?.length > 0);
+    const canRenderNoteRefs = (references?.videoLinks?.length > 0 || references?.pdfLinks?.length > 0 || references?.imageLinks?.length > 0);
 
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
@@ -590,9 +591,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
               </h3>
             
               <ul style='list-style-type: none;'>
-                ${videoLinks.join('')}
-                ${pdfLinks.join('')}
-                ${imageLinks.join('')}
+                ${references.videoLinks.join('')}
+                ${references.pdfLinks.join('')}
+                ${references.imageLinks.join('')}
               </ul>` : ''}
         </span>`,
       model: models[0],
@@ -780,7 +781,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       return;
     }
 
-    if (selectedLLMs[0] !== 'dall-e-3' && selectedLLMs[0] !== 'gpt-4-vision') {
+    if (models[0] !== 'dall-e-3' && models[0] !== 'gpt-4-vision') {
       sendMessage(message);
       return;
     }
