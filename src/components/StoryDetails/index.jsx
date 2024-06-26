@@ -12,7 +12,7 @@ import toast from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import 'react-simple-toasts/dist/theme/light.css';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import { areArraysEqual, getLevelOfSection, transformString } from '../../utils';
+import { areArraysEqual, getLevelOfSection, isSameStoryContent, transformString } from '../../utils';
 
 function StoryDetails() {
 
@@ -69,11 +69,11 @@ function StoryDetails() {
         // }
 
         try {
-            const story = stories.find(story => story.story_id === selectedStory.story_id || story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase());
+            const story = stories.find(story => story.story_id === selectedStory.story_id || (story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase() && isSameStoryContent(story.text, selectedStory.text)));
             if (!story) {
                 await makeApiRequest('/stories', 'post', { ...selectedStory });
             } else {
-                if (stories.find(story => story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase())) {
+                if (stories.find(story => story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase() && isSameStoryContent(story.text, selectedStory.text))) {
                     toast('Story with the same title already exists', { className: 'p-2 rounded-md', theme });
                     return;
                 }

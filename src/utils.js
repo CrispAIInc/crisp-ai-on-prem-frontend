@@ -145,3 +145,7 @@ export function extractTextFromHTML(html) {
     // Extract and return the text content
     return tempDiv.textContent || tempDiv.innerText || "";
 }
+
+export function isSameStoryContent(storyContent1, storyContent2) {
+    return storyContent1.every((item, index) => item.content === storyContent2[index].content);
+}
