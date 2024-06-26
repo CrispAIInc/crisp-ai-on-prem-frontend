@@ -13,6 +13,7 @@ import 'react-simple-toasts/dist/theme/dark.css';
 import 'react-simple-toasts/dist/theme/light.css';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import { areArraysEqual, getLevelOfSection, isSameStoryContent, transformString } from '../../utils';
+import LoadingSpinner from '../LoadingSpinner';
 
 function StoryDetails() {
 
@@ -182,8 +183,12 @@ function StoryDetails() {
                 onClick={() => generateIntroConclusion()}
             >
                 <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                    {isGeneratingIntroConclusion ? 'Generating...' : 'Generate Introduction/Conclusion'}
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${isGeneratingIntroConclusion && 'flex items-center gap-2'}`}>
+                    {isGeneratingIntroConclusion ? (
+                        <>
+                            <LoadingSpinner videoSpinner={true} /> <span>Generating...</span>
+                        </>
+                    ) : 'Generate Introduction/Conclusion'}
                 </span>
             </div>}
             {/* story title */}
