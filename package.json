@@ -21,6 +21,8 @@
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.7.5",
     "pdfjs-dist": "^3.11.174",
+    "quill": "^2.0.2",
+    "quill-paste-smart": "^1.4.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",

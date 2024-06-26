@@ -327,7 +327,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       }),
       pdfLinks: data.pdf_references.map((pdf, index) => {
         return (
-          `<li key='${index}'><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
+          `<li key='${index}'><a href="${encodeURIComponent(JSON.stringify(pdf))}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
         );
       }),
       imageLinks: data.img_references.map((img, index) => {

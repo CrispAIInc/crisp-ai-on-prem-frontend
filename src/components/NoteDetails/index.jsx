@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
 import SaveIcon from '@mui/icons-material/Save';
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
@@ -27,6 +27,7 @@ function NoteDetails() {
         setResourceURL,
         setSummary,
         setSummaries,
+        setJumpToPage,
         API_ENDPOINT,
         notes,
         setActiveView,
@@ -112,6 +113,7 @@ function NoteDetails() {
     }, [HTMLToDisplay]);
 
     const handleVideoLinkClick = (event, video) => {
+        console.log("hi");
         event.preventDefault();
         // setFromChat(true);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
@@ -121,6 +123,19 @@ function NoteDetails() {
         setSummary(video.summary);
         setSummaries(video.topic_summaries);
         setActiveView('resource');
+        // setShowNoteDetails(false);
+    };
+
+    const handlePDFLinkClick = (event, pdf) => {
+        event.preventDefault();
+        const resourceURL = `${API_ENDPOINT}/${pdf.file_type
+            }/all/${encodeURIComponent(pdf.source_path)}`;
+        setCurrentResource(pdf);
+        setResourceURL(resourceURL);
+        setSummary(pdf.summary);
+        setSummaries(pdf.topic_summaries);
+        setActiveView('resource');
+        setJumpToPage({ page: parseInt(pdf.page) + 1 });
         // setShowNoteDetails(false);
     };
 
@@ -134,7 +149,12 @@ function NoteDetails() {
 
         if (target && target.tagName === 'LI') {
             const sourceObject = JSON.parse(decodeURIComponent(target.children[0].getAttribute('href')));
-            handleVideoLinkClick(event, sourceObject);
+
+            switch (sourceObject.file_type) {
+                case 'video': handleVideoLinkClick(event, sourceObject); break;
+                case 'pdf': handlePDFLinkClick(event, sourceObject); break;
+                default: console.log('no file type found');
+            }
             // const id = target.getAttribute('data-id');
             // if (id) {
             //     console.log('List item clicked:', id);
