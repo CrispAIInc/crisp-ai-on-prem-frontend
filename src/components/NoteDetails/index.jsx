@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef, useMemo } from 'react';
 import makeApiRequest from '../../api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
 import SaveIcon from '@mui/icons-material/Save';
-import ReactQuill, { Quill } from 'react-quill';
+import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
@@ -21,8 +21,13 @@ function NoteDetails() {
         setSelectedNote,
         isManualNote,
         noteIndex,
+        setCurrentResource,
         setNotes,
         llmModels,
+        setResourceURL,
+        setSummary,
+        setSummaries,
+        API_ENDPOINT,
         notes,
         setActiveView,
         modules,
@@ -44,6 +49,38 @@ function NoteDetails() {
         return url; // You can modify the URL here
     };
 
+    const quillRef = useRef(null);
+    // const modules = useMemo(() => ({
+    //     clipboard: {
+    //         allowed: {
+    //             tags: ['a', 'b', 'strong', 'u', 's', 'i', 'p', 'br', 'ul', 'ol', 'li', 'span'],
+    //             attributes: ['href', 'rel', 'target', 'class', 'data-id', 'style']
+    //         },
+    //         keepSelection: true,
+    //         substituteBlockElements: true,
+    //         magicPasteLinks: true,
+    //     },
+    // }), []);
+    // useEffect(() => {
+    //     const options = {
+    //         theme: 'snow',
+    //         modules: {
+    //             clipboard: {
+    //                 allowed: {
+    //                     tags: ['a', 'b', 'strong', 'u', 's', 'i', 'p', 'br', 'ul', 'ol', 'li', 'span'],
+    //                     attributes: ['href', 'rel', 'target', 'class', 'data-id']
+    //                 },
+    //                 keepSelection: true,
+    //                 substituteBlockElements: true,
+    //                 magicPasteLinks: true,
+    //             },
+    //         },
+    //     };
+    //     if (quillRef.current) {
+    //         new Quill(quillRef.current, options);
+    //     }
+    // }, []);
+
     useEffect(() => {
         if (selectedNote.text) {
             const htmlString = selectedNote.text.map(item => {
@@ -54,6 +91,59 @@ function NoteDetails() {
             setHTMLToDisplay(htmlString);
         }
     }, [selectedNote, selectedNote.text, selectedNote.text.length, theme]);
+
+
+    useEffect(() => {
+        if (quillRef.current) {
+            const quill = quillRef.current.getEditor();
+            quill.root.addEventListener('click', handleClick);
+
+            quill.clipboard.dangerouslyPasteHTML(HTMLToDisplay);
+            // console.log(quill.root.innerHTML);
+        }
+
+        // Cleanup function to remove event listener when component unmounts
+        return () => {
+            if (quillRef.current) {
+                const quill = quillRef.current.getEditor();
+                quill.root.removeEventListener('click', handleClick);
+            }
+        };
+    }, [HTMLToDisplay]);
+
+    const handleVideoLinkClick = (event, video) => {
+        event.preventDefault();
+        // setFromChat(true);
+        const resourceURL = `${API_ENDPOINT}/${video.file_type
+            }/all/${encodeURIComponent(video.source_path)}`;
+        setCurrentResource(video);
+        setResourceURL(resourceURL);
+        setSummary(video.summary);
+        setSummaries(video.topic_summaries);
+        setActiveView('resource');
+        // setShowNoteDetails(false);
+    };
+
+    const handleClick = (event) => {
+        let target = event.target;
+
+        // Traverse up the DOM tree to find the <li> element
+        while (target && target.tagName !== 'LI') {
+            target = target.parentNode;
+        }
+
+        if (target && target.tagName === 'LI') {
+            const sourceObject = JSON.parse(decodeURIComponent(target.children[0].getAttribute('href')));
+            handleVideoLinkClick(event, sourceObject);
+            // const id = target.getAttribute('data-id');
+            // if (id) {
+            //     console.log('List item clicked:', id);
+            //     // Call your function here with the id
+            // } else {
+            //     console.log('data-id attribute is missing');
+            // }
+        }
+    };
 
 
     const handleContentChange = (newContent) => {
@@ -330,7 +420,7 @@ function NoteDetails() {
             </div>
 
             <div className=''>
-                <ReactQuill className='#editor h-full' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
+                <ReactQuill ref={quillRef} className='#editor h-full' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
                     modules={modules}
                     formats={formats} />
             </div>

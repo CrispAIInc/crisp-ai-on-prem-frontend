@@ -302,10 +302,27 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       );
     });
     // `<li><a href="${video}" target="_blank">${video}</a></li>`
+    // const references = {
+    //   videoLinks: data.video_references.map((video, index) => {
+    //     return (
+    //       `<span style="display:none;" data-id='${JSON.stringify(video)}'>${JSON.stringify(video).substring(0, 3)}</span>`
+    //     );
+    //   }),
+    //   pdfLinks: data.pdf_references.map((pdf, index) => {
+    //     return (
+    //       `<li key='${index}'><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
+    //     );
+    //   }),
+    //   imageLinks: data.img_references.map((img, index) => {
+    //     return (
+    //       `<li key='${index}'><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
+    //     );
+    //   }),
+    // };
     const references = {
       videoLinks: data.video_references.map((video, index) => {
         return (
-          `<li key='${index}'><a href="${video.source_path + " | Timestamp: " + video.timestamp}" target="_blank">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
+          `<li key='${index}'><a style='cursor: pointer;' href="${encodeURIComponent(JSON.stringify(video))}" target="${JSON.stringify(video)}">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
         );
       }),
       pdfLinks: data.pdf_references.map((pdf, index) => {
@@ -485,7 +502,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     const newText = {
       content:
-        `<span style="margin-top: 0px; color: ${hexToRGBString(llmColor || fallbackColor)}">
+        `<span>
 
         <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
           ${file ? `<img src='${imgUrl}' />` : question}
@@ -672,6 +689,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   };
 
   const handleVisionUpload = async (images, query) => {
+    console.log("hehe");
+    if (!chatLoaded) return;
     console.log("from parent copilot");
     console.log(images);
     console.log(query);
@@ -933,112 +952,111 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 </div>
               </div>
             ) : (
-              <>
-                <div key={index}>
-                  <div className={`message bot-message h-full`}>
-                    <div
-                      className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
-                        ? "bg-separator text-textColor-200"
-                        : "bg-background_workspace"
-                        }`}
-                    >
-                      {message.models.includes("dall-e-3") && message.img ? (
-                        <>
-                          <b
-                            className={`${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-100"
-                              }`}
-                          >
-                            Chatbot:{" "}
-                          </b>
-                          <div className="flex flex-col flex-1">
-                            <img
-                              src={message.img}
-                              alt="Image is Loading ..."
-                              onClick={openLightbox}
-                              className="flex-1 cursor-pointer"
-                            />
-                            <div className="flex flex-wrap items-center gap-1 mt-3">
-                              <span
-                                className={`text-xs ${theme === "light"
-                                  ? "text-textColor-300"
-                                  : "text-textColor-200"
-                                  }`}
-                              >
-                                <AddOptionsModal
-                                  models={["dall-e-3"]}
-                                  text={message.img}
-                                  addToNewNote={addToNewNote}
-                                  addToExistingNote={addToExistingNote}
-                                  setExistingNote={setExistingNote}
-                                  question={message.question}
-                                  existingNote={existingNote}
-                                  onHide={onHide}
-                                  isNewNote={isNewNote}
-                                  setShowNoteModal={setShowNoteModal}
-                                  updateSelectedNote={setSelectedNote}
-                                  showNoteModal={showNoteModal}
-                                  selectedNote={selectedNote}
-                                  notes={notes} />
-                              </span>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-1 mt-3">
-                              <span
-                                className={`text-xs ${theme === "light"
-                                  ? "text-textColor-300"
-                                  : "text-textColor-200"
-                                  }`}
-                              >
-                                {message.models.map((item, index) => (
-                                  <span
-                                    key={index}
-                                    className={`text-xs divide-x ${theme === "light"
-                                      ? "text-textColor-300"
-                                      : "text-textColor-200"
-                                      }`}
-                                  >
-                                    {item.toUpperCase()}
-                                  </span>
-                                ))}
-                              </span>
-                            </div>
-                            {isLightboxOpen && (
-                              <PreviewModal closeLightbox={closeLightbox} content={message.img} />
-                            )}
-                            {/* <ImageModal
+              <div key={index}>
+                <div className={`message bot-message h-full`}>
+                  <div
+                    className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
+                      ? "bg-separator text-textColor-200"
+                      : "bg-background_workspace"
+                      }`}
+                  >
+                    {message.models.includes("dall-e-3") && message.img ? (
+                      <>
+                        <b
+                          className={`${theme === "light"
+                            ? "text-textColor-300"
+                            : "text-textColor-100"
+                            }`}
+                        >
+                          Chatbot:{" "}
+                        </b>
+                        <div className="flex flex-col flex-1">
+                          <img
+                            src={message.img}
+                            alt="Image is Loading ..."
+                            onClick={openLightbox}
+                            className="flex-1 cursor-pointer"
+                          />
+                          <div className="flex flex-wrap items-center gap-1 mt-3">
+                            <span
+                              className={`text-xs ${theme === "light"
+                                ? "text-textColor-300"
+                                : "text-textColor-200"
+                                }`}
+                            >
+                              <AddOptionsModal
+                                models={["dall-e-3"]}
+                                text={message.img}
+                                addToNewNote={addToNewNote}
+                                addToExistingNote={addToExistingNote}
+                                setExistingNote={setExistingNote}
+                                question={message.question}
+                                existingNote={existingNote}
+                                onHide={onHide}
+                                isNewNote={isNewNote}
+                                setShowNoteModal={setShowNoteModal}
+                                updateSelectedNote={setSelectedNote}
+                                showNoteModal={showNoteModal}
+                                selectedNote={selectedNote}
+                                notes={notes} />
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-1 mt-3">
+                            <span
+                              className={`text-xs ${theme === "light"
+                                ? "text-textColor-300"
+                                : "text-textColor-200"
+                                }`}
+                            >
+                              {message.models.map((item, index) => (
+                                <span
+                                  key={index}
+                                  className={`text-xs divide-x ${theme === "light"
+                                    ? "text-textColor-300"
+                                    : "text-textColor-200"
+                                    }`}
+                                >
+                                  {item.toUpperCase()}
+                                </span>
+                              ))}
+                            </span>
+                          </div>
+                          {isLightboxOpen && (
+                            <PreviewModal closeLightbox={closeLightbox} content={message.img} />
+                          )}
+                          {/* <ImageModal
                               show={showImageModal}
                               onHide={onHideImageModal}
                               imageURL={message.img}
                               className="modal"
                               key={message.img}
                             /> */}
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <b
-                            className={`${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-100"
-                              }`}
-                          >
-                            Chatbot:{" "}
-                          </b>
-                          <div
-                            className={`${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-100"
-                              }`}
-                          >
-                            {message.text}
-                          </div>
-                          {showCursor && index == responseIndex ? (
-                            <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
-                          ) : null}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <b
+                          className={`${theme === "light"
+                            ? "text-textColor-300"
+                            : "text-textColor-100"
+                            }`}
+                        >
+                          Chatbot:{" "}
+                        </b>
+                        <div
+                          className={`${theme === "light"
+                            ? "text-textColor-300"
+                            : "text-textColor-100"
+                            }`}
+                        >
+                          {message.text}
+                        </div>
+                        {showCursor && index == responseIndex ? (
+                          <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
+                        ) : null}
 
-                          {/* add to note */}
-                          {/* <AddOptionsModal
+                        {/* add to note */}
+                        {/* <AddOptionsModal
                             text={message.text}
                             file={message.file}
                             models={["gpt-4-vision"]}
@@ -1057,33 +1075,32 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                           /> */}
 
 
-                          <div className="flex flex-wrap items-center gap-1">
+                        <div className="flex flex-wrap items-center gap-1">
+                          <span
+                            className={`text-xs ${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-200"
+                              }`}
+                          >
+                            Models:{" "}
+                          </span>
+                          {message.models.map((item, index) => (
                             <span
-                              className={`text-xs ${theme === "light"
+                              key={index}
+                              className={`text-xs divide-x ${theme === "light"
                                 ? "text-textColor-300"
                                 : "text-textColor-200"
                                 }`}
                             >
-                              Models:{" "}
+                              {item.toUpperCase()}
                             </span>
-                            {message.models.map((item, index) => (
-                              <span
-                                key={index}
-                                className={`text-xs divide-x ${theme === "light"
-                                  ? "text-textColor-300"
-                                  : "text-textColor-200"
-                                  }`}
-                              >
-                                {item.toUpperCase()}
-                              </span>
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
-              </>
+              </div>
             )
           )
         ) : (

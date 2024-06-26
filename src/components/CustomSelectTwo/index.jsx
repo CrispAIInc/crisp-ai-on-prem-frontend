@@ -9,8 +9,6 @@ const CustomSelectTwo = ({ options, onChange, placeholder }) => {
     const [selectedValue, setSelectedValue] = useState('');
 
     const handleChange = (event) => {
-        console.log(event.target.value);
-        console.log(options);
         const selectedOption = options.find(
             (option) => option.value === event.target.value
         );

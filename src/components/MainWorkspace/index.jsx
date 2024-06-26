@@ -11,6 +11,7 @@ import ChatPanel from "../ChatPanel";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const MainWorkspace = ({ theme }) => {
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
   const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace
   const [resourceURL, setResourceURL] = useState(null); // The Selected Resource Direct URL
 
@@ -134,6 +135,7 @@ const MainWorkspace = ({ theme }) => {
     'bullet',
     'link',
     'image',
+    'display',
   ];
 
   const [isManualNote, setIsManualNote] = useState(false);
@@ -299,6 +301,7 @@ const MainWorkspace = ({ theme }) => {
 
   // create value object with all the states
   const value = {
+    API_ENDPOINT,
     languageOptions,
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
