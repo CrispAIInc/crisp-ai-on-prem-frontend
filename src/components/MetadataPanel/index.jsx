@@ -98,7 +98,6 @@ const MetadataPanel = () => {
     const pageRefs = useRef({});
 
     async function translateMetadata(chosenLanguage, object) {
-        console.log(object);
         setChosenLanguage(chosenLanguage);
         setIsTranslationLoading(true);
         // make sure response body is also like httpRequestBody (w/o lang)
@@ -179,7 +178,7 @@ const MetadataPanel = () => {
                     />
                     {/* video summary */}
                     {!isTranslationLoading ? (
-                        <div className="mt-10 metadata-container">
+                        <div className={`mt-10 metadata-container ${chosenLanguage === 'ar' && 'text-right'}`}>
                             <CustomSelectTwo
                                 options={languageOptions}
                                 onChange={(lang) => translateMetadata(lang.value, translatedResource)}
