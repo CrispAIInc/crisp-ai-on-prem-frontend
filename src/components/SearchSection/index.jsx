@@ -5,6 +5,7 @@ import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
+import toast from 'react-simple-toasts';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -64,6 +65,9 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
             }
         } catch (error) {
             console.log(error);
+            toast('An error occurred while searching');
+        } finally {
+            setIsSearching(false);
         }
     };
 
