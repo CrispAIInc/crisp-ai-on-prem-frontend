@@ -17,7 +17,7 @@ const CustomSelectTwo = ({ options, onChange, placeholder }) => {
     };
 
     return (
-        <div className="custom-select-container">
+        <div className="custom-select-container user-select-none">
             <select className={`px-1 cursor-pointer py-1 rounded-md outline-none ${theme === 'light' ? 'bg-white border border-textColor-100' : 'bg-transparent text-textColor-100  !border !border-textColor-300'}`} onChange={handleChange} value={selectedValue}>
                 <option value="" disabled className={`${theme === 'dark' && 'bg-background text-textColor-100'}`}>{placeholder}</option>
                 {options.map((option) => (

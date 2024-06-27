@@ -856,7 +856,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         />
       </div>
 
-      <div className="flex items-center gap-1 mx-2 my-3">
+      <div className="flex items-center gap-1 mx-2 my-3 user-select-none">
         <span
           className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
             }`}
@@ -908,7 +908,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                       ? (
                         <>
                           <div className="flex items-center justify-between">
-                            <b className="">You: </b>
+                            <b className="user-select-none">You: </b>
                             <div
                               className="cursor-pointer"
                               onClick={() => {
@@ -935,7 +935,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                       ) : (
                         <>
                           <div className="flex items-center justify-between">
-                            <b className="">You: </b>
+                            <b className="user-select-none">You: </b>
                             <div
                               className="cursor-pointer"
                               onClick={() => {
@@ -963,7 +963,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     {message.models.includes("dall-e-3") && message.img ? (
                       <>
                         <b
-                          className={`${theme === "light"
+                          className={`user-select-none ${theme === "light"
                             ? "text-textColor-300"
                             : "text-textColor-100"
                             }`}
@@ -1036,7 +1036,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     ) : (
                       <>
                         <b
-                          className={`${theme === "light"
+                          className={`user-select-none ${theme === "light"
                             ? "text-textColor-300"
                             : "text-textColor-100"
                             }`}
