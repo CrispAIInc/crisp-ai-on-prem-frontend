@@ -282,7 +282,7 @@ const MetadataPanel = () => {
                     </div>
                     {/* PDF summary */}
                     {!isTranslationLoading ? (
-                        <div className="mt-10 metadata-container">
+                        <div className={`mt-10 metadata-container ${chosenLanguage === 'ar' && 'text-right'}`}>
                             <CustomSelectTwo
                                 options={languageOptions}
                                 onChange={(lang) => translateMetadata(lang.value, translatedResource)}
@@ -367,7 +367,7 @@ const MetadataPanel = () => {
                     </div>
                     {/* Image Caption */}
                     {!isTranslationLoading ? (
-                        <div className="mt-10 metadata-container">
+                        <div className={`mt-10 metadata-container ${chosenLanguage === 'ar' && 'text-right'}`}>
                             <CustomSelectTwo
                                 options={languageOptions}
                                 onChange={(lang) => translateMetadata(lang.value, translatedResource)}
