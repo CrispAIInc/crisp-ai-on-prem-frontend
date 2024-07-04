@@ -178,7 +178,7 @@ const MetadataPanel = () => {
                     />
                     {/* video summary */}
                     {!isTranslationLoading ? (
-                        <div className={`mt-10 metadata-container ${chosenLanguage === 'ar' && 'text-right'}`}>
+                        <div className={`mt-10 metadata-container ${chosenLanguage === 'ar' || chosenLanguage === 'ku' || chosenLanguage === 'ckb' || chosenLanguage === 'iw' || chosenLanguage === "ur" && 'text-right'}`}>
                             <CustomSelectTwo
                                 options={languageOptions}
                                 onChange={(lang) => translateMetadata(lang.value, translatedResource)}
@@ -282,7 +282,7 @@ const MetadataPanel = () => {
                     </div>
                     {/* PDF summary */}
                     {!isTranslationLoading ? (
-                        <div className={`mt-10 metadata-container ${chosenLanguage === 'ar' && 'text-right'}`}>
+                        <div className={`mt-10 metadata-container ${chosenLanguage === 'ar' || chosenLanguage === 'ku' || chosenLanguage === 'ckb' || chosenLanguage === 'iw' || chosenLanguage === "ur" && 'text-right'}`}>
                             <CustomSelectTwo
                                 options={languageOptions}
                                 onChange={(lang) => translateMetadata(lang.value, translatedResource)}
@@ -367,7 +367,7 @@ const MetadataPanel = () => {
                     </div>
                     {/* Image Caption */}
                     {!isTranslationLoading ? (
-                        <div className={`mt-10 metadata-container ${chosenLanguage === 'ar' && 'text-right'}`}>
+                        <div className={`mt-10 metadata-container ${chosenLanguage === 'ar' || chosenLanguage === 'ku' || chosenLanguage === 'ckb' || chosenLanguage === 'iw' || chosenLanguage === "ur" && 'text-right'}`}>
                             <CustomSelectTwo
                                 options={languageOptions}
                                 onChange={(lang) => translateMetadata(lang.value, translatedResource)}
