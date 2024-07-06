@@ -149,3 +149,7 @@ export function extractTextFromHTML(html) {
 export function isSameStoryContent(storyContent1, storyContent2) {
     return storyContent1.every((item, index) => item.content === storyContent2[index].content);
 }
+
+export function transformArrayOfObjectsToArray(arr) {
+    return arr.map(item => item.outline.name);
+}
