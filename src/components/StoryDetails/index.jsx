@@ -186,11 +186,25 @@ function StoryDetails() {
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${isGeneratingIntroConclusion && 'flex items-center gap-2'}`}>
                     {isGeneratingIntroConclusion ? (
                         <>
+                            <LoadingSpinner videoSpinner={true} /> <span>Generating Story...</span>
+                        </>
+                    ) : 'Auto generate story'}
+                </span>
+            </div>}
+            {/* intro/conc generation
+            {selectedStory.text.length > 0 && <div
+                className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                onClick={() => generateIntroConclusion()}
+            >
+                <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${isGeneratingIntroConclusion && 'flex items-center gap-2'}`}>
+                    {isGeneratingIntroConclusion ? (
+                        <>
                             <LoadingSpinner videoSpinner={true} /> <span>Generating...</span>
                         </>
                     ) : 'Generate Introduction/Conclusion'}
                 </span>
-            </div>}
+            </div>} */}
             {/* story title */}
             <div className="my-4">
                 <CustomInput className="py-2" placeholder='story title' value={selectedStory.story_name} onChange={(e) => setSelectedStory(prev => ({ ...prev, story_name: e.target.value }))} />
