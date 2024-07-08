@@ -512,8 +512,8 @@ function NoteDetails() {
 
             {/* questions/answers */}
             <div className={`mb-5 overflow-y-scroll ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
-                {selectedNote.text?.map((item, index) => (
-                    <div key={`${item.question}-${index}`} className="flex flex-col gap-4 px-3">
+                {selectedNote.text?.map((item) => (
+                    <div key={item.id} className="flex flex-col gap-4 px-3">
                         <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
                             <p>{item.question}</p>
                         </div>

@@ -13,7 +13,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import CustomButton from "../CustomButton";
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import { hexToRGBString, toBase64 } from '../../utils';
+import { generateRandomHash, hexToRGBString, toBase64 } from '../../utils';
 import CustomSelectTwo from '../CustomSelectTwo';
 import ImageUpload from '../ImageUpload';
 import PreviewModal from '../PreviewModal';
@@ -501,6 +501,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     }
 
     const newText = {
+      id: generateRandomHash(5),
       content:
         `<span>
 
