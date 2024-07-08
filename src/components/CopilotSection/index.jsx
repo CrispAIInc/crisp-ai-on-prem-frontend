@@ -329,17 +329,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     const references = {
       videoLinks: data.video_references.map((video, index) => {
         return (
-          `<li key='${index}' data-object='${video}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
+          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
         );
       }),
       pdfLinks: data.pdf_references.map((pdf, index) => {
         return (
-          `<li key='${index}' data-object='${pdf}'>${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</li>`
+          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${pdf}'>${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</li>`
         );
       }),
       imageLinks: data.img_references.map((img, index) => {
         return (
-          `<li key='${index}' data-object='${img}'>${img.source_path}</li>`
+          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${img}'>${img.source_path}</li>`
         );
       }),
     };

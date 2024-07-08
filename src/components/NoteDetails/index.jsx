@@ -577,7 +577,7 @@ function NoteDetails() {
                                     item.answer ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
-                                                <p className='text-sm' contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                                <p className='' contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         e.preventDefault();
                                                         setIsNewNote(false);
