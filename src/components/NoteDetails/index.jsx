@@ -14,6 +14,7 @@ import { hexToRGBString, extractTextFromHTML } from '../../utils';
 import AggregationLlmModal from '../AggregationLlmModal';
 import toast from 'react-simple-toasts';
 import AddToStoryModal from '../AddToStoryModal';
+import AddIcon from '@mui/icons-material/Add';
 
 function NoteDetails() {
     const {
@@ -389,56 +390,58 @@ function NoteDetails() {
 
     return (
         <div className="max-w-3xl mx-auto flex flex-col h-full">
-            <div className='flex items-center justify-end mt-3'>
-                <BaseHeading text='close' className='cursor-pointer user-select-none' onClick={() => {
-                    setShowNoteDetails(false);
-                    setSelectedNote({
-                        note_id: "",
-                        text: [{
-                            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
-                                videoLinks: [],
-                                pdfLinks: [],
-                                imageLinks: [],
+            <div className='flex justify-between'>
+                <div>
+                    {/* aggregated insights */}
+                    <div
+                        className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        onClick={() => setIsAggregationModalOpen(true)}
+                    >
+                        <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                            {isPending ? "Aggregating insight..." : "Aggregate Insight"}
+                        </span>
+                    </div>
+
+                    {/* add to story */}
+                    <div
+                        className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        onClick={handleOpen}
+                    >
+                        <SummarizeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                            Add to Story
+                        </span>
+
+                    </div>
+                    <AddToStoryModal open={open} setOpen={setOpen} handleOpen={handleOpen} handleClose={handleClose} />
+
+                    <AggregationLlmModal llmAggregation={llmAggregation} setLlmAggregation={setLlmAggregation} isLlmAggregationModalOpen={isLlmAggregationModalOpen} setIsAggregationModalOpen={setIsAggregationModalOpen} aggregateInsight={aggregateInsight} isPending={isPending} />
+                </div>
+                <div className='flex items-center justify-end'>
+                    <BaseHeading text='close' className='cursor-pointer user-select-none' onClick={() => {
+                        setShowNoteDetails(false);
+                        setSelectedNote({
+                            note_id: "",
+                            text: [{
+                                content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+                                    videoLinks: [],
+                                    pdfLinks: [],
+                                    imageLinks: [],
+                                }
+                            }],
+                            images: [],
+                            note_name: "",
+                        });
+                        setActiveView(() => {
+                            if (currentResource) {
+                                return 'resource';
                             }
-                        }],
-                        images: [],
-                        note_name: "",
-                    });
-                    setActiveView(() => {
-                        if (currentResource) {
-                            return 'resource';
-                        }
-                        return null;
-                    });
-                }} />
+                            return null;
+                        });
+                    }} />
+                </div>
             </div>
-
-
-            {/* aggregated insights */}
-            <div
-                className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                onClick={() => setIsAggregationModalOpen(true)}
-            >
-                <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                    {isPending ? "Aggregating insight..." : "Aggregate Insight"}
-                </span>
-            </div>
-
-            {/* add to story */}
-            <div
-                className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                onClick={handleOpen}
-            >
-                <SummarizeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                    Add to Story
-                </span>
-
-            </div>
-            <AddToStoryModal open={open} setOpen={setOpen} handleOpen={handleOpen} handleClose={handleClose} />
-
-            <AggregationLlmModal llmAggregation={llmAggregation} setLlmAggregation={setLlmAggregation} isLlmAggregationModalOpen={isLlmAggregationModalOpen} setIsAggregationModalOpen={setIsAggregationModalOpen} aggregateInsight={aggregateInsight} isPending={isPending} />
 
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
@@ -448,10 +451,9 @@ function NoteDetails() {
             {/* <div > */}
 
             {/* questions/answers */}
-            {/* make this next div scrollable */}
-            <div className={` overflow-y-scroll ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
+            <div className={`mb-5 overflow-y-scroll ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
                 {selectedNote.text?.map((item, index) => (
-                    <div key={`${item.question}-${index}`} className="mt-10 flex flex-col gap-4 px-3">
+                    <div key={`${item.question}-${index}`} className="flex flex-col gap-4 px-3">
                         <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
                             <p>{item.question}</p>
                         </div>
@@ -463,7 +465,15 @@ function NoteDetails() {
                         </div>
                     </div>
                 ))}
-                {/* </div> */}
+                {/* add new question/answer */}
+                <div className="flex flex-col gap-4 px-3">
+                    <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}>
+                        <AddIcon />
+                    </div>
+                    <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%] cursor-pointer`}>
+                        <AddIcon />
+                    </div>
+                </div>
             </div>
         </div>
     );
