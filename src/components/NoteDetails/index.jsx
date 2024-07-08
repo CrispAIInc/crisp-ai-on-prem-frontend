@@ -392,6 +392,7 @@ function NoteDetails() {
     const [newQuestion, setNewQuestion] = useState('');
     const [isAddingNewAnswer, setIsAddingNewAnswer] = useState(false);
     const [newAnswer, setNewAnswer] = useState('');
+    const titleRef = useRef(null);
 
 
     function handleOpenNewQuestionBox() {
@@ -496,7 +497,13 @@ function NoteDetails() {
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 <h3 className='m-0'>Title:</h3>
-                <h4 className='m-0'>title here</h4>
+                <h4 className='m-0' ref={titleRef} contentEditable onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        setSelectedNote(prev => ({ ...prev, note_name: titleRef.current.innerText }));
+                        titleRef.current.blur();
+                    }
+                }}>{selectedNote.note_name}</h4>
             </div>
             {/* <div > */}
 
