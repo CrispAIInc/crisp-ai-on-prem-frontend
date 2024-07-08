@@ -12,14 +12,14 @@ import toast from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import 'react-simple-toasts/dist/theme/light.css';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import { areArraysEqual, getLevelOfSection, isSameStoryContent, transformString } from '../../utils';
+import { areArraysEqual, getLevelOfSection, isSameStoryContent, transformArrayOfObjectsToArray, transformString } from '../../utils';
 import LoadingSpinner from '../LoadingSpinner';
 
 function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
         modules, theme, stories,
-        formats, setStories, isNewStory, setIsNewStory } = useContext(MainContext);
+        formats, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
     const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] = useState(false);
@@ -89,45 +89,65 @@ function StoryDetails() {
         }
     };
 
-    async function generateIntroConclusion() {
+    async function autoGenerateStory() {
         if (!isNewStory) {
             setIsGeneratingIntroConlusion(true);
-            // get text of selectedStory except for introduction and conclusion sections
-            let content = "";
-            for (let i = 0; i < selectedStory.text.length; i++) {
-                if (selectedStory.text[i].outline.name.toLowerCase().includes('introduction')) continue;
-                if (selectedStory.text[i].outline.name.toLowerCase().includes('conclusion')) break;
-                content += '\n' + selectedStory.text[i].outline.name + '\n' + selectedStory.text[i].content;
-            }
 
             const httpPayload = {
-                content
+                sections: transformArrayOfObjectsToArray(selectedStory.text),
+                models: selectedGenStoriesModels,
             };
+
+            console.log(httpPayload);
             try {
-                const { introduction, conclusion } = await makeApiRequest(`/generate-intro-outro/${selectedStory.models[0]}`, 'post', httpPayload);
-
-                setSelectedStory((prev) => {
-                    const updatedStory = { ...prev };
-
-                    updatedStory.text[0] = { ...updatedStory.text[0], content: introduction + '<br />' };
-
-                    // Loop through the text array and update content where outline.name contains "conclusion"
-                    updatedStory.text = updatedStory.text.map((textItem) => {
-                        if (textItem.outline?.name?.toLowerCase().includes("conclusion")) {
-                            return { ...textItem, content: conclusion + '<br />' };
-                        }
-                        return textItem;
-                    });
-
-                    return updatedStory;
-                });
-            } catch (error) {
+                console.log("jdsf");
+            }
+            catch (error) {
                 console.log(error);
             } finally {
                 setIsGeneratingIntroConlusion(false);
             }
         }
     }
+    // async function generateIntroConclusion() {
+    //     if (!isNewStory) {
+    //         setIsGeneratingIntroConlusion(true);
+    //         // get text of selectedStory except for introduction and conclusion sections
+    //         let content = "";
+    //         for (let i = 0; i < selectedStory.text.length; i++) {
+    //             if (selectedStory.text[i].outline.name.toLowerCase().includes('introduction')) continue;
+    //             if (selectedStory.text[i].outline.name.toLowerCase().includes('conclusion')) break;
+    //             content += '\n' + selectedStory.text[i].outline.name + '\n' + selectedStory.text[i].content;
+    //         }
+
+    //         const httpPayload = {
+    //             content
+    //         };
+    //         try {
+    //             const { introduction, conclusion } = await makeApiRequest(`/generate-intro-outro/${selectedStory.models[0]}`, 'post', httpPayload);
+
+    //             setSelectedStory((prev) => {
+    //                 const updatedStory = { ...prev };
+
+    //                 updatedStory.text[0] = { ...updatedStory.text[0], content: introduction + '<br />' };
+
+    //                 // Loop through the text array and update content where outline.name contains "conclusion"
+    //                 updatedStory.text = updatedStory.text.map((textItem) => {
+    //                     if (textItem.outline?.name?.toLowerCase().includes("conclusion")) {
+    //                         return { ...textItem, content: conclusion + '<br />' };
+    //                     }
+    //                     return textItem;
+    //                 });
+
+    //                 return updatedStory;
+    //             });
+    //         } catch (error) {
+    //             console.log(error);
+    //         } finally {
+    //             setIsGeneratingIntroConlusion(false);
+    //         }
+    //     }
+    // }
 
     const deleteStory = async (id) => {
         try {
@@ -180,7 +200,7 @@ function StoryDetails() {
             {/*intro/conc generation */}
             {selectedStory.text.length > 0 && <div
                 className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                onClick={() => generateIntroConclusion()}
+                onClick={() => autoGenerateStory()}
             >
                 <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${isGeneratingIntroConclusion && 'flex items-center gap-2'}`}>
