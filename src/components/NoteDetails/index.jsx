@@ -205,11 +205,11 @@ function NoteDetails() {
             // const noteFilename = `${dateTimeStr}.json`;
             selectedNote.note_id = dateTimeStr;
         }
-        const insight = notes.find((note) => note.note_name.trim().toLowerCase() === selectedNote.note_name.trim().toLowerCase() && note.text.length === selectedNote.text.length);
-        if (insight) {
-            toast('Insight already exists', { className: 'p-2 rounded-md', theme });
-            return;
-        }
+        // const insight = notes.find((note) => note.note_name.trim().toLowerCase() === selectedNote.note_name.trim().toLowerCase() && note.text.length === selectedNote.text.length);
+        // if (insight) {
+        //     toast('Insight already exists', { className: 'p-2 rounded-md', theme });
+        //     return;
+        // }
         try {
             await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex + 1), isNewNote: isNewNote });
 
@@ -402,7 +402,7 @@ function NoteDetails() {
         setIsAddingNewAnswer(true);
     }
 
-    function addNewQuestion() {
+    function addNewQuestion(e) {
         if (newQuestion === '') {
             return;
         }
@@ -424,9 +424,10 @@ function NoteDetails() {
         });
         setNewQuestion('');
         setIsAddingNewQuestion(false);
+        handleSave(e);
     }
 
-    function addNewAnswer() {
+    function addNewAnswer(e) {
         if (newAnswer === '') {
             return;
         }
@@ -437,6 +438,7 @@ function NoteDetails() {
         });
         setNewAnswer('');
         setIsAddingNewAnswer(false);
+        handleSave(e);
     }
 
     return (
@@ -502,6 +504,7 @@ function NoteDetails() {
                         e.preventDefault();
                         setSelectedNote(prev => ({ ...prev, note_name: titleRef.current.innerText }));
                         titleRef.current.blur();
+                        handleSave(e);
                     }
                 }}>{selectedNote.note_name}</h4>
             </div>
@@ -534,7 +537,7 @@ function NoteDetails() {
                             </div>
                             <div className="flex items-center justify-end gap-2">
                                 <CustomButton className='my-0' onClick={() => setIsAddingNewQuestion(false)}>Cancel</CustomButton>
-                                <CustomButton className='my-0' onClick={addNewQuestion}>Save</CustomButton>
+                                <CustomButton className='my-0' onClick={e => addNewQuestion(e)}>Save</CustomButton>
                             </div>
                         </div>}
                     {!isAddingNewAnswer && !isAddingNewQuestion ? <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%] cursor-pointer`}
@@ -547,7 +550,7 @@ function NoteDetails() {
                             </div>
                             <div className="flex items-center justify-end gap-2">
                                 <CustomButton className='my-0' onClick={() => setIsAddingNewAnswer(false)}>Cancel</CustomButton>
-                                <CustomButton className='my-0' onClick={addNewAnswer}>Save</CustomButton>
+                                <CustomButton className='my-0' onClick={e => addNewAnswer(e)}>Save</CustomButton>
                             </div>
                         </div>}
                 </div>
