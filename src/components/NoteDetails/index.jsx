@@ -449,7 +449,7 @@ function NoteDetails() {
 
             {/* questions/answers */}
             {/* make this next div scrollable */}
-            <div className={` overflow-y-scroll ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+            <div className={` overflow-y-scroll ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
                 {selectedNote.text?.map((item, index) => (
                     <div key={`${item.question}-${index}`} className="mt-10 flex flex-col gap-4 px-3">
                         <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
@@ -459,7 +459,7 @@ function NoteDetails() {
                             <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
                                 <p>{item.answer}</p>
                             </div>
-                            <h6 className='text-sm'>LLM: {item.model}</h6>
+                            <h6 className='text-sm mt-2'>LLM: {item.model}</h6>
                         </div>
                     </div>
                 ))}
