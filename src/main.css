@@ -33,6 +33,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+p {
+  margin: 0 !important;
+}
+
 .ql-container {
   height: 300px !important;
   max-height: 300px !important;

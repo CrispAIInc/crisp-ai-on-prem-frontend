@@ -441,7 +441,7 @@ function NoteDetails() {
             <AggregationLlmModal llmAggregation={llmAggregation} setLlmAggregation={setLlmAggregation} isLlmAggregationModalOpen={isLlmAggregationModalOpen} setIsAggregationModalOpen={setIsAggregationModalOpen} aggregateInsight={aggregateInsight} isPending={isPending} />
 
             {/* title */}
-            <div className={`mt-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+            <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 <h3 className='m-0'>Title:</h3>
                 <h4 contentEditable className='m-0'>title here</h4>
             </div>
@@ -451,15 +451,15 @@ function NoteDetails() {
             {/* make this next div scrollable */}
             <div className={` overflow-y-scroll ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 {selectedNote.text?.map((item, index) => (
-                    <div key={`${item.question}-${index}`} className="mt-10 flex flex-col gap-4">
+                    <div key={`${item.question}-${index}`} className="mt-10 flex flex-col gap-4 px-3">
                         <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
-                            <h5>{item.question}</h5>
+                            <p>{item.question}</p>
                         </div>
                         <div>
                             <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
-                                <h5>{item.answer}</h5>
+                                <p>{item.answer}</p>
                             </div>
-                            <p>{item.model}</p>
+                            <h6 className='text-sm'>LLM: {item.model}</h6>
                         </div>
                     </div>
                 ))}
