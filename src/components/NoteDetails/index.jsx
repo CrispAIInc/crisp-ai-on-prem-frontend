@@ -16,6 +16,7 @@ import toast from 'react-simple-toasts';
 import AddToStoryModal from '../AddToStoryModal';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
+import ReactHtmlParser from "react-html-parser";
 
 function NoteDetails() {
     const {
@@ -25,6 +26,7 @@ function NoteDetails() {
         noteIndex,
         setCurrentResource,
         setNotes,
+        setIsNewNote,
         llmModels,
         setResourceURL,
         setSummary,
@@ -527,6 +529,7 @@ function NoteDetails() {
                 <h4 className='m-0' ref={titleRef} contentEditable onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
+                        setIsNewNote(false);
                         setSelectedNote(prev => {
                             return { ...prev, note_name: e.target.innerText };
                         });
@@ -552,14 +555,15 @@ function NoteDetails() {
                                         <p contentEditable ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();
+                                                setIsNewNote(false);
                                                 // update question
                                                 setSelectedNote(prev => {
                                                     const newNote = { ...prev };
-                                                    newNote.text.find((note) => note.id === item.id).question = questionRefs.current[item.id].innerText;
+                                                    newNote.text.find((note) => note.id === item.id).question = e.target.innerText;
                                                     return newNote;
                                                 });
                                                 questionRefs.current[item.id].blur();
-                                                handleSave(e);
+                                                // handleSave(e);
                                             }
                                         }}>{item.question}</p>
                                     </div>
@@ -572,10 +576,11 @@ function NoteDetails() {
                                 {
                                     item.answer ? (
                                         <div className='flex items-center gap-2'>
-                                            <div className={`flex flex-col  gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
+                                            <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
                                                 <p className='text-sm' contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         e.preventDefault();
+                                                        setIsNewNote(false);
                                                         // update answer
                                                         setSelectedNote(prev => {
                                                             const newNote = { ...prev };
@@ -583,18 +588,35 @@ function NoteDetails() {
                                                             return newNote;
                                                         });
                                                         answerRefs.current[item.id].blur();
-                                                        handleSave(e);
+                                                        // handleSave(e);
                                                     }
                                                 }}>{item.answer}</p>
                                                 {/* display references */}
-                                                {/* {item.refs?.videoLinks.length > 0 || item.refs?.pdfLinks.length > 0 || item.refs?.imageLinks.length > 0 ? <div className='flex flex-col gap-2'>
+                                                {item.refs?.videoLinks.length > 0 || item.refs?.pdfLinks.length > 0 || item.refs?.imageLinks.length > 0 ? <div className='flex flex-col gap-2'>
                                                     <h6 className='text-sm'>References:</h6>
                                                     <ul className='break-all'>
-                                                        {item.refs.videoLinks.map(ref => ref)}
-                                                        {item.refs.pdfLinks.map(ref => ref)}
-                                                        {item.refs.imgLinks.map(ref => ref)}
+                                                        {item?.references?.videoLinks?.map(ref => ReactHtmlParser(ref))}
+                                                        {item?.references?.pdfLinks?.map(ref => ReactHtmlParser(ref))}
+                                                        {item?.references?.imgLinks?.map(ref => ReactHtmlParser(ref))}
+                                                        {/* {item?.refs?.pdfLinks.map(ref => ref)}
+                                                        {item?.refs?.imgLinks.map(ref => ref)} */}
                                                     </ul>
-                                                </div> : <p>no refs</p>} */}
+                                                </div> : <p>no refs</p>}
+                                                {/* {item.videoLinks && (
+                                                    <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                        {item.videoLinks}
+                                                    </ul>
+                                                )} */}
+                                                {/* {item.pdfLinks && (
+                                                    <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                        {item.pdfLinks}
+                                                    </ul>
+                                                )}
+                                                {item.imgLinks && (
+                                                    <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                        {item.imgLinks}
+                                                    </ul>
+                                                )} */}
                                             </div>
                                             <div className="flex gap-2">
                                                 <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
