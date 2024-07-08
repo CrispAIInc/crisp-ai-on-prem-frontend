@@ -10,7 +10,7 @@ import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
-import { hexToRGBString, extractTextFromHTML } from '../../utils';
+import { hexToRGBString, extractTextFromHTML, generateRandomHash } from '../../utils';
 import AggregationLlmModal from '../AggregationLlmModal';
 import toast from 'react-simple-toasts';
 import AddToStoryModal from '../AddToStoryModal';
@@ -410,6 +410,7 @@ function NoteDetails() {
         setSelectedNote(prev => {
             const newNote = { ...prev };
             newNote.text.push({
+                id: generateRandomHash(5),
                 content: newQuestion,
                 answer: '',
                 model: null,
@@ -441,6 +442,8 @@ function NoteDetails() {
         setIsAddingNewAnswer(false);
         handleSave(e);
     }
+
+    const questionRefs = useRef({});
 
     return (
         <div className="max-w-3xl mx-auto flex flex-col h-full">
@@ -518,11 +521,22 @@ function NoteDetails() {
                         {/* question */}
                         <div className='flex items-center gap-2 align-self-end'>
                             <div className="flex gap-2">
-                                <EditIcon fontSize="small" className='cursor-pointer' />
                                 <DeleteIcon fontSize="small" className='cursor-pointer' />
                             </div>
                             <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
-                                <p>{item.question}</p>
+                                <p contentEditable ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        // update question
+                                        setSelectedNote(prev => {
+                                            const newNote = { ...prev };
+                                            newNote.text.find((note) => note.id === item.id).question = questionRefs.current[item.id].innerText;
+                                            return newNote;
+                                        });
+                                        questionRefs.current[item.id].blur();
+                                        handleSave(e);
+                                    }
+                                }}>{item.question}</p>
                             </div>
                         </div>
                         {/* answer */}
