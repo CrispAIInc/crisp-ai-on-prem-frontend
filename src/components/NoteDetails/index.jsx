@@ -488,20 +488,20 @@ function NoteDetails() {
                             <p>{item.question}</p>
                         </div>
                         <div>
-                            <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
+                            {item.answer && <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
                                 <p>{item.answer}</p>
-                            </div>
-                            <h6 className='text-sm mt-2'>LLM: {item.model}</h6>
+                            </div>}
+                            {item.model && <h6 className='text-sm mt-2'>LLM: {item.model}</h6>}
                         </div>
                     </div>
                 ))}
                 {/* add new question/answer */}
                 <div className="flex flex-col gap-4 px-3">
-                    {!isAddingNewQuestion ? <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
+                    {!isAddingNewQuestion && selectedNote?.text.at(-1)?.answer !== "" ? <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
                         onClick={handleOpenNewQuestionBox}>
                         <AddIcon />
                     </div>
-                        : <div className="flex flex-col">
+                        : isAddingNewQuestion && selectedNote?.text.at(-1)?.question !== "" && <div className="flex flex-col">
                             <div>
                                 <CustomInput placeholder='Question' value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
                             </div>
