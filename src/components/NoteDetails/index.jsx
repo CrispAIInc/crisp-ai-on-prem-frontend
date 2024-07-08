@@ -82,114 +82,114 @@ function NoteDetails() {
     //     }
     // }, []);
 
-    useEffect(() => {
-        if (selectedNote.text) {
-            const htmlString = selectedNote.text.map(item => {
-                const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
-                const fallbackColor = isManualNote ? item.color : theme === 'light' ? "#333333" : "#FFFFFF";
-                return `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">${item.content}</span>`;
-            }).join('');
-            setHTMLToDisplay(htmlString);
-        }
-    }, [selectedNote.text.length, theme]);
+    // useEffect(() => {
+    //     if (selectedNote.text) {
+    //         const htmlString = selectedNote.text.map(item => {
+    //             const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
+    //             const fallbackColor = isManualNote ? item.color : theme === 'light' ? "#333333" : "#FFFFFF";
+    //             return `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">${item.content}</span>`;
+    //         }).join('');
+    //         setHTMLToDisplay(htmlString);
+    //     }
+    // }, [selectedNote.text.length, theme]);
 
 
-    useEffect(() => {
-        if (quillRef.current) {
-            const quill = quillRef.current.getEditor();
-            quill.root.addEventListener('click', handleClick);
+    // useEffect(() => {
+    //     if (quillRef.current) {
+    //         const quill = quillRef.current.getEditor();
+    //         quill.root.addEventListener('click', handleClick);
 
-            quill.clipboard.dangerouslyPasteHTML(HTMLToDisplay);
-            // console.log(quill.root.innerHTML);
-        }
+    //         quill.clipboard.dangerouslyPasteHTML(HTMLToDisplay);
+    //         // console.log(quill.root.innerHTML);
+    //     }
 
-        // Cleanup function to remove event listener when component unmounts
-        return () => {
-            if (quillRef.current) {
-                const quill = quillRef.current.getEditor();
-                quill.root.removeEventListener('click', handleClick);
-            }
-        };
-    }, [HTMLToDisplay]);
+    //     // Cleanup function to remove event listener when component unmounts
+    //     return () => {
+    //         if (quillRef.current) {
+    //             const quill = quillRef.current.getEditor();
+    //             quill.root.removeEventListener('click', handleClick);
+    //         }
+    //     };
+    // }, [HTMLToDisplay]);
 
-    const handleVideoLinkClick = (event, video) => {
-        console.log("hi");
-        event.preventDefault();
-        // setFromChat(true);
-        const resourceURL = `${API_ENDPOINT}/${video.file_type
-            }/all/${encodeURIComponent(video.source_path)}`;
-        setCurrentResource(video);
-        setResourceURL(resourceURL);
-        setSummary(video.summary);
-        setSummaries(video.topic_summaries);
-        setActiveView('resource');
-        // setShowNoteDetails(false);
-    };
+    // const handleVideoLinkClick = (event, video) => {
+    //     console.log("hi");
+    //     event.preventDefault();
+    //     // setFromChat(true);
+    //     const resourceURL = `${API_ENDPOINT}/${video.file_type
+    //         }/all/${encodeURIComponent(video.source_path)}`;
+    //     setCurrentResource(video);
+    //     setResourceURL(resourceURL);
+    //     setSummary(video.summary);
+    //     setSummaries(video.topic_summaries);
+    //     setActiveView('resource');
+    //     // setShowNoteDetails(false);
+    // };
 
-    const handlePDFLinkClick = (event, pdf) => {
-        event.preventDefault();
-        const resourceURL = `${API_ENDPOINT}/${pdf.file_type
-            }/all/${encodeURIComponent(pdf.source_path)}`;
-        setCurrentResource(pdf);
-        setResourceURL(resourceURL);
-        setSummary(pdf.summary);
-        setSummaries(pdf.topic_summaries);
-        setActiveView('resource');
-        setJumpToPage({ page: parseInt(pdf.page) + 1 });
-        // setShowNoteDetails(false);
-    };
+    // const handlePDFLinkClick = (event, pdf) => {
+    //     event.preventDefault();
+    //     const resourceURL = `${API_ENDPOINT}/${pdf.file_type
+    //         }/all/${encodeURIComponent(pdf.source_path)}`;
+    //     setCurrentResource(pdf);
+    //     setResourceURL(resourceURL);
+    //     setSummary(pdf.summary);
+    //     setSummaries(pdf.topic_summaries);
+    //     setActiveView('resource');
+    //     setJumpToPage({ page: parseInt(pdf.page) + 1 });
+    //     // setShowNoteDetails(false);
+    // };
 
-    const handleClick = (event) => {
-        let target = event.target;
+    // const handleClick = (event) => {
+    //     let target = event.target;
 
-        // Traverse up the DOM tree to find the <li> element
-        while (target && target.tagName !== 'LI') {
-            target = target.parentNode;
-        }
+    //     // Traverse up the DOM tree to find the <li> element
+    //     while (target && target.tagName !== 'LI') {
+    //         target = target.parentNode;
+    //     }
 
-        if (target && target.tagName === 'LI') {
-            const sourceObject = JSON.parse(decodeURIComponent(target.children[0].getAttribute('href')));
+    //     if (target && target.tagName === 'LI') {
+    //         const sourceObject = JSON.parse(decodeURIComponent(target.children[0].getAttribute('href')));
 
-            switch (sourceObject.file_type) {
-                case 'video': handleVideoLinkClick(event, sourceObject); break;
-                case 'pdf': handlePDFLinkClick(event, sourceObject); break;
-                default: console.log('no file type found');
-            }
-            // const id = target.getAttribute('data-id');
-            // if (id) {
-            //     console.log('List item clicked:', id);
-            //     // Call your function here with the id
-            // } else {
-            //     console.log('data-id attribute is missing');
-            // }
-        }
-    };
+    //         switch (sourceObject.file_type) {
+    //             case 'video': handleVideoLinkClick(event, sourceObject); break;
+    //             case 'pdf': handlePDFLinkClick(event, sourceObject); break;
+    //             default: console.log('no file type found');
+    //         }
+    //         // const id = target.getAttribute('data-id');
+    //         // if (id) {
+    //         //     console.log('List item clicked:', id);
+    //         //     // Call your function here with the id
+    //         // } else {
+    //         //     console.log('data-id attribute is missing');
+    //         // }
+    //     }
+    // };
 
 
-    const handleContentChange = (newContent, delta, source) => {
-        if (isNewNote && isManualNote) {
-            selectedNote.text = [{
-                content: `<span style="color: ${hexToRGBString(theme === 'light' ? "#333" : '#fff')}">${newContent}</span>`,
-                answer: extractTextFromHTML(newContent),
-                model: null,
-                color: theme === 'light' ? "#333" : '#fff',
-                question: '',
-                references: {
-                    videoLinks: [],
-                    pdfLinks: [],
-                    imageLinks: [],
-                }
-            }];
-            return;
-        }
+    // const handleContentChange = (newContent, delta, source) => {
+    //     if (isNewNote && isManualNote) {
+    //         selectedNote.text = [{
+    //             content: `<span style="color: ${hexToRGBString(theme === 'light' ? "#333" : '#fff')}">${newContent}</span>`,
+    //             answer: extractTextFromHTML(newContent),
+    //             model: null,
+    //             color: theme === 'light' ? "#333" : '#fff',
+    //             question: '',
+    //             references: {
+    //                 videoLinks: [],
+    //                 pdfLinks: [],
+    //                 imageLinks: [],
+    //             }
+    //         }];
+    //         return;
+    //     }
 
-        console.log(newContent);
-        console.log(source)
+    //     console.log(newContent);
+    //     console.log(source)
 
-        // if (source === 'user') {
-        //     setSelectedNote(prev => ({ ...prev, content: newContent }));
-        // }
-    };
+    //     // if (source === 'user') {
+    //     //     setSelectedNote(prev => ({ ...prev, content: newContent }));
+    //     // }
+    // };
 
     const handleSave = async (event) => {
         event.preventDefault();
@@ -388,7 +388,7 @@ function NoteDetails() {
     });
 
     return (
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto flex flex-col h-full">
             <div className='flex items-center justify-end mt-3'>
                 <BaseHeading text='close' className='cursor-pointer user-select-none' onClick={() => {
                     setShowNoteDetails(false);
@@ -440,33 +440,30 @@ function NoteDetails() {
 
             <AggregationLlmModal llmAggregation={llmAggregation} setLlmAggregation={setLlmAggregation} isLlmAggregationModalOpen={isLlmAggregationModalOpen} setIsAggregationModalOpen={setIsAggregationModalOpen} aggregateInsight={aggregateInsight} isPending={isPending} />
 
-
-            {/* note title */}
-            <div className="my-4">
-                <CustomInput className="py-2" placeholder='Note title' value={selectedNote.note_name} onChange={(e) => setSelectedNote(prev => ({ ...prev, note_name: e.target.value }))} />
+            {/* title */}
+            <div className={`mt-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                <h3 className='m-0'>Title:</h3>
+                <h4 contentEditable className='m-0'>title here</h4>
             </div>
+            {/* <div > */}
 
-            <div className=''>
-                <ReactQuill ref={quillRef} className='#editor h-full' theme="snow" value={HTMLToDisplay} onChange={handleContentChange}
-                    modules={modules}
-                    formats={formats} />
-            </div>
-            <div className="flex flex-wrap items-center gap-4 my-1">
-                {
-                    distinctModels?.map((model, index) => {
-                        const modelColor = `bg-${model?.toUpperCase()}-200`;
-                        return (
-                            <div key={index} className={`flex items-center gap-1 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`}>
-                                <span className={`w-3 h-3 ${modelColor}`}></span><span>{model?.toUpperCase()}</span>
+            {/* questions/answers */}
+            {/* make this next div scrollable */}
+            <div className={` overflow-y-scroll ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                {selectedNote.text?.map((item, index) => (
+                    <div key={`${item.question}-${index}`} className="mt-10 flex flex-col gap-4">
+                        <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
+                            <h5>{item.question}</h5>
+                        </div>
+                        <div>
+                            <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
+                                <h5>{item.answer}</h5>
                             </div>
-                        );
-                    })
-                }
-            </div>
-
-            <div className="flex items-center justify-end gap-2">
-                <CustomButton className='bg-primary-300 !my-0' onClick={handleDelete}><DeleteIcon className='text-white' /></CustomButton>
-                <CustomButton onClick={handleSave} className="bg-primary-300 !my-0"> <SaveIcon className='text-white' /> </CustomButton>
+                            <p>{item.model}</p>
+                        </div>
+                    </div>
+                ))}
+                {/* </div> */}
             </div>
         </div>
     );
