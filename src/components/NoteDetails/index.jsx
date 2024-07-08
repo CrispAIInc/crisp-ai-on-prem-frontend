@@ -444,6 +444,7 @@ function NoteDetails() {
     }
 
     const questionRefs = useRef({});
+    const answerRefs = useRef({});
 
     return (
         <div className="max-w-3xl mx-auto flex flex-col h-full">
@@ -546,10 +547,21 @@ function NoteDetails() {
                                     item.answer && (
                                         <div className='flex items-center gap-2'>
                                             <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
-                                                <p>{item.answer}</p>
+                                                <p contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        // update answer
+                                                        setSelectedNote(prev => {
+                                                            const newNote = { ...prev };
+                                                            newNote.text.find((note) => note.id === item.id).answer = answerRefs.current[item.id].innerText;
+                                                            return newNote;
+                                                        });
+                                                        answerRefs.current[item.id].blur();
+                                                        handleSave(e);
+                                                    }
+                                                }}>{item.answer}</p>
                                             </div>
                                             <div className="flex gap-2">
-                                                <EditIcon fontSize="small" className='cursor-pointer' />
                                                 <DeleteIcon fontSize="small" className='cursor-pointer' />
                                             </div>
                                         </div>)
