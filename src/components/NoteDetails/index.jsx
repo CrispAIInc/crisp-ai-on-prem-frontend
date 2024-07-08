@@ -91,7 +91,7 @@ function NoteDetails() {
             }).join('');
             setHTMLToDisplay(htmlString);
         }
-    }, [selectedNote, selectedNote.text, selectedNote.text.length, theme]);
+    }, [selectedNote.text.length, theme]);
 
 
     useEffect(() => {
@@ -166,7 +166,7 @@ function NoteDetails() {
     };
 
 
-    const handleContentChange = (newContent) => {
+    const handleContentChange = (newContent, delta, source) => {
         if (isNewNote && isManualNote) {
             selectedNote.text = [{
                 content: `<span style="color: ${hexToRGBString(theme === 'light' ? "#333" : '#fff')}">${newContent}</span>`,
@@ -182,6 +182,13 @@ function NoteDetails() {
             }];
             return;
         }
+
+        console.log(newContent);
+        console.log(source)
+
+        // if (source === 'user') {
+        //     setSelectedNote(prev => ({ ...prev, content: newContent }));
+        // }
     };
 
     const handleSave = async (event) => {
