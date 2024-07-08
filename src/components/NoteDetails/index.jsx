@@ -15,6 +15,7 @@ import AggregationLlmModal from '../AggregationLlmModal';
 import toast from 'react-simple-toasts';
 import AddToStoryModal from '../AddToStoryModal';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 function NoteDetails() {
     const {
@@ -514,14 +515,33 @@ function NoteDetails() {
             <div className={`mb-5 overflow-y-scroll ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
                 {selectedNote.text?.map((item) => (
                     <div key={item.id} className="flex flex-col gap-4 px-3">
-                        <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
-                            <p>{item.question}</p>
+                        {/* question */}
+                        <div className='flex items-center gap-2 align-self-end'>
+                            <div className="flex gap-2">
+                                <EditIcon fontSize="small" className='cursor-pointer' />
+                                <DeleteIcon fontSize="small" className='cursor-pointer' />
+                            </div>
+                            <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
+                                <p>{item.question}</p>
+                            </div>
                         </div>
-                        <div>
-                            {item.answer && <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
-                                <p>{item.answer}</p>
-                            </div>}
-                            {item.model && <h6 className='text-sm mt-2'>LLM: {item.model}</h6>}
+                        {/* answer */}
+                        <div className='flex items-center gap-4'>
+                            <div>
+                                {
+                                    item.answer && (
+                                        <div className='flex items-center gap-2'>
+                                            <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
+                                                <p>{item.answer}</p>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <EditIcon fontSize="small" className='cursor-pointer' />
+                                                <DeleteIcon fontSize="small" className='cursor-pointer' />
+                                            </div>
+                                        </div>)
+                                }
+                                {item.model && <h6 className='text-sm mt-2'>LLM: {item.model}</h6>}
+                            </div>
                         </div>
                     </div>
                 ))}
