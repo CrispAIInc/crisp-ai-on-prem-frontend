@@ -41,6 +41,7 @@ function NoteDetails() {
     const [llmAggregation, setLlmAggregation] = useState('gpt-4');
     const [isLlmAggregationModalOpen, setIsAggregationModalOpen] = useState(false);
     const [isPending, setIsPending] = useState(false);
+    const [isAddingNewQuestion, setIsAddingNewQuestion] = useState(false);
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -388,6 +389,35 @@ function NoteDetails() {
         }
     });
 
+    const [newQuestion, setNewQuestion] = useState('');
+    function handleOpenNewQuestionBox() {
+        setIsAddingNewQuestion(true);
+    }
+
+    function addNewQuestion() {
+        if (newQuestion === '') {
+            return;
+        }
+        setSelectedNote(prev => {
+            const newNote = { ...prev };
+            newNote.text.push({
+                content: newQuestion,
+                answer: '',
+                model: null,
+                color: theme === 'light' ? "#333" : '#fff',
+                question: newQuestion,
+                references: {
+                    videoLinks: [],
+                    pdfLinks: [],
+                    imageLinks: [],
+                }
+            });
+            return newNote;
+        });
+        setNewQuestion('');
+        setIsAddingNewQuestion(false);
+    }
+
     return (
         <div className="max-w-3xl mx-auto flex flex-col h-full">
             <div className='flex justify-between'>
@@ -446,7 +476,7 @@ function NoteDetails() {
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 <h3 className='m-0'>Title:</h3>
-                <h4 contentEditable className='m-0'>title here</h4>
+                <h4 className='m-0'>title here</h4>
             </div>
             {/* <div > */}
 
@@ -467,9 +497,19 @@ function NoteDetails() {
                 ))}
                 {/* add new question/answer */}
                 <div className="flex flex-col gap-4 px-3">
-                    <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}>
+                    {!isAddingNewQuestion ? <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
+                        onClick={handleOpenNewQuestionBox}>
                         <AddIcon />
                     </div>
+                        : <div className="flex flex-col">
+                            <div>
+                                <CustomInput placeholder='Question' value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
+                            </div>
+                            <div className="flex items-center justify-end gap-2">
+                                <CustomButton className='my-0' onClick={() => setIsAddingNewQuestion(false)}>Cancel</CustomButton>
+                                <CustomButton className='my-0' onClick={addNewQuestion}>Save</CustomButton>
+                            </div>
+                        </div>}
                     <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%] cursor-pointer`}>
                         <AddIcon />
                     </div>
