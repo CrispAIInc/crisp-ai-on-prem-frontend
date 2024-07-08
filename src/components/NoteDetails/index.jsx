@@ -390,8 +390,15 @@ function NoteDetails() {
     });
 
     const [newQuestion, setNewQuestion] = useState('');
+    const [isAddingNewAnswer, setIsAddingNewAnswer] = useState(false);
+    const [newAnswer, setNewAnswer] = useState('');
+
+
     function handleOpenNewQuestionBox() {
         setIsAddingNewQuestion(true);
+    }
+    function handleOpenNewAnswerBox() {
+        setIsAddingNewAnswer(true);
     }
 
     function addNewQuestion() {
@@ -416,6 +423,19 @@ function NoteDetails() {
         });
         setNewQuestion('');
         setIsAddingNewQuestion(false);
+    }
+
+    function addNewAnswer() {
+        if (newAnswer === '') {
+            return;
+        }
+        setSelectedNote(prev => {
+            const newNote = { ...prev };
+            newNote.text.at(-1).answer = newAnswer;
+            return newNote;
+        });
+        setNewAnswer('');
+        setIsAddingNewAnswer(false);
     }
 
     return (
@@ -510,9 +530,19 @@ function NoteDetails() {
                                 <CustomButton className='my-0' onClick={addNewQuestion}>Save</CustomButton>
                             </div>
                         </div>}
-                    <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%] cursor-pointer`}>
+                    {!isAddingNewAnswer && !isAddingNewQuestion ? <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%] cursor-pointer`}
+                        onClick={handleOpenNewAnswerBox}>
                         <AddIcon />
                     </div>
+                        : isAddingNewAnswer && selectedNote?.text.at(-1)?.question !== "" && <div className="flex flex-col">
+                            <div>
+                                <textarea className='w-full border' placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
+                            </div>
+                            <div className="flex items-center justify-end gap-2">
+                                <CustomButton className='my-0' onClick={() => setIsAddingNewAnswer(false)}>Cancel</CustomButton>
+                                <CustomButton className='my-0' onClick={addNewAnswer}>Save</CustomButton>
+                            </div>
+                        </div>}
                 </div>
             </div>
         </div>
