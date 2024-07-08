@@ -195,7 +195,7 @@ function NoteDetails() {
     // };
 
     const handleSave = async (event) => {
-        event.preventDefault();
+        event && event.preventDefault();
         if (selectedNote.note_name === "") {
             // add shadow to toast classnames
             toast('Note title cannot be empty', { className: `p-2 rounded-md`, theme });
@@ -433,6 +433,9 @@ function NoteDetails() {
         if (newAnswer === '') {
             return;
         }
+
+        if (selectedNote.text.at(-1).answer) return;
+
         setSelectedNote(prev => {
             const newNote = { ...prev };
             newNote.text.at(-1).answer = newAnswer;
@@ -446,8 +449,25 @@ function NoteDetails() {
     const questionRefs = useRef({});
     const answerRefs = useRef({});
 
+    function handleDeleteContent(id) {
+        setSelectedNote(prev => {
+            const newNote = {
+                ...prev,
+                text: prev.text.filter(content => content.id !== id)
+            };
+
+            return newNote;
+        });
+    }
+
+    // useEffect(() => {
+    //     // save selectedNote
+    //     handleSave();
+    // }, []);
+
+
     return (
-        <div className="max-w-3xl mx-auto flex flex-col h-full">
+        <div className="flex flex-col h-full max-w-3xl mx-auto">
             <div className='flex justify-between'>
                 <div>
                     {/* aggregated insights */}
@@ -507,47 +527,53 @@ function NoteDetails() {
                 <h4 className='m-0' ref={titleRef} contentEditable onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        setSelectedNote(prev => ({ ...prev, note_name: titleRef.current.innerText }));
+                        setSelectedNote(prev => {
+                            return { ...prev, note_name: e.target.innerText };
+                        });
                         titleRef.current.blur();
-                        handleSave(e);
+                        // handleSave(e);
                     }
                 }}>{selectedNote.note_name}</h4>
             </div>
             {/* <div > */}
 
             {/* questions/answers */}
-            <div className={`mb-5 overflow-y-scroll ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
+            <div className={`mb-5 overflow-y-auto ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
                 {selectedNote.text?.map((item) => (
                     <div key={item.id} className="flex flex-col gap-4 px-3">
                         {/* question */}
-                        <div className='flex items-center gap-2 align-self-end'>
-                            <div className="flex gap-2">
-                                <DeleteIcon fontSize="small" className='cursor-pointer' />
-                            </div>
-                            <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
-                                <p contentEditable ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault();
-                                        // update question
-                                        setSelectedNote(prev => {
-                                            const newNote = { ...prev };
-                                            newNote.text.find((note) => note.id === item.id).question = questionRefs.current[item.id].innerText;
-                                            return newNote;
-                                        });
-                                        questionRefs.current[item.id].blur();
-                                        handleSave(e);
-                                    }
-                                }}>{item.question}</p>
-                            </div>
-                        </div>
+                        {
+                            item.question ?
+                                <div className='flex items-center gap-2 align-self-end'>
+                                    <div className="flex gap-2">
+                                        <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
+                                    </div>
+                                    <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
+                                        <p contentEditable ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                // update question
+                                                setSelectedNote(prev => {
+                                                    const newNote = { ...prev };
+                                                    newNote.text.find((note) => note.id === item.id).question = questionRefs.current[item.id].innerText;
+                                                    return newNote;
+                                                });
+                                                questionRefs.current[item.id].blur();
+                                                handleSave(e);
+                                            }
+                                        }}>{item.question}</p>
+                                    </div>
+                                </div>
+                                : null
+                        }
                         {/* answer */}
                         <div className='flex items-center gap-4'>
                             <div>
                                 {
-                                    item.answer && (
+                                    item.answer ? (
                                         <div className='flex items-center gap-2'>
-                                            <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
-                                                <p contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                            <div className={`flex flex-col  gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
+                                                <p className='text-sm' contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         e.preventDefault();
                                                         // update answer
@@ -560,22 +586,31 @@ function NoteDetails() {
                                                         handleSave(e);
                                                     }
                                                 }}>{item.answer}</p>
+                                                {/* display references */}
+                                                {/* {item.refs?.videoLinks.length > 0 || item.refs?.pdfLinks.length > 0 || item.refs?.imageLinks.length > 0 ? <div className='flex flex-col gap-2'>
+                                                    <h6 className='text-sm'>References:</h6>
+                                                    <ul className='break-all'>
+                                                        {item.refs.videoLinks.map(ref => ref)}
+                                                        {item.refs.pdfLinks.map(ref => ref)}
+                                                        {item.refs.imgLinks.map(ref => ref)}
+                                                    </ul>
+                                                </div> : <p>no refs</p>} */}
                                             </div>
                                             <div className="flex gap-2">
-                                                <DeleteIcon fontSize="small" className='cursor-pointer' />
+                                                <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                             </div>
-                                        </div>)
+                                        </div>) : null
                                 }
-                                {item.model && <h6 className='text-sm mt-2'>LLM: {item.model}</h6>}
+                                {item.model && <h6 className='mt-2 text-sm'>{item.model}</h6>}
                             </div>
                         </div>
                     </div>
                 ))}
                 {/* add new question/answer */}
-                <div className="flex flex-col gap-4 px-3">
+                <div className="flex flex-col gap-4 px-3 mt-2">
                     {!isAddingNewQuestion && selectedNote?.text.at(-1)?.answer !== "" ? <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
                         onClick={handleOpenNewQuestionBox}>
-                        <AddIcon />
+                        <AddIcon fontSize='small' />
                     </div>
                         : isAddingNewQuestion && selectedNote?.text.at(-1)?.question !== "" && <div className="flex flex-col">
                             <div>
@@ -588,11 +623,11 @@ function NoteDetails() {
                         </div>}
                     {!isAddingNewAnswer && !isAddingNewQuestion ? <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%] cursor-pointer`}
                         onClick={handleOpenNewAnswerBox}>
-                        <AddIcon />
+                        <AddIcon fontSize='small' />
                     </div>
                         : isAddingNewAnswer && selectedNote?.text.at(-1)?.question !== "" && <div className="flex flex-col">
                             <div>
-                                <textarea className='w-full border' placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
+                                <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
                             </div>
                             <div className="flex items-center justify-end gap-2">
                                 <CustomButton className='my-0' onClick={() => setIsAddingNewAnswer(false)}>Cancel</CustomButton>
@@ -601,6 +636,7 @@ function NoteDetails() {
                         </div>}
                 </div>
             </div>
+            <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
         </div>
     );
 }

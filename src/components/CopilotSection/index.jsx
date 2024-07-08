@@ -319,20 +319,27 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     //     );
     //   }),
     // };
+
+    const refs = {
+      videoLinks,
+      pdfLinks,
+      imgLinks,
+    };
+
     const references = {
       videoLinks: data.video_references.map((video, index) => {
         return (
-          `<li key='${index}'><a style='cursor: pointer;' href="${encodeURIComponent(JSON.stringify(video))}" target="${JSON.stringify(video)}">${video.source_path + " | Timestamp: " + video.timestamp}</a></li>`
+          `<li key='${index}' data-object='${video}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
         );
       }),
       pdfLinks: data.pdf_references.map((pdf, index) => {
         return (
-          `<li key='${index}'><a href="${encodeURIComponent(JSON.stringify(pdf))}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
+          `<li key='${index}' data-object='${pdf}'>${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</li>`
         );
       }),
       imageLinks: data.img_references.map((img, index) => {
         return (
-          `<li key='${index}'><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
+          `<li key='${index}' data-object='${img}'>${img.source_path}</li>`
         );
       }),
     };
@@ -365,6 +372,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             selectedLanguage == "en" ? data.bot_message : newData.translatedText
           }
           addToNewNote={addToNewNote}
+          refs={refs}
           addToExistingNote={addToExistingNote}
           setExistingNote={setExistingNote}
           question={noteQuestion.current}
@@ -489,7 +497,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     );
   };
 
-  const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, references) => {
+  const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, references, refs) => {
 
     const canRenderNoteRefs = (references?.videoLinks.length > 0 || references?.pdfLinks.length > 0 || references?.imageLinks.length > 0);
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
@@ -529,10 +537,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       question,
       answer: textToAdd,
       references,
+      refs,
     };
     const newNote = {
       ...selectedNote,
-      note_name: "",
+      note_name: "new title...",
       text: [{
         ...newText
       }]
