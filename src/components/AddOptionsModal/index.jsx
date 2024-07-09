@@ -50,7 +50,7 @@ const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, setExist
 
           <div
             className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-            onClick={() => { addToExistingNote(text, file, question, models, references); handleClose(); }}
+            onClick={() => { addToExistingNote(text, file, question, models, references, refs); handleClose(); }}
           >
             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} mb-4`}>Add to an existing insight</span>
           </div>

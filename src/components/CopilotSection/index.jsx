@@ -584,7 +584,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     latestNotes.current = notes;
   }, [notes]);
 
-  const addToExistingNote = async (newTextContent, file, question = '', models = selectedLLMs, references) => {
+  const addToExistingNote = async (newTextContent, file, question = '', models = selectedLLMs, references, refs) => {
     // setNoteReferences({
     //   videoLinks: [],
     //   pdfLinks: [],
@@ -618,6 +618,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     }
 
     const newNoteTextEntry = {
+      id: generateRandomHash(5),
       content:
         `<span style="margin-top: 0px; color: ${hexToRGBString(llmColor || fallbackColor)}">
           <br />
@@ -646,6 +647,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       question,
       answer: newTextContent,
       references,
+      refs
     };
 
     if (Array.isArray(latestNotes.current[existingNoteRef.current]?.text)) {
