@@ -75,10 +75,10 @@ function StoryDetails() {
             if (!story) {
                 await makeApiRequest('/stories', 'post', { ...selectedStory });
             } else {
-                if (stories.find(story => story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase() && isSameStoryContent(story.text, selectedStory.text))) {
-                    toast('Story with the same title already exists', { className: 'p-2 rounded-md', theme });
-                    return;
-                }
+                // if (stories.find(story => story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase() && isSameStoryContent(story.text, selectedStory.text))) {
+                //     toast('Story with the same title already exists', { className: 'p-2 rounded-md', theme });
+                //     return;
+                // }
                 await makeApiRequest(`/stories/${selectedStory.story_id}`, 'put', selectedStory);
             }
             const data = await makeApiRequest("/stories", "get");
@@ -261,7 +261,7 @@ function StoryDetails() {
             </div>
 
 
-            <div className={`mb-5 overflow-y-auto gap-4 ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
+            <div className={`mb-5 overflow-y-auto flex flex-col gap-4 ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
                 {selectedStory.text?.map((item) => (
                     <div key={item.id} className="flex flex-col gap-4 px-3">
                         {/* question */}
