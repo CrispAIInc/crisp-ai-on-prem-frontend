@@ -157,7 +157,7 @@ function StoryDetails() {
             setSelectedStory({
                 story_id: "",
                 text: [],
-                story_name: "",
+                story_name: "new story...",
                 models: []
             });
 
@@ -261,7 +261,7 @@ function StoryDetails() {
         });
         setNewAnswer('');
         setCurrentAddingAnswerId("");
-        handleSave(e);
+        // handleSave(e);
     }
 
     return (
@@ -410,7 +410,10 @@ function StoryDetails() {
             </div>
 
             {/* questions/answers */}
-            <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
+            <div className='flex items-center w-fit ml-auto gap-3'>
+                <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={() => deleteStory(selectedStory.story_id)}>Delete</CustomButton>
+                <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
+            </div>
 
             {/* story title
             <div className="my-4">
