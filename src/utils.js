@@ -153,3 +153,15 @@ export function isSameStoryContent(storyContent1, storyContent2) {
 export function transformArrayOfObjectsToArray(arr) {
     return arr.map(item => item.outline.name);
 }
+
+export function isSameInsightQuestions(text1, text2) {
+    let insightOneFullContent = text1.map(item => item.question).join('');
+    let insightTwoFullContent = text2.map(item => item.question).join('');
+    return insightOneFullContent === insightTwoFullContent;
+}
+
+export function isSameInsightAnswers(text1, text2) {
+    let insightOneFullContent = text1.map(item => item.answer).join('');
+    let insightTwoFullContent = text2.map(item => item.answer).join('');
+    return insightOneFullContent === insightTwoFullContent;
+}

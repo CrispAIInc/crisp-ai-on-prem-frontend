@@ -65,7 +65,7 @@ const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
                 </span>
             </div>
             {
-                Array.isArray(note.text) && note.text.length > 0 && <p className={`my-0 text-xs ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} line-clamp-2`}>{parseHtmlToText(note.text[0]?.content || note.text[1]?.content)}</p>
+                Array.isArray(note.text) && note.text.length > 0 && <p className={`my-0 text-xs ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} line-clamp-2`}>{note.text[0]?.answer}</p>
             }
 
             {/* list of models used */}

@@ -10,13 +10,14 @@ import { MainContext } from '../../contexts/mainContext';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
-import { hexToRGBString, extractTextFromHTML, generateRandomHash } from '../../utils';
+import { hexToRGBString, extractTextFromHTML, generateRandomHash, isSameInsightQuestions } from '../../utils';
 import AggregationLlmModal from '../AggregationLlmModal';
 import toast from 'react-simple-toasts';
 import AddToStoryModal from '../AddToStoryModal';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
-import ReactHtmlParser from "react-html-parser";
+import { Parser } from "html-to-react";
+import { Link } from 'react-router-dom';
 
 function NoteDetails() {
     const {
@@ -117,32 +118,34 @@ function NoteDetails() {
     //     };
     // }, [HTMLToDisplay]);
 
-    // const handleVideoLinkClick = (event, video) => {
-    //     console.log("hi");
-    //     event.preventDefault();
-    //     // setFromChat(true);
-    //     const resourceURL = `${API_ENDPOINT}/${video.file_type
-    //         }/all/${encodeURIComponent(video.source_path)}`;
-    //     setCurrentResource(video);
-    //     setResourceURL(resourceURL);
-    //     setSummary(video.summary);
-    //     setSummaries(video.topic_summaries);
-    //     setActiveView('resource');
-    //     // setShowNoteDetails(false);
-    // };
+    let htmlToReactParser = new Parser();
 
-    // const handlePDFLinkClick = (event, pdf) => {
-    //     event.preventDefault();
-    //     const resourceURL = `${API_ENDPOINT}/${pdf.file_type
-    //         }/all/${encodeURIComponent(pdf.source_path)}`;
-    //     setCurrentResource(pdf);
-    //     setResourceURL(resourceURL);
-    //     setSummary(pdf.summary);
-    //     setSummaries(pdf.topic_summaries);
-    //     setActiveView('resource');
-    //     setJumpToPage({ page: parseInt(pdf.page) + 1 });
-    //     // setShowNoteDetails(false);
-    // };
+    const handleVideoLinkClick = (event, video) => {
+        console.log("hi");
+        event.preventDefault();
+        // setFromChat(true);
+        const resourceURL = `${API_ENDPOINT}/${video.file_type
+            }/all/${encodeURIComponent(video.source_path)}`;
+        setCurrentResource(video);
+        setResourceURL(resourceURL);
+        setSummary(video.summary);
+        setSummaries(video.topic_summaries);
+        setActiveView('resource');
+        // setShowNoteDetails(false);
+    };
+
+    const handlePDFLinkClick = (event, pdf) => {
+        event.preventDefault();
+        const resourceURL = `${API_ENDPOINT}/${pdf.file_type
+            }/all/${encodeURIComponent(pdf.source_path)}`;
+        setCurrentResource(pdf);
+        setResourceURL(resourceURL);
+        setSummary(pdf.summary);
+        setSummaries(pdf.topic_summaries);
+        setActiveView('resource');
+        setJumpToPage({ page: parseInt(pdf.page) + 1 });
+        // setShowNoteDetails(false);
+    };
 
     // const handleClick = (event) => {
     //     let target = event.target;
@@ -208,7 +211,7 @@ function NoteDetails() {
             // const noteFilename = `${dateTimeStr}.json`;
             selectedNote.note_id = dateTimeStr;
         }
-        // const insight = notes.find((note) => note.note_name.trim().toLowerCase() === selectedNote.note_name.trim().toLowerCase() && note.text.length === selectedNote.text.length);
+        // const insight = notes.find((note) => note.note_name.trim().toLowerCase() === selectedNote.note_name.trim().toLowerCase() && isSameInsightQuestions(note.text, selectedNote.text) );
         // if (insight) {
         //     toast('Insight already exists', { className: 'p-2 rounded-md', theme });
         //     return;
@@ -592,31 +595,42 @@ function NoteDetails() {
                                                     }
                                                 }}>{item.answer}</p>
                                                 {/* display references */}
-                                                {item.refs?.videoLinks.length > 0 || item.refs?.pdfLinks.length > 0 || item.refs?.imageLinks.length > 0 ? <div className='flex flex-col gap-2'>
+                                                {(item.refs?.videoLinks.length > 0 || item.refs?.pdfLinks.length > 0 || item.refs?.imgLinks.length > 0) && <div className='flex flex-col gap-2'>
                                                     <h6 className='text-sm'>References:</h6>
                                                     <ul className='break-all'>
-                                                        {item?.references?.videoLinks?.map(ref => ReactHtmlParser(ref))}
-                                                        {item?.references?.pdfLinks?.map(ref => ReactHtmlParser(ref))}
-                                                        {item?.references?.imgLinks?.map(ref => ReactHtmlParser(ref))}
-                                                        {/* {item?.refs?.pdfLinks.map(ref => ref)}
-                                                        {item?.refs?.imgLinks.map(ref => ref)} */}
+                                                        {
+                                                            item.refs?.videoLinks.map((video) => (
+                                                                <li key={video.source_path} className="ml-0">
+                                                                    <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+                                                                        {video.source_path + " | Timestamp: " + video.timestamp}
+                                                                    </Link>
+                                                                </li>
+                                                            ))
+                                                        }
                                                     </ul>
-                                                </div> : <p>no refs</p>}
-                                                {/* {item.videoLinks && (
-                                                    <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                        {item.videoLinks}
+                                                    <ul className='break-all'>
+                                                        {
+                                                            item.refs?.pdfLinks.map((pdf) => (
+                                                                <li key={pdf.source_path} className="ml-0">
+                                                                    <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
+                                                                        {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
+                                                                    </Link>
+                                                                </li>
+                                                            ))
+                                                        }
                                                     </ul>
-                                                )} */}
-                                                {/* {item.pdfLinks && (
-                                                    <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                        {item.pdfLinks}
+                                                    <ul className='break-all'>
+                                                        {
+                                                            item.refs?.imgLinks.map((img) => (
+                                                                <li key={img.source_path} className="ml-0">
+                                                                    <Link onClick={(event) => handlePDFLinkClick(event, img)}>
+                                                                        {img.source_path}
+                                                                    </Link>
+                                                                </li>
+                                                            ))
+                                                        }
                                                     </ul>
-                                                )}
-                                                {item.imgLinks && (
-                                                    <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                        {item.imgLinks}
-                                                    </ul>
-                                                )} */}
+                                                </div>}
                                             </div>
                                             <div className="flex gap-2">
                                                 <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />

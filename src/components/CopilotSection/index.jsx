@@ -17,6 +17,8 @@ import { generateRandomHash, hexToRGBString, toBase64 } from '../../utils';
 import CustomSelectTwo from '../CustomSelectTwo';
 import ImageUpload from '../ImageUpload';
 import PreviewModal from '../PreviewModal';
+import toast from 'react-simple-toasts';
+// import parse, { domToReact } from 'html-react-parser';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
@@ -27,6 +29,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setCurrentResource,
     isFoundationLlm,
     resourceURL,
+    noteIndex,
     noteReferences, setNoteReferences,
     setResourceURL,
     player,
@@ -270,8 +273,15 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     noteReferences.pdfLinks = [];
     noteReferences.imageLinks = [];
 
+    let refs = {
+      videoLinks: [],
+      pdfLinks: [],
+      imgLinks: [],
+    };
+
     const videoLinks = data.video_references.map((video) => {
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
+      refs["videoLinks"].push(video);
       return (
         <li key={video.source_path} className="ml-0">
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -282,6 +292,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     });
     const pdfLinks = data.pdf_references.map((pdf) => {
       noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
+      refs["pdfLinks"].push(pdf);
       return (
         <li key={pdf.source_path} className="ml-0">
           <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
@@ -293,6 +304,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     const imgLinks = data.img_references.map((img) => {
       noteReferences.imageLinks.push(img.source_path);
+      refs["imgLinks"].push(img);
       return (
         <li key={img.source_path} className="ml-0">
           <Link onClick={(event) => handlePDFLinkClick(event, img)}>
@@ -320,16 +332,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     //   }),
     // };
 
-    const refs = {
-      videoLinks,
-      pdfLinks,
-      imgLinks,
-    };
-
     const references = {
       videoLinks: data.video_references.map((video, index) => {
         return (
-          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
+          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
         );
       }),
       pdfLinks: data.pdf_references.map((pdf, index) => {
@@ -546,8 +552,20 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         ...newText
       }]
     };
-    setSelectedNote(newNote);
     setIsNewNote(true);
+    // setNotes([...notes, newNote]);
+    // save note
+    // try {
+    //   await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, newNote, noteName: 'note_json', noteNumber: parseInt(noteIndex + 1), isNewNote: isNewNote });
+
+    //   // fetch updated version of notes
+    //   const data = await makeApiRequest("/notes", "post");
+    //   setNotes(() => data);
+    //   toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    setSelectedNote(newNote);
     setIsManualNote(false);
     setShowNoteDetails(true);
     setActiveView('note');

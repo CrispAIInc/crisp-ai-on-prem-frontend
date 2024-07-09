@@ -20,6 +20,7 @@
     "bootstrap": "^5.2.3",
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.7.5",
+    "html-to-react": "^1.7.0",
     "pdfjs-dist": "^3.11.174",
     "quill": "^2.0.2",
     "quill-paste-smart": "^1.4.0",
