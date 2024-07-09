@@ -12,7 +12,7 @@ import toast from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import 'react-simple-toasts/dist/theme/light.css';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import { areArraysEqual, getLevelOfSection, isSameStoryContent, transformArrayOfObjectsToArray, transformString } from '../../utils';
+import { areArraysEqual, generateRandomHash, getLevelOfSection, isSameStoryContent, transformArrayOfObjectsToArray, transformString } from '../../utils';
 import LoadingSpinner from '../LoadingSpinner';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -191,13 +191,14 @@ function StoryDetails() {
     };
 
     const [newQuestion, setNewQuestion] = useState('');
+    const [currentAddingQuestionId, setCurrentAddingQuestionId] = useState("");
     const [currentAddingAnswerId, setCurrentAddingAnswerId] = useState("");
     const [newAnswer, setNewAnswer] = useState('');
     const titleRef = useRef(null);
 
 
-    function handleOpenNewQuestionBox() {
-        setIsAddingNewQuestion(true);
+    function handleOpenNewQuestionBox(id) {
+        setCurrentAddingQuestionId(id);
     }
     function handleOpenNewAnswerBox(id) {
         setCurrentAddingAnswerId(id);
@@ -224,8 +225,46 @@ function StoryDetails() {
         setNewAnswer("");
     }
 
+    function addNewQuestion() {
+        if (newQuestion === '') {
+            return;
+        }
+        setSelectedStory(prev => {
+            const newStory = { ...prev };
+            newStory.text.push({
+                id: generateRandomHash(5),
+                content: "",
+                outline: {
+                    id: generateRandomHash(5),
+                    name: newQuestion
+                }
+            });
+            return newStory;
+        });
+        setNewQuestion('');
+        setCurrentAddingQuestionId("");
+        // handleSave(e);
+    }
+
+    function addNewAnswer() {
+        if (newAnswer === '') {
+            return;
+        }
+
+        if (selectedStory.text.at(-1).content) return;
+
+        setSelectedStory(prev => {
+            const newStory = { ...prev };
+            newStory.text.at(-1).answer = newAnswer;
+            return newStory;
+        });
+        setNewAnswer('');
+        setCurrentAddingAnswerId("");
+        handleSave(e);
+    }
+
     return (
-        <div className="max-w-3xl mx-auto mt-3">
+        <div className="max-w-3xl mx-auto mt-3 flex flex-col h-full">
             <div className='flex items-center justify-between'>
                 {/*intro/conc generation */}
                 {selectedStory.text.length > 0 && <div
@@ -262,17 +301,14 @@ function StoryDetails() {
             </div>
 
 
-            <div className={`mb-5 overflow-y-auto flex flex-col gap-4 ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
+            <div className={`overflow-y-auto flex-1 flex flex-col gap-4 ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
                 {selectedStory.text?.map((item) => (
                     <div key={item.id} className="flex flex-col gap-4 px-3">
                         {/* question */}
                         {
                             item.outline.name ?
-                                <div className='flex items-center gap-2 align-self-end'>
-                                    <div className="flex gap-2">
-                                        <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
-                                    </div>
-                                    <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
+                                <div className='flex items-center gap-2'>
+                                    <div className={`flex items-center gap-3 py-1 px-3 w-fit rounded-md ${theme === 'light' ? 'bg-white border border-slate-200' : 'bg-textColor-300'}`}>
                                         <p contentEditable ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();
@@ -288,6 +324,9 @@ function StoryDetails() {
                                             }
                                         }}>{item.outline.name}</p>
                                     </div>
+                                    <div className="flex gap-2">
+                                        <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
+                                    </div>
                                 </div>
                                 : null
                         }
@@ -297,7 +336,7 @@ function StoryDetails() {
                                 {
                                     item.content ? (
                                         <div className='flex items-center gap-2'>
-                                            <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
+                                            <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start max-w-[80%]`}>
                                                 <p className='' contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         e.preventDefault();
@@ -317,7 +356,7 @@ function StoryDetails() {
                                                 <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                             </div>
                                         </div>) : currentAddingAnswerId !== item.id ? (
-                                            <div className={`flex items-center py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start cursor-pointer`}
+                                            <div className={`flex items-center justify-center py-1 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background rounded-md'} align-self-start cursor-pointer`}
                                                 onClick={() => handleOpenNewAnswerBox(item.id)}>
                                                 <AddIcon fontSize='small' />
                                             </div>
@@ -337,6 +376,36 @@ function StoryDetails() {
                         </div>
                     </div>
                 ))}
+
+                {/* add new question/answer */}
+                {/* <div className="flex flex-col gap-4 px-3 mt-2">
+                    {!currentAddingQuestionId ? <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
+                        onClick={handleOpenNewQuestionBox}>
+                        <AddIcon fontSize='small' />
+                    </div>
+                        : <div className="flex flex-col">
+                            <div>
+                                <CustomInput placeholder='Question' value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
+                            </div>
+                            <div className="flex items-center justify-end gap-2">
+                                <CustomButton className='my-0' onClick={() => setCurrentAddingQuestionId("")}>Cancel</CustomButton>
+                                <CustomButton className='my-0' onClick={e => addNewQuestion(e)}>Save</CustomButton>
+                            </div>
+                        </div>}
+                    {!currentAddingAnswerId && !currentAddingQuestionId ? <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%] cursor-pointer`}
+                        onClick={handleOpenNewAnswerBox}>
+                        <AddIcon fontSize='small' />
+                    </div>
+                        : selectedStory?.text.at(-1)?.outline.name !== "" && <div className="flex flex-col">
+                            <div>
+                                <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
+                            </div>
+                            <div className="flex items-center justify-end gap-2">
+                                <CustomButton className='my-0' onClick={() => setCurrentAddingAnswerId("")}>Cancel</CustomButton>
+                                <CustomButton className='my-0' onClick={e => addNewAnswer(e)}>Save</CustomButton>
+                            </div>
+                        </div>}
+                </div> */}
             </div>
 
             {/* questions/answers */}
