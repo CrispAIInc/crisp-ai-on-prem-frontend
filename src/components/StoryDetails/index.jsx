@@ -205,6 +205,14 @@ function StoryDetails() {
     const questionRefs = useRef({});
     const answerRefs = useRef({});
 
+    function handleDeleteContent(id) {
+        setSelectedStory((prev) => {
+            const updatedStory = { ...prev };
+            updatedStory.text = updatedStory.text.filter((item) => item.id !== id);
+            return updatedStory;
+        });
+    }
+
     return (
         <div className="max-w-3xl mx-auto">
             {/* close button */}
@@ -240,7 +248,69 @@ function StoryDetails() {
                     }
                 }}>{selectedStory.story_name}</h4>
             </div>
-            {/* <div > */}
+
+
+            <div className={`mb-5 overflow-y-auto ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
+                {selectedStory.text?.map((item) => (
+                    <div key={item.id} className="flex flex-col gap-4 px-3">
+                        {/* question */}
+                        {
+                            item.outline.name ?
+                                <div className='flex items-center gap-2 align-self-end'>
+                                    <div className="flex gap-2">
+                                        <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
+                                    </div>
+                                    <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
+                                        <p contentEditable ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                setIsNewStory(false);
+                                                // update outline name
+                                                setSelectedStory(prev => {
+                                                    const newStory = { ...prev };
+                                                    newStory.text.find((note) => note.id === item.id).outline.name = questionRefs.current[item.id].innerText;
+                                                    return newStory;
+                                                });
+                                                questionRefs.current[item.id].blur();
+                                                // handleSave(e);
+                                            }
+                                        }}>{item.outline.name}</p>
+                                    </div>
+                                </div>
+                                : null
+                        }
+                        {/* answer */}
+                        <div className='flex items-center gap-4'>
+                            <div>
+                                {
+                                    item.answer ? (
+                                        <div className='flex items-center gap-2'>
+                                            <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
+                                                <p className='' contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        setIsNewNote(false);
+                                                        // update answer
+                                                        setSelectedNote(prev => {
+                                                            const newNote = { ...prev };
+                                                            newNote.text.find((note) => note.id === item.id).answer = answerRefs.current[item.id].innerText;
+                                                            return newNote;
+                                                        });
+                                                        answerRefs.current[item.id].blur();
+                                                        // handleSave(e);
+                                                    }
+                                                }}>{item.answer}</p>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
+                                            </div>
+                                        </div>) : null
+                                }
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
 
             {/* questions/answers */}
             <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>

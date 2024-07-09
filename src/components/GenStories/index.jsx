@@ -98,6 +98,7 @@ const GenStories = () => {
                     name: section
                 },
                 content: '',
+                id: generateRandomHash(5),
             };
         });
         const newStory = {
