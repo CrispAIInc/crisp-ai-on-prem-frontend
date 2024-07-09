@@ -14,6 +14,7 @@ import 'react-simple-toasts/dist/theme/light.css';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import { areArraysEqual, getLevelOfSection, isSameStoryContent, transformArrayOfObjectsToArray, transformString } from '../../utils';
 import LoadingSpinner from '../LoadingSpinner';
+import AddIcon from '@mui/icons-material/Add';
 
 function StoryDetails() {
 
@@ -26,30 +27,30 @@ function StoryDetails() {
     const newStoryContent = useRef('');
 
 
-    useEffect(() => {
-        if (selectedStory.text) {
-            const htmlString = selectedStory.text.map(item => {
-                const headingLevel = getLevelOfSection(item.outline.name);
-                const outlineHtml = `<h${headingLevel} style='font-style: italic; font-weight: 700;'>${item.outline.name}</h${headingLevel}>`;
-                const contentHtml = item.content;
+    // useEffect(() => {
+    //     if (selectedStory.text) {
+    //         const htmlString = selectedStory.text.map(item => {
+    //             const headingLevel = getLevelOfSection(item.outline.name);
+    //             const outlineHtml = `<h${headingLevel} style='font-style: italic; font-weight: 700;'>${item.outline.name}</h${headingLevel}>`;
+    //             const contentHtml = item.content;
 
-                return `
-                        <span style="color: ${theme === 'light' ? '#333' : '#ABAEB4'};">
-                            ${outlineHtml}
-                            ${contentHtml}
-                        </span>
-                    `;
-            }).join('<br />');
-            setHTMLToDisplay(htmlString);
-        }
-    }, [selectedStory.text, selectedStory.text.length, theme]);
+    //             return `
+    //                     <span style="color: ${theme === 'light' ? '#333' : '#ABAEB4'};">
+    //                         ${outlineHtml}
+    //                         ${contentHtml}
+    //                     </span>
+    //                 `;
+    //         }).join('<br />');
+    //         setHTMLToDisplay(htmlString);
+    //     }
+    // }, [selectedStory.text, selectedStory.text.length, theme]);
 
-    const handleContentChange = (newContent) => {
-        if (isNewStory) {
-            newStoryContent.current = newContent;
-            selectedStory.text = transformString(newContent);
-        }
-    };
+    // const handleContentChange = (newContent) => {
+    //     if (isNewStory) {
+    //         newStoryContent.current = newContent;
+    //         selectedStory.text = transformString(newContent);
+    //     }
+    // };
 
     const handleSave = async () => {
         if (!selectedStory.story_name) {
@@ -70,7 +71,7 @@ function StoryDetails() {
         // }
 
         try {
-            const story = stories.find(story => story.story_id === selectedStory.story_id || (story.story_name.trim().toLowerCase() === selectedStory.story_name.trim().toLowerCase() && isSameStoryContent(story.text, selectedStory.text)));
+            const story = stories.find(story => story.story_id === selectedStory.story_id);
             if (!story) {
                 await makeApiRequest('/stories', 'post', { ...selectedStory });
             } else {
@@ -190,7 +191,7 @@ function StoryDetails() {
     };
 
     const [newQuestion, setNewQuestion] = useState('');
-    const [isAddingNewAnswer, setIsAddingNewAnswer] = useState(false);
+    const [currentAddingAnswerId, setCurrentAddingAnswerId] = useState("");
     const [newAnswer, setNewAnswer] = useState('');
     const titleRef = useRef(null);
 
@@ -198,8 +199,8 @@ function StoryDetails() {
     function handleOpenNewQuestionBox() {
         setIsAddingNewQuestion(true);
     }
-    function handleOpenNewAnswerBox() {
-        setIsAddingNewAnswer(true);
+    function handleOpenNewAnswerBox(id) {
+        setCurrentAddingAnswerId(id);
     }
 
     const questionRefs = useRef({});
@@ -283,28 +284,43 @@ function StoryDetails() {
                         <div className='flex items-center gap-4'>
                             <div>
                                 {
-                                    item.answer ? (
+                                    item.content ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
                                                 <p className='' contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         e.preventDefault();
-                                                        setIsNewNote(false);
-                                                        // update answer
-                                                        setSelectedNote(prev => {
-                                                            const newNote = { ...prev };
-                                                            newNote.text.find((note) => note.id === item.id).answer = answerRefs.current[item.id].innerText;
-                                                            return newNote;
+                                                        setIsNewStory(false);
+                                                        // update content
+                                                        setSelectedStory(prev => {
+                                                            const newStory = { ...prev };
+                                                            newStory.text.find((note) => note.id === item.id).content = answerRefs.current[item.id].innerText;
+                                                            return newStory;
                                                         });
                                                         answerRefs.current[item.id].blur();
                                                         // handleSave(e);
                                                     }
-                                                }}>{item.answer}</p>
+                                                }}>{item.content}</p>
                                             </div>
                                             <div className="flex gap-2">
                                                 <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                             </div>
-                                        </div>) : null
+                                        </div>) : currentAddingAnswerId !== item.id ? (
+                                            <div className={`flex items-center py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start cursor-pointer`}
+                                                onClick={() => handleOpenNewAnswerBox(item.id)}>
+                                                <AddIcon fontSize='small' />
+                                            </div>
+                                        ) : (
+                                        <div className="flex flex-col">
+                                            <div>
+                                                <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
+                                            </div>
+                                            <div className="flex items-center justify-end gap-2">
+                                                <CustomButton className='my-0' onClick={() => setCurrentAddingAnswerId("")}>Cancel</CustomButton>
+                                                <CustomButton className='my-0'>Save</CustomButton>
+                                            </div>
+                                        </div>
+                                    )
                                 }
                             </div>
                         </div>

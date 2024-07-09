@@ -146,9 +146,9 @@ export function extractTextFromHTML(html) {
     return tempDiv.textContent || tempDiv.innerText || "";
 }
 
-export function isSameStoryContent(storyContent1, storyContent2) {
-    return storyContent1.every((item, index) => item.content === storyContent2[index].content);
-}
+// export function isSameStoryContent(storyContent1, storyContent2) {
+//     return storyContent1.every((item, index) => item.content === storyContent2[index].content);
+// }
 
 export function transformArrayOfObjectsToArray(arr) {
     return arr.map(item => item.outline.name);
@@ -164,4 +164,13 @@ export function isSameInsightAnswers(text1, text2) {
     let insightOneFullContent = text1.map(item => item.answer).join('');
     let insightTwoFullContent = text2.map(item => item.answer).join('');
     return insightOneFullContent === insightTwoFullContent;
+}
+
+export function isSameStoryContent(storyContent1, storyContent2) {
+    const storyContent1TextContent = storyContent1.map(item => item.content).join('');
+    const storyContent2TextContent = storyContent2.map(item => item.content).join('');
+    const storyContent1TextSections = storyContent1.map(item => item.outline.name).join('');
+    const storyContent2TextSections = storyContent2.map(item => item.outline.name).join('');
+
+    return storyContent1TextContent === storyContent2TextContent && storyContent1TextSections === storyContent2TextSections;
 }
