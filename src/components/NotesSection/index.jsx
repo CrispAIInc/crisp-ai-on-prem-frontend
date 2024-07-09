@@ -22,10 +22,20 @@ const NotesSection = () => {
         setSelectedNote({
             note_id: "",
             text: [{
-                content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+                content: "",
+                model: null,
+                color: theme === 'light' ? "#333" : '#fff',
+                question: '',
+                answer: '',
+                references: {
                     videoLinks: [],
                     pdfLinks: [],
                     imageLinks: [],
+                },
+                refs: {
+                    videoLinks: [],
+                    pdfLinks: [],
+                    imgLinks: [],
                 }
             }],
             images: [],

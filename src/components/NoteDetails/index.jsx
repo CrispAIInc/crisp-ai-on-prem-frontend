@@ -121,7 +121,6 @@ function NoteDetails() {
     let htmlToReactParser = new Parser();
 
     const handleVideoLinkClick = (event, video) => {
-        console.log("hi");
         event.preventDefault();
         // setFromChat(true);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
@@ -644,11 +643,11 @@ function NoteDetails() {
                 ))}
                 {/* add new question/answer */}
                 <div className="flex flex-col gap-4 px-3 mt-2">
-                    {!isAddingNewQuestion && selectedNote?.text.at(-1)?.answer !== "" ? <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
+                    {!isAddingNewQuestion ? <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
                         onClick={handleOpenNewQuestionBox}>
                         <AddIcon fontSize='small' />
                     </div>
-                        : isAddingNewQuestion && selectedNote?.text.at(-1)?.question !== "" && <div className="flex flex-col">
+                        : <div className="flex flex-col">
                             <div>
                                 <CustomInput placeholder='Question' value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
                             </div>
