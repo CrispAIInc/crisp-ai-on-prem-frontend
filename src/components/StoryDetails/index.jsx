@@ -290,7 +290,7 @@ function StoryDetails() {
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 <h3 className='m-0'>Title:</h3>
-                <h4 className='m-0' ref={titleRef} contentEditable onKeyDown={(e) => {
+                <h4 className='m-0' ref={titleRef} contentEditable suppressContentEditableWarning={true} onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         setIsNewStory(false);
@@ -310,7 +310,7 @@ function StoryDetails() {
                             item.outline.name ?
                                 <div className='flex items-center gap-2'>
                                     <div className={`flex items-center gap-3 py-1 px-3 w-fit rounded-md ${theme === 'light' ? 'bg-white border border-slate-200' : 'bg-textColor-300'}`}>
-                                        <p contentEditable ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                        <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();
                                                 setIsNewStory(false);
@@ -338,7 +338,7 @@ function StoryDetails() {
                                     item.content ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start max-w-[80%]`}>
-                                                <p className='' contentEditable ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                                <p className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         e.preventDefault();
                                                         setIsNewStory(false);
