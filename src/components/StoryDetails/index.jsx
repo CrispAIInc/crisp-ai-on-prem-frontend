@@ -17,7 +17,7 @@ import LoadingSpinner from '../LoadingSpinner';
 
 function StoryDetails() {
 
-    const { setSelectedStory, selectedStory, setActiveView, currentResource, selectedNote,
+    const { setSelectedStory, selectedStory, setActiveView, currentResource,
         modules, theme, stories,
         formats, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels } = useContext(MainContext);
 
@@ -180,7 +180,7 @@ function StoryDetails() {
             if (currentResource) {
                 return 'resource';
             }
-            if (selectedNote.note_id !== '') {
+            if (selectedStory.note_id !== '') {
                 console.log("hehe");
                 return 'note';
             }
@@ -188,6 +188,22 @@ function StoryDetails() {
         });
         setIsNewStory(false);
     };
+
+    const [newQuestion, setNewQuestion] = useState('');
+    const [isAddingNewAnswer, setIsAddingNewAnswer] = useState(false);
+    const [newAnswer, setNewAnswer] = useState('');
+    const titleRef = useRef(null);
+
+
+    function handleOpenNewQuestionBox() {
+        setIsAddingNewQuestion(true);
+    }
+    function handleOpenNewAnswerBox() {
+        setIsAddingNewAnswer(true);
+    }
+
+    const questionRefs = useRef({});
+    const answerRefs = useRef({});
 
     return (
         <div className="max-w-3xl mx-auto">
@@ -211,21 +227,25 @@ function StoryDetails() {
                     ) : 'Auto generate story'}
                 </span>
             </div>}
-            {/* intro/conc generation
-            {selectedStory.text.length > 0 && <div
-                className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                onClick={() => generateIntroConclusion()}
-            >
-                <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${isGeneratingIntroConclusion && 'flex items-center gap-2'}`}>
-                    {isGeneratingIntroConclusion ? (
-                        <>
-                            <LoadingSpinner videoSpinner={true} /> <span>Generating...</span>
-                        </>
-                    ) : 'Generate Introduction/Conclusion'}
-                </span>
-            </div>} */}
-            {/* story title */}
+            {/* title */}
+            <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                <h3 className='m-0'>Title:</h3>
+                <h4 className='m-0' ref={titleRef} contentEditable onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        setIsNewStory(false);
+                        setSelectedStory(prev => ({ ...prev, story_name: titleRef.current.innerText }));
+                        titleRef.current.blur();
+                        // handleSave(e);
+                    }
+                }}>{selectedStory.story_name}</h4>
+            </div>
+            {/* <div > */}
+
+            {/* questions/answers */}
+            <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
+
+            {/* story title
             <div className="my-4">
                 <CustomInput className="py-2" placeholder='story title' value={selectedStory.story_name} onChange={(e) => setSelectedStory(prev => ({ ...prev, story_name: e.target.value }))} />
             </div>
@@ -237,7 +257,7 @@ function StoryDetails() {
             <div className="flex items-center justify-end gap-2 mt-2">
                 <CustomButton className='bg-primary-300 !my-0' onClick={() => deleteStory(selectedStory.story_id)}><DeleteIcon className='text-white' /></CustomButton>
                 <CustomButton onClick={handleSave} className="bg-primary-300 !my-0"> <SaveIcon className='text-white' /> </CustomButton>
-            </div>
+            </div> */}
         </div>
     );
 }
