@@ -225,27 +225,28 @@ function StoryDetails() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto">
-            {/* close button */}
-            <div className='flex items-center justify-end mt-3'>
-                <BaseHeading text='close' className='cursor-pointer user-select-none' onClick={handleCloseStory} />
+        <div className="max-w-3xl mx-auto mt-3">
+            <div className='flex items-center justify-between'>
+                {/*intro/conc generation */}
+                {selectedStory.text.length > 0 && <div
+                    className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                    onClick={() => autoGenerateStory()}
+                >
+                    <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${isGeneratingIntroConclusion && 'flex items-center gap-2'}`}>
+                        {isGeneratingIntroConclusion ? (
+                            <>
+                                <LoadingSpinner videoSpinner={true} /> <span>Generating Story...</span>
+                            </>
+                        ) : 'Auto generate story'}
+                    </span>
+                </div>}
+                {/* close button */}
+                <div className='flex items-center justify-end'>
+                    <BaseHeading text='close' className='cursor-pointer user-select-none' onClick={handleCloseStory} />
+                </div>
             </div>
 
-            {/* story editor */}
-            {/*intro/conc generation */}
-            {selectedStory.text.length > 0 && <div
-                className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                onClick={() => autoGenerateStory()}
-            >
-                <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${isGeneratingIntroConclusion && 'flex items-center gap-2'}`}>
-                    {isGeneratingIntroConclusion ? (
-                        <>
-                            <LoadingSpinner videoSpinner={true} /> <span>Generating Story...</span>
-                        </>
-                    ) : 'Auto generate story'}
-                </span>
-            </div>}
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 <h3 className='m-0'>Title:</h3>
