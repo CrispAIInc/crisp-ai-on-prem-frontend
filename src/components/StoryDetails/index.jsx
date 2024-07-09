@@ -214,6 +214,16 @@ function StoryDetails() {
         });
     }
 
+    function handleAddSectionAnswer(id) {
+        setSelectedStory(prev => {
+            const newStory = { ...prev };
+            newStory.text.find(t => t.id === id).content = newAnswer;
+
+            return newStory;
+        });
+        setNewAnswer("");
+    }
+
     return (
         <div className="max-w-3xl mx-auto">
             {/* close button */}
@@ -251,7 +261,7 @@ function StoryDetails() {
             </div>
 
 
-            <div className={`mb-5 overflow-y-auto ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
+            <div className={`mb-5 overflow-y-auto gap-4 ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
                 {selectedStory.text?.map((item) => (
                     <div key={item.id} className="flex flex-col gap-4 px-3">
                         {/* question */}
@@ -282,7 +292,7 @@ function StoryDetails() {
                         }
                         {/* answer */}
                         <div className='flex items-center gap-4'>
-                            <div>
+                            <div className='w-[80%]'>
                                 {
                                     item.content ? (
                                         <div className='flex items-center gap-2'>
@@ -317,7 +327,7 @@ function StoryDetails() {
                                             </div>
                                             <div className="flex items-center justify-end gap-2">
                                                 <CustomButton className='my-0' onClick={() => setCurrentAddingAnswerId("")}>Cancel</CustomButton>
-                                                <CustomButton className='my-0'>Save</CustomButton>
+                                                <CustomButton className='my-0' onClick={() => handleAddSectionAnswer(item.id)}>Save</CustomButton>
                                             </div>
                                         </div>
                                     )
