@@ -353,9 +353,9 @@ function StoryDetails() {
                                                     }
                                                 }}>{item.content}</p>
                                             </div>
-                                            <div className="flex gap-2">
+                                            {/* <div className="flex gap-2">
                                                 <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
-                                            </div>
+                                            </div> */}
                                         </div>) : currentAddingAnswerId !== item.id ? (
                                             <div className={`flex items-center justify-center py-1 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background rounded-md'} align-self-start cursor-pointer`}
                                                 onClick={() => handleOpenNewAnswerBox(item.id)}>
