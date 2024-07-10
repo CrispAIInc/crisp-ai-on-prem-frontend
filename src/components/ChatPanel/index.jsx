@@ -6,14 +6,15 @@ import { MainContext } from '../../contexts/mainContext';
 
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 const ChatPanel = () => {
-  const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick } = useResizableSidebar(200, false);
+  const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded, setChatLoaded, isRightSidebarOpen } = useContext(MainContext);
+  const { chatLoaded, setChatLoaded, isRightSidebarOpen, theme } = useContext(MainContext);
 
   return (
     <div className={`relative w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
@@ -25,6 +26,15 @@ const ChatPanel = () => {
         onMouseDown={handleRightMouseDown}
         onDoubleClick={handleDoubleClick}
       ></div>}
+
+      <div
+        className={`px-2 py-2 rounded-md w-fit absolute right-0 h-full flex flex-col justify-center items-center z-40`}
+      >
+        <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setSidebarWidth(prev => {
+          if (prev !== maxWidth) return maxWidth;
+          return window.innerWidth * 0.25;
+        })} />
+      </div>
 
       <Tabs
         transition={false}

@@ -18,6 +18,8 @@ import CustomSelectTwo from '../CustomSelectTwo';
 import ImageUpload from '../ImageUpload';
 import PreviewModal from '../PreviewModal';
 import toast from 'react-simple-toasts';
+import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
+import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 // import parse, { domToReact } from 'html-react-parser';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -57,6 +59,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+
+  const { setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
 
   const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
@@ -921,172 +925,173 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
       </div>
 
-      <div
-        className={`flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
-          }`}
-        ref={chatAppRef}
-      >
-        {chatLoaded ? (
-          messages.map((message, index) =>
-            index % 2 == 0 ? (
-              <div key={index} className="my-2 break-all w-fit">
-                <div
-                  className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
-                >
-                  {
-                    message.models.includes('gpt-4-vision')
-                      ? (
-                        <>
-                          <div className="flex items-center justify-between">
-                            <b className="user-select-none">You: </b>
-                            <div
-                              className="cursor-pointer"
-                              onClick={() => {
-                                handleVisionUpload(message.text.images, message.text.query);
-                              }}
-                            >
-                              <ReplayOutlinedIcon />
-                            </div>
-                          </div>
-                          <div>
-                            {
-                              message.text.images.map((img, index) => {
-                                return (
-                                  <img src={img} key={img} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
-                                );
-                              })
-                            }
-                            <p>{message.text.query}</p>
-                          </div>
-                          {isLightboxOpen && (
-                            <PreviewModal closeLightbox={closeLightbox} content={message.text.images[imagePreviewIndex]} />
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <div className="flex items-center justify-between">
-                            <b className="user-select-none">You: </b>
-                            <div
-                              className="cursor-pointer"
-                              onClick={() => {
-                                handleRepeatQuestion(message.text, message.models);
-                              }}
-                            >
-                              <ReplayOutlinedIcon />
-                            </div>
-                          </div>
-                          <div>{message.text.startsWith('blob') ? (<img src={message.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0">{message.text}</p>)}</div>
-                        </>
-                      )
-                  }
-                </div>
-              </div>
-            ) : (
-              <div key={index}>
-                <div className={`message bot-message h-full`}>
+      <div className="flex items-center flex-1 gap-3">
+        <div
+          className={`flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
+            }`}
+          ref={chatAppRef}
+        >
+          {chatLoaded ? (
+            messages.map((message, index) =>
+              index % 2 == 0 ? (
+                <div key={index} className="my-2 break-all w-fit">
                   <div
-                    className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
-                      ? "bg-separator text-textColor-200"
-                      : "bg-background_workspace"
-                      }`}
+                    className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
                   >
-                    {message.models.includes("dall-e-3") && message.img ? (
-                      <>
-                        <b
-                          className={`user-select-none ${theme === "light"
-                            ? "text-textColor-300"
-                            : "text-textColor-100"
-                            }`}
-                        >
-                          Chatbot:{" "}
-                        </b>
-                        <div className="flex flex-col flex-1">
-                          <img
-                            src={message.img}
-                            alt="Image is Loading ..."
-                            onClick={openLightbox}
-                            className="flex-1 cursor-pointer"
-                          />
-                          <div className="flex flex-wrap items-center gap-1 mt-3">
-                            <span
-                              className={`text-xs ${theme === "light"
-                                ? "text-textColor-300"
-                                : "text-textColor-200"
-                                }`}
-                            >
-                              <AddOptionsModal
-                                models={["dall-e-3"]}
-                                text={message.img}
-                                addToNewNote={addToNewNote}
-                                addToExistingNote={addToExistingNote}
-                                setExistingNote={setExistingNote}
-                                question={message.question}
-                                existingNote={existingNote}
-                                onHide={onHide}
-                                isNewNote={isNewNote}
-                                setShowNoteModal={setShowNoteModal}
-                                updateSelectedNote={setSelectedNote}
-                                showNoteModal={showNoteModal}
-                                selectedNote={selectedNote}
-                                notes={notes} />
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap items-center gap-1 mt-3">
-                            <span
-                              className={`text-xs ${theme === "light"
-                                ? "text-textColor-300"
-                                : "text-textColor-200"
-                                }`}
-                            >
-                              {message.models.map((item, index) => (
-                                <span
-                                  key={index}
-                                  className={`text-xs divide-x ${theme === "light"
-                                    ? "text-textColor-300"
-                                    : "text-textColor-200"
-                                    }`}
-                                >
-                                  {item.toUpperCase()}
-                                </span>
-                              ))}
-                            </span>
-                          </div>
-                          {isLightboxOpen && (
-                            <PreviewModal closeLightbox={closeLightbox} content={message.img} />
-                          )}
-                          {/* <ImageModal
+                    {
+                      message.models.includes('gpt-4-vision')
+                        ? (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <b className="user-select-none">You: </b>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => {
+                                  handleVisionUpload(message.text.images, message.text.query);
+                                }}
+                              >
+                                <ReplayOutlinedIcon />
+                              </div>
+                            </div>
+                            <div>
+                              {
+                                message.text.images.map((img, index) => {
+                                  return (
+                                    <img src={img} key={img} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
+                                  );
+                                })
+                              }
+                              <p>{message.text.query}</p>
+                            </div>
+                            {isLightboxOpen && (
+                              <PreviewModal closeLightbox={closeLightbox} content={message.text.images[imagePreviewIndex]} />
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <b className="user-select-none">You: </b>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => {
+                                  handleRepeatQuestion(message.text, message.models);
+                                }}
+                              >
+                                <ReplayOutlinedIcon />
+                              </div>
+                            </div>
+                            <div>{message.text.startsWith('blob') ? (<img src={message.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0">{message.text}</p>)}</div>
+                          </>
+                        )
+                    }
+                  </div>
+                </div>
+              ) : (
+                <div key={index}>
+                  <div className={`message bot-message h-full`}>
+                    <div
+                      className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
+                        ? "bg-separator text-textColor-200"
+                        : "bg-background_workspace"
+                        }`}
+                    >
+                      {message.models.includes("dall-e-3") && message.img ? (
+                        <>
+                          <b
+                            className={`user-select-none ${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-100"
+                              }`}
+                          >
+                            Chatbot:{" "}
+                          </b>
+                          <div className="flex flex-col flex-1">
+                            <img
+                              src={message.img}
+                              alt="Image is Loading ..."
+                              onClick={openLightbox}
+                              className="flex-1 cursor-pointer"
+                            />
+                            <div className="flex flex-wrap items-center gap-1 mt-3">
+                              <span
+                                className={`text-xs ${theme === "light"
+                                  ? "text-textColor-300"
+                                  : "text-textColor-200"
+                                  }`}
+                              >
+                                <AddOptionsModal
+                                  models={["dall-e-3"]}
+                                  text={message.img}
+                                  addToNewNote={addToNewNote}
+                                  addToExistingNote={addToExistingNote}
+                                  setExistingNote={setExistingNote}
+                                  question={message.question}
+                                  existingNote={existingNote}
+                                  onHide={onHide}
+                                  isNewNote={isNewNote}
+                                  setShowNoteModal={setShowNoteModal}
+                                  updateSelectedNote={setSelectedNote}
+                                  showNoteModal={showNoteModal}
+                                  selectedNote={selectedNote}
+                                  notes={notes} />
+                              </span>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-1 mt-3">
+                              <span
+                                className={`text-xs ${theme === "light"
+                                  ? "text-textColor-300"
+                                  : "text-textColor-200"
+                                  }`}
+                              >
+                                {message.models.map((item, index) => (
+                                  <span
+                                    key={index}
+                                    className={`text-xs divide-x ${theme === "light"
+                                      ? "text-textColor-300"
+                                      : "text-textColor-200"
+                                      }`}
+                                  >
+                                    {item.toUpperCase()}
+                                  </span>
+                                ))}
+                              </span>
+                            </div>
+                            {isLightboxOpen && (
+                              <PreviewModal closeLightbox={closeLightbox} content={message.img} />
+                            )}
+                            {/* <ImageModal
                               show={showImageModal}
                               onHide={onHideImageModal}
                               imageURL={message.img}
                               className="modal"
                               key={message.img}
                             /> */}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <b
-                          className={`user-select-none ${theme === "light"
-                            ? "text-textColor-300"
-                            : "text-textColor-100"
-                            }`}
-                        >
-                          Chatbot:{" "}
-                        </b>
-                        <div
-                          className={`${theme === "light"
-                            ? "text-textColor-300"
-                            : "text-textColor-100"
-                            }`}
-                        >
-                          {message.text}
-                        </div>
-                        {showCursor && index == responseIndex ? (
-                          <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
-                        ) : null}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <b
+                            className={`user-select-none ${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-100"
+                              }`}
+                          >
+                            Chatbot:{" "}
+                          </b>
+                          <div
+                            className={`${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-100"
+                              }`}
+                          >
+                            {message.text}
+                          </div>
+                          {showCursor && index == responseIndex ? (
+                            <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
+                          ) : null}
 
-                        {/* add to note */}
-                        {/* <AddOptionsModal
+                          {/* add to note */}
+                          {/* <AddOptionsModal
                             text={message.text}
                             file={message.file}
                             models={["gpt-4-vision"]}
@@ -1105,44 +1110,46 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                           /> */}
 
 
-                        <div className="flex flex-wrap items-center gap-1">
-                          <span
-                            className={`text-xs ${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-200"
-                              }`}
-                          >
-                            Models:{" "}
-                          </span>
-                          {message.models.map((item, index) => (
+                          <div className="flex flex-wrap items-center gap-1">
                             <span
-                              key={index}
-                              className={`text-xs divide-x ${theme === "light"
+                              className={`text-xs ${theme === "light"
                                 ? "text-textColor-300"
                                 : "text-textColor-200"
                                 }`}
                             >
-                              {item.toUpperCase()}
+                              Models:{" "}
                             </span>
-                          ))}
-                        </div>
-                      </>
-                    )}
+                            {message.models.map((item, index) => (
+                              <span
+                                key={index}
+                                className={`text-xs divide-x ${theme === "light"
+                                  ? "text-textColor-300"
+                                  : "text-textColor-200"
+                                  }`}
+                              >
+                                {item.toUpperCase()}
+                              </span>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )
             )
-          )
-        ) : (
-          <div className="flex flex-col items-center justify-center h-full loading-container">
-            <div className="chat-spinner">
-              <LoadingSpinner />
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full loading-container">
+              <div className="chat-spinner">
+                <LoadingSpinner />
+              </div>
+              <p className="text-sm text-center loading-text text-textColor-200">
+                Loading Knowledge Base, Please wait a few seconds...
+              </p>
             </div>
-            <p className="text-sm text-center loading-text text-textColor-200">
-              Loading Knowledge Base, Please wait a few seconds...
-            </p>
-          </div>
-        )}
+          )}
+        </div>
+
       </div>
       <div className="flex items-center gap-2 input-area">
 
