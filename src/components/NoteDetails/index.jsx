@@ -671,7 +671,11 @@ function NoteDetails() {
                         </div>}
                 </div>
             </div>
-            <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
+            <div className='flex items-center gap-3 ml-auto w-fit'>
+                <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={() => handleDelete()}>Delete</CustomButton>
+                <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
+            </div>
+            {/* <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton> */}
         </div>
     );
 }
