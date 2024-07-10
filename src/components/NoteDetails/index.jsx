@@ -469,6 +469,53 @@ function NoteDetails() {
     //     handleSave();
     // }, []);
 
+    const [currentRefType, setCurrentRefType] = useState('');
+
+    const [currentEditable, setCurrentEditable] = useState(null);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (currentEditable && !Object.values(currentRefType === "question" ? questionRefs.current : currentRefType === "answer" ? answerRefs.current : titleRef.current).includes(event.target)) {
+                fireFunction();
+                setCurrentEditable(null);
+            }
+        };
+
+        if (currentEditable) {
+            document.addEventListener('click', handleClickOutside);
+        } else {
+            document.removeEventListener('click', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [currentEditable, currentRefType]);
+
+    const fireFunction = () => {
+        if (currentRefType === "question") {
+            updateQuestion(currentEditable);
+        } else if (currentRefType === "answer") {
+            updateResponse(currentEditable);
+        } else {
+            updateTitle();
+        }
+    };
+
+    const handleFocus = (type, id) => {
+        setCurrentRefType(type);
+        setCurrentEditable(id);
+        // if (id === -1) return;
+    };
+
+    function updateQuestion(id) {
+        setIsNewNote(false);
+        setSelectedNote(prev => {
+            const newNote = { ...prev };
+            newNote.text.find((note) => note.id === id).question = questionRefs.current[id].innerText;
+            return newNote;
+        });
+        questionRefs.current[id].blur();
+    }
 
     return (
         <div className="flex flex-col h-full max-w-3xl mx-auto">
@@ -554,17 +601,10 @@ function NoteDetails() {
                                         <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                     </div>
                                     <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
-                                        <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                        <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();
-                                                setIsNewNote(false);
-                                                // update question
-                                                setSelectedNote(prev => {
-                                                    const newNote = { ...prev };
-                                                    newNote.text.find((note) => note.id === item.id).question = e.target.innerText;
-                                                    return newNote;
-                                                });
-                                                questionRefs.current[item.id].blur();
+                                                updateQuestion(item.id);
                                                 // handleSave(e);
                                             }
                                         }}>{item.question}</p>
