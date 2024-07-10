@@ -495,7 +495,7 @@ function NoteDetails() {
         if (currentRefType === "question") {
             updateQuestion(currentEditable);
         } else if (currentRefType === "answer") {
-            updateResponse(currentEditable);
+            updateAnswer(currentEditable);
         } else {
             updateTitle();
         }
@@ -515,6 +515,16 @@ function NoteDetails() {
             return newNote;
         });
         questionRefs.current[id].blur();
+    }
+
+    function updateAnswer(id) {
+        setIsNewNote(false);
+        setSelectedNote(prev => {
+            const newNote = { ...prev };
+            newNote.text.find((note) => note.id === id).answer = answerRefs.current[id].innerText;
+            return newNote;
+        });
+        answerRefs.current[id].blur();
     }
 
     return (
@@ -619,17 +629,10 @@ function NoteDetails() {
                                     item.answer ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
-                                                <p className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                                <p className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         e.preventDefault();
-                                                        setIsNewNote(false);
-                                                        // update answer
-                                                        setSelectedNote(prev => {
-                                                            const newNote = { ...prev };
-                                                            newNote.text.find((note) => note.id === item.id).answer = answerRefs.current[item.id].innerText;
-                                                            return newNote;
-                                                        });
-                                                        answerRefs.current[item.id].blur();
+                                                        updateAnswer(item.id);
                                                         // handleSave(e);
                                                     }
                                                 }}>{item.answer}</p>
