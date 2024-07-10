@@ -23,11 +23,11 @@ const Workspace = () => {
     } = useContext(MainContext);
     return (
         <div className={`relative flex-1 h-full px-10 ${activeView !== 'note' && 'overflow-y-auto'} media-container bg-background_workspace`}>
-            <div
+            {/* <div
                 className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
-            </div>
+            </div> */}
             {!activeView ? (
                 <div className="mt-10">
                     <NoData />
@@ -41,11 +41,11 @@ const Workspace = () => {
             ) : null}
 
             {/* right sidebar collapser */}
-            <div
+            {/* <div
                 className={`px-2 py-2 rounded-md z-50 w-fit absolute right-0 h-full flex flex-col justify-center items-center top-0`}
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)} />
-            </div>
+            </div> */}
         </div>
     );
 };

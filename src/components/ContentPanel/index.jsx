@@ -4,6 +4,7 @@ import makeApiRequest from "../../api";
 
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
 import SearchModal from "../SearchModal";
 
@@ -16,7 +17,7 @@ import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import StoriesSection from '../StoriesSection';
 
 const ContentPanel = () => {
-    const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick } = useResizableSidebar(200, true);
+    const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
 
     const { setCurrentResource,
         setResourceURL,
@@ -115,6 +116,14 @@ const ContentPanel = () => {
         <div className={`user-select-none h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
             width: leftWidth
         }}>
+            <div
+                className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
+            >
+                <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setSidebarWidth(prev => {
+                    if (prev !== maxWidth) return maxWidth;
+                    return window.innerWidth * 0.25;
+                })} />
+            </div>
             {
                 isLeftSidebarOpen && <div
                     className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
