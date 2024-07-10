@@ -96,13 +96,20 @@ function StoryDetails() {
             setIsGeneratingIntroConlusion(true);
 
             const httpPayload = {
-                sections: transformArrayOfObjectsToArray(selectedStory.text),
-                models: selectedGenStoriesModels,
+                story_sections_titles: transformArrayOfObjectsToArray(selectedStory.text),
+                outline_title: selectedStory.story_name,
+                llm_model: selectedGenStoriesModels,
             };
-
-            console.log(httpPayload);
             try {
-                console.log("jdsf");
+                const { sections } = await makeApiRequest('/auto-generate-story', 'post', httpPayload);
+
+                setSelectedStory(prev => {
+                    prev.text.forEach((textItem, index) => {
+                        textItem.content = sections[index];
+                    });
+
+                    return prev;
+                });
             }
             catch (error) {
                 console.log(error);
