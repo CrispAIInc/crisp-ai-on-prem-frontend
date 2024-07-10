@@ -16,6 +16,7 @@ import { areArraysEqual, generateRandomHash, getLevelOfSection, isSameStoryConte
 import LoadingSpinner from '../LoadingSpinner';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import { useOutsideClick } from '../../hooks/useOutsideClick';
 
 function StoryDetails() {
 
@@ -271,6 +272,66 @@ function StoryDetails() {
         // handleSave(e);
     }
 
+    const [currentRefType, setCurrentRefType] = useState('');
+
+    const [currentEditable, setCurrentEditable] = useState(null);
+    // const questionRefs = useRef([]);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (currentEditable && !Object.values(currentRefType === "question" ? questionRefs.current : answerRefs.current).includes(event.target)) {
+                fireFunction();
+                setCurrentEditable(null);
+            }
+        };
+
+        if (currentEditable) {
+            document.addEventListener('click', handleClickOutside);
+        } else {
+            document.removeEventListener('click', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [currentEditable, currentRefType]);
+
+    const fireFunction = () => {
+        if (currentRefType === "question") {
+            updateSection(currentEditable);
+        } else {
+            updateResponse(currentEditable);
+        }
+    };
+
+    const handleFocus = (type, id) => {
+        setCurrentRefType(type);
+        setCurrentEditable(id);
+    };
+
+    function updateSection(id) {
+        setIsNewStory(false);
+        // update outline name
+        setSelectedStory(prev => {
+            const newStory = { ...prev };
+            newStory.text.find((note) => note.id === id).outline.name = questionRefs.current[id].innerText;
+            return newStory;
+        });
+        questionRefs.current[id].blur();
+    }
+
+    function updateResponse(id) {
+        setIsNewStory(false);
+        // update content
+        setSelectedStory(prev => {
+            const newStory = { ...prev };
+            newStory.text.find((note) => note.id === id).content = answerRefs.current[id].innerText;
+            return newStory;
+        });
+        answerRefs.current[id].blur();
+    }
+
+
     return (
         <div className="flex flex-col h-full max-w-3xl mx-auto mt-3">
             <div className='flex items-center justify-between'>
@@ -317,17 +378,10 @@ function StoryDetails() {
                             item.outline.name ?
                                 <div className='flex items-center gap-2'>
                                     <div className={`flex items-center gap-3 py-1 px-3 w-fit rounded-md ${theme === 'light' ? 'bg-white border border-slate-200' : 'bg-textColor-300'}`}>
-                                        <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                        <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();
-                                                setIsNewStory(false);
-                                                // update outline name
-                                                setSelectedStory(prev => {
-                                                    const newStory = { ...prev };
-                                                    newStory.text.find((note) => note.id === item.id).outline.name = questionRefs.current[item.id].innerText;
-                                                    return newStory;
-                                                });
-                                                questionRefs.current[item.id].blur();
+                                                updateSection(item.id);
                                                 // handleSave(e);
                                             }
                                         }}>{item.outline.name}</p>
@@ -345,18 +399,10 @@ function StoryDetails() {
                                     item.content ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start max-w-[80%]`}>
-                                                <p className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onKeyDown={(e) => {
+                                                <p className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         e.preventDefault();
-                                                        setIsNewStory(false);
-                                                        // update content
-                                                        setSelectedStory(prev => {
-                                                            const newStory = { ...prev };
-                                                            newStory.text.find((note) => note.id === item.id).content = answerRefs.current[item.id].innerText;
-                                                            return newStory;
-                                                        });
-                                                        answerRefs.current[item.id].blur();
-                                                        // handleSave(e);
+                                                        updateResponse(item.id);
                                                     }
                                                 }}>{item.content}</p>
                                             </div>
