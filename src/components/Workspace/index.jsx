@@ -41,11 +41,11 @@ const Workspace = () => {
             ) : null}
 
             {/* right sidebar collapser */}
-            {/* <div
+            <div
                 className={`px-2 py-2 rounded-md z-50 w-fit absolute right-0 h-full flex flex-col justify-center items-center top-0`}
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)} />
-            </div> */}
+            </div>
         </div>
     );
 };
