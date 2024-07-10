@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 
 export const useResizableSidebar = (minWidth, isLeft) => {
-    const maxWidth = window.innerWidth * 0.65;
+    const maxWidth = window.innerWidth * 0.75;
     const [sidebarWidth, setSidebarWidth] = useState(window.innerWidth * 0.25);
     const [isResizing, setIsResizing] = useState(false);
 
