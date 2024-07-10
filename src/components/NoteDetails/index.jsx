@@ -527,6 +527,14 @@ function NoteDetails() {
         answerRefs.current[id].blur();
     }
 
+    function updateTitle() {
+        setIsNewNote(false);
+        setSelectedNote(prev => {
+            return { ...prev, note_name: titleRef.current.innerText };
+        });
+        titleRef.current.blur();
+    }
+
     return (
         <div className="flex flex-col h-full max-w-3xl mx-auto">
             <div className='flex justify-between'>
@@ -585,14 +593,10 @@ function NoteDetails() {
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 <h3 className='m-0'>Title:</h3>
-                <h4 className='m-0' ref={titleRef} contentEditable suppressContentEditableWarning={true} onKeyDown={(e) => {
+                <h4 className='m-0' ref={titleRef} contentEditable suppressContentEditableWarning={true} onFocus={() => handleFocus("title", 101)} onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        setIsNewNote(false);
-                        setSelectedNote(prev => {
-                            return { ...prev, note_name: e.target.innerText };
-                        });
-                        titleRef.current.blur();
+                        updateTitle();
                         // handleSave(e);
                     }
                 }}>{selectedNote.note_name}</h4>
