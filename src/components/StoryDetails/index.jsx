@@ -98,7 +98,7 @@ function StoryDetails() {
             const httpPayload = {
                 story_sections_titles: transformArrayOfObjectsToArray(selectedStory.text),
                 outline_title: selectedStory.story_name,
-                llm_model: selectedGenStoriesModels,
+                llm_model: selectedGenStoriesModels[0],
             };
             try {
                 const { sections } = await makeApiRequest('/auto-generate-story', 'post', httpPayload);
@@ -272,7 +272,7 @@ function StoryDetails() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto mt-3 flex flex-col h-full">
+        <div className="flex flex-col h-full max-w-3xl mx-auto mt-3">
             <div className='flex items-center justify-between'>
                 {/*intro/conc generation */}
                 {selectedStory.text.length > 0 && <div
@@ -365,7 +365,7 @@ function StoryDetails() {
                                             </div> */}
                                         </div>) : currentAddingAnswerId !== item.id ? (
                                             <div className={`flex items-center justify-center py-1 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background rounded-md'} align-self-start cursor-pointer`}
-                                                onClick={() => handleOpenNewAnswerBox(item.id)}>
+                                                onClick={() => { setNewAnswer(''); handleOpenNewAnswerBox(item.id); }}>
                                                 <AddIcon fontSize='small' />
                                             </div>
                                         ) : (
@@ -374,7 +374,7 @@ function StoryDetails() {
                                                 <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
                                             </div>
                                             <div className="flex items-center justify-end gap-2">
-                                                <CustomButton className='my-0' onClick={() => setCurrentAddingAnswerId("")}>Cancel</CustomButton>
+                                                <CustomButton className='my-0' onClick={() => { setNewAnswer(""); setCurrentAddingAnswerId(""); }}>Cancel</CustomButton>
                                                 <CustomButton className='my-0' onClick={() => handleAddSectionAnswer(item.id)}>Save</CustomButton>
                                             </div>
                                         </div>
@@ -417,7 +417,7 @@ function StoryDetails() {
             </div>
 
             {/* questions/answers */}
-            <div className='flex items-center w-fit ml-auto gap-3'>
+            <div className='flex items-center gap-3 ml-auto w-fit'>
                 <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={() => deleteStory(selectedStory.story_id)}>Delete</CustomButton>
                 <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
             </div>
