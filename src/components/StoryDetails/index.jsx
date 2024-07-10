@@ -275,11 +275,9 @@ function StoryDetails() {
     const [currentRefType, setCurrentRefType] = useState('');
 
     const [currentEditable, setCurrentEditable] = useState(null);
-    // const questionRefs = useRef([]);
-
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (currentEditable && !Object.values(currentRefType === "question" ? questionRefs.current : answerRefs.current).includes(event.target)) {
+            if (currentEditable && !Object.values(currentRefType === "question" ? questionRefs.current : currentRefType === "answer" ? answerRefs.current : titleRef.current).includes(event.target)) {
                 fireFunction();
                 setCurrentEditable(null);
             }
@@ -299,14 +297,17 @@ function StoryDetails() {
     const fireFunction = () => {
         if (currentRefType === "question") {
             updateSection(currentEditable);
-        } else {
+        } else if (currentRefType === "answer") {
             updateResponse(currentEditable);
+        } else {
+            updateTitle();
         }
     };
 
     const handleFocus = (type, id) => {
         setCurrentRefType(type);
         setCurrentEditable(id);
+        // if (id === -1) return;
     };
 
     function updateSection(id) {
@@ -329,6 +330,12 @@ function StoryDetails() {
             return newStory;
         });
         answerRefs.current[id].blur();
+    }
+
+    function updateTitle() {
+        setIsNewStory(false);
+        setSelectedStory(prev => ({ ...prev, story_name: titleRef.current.innerText }));
+        titleRef.current.blur();
     }
 
 
@@ -358,13 +365,10 @@ function StoryDetails() {
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 <h3 className='m-0'>Title:</h3>
-                <h4 className='m-0' ref={titleRef} contentEditable suppressContentEditableWarning={true} onKeyDown={(e) => {
+                <h4 className='m-0' ref={titleRef} contentEditable suppressContentEditableWarning={true} onFocus={() => handleFocus("title", 101)} onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        setIsNewStory(false);
-                        setSelectedStory(prev => ({ ...prev, story_name: titleRef.current.innerText }));
-                        titleRef.current.blur();
-                        // handleSave(e);
+                        updateTitle();
                     }
                 }}>{selectedStory.story_name}</h4>
             </div>
