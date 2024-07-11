@@ -18,6 +18,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { Parser } from "html-to-react";
 import { Link } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
 
 function NoteDetails() {
     const {
@@ -612,7 +613,7 @@ function NoteDetails() {
                             item.question ?
                                 <div className='flex items-center gap-2 align-self-end'>
                                     <div className="flex gap-2">
-                                        <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
+                                        <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                     </div>
                                     <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
                                         <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} onKeyDown={(e) => {
@@ -628,7 +629,7 @@ function NoteDetails() {
                         }
                         {/* answer */}
                         <div className='flex items-center gap-4'>
-                            <div>
+                            <div className='min-w-28'>
                                 {
                                     item.answer ? (
                                         <div className='flex items-center gap-2'>
@@ -678,9 +679,9 @@ function NoteDetails() {
                                                     </ul>
                                                 </div>}
                                             </div>
-                                            <div className="flex gap-2">
+                                            {/* <div className="flex gap-2">
                                                 <DeleteIcon fontSize="small" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
-                                            </div>
+                                            </div> */}
                                         </div>) : null
                                 }
                                 {item.model && <h6 className='mt-2 text-sm'>{item.model}</h6>}
