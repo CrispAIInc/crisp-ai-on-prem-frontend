@@ -295,6 +295,7 @@ function StoryDetails() {
     }, [currentEditable, currentRefType]);
 
     const fireFunction = () => {
+        console.log("clicked outside");
         if (currentRefType === "question") {
             updateSection(currentEditable);
         } else if (currentRefType === "answer") {
@@ -333,9 +334,10 @@ function StoryDetails() {
     }
 
     function updateTitle() {
+        console.log("updating title...");
         setIsNewStory(false);
         setSelectedStory(prev => ({ ...prev, story_name: titleRef.current.innerText }));
-        titleRef.current.blur();
+        // titleRef.current.blur();
     }
 
 
