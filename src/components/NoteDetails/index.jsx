@@ -532,7 +532,7 @@ function NoteDetails() {
         setSelectedNote(prev => {
             return { ...prev, note_name: titleRef.current.innerText };
         });
-        titleRef.current.blur();
+        // titleRef.current.blur();
     }
 
     return (
