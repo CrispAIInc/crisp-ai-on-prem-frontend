@@ -22,7 +22,8 @@ function App() {
   useEffect(() => {
     function handleKeyDown(event) {
       // Check if CTRL key and 't' key are pressed simultaneously
-      if (event.ctrlKey && event.key === 't') {
+      // handle the case for command on mac as well
+      if ((event.ctrlKey && event.key === 't') || (event.ctrlKey && event.key === 'T') || (event.metaKey && event.key === 't') || (event.metaKey && event.key === 'T')) {
         // Call your function here
         setTheme((theme) => theme === 'light' ? 'dark' : 'light');
       }
