@@ -616,13 +616,24 @@ function NoteDetails() {
                                         <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                     </div>
                                     <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
-                                        <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} onKeyDown={(e) => {
+                                        {typeof item.question === 'string' ? <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();
                                                 updateQuestion(item.id);
                                                 // handleSave(e);
                                             }
-                                        }}>{item.question}</p>
+                                        }}>{item.question}</p> : (
+                                            <div>
+                                                <div className="flex flex-col items-center gap-3">
+                                                    {/* list of images */}
+                                                    {item.question?.imgs_list.map((imgBlob, index) => (
+                                                        <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
+                                                    )
+                                                    )}
+                                                </div>
+                                                <p>{item.question?.query}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 : null

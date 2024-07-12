@@ -769,7 +769,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             addToNewNote={addToNewNote}
             addToExistingNote={addToExistingNote}
             setExistingNote={setExistingNote}
-            question={noteQuestion.current}
+            question={userMessage}
             existingNote={existingNote}
             onHide={onHide}
             isNewNote={isNewNote}
