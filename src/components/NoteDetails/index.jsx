@@ -512,7 +512,7 @@ function NoteDetails() {
         setIsNewNote(false);
         setSelectedNote(prev => {
             const newNote = { ...prev };
-            newNote.text.find((note) => note.id === id).question = questionRefs.current[id].innerText;
+            newNote.text.find((note) => note.id === id).question = questionRefs.current[id]?.innerText;
             return newNote;
         });
         questionRefs.current[id].blur();
@@ -522,7 +522,7 @@ function NoteDetails() {
         setIsNewNote(false);
         setSelectedNote(prev => {
             const newNote = { ...prev };
-            newNote.text.find((note) => note.id === id).answer = answerRefs.current[id].innerText;
+            newNote.text.find((note) => note.id === id).answer = answerRefs.current[id]?.innerText;
             return newNote;
         });
         answerRefs.current[id].blur();
@@ -634,13 +634,13 @@ function NoteDetails() {
                                     item.answer ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
-                                                <p className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} onKeyDown={(e) => {
+                                                {!item.answer.startsWith('https://oaidalleapiprodscus.blob') ? <p className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
                                                         e.preventDefault();
                                                         updateAnswer(item.id);
                                                         // handleSave(e);
                                                     }
-                                                }}>{item.answer}</p>
+                                                }}>{item.answer}</p> : <img className="w-[400px] h-[300px]" width="400" height="300" src={item.answer} alt="image" />}
                                                 {/* display references */}
                                                 {(item.refs?.videoLinks.length > 0 || item.refs?.pdfLinks.length > 0 || item.refs?.imgLinks.length > 0) && <div className='flex flex-col gap-2'>
                                                     <h6 className='text-sm'>References:</h6>
