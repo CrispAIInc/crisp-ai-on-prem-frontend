@@ -468,9 +468,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
               <div className="coorg-response">
                 {data.translated_responses[botIndex]}
               </div>
-              {message.references.videoLinks &&
-                message.references.pdfLinks &&
-                message.references.imgLinks && (
+              {message?.references?.videoLinks &&
+                message?.references?.pdfLinks &&
+                message?.references?.imgLinks && (
                   <div>
                     <p className="m-0">References:</p>
                     {message.references.videoLinks && (
