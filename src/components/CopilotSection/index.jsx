@@ -723,9 +723,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   };
 
   const handleVisionUpload = async (images, query) => {
-    console.log("hehe");
     if (!chatLoaded) return;
-    console.log("from parent copilot");
     console.log(images);
     console.log(query);
     // setIsUploadingVisionImg(true);
@@ -740,7 +738,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     //TODO:change user message so that it store the images as well as the query
     const userMessage = {
       query,
-      images
+      imgs_list: images
     };
 
     //   const userMessage = URL.createObjectURL(file);
@@ -754,64 +752,58 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     //   setInput("");
     setResponseIndex((responseIndex) => responseIndex + 2);
 
-    //   try {
-    //     const response = await axios.post(
-    //       `${API_ENDPOINT}/upload-and-caption`,
-    //       formData,
-    //       {
-    //         headers: {
-    //           "Content-Type": "multipart/form-data",
-    //         },
-    //       }
-    //     );
+    try {
+      const response = await axios.post(
+        `${API_ENDPOINT}/upload-and-caption`,
+        userMessage
+      );
 
-    //     // Assuming the response contains the caption
-    //     const caption = response?.data.caption;
-    //     const botMessage = (
-    //       <div>
-    //          list of images as <div flex><img><img>...</div>
-    //         <p>{caption}</p>
-    //         <AddOptionsModal
-    //           text={caption}
-    //           file={file}
-    //           models={["gpt-4-vision"]}
-    //           addToNewNote={addToNewNote}
-    //           addToExistingNote={addToExistingNote}
-    //           setExistingNote={setExistingNote}
-    //           question={noteQuestion.current}
-    //           existingNote={existingNote}
-    //           onHide={onHide}
-    //           isNewNote={isNewNote}
-    //           setShowNoteModal={setShowNoteModal}
-    //           updateSelectedNote={setSelectedNote}
-    //           showNoteModal={showNoteModal}
-    //           selectedNote={selectedNote}
-    //           notes={notes}
-    //         />
-    //       </div>
-    //     );
-    //     setMessages((prevMessages) => {
-    //       const newMessages = [...prevMessages];
-    //       if (newMessages.length > 0) {
-    //         const lastMessageIndex = newMessages.length - 1;
-    //         newMessages[lastMessageIndex] = {
-    //           ...newMessages[lastMessageIndex],
-    //           text: botMessage,
-    //         };
-    //       }
-    //       return newMessages;
-    //     });
+      //     // Assuming the response contains the caption
+      const caption = response.data.answer;
+      const botMessage = (
+        <div>
+          <p>{caption}</p>
+          <AddOptionsModal
+            text={caption}
+            models={["gpt-4-vision"]}
+            addToNewNote={addToNewNote}
+            addToExistingNote={addToExistingNote}
+            setExistingNote={setExistingNote}
+            question={noteQuestion.current}
+            existingNote={existingNote}
+            onHide={onHide}
+            isNewNote={isNewNote}
+            setShowNoteModal={setShowNoteModal}
+            updateSelectedNote={setSelectedNote}
+            showNoteModal={showNoteModal}
+            selectedNote={selectedNote}
+            notes={notes}
+          />
+        </div>
+      );
+      // const botMessage = caption;
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        if (newMessages.length > 0) {
+          const lastMessageIndex = newMessages.length - 1;
+          newMessages[lastMessageIndex] = {
+            ...newMessages[lastMessageIndex],
+            text: botMessage,
+          };
+        }
+        return newMessages;
+      });
 
-    //     // Update your chat messages state here to include the new caption
-    //     // setMessages([...messages, { sender: 'bot', text: caption }]);
-    //     // setMessages([...messages, { sender: 'user', text: userMessage }, { sender: 'bot', text: '' }]);
-    //   } catch (error) {
-    //     console.error("Error uploading and captioning image:", error);
-    //   }
-    // }
-    // setShowCursor(false);
-    // setIsUploadingVisionImg(false);
+      //     // Update your chat messages state here to include the new caption
+      //     // setMessages([...messages, { sender: 'bot', text: caption }]);
+      // setMessages([...messages, { sender: 'user', text: userMessage }, { sender: 'bot', text: '' }]);
+    } catch (error) {
+      console.error("Error uploading and captioning image:", error);
+    }
+    setShowCursor(false);
+    setIsUploadingVisionImg(false);
   };
+
 
   const selectLLMModels = (event) => {
     event.preventDefault();
@@ -955,13 +947,14 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                           </div>
                           <div>
                             {
-                              message.text.images.map((img, index) => {
+                              message.text.imgs_list.map((img, index) => {
                                 return (
                                   <img src={img} key={img} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
                                 );
                               })
                             }
                             <p>{message.text.query}</p>
+                            {/* <p>{message.text}</p> */}
                           </div>
                           {isLightboxOpen && (
                             <PreviewModal closeLightbox={closeLightbox} content={message.text.images[imagePreviewIndex]} />
