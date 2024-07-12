@@ -551,7 +551,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     };
     const newNote = {
       ...selectedNote,
-      note_name: "new title...",
+      note_name: `new title ${Math.floor(Math.random() * 100)}`,
       text: [{
         ...newText
       }]
