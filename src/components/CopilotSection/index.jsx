@@ -20,6 +20,7 @@ import PreviewModal from '../PreviewModal';
 import toast from 'react-simple-toasts';
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
+import CustomTextArea from '../CustomTextArea';
 // import parse, { domToReact } from 'html-react-parser';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -142,7 +143,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       return;
     }
 
-    const validatedInput = blacklist(input, '<>/');
+    const validatedInput = input.replace('\n', ' ');
     setShowCursor(true);
 
     let userMessage = "";
@@ -1163,7 +1164,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             <ImageUpload handleUpload={handleVisionUpload} />
             :
             <>
-              <CustomInput
+              {/* <CustomInput
                 placeholder="Message model..."
                 value={input}
                 disabled={showCursor}
@@ -1173,7 +1174,18 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     sendMessage(input);
                   }
                 }}
-              />
+              /> */}
+              <CustomTextArea
+                placeholder="Message model..."
+                value={input}
+                rows="1"
+                disabled={showCursor}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    sendMessage(input);
+                  }
+                }} />
               <div
                 className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
                   }`}
