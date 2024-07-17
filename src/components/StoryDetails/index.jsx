@@ -384,13 +384,7 @@ function StoryDetails() {
                             item.outline.name ?
                                 <div className='flex items-center gap-2'>
                                     <div className={`flex items-center gap-3 py-1 px-3 w-fit rounded-md ${theme === 'light' ? 'bg-white border border-slate-200' : 'bg-textColor-300'}`}>
-                                        <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                e.preventDefault();
-                                                updateSection(item.id);
-                                                // handleSave(e);
-                                            }
-                                        }}>{item.outline.name}</p>
+                                        <p contentEditable dangerouslySetInnerHTML={{ __html: item.outline.name.replace(/\n/g, '<br>') }} suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} ></p>
                                     </div>
                                     <div className="flex gap-2">
                                         <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
@@ -405,12 +399,7 @@ function StoryDetails() {
                                     item.content ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start max-w-[80%]`}>
-                                                <p className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        e.preventDefault();
-                                                        updateResponse(item.id);
-                                                    }
-                                                }}>{item.content}</p>
+                                                <p dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br>') }} className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} ></p>
                                             </div>
                                             {/* <div className="flex gap-2">
                                                 <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
@@ -438,8 +427,8 @@ function StoryDetails() {
                 ))}
 
                 {/* add new question/answer */}
-                {/* <div className="flex flex-col gap-4 px-3 mt-2">
-                    {!currentAddingQuestionId ? <div className={`flex items-center align-self-end gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
+                <div className="flex flex-col gap-4 px-3 mt-2">
+                    {!currentAddingQuestionId ? <div className={`flex items-center  gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
                         onClick={handleOpenNewQuestionBox}>
                         <AddIcon fontSize='small' />
                     </div>
@@ -465,7 +454,7 @@ function StoryDetails() {
                                 <CustomButton className='my-0' onClick={e => addNewAnswer(e)}>Save</CustomButton>
                             </div>
                         </div>}
-                </div> */}
+                </div>
             </div>
 
             {/* questions/answers */}
