@@ -308,7 +308,7 @@ const ContentSection = ({
             <BaseHeading text='Selected sources' />
 
             {
-                <div className={`flex flex-col items-center w-4/5 w-full max-w-full gap-8 mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
+                <div className={`grid grid-cols-[repeat(auto-fill,_160px)] gap-5 justify-center items-start w-4/5 w-full max-w-full gap-8 mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
                     {knowledgeBase.slice(0).reverse().map((item, index) => {
                         if (canRenderSourceThumbnail(item)) {
                             return (<ContentPanelThumbnail
