@@ -22,9 +22,9 @@ const ImageUpload = ({ handleUpload }) => {
     }
 
     function onImageChange(e) {
-        const files = Array.from(e.target.files);
-        const imagePreviews = files.map(file => URL.createObjectURL(file));
-        setSelectedImages(prev => [...prev, ...imagePreviews]);
+        const files = e.target.files;
+        // const imagePreviews = files.map(file => URL.createObjectURL(file));
+        setSelectedImages(prev => [...prev, ...files]);
     }
 
     function onImagePreviewRemove(e, image) {
@@ -35,7 +35,7 @@ const ImageUpload = ({ handleUpload }) => {
 
     const openLightbox = (image) => {
         setisLightboxOpen(true);
-        setselectedImageInModal(image);
+        setselectedImageInModal(URL.createObjectURL(image));
     };
 
     const closeLightbox = () => {
@@ -63,9 +63,9 @@ const ImageUpload = ({ handleUpload }) => {
             {/* images placeholder */}
             <div className={`py-2 flex gap-3 flex-wrap`}>
                 {selectedImages.map((image, index) => (
-                    <div key={image} className='relative' onClick={() => openLightbox(image)}>
+                    <div key={image.name} className='relative' onClick={() => openLightbox(image)}>
                         <CloseIcon className="absolute top-0 right-0 cursor-pointer" onClick={(e) => onImagePreviewRemove(e, image)} />
-                        <img src={image} alt={`Preview ${index}`} className="cursor-pointer image-preview" />
+                        <img src={URL.createObjectURL(image)} alt={`Preview ${index}`} className="cursor-pointer image-preview" />
                     </div>
                 ))}
             </div>

@@ -950,7 +950,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                             {
                               message.text.imgs_list.map((img, index) => {
                                 return (
-                                  <img src={img} key={img} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
+                                  <img src={URL.createObjectURL(img)} key={img} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
                                 );
                               })
                             }
@@ -958,7 +958,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                             {/* <p>{message.text}</p> */}
                           </div>
                           {isLightboxOpen && (
-                            <PreviewModal closeLightbox={closeLightbox} content={message.text.images[imagePreviewIndex]} />
+                            <PreviewModal closeLightbox={closeLightbox} content={URL.createObjectURL(message.text.imgs_list[imagePreviewIndex])} />
                           )}
                         </>
                       ) : (
