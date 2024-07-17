@@ -143,7 +143,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       return;
     }
 
-    const validatedInput = input.replace('\n', ' ');
+    // const validatedInput = input.replace('\n', ' ');
     setShowCursor(true);
 
     let userMessage = "";
@@ -152,10 +152,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       const data = await makeApiRequest(
         `/translate`,
         "post",
-        JSON.stringify({ text: validatedInput || message, language: selectedLanguage })
+        JSON.stringify({ text: input || message, language: selectedLanguage })
       );
       userMessage = data.translatedText;
-    } else userMessage = validatedInput || message;
+    } else userMessage = input || message;
 
     noteQuestion.current = userMessage;
 
@@ -199,7 +199,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       const eventSource = new EventSource(
         `${API_ENDPOINT}/message/${encodeURIComponent(
           selectedCategoryChat
-        )}/${encodeURIComponent(userMessage)}/${encodeURIComponent(
+        )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
           selectedLLMs[0]
         )}/${isFoundationLlm}`
       );
@@ -927,7 +927,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         {chatLoaded ? (
           messages.map((message, index) =>
             index % 2 == 0 ? (
-              <div key={index} className="my-2 break-all w-fit">
+              <div key={index} className="my-2 break-all w-fit min-w-[50%]">
                 <div
                   className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
                 >
@@ -974,7 +974,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                               <ReplayOutlinedIcon />
                             </div>
                           </div>
-                          <div>{message.text.startsWith('blob') ? (<img src={message.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0">{message.text}</p>)}</div>
+                          <div>{message.text.startsWith('blob') ? (<img src={message.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0" dangerouslySetInnerHTML={{ __html: message.text.replace(/\n/g, '<br>') }}></p>)}</div>
                         </>
                       )
                   }
