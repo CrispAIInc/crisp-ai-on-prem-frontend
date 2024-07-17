@@ -342,7 +342,7 @@ function StoryDetails() {
 
 
     return (
-        <div className="flex flex-col h-full max-w-3xl mx-auto mt-3">
+        <div className="flex flex-col h-full max-w-6xl mx-auto mt-3">
             <div className='flex items-center justify-between'>
                 {/*intro/conc generation */}
                 {selectedStory.text.length > 0 && <div
@@ -394,11 +394,11 @@ function StoryDetails() {
                         }
                         {/* answer */}
                         <div className='flex items-center gap-4'>
-                            <div className='w-[80%]'>
+                            <div>
                                 {
                                     item.content ? (
                                         <div className='flex items-center gap-2'>
-                                            <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start max-w-[80%]`}>
+                                            <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start max-w-[95%]`}>
                                                 <p dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br>') }} className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} ></p>
                                             </div>
                                             {/* <div className="flex gap-2">

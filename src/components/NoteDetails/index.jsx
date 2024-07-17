@@ -537,7 +537,7 @@ function NoteDetails() {
     }
 
     return (
-        <div className="flex flex-col h-full max-w-3xl mx-auto">
+        <div className="flex flex-col h-full max-w-6xl mx-auto">
             <div className='flex justify-between'>
                 <div>
                     {/* aggregated insights */}
