@@ -725,8 +725,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const handleVisionUpload = async (images, query) => {
     if (!chatLoaded) return;
-    console.log(images);
-    console.log(query);
+    const base64Imgs = images.map(async (image) => await toBase64(image));
+    // console.log(base64Imgs);
     // setIsUploadingVisionImg(true);
     // const selectedVisionLLMs = ['gpt-4-vision'];
 
@@ -756,7 +756,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     try {
       const response = await axios.post(
         `${API_ENDPOINT}/upload-and-caption`,
-        userMessage
+        { ...userMessage, imgs_list: base64Imgs }
       );
 
       //     // Assuming the response contains the caption
