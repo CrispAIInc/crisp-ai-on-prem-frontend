@@ -725,7 +725,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const handleVisionUpload = async (images, query) => {
     if (!chatLoaded) return;
-    const base64Imgs = images.map(async (image) => await toBase64(image));
+    const base64Imgs = await Promise.all(images.map(async (image) => await toBase64(image)));
+    console.log(base64Imgs);
     // console.log(base64Imgs);
     // setIsUploadingVisionImg(true);
     // const selectedVisionLLMs = ['gpt-4-vision'];
