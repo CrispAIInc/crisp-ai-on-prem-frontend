@@ -505,10 +505,12 @@ function NoteDetails() {
     const handleFocus = (type, id) => {
         setCurrentRefType(type);
         setCurrentEditable(id);
+        console.log(type, id);
         // if (id === -1) return;
     };
 
     function updateQuestion(id) {
+        console.log("updating question...");
         setIsNewNote(false);
         setSelectedNote(prev => {
             const newNote = { ...prev };
@@ -616,13 +618,7 @@ function NoteDetails() {
                                         <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                     </div>
                                     <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
-                                        {typeof item.question === 'string' ? <p contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                e.preventDefault();
-                                                updateQuestion(item.id);
-                                                // handleSave(e);
-                                            }
-                                        }}>{item.question}</p> : (
+                                        {typeof item.question === 'string' ? <p dangerouslySetInnerHTML={{ __html: item.question.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)}></p> : (
                                             <div>
                                                 <div className="flex flex-col items-center gap-3">
                                                     {/* list of images */}
@@ -645,13 +641,7 @@ function NoteDetails() {
                                     item.answer ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
-                                                {!item.answer.startsWith('https://oaidalleapiprodscus.blob') ? <p className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        e.preventDefault();
-                                                        updateAnswer(item.id);
-                                                        // handleSave(e);
-                                                    }
-                                                }}>{item.answer}</p> : <img className="w-[400px] h-[300px]" width="400" height="300" src={item.answer} alt="image" />}
+                                                {!item.answer.startsWith('https://oaidalleapiprodscus.blob') ? <p dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}></p> : <img className="w-[400px] h-[300px]" width="400" height="300" src={item.answer} alt="image" />}
                                                 {/* display references */}
                                                 {(item.refs?.videoLinks.length > 0 || item.refs?.pdfLinks.length > 0 || item.refs?.imgLinks.length > 0) && <div className='flex flex-col gap-2'>
                                                     <h6 className='text-sm'>References:</h6>

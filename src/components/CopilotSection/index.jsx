@@ -951,7 +951,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                             {
                               message.text.imgs_list.map((img, index) => {
                                 return (
-                                  <img src={URL.createObjectURL(img)} key={img} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
+                                  <img src={URL.createObjectURL(img)} key={img.name} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
                                 );
                               })
                             }
