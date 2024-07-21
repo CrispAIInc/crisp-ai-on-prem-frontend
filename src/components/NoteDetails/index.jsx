@@ -636,7 +636,7 @@ function NoteDetails() {
                         }
                         {/* answer */}
                         <div className='flex items-center gap-4'>
-                            <div className='min-w-28'>
+                            <div className='min-w-[50%]'>
                                 {
                                     item.answer ? (
                                         <div className='flex items-center gap-2'>
