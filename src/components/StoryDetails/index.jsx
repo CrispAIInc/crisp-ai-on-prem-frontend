@@ -396,7 +396,7 @@ function StoryDetails() {
                         }
                         {/* answer */}
                         <div className='flex items-center gap-4'>
-                            <div>
+                            <div className='min-w-[50%]'>
                                 {
                                     item.content ? (
                                         <div className='flex items-center gap-2'>
