@@ -100,6 +100,7 @@ function StoryDetails() {
                 story_sections_titles: transformArrayOfObjectsToArray(selectedStory.text),
                 outline_title: selectedStory.story_name,
                 llm_model: selectedGenStoriesModels[0],
+                with_selected_sources: selectedSources.length > 0
             };
             try {
                 const { sections } = await makeApiRequest('/auto-generate-story', 'post', httpPayload);
@@ -168,6 +169,7 @@ function StoryDetails() {
                 story_name: "new story...",
                 models: []
             });
+            setActiveView(null);
 
             // fetch stories
             const data = await makeApiRequest("/stories", "get");
