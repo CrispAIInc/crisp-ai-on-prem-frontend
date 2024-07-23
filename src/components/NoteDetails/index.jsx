@@ -417,11 +417,17 @@ function NoteDetails() {
             newNote.text.push({
                 id: generateRandomHash(5),
                 content: newQuestion,
+                questionImages: selectedImagesInQuestion,
                 answer: '',
                 model: null,
                 color: theme === 'light' ? "#333" : '#fff',
                 question: newQuestion,
                 references: {
+                    videoLinks: [],
+                    pdfLinks: [],
+                    imageLinks: [],
+                },
+                refs: {
                     videoLinks: [],
                     pdfLinks: [],
                     imageLinks: [],
@@ -444,6 +450,7 @@ function NoteDetails() {
         setSelectedNote(prev => {
             const newNote = { ...prev };
             newNote.text.at(-1).answer = newAnswer;
+            newNote.text.at(-1).answerImages = selectedImagesInAnswer;
             return newNote;
         });
         setNewAnswer('');
@@ -538,6 +545,17 @@ function NoteDetails() {
         // titleRef.current.blur();
     }
 
+    const [selectedImagesInQuestion, setSelectedImagesInQuestion] = useState([]);
+    const [selectedImagesInAnswer, setSelectedImagesInAnswer] = useState([]);
+
+    function handleNewImgSelected(e, type) {
+        if (e.target.files) {
+            const files = Array.from(e.target.files);
+            const urls = files.map(file => URL.createObjectURL(file));
+            type === "question" ? setSelectedImagesInQuestion(prev => [...prev, ...urls]) : setSelectedImagesInAnswer(prev => [...prev, ...urls]);
+        }
+    }
+
     return (
         <div className="flex flex-col h-full max-w-6xl mx-auto">
             <div className='flex justify-between'>
@@ -618,7 +636,18 @@ function NoteDetails() {
                                         <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                     </div>
                                     <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
-                                        {typeof item.question === 'string' ? <p dangerouslySetInnerHTML={{ __html: item.question.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)}></p> : (
+                                        {typeof item.question === 'string' ? (
+                                            <div>
+                                                <div className="flex flex-col gap-3 mb-4">
+                                                    {/* list of images */}
+                                                    {item?.questionImages?.map((imgBlob, index) => (
+                                                        <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
+                                                    )
+                                                    )}
+                                                </div>
+                                                <p dangerouslySetInnerHTML={{ __html: item.question.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)}></p>
+                                            </div>
+                                        ) : (
                                             <div>
                                                 <div className="flex flex-col items-center gap-3">
                                                     {/* list of images */}
@@ -641,9 +670,17 @@ function NoteDetails() {
                                     item.answer ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
-                                                {!item.answer.startsWith('https://oaidalleapiprodscus.blob') ? <p dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}></p> : <img className="w-[400px] h-[300px]" width="400" height="300" src={item.answer} alt="image" />}
+                                                {!item.answer.startsWith('https://oaidalleapiprodscus.blob') ? <div>
+                                                    <div className="flex flex-col gap-3 mb-4">
+                                                        {/* list of images */}
+                                                        {item?.answerImages?.map((imgBlob, index) => (
+                                                            <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
+                                                        )
+                                                        )}
+                                                    </div>
+                                                    <p dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}></p></div> : <img className="w-[400px] h-[300px]" width="400" height="300" src={item.answer} alt="image" />}
                                                 {/* display references */}
-                                                {(item.refs?.videoLinks.length > 0 || item.refs?.pdfLinks.length > 0 || item.refs?.imgLinks.length > 0) && <div className='flex flex-col gap-2'>
+                                                {(item.refs?.videoLinks?.length > 0 || item.refs?.pdfLinks?.length > 0 || item.refs?.imgLinks?.length > 0) && <div className='flex flex-col gap-2'>
                                                     <h6 className='text-sm'>References:</h6>
                                                     <ul className='break-all'>
                                                         {
@@ -697,6 +734,15 @@ function NoteDetails() {
                         <AddIcon fontSize='small' />
                     </div>
                         : <div className="flex flex-col">
+                            {/* img placeholders */}
+                            <input type="file" multiple onChange={e => handleNewImgSelected(e, 'question')} accept='image/*' />
+                            <div className='flex items-center gap-2'>
+                                {
+                                    selectedImagesInQuestion.map((item, index) => (
+                                        <img className='w-10 h-10' src={item} alt="img" key={index} />
+                                    ))
+                                }
+                            </div>
                             <div>
                                 <CustomInput placeholder='Question' value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
                             </div>
@@ -710,6 +756,15 @@ function NoteDetails() {
                         <AddIcon fontSize='small' />
                     </div>
                         : isAddingNewAnswer && selectedNote?.text.at(-1)?.question !== "" && <div className="flex flex-col">
+                            {/* img placeholders */}
+                            <input type="file" multiple onChange={e => handleNewImgSelected(e, 'answer')} accept='image/*' />
+                            <div className='flex items-center gap-2'>
+                                {
+                                    selectedImagesInAnswer.map((item, index) => (
+                                        <img className='w-10 h-10' src={item} alt="img" key={index} />
+                                    ))
+                                }
+                            </div>
                             <div>
                                 <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
                             </div>
