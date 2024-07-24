@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import CustomInput from '../CustomInput';
@@ -17,12 +17,14 @@ import LoadingSpinner from '../LoadingSpinner';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { useOutsideClick } from '../../hooks/useOutsideClick';
+import DynamicComponent from '../DynamicComponent';
+import CheckIcon from '@mui/icons-material/Check';
 
 function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource,
         modules, theme, stories,
-        formats, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels } = useContext(MainContext);
+        formats, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels, selectedSources } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
     const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] = useState(false);
@@ -248,7 +250,8 @@ function StoryDetails() {
                 outline: {
                     id: generateRandomHash(5),
                     name: newQuestion
-                }
+                },
+                sectionImages: selectedImagesInQuestion
             });
             return newStory;
         });
@@ -267,6 +270,7 @@ function StoryDetails() {
         setSelectedStory(prev => {
             const newStory = { ...prev };
             newStory.text.at(-1).answer = newAnswer;
+            newStory.text.at(-1).contentImages = selectedImagesInAnswer;
             return newStory;
         });
         setNewAnswer('');
@@ -342,6 +346,58 @@ function StoryDetails() {
         // titleRef.current.blur();
     }
 
+    const renderElement = (element) => {
+        if (element == null) {
+            return null;
+        }
+
+        if (typeof element === 'string' || typeof element === 'number') {
+            return element;
+        }
+
+        if (typeof element.type === 'undefined' || typeof element.type === 'object' && Object.keys(element.type).length === 0) {
+            console.error('Invalid type:', element);
+            return null;
+        }
+
+        if (typeof element.type !== 'string' && typeof element.type !== 'function') {
+            console.error('Invalid type:', element.type);
+            return null;
+        }
+
+        const { type, props, key, ref } = element;
+
+        const children = props && props.children
+            ? (Array.isArray(props.children)
+                ? props.children.map(renderElement)
+                : renderElement(props.children))
+            : null;
+
+        return React.createElement(type, { ...props, key, ref }, children);
+    };
+
+    // const reactElement = createElementFromObject(elementObject);
+
+    const [selectedImagesInQuestion, setSelectedImagesInQuestion] = useState([]);
+    const [selectedImagesInAnswer, setSelectedImagesInAnswer] = useState([]);
+
+    function handleNewImgSelected(e, type) {
+        if (e.target.files) {
+            const files = Array.from(e.target.files);
+            const urls = files.map(file => URL.createObjectURL(file));
+            type === "question" ? setSelectedImagesInQuestion(prev => [...prev, ...urls]) : setSelectedImagesInAnswer(prev => [...prev, ...urls]);
+        }
+    }
+
+    const [isTitleEditing, setIsTitleEditing] = useState(false);
+    function handleTitleFocus() {
+        setIsTitleEditing(true);
+    }
+    function changeTitle() {
+        console.log("change");
+        updateTitle();
+        setIsTitleEditing(false);
+    }
 
     return (
         <div className="flex flex-col h-full max-w-6xl mx-auto mt-3">
@@ -369,12 +425,15 @@ function StoryDetails() {
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 <h3 className='m-0'>Title:</h3>
-                <h4 className='m-0' ref={titleRef} contentEditable suppressContentEditableWarning={true} onFocus={() => handleFocus("title", 101)} onKeyDown={(e) => {
+                <h4 className='m-0' onFocus={handleTitleFocus} ref={titleRef} contentEditable suppressContentEditableWarning={true} onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         updateTitle();
                     }
                 }}>{selectedStory.story_name}</h4>
+                {
+                    isTitleEditing && <CheckIcon onClick={changeTitle} className='cursor-pointer' />
+                }
             </div>
 
 
@@ -384,12 +443,22 @@ function StoryDetails() {
                         {/* question */}
                         {
                             item.outline.name ?
+                                <div>
                                 <div className='flex items-center gap-2'>
-                                    <div className={`flex items-center gap-3 py-1 px-3 w-fit rounded-md ${theme === 'light' ? 'bg-white border border-slate-200' : 'bg-textColor-300'}`}>
-                                        <p contentEditable dangerouslySetInnerHTML={{ __html: item.outline.name.replace(/\n/g, '<br>') }} suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} ></p>
+                                        <div className={`py-1 px-3 w-fit rounded-md ${theme === 'light' ? 'bg-white border border-slate-200' : 'bg-textColor-300'}`}>
+                                            {/* displaying imgs */}
+                                            <div className="flex flex-col gap-3 mb-4">
+                                                {/* list of images */}
+                                                {item?.sectionImages?.map((imgBlob, index) => (
+                                                    <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
+                                                )
+                                                )}
+                                            </div>
+                                            <div contentEditable dangerouslySetInnerHTML={{ __html: item.outline.name.replace(/\n/g, '<br>') }} suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} ></div>
                                     </div>
                                     <div className="flex gap-2">
                                         <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
+                                        </div>
                                     </div>
                                 </div>
                                 : null
@@ -400,8 +469,18 @@ function StoryDetails() {
                                 {
                                     item.content ? (
                                         <div className='flex items-center gap-2'>
-                                            <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start max-w-[95%]`}>
-                                                <p dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br>') }} className='' contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} ></p>
+                                            <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start w-fit max-w-[95%]`}>
+                                                {typeof item.content === 'string' ? <><div className="flex flex-col gap-3 mb-4">
+                                                    {/* list of images */}
+                                                    {item?.contentImages?.map((imgBlob, index) => (
+                                                        <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
+                                                    )
+                                                    )}
+                                                </div><p dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} ></p></> : (
+                                                    <>
+                                                        <div ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}>{renderElement(item.content)}</div>
+                                                    </>
+                                                )}
                                             </div>
                                             {/* <div className="flex gap-2">
                                                 <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
@@ -436,7 +515,16 @@ function StoryDetails() {
                     </div>
                         : <div className="flex flex-col">
                             <div>
-                                <CustomInput placeholder='Question' value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
+                                {/* img placeholders */}
+                                <input type="file" multiple onChange={e => handleNewImgSelected(e, 'question')} accept='image/*' />
+                                <div className='flex items-center gap-2'>
+                                    {
+                                        selectedImagesInQuestion.map((item, index) => (
+                                            <img className='w-10 h-10' src={item} alt="img" key={index} />
+                                        ))
+                                    }
+                                </div>
+                                <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Question' value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
                             </div>
                             <div className="flex items-center justify-end gap-2">
                                 <CustomButton className='my-0' onClick={() => setCurrentAddingQuestionId("")}>Cancel</CustomButton>
@@ -448,6 +536,15 @@ function StoryDetails() {
                         <AddIcon fontSize='small' />
                     </div>
                         : selectedStory?.text.at(-1)?.outline.name !== "" && <div className="flex flex-col">
+                            {/* img placeholders */}
+                            <input type="file" multiple onChange={e => handleNewImgSelected(e, 'answer')} accept='image/*' />
+                            <div className='flex items-center gap-2'>
+                                {
+                                    selectedImagesInAnswer.map((item, index) => (
+                                        <img className='w-10 h-10' src={item} alt="img" key={index} />
+                                    ))
+                                }
+                            </div>
                             <div>
                                 <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
                             </div>
