@@ -19,6 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Parser } from "html-to-react";
 import { Link } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 
 function NoteDetails() {
     const {
@@ -512,8 +513,6 @@ function NoteDetails() {
     const handleFocus = (type, id) => {
         setCurrentRefType(type);
         setCurrentEditable(id);
-        console.log(type, id);
-        // if (id === -1) return;
     };
 
     function updateQuestion(id) {
@@ -554,6 +553,20 @@ function NoteDetails() {
             const urls = files.map(file => URL.createObjectURL(file));
             type === "question" ? setSelectedImagesInQuestion(prev => [...prev, ...urls]) : setSelectedImagesInAnswer(prev => [...prev, ...urls]);
         }
+    }
+
+    const [isTitleEditing, setIsTitleEditing] = useState(false);
+    function handleTitleFocus() {
+        setIsTitleEditing(true);
+    }
+    // function handleTitleBlur() {
+    //     setIsTitleEditing(false);
+    // }
+
+    function changeTitle() {
+        console.log("change");
+        updateTitle();
+        setIsTitleEditing(false);
     }
 
     return (
@@ -614,13 +627,17 @@ function NoteDetails() {
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                 <h3 className='m-0'>Title:</h3>
-                <h4 className='m-0' ref={titleRef} contentEditable suppressContentEditableWarning={true} onFocus={() => handleFocus("title", 101)} onKeyDown={(e) => {
+                <h4 className='m-0' onFocus={handleTitleFocus}
+                    ref={titleRef} contentEditable suppressContentEditableWarning={true} onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         updateTitle();
                         // handleSave(e);
                     }
                 }}>{selectedNote.note_name}</h4>
+                {
+                    isTitleEditing && <CheckIcon onClick={changeTitle} className='cursor-pointer' />
+                }
             </div>
             {/* <div > */}
 
@@ -744,7 +761,7 @@ function NoteDetails() {
                                 }
                             </div>
                             <div>
-                                <CustomInput placeholder='Question' value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
+                                <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
                             </div>
                             <div className="flex items-center justify-end gap-2">
                                 <CustomButton className='my-0' onClick={() => setIsAddingNewQuestion(false)}>Cancel</CustomButton>
