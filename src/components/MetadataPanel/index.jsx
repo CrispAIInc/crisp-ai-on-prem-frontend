@@ -25,6 +25,7 @@ const MetadataPanel = () => {
         selectedNote,
         activeView,
         theme,
+        selectedStory
     } = useContext(MainContext);
     const [translatedResource, setTranslatedResource] = useState(currentResource);
     const [isTranslationLoading, setIsTranslationLoading] = useState(false);
@@ -62,6 +63,9 @@ const MetadataPanel = () => {
             if (selectedNote.note_id !== "") {
                 return "note";
             }
+            if (selectedStory.story_id !== "") {
+                return "story";
+            }
             return null;
         });
     };
@@ -74,6 +78,9 @@ const MetadataPanel = () => {
             if (selectedNote.note_id !== "") {
                 return "note";
             }
+            if (selectedStory.story_id !== "") {
+                return "story";
+            }
             return null;
         });
     };
@@ -85,6 +92,9 @@ const MetadataPanel = () => {
         setActiveView(() => {
             if (selectedNote.note_id !== "") {
                 return "note";
+            }
+            if (selectedStory.story_id !== "") {
+                return "story";
             }
             return null;
         });
