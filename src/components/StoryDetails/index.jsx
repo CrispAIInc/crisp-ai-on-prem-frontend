@@ -515,42 +515,48 @@ function StoryDetails() {
                                                         <p dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} ></p></> : (
                                                         <>
                                                             {/* <div ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}>{renderElement(item.content)}</div> */}
-                                                            <div>
-                                                                <p>{item.content.answer}</p>
-                                                                {(item.content.videosArr?.length > 0 || item.content.pdfsArr?.length > 0) && (
-                                                                    <div>
-                                                                        <p className="m-0">References:</p>
-                                                                        {item.content.videosArr?.length > 0 && (
-                                                                            <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                {item.content.videosArr.map((video, index) => (
-                                                                                    <Link key={index} onClick={(event) => handleVideoLinkClick(event, video)}>
-                                                                                        {video.source_path + " | Timestamp: " + video.timestamp}
-                                                                                    </Link>
-                                                                                ))}
+                                                            {
+                                                                item.content.map((i, index) => {
+                                                                    return (
+                                                                        <div key={index}>
+                                                                            <p>{i.answer}</p>
+                                                                            {(i.videosArr?.length > 0 || i.pdfsArr?.length > 0) && (
+                                                                                <div>
+                                                                                    <p className="m-0">References:</p>
+                                                                                    {i.videosArr?.length > 0 && (
+                                                                                        <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                            {i.videosArr.map((video, index) => (
+                                                                                                <Link key={index} onClick={(event) => handleVideoLinkClick(event, video)}>
+                                                                                                    {video.source_path + " | Timestamp: " + video.timestamp}
+                                                                                                </Link>
+                                                                                            ))}
 
-                                                                            </ul>
-                                                                        )}
-                                                                        {item.content.pdfsArr?.length > 0 && (
-                                                                            <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                {item.content.pdfsArr.map((pdf, index) => (
-                                                                                    <Link key={index}>
-                                                                                        {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
-                                                                                    </Link>
-                                                                                ))}
-                                                                            </ul>
-                                                                        )}
-                                                                        {item.content.imgsArr?.length > 0 && (
-                                                                            <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                {item.content.imgsArr.map((img, index) => (
-                                                                                    <Link key={index}>
-                                                                                        {img.source_path}
-                                                                                    </Link>
-                                                                                ))}
-                                                                            </ul>
-                                                                        )}
-                                                                    </div>
-                                                                )}
-                                                            </div>
+                                                                                        </ul>
+                                                                                    )}
+                                                                                    {i.pdfsArr?.length > 0 && (
+                                                                                        <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                            {i.pdfsArr.map((pdf, index) => (
+                                                                                                <Link key={index}>
+                                                                                                    {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
+                                                                                                </Link>
+                                                                                            ))}
+                                                                                        </ul>
+                                                                                    )}
+                                                                                    {i.imgsArr?.length > 0 && (
+                                                                                        <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                            {i.imgsArr.map((img, index) => (
+                                                                                                <Link key={index}>
+                                                                                                    {img.source_path}
+                                                                                                </Link>
+                                                                                            ))}
+                                                                                        </ul>
+                                                                                    )}
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    );
+                                                                })
+                                                            }
                                                         </>
                                                     )}
                                             </div>

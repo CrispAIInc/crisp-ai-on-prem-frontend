@@ -143,7 +143,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
         setSelectedStory(prev => {
             const newStory = { ...prev };
             let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
-            currentText.content = joinedAnswers[0];
+            currentText.content = joinedAnswers;
             // const canRenderNoteRefs = (selectedNote.text[0].refs?.videoLinks.length > 0 || selectedNote.text[0].refs?.pdfLinks.length > 0 || selectedNote.text[0].refs?.imageLinks.length > 0);
             // currentText.refsJsx = canRenderNoteRefs && (
             //     <>
