@@ -19,12 +19,19 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useOutsideClick } from '../../hooks/useOutsideClick';
 import DynamicComponent from '../DynamicComponent';
 import CheckIcon from '@mui/icons-material/Check';
+import ReactDOM from 'react-dom';
+import { Link } from "react-router-dom";
 
 function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource,
         modules, theme, stories,
-        formats, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels, selectedSources } = useContext(MainContext);
+        formats, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels, selectedSources, API_ENDPOINT,
+        setCurrentResource,
+        setResourceURL,
+        setSummary,
+        setSummaries,
+        setJumpToPage, } = useContext(MainContext);
 
     const [HTMLToDisplay, setHTMLToDisplay] = useState('');
     const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] = useState(false);
@@ -399,6 +406,33 @@ function StoryDetails() {
         setIsTitleEditing(false);
     }
 
+    const handleVideoLinkClick = (event, video) => {
+        event.preventDefault();
+        // setFromChat(true);
+        const resourceURL = `${API_ENDPOINT}/${video.file_type
+            }/all/${encodeURIComponent(video.source_path)}`;
+        setCurrentResource(video);
+        setResourceURL(resourceURL);
+        setSummary(video.summary);
+        setSummaries(video.topic_summaries);
+        setActiveView('resource');
+        // setShowNoteDetails(false);
+    };
+
+    const handlePDFLinkClick = (event, pdf) => {
+        event.preventDefault();
+        const resourceURL = `${API_ENDPOINT}/${pdf.file_type
+            }/all/${encodeURIComponent(pdf.source_path)}`;
+        setCurrentResource(pdf);
+        setResourceURL(resourceURL);
+        setSummary(pdf.summary);
+        setSummaries(pdf.topic_summaries);
+        setActiveView('resource');
+        setJumpToPage({ page: parseInt(pdf.page) + 1 });
+        // setShowNoteDetails(false);
+    };
+
+
     return (
         <div className="flex flex-col h-full max-w-6xl mx-auto mt-3">
             <div className='flex items-center justify-between'>
@@ -444,20 +478,19 @@ function StoryDetails() {
                         {
                             item.outline.name ?
                                 <div>
-                                <div className='flex items-center gap-2'>
+                                    <div className='flex items-center gap-2'>
                                         <div className={`py-1 px-3 w-fit rounded-md ${theme === 'light' ? 'bg-white border border-slate-200' : 'bg-textColor-300'}`}>
                                             {/* displaying imgs */}
-                                            <div className="flex flex-col gap-3 mb-4">
-                                                {/* list of images */}
+                                            {item?.sectionImages?.length > 0 && <div className="flex flex-col gap-3 mb-4">
                                                 {item?.sectionImages?.map((imgBlob, index) => (
                                                     <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
                                                 )
                                                 )}
-                                            </div>
+                                            </div>}
                                             <div contentEditable dangerouslySetInnerHTML={{ __html: item.outline.name.replace(/\n/g, '<br>') }} suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} ></div>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                         </div>
                                     </div>
                                 </div>
@@ -470,17 +503,56 @@ function StoryDetails() {
                                     item.content ? (
                                         <div className='flex items-center gap-2'>
                                             <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start w-fit max-w-[95%]`}>
-                                                {typeof item.content === 'string' ? <><div className="flex flex-col gap-3 mb-4">
-                                                    {/* list of images */}
-                                                    {item?.contentImages?.map((imgBlob, index) => (
-                                                        <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
-                                                    )
-                                                    )}
-                                                </div><p dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} ></p></> : (
+                                                {typeof item.content === 'string' ?
                                                     <>
-                                                        <div ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}>{renderElement(item.content)}</div>
-                                                    </>
-                                                )}
+                                                        {item?.contentImages?.length > 0 && <div className="flex flex-col gap-3 mb-4">
+                                                            {/* list of images */}
+                                                            {item?.contentImages?.map((imgBlob, index) => (
+                                                                <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
+                                                            )
+                                                            )}
+                                                        </div>}
+                                                        <p dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} ></p></> : (
+                                                        <>
+                                                            {/* <div ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}>{renderElement(item.content)}</div> */}
+                                                            <div>
+                                                                <p>{item.content.answer}</p>
+                                                                {(item.content.videosArr?.length > 0 || item.content.pdfsArr?.length > 0) && (
+                                                                    <div>
+                                                                        <p className="m-0">References:</p>
+                                                                        {item.content.videosArr?.length > 0 && (
+                                                                            <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                {item.content.videosArr.map((video, index) => (
+                                                                                    <Link key={index} onClick={(event) => handleVideoLinkClick(event, video)}>
+                                                                                        {video.source_path + " | Timestamp: " + video.timestamp}
+                                                                                    </Link>
+                                                                                ))}
+
+                                                                            </ul>
+                                                                        )}
+                                                                        {item.content.pdfsArr?.length > 0 && (
+                                                                            <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                {item.content.pdfsArr.map((pdf, index) => (
+                                                                                    <Link key={index}>
+                                                                                        {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
+                                                                                    </Link>
+                                                                                ))}
+                                                                            </ul>
+                                                                        )}
+                                                                        {item.content.imgsArr?.length > 0 && (
+                                                                            <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                {item.content.imgsArr.map((img, index) => (
+                                                                                    <Link key={index}>
+                                                                                        {img.source_path}
+                                                                                    </Link>
+                                                                                ))}
+                                                                            </ul>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </>
+                                                    )}
                                             </div>
                                             {/* <div className="flex gap-2">
                                                 <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
