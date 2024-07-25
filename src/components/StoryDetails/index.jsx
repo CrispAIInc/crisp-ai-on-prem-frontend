@@ -285,12 +285,13 @@ function StoryDetails() {
         // handleSave(e);
     }
 
+    const [currentAnswerRef, setCurrentAnswerRef] = useState("");
     const [currentRefType, setCurrentRefType] = useState('');
 
     const [currentEditable, setCurrentEditable] = useState(null);
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (currentEditable && !Object.values(currentRefType === "question" ? questionRefs.current : currentRefType === "answer" ? answerRefs.current : titleRef.current).includes(event.target)) {
+            if (currentEditable && !Object.values(currentRefType === "question" ? questionRefs.current : currentRefType === "answer" ? answerRefs.current : currentRefType === "answerWithReference" ? answerWithReferenceRefs.current : titleRef.current).includes(event.target)) {
                 fireFunction();
                 setCurrentEditable(null);
             }
@@ -313,16 +314,32 @@ function StoryDetails() {
             updateSection(currentEditable);
         } else if (currentRefType === "answer") {
             updateResponse(currentEditable);
-        } else {
+        } else if (currentRefType === "answerWithReference") {
+            // updatedAnswerWithReference(currentEditable, currentAnswerRef);
+        }
+        else {
             updateTitle();
         }
     };
 
-    const handleFocus = (type, id) => {
+    const handleFocus = (type, id, answerIndex) => {
         setCurrentRefType(type);
         setCurrentEditable(id);
+        if (answerIndex)
+            setCurrentAnswerRef(answerIndex);
         // if (id === -1) return;
     };
+
+    function updateResponseWithReference(id, content) {
+        console.log(id, content);
+        setIsNewStory(false);
+        setSelectedStory(prev => {
+            const newStory = { ...prev };
+            newStory.text.find((note) => note.id === id).content.find(c => c.id === currentAnswerRef).answer = content;
+            return newStory;
+        });
+        // answerWithReferenceRefs.current[id].blur();
+    }
 
     function updateSection(id) {
         setIsNewStory(false);
@@ -352,36 +369,6 @@ function StoryDetails() {
         setSelectedStory(prev => ({ ...prev, story_name: titleRef.current.innerText }));
         // titleRef.current.blur();
     }
-
-    const renderElement = (element) => {
-        if (element == null) {
-            return null;
-        }
-
-        if (typeof element === 'string' || typeof element === 'number') {
-            return element;
-        }
-
-        if (typeof element.type === 'undefined' || typeof element.type === 'object' && Object.keys(element.type).length === 0) {
-            console.error('Invalid type:', element);
-            return null;
-        }
-
-        if (typeof element.type !== 'string' && typeof element.type !== 'function') {
-            console.error('Invalid type:', element.type);
-            return null;
-        }
-
-        const { type, props, key, ref } = element;
-
-        const children = props && props.children
-            ? (Array.isArray(props.children)
-                ? props.children.map(renderElement)
-                : renderElement(props.children))
-            : null;
-
-        return React.createElement(type, { ...props, key, ref }, children);
-    };
 
     // const reactElement = createElementFromObject(elementObject);
 
@@ -432,6 +419,7 @@ function StoryDetails() {
         // setShowNoteDetails(false);
     };
 
+    const answerWithReferenceRefs = useRef({});
 
     return (
         <div className="flex flex-col h-full max-w-6xl mx-auto mt-3">
@@ -472,7 +460,7 @@ function StoryDetails() {
 
 
             <div className={`overflow-y-auto flex-1 flex flex-col gap-4 ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
-                {selectedStory.text?.map((item) => (
+                {selectedStory.text?.map((item, textIndex) => (
                     <div key={item.id} className="flex flex-col gap-4 px-3">
                         {/* question */}
                         {
@@ -519,7 +507,13 @@ function StoryDetails() {
                                                                 item.content.map((i, index) => {
                                                                     return (
                                                                         <div key={index}>
-                                                                            <p>{i.answer}</p>
+                                                                            {/* single answer */}
+                                                                            <div className='flex items-center gap-2'>
+                                                                                <p dangerouslySetInnerHTML={{ __html: i.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerWithReferenceRefs.current[item.id] = el)} onFocus={() => {
+                                                                                    setCurrentAnswerRef(i.id);
+                                                                                }} onBlur={(e) => updateResponseWithReference(item.id, e.target.innerText)}></p>
+                                                                                {currentAnswerRef === i.id && <CheckIcon onClick={() => updateResponseWithReference(textIndex)} className='cursor-pointer' />}
+                                                                            </div>
                                                                             {(i.videosArr?.length > 0 || i.pdfsArr?.length > 0) && (
                                                                                 <div>
                                                                                     <p className="m-0">References:</p>

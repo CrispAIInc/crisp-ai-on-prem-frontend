@@ -4,6 +4,7 @@ import Select from 'react-select';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
+import { generateRandomHash } from '../../utils';
 
 function AddToStoryModal({ open, handleClose, setOpen }) {
     const { theme, selectedNote, stories, selectedStory, setSelectedStory, API_ENDPOINT, setCurrentResource,
@@ -130,6 +131,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
             // );
 
             return {
+                id: generateRandomHash(8),
                 answer,
                 videosArr,
                 pdfsArr,

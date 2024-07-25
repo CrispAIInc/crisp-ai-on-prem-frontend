@@ -629,12 +629,12 @@ function NoteDetails() {
                 <h3 className='m-0'>Title:</h3>
                 <h4 className='m-0' onFocus={handleTitleFocus}
                     ref={titleRef} contentEditable suppressContentEditableWarning={true} onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        updateTitle();
-                        // handleSave(e);
-                    }
-                }}>{selectedNote.note_name}</h4>
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            updateTitle();
+                            // handleSave(e);
+                        }
+                    }}>{selectedNote.note_name}</h4>
                 {
                     isTitleEditing && <CheckIcon onClick={changeTitle} className='cursor-pointer' />
                 }
