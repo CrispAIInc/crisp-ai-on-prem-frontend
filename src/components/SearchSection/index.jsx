@@ -17,7 +17,8 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
         setShowSearchModal,
         setSummary,
         setActiveView,
-        activeView
+        activeView,
+        setJumpToPage
     } = useContext(MainContext);
 
     const [, setFromChat] = useState(false);
@@ -61,6 +62,10 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
                 setAdditionalSources(response.data.additional_sources);
                 if (activeView !== 'resource') {
                     setShowSearchModal(true);
+                }
+
+                if (response.data.file_type === "pdf") {
+                    setJumpToPage({ page: response.data.page });
                 }
             }
         } catch (error) {
