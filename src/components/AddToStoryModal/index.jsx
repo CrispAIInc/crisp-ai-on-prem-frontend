@@ -45,10 +45,15 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
     const saveToStory = async () => {
         const joinedAnswers = selectedNote.text.map(({ id, answer, refs, references }, index) => {
             if (answer.includes('https://oaidalleapiprodscus.blob')) {
-                return `<img key={${index}} src={${answer}} alt="image" />`;
+                return {
+                    id: generateRandomHash(8),
+                    answer,
+                    videosArr: [],
+                    pdfsArr: [],
+                    imgsArr: [],
+                };
             }
-            // return answer;
-            const canRenderNoteRefs = (refs?.videoLinks?.length > 0 || refs?.pdfLinks?.length > 0 || refs?.imageLinks?.length > 0);
+            // return `<img key={${index}} src={${answer}} alt="image" />`;
 
             let videosArr = [];
             let pdfsArr = [];
@@ -56,79 +61,14 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
 
             refs.videoLinks.forEach((video) => {
                 videosArr.push(video);
-                // return (
-                //     <li key={video.source_path} className="ml-0">
-                //         <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-                //             {video.source_path + " | Timestamp: " + video.timestamp}
-                //         </Link>
-                //     </li>
-                // );
             });
             refs.pdfLinks.forEach((pdf) => {
                 pdfsArr.push(pdf);
-                // return (
-                //     <li key={pdf.source_path} className="ml-0">
-                //         <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
-                //             {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
-                //         </Link>
-                //     </li>
-                // );
             });
 
             refs.imgLinks.forEach((img) => {
                 imgsArr.push(img);
-                // return (
-                //     <li key={img.source_path} className="ml-0">
-                //         <Link onClick={(event) => handlePDFLinkClick(event, img)}>
-                //             {img.source_path}
-                //         </Link>
-                //     </li>
-                // );
             });
-
-            // const references = {
-            //     videoLinks: data.video_references.map((video, index) => {
-            //         return (
-            //             `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
-            //         );
-            //     }),
-            //     pdfLinks: data.pdf_references.map((pdf, index) => {
-            //         return (
-            //             `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${pdf}'>${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</li>`
-            //         );
-            //     }),
-            //     imageLinks: data.img_references.map((img, index) => {
-            //         return (
-            //             `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${img}'>${img.source_path}</li>`
-            //         );
-            //     }),
-            // };
-
-            // const Element = (
-            // <div key={index}>
-            //     <p>{answer}</p>
-            //     {videoLinks && pdfLinks && (
-            //         <div>
-            //             <p className="m-0">References:</p>
-            //             {videoLinks && (
-            //                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-            //                     {videoLinks}
-            //                 </ul>
-            //             )}
-            //             {pdfLinks && (
-            //                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-            //                     {pdfLinks}
-            //                 </ul>
-            //             )}
-            //             {imgLinks && (
-            //                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-            //                     {imgLinks}
-            //                 </ul>
-            //             )}
-            //         </div>
-            //     )}
-            // </div>
-            // );
 
             return {
                 id: generateRandomHash(8),

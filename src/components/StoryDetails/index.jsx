@@ -17,7 +17,6 @@ import LoadingSpinner from '../LoadingSpinner';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { useOutsideClick } from '../../hooks/useOutsideClick';
-import DynamicComponent from '../DynamicComponent';
 import CheckIcon from '@mui/icons-material/Check';
 import ReactDOM from 'react-dom';
 import { Link } from "react-router-dom";
@@ -509,10 +508,10 @@ function StoryDetails() {
                                                                         <div key={index}>
                                                                             {/* single answer */}
                                                                             <div className='flex items-center gap-2'>
-                                                                                <p dangerouslySetInnerHTML={{ __html: i.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerWithReferenceRefs.current[item.id] = el)} onFocus={() => {
+                                                                                {!i.answer.includes('https://oaidalleapiprodscus.blob') ? <p dangerouslySetInnerHTML={{ __html: i.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerWithReferenceRefs.current[item.id] = el)} onFocus={() => {
                                                                                     setCurrentAnswerRef(i.id);
-                                                                                }} onBlur={(e) => updateResponseWithReference(item.id, e.target.innerText)}></p>
-                                                                                {currentAnswerRef === i.id && <CheckIcon onClick={() => updateResponseWithReference(textIndex)} className='cursor-pointer' />}
+                                                                                }} onBlur={(e) => updateResponseWithReference(item.id, e.target.innerText)}></p> : <img src={i.answer} alt='image' />}
+                                                                                {/* {currentAnswerRef === i.id && <CheckIcon onClick={() => updateResponseWithReference(textIndex)} className='cursor-pointer' />} */}
                                                                             </div>
                                                                             {(i.videosArr?.length > 0 || i.pdfsArr?.length > 0) && (
                                                                                 <div>
