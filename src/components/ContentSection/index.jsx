@@ -258,12 +258,12 @@ const ContentSection = ({
                         onClick={() => setIsSearching(!isSearching)}
                     >
                         <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Search</span>
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Search</span>
                     </div>
                     {
                         isSearching && (
                             <div className="flex items-center gap-2">
-                                <span className={`cursor-pointer text-2xl ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>&times;</span>
+                                {/* <span className={`cursor-pointer text-2xl ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>&times;</span> */}
                                 <SearchSection chatLoaded={chatLoaded} className='flex-1' />
                             </div>
                         )
