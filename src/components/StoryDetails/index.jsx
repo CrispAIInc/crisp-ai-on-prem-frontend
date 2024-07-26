@@ -606,7 +606,7 @@ function StoryDetails() {
                         onClick={handleOpenNewAnswerBox}>
                         <AddIcon fontSize='small' />
                     </div>
-                        : selectedStory?.text.at(-1)?.outline.name !== "" && <div className="flex flex-col">
+                        : currentAddingAnswerId && !currentAddingQuestionId ? selectedStory?.text.at(-1)?.outline.name !== "" && <div className="flex flex-col">
                             {/* img placeholders */}
                             <input type="file" multiple onChange={e => handleNewImgSelected(e, 'answer')} accept='image/*' />
                             <div className='flex items-center gap-2'>
@@ -623,7 +623,7 @@ function StoryDetails() {
                                 <CustomButton className='my-0' onClick={() => setCurrentAddingAnswerId("")}>Cancel</CustomButton>
                                 <CustomButton className='my-0' onClick={e => addNewAnswer(e)}>Save</CustomButton>
                             </div>
-                        </div>}
+                        </div> : null}
                 </div>
             </div>
 
