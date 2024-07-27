@@ -54,9 +54,9 @@ function SavedStory({ story }) {
                     <DeleteIcon color={`${theme === 'light' ? '#444' : 'error'}`} />
                 </span>
             </div>
-            {/* {
-                Array.isArray(story.text) && <div className={`my-0 text-xs ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} line-clamp-2`}>{story.text[0]?.content}</div>
-            } */}
+            {
+                Array.isArray(story.text) && <div className={`my-0 text-xs ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} line-clamp-2`}>{story.text[0]?.content[0]?.answer}</div>
+            }
         </SideCard>
     );
 }
