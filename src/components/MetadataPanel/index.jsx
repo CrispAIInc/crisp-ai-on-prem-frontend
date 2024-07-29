@@ -444,15 +444,17 @@ const MetadataPanel = () => {
                         className="relative h-[60vh] w-full mx-auto overflow-x-hidden overflow-y-auto"
                         ref={PdfContainer}
                     >
-                        <CancelIcon
-                            onClick={closePDF}
-                            className="absolute right-1 top-[15px] cursor-pointer z-50"
-                        />
+
                         <Document
-                            className="!w-full mx-auto"
+                            className="!w-full mx-auto relative"
                             file={resourceURL}
                             onLoadSuccess={onDocumentLoadSuccess}
                         >
+                            <CancelIcon
+                                onClick={closePDF}
+                                className="sticky top-0 left-full cursor-pointer z-50"
+                                color='error'
+                            />
                             {Array.from(new Array(numPages), (el, index) => (
                                 <div
                                     key={`page_${index + 1}`}
