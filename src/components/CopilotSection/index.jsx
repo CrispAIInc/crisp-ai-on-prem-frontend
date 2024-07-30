@@ -725,6 +725,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const handleVisionUpload = async (images, query) => {
     if (!chatLoaded) return;
+    setShowCursor(true);
     const base64Imgs = await Promise.all(images.map(async (image) => await toBase64(image)));
     console.log(base64Imgs);
     // console.log(base64Imgs);
