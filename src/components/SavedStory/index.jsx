@@ -1,13 +1,12 @@
 import { useContext } from 'react';
-import SideCard from '../../layouts/SideCard';
 import { MainContext } from '../../contexts/mainContext';
+import SideCard from '../../layouts/SideCard';
 
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { parseHtmlToText } from '../../utils';
 
-import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
+import makeApiRequest from '../../api';
 
 function SavedStory({ story }) {
 

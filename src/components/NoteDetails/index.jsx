@@ -1,25 +1,21 @@
-import { useContext, useEffect, useState, useRef, useMemo } from 'react';
-import makeApiRequest from '../../api';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import ReactQuill, { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { MainContext } from '../../contexts/mainContext';
-import CustomInput from '../CustomInput';
-import CustomButton from '../CustomButton';
-import BaseHeading from '../BaseHeading';
-import { hexToRGBString, extractTextFromHTML, generateRandomHash, isSameInsightQuestions } from '../../utils';
-import AggregationLlmModal from '../AggregationLlmModal';
-import toast from 'react-simple-toasts';
-import AddToStoryModal from '../AddToStoryModal';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import { Parser } from "html-to-react";
-import { Link } from 'react-router-dom';
-import CloseIcon from '@mui/icons-material/Close';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
+import { Parser } from "html-to-react";
+import { useContext, useEffect, useRef, useState } from 'react';
+import { Quill } from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { Link } from 'react-router-dom';
+import toast from 'react-simple-toasts';
+import makeApiRequest from '../../api';
+import { MainContext } from '../../contexts/mainContext';
+import { generateRandomHash, hexToRGBString } from '../../utils';
+import AddToStoryModal from '../AddToStoryModal';
+import AggregationLlmModal from '../AggregationLlmModal';
+import BaseHeading from '../BaseHeading';
+import CustomButton from '../CustomButton';
 
 function NoteDetails() {
     const {

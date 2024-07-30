@@ -1,9 +1,8 @@
-import { useContext, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
-import Select from 'react-select';
-import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { Link } from 'react-router-dom';
+import Modal from '@mui/material/Modal';
+import { useContext, useState } from 'react';
+import Select from 'react-select';
+import { MainContext } from '../../contexts/mainContext';
 import { generateRandomHash } from '../../utils';
 
 function AddToStoryModal({ open, handleClose, setOpen }) {

@@ -1,5 +1,4 @@
-import { useContext, useState, useRef, useEffect } from "react";
-import { escape, blacklist } from 'validator';
+import { useContext, useEffect, useRef, useState } from "react";
 
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -8,12 +7,12 @@ import SendIcon from "@mui/icons-material/Send";
 import Button from '@mui/material/Button';
 
 import CustomButton from "../CustomButton";
-import GenStoriesLLMModal from "../GenStoriesLLMModal";
 import CustomInput from "../CustomInput";
+import GenStoriesLLMModal from "../GenStoriesLLMModal";
 
+import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
 import { extractSections, extractTitle, generateRandomHash, getLevelOfSectionInGenStories } from '../../utils';
-import makeApiRequest from "../../api";
 
 const GenStories = () => {
     const [showLLMModal, setShowLLMModal] = useState(false);

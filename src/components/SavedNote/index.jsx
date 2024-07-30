@@ -2,10 +2,9 @@ import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 import DeleteIcon from "@mui/icons-material/Delete";
-import { parseHtmlToText } from '../../utils';
-import ModelChip from '../ModelChip';
 import makeApiRequest from '../../api';
 import SideCard from '../../layouts/SideCard';
+import ModelChip from '../ModelChip';
 
 const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
 

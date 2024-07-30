@@ -1,25 +1,19 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
-import CustomInput from '../CustomInput';
-import ReactQuill from 'react-quill';
 import CustomButton from '../CustomButton';
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
-import makeApiRequest from '../../api';
+import AddIcon from '@mui/icons-material/Add';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { Link } from "react-router-dom";
 import toast from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import 'react-simple-toasts/dist/theme/light.css';
-import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import { areArraysEqual, generateRandomHash, getLevelOfSection, isSameStoryContent, transformArrayOfObjectsToArray, transformString } from '../../utils';
+import makeApiRequest from '../../api';
+import { generateRandomHash, transformArrayOfObjectsToArray } from '../../utils';
 import LoadingSpinner from '../LoadingSpinner';
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import { useOutsideClick } from '../../hooks/useOutsideClick';
-import CheckIcon from '@mui/icons-material/Check';
-import ReactDOM from 'react-dom';
-import { Link } from "react-router-dom";
 
 function StoryDetails() {
 

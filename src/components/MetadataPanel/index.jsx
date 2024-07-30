@@ -1,10 +1,9 @@
-import { useContext, useRef, useState, useEffect } from "react";
-import { MainContext } from "../../contexts/mainContext.js";
-import makeApiRequest from "../../api";
-import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
-import CustomSelect from "../CustomSelect";
+import ReactPlayer from "react-player";
+import makeApiRequest from "../../api";
+import { MainContext } from "../../contexts/mainContext.js";
 import LoadingSpinner from "../LoadingSpinner";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -452,7 +451,7 @@ const MetadataPanel = () => {
                         >
                             <CancelIcon
                                 onClick={closePDF}
-                                className="sticky top-0 left-full cursor-pointer z-50"
+                                className="sticky top-0 z-50 cursor-pointer left-full"
                                 color='error'
                             />
                             {Array.from(new Array(numPages), (el, index) => (
