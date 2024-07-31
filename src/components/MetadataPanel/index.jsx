@@ -212,10 +212,10 @@ const MetadataPanel = () => {
           {!isTranslationLoading ? (
             <div
               className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
-                  chosenLanguage === "ku" ||
-                  chosenLanguage === "ckb" ||
-                  chosenLanguage === "iw" ||
-                  chosenLanguage === "ur") &&
+                chosenLanguage === "ku" ||
+                chosenLanguage === "ckb" ||
+                chosenLanguage === "iw" ||
+                chosenLanguage === "ur") &&
                 "text-right"
                 }`}
             >
@@ -238,8 +238,8 @@ const MetadataPanel = () => {
                     </h3>
                     <p
                       className={`text-sm ${theme === "light"
-                          ? "text-textColor-300"
-                          : "text-textColor-100"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
                         }`}
                     >
                       {translatedResource?.summary?.content}
@@ -253,8 +253,8 @@ const MetadataPanel = () => {
                     </h3>
                     <p
                       className={`text-sm ${theme === "light"
-                          ? "text-textColor-300"
-                          : "text-textColor-100"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
                         }`}
                     >
                       {translatedResource?.topic_summaries?.content}
@@ -271,8 +271,8 @@ const MetadataPanel = () => {
                   </h3>
                   <p
                     className={`text-sm ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
+                      ? "text-textColor-300"
+                      : "text-textColor-100"
                       }`}
                   >
                     The video begins with a sweeping aerial shot of the majestic
@@ -561,8 +561,8 @@ const MetadataPanel = () => {
                   </h3>
                   <p
                     className={`text-sm ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
+                      ? "text-textColor-300"
+                      : "text-textColor-100"
                       }`}
                   >
                     Introduction and Contact Information <br />
@@ -725,8 +725,8 @@ const MetadataPanel = () => {
                   </h3>
                   <p
                     className={`text-sm ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
+                      ? "text-textColor-300"
+                      : "text-textColor-100"
                       }`}
                   >
                     {translatedResource?.transcript?.content}
@@ -739,8 +739,8 @@ const MetadataPanel = () => {
                   </h3>
                   <p
                     className={`text-sm ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
+                      ? "text-textColor-300"
+                      : "text-textColor-100"
                       }`}
                   >
                     {translatedResource?.keywords?.content}
@@ -753,8 +753,8 @@ const MetadataPanel = () => {
               <LoadingSpinner isSmall={true} />
               <span
                 className={`font-medium ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                  ? "text-textColor-300"
+                  : "text-textColor-100"
                   }`}
               >
                 Loading translated metadata...
@@ -769,15 +769,16 @@ const MetadataPanel = () => {
             className="relative h-[60vh] w-full mx-auto overflow-x-hidden overflow-y-auto"
             ref={PdfContainer}
           >
-            <CancelIcon
-              onClick={closePDF}
-              className="absolute right-1 top-[15px] cursor-pointer z-50"
-            />
             <Document
-              className="!w-full mx-auto"
+              className="!w-full mx-auto relative"
               file={resourceURL}
               onLoadSuccess={onDocumentLoadSuccess}
             >
+              <CancelIcon
+                onClick={closePDF}
+                className="sticky top-0 left-full cursor-pointer z-50"
+                color='error'
+              />
               {Array.from(new Array(numPages), (el, index) => (
                 <div
                   key={`page_${index + 1}`}
@@ -798,10 +799,10 @@ const MetadataPanel = () => {
           {!isTranslationLoading ? (
             <div
               className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
-                  chosenLanguage === "ku" ||
-                  chosenLanguage === "ckb" ||
-                  chosenLanguage === "iw" ||
-                  chosenLanguage === "ur") &&
+                chosenLanguage === "ku" ||
+                chosenLanguage === "ckb" ||
+                chosenLanguage === "iw" ||
+                chosenLanguage === "ur") &&
                 "text-right"
                 }`}
             >
@@ -820,8 +821,8 @@ const MetadataPanel = () => {
               </h3>
               <p
                 className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                  ? "text-textColor-300"
+                  : "text-textColor-100"
                   }`}
               >
                 {translatedResource?.summary?.content}
@@ -835,8 +836,8 @@ const MetadataPanel = () => {
               </h3>
               <p
                 className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                  ? "text-textColor-300"
+                  : "text-textColor-100"
                   }`}
               >
                 {translatedResource?.topic_summaries?.content}
@@ -863,8 +864,8 @@ const MetadataPanel = () => {
               </h3>
               <p
                 className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                  ? "text-textColor-300"
+                  : "text-textColor-100"
                   }`}
               >
                 {translatedResource?.keywords?.content}
@@ -875,8 +876,8 @@ const MetadataPanel = () => {
               <LoadingSpinner isSmall={true} />
               <span
                 className={`font-medium ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                  ? "text-textColor-300"
+                  : "text-textColor-100"
                   }`}
               >
                 Loading translated metadata...
@@ -901,10 +902,10 @@ const MetadataPanel = () => {
           {!isTranslationLoading ? (
             <div
               className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
-                  chosenLanguage === "ku" ||
-                  chosenLanguage === "ckb" ||
-                  chosenLanguage === "iw" ||
-                  chosenLanguage === "ur") &&
+                chosenLanguage === "ku" ||
+                chosenLanguage === "ckb" ||
+                chosenLanguage === "iw" ||
+                chosenLanguage === "ur") &&
                 "text-right"
                 }`}
             >
@@ -923,8 +924,8 @@ const MetadataPanel = () => {
               </h3>
               <p
                 className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                  ? "text-textColor-300"
+                  : "text-textColor-100"
                   }`}
               >
                 {translatedResource?.caption?.content}
@@ -938,8 +939,8 @@ const MetadataPanel = () => {
               </h3>
               <p
                 className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                  ? "text-textColor-300"
+                  : "text-textColor-100"
                   }`}
               >
                 {translatedResource?.keywords?.content}
@@ -950,8 +951,8 @@ const MetadataPanel = () => {
               <LoadingSpinner isSmall={true} />
               <span
                 className={`font-medium ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                  ? "text-textColor-300"
+                  : "text-textColor-100"
                   }`}
               >
                 Loading translated metadata...
