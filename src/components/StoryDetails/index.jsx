@@ -544,7 +544,7 @@ function StoryDetails() {
         var fileDownload = document.createElement("a");
         document.body.appendChild(fileDownload);
         fileDownload.href = source;
-        fileDownload.download = 'document.pdf';
+        fileDownload.download = 'document.doc';
         fileDownload.click();
         document.body.removeChild(fileDownload);
     }
