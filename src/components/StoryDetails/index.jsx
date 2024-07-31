@@ -414,6 +414,129 @@ function StoryDetails() {
 
     const answerWithReferenceRefs = useRef({});
 
+    // function to return all selectedStory content and outline as html
+    function transformSelectedStoryToHtml(selectedStory) {
+        if (!selectedStory) {
+            return '';
+        }
+
+        const { content, outline } = selectedStory;
+
+        const contentHtml = `<div class="content">${content}</div>`;
+        const outlineHtml = `<div class="outline">${outline}</div>`;
+
+        return `
+    <div class="selected-story">
+      ${contentHtml}
+      ${outlineHtml}
+    </div>
+  `;
+    }
+
+
+    function exportHTML() {
+        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+            "xmlns='http://www.w3.org/TR/REC-html40'>" +
+            `<head><meta charset='utf-8'><title>Story:${selectedStory.story_name}</title></head><body>`;
+        var footer = "</body></html>";
+        const htmlString = `
+    <div>
+        <h1 style='text-align: center; margin-bottom: 30px;'>${selectedStory.story_name}</h1>
+    </div>
+
+    <div>
+        ${selectedStory.text?.map(item => `
+            <div>
+                ${item.outline.name ? `
+                    <div>
+                        <div>
+                            <div>
+                                ${item.sectionImages?.length > 0 ? `
+                                    <div>
+                                        ${item.sectionImages.map(imgBlob => `
+                                            <img width="300" height="300" src="${imgBlob}" alt="img" />
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                                <h3>${item.outline.name.replace(/\n/g, '<br>')}</h3>
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+                <div>
+                    <div>
+                        ${item.content ? `
+                            <div>
+                                <div>
+                                    ${typeof item.content === 'string' ? `
+                                        ${item.contentImages?.length > 0 ? `
+                                            <div>
+                                                ${item.contentImages.map(imgBlob => `
+                                                    <img width="300" height="300" src="${imgBlob}" alt="img" />
+                                                `).join('')}
+                                            </div>
+                                        ` : ''}
+                                        <h5>${item.content.replace(/\n/g, '<br>')}</h5>
+                                    ` : `
+                                        ${item.content.map(i => `
+                                            <div>
+                                                <div>
+                                                    ${!i.answer.includes('https://oaidalleapiprodscus.blob') ? `
+                                                        <p>${i.answer.replace(/\n/g, '<br>')}</p>
+                                                    ` : `
+                                                        <img width="300" height="300" src="${i.answer}" alt="image" />
+                                                    `}
+                                                </div>
+                                                ${(i.videosArr?.length > 0 || i.pdfsArr?.length > 0) ? `
+                                                    <div>
+                                                        <p>References:</p>
+                                                        ${i.videosArr?.length > 0 ? `
+                                                            <ul>
+                                                                ${i.videosArr.map(video => `
+                                                                    <li>${video.source_path + " | Timestamp: " + video.timestamp}</li>
+                                                                `).join('')}
+                                                            </ul>
+                                                        ` : ''}
+                                                        ${i.pdfsArr?.length > 0 ? `
+                                                            <ul>
+                                                                ${i.pdfsArr.map(pdf => `
+                                                                    <li>${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</li>
+                                                                `).join('')}
+                                                            </ul>
+                                                        ` : ''}
+                                                        ${i.imgsArr?.length > 0 ? `
+                                                            <ul>
+                                                                ${i.imgsArr.map(img => `
+                                                                    <li>${img.source_path}</li>
+                                                                `).join('')}
+                                                            </ul>
+                                                        ` : ''}
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                        `).join('')}
+                                    `}
+                                </div>
+                            </div>
+                        ` : `<p></p>`}
+                    </div>
+                </div>
+            </div>
+        `).join('')}
+    </div>
+`;
+        var sourceHTML = header + htmlString + footer;
+
+        var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+        var fileDownload = document.createElement("a");
+        document.body.appendChild(fileDownload);
+        fileDownload.href = source;
+        fileDownload.download = 'document.doc';
+        fileDownload.click();
+        document.body.removeChild(fileDownload);
+    }
+
     return (
         <div className="flex flex-col h-full max-w-6xl mx-auto mt-3">
             <div className='flex items-center justify-between'>
@@ -464,7 +587,7 @@ function StoryDetails() {
                                             {/* displaying imgs */}
                                             {item?.sectionImages?.length > 0 && <div className="flex flex-col gap-3 mb-4">
                                                 {item?.sectionImages?.map((imgBlob, index) => (
-                                                    <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
+                                                    <img width='300' height='200' className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
                                                 )
                                                 )}
                                             </div>}
@@ -625,6 +748,7 @@ function StoryDetails() {
             <div className='flex items-center gap-3 ml-auto w-fit'>
                 <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={() => deleteStory(selectedStory.story_id)}>Delete</CustomButton>
                 <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
+                <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={exportHTML}>Export to Word</CustomButton>
             </div>
 
             {/* story title
