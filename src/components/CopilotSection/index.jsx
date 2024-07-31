@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-import { generateRandomHash, hexToRGBString, toBase64 } from '../../utils';
+import { generateRandomHash, hexToRGBString, timeToSeconds, toBase64 } from '../../utils';
 import AddOptionsModal from "../AddOptionsModal";
 import CustomButton from "../CustomButton";
 import CustomSelectTwo from '../CustomSelectTwo';
@@ -24,6 +24,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     currentResource,
     llmModels,
     setCurrentResource,
+    fromChat, setFromChat,
     isFoundationLlm,
     resourceURL,
     noteIndex,
@@ -63,7 +64,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   const [originalResponses, setOriginalResponses] = useState([]);
   const [responseIndex, setResponseIndex] = useState(-1);
   const [selectedCategoryChat] = useState("all");
-  const [fromChat, setFromChat] = useState(false);
+
   const [existingNote, setExistingNote] = useState(0);
 
   const existingNoteRef = useRef(existingNote);
@@ -105,15 +106,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     fetchChat();
   }, [selectedCategoryChat, selectedSources]);
-
-  function timeToSeconds(time) {
-    const parts = time.split(":");
-    const hours = parseInt(parts[0], 10);
-    const minutes = parseInt(parts[1], 10);
-    const seconds = parseInt(parts[2], 10);
-
-    return hours * 3600 + minutes * 60 + seconds;
-  }
 
   useEffect(() => {
     if (

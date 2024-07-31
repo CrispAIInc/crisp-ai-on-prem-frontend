@@ -174,3 +174,12 @@ export function isSameStoryContent(storyContent1, storyContent2) {
 
     return storyContent1TextContent === storyContent2TextContent && storyContent1TextSections === storyContent2TextSections;
 }
+
+export function timeToSeconds(time) {
+    const parts = time.split(":");
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+    const seconds = parseInt(parts[2], 10);
+
+    return hours * 3600 + minutes * 60 + seconds;
+}

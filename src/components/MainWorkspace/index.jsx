@@ -9,6 +9,7 @@ import Workspace from "../Workspace";
 import ChatPanel from "../ChatPanel";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import { timeToSeconds } from '../../utils.js';
 
 const MainWorkspace = ({ theme }) => {
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -138,6 +139,7 @@ const MainWorkspace = ({ theme }) => {
     'display',
   ];
 
+  const [fromChat, setFromChat] = useState(false);
   const [isManualNote, setIsManualNote] = useState(false);
   // this indicates wether the user is using the model in the wild (MiW)
   // or using models for the selected sourcesonly
@@ -328,6 +330,7 @@ const MainWorkspace = ({ theme }) => {
     showNoteDetails, setShowNoteDetails,
     notes,
     isManualNote, setIsManualNote,
+    fromChat, setFromChat,
     setNotes,
     showNoteModal,
     setShowNoteModal,

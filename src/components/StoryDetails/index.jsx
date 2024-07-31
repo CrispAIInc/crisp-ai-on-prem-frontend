@@ -12,15 +12,18 @@ import toast from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import 'react-simple-toasts/dist/theme/light.css';
 import makeApiRequest from '../../api';
-import { generateRandomHash, transformArrayOfObjectsToArray } from '../../utils';
+import { generateRandomHash, timeToSeconds, transformArrayOfObjectsToArray } from '../../utils';
 import LoadingSpinner from '../LoadingSpinner';
 
 function StoryDetails() {
 
     const { setSelectedStory, selectedStory, setActiveView, currentResource,
-        modules, theme, stories,
-        formats, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels, selectedSources, API_ENDPOINT,
+        setFromChat, theme, stories,
+        isFromChat, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels, selectedSources, API_ENDPOINT,
         setCurrentResource,
+        resourceURL,
+        player,
+        isPlayerReady,
         setResourceURL,
         setSummary,
         setSummaries,
@@ -386,9 +389,18 @@ function StoryDetails() {
         setIsTitleEditing(false);
     }
 
+
+    useEffect(() => {
+        if (!isFromChat && isPlayerReady && resourceURL && currentResource.file_type === "video") {
+            const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
+            if (timestamp) player?.current?.seekTo(timeToSeconds(timestamp));
+        }
+    }, [isPlayerReady]);
+
+
     const handleVideoLinkClick = (event, video) => {
         event.preventDefault();
-        // setFromChat(true);
+        setFromChat(false);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
             }/all/${encodeURIComponent(video.source_path)}`;
         setCurrentResource(video);
@@ -532,7 +544,7 @@ function StoryDetails() {
         var fileDownload = document.createElement("a");
         document.body.appendChild(fileDownload);
         fileDownload.href = source;
-        fileDownload.download = 'document.doc';
+        fileDownload.download = 'document.pdf';
         fileDownload.click();
         document.body.removeChild(fileDownload);
     }
@@ -646,7 +658,7 @@ function StoryDetails() {
                                                                                     {i.pdfsArr?.length > 0 && (
                                                                                         <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                                                                                             {i.pdfsArr.map((pdf, index) => (
-                                                                                                <Link key={index}>
+                                                                                                <Link key={index} onClick={(event) => handlePDFLinkClick(event, pdf)}>
                                                                                                     {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
                                                                                                 </Link>
                                                                                             ))}
