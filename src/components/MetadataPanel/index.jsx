@@ -776,7 +776,7 @@ const MetadataPanel = () => {
             >
               <CancelIcon
                 onClick={closePDF}
-                className="sticky top-0 left-full cursor-pointer z-50"
+                className="sticky top-0 z-50 cursor-pointer left-full"
                 color='error'
               />
               {Array.from(new Array(numPages), (el, index) => (
@@ -790,6 +790,7 @@ const MetadataPanel = () => {
                     _className="mx-auto !w-full !min-w-0"
                     className="!w-full mx-auto"
                     pageNumber={index + 1}
+                    scale={2.0}
                   />
                 </div>
               ))}
