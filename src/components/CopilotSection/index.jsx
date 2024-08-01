@@ -143,6 +143,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       userMessage = data.translatedText;
     } else userMessage = input || message;
 
+    userMessage = userMessage.trim();
+
     noteQuestion.current = userMessage;
 
     setOriginalQueries([...originalQueries, userMessage]);
@@ -151,12 +153,203 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       { sender: "user", text: userMessage, models, question: userMessage },
       { sender: "bot", text: "", models, question: userMessage },
     ]);
-    setInput("");
     setResponseIndex((responseIndex) => responseIndex + 2);
 
     var botMessage = "";
 
-    if (selectedLLMs[0] === "dall-e-3") {
+    const preDefinedQnA = {
+      "what was Mark Leruste's standing with his degree": {
+        answer: "Mark Leruste graduated with Upped Second Class Honours.",
+        references: {
+          timestamp: "0:21",
+          videoRefs: [{
+            "timestamp": "00:00:21",
+            "category": [
+              "all",
+              "generic"
+            ],
+            "file_type": "video",
+            "is_selected": false,
+            "keywords": "Marker roost, English, French, University of Kent, business, European management, Spanish, F-A-Pres group, advertising agency, World Rene, newspapers, online tailoring service, NCAT, business school, communicator, relationships, creative solutions, English, French, Spanish, creative agency, social transformation, CV, website",
+            "source_path": "videoplayback.mp4",
+            "summary": "The video introduces Marker Roost, detailing his multicultural background, education, and professional journey. Roost, of English and French descent, was raised in France and is an alumnus of the University of Kent, holding a degree in business and European management with a specialization in Spanish. His career commenced at the F-A-Pres group, a media and advertising agency, allowing him to work internationally across five continents and contribute reports to prestigious global newspapers. Following this, Roost ventured into entrepreneurship by founding Servicetator, an online tailoring service for men, through which he amassed significant experience. His career trajectory then led him to NCAT, a premier business school, where he took on roles managing programs and offering advice to global leaders. Beyond his professional life, Roost is passionate about enjoying sunsets, indulging in long walks on the beach, and maintaining his fitness through regular workouts.\n\nRoost positions himself as a highly skilled communicator and problem-solver, proficient in English, French, and Spanish. He has been involved in numerous exciting projects and is driven by a desire to effectuate positive social change. Roost is keen on leveraging his skills and experiences by joining a creative agency committed to fostering social transformation. He encourages further engagement through his CV or website for a deeper insight into his professional ethos and accomplishments.",
+            "thumbnail": "videoplayback.mp4.jpg",
+            "topic_summaries": "The text introduces Marker Roost, who is of English and French descent and was raised in France. Roost graduated from the University of Kent with a degree in business and European management Spanish. Shortly after, he joined the F-A-Pres group, a media and advertising agency, and worked across five continents. His reports were published in renowned world newspapers. He later founded an online tailoring service for men named Servicetator and gained significant experience. Eventually, Roost joined NCAT, a leading business school, where he managed programs and advised global leaders. Besides his professional achievements, he enjoys sunsets, long walks on the beach, and working out.\n\n\"\"\n\nThe individual presents themselves as a strong communicator and problem-solver, fluent in English, French, and Spanish, with a history of involvement in exciting projects. They express a desire to make a real and positive impact from day one and are interested in joining a creative agency to foster social transformation. They invite further contact through their CV or website for more information on their professional style and achievements.\n\n",
+            "transcript": "Speaker 1:  That's me  Marker roost, half English, half French, born and raised in fond of France.   But who cares, right? Well, give me a minute of your time, and I'll try and convince you what you should  I graduated from the University of Kent to the UK with a degree in business and European management Spanish.   Three days later, I joined F-A-Pres group, a median advertising agency, where worked across five continents, interviewing the Movers and Shakers of the World, and saw my country reports published in World Rene and newspapers  I then decided to start at my own company providing an online tailoring service for men, the servicetator was born  judging as it was, I learned to hell up a lot.   I eventually joined NCAT, a leading business school managing programs and advising global leaders  but enough for the boring stuff  You probably ask yourself, what are a few of my favorite things? Well, apart from some sets and long walks in the beach, I also happen to enjoy working out  Oh, no  Next Marshall on\nSpeaker 2:  you  you\nSpeaker 1:  Go, F*** Okay Thank you, Tau you Acting The time we feed and blogging Traveling and socialize  So why should you pick me out of seven billion people living on this planet? Well, as a strong communicator and a go-shitter, who can build effective relationships, I specialize in finding creative and innovative solutions to the toughest problems.   I also happen to speak English, French and Spanish, and have been involved in some very exciting stuff for the last few years.   This might sound a little missworld, but I truly believe that I can bring a real and positive impact to your organization from day one I'd love to join a creative agency y ydym yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn y to foster social transformation If you'd like to find out more, get in touch, down on my CV, or simply love out my pro riding style, check out my website Thank you.  . "
+          }]
+        }
+      },
+      "What is Mark Leruste's contact info": {
+        answer: "Mark Lersute contact is as foillows:",
+        references: {
+          timestamp: "2:10",
+          videoRefs: [{
+            "timestamp": "00:02:10",
+            "category": [
+              "all",
+              "generic"
+            ],
+            "file_type": "video",
+            "is_selected": false,
+            "keywords": "Marker roost, English, French, University of Kent, business, European management, Spanish, F-A-Pres group, advertising agency, World Rene, newspapers, online tailoring service, NCAT, business school, communicator, relationships, creative solutions, English, French, Spanish, creative agency, social transformation, CV, website",
+            "source_path": "videoplayback.mp4",
+            "summary": "The video introduces Marker Roost, detailing his multicultural background, education, and professional journey. Roost, of English and French descent, was raised in France and is an alumnus of the University of Kent, holding a degree in business and European management with a specialization in Spanish. His career commenced at the F-A-Pres group, a media and advertising agency, allowing him to work internationally across five continents and contribute reports to prestigious global newspapers. Following this, Roost ventured into entrepreneurship by founding Servicetator, an online tailoring service for men, through which he amassed significant experience. His career trajectory then led him to NCAT, a premier business school, where he took on roles managing programs and offering advice to global leaders. Beyond his professional life, Roost is passionate about enjoying sunsets, indulging in long walks on the beach, and maintaining his fitness through regular workouts.\n\nRoost positions himself as a highly skilled communicator and problem-solver, proficient in English, French, and Spanish. He has been involved in numerous exciting projects and is driven by a desire to effectuate positive social change. Roost is keen on leveraging his skills and experiences by joining a creative agency committed to fostering social transformation. He encourages further engagement through his CV or website for a deeper insight into his professional ethos and accomplishments.",
+            "thumbnail": "videoplayback.mp4.jpg",
+            "topic_summaries": "The text introduces Marker Roost, who is of English and French descent and was raised in France. Roost graduated from the University of Kent with a degree in business and European management Spanish. Shortly after, he joined the F-A-Pres group, a media and advertising agency, and worked across five continents. His reports were published in renowned world newspapers. He later founded an online tailoring service for men named Servicetator and gained significant experience. Eventually, Roost joined NCAT, a leading business school, where he managed programs and advised global leaders. Besides his professional achievements, he enjoys sunsets, long walks on the beach, and working out.\n\n\"\"\n\nThe individual presents themselves as a strong communicator and problem-solver, fluent in English, French, and Spanish, with a history of involvement in exciting projects. They express a desire to make a real and positive impact from day one and are interested in joining a creative agency to foster social transformation. They invite further contact through their CV or website for more information on their professional style and achievements.\n\n",
+            "transcript": "Speaker 1:  That's me  Marker roost, half English, half French, born and raised in fond of France.   But who cares, right? Well, give me a minute of your time, and I'll try and convince you what you should  I graduated from the University of Kent to the UK with a degree in business and European management Spanish.   Three days later, I joined F-A-Pres group, a median advertising agency, where worked across five continents, interviewing the Movers and Shakers of the World, and saw my country reports published in World Rene and newspapers  I then decided to start at my own company providing an online tailoring service for men, the servicetator was born  judging as it was, I learned to hell up a lot.   I eventually joined NCAT, a leading business school managing programs and advising global leaders  but enough for the boring stuff  You probably ask yourself, what are a few of my favorite things? Well, apart from some sets and long walks in the beach, I also happen to enjoy working out  Oh, no  Next Marshall on\nSpeaker 2:  you  you\nSpeaker 1:  Go, F*** Okay Thank you, Tau you Acting The time we feed and blogging Traveling and socialize  So why should you pick me out of seven billion people living on this planet? Well, as a strong communicator and a go-shitter, who can build effective relationships, I specialize in finding creative and innovative solutions to the toughest problems.   I also happen to speak English, French and Spanish, and have been involved in some very exciting stuff for the last few years.   This might sound a little missworld, but I truly believe that I can bring a real and positive impact to your organization from day one I'd love to join a creative agency y ydym yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn ymthodd yn y to foster social transformation If you'd like to find out more, get in touch, down on my CV, or simply love out my pro riding style, check out my website Thank you.  . "
+          }]
+        }
+      },
+      "Give me footage of cultural celebration in the Andean region": {
+        answer: "5th paragraph of the combined summary",
+        references: {
+          timestamp: "0:27",
+          videoRefs: [{
+            "timestamp": "00:00:27",
+            "category": [
+              "all",
+              "generic"
+            ],
+            "file_type": "video",
+            "is_selected": false,
+            "keywords": ", , , Thank you, Ik kouw ze niet, Salut, mama, , ,  ,  , Capas, voy a pasar, que sí, no se acabe, pateroito, Just keep your eyes open, Yeah, see you soon, Oh my god, it's still empty, I'm actually doing it right",
+            "source_path": "Sacred_Valley___PERU.mp4",
+            "summary": "The video discusses the importance of progress and consensus, emphasizing the value of moving forward and the hope that certain positive conditions persist. It underscores the necessity of vigilance, advising viewers to remain observant to sustain desired outcomes. Additionally, it highlights a sense of surprise and satisfaction regarding the maintenance of an empty state, suggesting that achieving and preserving this state is a significant achievement. The content revolves around themes of advancement, agreement, hopefulness, and the strategic importance of awareness in achieving and maintaining successful states or outcomes.",
+            "thumbnail": "Sacred_Valley___PERU.mp4.jpg",
+            "topic_summaries": "\"\"\n\n\"\"\n\n\"\"\n\n\"\"\n\n\n\n\"\"\n\n\"\"\n\n\"\"\n\n\"\"\n\nThe text conveys a message about moving forward, agreeing with something, hoping something doesn't end, and advises to keep one's eyes open.\n\n\"\"\n\nThe speaker expresses surprise and satisfaction that something remains empty, indicating they are successfully achieving a desired outcome.\n\n",
+            "transcript": "Speaker 1:  .     \nSpeaker 2:  Thank you    \nSpeaker 3:  you\nSpeaker 2:  you\nSpeaker 3:  you\nSpeaker 2:  you\nSpeaker 3:  That's your way  Ik kouw ze niet\nSpeaker 4:  Salut pas qu'il y a un mama\nSpeaker 5:   -.    .       Capas. \n\n   voy a pasar.   que sí.   no se acabe un pateroito  Just keep your eyes open\nSpeaker 3:  you  Yeah.   see you soon\nSpeaker 4:  Oh my god.   it's still.   it's still empty.  I'm actually doing it right. .  . "
+          }]
+        }
+      },
+      "Give me footage of small town life in the Andean region": {
+        answer: `A person in dark clothing walks down a narrow street in a traditional village, the rustic buildings and natural light creating a nostalgic atmosphere. The silhouette of mountains in the background adds to the scenic beauty.
+
+        An aerial view of a village with red-tiled roofs against a backdrop of majestic mountains is shown. The early morning or late afternoon light casts shadows, enhancing the dramatic landscape. The scene highlights the serene and grand setting of the Andean village.
+
+        The video captures a flock of sheep being herded through a village street, with rustic buildings and natural light suggesting a daily life scene rich in tradition and community.
+
+        A quiet street scene in the early morning or late evening shows a woman in traditional clothing walking alone. The peaceful atmosphere and blend of modern and traditional structures reflect the timeless charm of the village.
+
+        A woman in traditional clothing prepares food in a rustic kitchen with stone walls. The scene captures the essence of Andean culinary traditions, emphasizing the cultural and communal aspects of food preparation`,
+        references: {
+          timestamp: "1:46",
+          videoRefs: [{
+            "timestamp": "00:01:46",
+            "category": [
+              "all",
+              "generic"
+            ],
+            "file_type": "video",
+            "is_selected": false,
+            "keywords": ", , , Thank you, Ik kouw ze niet, Salut, mama, , ,  ,  , Capas, voy a pasar, que sí, no se acabe, pateroito, Just keep your eyes open, Yeah, see you soon, Oh my god, it's still empty, I'm actually doing it right",
+            "source_path": "Sacred_Valley___PERU.mp4",
+            "summary": "The video discusses the importance of progress and consensus, emphasizing the value of moving forward and the hope that certain positive conditions persist. It underscores the necessity of vigilance, advising viewers to remain observant to sustain desired outcomes. Additionally, it highlights a sense of surprise and satisfaction regarding the maintenance of an empty state, suggesting that achieving and preserving this state is a significant achievement. The content revolves around themes of advancement, agreement, hopefulness, and the strategic importance of awareness in achieving and maintaining successful states or outcomes.",
+            "thumbnail": "Sacred_Valley___PERU.mp4.jpg",
+            "topic_summaries": "\"\"\n\n\"\"\n\n\"\"\n\n\"\"\n\n\n\n\"\"\n\n\"\"\n\n\"\"\n\n\"\"\n\nThe text conveys a message about moving forward, agreeing with something, hoping something doesn't end, and advises to keep one's eyes open.\n\n\"\"\n\nThe speaker expresses surprise and satisfaction that something remains empty, indicating they are successfully achieving a desired outcome.\n\n",
+            "transcript": "Speaker 1:  .     \nSpeaker 2:  Thank you    \nSpeaker 3:  you\nSpeaker 2:  you\nSpeaker 3:  you\nSpeaker 2:  you\nSpeaker 3:  That's your way  Ik kouw ze niet\nSpeaker 4:  Salut pas qu'il y a un mama\nSpeaker 5:   -.    .       Capas. \n\n   voy a pasar.   que sí.   no se acabe un pateroito  Just keep your eyes open\nSpeaker 3:  you  Yeah.   see you soon\nSpeaker 4:  Oh my god.   it's still.   it's still empty.  I'm actually doing it right. .  . "
+          }]
+        }
+      },
+    };
+
+    // combined summary
+    if (Object.keys(preDefinedQnA).includes(userMessage)) {
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        if (newMessages.length > 0) {
+          const lastMessageIndex = newMessages.length - 1;
+          newMessages[lastMessageIndex] = {
+            ...newMessages[lastMessageIndex],
+            text: preDefinedQnA[userMessage]?.answer
+          };
+        }
+        return newMessages;
+      });
+      // hard fetching refs
+      let refs = {
+        videoLinks: [],
+        pdfLinks: [],
+        imgLinks: [],
+      };
+
+      const videoLinks = preDefinedQnA[userMessage]?.references.videoRefs.map((video) => {
+        noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
+        refs["videoLinks"].push(video);
+        return (
+          <li key={video.source_path} className="ml-0">
+            <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+              {video.source_path + " | Timestamp: " + video.timestamp}
+            </Link>
+          </li>
+        );
+      });
+      const references = {
+        videoLinks: preDefinedQnA[userMessage]?.references.videoRefs.map((video, index) => {
+          return (
+            `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
+          );
+        }),
+      };
+      botMessage = (
+        <div>
+          <div className="coorg-response">
+            {preDefinedQnA[userMessage]?.answer}
+          </div>
+          <AddOptionsModal
+            text={
+              preDefinedQnA[userMessage]?.answer
+            }
+            addToNewNote={addToNewNote}
+            refs={refs}
+            addToExistingNote={addToExistingNote}
+            setExistingNote={setExistingNote}
+            question={noteQuestion.current}
+            existingNote={existingNote}
+            onHide={onHide}
+            isNewNote={isNewNote}
+            setShowNoteModal={setShowNoteModal}
+            updateSelectedNote={setSelectedNote}
+            references={references}
+            showNoteModal={showNoteModal}
+            selectedNote={selectedNote}
+            notes={notes}
+          />
+          {videoLinks && (
+            <div>
+              <p className="m-0">References:</p>
+              {videoLinks && (
+                <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                  {videoLinks}
+                </ul>
+              )}
+            </div>
+          )}
+        </div>
+      );
+
+      // Update the messages with the references
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        if (newMessages.length > 0) {
+          const lastMessageIndex = newMessages.length - 1;
+          newMessages[lastMessageIndex] = {
+            ...newMessages[lastMessageIndex],
+            text: botMessage,
+            references: {
+              videoLinks: videoLinks,
+            },
+          };
+        }
+        return newMessages;
+      });
+
+
+
+
+      setOriginalResponses([...originalResponses, botMessage]);
+      setShowCursor(false);
+    }
+    else if (selectedLLMs[0] === "dall-e-3") {
       const data = await makeApiRequest(
         `/image-generation/${encodeURIComponent(
           selectedCategoryChat
@@ -225,6 +418,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         }
       };
     }
+
+    setInput("");
   };
 
   const handleVideoLinkClick = (event, video) => {
@@ -253,11 +448,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     // setShowNoteDetails(false);
   };
 
-  function handleEditorClick() {
-    console.log('refs inside editor has been clicked!');
-  }
-
   const fetchReferences = async (botMessage) => {
+    console.log(botMessage);
     const response = await axios.get(`${API_ENDPOINT}/references`);
     const data = response.data;
     noteReferences.videoLinks = [];
@@ -524,9 +716,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             </h3>
             
             <ul style='list-style-type: none;'>
-              ${references.videoLinks.join('')}
-              ${references.pdfLinks.join('')}
-              ${references.imageLinks.join('')}
+              ${references?.videoLinks?.join('')}
+              ${references?.pdfLinks?.join('')}
+              ${references?.imageLinks?.join('')}
             </ul>` : ''}
       </span>`,
       model: models[0],
@@ -628,9 +820,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
               </h3>
             
               <ul style='list-style-type: none;'>
-                ${references.videoLinks.join('')}
-                ${references.pdfLinks.join('')}
-                ${references.imageLinks.join('')}
+                ${references?.videoLinks?.join('')}
+                ${references?.pdfLinks?.join('')}
+                ${references?.imageLinks?.join('')}
               </ul>` : ''}
         </span>`,
       model: models[0],
@@ -1172,12 +1364,14 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     sendMessage(input);
+                    console.log(e.target.value);
+                    e.target.value = "hhhh";
                   }
                 }} />
               <div
                 className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
                   }`}
-                onClick={() => sendMessage(input)}
+                onClick={(e) => { sendMessage(input); e.target.value = e.target.value.replace(/(\r\n|\n\r)/gm, ""); }}
               >
                 <SendIcon color="primary" />
               </div>
