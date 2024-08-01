@@ -180,7 +180,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         }
       },
       "What is Mark Leruste's contact info": {
-        answer: "Mark Lersute contact is as foillows:",
+        answer: "Mark Leruste contact is as follows: Website: markleruste.com | LinkedIn: Mark Leruste | Facebook: Mark Leruste | X: @markleruste",
         references: {
           timestamp: "2:10",
           videoRefs: [{
@@ -201,7 +201,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         }
       },
       "Give me footage of cultural celebration in the Andean region": {
-        answer: "5th paragraph of the combined summary",
+        answer: "The scene shifts to a vibrant cultural celebration, where three individuals in colorful traditional attire dance energetically. Their red dresses and intricate patterns create a dynamic visual, while the stone structure and grassy ground in the background suggest a setting rich in cultural heritage.",
         references: {
           timestamp: "0:27",
           videoRefs: [{
