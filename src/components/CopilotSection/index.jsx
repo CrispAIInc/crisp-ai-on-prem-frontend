@@ -254,100 +254,98 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     // combined summary
     if (Object.keys(preDefinedQnA).includes(userMessage)) {
-      setMessages((prevMessages) => {
-        const newMessages = [...prevMessages];
-        if (newMessages.length > 0) {
-          const lastMessageIndex = newMessages.length - 1;
-          newMessages[lastMessageIndex] = {
-            ...newMessages[lastMessageIndex],
-            text: preDefinedQnA[userMessage]?.answer
-          };
-        }
-        return newMessages;
-      });
-      // hard fetching refs
-      let refs = {
-        videoLinks: [],
-        pdfLinks: [],
-        imgLinks: [],
-      };
+      setTimeout(() => {
+        setMessages((prevMessages) => {
+          const newMessages = [...prevMessages];
+          if (newMessages.length > 0) {
+            const lastMessageIndex = newMessages.length - 1;
+            newMessages[lastMessageIndex] = {
+              ...newMessages[lastMessageIndex],
+              text: preDefinedQnA[userMessage]?.answer
+            };
+          }
+          return newMessages;
+        });
+        // hard fetching refs
+        let refs = {
+          videoLinks: [],
+          pdfLinks: [],
+          imgLinks: [],
+        };
 
-      const videoLinks = preDefinedQnA[userMessage]?.references.videoRefs.map((video) => {
-        noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
-        refs["videoLinks"].push(video);
-        return (
-          <li key={video.source_path} className="ml-0">
-            <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-              {video.source_path + " | Timestamp: " + video.timestamp}
-            </Link>
-          </li>
-        );
-      });
-      const references = {
-        videoLinks: preDefinedQnA[userMessage]?.references.videoRefs.map((video, index) => {
+        const videoLinks = preDefinedQnA[userMessage]?.references.videoRefs.map((video) => {
+          noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
+          refs["videoLinks"].push(video);
           return (
-            `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
+            <li key={video.source_path} className="ml-0">
+              <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+                {video.source_path + " | Timestamp: " + video.timestamp}
+              </Link>
+            </li>
           );
-        }),
-      };
-      botMessage = (
-        <div>
-          <div className="coorg-response">
-            {preDefinedQnA[userMessage]?.answer}
-          </div>
-          <AddOptionsModal
-            text={
-              preDefinedQnA[userMessage]?.answer
-            }
-            addToNewNote={addToNewNote}
-            refs={refs}
-            addToExistingNote={addToExistingNote}
-            setExistingNote={setExistingNote}
-            question={noteQuestion.current}
-            existingNote={existingNote}
-            onHide={onHide}
-            isNewNote={isNewNote}
-            setShowNoteModal={setShowNoteModal}
-            updateSelectedNote={setSelectedNote}
-            references={references}
-            showNoteModal={showNoteModal}
-            selectedNote={selectedNote}
-            notes={notes}
-          />
-          {videoLinks && (
-            <div>
-              <p className="m-0">References:</p>
-              {videoLinks && (
-                <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                  {videoLinks}
-                </ul>
-              )}
+        });
+        const references = {
+          videoLinks: preDefinedQnA[userMessage]?.references.videoRefs.map((video, index) => {
+            return (
+              `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
+            );
+          }),
+        };
+        botMessage = (
+          <div>
+            <div className="coorg-response">
+              {preDefinedQnA[userMessage]?.answer}
             </div>
-          )}
-        </div>
-      );
+            <AddOptionsModal
+              text={
+                preDefinedQnA[userMessage]?.answer
+              }
+              addToNewNote={addToNewNote}
+              refs={refs}
+              addToExistingNote={addToExistingNote}
+              setExistingNote={setExistingNote}
+              question={noteQuestion.current}
+              existingNote={existingNote}
+              onHide={onHide}
+              isNewNote={isNewNote}
+              setShowNoteModal={setShowNoteModal}
+              updateSelectedNote={setSelectedNote}
+              references={references}
+              showNoteModal={showNoteModal}
+              selectedNote={selectedNote}
+              notes={notes}
+            />
+            {videoLinks && (
+              <div>
+                <p className="m-0">References:</p>
+                {videoLinks && (
+                  <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                    {videoLinks}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
+        );
 
-      // Update the messages with the references
-      setMessages((prevMessages) => {
-        const newMessages = [...prevMessages];
-        if (newMessages.length > 0) {
-          const lastMessageIndex = newMessages.length - 1;
-          newMessages[lastMessageIndex] = {
-            ...newMessages[lastMessageIndex],
-            text: botMessage,
-            references: {
-              videoLinks: videoLinks,
-            },
-          };
-        }
-        return newMessages;
-      });
-
-
-
-
-      setOriginalResponses([...originalResponses, botMessage]);
-      setShowCursor(false);
+        // Update the messages with the references
+        setMessages((prevMessages) => {
+          const newMessages = [...prevMessages];
+          if (newMessages.length > 0) {
+            const lastMessageIndex = newMessages.length - 1;
+            newMessages[lastMessageIndex] = {
+              ...newMessages[lastMessageIndex],
+              text: botMessage,
+              references: {
+                videoLinks: videoLinks,
+              },
+            };
+          }
+          return newMessages;
+        });
+        setOriginalResponses([...originalResponses, botMessage]);
+        setShowCursor(false);
+      }, 3000);
     }
     else if (selectedLLMs[0] === "dall-e-3") {
       const data = await makeApiRequest(
