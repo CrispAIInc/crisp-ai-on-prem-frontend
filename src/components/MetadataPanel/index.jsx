@@ -79,11 +79,11 @@ const MetadataPanel = () => {
     setResourceURL(null);
     setIsPlayerReady(false);
     setActiveView(() => {
-      if (selectedNote.note_id !== "") {
-        return "note";
-      }
-      if (selectedStory.story_id !== "") {
+      if (selectedStory.text.length > 0) {
         return "story";
+      }
+      if (selectedNote.text.length > 1) {
+        return "note";
       }
       return null;
     });
@@ -94,11 +94,11 @@ const MetadataPanel = () => {
     setCurrentResource(null);
     setResourceURL(null);
     setActiveView(() => {
-      if (selectedNote.note_id !== "") {
-        return "note";
-      }
-      if (selectedStory.story_id !== "") {
+      if (selectedStory.text.length > 0) {
         return "story";
+      }
+      if (selectedNote.text.length > 1) {
+        return "note";
       }
       return null;
     });
@@ -109,11 +109,11 @@ const MetadataPanel = () => {
     setCurrentResource(null);
     setResourceURL(null);
     setActiveView(() => {
-      if (selectedNote.note_id !== "") {
-        return "note";
-      }
-      if (selectedStory.story_id !== "") {
+      if (selectedStory.text.length > 0) {
         return "story";
+      }
+      if (selectedNote.text.length > 1) {
+        return "note";
       }
       return null;
     });
