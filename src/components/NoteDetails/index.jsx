@@ -651,13 +651,13 @@ function NoteDetails() {
                                     <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
                                         {typeof item.question === 'string' ? (
                                             <div>
-                                                <div className="flex flex-col gap-3 mb-4">
+                                                {item?.questionImages?.length > 0 && <div className="flex flex-col gap-3 mb-4">
                                                     {/* list of images */}
                                                     {item?.questionImages?.map((imgBlob, index) => (
                                                         <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
                                                     )
                                                     )}
-                                                </div>
+                                                </div>}
                                                 <p dangerouslySetInnerHTML={{ __html: item.question.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)}></p>
                                             </div>
                                         ) : (
@@ -684,13 +684,13 @@ function NoteDetails() {
                                         <div className='flex items-center gap-2'>
                                             <div className={`flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%]`}>
                                                 {!item.answer.startsWith('https://oaidalleapiprodscus.blob') ? <div>
-                                                    <div className="flex flex-col gap-3 mb-4">
+                                                    {item?.answerImages?.length > 0 && <div className="flex flex-col gap-3 mb-4">
                                                         {/* list of images */}
                                                         {item?.answerImages?.map((imgBlob, index) => (
                                                             <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
                                                         )
                                                         )}
-                                                    </div>
+                                                    </div>}
                                                     <p dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}></p></div> : <img className="w-[400px] h-[300px]" width="400" height="300" src={item.answer} alt="image" />}
                                                 {/* display references */}
                                                 {(item.refs?.videoLinks?.length > 0 || item.refs?.pdfLinks?.length > 0 || item.refs?.imgLinks?.length > 0) && <div className='flex flex-col gap-2'>
