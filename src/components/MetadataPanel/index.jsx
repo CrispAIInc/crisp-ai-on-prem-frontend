@@ -766,7 +766,7 @@ const MetadataPanel = () => {
       {currentResource.file_type === "pdf" && (
         <>
           <div
-            className="relative h-[60vh] w-full mx-auto overflow-x-hidden overflow-y-auto"
+            className="relative h-[70vh] w-full mx-auto overflow-x-hidden overflow-y-auto"
             ref={PdfContainer}
           >
             <Document
