@@ -642,7 +642,7 @@ function StoryDetails() {
                                                                                 }} onBlur={(e) => updateResponseWithReference(item.id, e.target.innerText)}></p> : <img src={i.answer} alt='image' />}
                                                                                 {/* {currentAnswerRef === i.id && <CheckIcon onClick={() => updateResponseWithReference(textIndex)} className='cursor-pointer' />} */}
                                                                             </div>
-                                                                            {(i.videosArr?.length > 0 || i.pdfsArr?.length > 0) && (
+                                                                            {(i.videosArr?.length > 0 || i.pdfsArr?.length > 0 || i.imgsArr?.length > 0) && (
                                                                                 <div>
                                                                                     <p className="m-0">References:</p>
                                                                                     {i.videosArr?.length > 0 && (
@@ -667,7 +667,7 @@ function StoryDetails() {
                                                                                     {i.imgsArr?.length > 0 && (
                                                                                         <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                                                                                             {i.imgsArr.map((img, index) => (
-                                                                                                <Link key={index}>
+                                                                                                <Link key={index} onClick={(event) => handlePDFLinkClick(event, img)}>
                                                                                                     {img.source_path}
                                                                                                 </Link>
                                                                                             ))}
