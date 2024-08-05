@@ -7,10 +7,6 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import { MainContext } from '../../contexts/mainContext';
 
-/**
- * formats type: [{name: "string", icon: MuiIconComponent}]
- */
-
 const FORMATS = [
     {
         name: "PDF",
@@ -29,13 +25,7 @@ const FORMATS = [
         icon: <SlideshowOutlinedIcon />,
         extensions: [".mp4"],
         value: "video"
-    },
-    // {
-    //     name: "Text file",
-    //     icon: <TextSnippetOutlinedIcon />,
-    //     extensions: [".txt"],
-    //     value: "text"
-    // }
+    }
 ];
 
 function FileFormatsModal(props) {

@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { MainContext } from '../../contexts/mainContext';
 
-const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, setExistingNote, refs, question, models, references }) => {
+const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, refs, question, models, references }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

@@ -3,7 +3,6 @@ import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
-import { Parser } from "html-to-react";
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -21,7 +20,7 @@ function NoteDetails() {
     const {
         selectedNote,
         setSelectedNote,
-        isManualNote,
+
         noteIndex,
         setCurrentResource,
         setNotes,
@@ -32,14 +31,13 @@ function NoteDetails() {
         setSummaries,
         setJumpToPage,
         API_ENDPOINT,
-        notes,
+
         setActiveView,
-        modules,
-        formats,
+
+
         currentResource,
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
-    const [HTMLToDisplay, setHTMLToDisplay] = useState('');
     const [llmAggregation, setLlmAggregation] = useState('gpt-4');
     const [isLlmAggregationModalOpen, setIsAggregationModalOpen] = useState(false);
     const [isPending, setIsPending] = useState(false);
@@ -53,70 +51,6 @@ function NoteDetails() {
     Image.sanitize = function (url) {
         return url; // You can modify the URL here
     };
-
-    const quillRef = useRef(null);
-    // const modules = useMemo(() => ({
-    //     clipboard: {
-    //         allowed: {
-    //             tags: ['a', 'b', 'strong', 'u', 's', 'i', 'p', 'br', 'ul', 'ol', 'li', 'span'],
-    //             attributes: ['href', 'rel', 'target', 'class', 'data-id', 'style']
-    //         },
-    //         keepSelection: true,
-    //         substituteBlockElements: true,
-    //         magicPasteLinks: true,
-    //     },
-    // }), []);
-    // useEffect(() => {
-    //     const options = {
-    //         theme: 'snow',
-    //         modules: {
-    //             clipboard: {
-    //                 allowed: {
-    //                     tags: ['a', 'b', 'strong', 'u', 's', 'i', 'p', 'br', 'ul', 'ol', 'li', 'span'],
-    //                     attributes: ['href', 'rel', 'target', 'class', 'data-id']
-    //                 },
-    //                 keepSelection: true,
-    //                 substituteBlockElements: true,
-    //                 magicPasteLinks: true,
-    //             },
-    //         },
-    //     };
-    //     if (quillRef.current) {
-    //         new Quill(quillRef.current, options);
-    //     }
-    // }, []);
-
-    // useEffect(() => {
-    //     if (selectedNote.text) {
-    //         const htmlString = selectedNote.text.map(item => {
-    //             const llmColor = llmModels.find((llm) => llm.value === item.model)?.color;
-    //             const fallbackColor = isManualNote ? item.color : theme === 'light' ? "#333333" : "#FFFFFF";
-    //             return `<span style="color: ${hexToRGBString(llmColor || fallbackColor)}">${item.content}</span>`;
-    //         }).join('');
-    //         setHTMLToDisplay(htmlString);
-    //     }
-    // }, [selectedNote.text.length, theme]);
-
-
-    // useEffect(() => {
-    //     if (quillRef.current) {
-    //         const quill = quillRef.current.getEditor();
-    //         quill.root.addEventListener('click', handleClick);
-
-    //         quill.clipboard.dangerouslyPasteHTML(HTMLToDisplay);
-    //         // console.log(quill.root.innerHTML);
-    //     }
-
-    //     // Cleanup function to remove event listener when component unmounts
-    //     return () => {
-    //         if (quillRef.current) {
-    //             const quill = quillRef.current.getEditor();
-    //             quill.root.removeEventListener('click', handleClick);
-    //         }
-    //     };
-    // }, [HTMLToDisplay]);
-
-    let htmlToReactParser = new Parser();
 
     const handleVideoLinkClick = (event, video) => {
         event.preventDefault();
@@ -141,60 +75,7 @@ function NoteDetails() {
         setSummaries(pdf.topic_summaries);
         setActiveView('resource');
         setJumpToPage({ page: parseInt(pdf.page) + 1 });
-        // setShowNoteDetails(false);
     };
-
-    // const handleClick = (event) => {
-    //     let target = event.target;
-
-    //     // Traverse up the DOM tree to find the <li> element
-    //     while (target && target.tagName !== 'LI') {
-    //         target = target.parentNode;
-    //     }
-
-    //     if (target && target.tagName === 'LI') {
-    //         const sourceObject = JSON.parse(decodeURIComponent(target.children[0].getAttribute('href')));
-
-    //         switch (sourceObject.file_type) {
-    //             case 'video': handleVideoLinkClick(event, sourceObject); break;
-    //             case 'pdf': handlePDFLinkClick(event, sourceObject); break;
-    //             default: console.log('no file type found');
-    //         }
-    //         // const id = target.getAttribute('data-id');
-    //         // if (id) {
-    //         //     console.log('List item clicked:', id);
-    //         //     // Call your function here with the id
-    //         // } else {
-    //         //     console.log('data-id attribute is missing');
-    //         // }
-    //     }
-    // };
-
-
-    // const handleContentChange = (newContent, delta, source) => {
-    //     if (isNewNote && isManualNote) {
-    //         selectedNote.text = [{
-    //             content: `<span style="color: ${hexToRGBString(theme === 'light' ? "#333" : '#fff')}">${newContent}</span>`,
-    //             answer: extractTextFromHTML(newContent),
-    //             model: null,
-    //             color: theme === 'light' ? "#333" : '#fff',
-    //             question: '',
-    //             references: {
-    //                 videoLinks: [],
-    //                 pdfLinks: [],
-    //                 imageLinks: [],
-    //             }
-    //         }];
-    //         return;
-    //     }
-
-    //     console.log(newContent);
-    //     console.log(source)
-
-    //     // if (source === 'user') {
-    //     //     setSelectedNote(prev => ({ ...prev, content: newContent }));
-    //     // }
-    // };
 
     const handleSave = async (event) => {
         event && event.preventDefault();
@@ -205,18 +86,12 @@ function NoteDetails() {
         }
         if (isNewNote) {
             const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
-            // const noteFilename = `${dateTimeStr}.json`;
+
             selectedNote.note_id = dateTimeStr;
         }
-        // const insight = notes.find((note) => note.note_name.trim().toLowerCase() === selectedNote.note_name.trim().toLowerCase() && isSameInsightQuestions(note.text, selectedNote.text) );
-        // if (insight) {
-        //     toast('Insight already exists', { className: 'p-2 rounded-md', theme });
-        //     return;
-        // }
         try {
             await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex + 1), isNewNote: isNewNote });
 
-            // fetch updated version of notes
             const data = await makeApiRequest("/notes", "post");
             setNotes(() => data);
             toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });

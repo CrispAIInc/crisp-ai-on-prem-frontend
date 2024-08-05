@@ -98,25 +98,6 @@ const ImageUpload = ({ handleUpload }) => {
                 </div>
             </div>
         </div>
-        // <div className="image-upload-container">
-        // <div className="image-preview-container">
-        //     {selectedImages.map((image, index) => (
-        //         <img key={index} src={image} alt={`Preview ${index}`} className="image-preview" />
-        //     ))}
-        // </div>
-        //     <div className="input-container">
-        //         <input
-        //             type="file"
-        //             id="imageUpload"
-        //             multiple
-        //             onChange={handleImageChange}
-        //             style={{ display: 'none' }}
-        //         />
-        //         <label htmlFor="imageUpload" className="upload-button">Choose Images</label>
-        //         <input type="text" placeholder="Type your question here..." className="question-input" />
-        //         <button className="send-button">Send</button>
-        //     </div>
-        // </div>
     );
 };
 

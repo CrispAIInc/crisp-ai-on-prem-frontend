@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-// import './CustomSelect.css';
 import { MainContext } from '../../contexts/mainContext';
 
 const CustomSelectTwo = ({ options, onChange, placeholder }) => {

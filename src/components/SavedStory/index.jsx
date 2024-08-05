@@ -10,7 +10,7 @@ import makeApiRequest from '../../api';
 
 function SavedStory({ story }) {
 
-    const { theme, setSelectedStory, selectedStory, setActiveView, setStories, setIsNewStory } = useContext(MainContext);
+    const { theme, setSelectedStory, setActiveView, setStories, setIsNewStory } = useContext(MainContext);
 
     const showStory = () => {
         setSelectedStory(story);

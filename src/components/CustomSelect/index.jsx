@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
-const CustomSelect = ({ title, options, onChange, defaultValue = '' }) => {
+const CustomSelect = ({ title, options, onChange }) => {
 
     const { selectedCategory, theme } = useContext(MainContext);
 

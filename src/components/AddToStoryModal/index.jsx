@@ -6,12 +6,7 @@ import { MainContext } from '../../contexts/mainContext';
 import { generateRandomHash } from '../../utils';
 
 function AddToStoryModal({ open, handleClose, setOpen }) {
-    const { theme, selectedNote, stories, selectedStory, setSelectedStory, API_ENDPOINT, setCurrentResource,
-        setResourceURL,
-        setSummary,
-        setSummaries,
-        setActiveView,
-        setJumpToPage } = useContext(MainContext);
+    const { theme, selectedNote, stories, setSelectedStory } = useContext(MainContext);
     const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
     const [selectedSectionId, setSelectedSectionId] = useState("");
 
@@ -42,7 +37,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
 
 
     const saveToStory = async () => {
-        const joinedAnswers = selectedNote.text.map(({ id, answer, refs, references }, index) => {
+        const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
             if (answer.includes('https://oaidalleapiprodscus.blob')) {
                 return {
                     id: generateRandomHash(8),
@@ -52,8 +47,6 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                     imgsArr: [],
                 };
             }
-            // return `<img key={${index}} src={${answer}} alt="image" />`;
-
             let videosArr = [];
             let pdfsArr = [];
             let imgsArr = [];
@@ -76,54 +69,14 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                 pdfsArr,
                 imgsArr,
             };
-
-            // return Element;
         });
-        // add joinedAnswers to the selected section of the selected story
-        // selectedStory.text.find(({ outline }) => outline.id === selectedSectionId).content = joinedAnswers + '<br />';
         setSelectedStory(prev => {
             const newStory = { ...prev };
             let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
             currentText.content = joinedAnswers;
-            // const canRenderNoteRefs = (selectedNote.text[0].refs?.videoLinks.length > 0 || selectedNote.text[0].refs?.pdfLinks.length > 0 || selectedNote.text[0].refs?.imageLinks.length > 0);
-            // currentText.refsJsx = canRenderNoteRefs && (
-            //     <>
-            //         <div className='flex flex-col gap-2'>
-            //             <h6 className='text-sm'>References:</h6>
-            //             <ul className='break-all'>
-            //                 {selectedNote.text[0]?.refs?.videoLinks.map((video) => (
-            //                     <li key={video.source_path} className="ml-0">
-            //                         <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-            //                             {video.source_path + " | Timestamp: " + video.timestamp}
-            //                         </Link>
-            //                     </li>
-            //                 ))}
-            //             </ul>
-            //             <ul className='break-all'>
-            //                 {selectedNote.text[0]?.refs?.pdfLinks.map((pdf) => (
-            //                     <li key={pdf.source_path} className="ml-0">
-            //                         <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
-            //                             {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
-            //                         </Link>
-            //                     </li>
-            //                 ))}
-            //             </ul>
-            //             <ul className='break-all'>
-            //                 {selectedNote.text[0]?.refs?.imgLinks.map((img) => (
-            //                     <li key={img.source_path} className="ml-0">
-            //                         <Link onClick={(event) => handlePDFLinkClick(event, img)}>
-            //                             {img.source_path}
-            //                         </Link>
-            //                     </li>
-            //                 ))}
-            //             </ul>
-            //         </div>
-            //     </>
-            // );
             return { ...newStory };
 
         });
-        // sectionToBeModified.content = joinedAnswers + '<br />';
 
         setOpen(false);
     };

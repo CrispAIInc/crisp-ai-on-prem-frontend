@@ -4,7 +4,6 @@ import makeApiRequest from "../../api";
 import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Document, Page } from "react-pdf";
-import CustomSelect from "../CustomSelect";
 import LoadingSpinner from "../LoadingSpinner";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -593,7 +592,7 @@ const MetadataPanel = () => {
                     Business Administration with Upper Second Class Honours in
                     European Management on July 10, 2007. <br />
                     **Context:** The degree certificate from the University of
-                    Kent is displayed, highlighting Mark Andre Leruste's
+                    Kent is displayed, highlighting Mark Andre Leruste&apos;s
                     graduation with honors.
                     <br />
                     Professional Experience
@@ -606,7 +605,7 @@ const MetadataPanel = () => {
                     <br />
                     **Context:** The AFA Press webpage features a photograph of
                     Mark Leruste with former US President Bill Clinton and two
-                    other individuals at an event, showcasing the company's
+                    other individuals at an event, showcasing the company&apos;s
                     capabilities and notable endorsements.
                     <br />
                     Global Influence
@@ -649,31 +648,31 @@ const MetadataPanel = () => {
                     <br />
                     Special Reports
                     <br />
-                    Mark's work includes producing detailed reports on various
+                    Mark&apos;s work includes producing detailed reports on various
                     countries, such as a report on South Africa published by The
                     Sunday Telegraph.
                     <br />
-                    **Context:** A cover image of a publication titled "South
-                    Africa: A legacy in the making" produced for The Sunday
+                    **Context:** A cover image of a publication titled &apos;South
+                    Africa: A legacy in the making&apos; produced for The Sunday
                     Telegraph. He also produced a significant report on The
                     Gambia, published in The Wall Street Journal, highlighting
                     its national developments.
                     <br />
-                    **Context:** A newspaper page titled "The Gambia" with the
-                    main headline "A Nation on the Move" published in The Wall
+                    **Context:** A newspaper page titled &apos;The Gambia&apos; with the
+                    main headline &apos;A Nation on the Move&apos; published in The Wall
                     Street Journal. Additionally, he covered Kazakhstan,
                     focusing on its cultural and economic growth, featured in
                     The Wall Street Journal.
                     <br />
-                    **Context:** A newspaper page titled "Kazakhstan" with the
-                    headline "The fast riders," highlighting cultural and
+                    **Context:** A newspaper page titled &apos;Kazakhstan&apos; with the
+                    headline &apos;The fast riders,&apos; highlighting cultural and
                     economic developments.
                     <br />
                     Transition to Tailoring
                     <br />
                     After his extensive media career, Mark decided to start his
                     own company providing an online tailoring service for men.
-                    The service "Mister Tailor" was born.
+                    The service &apos;Mister Tailor&apos; was born.
                     <br />
                     **Context:** A close-up image shows a person being measured
                     around the waist with a measuring tape, indicating the
@@ -681,11 +680,11 @@ const MetadataPanel = () => {
                     <br />
                     --- ####
                     <br />
-                    Branding The logo for "Mister Tailor" represents his venture
+                    Branding The logo for &apos;Mister Tailor&apos; represents his venture
                     into the tailoring industry, where he learned a great deal
                     about business and customer service.
                     <br />
-                    **Context:** The logo or title card for "Mister Tailor,"
+                    **Context:** The logo or title card for &apos;Mister Tailor,&apos;
                     featuring a red silhouette of a man walking in formal
                     attire.
                     <br />
@@ -842,20 +841,7 @@ const MetadataPanel = () => {
                   }`}
               >
                 {translatedResource?.topic_summaries?.content}
-              </p>
-
-              {/* <h3
-                                className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                                    }`}
-                            >
-                                {translatedResource?.transcript?.title}
-                            </h3>
-                            <p
-                                className={`text-sm ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
-                                    }`}
-                            >
-                                {translatedResource?.transcript?.content}
-                            </p> */}
+              </p>s
 
               <h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"

@@ -5,7 +5,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
-import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import { generateRandomHash, hexToRGBString, timeToSeconds, toBase64 } from '../../utils';
 import AddOptionsModal from "../AddOptionsModal";
 import CustomButton from "../CustomButton";
@@ -27,8 +26,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     fromChat, setFromChat,
     isFoundationLlm,
     resourceURL,
-    noteIndex,
-    noteReferences, setNoteReferences,
+
+    noteReferences,
     setResourceURL,
     player,
     isPlayerReady,
@@ -56,8 +55,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const { setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
-
   const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
   const [originalQueries, setOriginalQueries] = useState([]);
@@ -71,16 +68,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const [showCursor, setShowCursor] = useState(false);
 
-  const [, setShowImageModal] = useState(false);
-
   // For GPT-4-Vision
   const [, setIsUploadingVisionImg] = useState(false);
 
   // For LLM Model Selction from the popup modal
   const [selectedLLMs, setSelectedLLMs] = useState([llmModels[0].value]); // State to track multiple selected LLMs
   const [showLLMModal, setShowLLMModal] = useState(false);
-
-  const imageGenRefInput = useRef(null);
 
   // scroll chatAppRef to bottom whenever a new message is added to the chat
   useEffect(() => {
@@ -371,8 +364,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       });
       setShowCursor(false);
     } else {
-      let sessionID = null; // Variable to store the session ID
 
+      let sessionID = null; // Variable to store the session ID
       const eventSource = new EventSource(
         `${API_ENDPOINT}/message/${encodeURIComponent(
           selectedCategoryChat
@@ -887,40 +880,15 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setIsNewNote(false);
   };
 
-  const fetchBlobAndRecreateFile = async (blob) => {
-    if (blob) {
-      const response = await fetch(blob);
-      const newBlob = await response.blob();
-      const newFile = new File([newBlob], 'recreated-file.jpg', {
-        type: newBlob.type,
-        lastModified: Date.now(),
-      });
-      return newFile;
-    }
-  };
-
   const handleVisionUpload = async (images, query) => {
     if (!chatLoaded) return;
     setShowCursor(true);
     const base64Imgs = await Promise.all(images.map(async (image) => await toBase64(image)));
-    console.log(base64Imgs);
-    // console.log(base64Imgs);
-    // setIsUploadingVisionImg(true);
-    // const selectedVisionLLMs = ['gpt-4-vision'];
-
-    // // Function to handle file selection and upload
-    // const file = event === null ? await fetchBlobAndRecreateFile(blob) : event.target.files[0];
-    // if (file) {
-    //   const formData = new FormData();
-    //   formData.append("image", file);
-    //   setShowCursor(true);
-    //TODO:change user message so that it store the images as well as the query
     const userMessage = {
       query,
       imgs_list: images
     };
 
-    //   const userMessage = URL.createObjectURL(file);
     setOriginalQueries([...originalQueries, userMessage]);
 
     setMessages([
@@ -928,7 +896,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       { sender: "user", text: userMessage, models: ['gpt-4-vision'] },
       { sender: "bot", text: "", models: ['gpt-4-vision'] },
     ]);
-    //   setInput("");
     setResponseIndex((responseIndex) => responseIndex + 2);
 
     try {
@@ -960,7 +927,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           />
         </div>
       );
-      // const botMessage = caption;
       setMessages((prevMessages) => {
         const newMessages = [...prevMessages];
         if (newMessages.length > 0) {
@@ -972,10 +938,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         }
         return newMessages;
       });
-
-      //     // Update your chat messages state here to include the new caption
-      //     // setMessages([...messages, { sender: 'bot', text: caption }]);
-      // setMessages([...messages, { sender: 'user', text: userMessage }, { sender: 'bot', text: '' }]);
     } catch (error) {
       console.error("Error uploading and captioning image:", error);
     }

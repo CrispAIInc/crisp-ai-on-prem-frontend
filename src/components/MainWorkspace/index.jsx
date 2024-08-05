@@ -9,7 +9,6 @@ import Workspace from "../Workspace";
 import ChatPanel from "../ChatPanel";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import { timeToSeconds } from '../../utils.js';
 
 const MainWorkspace = ({ theme }) => {
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;

@@ -6,7 +6,7 @@ import makeApiRequest from '../../api';
 import SideCard from '../../layouts/SideCard';
 import ModelChip from '../ModelChip';
 
-const SavedNote = ({ index, setNoteIndex, note, onHide }) => {
+const SavedNote = ({ index, setNoteIndex, note }) => {
 
     const previousModels = [];
 
