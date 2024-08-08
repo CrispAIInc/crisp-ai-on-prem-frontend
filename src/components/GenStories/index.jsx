@@ -71,7 +71,8 @@ const GenStories = () => {
             const sections = extractSections(answer);
             const htmlContent = sections.map((section, index) => {
                 const headingLevel = getLevelOfSectionInGenStories(section, true);
-                return `<h${headingLevel} key="${index}" style='font-style: italic; font-weight: 700;'>${section}</h${headingLevel}>`;
+                if (headingLevel === -1) return `<span key="${index}" style='font-style: italic; font-size: 14px; display: block;'>${section}</h${headingLevel}>`;
+                return `<h${headingLevel} key="${index}" style="font-style: italic; font-weight: ${headingLevel > 4 ? '900' : '500'};">${section}</h${headingLevel}>`;
             });
 
 

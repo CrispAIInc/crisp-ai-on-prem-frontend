@@ -78,9 +78,9 @@ export function getLevelOfSection(section) {
 
 export function getLevelOfSectionInGenStories(section) {
     const indicator = section.split('. ')[0];
-    if (isRomanNumber(indicator)) return 4;
-    if (isNumber(indicator) || !isNaN(indicator)) return 6;
-    if (isString(indicator)) return 5;
+    if (isRomanNumber(indicator)) return 5;
+    if (isNumber(indicator) || !isNaN(indicator)) return -1;
+    if (isString(indicator)) return 6;
 }
 
 export function isRomanNumber(string) {
@@ -176,6 +176,7 @@ export function isSameStoryContent(storyContent1, storyContent2) {
 }
 
 export function timeToSeconds(time) {
+    console.log(time);
     const parts = time.split(":");
     const hours = parseInt(parts[0], 10);
     const minutes = parseInt(parts[1], 10);
