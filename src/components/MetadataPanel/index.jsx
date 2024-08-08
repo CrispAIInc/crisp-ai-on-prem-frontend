@@ -9,6 +9,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import CustomSelectTwo from "../CustomSelectTwo";
+import { timeToSeconds } from '../../utils.js';
 
 const MetadataPanel = () => {
   const {
@@ -36,20 +37,20 @@ const MetadataPanel = () => {
 
   let currentResourceType = currentResource.file_type;
 
-  function timeToSeconds(time) {
-    const parts = time.split(":");
-    const hours = parseInt(parts[0], 10);
-    const minutes = parseInt(parts[1], 10);
-    const seconds = parseInt(parts[2], 10);
+  // function timeToSeconds(time) {
+  //   console.log(time);
+  //   const parts = time.split(":");
+  //   const hours = parseInt(parts[0], 10);
+  //   const minutes = parseInt(parts[1], 10);
+  //   const seconds = parseInt(parts[2], 10);
 
-    return hours * 3600 + minutes * 60 + seconds;
-  }
+  //   return hours * 3600 + minutes * 60 + seconds;
+  // }
 
   useEffect(() => {
-    console.log(isPlayerReady, resourceURL, currentResource);
     if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
       const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
-      if (timestamp) player.current.seekTo(timeToSeconds(timestamp));
+      if (timestamp) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
       // setFromStory(false);
     }
   }, [isPlayerReady]);

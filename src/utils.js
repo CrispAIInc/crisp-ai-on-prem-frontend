@@ -176,7 +176,6 @@ export function isSameStoryContent(storyContent1, storyContent2) {
 }
 
 export function timeToSeconds(time) {
-    console.log(time);
     const parts = time.split(":");
     const hours = parseInt(parts[0], 10);
     const minutes = parseInt(parts[1], 10);

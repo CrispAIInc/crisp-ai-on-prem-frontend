@@ -6,6 +6,7 @@ import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
 import toast from 'react-simple-toasts';
+import { timeToSeconds } from '../../utils';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -29,7 +30,7 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
     useEffect(() => {
         if (isPlayerReady && resourceURL && currentResource.file_type === 'video') {
             const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
-            if (timestamp) player.current.seekTo(timestamp);
+            if (timestamp) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             else;
             setFromChat(false);
         }
