@@ -23,8 +23,11 @@ const Workspace = () => {
     } = useContext(MainContext);
     return (
         <div className={`relative flex-1 h-full px-10 ${activeView === 'story' && 'overflow-y-hidden'} ${activeView !== 'note' && 'overflow-y-auto'} media-container bg-background_workspace`}>
+            {/* logo */}
+            <p className={` font-sans font-extrabold text-4xl text-center ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}>Crisp<span className="font-extrabold">AI</span></p>
+
             <div
-                className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
+                className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center top-0 z-50`}
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
             </div>
