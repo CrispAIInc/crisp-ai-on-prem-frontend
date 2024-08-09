@@ -27,7 +27,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
         setSelectedStory(stories[selectedOption.value]);
     };
 
-    const sections = stories[selectedStoryIndex].text.map(({ outline }) => ({ value: outline.id, label: outline.name }));
+    const sections = stories[selectedStoryIndex]?.text.map(({ outline }) => ({ value: outline.id, label: outline.name }));
 
     const handleSectionChange = (selectedOption) => {
         setSelectedSectionId(selectedOption.value);
