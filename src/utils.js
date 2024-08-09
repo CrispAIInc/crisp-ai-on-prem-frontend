@@ -1,12 +1,5 @@
 import _ from 'lodash';
 
-export function parseHtmlToText(html) {
-    let parser = new DOMParser();
-    let doc = parser.parseFromString(html, 'text/html');
-
-    return doc.body.textContent;
-}
-
 /**
  * Convert a hex color to an RGB formatted string.
  * @param {string} hex - The hex color code (with or without the leading #).
@@ -33,10 +26,6 @@ export function hexToRGBString(hex) {
 
     // Return the formatted RGB string.
     return `rgb(${r},${g},${b})`;
-}
-
-export function isNoteFull(noteTextArray) {
-    return noteTextArray.some((item) => item.content !== '' && item.content !== '<p><br></p>');
 }
 
 export function extractSections(outlineText) {
@@ -112,67 +101,12 @@ export const toBase64 = async file => new Promise((resolve, reject) => {
     reader.onerror = reject;
 });
 
-export function transformString(inputString) {
-    // Regular expression to find all <p>...</p> tags
-    const pTags = inputString.match(/<p>(.*?)<\/p>/g);
-
-    // Create the desired structure
-    const result = pTags.map(tag => {
-        // Extract the content inside the <p> tag
-        const content = tag.match(/<p>(.*?)<\/p>/)[1];
-        return {
-            outline: { name: content, id: generateRandomHash(10) },
-            content: tag
-        };
-    });
-
-    return result;
-}
-
 export function isArrayEqual(x, y) {
     return _(x).xorWith(y, _.isEqual).isEmpty();
 }
 
-export function areArraysEqual(arr1, arr2) {
-    return arr1.every((item, index) => item.content === arr2[index].content);
-}
-
-export function extractTextFromHTML(html) {
-    // Create a new DOM element to parse the HTML
-    let tempDiv = document.createElement("div");
-    tempDiv.innerHTML = html;
-
-    // Extract and return the text content
-    return tempDiv.textContent || tempDiv.innerText || "";
-}
-
-// export function isSameStoryContent(storyContent1, storyContent2) {
-//     return storyContent1.every((item, index) => item.content === storyContent2[index].content);
-// }
-
 export function transformArrayOfObjectsToArray(arr) {
     return arr.map(item => item.outline.name);
-}
-
-export function isSameInsightQuestions(text1, text2) {
-    let insightOneFullContent = text1.map(item => item.question).join('');
-    let insightTwoFullContent = text2.map(item => item.question).join('');
-    return insightOneFullContent === insightTwoFullContent;
-}
-
-export function isSameInsightAnswers(text1, text2) {
-    let insightOneFullContent = text1.map(item => item.answer).join('');
-    let insightTwoFullContent = text2.map(item => item.answer).join('');
-    return insightOneFullContent === insightTwoFullContent;
-}
-
-export function isSameStoryContent(storyContent1, storyContent2) {
-    const storyContent1TextContent = storyContent1.map(item => item.content).join('');
-    const storyContent2TextContent = storyContent2.map(item => item.content).join('');
-    const storyContent1TextSections = storyContent1.map(item => item.outline.name).join('');
-    const storyContent2TextSections = storyContent2.map(item => item.outline.name).join('');
-
-    return storyContent1TextContent === storyContent2TextContent && storyContent1TextSections === storyContent2TextSections;
 }
 
 export function timeToSeconds(time) {
