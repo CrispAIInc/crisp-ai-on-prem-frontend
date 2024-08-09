@@ -22,7 +22,7 @@ const Workspace = () => {
 
     } = useContext(MainContext);
     return (
-        <div className={`relative flex-1 h-full px-10 ${activeView === 'story' && 'overflow-y-hidden'} ${activeView !== 'note' && 'overflow-y-auto'} media-container bg-background_workspace`}>
+        <div className={`relative flex-1 h-full px-10 overflow-y-auto media-container bg-background_workspace`}>
             {/* logo */}
             <p className={` font-sans font-extrabold text-4xl text-center ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}>Crisp<span className="font-extrabold">AI</span></p>
 
