@@ -20,7 +20,7 @@ function NoteDetails() {
     const {
         selectedNote,
         setSelectedNote,
-
+        notes,
         noteIndex,
         setCurrentResource,
         setNotes,
@@ -84,13 +84,13 @@ function NoteDetails() {
             toast('Note title cannot be empty', { className: `p-2 rounded-md`, theme });
             return;
         }
-        if (isNewNote) {
+        if (isNewNote && notes.every(n => n.note_name !== selectedNote.note_name)) {
             const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
 
             selectedNote.note_id = dateTimeStr;
         }
         try {
-            await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex + 1), isNewNote: isNewNote });
+            await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex), isNewNote: isNewNote });
 
             const data = await makeApiRequest("/notes", "post");
             setNotes(() => data);
@@ -407,7 +407,7 @@ function NoteDetails() {
     }
 
     function updateTitle() {
-        setIsNewNote(false);
+        // setIsNewNote(false);
         setSelectedNote(prev => {
             return { ...prev, note_name: titleRef.current.innerText };
         });

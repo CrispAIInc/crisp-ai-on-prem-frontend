@@ -36,6 +36,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     selectedNote,
     setSelectedNote,
     showNoteModal,
+    setNoteIndex,
     setShowNoteModal,
     selectedSources,
     selectedAll,
@@ -440,7 +441,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   };
 
   const fetchReferences = async (botMessage) => {
-    console.log(botMessage);
     const response = await axios.get(`${API_ENDPOINT}/references`);
     const data = response.data;
     noteReferences.videoLinks = [];
@@ -727,18 +727,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       }]
     };
     setIsNewNote(true);
-    // setNotes([...notes, newNote]);
-    // save note
-    // try {
-    //   await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, newNote, noteName: 'note_json', noteNumber: parseInt(noteIndex + 1), isNewNote: isNewNote });
-
-    //   // fetch updated version of notes
-    //   const data = await makeApiRequest("/notes", "post");
-    //   setNotes(() => data);
-    //   toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    setNoteIndex(notes.length);
     setSelectedNote(newNote);
     setIsManualNote(false);
     setShowNoteDetails(true);
@@ -1324,14 +1313,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     sendMessage(input);
-                    console.log(e.target.value);
-                    e.target.value = "hhhh";
                   }
                 }} />
               <div
-                className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
+                className={`p-2 rounded-md cursor-pointer z-[41] ${theme === "light" ? "border" : "!border !border-textColor-300"
                   }`}
-                onClick={(e) => { sendMessage(input); e.target.value = e.target.value.replace(/(\r\n|\n\r)/gm, ""); }}
+                onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
               >
                 <SendIcon color="primary" />
               </div>
