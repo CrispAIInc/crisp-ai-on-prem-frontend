@@ -112,7 +112,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       else;
       setFromChat(false);
     }
-  }, [isPlayerReady]);
+  }, [isPlayerReady, currentResource?.timestamp]);
 
   let noteQuestion = useRef('');
   const sendMessage = async (message, models = selectedLLMs) => {
