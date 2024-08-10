@@ -103,7 +103,6 @@ const ContentPanel = () => {
 
         // item should exist in selectedSources and isSelected is true => remove it from selectedSources
         if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
-            console.log('yes');
             setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
         }
     };

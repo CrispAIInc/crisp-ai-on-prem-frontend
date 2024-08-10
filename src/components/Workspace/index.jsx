@@ -47,7 +47,7 @@ const Workspace = () => {
             <div
                 className={`px-2 py-2 rounded-md w-fit absolute right-0 h-full flex flex-col justify-center items-center top-0 z-50`}
             >
-                <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => { setIsRightSidebarOpen(!isRightSidebarOpen); console.log("WS arrows"); }} />
+                <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => { setIsRightSidebarOpen(!isRightSidebarOpen); }} />
             </div>
         </div>
     );

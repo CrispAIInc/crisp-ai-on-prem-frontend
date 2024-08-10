@@ -387,7 +387,6 @@ function NoteDetails() {
     };
 
     function updateQuestion(id) {
-        console.log("updating question...");
         setIsNewNote(false);
         setSelectedNote(prev => {
             const newNote = { ...prev };
@@ -430,12 +429,8 @@ function NoteDetails() {
     function handleTitleFocus() {
         setIsTitleEditing(true);
     }
-    // function handleTitleBlur() {
-    //     setIsTitleEditing(false);
-    // }
 
     function changeTitle() {
-        console.log("change");
         updateTitle();
         setIsTitleEditing(false);
     }

@@ -37,16 +37,6 @@ const MetadataPanel = () => {
 
   let currentResourceType = currentResource.file_type;
 
-  // function timeToSeconds(time) {
-  //   console.log(time);
-  //   const parts = time.split(":");
-  //   const hours = parseInt(parts[0], 10);
-  //   const minutes = parseInt(parts[1], 10);
-  //   const seconds = parseInt(parts[2], 10);
-
-  //   return hours * 3600 + minutes * 60 + seconds;
-  // }
-
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
       const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
@@ -226,7 +216,6 @@ const MetadataPanel = () => {
                 }
                 placeholder="Select a language"
               />
-              {console.log(currentResource.source_path)}
               {currentResource.source_path != "Sacred_Valley___PERU.mp4" &&
                 currentResource.source_path != "videoplayback.mp4" && (
                   <>

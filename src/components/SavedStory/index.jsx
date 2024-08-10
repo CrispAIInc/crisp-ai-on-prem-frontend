@@ -20,8 +20,6 @@ function SavedStory({ story }) {
 
     const deleteStory = async (e, id) => {
         e.stopPropagation();
-        console.log(e);
-        console.log(id);
         try {
             await makeApiRequest(`/stories/${id}`, 'delete');
             setSelectedStory({
