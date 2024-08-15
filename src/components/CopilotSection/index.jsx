@@ -108,12 +108,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       resourceURL &&
       currentResource.file_type === "video"
     ) {
-      const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
+      const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
       if (timestamp) player.current.seekTo(timeToSeconds(timestamp));
       else;
       setFromChat(false);
     }
-  }, [isPlayerReady, currentResource?.timestamp]);
+  }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
   let noteQuestion = useRef('');
   const sendMessage = async (message, models = selectedLLMs) => {
@@ -419,7 +419,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setFromChat(true);
     const resourceURL = `${API_ENDPOINT}/${video.file_type
       }/all/${encodeURIComponent(video.source_path)}`;
-    setCurrentResource(video);
+    setCurrentResource({ ...video });
     setResourceURL(resourceURL);
     setSummary(video.summary);
     setSummaries(video.topic_summaries);
@@ -431,7 +431,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     event.preventDefault();
     const resourceURL = `${API_ENDPOINT}/${pdf.file_type
       }/all/${encodeURIComponent(pdf.source_path)}`;
-    setCurrentResource(pdf);
+    setCurrentResource({ ...pdf });
     setResourceURL(resourceURL);
     setSummary(pdf.summary);
     setSummaries(pdf.topic_summaries);

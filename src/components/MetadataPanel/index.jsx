@@ -39,11 +39,11 @@ const MetadataPanel = () => {
 
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
-      const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
+      const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
       if (timestamp) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
       // setFromStory(false);
     }
-  }, [isPlayerReady]);
+  }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
   useEffect(() => {
     if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {

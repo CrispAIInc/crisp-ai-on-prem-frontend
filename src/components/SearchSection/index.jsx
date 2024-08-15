@@ -29,12 +29,12 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
 
     useEffect(() => {
         if (isPlayerReady && resourceURL && currentResource.file_type === 'video') {
-            const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
+            const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
             if (timestamp) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             else;
             setFromChat(false);
         }
-    }, [isPlayerReady]);
+    }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
     const handleSubmitQuestion = async (event) => {
         event.preventDefault();

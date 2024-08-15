@@ -303,10 +303,10 @@ function StoryDetails() {
 
     useEffect(() => {
         if (!isFromChat && isPlayerReady && resourceURL && currentResource.file_type === "video") {
-            const timestamp = currentResource.timestamp; // Make sure you have the timestamp here
+            const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
             if (timestamp) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
         }
-    }, [isPlayerReady]);
+    }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
 
     const handleVideoLinkClick = (event, video) => {
@@ -314,7 +314,7 @@ function StoryDetails() {
         setFromChat(false);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
             }/all/${encodeURIComponent(video.source_path)}`;
-        setCurrentResource(video);
+        setCurrentResource({ ...video });
         setResourceURL(resourceURL);
         setSummary(video.summary);
         setSummaries(video.topic_summaries);
@@ -326,7 +326,7 @@ function StoryDetails() {
         event.preventDefault();
         const resourceURL = `${API_ENDPOINT}/${pdf.file_type
             }/all/${encodeURIComponent(pdf.source_path)}`;
-        setCurrentResource(pdf);
+        setCurrentResource({ ...pdf });
         setResourceURL(resourceURL);
         setSummary(pdf.summary);
         setSummaries(pdf.topic_summaries);
