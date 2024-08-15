@@ -135,17 +135,18 @@ function StoryDetails() {
     }
 
     useEffect(() => {
-        const storyViewPort = localStorage.getItem('storyViewPort');
-        if (storyViewPort) {
-            scrollRef.current.scrollTop = storyViewPort;
+        const storyViewPort = JSON.parse(localStorage.getItem('storyViewPort'));
+        if (storyViewPort && storyViewPort.story === selectedStory.story_id) {
+            console.log(true);
+            scrollRef.current.scrollTop = storyViewPort.scrollPosition;
         } else {
             scrollRef.current.scrollTop = 0;
         }
-    }, []);
+    }, [selectedStory.story_id]);
 
     useEffect(() => {
-        localStorage.setItem('storyViewPort', scrollPosition);
-    }, [scrollPosition]);
+        localStorage.setItem('storyViewPort', JSON.stringify({ scrollPosition, story: selectedStory.story_id }));
+    }, [scrollPosition, selectedStory.story_id]);
 
 
     function handleOpenNewQuestionBox(id) {
