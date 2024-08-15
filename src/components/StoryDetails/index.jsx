@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import CustomButton from '../CustomButton';
@@ -130,7 +129,6 @@ function StoryDetails() {
 
     const [scrollPosition, setScrollPosition] = useState(0);
     const scrollRef = useRef(null);
-    // const navigate = useNavigate();
 
     function handleScroll() {
         setScrollPosition(scrollRef.current.scrollTop);
