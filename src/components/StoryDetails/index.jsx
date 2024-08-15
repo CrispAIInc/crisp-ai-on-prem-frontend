@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import CustomButton from '../CustomButton';
@@ -126,6 +127,27 @@ function StoryDetails() {
     const [currentAddingAnswerId, setCurrentAddingAnswerId] = useState("");
     const [newAnswer, setNewAnswer] = useState('');
     const titleRef = useRef(null);
+
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const scrollRef = useRef(null);
+    // const navigate = useNavigate();
+
+    function handleScroll() {
+        setScrollPosition(scrollRef.current.scrollTop);
+    }
+
+    useEffect(() => {
+        const storyViewPort = localStorage.getItem('storyViewPort');
+        if (storyViewPort) {
+            scrollRef.current.scrollTop = storyViewPort;
+        } else {
+            scrollRef.current.scrollTop = 0;
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('storyViewPort', scrollPosition);
+    }, [scrollPosition]);
 
 
     function handleOpenNewQuestionBox(id) {
@@ -479,7 +501,7 @@ function StoryDetails() {
             </div>
 
 
-            <div className={`overflow-y-auto flex-1 flex flex-col gap-4 ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
+            <div className={`overflow-y-auto flex-1 flex flex-col gap-4 ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`} ref={scrollRef} onScroll={handleScroll}>
                 {selectedStory.text?.map((item) => (
                     <div key={item.id} className="flex flex-col gap-4 px-3">
                         {/* question */}
