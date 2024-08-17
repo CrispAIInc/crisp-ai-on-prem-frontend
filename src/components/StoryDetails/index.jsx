@@ -137,7 +137,6 @@ function StoryDetails() {
     useEffect(() => {
         const storyViewPort = JSON.parse(localStorage.getItem('storyViewPort'));
         if (storyViewPort && storyViewPort.story === selectedStory.story_id) {
-            console.log(true);
             scrollRef.current.scrollTop = storyViewPort.scrollPosition;
         } else {
             scrollRef.current.scrollTop = 0;
