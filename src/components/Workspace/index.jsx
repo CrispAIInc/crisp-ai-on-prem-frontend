@@ -25,8 +25,8 @@ const Workspace = () => {
         <div className={`relative flex-1 h-full px-10 overflow-y-auto media-container bg-background_workspace`}>
             {/* logo */}
             <div className="flex items-center justify-center gap-1 mt-3">
-                <img src="/app-logo.svg" alt="logo" className="w-12 h-12" />
-                <p className={`font-sans font-extrabold text-4xl text-center user-select-none ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}>Crisp AI</p>
+                <img src="/app-logo.svg" alt="logo" className="w-16 h-16" width="64" height="46" />
+                <p className={`font-sans font-extrabold text-3xl text-center user-select-none ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}>Crisp AI</p>
             </div>
 
             <div
