@@ -1083,7 +1083,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                                 );
                               })
                             }
-                            <p>{message.text.query}</p>
+                            <p className="break-words">{message.text.query}</p>
                             {/* <p>{message.text}</p> */}
                           </div>
                           {isLightboxOpen && (
@@ -1205,7 +1205,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                           className={`${theme === "light"
                             ? "text-textColor-300"
                             : "text-textColor-100"
-                            }`}
+                            } break-words`}
                         >
                           {message.text}
                         </div>
