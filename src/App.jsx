@@ -8,6 +8,8 @@ import MainWorkspace from './components/MainWorkspace';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
+import HomePage from './pages/HomePage';
+import MainWorkspacePage from './pages/MainWorkspacePage';
 
 
 function App() {
@@ -42,7 +44,8 @@ function App() {
     <div className={`App ${theme}`}>
       <Router>
         <Routes>
-          <Route path="/" element={<MainWorkspace theme={theme} />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/workspace" element={<MainWorkspacePage theme={theme} />} />
         </Routes>
       </Router>
     </div>
