@@ -44,8 +44,8 @@ function App() {
     <div className={`App ${theme}`}>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage theme={theme} />} />
-          <Route path="/workspace" element={<MainWorkspacePage theme={theme} />} />
+          <Route path="/landing-page" element={<HomePage theme={theme} />} />
+          <Route path="/" element={<MainWorkspacePage theme={theme} />} />
         </Routes>
       </Router>
     </div>
