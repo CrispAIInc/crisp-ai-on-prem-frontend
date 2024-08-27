@@ -446,11 +446,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     noteReferences.videoLinks = [];
     noteReferences.pdfLinks = [];
     noteReferences.imageLinks = [];
+    noteReferences.keyframeLinks = [];
 
     let refs = {
       videoLinks: [],
       pdfLinks: [],
       imgLinks: [],
+      keyframeLinks: [],
     };
 
     const videoLinks = data.video_references.map((video) => {
@@ -464,6 +466,19 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         </li>
       );
     });
+
+    const keyframeLinks = data.keyframe_references.map((video) => {
+      noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + video.timestamp);
+      refs["keyframeLinks"].push(video);
+      return (
+        <li key={video.source_path} className="ml-0">
+          <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+            {video.source_path + " | keyframe at: " + video.timestamp}
+          </Link>
+        </li>
+      );
+    });
+
     const pdfLinks = data.pdf_references.map((pdf) => {
       noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
       refs["pdfLinks"].push(pdf);
@@ -504,12 +519,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     //       `<li key='${index}'><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
     //     );
     //   }),
-    // };
+    // };keyframeLinks
 
     const references = {
       videoLinks: data.video_references.map((video, index) => {
         return (
-          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Timestamp: " + video.timestamp}</li>`
+          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Timestamps: " + video.timestamp}</li>`
+        );
+      }),
+      keyframeLinks: data.keyframe_references.map((video, index) => {
+        return (
+          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Keyframe at: " + video.timestamp}</li>`
         );
       }),
       pdfLinks: data.pdf_references.map((pdf, index) => {
@@ -566,12 +586,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           selectedNote={selectedNote}
           notes={notes}
         />
-        {!isFoundationLlm && videoLinks && pdfLinks && (
+        {!isFoundationLlm && videoLinks && keyframeLinks && pdfLinks && (
           <div>
             <p className="m-0">References:</p>
             {videoLinks && (
               <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                 {videoLinks}
+              </ul>
+            )}
+            {keyframeLinks && (
+              <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                {keyframeLinks}
               </ul>
             )}
             {pdfLinks && (
@@ -599,6 +624,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           text: botMessage,
           references: {
             videoLinks: videoLinks,
+            keyframeLinks: keyframeLinks,
             pdfLinks: pdfLinks,
             imgLinks: imgLinks,
           },
@@ -639,6 +665,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 {data.translated_responses[botIndex]}
               </div>
               {message?.references?.videoLinks &&
+                message?.references?.keyframeLinks &&
                 message?.references?.pdfLinks &&
                 message?.references?.imgLinks && (
                   <div>
@@ -646,6 +673,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     {message.references.videoLinks && (
                       <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                         {message.references.videoLinks}
+                      </ul>
+                    )}
+                    {message.references.keyframeLinks && (
+                      <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                        {message.references.keyframeLinks}
                       </ul>
                     )}
                     {message.references.pdfLinks && (
@@ -679,7 +711,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, references, refs) => {
 
-    const canRenderNoteRefs = (references?.videoLinks.length > 0 || references?.pdfLinks.length > 0 || references?.imageLinks.length > 0);
+    const canRenderNoteRefs = (references?.videoLinks.length > 0 || references?.keyframeLinks.length > 0 || references?.pdfLinks.length > 0 || references?.imageLinks.length > 0);
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
@@ -702,12 +734,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         </p>
         
         ${canRenderNoteRefs ?
-          `<h3 onclick='alert("hello")' style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
+          `<h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
               references:
             </h3>
             
             <ul style='list-style-type: none;'>
               ${references?.videoLinks?.join('')}
+              ${references?.keyframeLinks?.join('')}
               ${references?.pdfLinks?.join('')}
               ${references?.imageLinks?.join('')}
             </ul>` : ''}
@@ -770,7 +803,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     //   );
     // });
 
-    const canRenderNoteRefs = (references?.videoLinks?.length > 0 || references?.pdfLinks?.length > 0 || references?.imageLinks?.length > 0);
+    const canRenderNoteRefs = (references?.videoLinks?.length > 0 || references?.keyframeLinks?.length > 0 || references?.pdfLinks?.length > 0 || references?.imageLinks?.length > 0);
 
     const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
     const fallbackColor = theme === 'light' ? '#333' : '#fff';
@@ -801,6 +834,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             
               <ul style='list-style-type: none;'>
                 ${references?.videoLinks?.join('')}
+                ${references?.keyframeLinks?.join('')}
                 ${references?.pdfLinks?.join('')}
                 ${references?.imageLinks?.join('')}
               </ul>` : ''}
@@ -858,6 +892,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           text: [{
             content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
               videoLinks: [],
+              keyframeLinks: [],
               pdfLinks: [],
               imageLinks: [],
             }

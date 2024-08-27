@@ -115,6 +115,7 @@ function NoteDetails() {
                 text: [{
                     content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
                         videoLinks: [],
+                        keyframeLinks: [],
                         pdfLinks: [],
                         imageLinks: [],
                     }
@@ -148,6 +149,7 @@ function NoteDetails() {
             // references is not an array it's an object like this
             // {
             //     videoLinks: [],
+            //         keyframeLinks: [],
             //     pdfLinks: [],
             //     imageLinks: [],
             // }
@@ -155,6 +157,12 @@ function NoteDetails() {
             if (item.references) {
                 if (item.references.videoLinks) {
                     item.references.videoLinks.forEach((link) => {
+                        references.add(link);
+                    });
+                }
+
+                if (item.references.keyframeLinks) {
+                    item.references.keyframeLinks.forEach((link) => {
                         references.add(link);
                     });
                 }
@@ -190,6 +198,7 @@ function NoteDetails() {
         // insight referencesto be stored inside insight
         let _refs = {
             videoLinks: [],
+            keyframeLinks: [],
             pdfLinks: [],
             imageLinks: [],
         };
@@ -197,6 +206,7 @@ function NoteDetails() {
         references.map((ref) => {
             if (ref.includes('.mp4')) {
                 _refs.videoLinks.push(ref);
+                _refs.keyframeLinks.push(ref);
             } else if (ref.includes('.pdf')) {
                 _refs.pdfLinks.push(ref);
             } else if (ref.includes('.png') || ref.includes('.jpg') || ref.includes('.jpeg') || ref.includes('.svg')) {
@@ -296,11 +306,13 @@ function NoteDetails() {
                 question: newQuestion,
                 references: {
                     videoLinks: [],
+                    keyframeLinks: [],
                     pdfLinks: [],
                     imageLinks: [],
                 },
                 refs: {
                     videoLinks: [],
+                    keyframeLinks: [],
                     pdfLinks: [],
                     imageLinks: [],
                 }
@@ -473,6 +485,7 @@ function NoteDetails() {
                             text: [{
                                 content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
                                     videoLinks: [],
+                                    keyframeLinks: [],
                                     pdfLinks: [],
                                     imageLinks: [],
                                 }
@@ -563,7 +576,7 @@ function NoteDetails() {
                                                     </div>}
                                                     <p dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}></p></div> : <img className="w-[400px] h-[300px]" width="400" height="300" src={item.answer} alt="image" />}
                                                 {/* display references */}
-                                                {(item.refs?.videoLinks?.length > 0 || item.refs?.pdfLinks?.length > 0 || item.refs?.imgLinks?.length > 0) && <div className='flex flex-col gap-2'>
+                                                {(item.refs?.videoLinks?.length > 0 || item.refs?.keyframeLinks?.length > 0 || item.refs?.pdfLinks?.length > 0 || item.refs?.imgLinks?.length > 0) && <div className='flex flex-col gap-2'>
                                                     <h6 className='text-sm'>References:</h6>
                                                     <ul className='break-all'>
                                                         {
@@ -571,6 +584,17 @@ function NoteDetails() {
                                                                 <li key={video.source_path} className="ml-0">
                                                                     <Link onClick={(event) => handleVideoLinkClick(event, video)}>
                                                                         {video.source_path + " | Timestamp: " + video.timestamp}
+                                                                    </Link>
+                                                                </li>
+                                                            ))
+                                                        }
+                                                    </ul>
+                                                    <ul className='break-all'>
+                                                        {
+                                                            item.refs?.keyframeLinks.map((video) => (
+                                                                <li key={video.source_path} className="ml-0">
+                                                                    <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+                                                                        {video.source_path + " | Keyframe at: " + video.timestamp}
                                                                     </Link>
                                                                 </li>
                                                             ))

@@ -43,17 +43,24 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                     id: generateRandomHash(8),
                     answer,
                     videosArr: [],
+                    keyframesArr: [],
                     pdfsArr: [],
                     imgsArr: [],
                 };
             }
             let videosArr = [];
+            let keyframesArr = [];
             let pdfsArr = [];
             let imgsArr = [];
 
             refs.videoLinks.forEach((video) => {
                 videosArr.push(video);
             });
+
+            refs.keyframesArr.forEach((video) => {
+                keyframesArr.push(video);
+            });
+
             refs.pdfLinks.forEach((pdf) => {
                 pdfsArr.push(pdf);
             });
@@ -66,6 +73,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                 id: generateRandomHash(8),
                 answer,
                 videosArr,
+                keyframesArr,
                 pdfsArr,
                 imgsArr,
             };

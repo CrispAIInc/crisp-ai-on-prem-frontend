@@ -37,6 +37,7 @@ const SavedNote = ({ index, setNoteIndex, note }) => {
                 text: [{
                     content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
                         videoLinks: [],
+                        keyframeLinks: [],
                         pdfLinks: [],
                         imageLinks: [],
                     }

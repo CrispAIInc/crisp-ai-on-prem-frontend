@@ -29,6 +29,7 @@ const NotesSection = () => {
                 answer: '',
                 references: {
                     videoLinks: [],
+              keyframeLinks: [],
                     pdfLinks: [],
                     imageLinks: [],
                 },
