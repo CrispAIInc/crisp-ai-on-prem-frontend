@@ -196,6 +196,17 @@ const MetadataPanel = () => {
     try {
       setIsGeneratingCombinedSummary(true);
       const { visual_summary, combined_summary } = await makeApiRequest('/generate-combined-summary', 'post', { video_filename: currentResource.source_path });
+      setTranslatedResource((prev) => ({
+        ...prev,
+        visual_summary: {
+          title: "Visual Summary",
+          content: visual_summary,
+        },
+        combined_summary: {
+          title: "Combined Summary",
+          content: combined_summary,
+        },
+      }));
       console.log(visual_summary, combined_summary);
     } catch (error) {
       console.log(error);
