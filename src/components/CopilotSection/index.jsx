@@ -443,6 +443,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   const fetchReferences = async (botMessage) => {
     const response = await axios.get(`${API_ENDPOINT}/references`);
     const data = response.data;
+    console.log(data); // HERE
     noteReferences.videoLinks = [];
     noteReferences.pdfLinks = [];
     noteReferences.imageLinks = [];

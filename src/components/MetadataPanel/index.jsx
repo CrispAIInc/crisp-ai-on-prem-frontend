@@ -210,6 +210,8 @@ const MetadataPanel = () => {
       console.log(visual_summary, combined_summary);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsGeneratingCombinedSummary(false);
     }
   }
 
@@ -217,26 +219,6 @@ const MetadataPanel = () => {
     <div className="max-w-4xl pt-10 mx-auto">
       {currentResource.file_type === "video" && (
         <>
-          {/* generate visual/combined summary */}
-          {!isGeneratingCombinedSummary ? <div
-            className={`user-select-none flex items-center justify-center gap-2 py-1 mb-2 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`} onClick={() => generateVisualAndCombinedSummary()}>
-            <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-              Generate Visual & Combined Summary
-            </span>
-          </div> : (
-            <div className="flex items-center gap-2 mb-2">
-              <LoadingSpinner isSmall={true} />
-              <span
-                className={`font-medium ${theme === "light"
-                  ? "text-textColor-300"
-                  : "text-textColor-100"
-                  }`}
-              >
-                Generating Summaries...
-              </span>
-            </div>
-          )}
           <div className="relative">
             <CancelIcon
               onClick={closeVideo}
@@ -264,6 +246,26 @@ const MetadataPanel = () => {
                   "text-right"
                   }`}
               >
+                {/* generate visual/combined summary */}
+                {!isGeneratingCombinedSummary ? <div
+                  className={`user-select-none flex items-center justify-center gap-2 py-1 mb-2 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`} onClick={() => generateVisualAndCombinedSummary()}>
+                  <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                  <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    Generate Visual & Combined Summary
+                  </span>
+                </div> : (
+                  <div className="flex items-center gap-2 mb-2">
+                    <LoadingSpinner isSmall={true} />
+                    <span
+                      className={`font-medium ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
+                    >
+                      Generating Summaries...
+                    </span>
+                  </div>
+                )}
                 <CustomSelectTwo
                   options={languageOptions}
                   onChange={(lang) =>
