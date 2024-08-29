@@ -1,25 +1,40 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
-import BaseHeading from '../BaseHeading';
-import CustomButton from '../CustomButton';
+import { useContext, useEffect, useRef, useState } from "react";
+import { MainContext } from "../../contexts/mainContext";
+import BaseHeading from "../BaseHeading";
+import CustomButton from "../CustomButton";
 
-import AddIcon from '@mui/icons-material/Add';
-import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from "@mui/icons-material/Add";
+import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
-import toast from 'react-simple-toasts';
-import 'react-simple-toasts/dist/theme/dark.css';
-import 'react-simple-toasts/dist/theme/light.css';
-import makeApiRequest from '../../api';
-import { generateRandomHash, timeToSeconds, transformArrayOfObjectsToArray } from '../../utils';
-import LoadingSpinner from '../LoadingSpinner';
+import toast from "react-simple-toasts";
+import "react-simple-toasts/dist/theme/dark.css";
+import "react-simple-toasts/dist/theme/light.css";
+import makeApiRequest from "../../api";
+import {
+    generateRandomHash,
+    timeToSeconds,
+    transformArrayOfObjectsToArray,
+} from "../../utils";
+import LoadingSpinner from "../LoadingSpinner";
 
 function StoryDetails() {
-
-    const { setSelectedStory, selectedStory, setActiveView, currentResource,
-        setFromChat, theme, stories,
-        isFromChat, setStories, isNewStory, setIsNewStory, selectedGenStoriesModels, selectedSources, API_ENDPOINT,
+    const {
+        setSelectedStory,
+        selectedStory,
+        setActiveView,
+        currentResource,
+        setFromChat,
+        theme,
+        stories,
+        isFromChat,
+        setStories,
+        isNewStory,
+        setIsNewStory,
+        selectedGenStoriesModels,
+        selectedSources,
+        API_ENDPOINT,
         setCurrentResource,
         resourceURL,
         player,
@@ -27,29 +42,43 @@ function StoryDetails() {
         setResourceURL,
         setSummary,
         setSummaries,
-        setJumpToPage, } = useContext(MainContext);
+        setJumpToPage,
+    } = useContext(MainContext);
 
-    const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] = useState(false);
+    const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] =
+        useState(false);
 
     const handleSave = async () => {
         if (!selectedStory.story_name) {
-            toast('Story title cannot be empty', { className: 'p-2 rounded-md', theme });
+            toast("Story title cannot be empty", {
+                className: "p-2 rounded-md",
+                theme,
+            });
             return;
         }
 
         try {
-            const story = stories.find(story => story.story_id === selectedStory.story_id);
+            const story = stories.find(
+                (story) => story.story_id === selectedStory.story_id
+            );
             if (!story) {
-                await makeApiRequest('/stories', 'post', { ...selectedStory });
+                await makeApiRequest("/stories", "post", { ...selectedStory });
             } else {
-                await makeApiRequest(`/stories/${selectedStory.story_id}`, 'put', selectedStory);
+                await makeApiRequest(
+                    `/stories/${selectedStory.story_id}`,
+                    "put",
+                    selectedStory
+                );
             }
             const data = await makeApiRequest("/stories", "get");
             setStories(data);
-            toast('Story saved successfully', { className: 'p-2 rounded-md', theme });
+            toast("Story saved successfully", { className: "p-2 rounded-md", theme });
         } catch (error) {
             console.log(error);
-            toast('An error occurred while saving story', { className: 'p-2 rounded-md', theme });
+            toast("An error occurred while saving story", {
+                className: "p-2 rounded-md",
+                theme,
+            });
         }
     };
 
@@ -58,23 +87,28 @@ function StoryDetails() {
             setIsGeneratingIntroConlusion(true);
 
             const httpPayload = {
-                story_sections_titles: transformArrayOfObjectsToArray(selectedStory.text),
+                story_sections_titles: transformArrayOfObjectsToArray(
+                    selectedStory.text
+                ),
                 outline_title: selectedStory.story_name,
                 llm_model: selectedGenStoriesModels[0],
-                with_selected_sources: selectedSources.length > 0
+                with_selected_sources: selectedSources.length > 0,
             };
             try {
-                const { sections } = await makeApiRequest('/auto-generate-story', 'post', httpPayload);
+                const { sections } = await makeApiRequest(
+                    "/auto-generate-story",
+                    "post",
+                    httpPayload
+                );
 
-                setSelectedStory(prev => {
+                setSelectedStory((prev) => {
                     prev.text.forEach((textItem, index) => {
                         textItem.content = sections[index];
                     });
 
                     return prev;
                 });
-            }
-            catch (error) {
+            } catch (error) {
                 console.log(error);
             } finally {
                 setIsGeneratingIntroConlusion(false);
@@ -84,21 +118,27 @@ function StoryDetails() {
 
     const deleteStory = async (id) => {
         try {
-            await makeApiRequest(`/stories/${id}`, 'delete');
+            await makeApiRequest(`/stories/${id}`, "delete");
             setSelectedStory({
                 story_id: "",
                 text: [],
                 story_name: "new story...",
-                models: []
+                models: [],
             });
             setActiveView(null);
 
             const data = await makeApiRequest("/stories", "get");
             setStories(data);
-            toast('Story deleted successfully', { className: 'p-2 rounded-md', theme });
+            toast("Story deleted successfully", {
+                className: "p-2 rounded-md",
+                theme,
+            });
         } catch (error) {
             console.log(error);
-            toast('An error occurred while deleting story', { className: 'p-2 rounded-md', theme });
+            toast("An error occurred while deleting story", {
+                className: "p-2 rounded-md",
+                theme,
+            });
         }
     };
 
@@ -107,24 +147,24 @@ function StoryDetails() {
             story_id: "",
             text: [],
             story_name: "",
-            models: []
+            models: [],
         });
         setActiveView(() => {
             if (currentResource) {
-                return 'resource';
+                return "resource";
             }
-            if (selectedStory.note_id !== '') {
-                return 'note';
+            if (selectedStory.note_id !== "") {
+                return "note";
             }
             return null;
         });
         setIsNewStory(false);
     };
 
-    const [newQuestion, setNewQuestion] = useState('');
+    const [newQuestion, setNewQuestion] = useState("");
     const [currentAddingQuestionId, setCurrentAddingQuestionId] = useState("");
     const [currentAddingAnswerId, setCurrentAddingAnswerId] = useState("");
-    const [newAnswer, setNewAnswer] = useState('');
+    const [newAnswer, setNewAnswer] = useState("");
     const titleRef = useRef(null);
 
     const [scrollPosition, setScrollPosition] = useState(0);
@@ -135,7 +175,7 @@ function StoryDetails() {
     }
 
     useEffect(() => {
-        const storyViewPort = JSON.parse(localStorage.getItem('storyViewPort'));
+        const storyViewPort = JSON.parse(localStorage.getItem("storyViewPort"));
         if (storyViewPort && storyViewPort.story === selectedStory.story_id) {
             scrollRef.current.scrollTop = storyViewPort.scrollPosition;
         } else {
@@ -144,9 +184,11 @@ function StoryDetails() {
     }, [selectedStory.story_id]);
 
     useEffect(() => {
-        localStorage.setItem('storyViewPort', JSON.stringify({ scrollPosition, story: selectedStory.story_id }));
+        localStorage.setItem(
+            "storyViewPort",
+            JSON.stringify({ scrollPosition, story: selectedStory.story_id })
+        );
     }, [scrollPosition, selectedStory.story_id]);
-
 
     function handleOpenNewQuestionBox(id) {
         setCurrentAddingQuestionId(id);
@@ -167,9 +209,9 @@ function StoryDetails() {
     }
 
     function handleAddSectionAnswer(id) {
-        setSelectedStory(prev => {
+        setSelectedStory((prev) => {
             const newStory = { ...prev };
-            newStory.text.find(t => t.id === id).content = newAnswer;
+            newStory.text.find((t) => t.id === id).content = newAnswer;
 
             return newStory;
         });
@@ -177,65 +219,76 @@ function StoryDetails() {
     }
 
     function addNewQuestion() {
-        if (newQuestion === '') {
+        if (newQuestion === "") {
             return;
         }
-        setSelectedStory(prev => {
+        setSelectedStory((prev) => {
             const newStory = { ...prev };
             newStory.text.push({
                 id: generateRandomHash(5),
                 content: "",
                 outline: {
                     id: generateRandomHash(5),
-                    name: newQuestion
+                    name: newQuestion,
                 },
-                sectionImages: selectedImagesInQuestion
+                sectionImages: selectedImagesInQuestion,
             });
             return newStory;
         });
-        setNewQuestion('');
+        setNewQuestion("");
         setCurrentAddingQuestionId("");
         // handleSave(e);
     }
 
     function addNewAnswer() {
-        if (newAnswer === '') {
+        if (newAnswer === "") {
             return;
         }
 
         if (selectedStory.text.at(-1).content) return;
 
-        setSelectedStory(prev => {
+        setSelectedStory((prev) => {
             const newStory = { ...prev };
             newStory.text.at(-1).answer = newAnswer;
             newStory.text.at(-1).contentImages = selectedImagesInAnswer;
             return newStory;
         });
-        setNewAnswer('');
+        setNewAnswer("");
         setCurrentAddingAnswerId("");
         // handleSave(e);
     }
 
     const [currentAnswerRef, setCurrentAnswerRef] = useState("");
-    const [currentRefType, setCurrentRefType] = useState('');
+    const [currentRefType, setCurrentRefType] = useState("");
 
     const [currentEditable, setCurrentEditable] = useState(null);
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (currentEditable && !Object.values(currentRefType === "question" ? questionRefs.current : currentRefType === "answer" ? answerRefs.current : currentRefType === "answerWithReference" ? answerWithReferenceRefs.current : titleRef.current).includes(event.target)) {
+            if (
+                currentEditable &&
+                !Object.values(
+                    currentRefType === "question"
+                        ? questionRefs.current
+                        : currentRefType === "answer"
+                            ? answerRefs.current
+                            : currentRefType === "answerWithReference"
+                                ? answerWithReferenceRefs.current
+                                : titleRef.current
+                ).includes(event.target)
+            ) {
                 fireFunction();
                 setCurrentEditable(null);
             }
         };
 
         if (currentEditable) {
-            document.addEventListener('click', handleClickOutside);
+            document.addEventListener("click", handleClickOutside);
         } else {
-            document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener("click", handleClickOutside);
         }
 
         return () => {
-            document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener("click", handleClickOutside);
         };
     }, [currentEditable, currentRefType]);
 
@@ -246,8 +299,7 @@ function StoryDetails() {
             updateResponse(currentEditable);
         } else if (currentRefType === "answerWithReference") {
             // updatedAnswerWithReference(currentEditable, currentAnswerRef);
-        }
-        else {
+        } else {
             updateTitle();
         }
     };
@@ -255,16 +307,17 @@ function StoryDetails() {
     const handleFocus = (type, id, answerIndex) => {
         setCurrentRefType(type);
         setCurrentEditable(id);
-        if (answerIndex)
-            setCurrentAnswerRef(answerIndex);
+        if (answerIndex) setCurrentAnswerRef(answerIndex);
         // if (id === -1) return;
     };
 
     function updateResponseWithReference(id, content) {
         setIsNewStory(false);
-        setSelectedStory(prev => {
+        setSelectedStory((prev) => {
             const newStory = { ...prev };
-            newStory.text.find((note) => note.id === id).content.find(c => c.id === currentAnswerRef).answer = content;
+            newStory.text
+                .find((note) => note.id === id)
+                .content.find((c) => c.id === currentAnswerRef).answer = content;
             return newStory;
         });
         // answerWithReferenceRefs.current[id].blur();
@@ -273,9 +326,10 @@ function StoryDetails() {
     function updateSection(id) {
         setIsNewStory(false);
         // update outline name
-        setSelectedStory(prev => {
+        setSelectedStory((prev) => {
             const newStory = { ...prev };
-            newStory.text.find((note) => note.id === id).outline.name = questionRefs.current[id].innerText;
+            newStory.text.find((note) => note.id === id).outline.name =
+                questionRefs.current[id].innerText;
             return newStory;
         });
         questionRefs.current[id].blur();
@@ -284,9 +338,10 @@ function StoryDetails() {
     function updateResponse(id) {
         setIsNewStory(false);
         // update content
-        setSelectedStory(prev => {
+        setSelectedStory((prev) => {
             const newStory = { ...prev };
-            newStory.text.find((note) => note.id === id).content = answerRefs.current[id].innerText;
+            newStory.text.find((note) => note.id === id).content =
+                answerRefs.current[id].innerText;
             return newStory;
         });
         answerRefs.current[id].blur();
@@ -294,7 +349,10 @@ function StoryDetails() {
 
     function updateTitle() {
         setIsNewStory(false);
-        setSelectedStory(prev => ({ ...prev, story_name: titleRef.current.innerText }));
+        setSelectedStory((prev) => ({
+            ...prev,
+            story_name: titleRef.current.innerText,
+        }));
         // titleRef.current.blur();
     }
 
@@ -306,8 +364,10 @@ function StoryDetails() {
     function handleNewImgSelected(e, type) {
         if (e.target.files) {
             const files = Array.from(e.target.files);
-            const urls = files.map(file => URL.createObjectURL(file));
-            type === "question" ? setSelectedImagesInQuestion(prev => [...prev, ...urls]) : setSelectedImagesInAnswer(prev => [...prev, ...urls]);
+            const urls = files.map((file) => URL.createObjectURL(file));
+            type === "question"
+                ? setSelectedImagesInQuestion((prev) => [...prev, ...urls])
+                : setSelectedImagesInAnswer((prev) => [...prev, ...urls]);
         }
     }
 
@@ -320,14 +380,20 @@ function StoryDetails() {
         setIsTitleEditing(false);
     }
 
-
     useEffect(() => {
-        if (!isFromChat && isPlayerReady && resourceURL && currentResource.file_type === "video") {
+        if (
+            !isFromChat &&
+            isPlayerReady &&
+            resourceURL &&
+            currentResource.file_type === "video"
+        ) {
             const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-            if (timestamp) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+            if (timestamp)
+                player?.current?.seekTo(
+                    typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp)
+                );
         }
     }, [isPlayerReady, currentResource, currentResource?.timestamp]);
-
 
     const handleVideoLinkClick = (event, video) => {
         event.preventDefault();
@@ -338,7 +404,7 @@ function StoryDetails() {
         setResourceURL(resourceURL);
         setSummary(video.summary);
         setSummaries(video.topic_summaries);
-        setActiveView('resource');
+        setActiveView("resource");
         // setShowNoteDetails(false);
     };
 
@@ -350,287 +416,535 @@ function StoryDetails() {
         setResourceURL(resourceURL);
         setSummary(pdf.summary);
         setSummaries(pdf.topic_summaries);
-        setActiveView('resource');
+        setActiveView("resource");
         setJumpToPage({ page: parseInt(pdf.page) + 1 });
         // setShowNoteDetails(false);
     };
 
     const answerWithReferenceRefs = useRef({});
 
-
     function exportHTML() {
-        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+        var header =
+            "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
             "xmlns:w='urn:schemas-microsoft-com:office:word' " +
             "xmlns='http://www.w3.org/TR/REC-html40'>" +
             `<head><meta charset='utf-8'><title>Story:${selectedStory.story_name}</title></head><body>`;
         var footer = "</body></html>";
         const htmlString = `
     <div>
-        <h1 style='text-align: center; margin-bottom: 30px;'>${selectedStory.story_name}</h1>
+        <h1 style='text-align: center; margin-bottom: 30px;'>${selectedStory.story_name
+            }</h1>
     </div>
 
     <div>
-        ${selectedStory.text?.map(item => `
+        ${selectedStory.text
+                ?.map(
+                    (item) => `
             <div>
-                ${item.outline.name ? `
+                ${item.outline.name
+                            ? `
                     <div>
                         <div>
                             <div>
-                                ${item.sectionImages?.length > 0 ? `
+                                ${item.sectionImages?.length > 0
+                                ? `
                                     <div>
-                                        ${item.sectionImages.map(imgBlob => `
+                                        ${item.sectionImages
+                                    .map(
+                                        (imgBlob) => `
                                             <img width="300" height="300" src="${imgBlob}" alt="img" />
-                                        `).join('')}
+                                        `
+                                    )
+                                    .join("")}
                                     </div>
-                                ` : ''}
-                                <h3>${item.outline.name.replace(/\n/g, '<br>')}</h3>
+                                `
+                                : ""
+                            }
+                                <h3>${item.outline.name.replace(
+                                /\n/g,
+                                "<br>"
+                            )}</h3>
                             </div>
                         </div>
                     </div>
-                ` : ''}
+                `
+                            : ""
+                        }
                 <div>
                     <div>
-                        ${item.content ? `
+                        ${item.content
+                            ? `
                             <div>
                                 <div>
-                                    ${typeof item.content === 'string' ? `
-                                        ${item.contentImages?.length > 0 ? `
+                                    ${typeof item.content === "string"
+                                ? `
+                                        ${item.contentImages?.length > 0
+                                    ? `
                                             <div>
-                                                ${item.contentImages.map(imgBlob => `
+                                                ${item.contentImages
+                                        .map(
+                                            (imgBlob) => `
                                                     <img width="300" height="300" src="${imgBlob}" alt="img" />
-                                                `).join('')}
+                                                `
+                                        )
+                                        .join("")}
                                             </div>
-                                        ` : ''}
-                                        <h5>${item.content.replace(/\n/g, '<br>')}</h5>
-                                    ` : `
-                                        ${item.content?.map(i => `
+                                        `
+                                    : ""
+                                }
+                                        <h5>${item.content.replace(
+                                    /\n/g,
+                                    "<br>"
+                                )}</h5>
+                                    `
+                                : `
+                                        ${item.content
+                                    ?.map(
+                                        (i) => `
                                             <div>
                                                 <div>
-                                                    ${!i.answer.includes('https://oaidalleapiprodscus.blob') ? `
-                                                        <p>${i.answer.replace(/\n/g, '<br>')}</p>
-                                                    ` : `
+                                                    ${!i.answer.includes(
+                                            "https://oaidalleapiprodscus.blob"
+                                        )
+                                                ? `
+                                                        <p>${i.answer.replace(
+                                                    /\n/g,
+                                                    "<br>"
+                                                )}</p>
+                                                    `
+                                                : `
                                                         <img width="300" height="300" src="${i.answer}" alt="image" />
-                                                    `}
+                                                    `
+                                            }
                                                 </div>
-                                                ${(i.videosArr?.length > 0 || i.keyframesArr?.length > 0 || i.pdfsArr?.length > 0) ? `
+                                                ${i.videosArr?.length > 0 ||
+                                                i.keyframesArr?.length > 0 ||
+                                                i.pdfsArr?.length > 0
+                                                ? `
                                                     <div>
                                                         <p>References:</p>
-                                                        ${i.videosArr?.length > 0 ? `
+                                                        ${i.videosArr?.length >
+                                                    0
+                                                    ? `
                                                             <ul>
-                                                                ${i.videosArr?.map(video => `
-                                                                    <li>${video.source_path + " | Timestamp: " + video.timestamp}</li>
-                                                                `).join('')}
+                                                                ${i.videosArr
+                                                        ?.map(
+                                                            (video) => `
+                                                                    <li>${video.source_path +
+                                                                " | Timestamp: " +
+                                                                video.timestamp
+                                                                }</li>
+                                                                `
+                                                        )
+                                                        .join("")}
                                                             </ul>
-                                                        ` : ''}
-                                                        ${i.keyframesArr?.length > 0 ? `
+                                                        `
+                                                    : ""
+                                                }
+                                                        ${i.keyframesArr
+                                                    ?.length > 0
+                                                    ? `
                                                             <ul>
-                                                                ${i.keyframesArr?.map(video => `
-                                                                    <li>${video.source_path + " | Keyframe: " + video.timestamp}</li>
-                                                                `).join('')}
+                                                                ${i.keyframesArr
+                                                        ?.map(
+                                                            (video) => `
+                                                                    <li>${video.source_path +
+                                                                " | Keyframe: " +
+                                                                video.timestamp
+                                                                }</li>
+                                                                `
+                                                        )
+                                                        .join("")}
                                                             </ul>
-                                                        ` : ''}
-                                                        ${i.pdfsArr?.length > 0 ? `
+                                                        `
+                                                    : ""
+                                                }
+                                                        ${i.pdfsArr?.length > 0
+                                                    ? `
                                                             <ul>
-                                                                ${i.pdfsArr?.map(pdf => `
-                                                                    <li>${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</li>
-                                                                `).join('')}
+                                                                ${i.pdfsArr
+                                                        ?.map(
+                                                            (pdf) => `
+                                                                    <li>${pdf.source_path +
+                                                                " | Page: " +
+                                                                (parseInt(
+                                                                    pdf.page
+                                                                ) +
+                                                                    1)
+                                                                }</li>
+                                                                `
+                                                        )
+                                                        .join("")}
                                                             </ul>
-                                                        ` : ''}
-                                                        ${i.imgsArr?.length > 0 ? `
+                                                        `
+                                                    : ""
+                                                }
+                                                        ${i.imgsArr?.length > 0
+                                                    ? `
                                                             <ul>
-                                                                ${i.imgsArr?.map(img => `
+                                                                ${i.imgsArr
+                                                        ?.map(
+                                                            (img) => `
                                                                     <li>${img.source_path}</li>
-                                                                `).join('')}
+                                                                `
+                                                        )
+                                                        .join("")}
                                                             </ul>
-                                                        ` : ''}
+                                                        `
+                                                    : ""
+                                                }
                                                     </div>
-                                                ` : ''}
+                                                `
+                                                : ""
+                                            }
                                             </div>
-                                        `).join('')}
-                                    `}
+                                        `
+                                    )
+                                    .join("")}
+                                    `
+                            }
                                 </div>
                             </div>
-                        ` : `<p></p>`}
+                        `
+                            : `<p></p>`
+                        }
                     </div>
                 </div>
             </div>
-        `).join('')}
+        `
+                )
+                .join("")}
     </div>
 `;
         var sourceHTML = header + htmlString + footer;
 
-        var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+        var source =
+            "data:application/vnd.ms-word;charset=utf-8," +
+            encodeURIComponent(sourceHTML);
         var fileDownload = document.createElement("a");
         document.body.appendChild(fileDownload);
         fileDownload.href = source;
-        fileDownload.download = 'document.doc';
+        fileDownload.download = "document.doc";
         fileDownload.click();
         document.body.removeChild(fileDownload);
     }
 
     return (
         <div className="flex flex-col h-full max-w-6xl mx-auto mt-3">
-            <div className='flex items-center justify-between'>
+            <div className="flex items-center justify-between">
                 {/*intro/conc generation */}
-                {selectedStory.text.length > 0 && <div
-                    className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                    onClick={() => autoGenerateStory()}
-                >
-                    <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${isGeneratingIntroConclusion && 'flex items-center gap-2'}`}>
-                        {isGeneratingIntroConclusion ? (
-                            <>
-                                <LoadingSpinner videoSpinner={true} /> <span>Generating Story...</span>
-                            </>
-                        ) : 'Auto generate story'}
-                    </span>
-                </div>}
+                {selectedStory.text.length > 0 && (
+                    <div
+                        className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === "light"
+                                ? "hover:bg-light-hover-100"
+                                : "hover:bg-background_workspace"
+                            }`}
+                        onClick={() => autoGenerateStory()}
+                    >
+                        <AutoAwesomeOutlinedIcon
+                            style={{ color: `${theme === "light" ? "#333" : "#ABAEB4"}` }}
+                        />
+                        <span
+                            className={`font-medium ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                                } ${isGeneratingIntroConclusion && "flex items-center gap-2"}`}
+                        >
+                            {isGeneratingIntroConclusion ? (
+                                <>
+                                    <LoadingSpinner videoSpinner={true} />{" "}
+                                    <span>Generating Story...</span>
+                                </>
+                            ) : (
+                                "Auto generate story"
+                            )}
+                        </span>
+                    </div>
+                )}
                 {/* close button */}
-                <div className='flex items-center justify-end'>
-                    <BaseHeading text='close' className='cursor-pointer user-select-none' onClick={handleCloseStory} />
+                <div className="flex items-center justify-end">
+                    <BaseHeading
+                        text="close"
+                        className="cursor-pointer user-select-none"
+                        onClick={handleCloseStory}
+                    />
                 </div>
             </div>
 
             {/* title */}
-            <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                <h3 className='m-0'>Title:</h3>
-                <h4 className='m-0' onFocus={handleTitleFocus} ref={titleRef} contentEditable suppressContentEditableWarning={true} onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        updateTitle();
-                    }
-                }}>{selectedStory.story_name}</h4>
-                {
-                    isTitleEditing && <CheckIcon onClick={changeTitle} className='cursor-pointer' />
-                }
+            <div
+                className={`mt-2 mb-5 flex items-end gap-3 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                    }`}
+            >
+                <h3 className="m-0">Title:</h3>
+                <h4
+                    className="m-0"
+                    onFocus={handleTitleFocus}
+                    ref={titleRef}
+                    contentEditable
+                    suppressContentEditableWarning={true}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            updateTitle();
+                        }
+                    }}
+                >
+                    {selectedStory.story_name}
+                </h4>
+                {isTitleEditing && (
+                    <CheckIcon onClick={changeTitle} className="cursor-pointer" />
+                )}
             </div>
 
-
-            <div className={`overflow-y-auto flex-1 flex flex-col gap-4 ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`} ref={scrollRef} onScroll={handleScroll}>
+            <div
+                className={`overflow-y-auto flex-1 flex flex-col gap-4 ${theme === "light" ? "text-textColor-300" : "text-light-hover-100"
+                    }`}
+                ref={scrollRef}
+                onScroll={handleScroll}
+            >
                 {selectedStory.text?.map((item) => (
                     <div key={item.id} className="flex flex-col gap-4 px-3">
                         {/* question */}
-                        {
-                            item.outline.name ?
-                                <div>
-                                    <div className='flex items-center gap-2'>
-                                        <div className={`py-1 px-3 w-fit rounded-md ${theme === 'light' ? 'bg-white border border-slate-200' : 'bg-textColor-300'}`}>
-                                            {/* displaying imgs */}
-                                            {item?.sectionImages?.length > 0 && <div className="flex flex-col gap-3 mb-4">
+                        {item.outline.name ? (
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <div
+                                        className={`py-1 px-3 w-fit rounded-md ${theme === "light"
+                                                ? "bg-white border border-slate-200"
+                                                : "bg-textColor-300"
+                                            }`}
+                                    >
+                                        {/* displaying imgs */}
+                                        {item?.sectionImages?.length > 0 && (
+                                            <div className="flex flex-col gap-3 mb-4">
                                                 {item?.sectionImages?.map((imgBlob, index) => (
-                                                    <img width='300' height='200' className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
-                                                )
-                                                )}
-                                            </div>}
-                                            <div contentEditable dangerouslySetInnerHTML={{ __html: item.outline.name.replace(/\n/g, '<br>') }} suppressContentEditableWarning={true} ref={(el) => (questionRefs.current[item.id] = el)} onFocus={() => handleFocus("question", item.id)} ></div>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
-                                        </div>
+                                                    <img
+                                                        width="300"
+                                                        height="200"
+                                                        className="w-[300px] h-[200px] object-contain"
+                                                        src={imgBlob}
+                                                        alt="img"
+                                                        key={index}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                        <div
+                                            contentEditable
+                                            dangerouslySetInnerHTML={{
+                                                __html: item.outline.name.replace(/\n/g, "<br>"),
+                                            }}
+                                            suppressContentEditableWarning={true}
+                                            ref={(el) => (questionRefs.current[item.id] = el)}
+                                            onFocus={() => handleFocus("question", item.id)}
+                                        ></div>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <CloseIcon
+                                            fontSize="2"
+                                            className="cursor-pointer"
+                                            onClick={() => handleDeleteContent(item.id)}
+                                        />
                                     </div>
                                 </div>
-                                : null
-                        }
+                            </div>
+                        ) : null}
                         {/* answer */}
-                        <div className='flex items-center gap-4'>
-                            <div className='min-w-[50%]'>
-                                {
-                                    item.content ? (
-                                        <div className='flex items-center gap-2'>
-                                            <div className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background'} align-self-start w-fit max-w-[95%]`}>
-                                                {typeof item.content === 'string' ?
-                                                    <>
-                                                        {item?.contentImages?.length > 0 && <div className="flex flex-col gap-3 mb-4">
+                        <div className="flex items-center gap-4">
+                            <div className="min-w-[50%]">
+                                {item.content ? (
+                                    <div className="flex items-center gap-2">
+                                        <div
+                                            className={`w-fit rounded-md flex flex-col  gap-3 py-2 px-3 ${theme === "light" ? "bg-slate-200" : "bg-background"
+                                                } align-self-start w-fit max-w-[95%]`}
+                                        >
+                                            {typeof item.content === "string" ? (
+                                                <>
+                                                    {item?.contentImages?.length > 0 && (
+                                                        <div className="flex flex-col gap-3 mb-4">
                                                             {/* list of images */}
                                                             {item?.contentImages?.map((imgBlob, index) => (
-                                                                <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
-                                                            )
-                                                            )}
-                                                        </div>}
-                                                        <p dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)} ></p></> : (
-                                                        <>
-                                                            {/* <div ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}>{renderElement(item.content)}</div> */}
-                                                            {
-                                                                item.content?.map((i, index) => {
-                                                                    return (
-                                                                        <div key={index}>
-                                                                            {/* single answer */}
-                                                                            <div className='flex items-center gap-2'>
-                                                                                {!i.answer.includes('https://oaidalleapiprodscus.blob') ? <p dangerouslySetInnerHTML={{ __html: i.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerWithReferenceRefs.current[item.id] = el)} onFocus={() => {
-                                                                                    setCurrentAnswerRef(i.id);
-                                                                                }} onBlur={(e) => updateResponseWithReference(item.id, e.target.innerText)}></p> : <img src={i.answer} alt='image' />}
-                                                                                {/* {currentAnswerRef === i.id && <CheckIcon onClick={() => updateResponseWithReference(textIndex)} className='cursor-pointer' />} */}
-                                                                            </div>
-                                                                            {(i.videosArr?.length > 0 || i.keyframesArr?.length > 0 || i.pdfsArr?.length > 0 || i.imgsArr?.length > 0) && (
-                                                                                <div>
-                                                                                    <p className="m-0">References:</p>
-                                                                                    {i.videosArr?.length > 0 && (
-                                                                                        <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                            {i.videosArr?.map((video, index) => (
-                                                                                                <Link key={index} onClick={(event) => handleVideoLinkClick(event, video)}>
-                                                                                                    {video.source_path + " | Timestamp: " + video.timestamp}
-                                                                                                </Link>
-                                                                                            ))}
-
-                                                                                        </ul>
-                                                                                    )}
-                                                                                    {i.keyframesArr?.length > 0 && (
-                                                                                        <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                            {i.keyframesArr?.map((video, index) => (
-                                                                                                <Link key={index} onClick={(event) => handleVideoLinkClick(event, video)}>
-                                                                                                    {video.source_path + " | Keyframe at: " + video.timestamp}
-                                                                                                </Link>
-                                                                                            ))}
-
-                                                                                        </ul>
-                                                                                    )}
-                                                                                    {i.pdfsArr?.length > 0 && (
-                                                                                        <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                            {i.pdfsArr?.map((pdf, index) => (
-                                                                                                <Link key={index} onClick={(event) => handlePDFLinkClick(event, pdf)}>
-                                                                                                    {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
-                                                                                                </Link>
-                                                                                            ))}
-                                                                                        </ul>
-                                                                                    )}
-                                                                                    {i.imgsArr?.length > 0 && (
-                                                                                        <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                            {i.imgsArr?.map((img, index) => (
-                                                                                                <Link key={index} onClick={(event) => handlePDFLinkClick(event, img)}>
-                                                                                                    {img.source_path}
-                                                                                                </Link>
-                                                                                            ))}
-                                                                                        </ul>
-                                                                                    )}
-                                                                                </div>
+                                                                <img
+                                                                    className="w-[300px] h-[200px] object-contain"
+                                                                    src={imgBlob}
+                                                                    alt="img"
+                                                                    key={index}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                    <p
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: item.content.replace(/\n/g, "<br>"),
+                                                        }}
+                                                        contentEditable
+                                                        suppressContentEditableWarning={true}
+                                                        ref={(el) => (answerRefs.current[item.id] = el)}
+                                                        onFocus={() => handleFocus("answer", item.id)}
+                                                    ></p>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {/* <div ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}>{renderElement(item.content)}</div> */}
+                                                    {item.content?.map((i, index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                {/* single answer */}
+                                                                <div className="flex items-center gap-2">
+                                                                    {!i.answer.includes(
+                                                                        "https://oaidalleapiprodscus.blob"
+                                                                    ) ? (
+                                                                        <p
+                                                                            dangerouslySetInnerHTML={{
+                                                                                __html: i.answer.replace(/\n/g, "<br>"),
+                                                                            }}
+                                                                            contentEditable
+                                                                            suppressContentEditableWarning={true}
+                                                                            ref={(el) =>
+                                                                            (answerWithReferenceRefs.current[
+                                                                                item.id
+                                                                            ] = el)
+                                                                            }
+                                                                            onFocus={() => {
+                                                                                setCurrentAnswerRef(i.id);
+                                                                            }}
+                                                                            onBlur={(e) =>
+                                                                                updateResponseWithReference(
+                                                                                    item.id,
+                                                                                    e.target.innerText
+                                                                                )
+                                                                            }
+                                                                        ></p>
+                                                                    ) : (
+                                                                        <img src={i.answer} alt="image" />
+                                                                    )}
+                                                                    {/* {currentAnswerRef === i.id && <CheckIcon onClick={() => updateResponseWithReference(textIndex)} className='cursor-pointer' />} */}
+                                                                </div>
+                                                                {(i.videosArr?.length > 0 ||
+                                                                    i.keyframesArr?.length > 0 ||
+                                                                    i.pdfsArr?.length > 0 ||
+                                                                    i.imgsArr?.length > 0) && (
+                                                                        <div>
+                                                                            <p className="m-0">References:</p>
+                                                                            {i.videosArr?.length > 0 && (
+                                                                                <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                    {i.videosArr?.map((video, index) => (
+                                                                                        <Link
+                                                                                            key={index}
+                                                                                            onClick={(event) =>
+                                                                                                handleVideoLinkClick(event, video)
+                                                                                            }
+                                                                                        >
+                                                                                            {video.source_path +
+                                                                                                " | Timestamp: " +
+                                                                                                video.timestamp}
+                                                                                        </Link>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            )}
+                                                                            {i.keyframesArr?.length > 0 && (
+                                                                                <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                    {i.keyframesArr?.map((video, index) => (
+                                                                                        <Link
+                                                                                            key={index}
+                                                                                            onClick={(event) =>
+                                                                                                handleVideoLinkClick(event, video)
+                                                                                            }
+                                                                                        >
+                                                                                            {video.source_path +
+                                                                                                " | Keyframe at: " +
+                                                                                                video.timestamp}
+                                                                                        </Link>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            )}
+                                                                            {i.pdfsArr?.length > 0 && (
+                                                                                <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                    {i.pdfsArr?.map((pdf, index) => (
+                                                                                        <Link
+                                                                                            key={index}
+                                                                                            onClick={(event) =>
+                                                                                                handlePDFLinkClick(event, pdf)
+                                                                                            }
+                                                                                        >
+                                                                                            {pdf.source_path +
+                                                                                                " | Page: " +
+                                                                                                (parseInt(pdf.page) + 1)}
+                                                                                        </Link>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            )}
+                                                                            {i.imgsArr?.length > 0 && (
+                                                                                <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+                                                                                    {i.imgsArr?.map((img, index) => (
+                                                                                        <Link
+                                                                                            key={index}
+                                                                                            onClick={(event) =>
+                                                                                                handlePDFLinkClick(event, img)
+                                                                                            }
+                                                                                        >
+                                                                                            {img.source_path}
+                                                                                        </Link>
+                                                                                    ))}
+                                                                                </ul>
                                                                             )}
                                                                         </div>
-                                                                    );
-                                                                })
-                                                            }
-                                                        </>
-                                                    )}
-                                            </div>
-                                            {/* <div className="flex gap-2">
+                                                                    )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </>
+                                            )}
+                                        </div>
+                                        {/* <div className="flex gap-2">
                                                 <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
                                             </div> */}
-                                        </div>) : currentAddingAnswerId !== item.id ? (
-                                            <div className={`flex items-center justify-center py-1 px-3 ${theme === 'light' ? 'bg-slate-200' : 'bg-background rounded-md'} align-self-start cursor-pointer`}
-                                                onClick={() => { setNewAnswer(''); handleOpenNewAnswerBox(item.id); }}>
-                                                <AddIcon fontSize='small' />
-                                            </div>
-                                        ) : (
-                                        <div className="flex flex-col">
-                                            <div>
-                                                <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
-                                            </div>
-                                            <div className="flex items-center justify-end gap-2">
-                                                <CustomButton className='my-0' onClick={() => { setNewAnswer(""); setCurrentAddingAnswerId(""); }}>Cancel</CustomButton>
-                                                <CustomButton className='my-0' onClick={() => handleAddSectionAnswer(item.id)}>Save</CustomButton>
-                                            </div>
+                                    </div>
+                                ) : currentAddingAnswerId !== item.id ? (
+                                    <div
+                                        className={`flex items-center justify-center py-1 px-3 ${theme === "light"
+                                                ? "bg-slate-200"
+                                                : "bg-background rounded-md"
+                                            } align-self-start cursor-pointer`}
+                                        onClick={() => {
+                                            setNewAnswer("");
+                                            handleOpenNewAnswerBox(item.id);
+                                        }}
+                                    >
+                                        <AddIcon fontSize="small" />
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col">
+                                        <div>
+                                            <textarea
+                                                rows="5"
+                                                className={`w-full h-auto outline-none p-1 ${theme === "dark"
+                                                        ? "!border !border-textColor-300 bg-black text-textColor-100"
+                                                        : "border"
+                                                    }`}
+                                                placeholder="Answer"
+                                                value={newAnswer}
+                                                onChange={(e) => setNewAnswer(e.target.value)}
+                                            />
                                         </div>
-                                    )
-                                }
+                                        <div className="flex items-center justify-end gap-2">
+                                            <CustomButton
+                                                className="my-0"
+                                                onClick={() => {
+                                                    setNewAnswer("");
+                                                    setCurrentAddingAnswerId("");
+                                                }}
+                                            >
+                                                Cancel
+                                            </CustomButton>
+                                            <CustomButton
+                                                className="my-0"
+                                                onClick={() => handleAddSectionAnswer(item.id)}
+                                            >
+                                                Save
+                                            </CustomButton>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -638,58 +952,154 @@ function StoryDetails() {
 
                 {/* add new question/answer */}
                 <div className="flex flex-col gap-4 px-3 mt-2">
-                    {!currentAddingQuestionId ? <div className={`flex items-center  gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'} cursor-pointer`}
-                        onClick={handleOpenNewQuestionBox}>
-                        <AddIcon fontSize='small' />
-                    </div>
-                        : <div className="flex flex-col">
+                    {!currentAddingQuestionId ? (
+                        <div
+                            className={`flex items-center  gap-3 py-1 px-3 ${theme === "light"
+                                    ? "bg-light-hover-200"
+                                    : "bg-textColor-300 w-fit rounded-md"
+                                } cursor-pointer`}
+                            onClick={handleOpenNewQuestionBox}
+                        >
+                            <AddIcon fontSize="small" />
+                        </div>
+                    ) : (
+                        <div className="flex flex-col">
                             <div>
                                 {/* img placeholders */}
-                                <input type="file" multiple onChange={e => handleNewImgSelected(e, 'question')} accept='image/*' />
-                                <div className='flex items-center gap-2'>
-                                    {
-                                        selectedImagesInQuestion.map((item, index) => (
-                                            <img className='w-10 h-10' src={item} alt="img" key={index} />
-                                        ))
-                                    }
+                                <input
+                                    type="file"
+                                    multiple
+                                    onChange={(e) => handleNewImgSelected(e, "question")}
+                                    accept="image/*"
+                                />
+                                <div className="flex items-center gap-2">
+                                    {selectedImagesInQuestion.map((item, index) => (
+                                        <img
+                                            className="w-10 h-10"
+                                            src={item}
+                                            alt="img"
+                                            key={index}
+                                        />
+                                    ))}
                                 </div>
-                                <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Question' value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} />
+                                <textarea
+                                    rows="5"
+                                    className={`w-full h-auto outline-none p-1 ${theme === "dark"
+                                            ? "!border !border-textColor-300 bg-black text-textColor-100"
+                                            : "border"
+                                        }`}
+                                    placeholder="Question"
+                                    value={newQuestion}
+                                    onChange={(e) => setNewQuestion(e.target.value)}
+                                />
                             </div>
                             <div className="flex items-center justify-end gap-2">
-                                <CustomButton className='my-0' onClick={() => setCurrentAddingQuestionId("")}>Cancel</CustomButton>
-                                <CustomButton className='my-0' onClick={e => addNewQuestion(e)}>Save</CustomButton>
+                                <CustomButton
+                                    className="my-0"
+                                    onClick={() => setCurrentAddingQuestionId("")}
+                                >
+                                    Cancel
+                                </CustomButton>
+                                <CustomButton
+                                    className="my-0"
+                                    onClick={(e) => addNewQuestion(e)}
+                                >
+                                    Save
+                                </CustomButton>
                             </div>
-                        </div>}
-                    {!currentAddingAnswerId && !currentAddingQuestionId ? <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-background w-fit rounded-md'} align-self-start max-w-[80%] cursor-pointer`}
-                        onClick={handleOpenNewAnswerBox}>
-                        <AddIcon fontSize='small' />
-                    </div>
-                        : currentAddingAnswerId && !currentAddingQuestionId ? selectedStory?.text.at(-1)?.outline.name !== "" && <div className="flex flex-col">
-                            {/* img placeholders */}
-                            <input type="file" multiple onChange={e => handleNewImgSelected(e, 'answer')} accept='image/*' />
-                            <div className='flex items-center gap-2'>
-                                {
-                                    selectedImagesInAnswer.map((item, index) => (
-                                        <img className='w-10 h-10' src={item} alt="img" key={index} />
-                                    ))
-                                }
+                        </div>
+                    )}
+                    {!currentAddingAnswerId && !currentAddingQuestionId ? (
+                        <div
+                            className={`flex items-center gap-3 py-1 px-3 ${theme === "light"
+                                    ? "bg-light-hover-200"
+                                    : "bg-background w-fit rounded-md"
+                                } align-self-start max-w-[80%] cursor-pointer`}
+                            onClick={handleOpenNewAnswerBox}
+                        >
+                            <AddIcon fontSize="small" />
+                        </div>
+                    ) : currentAddingAnswerId && !currentAddingQuestionId ? (
+                        selectedStory?.text.at(-1)?.outline.name !== "" && (
+                            <div className="flex flex-col">
+                                {/* img placeholders */}
+                                <input
+                                    type="file"
+                                    multiple
+                                    onChange={(e) => handleNewImgSelected(e, "answer")}
+                                    accept="image/*"
+                                />
+                                <div className="flex items-center gap-2">
+                                    {selectedImagesInAnswer.map((item, index) => (
+                                        <img
+                                            className="w-10 h-10"
+                                            src={item}
+                                            alt="img"
+                                            key={index}
+                                        />
+                                    ))}
+                                </div>
+                                <div>
+                                    <textarea
+                                        rows="5"
+                                        className={`w-full h-auto outline-none p-1 ${theme === "dark"
+                                                ? "!border !border-textColor-300 bg-black text-textColor-100"
+                                                : "border"
+                                            }`}
+                                        placeholder="Answer"
+                                        value={newAnswer}
+                                        onChange={(e) => setNewAnswer(e.target.value)}
+                                    />
+                                </div>
+                                <div className="flex items-center justify-end gap-2">
+                                    <CustomButton
+                                        className="my-0"
+                                        onClick={() => setCurrentAddingAnswerId("")}
+                                    >
+                                        Cancel
+                                    </CustomButton>
+                                    <CustomButton
+                                        className="my-0"
+                                        onClick={(e) => addNewAnswer(e)}
+                                    >
+                                        Save
+                                    </CustomButton>
+                                </div>
                             </div>
-                            <div>
-                                <textarea rows='5' className={`w-full h-auto outline-none p-1 ${theme === 'dark' ? '!border !border-textColor-300 bg-black text-textColor-100' : 'border'}`} placeholder='Answer' value={newAnswer} onChange={(e) => setNewAnswer(e.target.value)} />
-                            </div>
-                            <div className="flex items-center justify-end gap-2">
-                                <CustomButton className='my-0' onClick={() => setCurrentAddingAnswerId("")}>Cancel</CustomButton>
-                                <CustomButton className='my-0' onClick={e => addNewAnswer(e)}>Save</CustomButton>
-                            </div>
-                        </div> : null}
+                        )
+                    ) : null}
                 </div>
             </div>
 
             {/* questions/answers */}
-            <div className='flex items-center gap-3 ml-auto w-fit'>
-                <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={() => deleteStory(selectedStory.story_id)}>Delete</CustomButton>
-                <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
-                <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={exportHTML}>Export to Word</CustomButton>
+            <div className="flex items-center gap-3 ml-auto w-fit">
+                <CustomButton
+                    className={`ml-auto ${theme === "light"
+                            ? "bg-white border border-light-hover-200"
+                            : "text-white bg-black"
+                        }`}
+                    onClick={() => deleteStory(selectedStory.story_id)}
+                >
+                    Delete
+                </CustomButton>
+                <CustomButton
+                    className={`ml-auto ${theme === "light"
+                            ? "bg-white border border-light-hover-200"
+                            : "text-white bg-black"
+                        }`}
+                    onClick={(e) => handleSave(e)}
+                >
+                    Save
+                </CustomButton>
+                <CustomButton
+                    className={`ml-auto ${theme === "light"
+                            ? "bg-white border border-light-hover-200"
+                            : "text-white bg-black"
+                        }`}
+                    onClick={exportHTML}
+                >
+                    Export to Word
+                </CustomButton>
             </div>
         </div>
     );
