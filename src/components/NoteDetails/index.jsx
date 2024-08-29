@@ -432,7 +432,7 @@ function NoteDetails() {
     function handleNewImgSelected(e, type) {
         if (e.target.files) {
             const files = Array.from(e.target.files);
-            const urls = files.map(file => URL.createObjectURL(file));
+            const urls = files?.map(file => URL.createObjectURL(file));
             type === "question" ? setSelectedImagesInQuestion(prev => [...prev, ...urls]) : setSelectedImagesInAnswer(prev => [...prev, ...urls]);
         }
     }
@@ -547,7 +547,7 @@ function NoteDetails() {
                                             <div>
                                                 <div className="flex flex-col items-center gap-3">
                                                     {/* list of images */}
-                                                    {item.question?.imgs_list.map((imgBlob, index) => (
+                                                    {item.question?.imgs_list?.map((imgBlob, index) => (
                                                         <img className="w-[300px] h-[200px] object-contain" src={imgBlob} alt='img' key={index} />
                                                     )
                                                     )}
@@ -580,7 +580,7 @@ function NoteDetails() {
                                                     <h6 className='text-sm'>References:</h6>
                                                     <ul className='break-all'>
                                                         {
-                                                            item.refs?.videoLinks.map((video) => (
+                                                            item.refs?.videoLinks?.map((video) => (
                                                                 <li key={video.source_path} className="ml-0">
                                                                     <Link onClick={(event) => handleVideoLinkClick(event, video)}>
                                                                         {video.source_path + " | Timestamp: " + video.timestamp}
@@ -591,7 +591,7 @@ function NoteDetails() {
                                                     </ul>
                                                     <ul className='break-all'>
                                                         {
-                                                            item.refs?.keyframeLinks.map((video) => (
+                                                            item.refs?.keyframeLinks?.map((video) => (
                                                                 <li key={video.source_path} className="ml-0">
                                                                     <Link onClick={(event) => handleVideoLinkClick(event, video)}>
                                                                         {video.source_path + " | Keyframe at: " + video.timestamp}
@@ -602,7 +602,7 @@ function NoteDetails() {
                                                     </ul>
                                                     <ul className='break-all'>
                                                         {
-                                                            item.refs?.pdfLinks.map((pdf) => (
+                                                            item.refs?.pdfLinks?.map((pdf) => (
                                                                 <li key={pdf.source_path} className="ml-0">
                                                                     <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
                                                                         {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
@@ -613,7 +613,7 @@ function NoteDetails() {
                                                     </ul>
                                                     <ul className='break-all'>
                                                         {
-                                                            item.refs?.imgLinks.map((img) => (
+                                                            item.refs?.imgLinks?.map((img) => (
                                                                 <li key={img.source_path} className="ml-0">
                                                                     <Link onClick={(event) => handlePDFLinkClick(event, img)}>
                                                                         {img.source_path}
@@ -645,7 +645,7 @@ function NoteDetails() {
                             <input type="file" multiple onChange={e => handleNewImgSelected(e, 'question')} accept='image/*' />
                             <div className='flex items-center gap-2'>
                                 {
-                                    selectedImagesInQuestion.map((item, index) => (
+                                    selectedImagesInQuestion?.map((item, index) => (
                                         <img className='w-10 h-10' src={item} alt="img" key={index} />
                                     ))
                                 }
@@ -667,7 +667,7 @@ function NoteDetails() {
                             <input type="file" multiple onChange={e => handleNewImgSelected(e, 'answer')} accept='image/*' />
                             <div className='flex items-center gap-2'>
                                 {
-                                    selectedImagesInAnswer.map((item, index) => (
+                                    selectedImagesInAnswer?.map((item, index) => (
                                         <img className='w-10 h-10' src={item} alt="img" key={index} />
                                     ))
                                 }

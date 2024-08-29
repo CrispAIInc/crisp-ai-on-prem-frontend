@@ -403,7 +403,7 @@ function StoryDetails() {
                                         ` : ''}
                                         <h5>${item.content.replace(/\n/g, '<br>')}</h5>
                                     ` : `
-                                        ${item.content.map(i => `
+                                        ${item.content?.map(i => `
                                             <div>
                                                 <div>
                                                     ${!i.answer.includes('https://oaidalleapiprodscus.blob') ? `
@@ -417,28 +417,28 @@ function StoryDetails() {
                                                         <p>References:</p>
                                                         ${i.videosArr?.length > 0 ? `
                                                             <ul>
-                                                                ${i.videosArr.map(video => `
+                                                                ${i.videosArr?.map(video => `
                                                                     <li>${video.source_path + " | Timestamp: " + video.timestamp}</li>
                                                                 `).join('')}
                                                             </ul>
                                                         ` : ''}
                                                         ${i.keyframesArr?.length > 0 ? `
                                                             <ul>
-                                                                ${i.keyframesArr.map(video => `
+                                                                ${i.keyframesArr?.map(video => `
                                                                     <li>${video.source_path + " | Keyframe: " + video.timestamp}</li>
                                                                 `).join('')}
                                                             </ul>
                                                         ` : ''}
                                                         ${i.pdfsArr?.length > 0 ? `
                                                             <ul>
-                                                                ${i.pdfsArr.map(pdf => `
+                                                                ${i.pdfsArr?.map(pdf => `
                                                                     <li>${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</li>
                                                                 `).join('')}
                                                             </ul>
                                                         ` : ''}
                                                         ${i.imgsArr?.length > 0 ? `
                                                             <ul>
-                                                                ${i.imgsArr.map(img => `
+                                                                ${i.imgsArr?.map(img => `
                                                                     <li>${img.source_path}</li>
                                                                 `).join('')}
                                                             </ul>
@@ -551,7 +551,7 @@ function StoryDetails() {
                                                         <>
                                                             {/* <div ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}>{renderElement(item.content)}</div> */}
                                                             {
-                                                                item.content.map((i, index) => {
+                                                                item.content?.map((i, index) => {
                                                                     return (
                                                                         <div key={index}>
                                                                             {/* single answer */}
@@ -566,7 +566,7 @@ function StoryDetails() {
                                                                                     <p className="m-0">References:</p>
                                                                                     {i.videosArr?.length > 0 && (
                                                                                         <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                            {i.videosArr.map((video, index) => (
+                                                                                            {i.videosArr?.map((video, index) => (
                                                                                                 <Link key={index} onClick={(event) => handleVideoLinkClick(event, video)}>
                                                                                                     {video.source_path + " | Timestamp: " + video.timestamp}
                                                                                                 </Link>
@@ -576,7 +576,7 @@ function StoryDetails() {
                                                                                     )}
                                                                                     {i.keyframesArr?.length > 0 && (
                                                                                         <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                            {i.keyframesArr.map((video, index) => (
+                                                                                            {i.keyframesArr?.map((video, index) => (
                                                                                                 <Link key={index} onClick={(event) => handleVideoLinkClick(event, video)}>
                                                                                                     {video.source_path + " | Keyframe at: " + video.timestamp}
                                                                                                 </Link>
@@ -586,7 +586,7 @@ function StoryDetails() {
                                                                                     )}
                                                                                     {i.pdfsArr?.length > 0 && (
                                                                                         <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                            {i.pdfsArr.map((pdf, index) => (
+                                                                                            {i.pdfsArr?.map((pdf, index) => (
                                                                                                 <Link key={index} onClick={(event) => handlePDFLinkClick(event, pdf)}>
                                                                                                     {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
                                                                                                 </Link>
@@ -595,7 +595,7 @@ function StoryDetails() {
                                                                                     )}
                                                                                     {i.imgsArr?.length > 0 && (
                                                                                         <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                            {i.imgsArr.map((img, index) => (
+                                                                                            {i.imgsArr?.map((img, index) => (
                                                                                                 <Link key={index} onClick={(event) => handlePDFLinkClick(event, img)}>
                                                                                                     {img.source_path}
                                                                                                 </Link>
