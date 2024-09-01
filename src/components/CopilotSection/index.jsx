@@ -1162,7 +1162,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                             : "text-textColor-100"
                             }`}
                         >
-                          Chatbot:{" "}
+                          Crisp Wiz:{" "}
                         </b>
                         <div className="flex flex-col flex-1">
                           <img
@@ -1235,7 +1235,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                             : "text-textColor-100"
                             }`}
                         >
-                          Chatbot:{" "}
+                          Crisp Wiz:{" "}
                         </b>
                         <div
                           className={`${theme === "light"
