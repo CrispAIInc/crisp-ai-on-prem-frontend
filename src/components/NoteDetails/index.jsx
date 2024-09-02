@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
-import { generateRandomHash, hexToRGBString } from '../../utils';
+import { decimalSecondsToHHMMSS, generateRandomHash, hexToRGBString } from '../../utils';
 import AddToStoryModal from '../AddToStoryModal';
 import AggregationLlmModal from '../AggregationLlmModal';
 import BaseHeading from '../BaseHeading';
@@ -594,7 +594,7 @@ function NoteDetails() {
                                                             item.refs?.keyframeLinks?.map((video) => (
                                                                 <li key={video.source_path} className="ml-0">
                                                                     <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-                                                                        {video.source_path + " | Keyframe at: " + video.timestamp}
+                                                                        {video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
                                                                     </Link>
                                                                 </li>
                                                             ))

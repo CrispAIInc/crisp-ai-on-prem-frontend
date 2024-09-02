@@ -13,6 +13,7 @@ import "react-simple-toasts/dist/theme/dark.css";
 import "react-simple-toasts/dist/theme/light.css";
 import makeApiRequest from "../../api";
 import {
+    decimalSecondsToHHMMSS,
     generateRandomHash,
     timeToSeconds,
     transformArrayOfObjectsToArray,
@@ -636,8 +637,8 @@ function StoryDetails() {
                 {selectedStory.text.length > 0 && (
                     <div
                         className={`user-select-none flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit text-sm ${theme === "light"
-                                ? "hover:bg-light-hover-100"
-                                : "hover:bg-background_workspace"
+                            ? "hover:bg-light-hover-100"
+                            : "hover:bg-background_workspace"
                             }`}
                         onClick={() => autoGenerateStory()}
                     >
@@ -709,8 +710,8 @@ function StoryDetails() {
                                 <div className="flex items-center gap-2">
                                     <div
                                         className={`py-1 px-3 w-fit rounded-md ${theme === "light"
-                                                ? "bg-white border border-slate-200"
-                                                : "bg-textColor-300"
+                                            ? "bg-white border border-slate-200"
+                                            : "bg-textColor-300"
                                             }`}
                                     >
                                         {/* displaying imgs */}
@@ -852,7 +853,7 @@ function StoryDetails() {
                                                                                         >
                                                                                             {video.source_path +
                                                                                                 " | Keyframe at: " +
-                                                                                                video.timestamp}
+                                                                                                decimalSecondsToHHMMSS(video.timestamp)}
                                                                                         </Link>
                                                                                     ))}
                                                                                 </ul>
@@ -902,8 +903,8 @@ function StoryDetails() {
                                 ) : currentAddingAnswerId !== item.id ? (
                                     <div
                                         className={`flex items-center justify-center py-1 px-3 ${theme === "light"
-                                                ? "bg-slate-200"
-                                                : "bg-background rounded-md"
+                                            ? "bg-slate-200"
+                                            : "bg-background rounded-md"
                                             } align-self-start cursor-pointer`}
                                         onClick={() => {
                                             setNewAnswer("");
@@ -918,8 +919,8 @@ function StoryDetails() {
                                             <textarea
                                                 rows="5"
                                                 className={`w-full h-auto outline-none p-1 ${theme === "dark"
-                                                        ? "!border !border-textColor-300 bg-black text-textColor-100"
-                                                        : "border"
+                                                    ? "!border !border-textColor-300 bg-black text-textColor-100"
+                                                    : "border"
                                                     }`}
                                                 placeholder="Answer"
                                                 value={newAnswer}
@@ -955,8 +956,8 @@ function StoryDetails() {
                     {!currentAddingQuestionId ? (
                         <div
                             className={`flex items-center  gap-3 py-1 px-3 ${theme === "light"
-                                    ? "bg-light-hover-200"
-                                    : "bg-textColor-300 w-fit rounded-md"
+                                ? "bg-light-hover-200"
+                                : "bg-textColor-300 w-fit rounded-md"
                                 } cursor-pointer`}
                             onClick={handleOpenNewQuestionBox}
                         >
@@ -985,8 +986,8 @@ function StoryDetails() {
                                 <textarea
                                     rows="5"
                                     className={`w-full h-auto outline-none p-1 ${theme === "dark"
-                                            ? "!border !border-textColor-300 bg-black text-textColor-100"
-                                            : "border"
+                                        ? "!border !border-textColor-300 bg-black text-textColor-100"
+                                        : "border"
                                         }`}
                                     placeholder="Question"
                                     value={newQuestion}
@@ -1012,8 +1013,8 @@ function StoryDetails() {
                     {!currentAddingAnswerId && !currentAddingQuestionId ? (
                         <div
                             className={`flex items-center gap-3 py-1 px-3 ${theme === "light"
-                                    ? "bg-light-hover-200"
-                                    : "bg-background w-fit rounded-md"
+                                ? "bg-light-hover-200"
+                                : "bg-background w-fit rounded-md"
                                 } align-self-start max-w-[80%] cursor-pointer`}
                             onClick={handleOpenNewAnswerBox}
                         >
@@ -1043,8 +1044,8 @@ function StoryDetails() {
                                     <textarea
                                         rows="5"
                                         className={`w-full h-auto outline-none p-1 ${theme === "dark"
-                                                ? "!border !border-textColor-300 bg-black text-textColor-100"
-                                                : "border"
+                                            ? "!border !border-textColor-300 bg-black text-textColor-100"
+                                            : "border"
                                             }`}
                                         placeholder="Answer"
                                         value={newAnswer}
@@ -1075,8 +1076,8 @@ function StoryDetails() {
             <div className="flex items-center gap-3 ml-auto w-fit">
                 <CustomButton
                     className={`ml-auto ${theme === "light"
-                            ? "bg-white border border-light-hover-200"
-                            : "text-white bg-black"
+                        ? "bg-white border border-light-hover-200"
+                        : "text-white bg-black"
                         }`}
                     onClick={() => deleteStory(selectedStory.story_id)}
                 >
@@ -1084,8 +1085,8 @@ function StoryDetails() {
                 </CustomButton>
                 <CustomButton
                     className={`ml-auto ${theme === "light"
-                            ? "bg-white border border-light-hover-200"
-                            : "text-white bg-black"
+                        ? "bg-white border border-light-hover-200"
+                        : "text-white bg-black"
                         }`}
                     onClick={(e) => handleSave(e)}
                 >
@@ -1093,8 +1094,8 @@ function StoryDetails() {
                 </CustomButton>
                 <CustomButton
                     className={`ml-auto ${theme === "light"
-                            ? "bg-white border border-light-hover-200"
-                            : "text-white bg-black"
+                        ? "bg-white border border-light-hover-200"
+                        : "text-white bg-black"
                         }`}
                     onClick={exportHTML}
                 >

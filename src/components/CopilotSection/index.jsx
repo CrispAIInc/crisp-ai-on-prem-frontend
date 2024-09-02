@@ -5,7 +5,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
-import { generateRandomHash, hexToRGBString, timeToSeconds, toBase64 } from '../../utils';
+import { decimalSecondsToHHMMSS, generateRandomHash, hexToRGBString, timeToSeconds, toBase64 } from '../../utils';
 import AddOptionsModal from "../AddOptionsModal";
 import CustomButton from "../CustomButton";
 import CustomSelectTwo from '../CustomSelectTwo';
@@ -469,12 +469,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     });
 
     const keyframeLinks = data.keyframe_references.map((video) => {
-      noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + video.timestamp);
+      noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
       refs["keyframeLinks"].push(video);
       return (
         <li key={video.source_path} className="ml-0">
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-            {video.source_path + " | keyframe at: " + video.timestamp}
+            {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
           </Link>
         </li>
       );
@@ -530,7 +530,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       }),
       keyframeLinks: data.keyframe_references.map((video, index) => {
         return (
-          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Keyframe at: " + video.timestamp}</li>`
+          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}</li>`
         );
       }),
       pdfLinks: data.pdf_references.map((pdf, index) => {
