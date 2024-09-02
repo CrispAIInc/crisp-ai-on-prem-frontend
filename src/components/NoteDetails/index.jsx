@@ -4,8 +4,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import { Link } from 'react-router-dom';
 import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
@@ -46,11 +44,6 @@ function NoteDetails() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    var Image = Quill.import('formats/image');
-    Image.sanitize = function (url) {
-        return url; // You can modify the URL here
-    };
 
     const handleVideoLinkClick = (event, video) => {
         event.preventDefault();
