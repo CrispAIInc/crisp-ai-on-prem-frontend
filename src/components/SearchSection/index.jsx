@@ -59,7 +59,7 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
                 setActiveView('resource');
                 setIsSearching(false);
                 response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
-                if (isPlayerReady) player.current.seekTo(timestamp);
+                if (isPlayerReady) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
                 setAdditionalSources(response.data.additional_sources);
                 if (activeView !== 'resource') {
                     setShowSearchModal(true);

@@ -15,6 +15,7 @@ import NoData from '../NoData';
 import CustomButton from '../CustomButton';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import SearchSection from '../SearchSection';
+import { timeToSeconds } from '../../utils';
 
 const ContentSection = ({
     onThumbnailClick,
@@ -93,7 +94,7 @@ const ContentSection = ({
         if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
             const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
             if (timestamp && Number.isInteger(+timestamp))
-                player.current.seekTo(timestamp);
+                player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             else;
         }
     }, [isPlayerReady, currentResource, currentResource?.timestamp]);

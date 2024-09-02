@@ -109,7 +109,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       currentResource.file_type === "video"
     ) {
       const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-      if (timestamp) player.current.seekTo(timestamp);
+      if (timestamp) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
       else;
       setFromChat(false);
     }
