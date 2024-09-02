@@ -117,3 +117,13 @@ export function timeToSeconds(time) {
 
     return hours * 3600 + minutes * 60 + seconds;
 }
+
+export function decimalSecondsToHHMMSS(decimalSeconds) {
+    const hours = Math.floor(decimalSeconds / 3600);
+    const minutes = Math.floor((decimalSeconds % 3600) / 60);
+    const seconds = Math.floor(decimalSeconds % 60);
+
+    const pad = (num) => num.toString().padStart(2, '0');
+
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
