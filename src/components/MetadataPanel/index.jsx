@@ -287,11 +287,13 @@ const MetadataPanel = () => {
                       ? "text-textColor-300"
                       : "text-textColor-100"
                       }`}
+                    dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
                   >
-                    {translatedResource?.summary?.content}
+                    {/* {translatedResource?.summary?.content} */}
                   </p>
 
-                  {translatedResource?.visual_summary?.title !== "" && <>
+                  {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
+                    <h1 className="text-red-400">{translatedResource?.visual_summary?.title}</h1>
                     <h3
                       className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                         }`}
@@ -303,12 +305,13 @@ const MetadataPanel = () => {
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
                     >
-                      {translatedResource?.visual_summary?.content}
+                      {/* {translatedResource?.visual_summary?.content} */}
                     </p>
                   </>}
 
-                  {translatedResource?.combined_summary?.title !== "" && <>
+                  {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
                     <h3
                       className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                         }`}
@@ -320,8 +323,10 @@ const MetadataPanel = () => {
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
+
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
                     >
-                      {translatedResource?.combined_summary?.content}
+                      {/* {translatedResource?.combined_summary?.content} */}
                     </p>
                   </>}
 
@@ -336,8 +341,10 @@ const MetadataPanel = () => {
                       ? "text-textColor-300"
                       : "text-textColor-100"
                       }`}
+
+                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
                   >
-                    {translatedResource?.topic_summaries?.content}
+                    {/* {translatedResource?.topic_summaries?.content} */}
                   </p>
                 </>
                 {/* )} */}
@@ -808,8 +815,10 @@ const MetadataPanel = () => {
                       ? "text-textColor-300"
                       : "text-textColor-100"
                       }`}
+
+                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
                   >
-                    {translatedResource?.transcript?.content}
+                    {/* {translatedResource?.transcript?.content} */}
                   </p>
                   <h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
@@ -822,6 +831,8 @@ const MetadataPanel = () => {
                       ? "text-textColor-300"
                       : "text-textColor-100"
                       }`}
+
+                  // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
                   >
                     {translatedResource?.keywords?.content}
                   </p>
@@ -906,8 +917,10 @@ const MetadataPanel = () => {
                   ? "text-textColor-300"
                   : "text-textColor-100"
                   }`}
+
+                dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
               >
-                {translatedResource?.summary?.content}
+                {/* {translatedResource?.summary?.content} */}
               </p>
 
               <h3
@@ -921,24 +934,28 @@ const MetadataPanel = () => {
                   ? "text-textColor-300"
                   : "text-textColor-100"
                   }`}
+
+                dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
               >
-                {translatedResource?.topic_summaries?.content}
+                {/* {translatedResource?.topic_summaries?.content} */}
               </p>s
 
-              <h3
+              {translatedResource?.keywords?.content !== undefined && (<><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                   }`}
               >
                 {translatedResource?.keywords?.title}
               </h3>
-              <p
-                className={`text-sm ${theme === "light"
-                  ? "text-textColor-300"
-                  : "text-textColor-100"
-                  }`}
-              >
-                {translatedResource?.keywords?.content}
-              </p>
+                <p
+                  className={`text-sm ${theme === "light"
+                    ? "text-textColor-300"
+                    : "text-textColor-100"
+                    }`}
+
+                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
+                >
+                  {/* {translatedResource?.keywords?.content} */}
+                </p></>)}
             </div>
           ) : (
             <div className="flex items-center gap-3 mt-10">
@@ -956,7 +973,7 @@ const MetadataPanel = () => {
         </>
       )}
       {currentResource.file_type === "img" && (
-        <div>
+        <div className="pb-10">
           <div className="relative w-[70%] h-72 w-full h-full max-w-lg mx-auto">
             <CancelIcon
               onClick={closeImage}
@@ -996,24 +1013,28 @@ const MetadataPanel = () => {
                   ? "text-textColor-300"
                   : "text-textColor-100"
                   }`}
+
+                dangerouslySetInnerHTML={{ __html: `${translatedResource?.caption?.content?.replace(/\n/gi, '<br />')}` }}
               >
-                {translatedResource?.caption?.content}
+                {/* {translatedResource?.caption?.content} */}
               </p>
 
-              <h3
+              {translatedResource?.keywords?.content !== undefined && <><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                   }`}
               >
                 {translatedResource?.keywords?.title}
               </h3>
-              <p
-                className={`text-sm ${theme === "light"
-                  ? "text-textColor-300"
-                  : "text-textColor-100"
-                  }`}
-              >
-                {translatedResource?.keywords?.content}
-              </p>
+                <p
+                  className={`text-sm ${theme === "light"
+                    ? "text-textColor-300"
+                    : "text-textColor-100"
+                    }`}
+
+                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
+                >
+                  {/* {translatedResource?.keywords?.content} */}
+                </p></>}
             </div>
           ) : (
             <div className="flex items-center gap-3 mt-10">
