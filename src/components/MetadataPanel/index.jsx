@@ -199,7 +199,7 @@ const MetadataPanel = () => {
       setTranslatedResource((prev) => ({
         ...prev,
         visual_summary: {
-          title: "Visual Summary",
+          title: "Visual Flow",
           content: visual_summary,
         },
         combined_summary: {
