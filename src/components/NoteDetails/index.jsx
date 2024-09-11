@@ -124,6 +124,7 @@ function NoteDetails() {
         const questions = new Set();
         const answers = new Set();
         const references = new Set();
+        const refs = new Set();
         const models = new Set();
 
         dataArray.forEach((item) => {
@@ -172,6 +173,32 @@ function NoteDetails() {
                     });
                 }
             }
+
+            if (item.refs) {
+                if (item.refs.videoLinks) {
+                    item.refs.videoLinks.forEach((link) => {
+                        !refs.has(link) && refs.add(link);
+                    });
+                }
+
+                if (item.refs.keyframeLinks) {
+                    item.refs.keyframeLinks.forEach((link) => {
+                        !refs.has(link) && refs.add(link);
+                    });
+                }
+
+                if (item.refs.pdfLinks) {
+                    item.refs.pdfLinks.forEach((link) => {
+                        !refs.has(link) && refs.add(link);
+                    });
+                }
+
+                if (item.refs.imageLinks) {
+                    item.refs.imageLinks.forEach((link) => {
+                        !refs.has(link) && refs.add(link);
+                    });
+                }
+            }
         });
 
         // Convert sets to arrays and return them
@@ -179,6 +206,7 @@ function NoteDetails() {
             questions: Array.from(questions),
             answers: Array.from(answers),
             references: Array.from(references),
+            refs: Array.from(refs),
             llm: Array.from(models),
         };
     }
@@ -186,7 +214,7 @@ function NoteDetails() {
     const aggregateInsight = async () => {
         setIsPending(true);
 
-        let { questions, answers, references } = extractUniqueAttributes(selectedNote.text);
+        let { questions, answers, references, refs } = extractUniqueAttributes(selectedNote.text);
 
         // insight referencesto be stored inside insight
         let _refs = {
@@ -196,16 +224,36 @@ function NoteDetails() {
             imageLinks: [],
         };
 
+        let __refs = {
+            videoLinks: [],
+            keyframeLinks: [],
+            pdfLinks: [],
+            imageLinks: [],
+        };
+
         references.map((ref) => {
             if (ref.includes('.mp4')) {
                 _refs.videoLinks.push(ref);
-                _refs.keyframeLinks.push(ref);
+                // _refs.keyframeLinks.push(ref);
             } else if (ref.includes('.pdf')) {
                 _refs.pdfLinks.push(ref);
             } else if (ref.includes('.png') || ref.includes('.jpg') || ref.includes('.jpeg') || ref.includes('.svg')) {
                 _refs.imageLinks.push(ref);
             }
         });
+
+        refs.map((ref) => {
+            if (ref.source_path.endsWith('.mp4')) {
+                __refs.videoLinks.push(ref);
+                __refs.keyframeLinks.push(ref);
+            } else if (ref.source_path.endsWith('.pdf')) {
+                __refs.pdfLinks.push(ref);
+            } else if (ref.source_path.endsWith('.png') || ref.includes('.jpg') || ref.includes('.jpeg') || ref.includes('.svg')) {
+                __refs.imageLinks.push(ref);
+            }
+        });
+
+
 
         const payload = {
             questions,
@@ -241,6 +289,7 @@ function NoteDetails() {
                         color: llmColor || fallbackColor,
                         question: questions.join(','),
                         references: _refs,
+                        refs: __refs,
                         isAggregated: true,
                     }
                 ],

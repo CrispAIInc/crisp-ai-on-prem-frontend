@@ -37,7 +37,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
 
 
     const saveToStory = async () => {
-        const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
+        const joinedAnswers = selectedNote.text.map(({ answer, references }) => {
             if (answer.includes('https://oaidalleapiprodscus.blob')) {
                 return {
                     id: generateRandomHash(8),
@@ -53,19 +53,19 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
             let pdfsArr = [];
             let imgsArr = [];
 
-            refs.videoLinks.forEach((video) => {
+            references.videoLinks.forEach((video) => {
                 videosArr.push(video);
             });
 
-            refs.keyframesArr.forEach((video) => {
+            references.keyframeLinks.forEach((video) => {
                 keyframesArr.push(video);
             });
 
-            refs.pdfLinks.forEach((pdf) => {
+            references.pdfLinks.forEach((pdf) => {
                 pdfsArr.push(pdf);
             });
 
-            refs.imgLinks.forEach((img) => {
+            references.imageLinks.forEach((img) => {
                 imgsArr.push(img);
             });
 
