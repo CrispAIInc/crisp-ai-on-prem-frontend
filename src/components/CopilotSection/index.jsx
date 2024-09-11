@@ -442,23 +442,22 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const fetchReferences = async (botMessage) => {
     const response = await axios.get(`${API_ENDPOINT}/references`);
-    const data = response.data;
-    console.log(data); // HERE
+    const data = response.data;// HERE
     noteReferences.videoLinks = [];
     noteReferences.pdfLinks = [];
     noteReferences.imageLinks = [];
     noteReferences.keyframeLinks = [];
 
     let refs = {
-      videoLinks: [],
-      pdfLinks: [],
-      imgLinks: [],
-      keyframeLinks: [],
+      videoObjects: [],
+      keyframeObjects: [],
+      pdfObjects: [],
+      imageObjects: [],
     };
 
     const videoLinks = data.video_references.map((video) => {
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
-      refs["videoLinks"].push(video);
+      refs["videoObjects"].push(video);
       return (
         <li key={video.source_path} className="ml-0">
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -470,7 +469,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     const keyframeLinks = data.keyframe_references.map((video) => {
       noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
-      refs["keyframeLinks"].push(video);
+      refs["keyframeObjects"].push(video);
       return (
         <li key={video.source_path} className="ml-0">
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -482,7 +481,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     const pdfLinks = data.pdf_references.map((pdf) => {
       noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
-      refs["pdfLinks"].push(pdf);
+      refs["pdfObjects"].push(pdf);
       return (
         <li key={pdf.source_path} className="ml-0">
           <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
@@ -494,7 +493,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
     const imgLinks = data.img_references.map((img) => {
       noteReferences.imageLinks.push(img.source_path);
-      refs["imgLinks"].push(img);
+      refs["imageObjects"].push(img);
       return (
         <li key={img.source_path} className="ml-0">
           <Link onClick={(event) => handlePDFLinkClick(event, img)}>
@@ -629,6 +628,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             pdfLinks: pdfLinks,
             imgLinks: imgLinks,
           },
+          refs,
         };
       }
       return newMessages;
