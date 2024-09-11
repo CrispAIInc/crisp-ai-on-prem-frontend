@@ -293,7 +293,6 @@ const MetadataPanel = () => {
                   </p>
 
                   {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
-                    <h1 className="text-red-400">{translatedResource?.visual_summary?.title}</h1>
                     <h3
                       className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                         }`}
