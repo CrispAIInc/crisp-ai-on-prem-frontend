@@ -129,7 +129,7 @@ const MetadataPanel = () => {
         content: "",
       },
       visual_summary: {
-        title: "",
+        title: "Visual Flow",
         content: "",
       },
       combined_summary: {
@@ -276,21 +276,21 @@ const MetadataPanel = () => {
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" &&
                   currentResource.source_path != "videoplayback.mp4" && ( */}
                 <>
-                  <h3
+                  {translatedResource?.summary?.content !== undefined && <><h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                       }`}
                   >
                     {translatedResource?.summary?.title}
                   </h3>
-                  <p
-                    className={`text-sm ${theme === "light"
-                      ? "text-textColor-300"
-                      : "text-textColor-100"
-                      }`}
-                    dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
-                  >
-                    {/* {translatedResource?.summary?.content} */}
-                  </p>
+                    <p
+                      className={`text-sm ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
+                      dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
+                    >
+                      {/* {translatedResource?.summary?.content} */}
+                    </p></>}
 
                   {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
                     <h3
@@ -329,22 +329,22 @@ const MetadataPanel = () => {
                     </p>
                   </>}
 
-                  <h3
+                  {translatedResource?.topic_summaries?.content !== undefined && <><h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                       }`}
                   >
                     {translatedResource?.topic_summaries?.title}
                   </h3>
-                  <p
-                    className={`text-sm ${theme === "light"
-                      ? "text-textColor-300"
-                      : "text-textColor-100"
-                      }`}
+                    <p
+                      className={`text-sm ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
 
-                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
-                  >
-                    {/* {translatedResource?.topic_summaries?.content} */}
-                  </p>
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                    >
+                      {/* {translatedResource?.topic_summaries?.content} */}
+                    </p></>}
                 </>
                 {/* )} */}
                 {/* {currentResource.source_path === "Sacred_Valley___PERU.mp4" && (
@@ -803,38 +803,38 @@ const MetadataPanel = () => {
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
                 <>
-                  <h3
+                  {translatedResource?.transcript?.content !== undefined && <><h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                       }`}
                   >
                     {translatedResource?.transcript?.title}
                   </h3>
-                  <p
-                    className={`text-sm ${theme === "light"
-                      ? "text-textColor-300"
-                      : "text-textColor-100"
-                      }`}
+                    <p
+                      className={`text-sm ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
 
-                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
-                  >
-                    {/* {translatedResource?.transcript?.content} */}
-                  </p>
-                  <h3
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
+                    >
+                      {/* {translatedResource?.transcript?.content} */}
+                    </p></>}
+                  {translatedResource?.keywords?.content !== undefined && <><h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                       }`}
                   >
                     {translatedResource?.keywords?.title}
                   </h3>
-                  <p
-                    className={`text-sm ${theme === "light"
-                      ? "text-textColor-300"
-                      : "text-textColor-100"
-                      }`}
+                    <p
+                      className={`text-sm ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
 
-                  // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
-                  >
-                    {translatedResource?.keywords?.content}
-                  </p>
+                    // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
+                    >
+                      {translatedResource?.keywords?.content}
+                    </p></>}
                 </>
                 {/* )} */}
               </div>
@@ -905,39 +905,39 @@ const MetadataPanel = () => {
                 }
                 placeholder="Select a language"
               />
-              <h3
+              {translatedResource?.summary?.content !== undefined && <><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                   }`}
               >
                 {translatedResource?.summary?.title}
               </h3>
-              <p
-                className={`text-sm ${theme === "light"
-                  ? "text-textColor-300"
-                  : "text-textColor-100"
-                  }`}
+                <p
+                  className={`text-sm ${theme === "light"
+                    ? "text-textColor-300"
+                    : "text-textColor-100"
+                    }`}
 
-                dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
-              >
-                {/* {translatedResource?.summary?.content} */}
-              </p>
+                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
+                >
+                  {/* {translatedResource?.summary?.content} */}
+                </p></>}
 
-              <h3
+              {translatedResource?.topic_summaries?.content !== undefined && <><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                   }`}
               >
                 {translatedResource?.topic_summaries?.title}
               </h3>
-              <p
-                className={`text-sm ${theme === "light"
-                  ? "text-textColor-300"
-                  : "text-textColor-100"
-                  }`}
+                <p
+                  className={`text-sm ${theme === "light"
+                    ? "text-textColor-300"
+                    : "text-textColor-100"
+                    }`}
 
-                dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
-              >
-                {/* {translatedResource?.topic_summaries?.content} */}
-              </p>s
+                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                >
+                  {/* {translatedResource?.topic_summaries?.content} */}
+                </p></>}
 
               {translatedResource?.keywords?.content !== undefined && (<><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
@@ -1001,22 +1001,22 @@ const MetadataPanel = () => {
                 }
                 placeholder="Select a language"
               />
-              <h3
+              {translatedResource?.caption?.content !== undefined && <><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                   }`}
               >
                 {translatedResource?.caption?.title}
               </h3>
-              <p
-                className={`text-sm ${theme === "light"
-                  ? "text-textColor-300"
-                  : "text-textColor-100"
-                  }`}
+                <p
+                  className={`text-sm ${theme === "light"
+                    ? "text-textColor-300"
+                    : "text-textColor-100"
+                    }`}
 
-                dangerouslySetInnerHTML={{ __html: `${translatedResource?.caption?.content?.replace(/\n/gi, '<br />')}` }}
-              >
-                {/* {translatedResource?.caption?.content} */}
-              </p>
+                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.caption?.content?.replace(/\n/gi, '<br />')}` }}
+                >
+                  {/* {translatedResource?.caption?.content} */}
+                </p></>}
 
               {translatedResource?.keywords?.content !== undefined && <><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
