@@ -11,6 +11,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import CustomSelectTwo from "../CustomSelectTwo";
 import { timeToSeconds } from '../../utils.js';
+import Chip from '../Chip/index.jsx';
 
 const MetadataPanel = () => {
   const {
@@ -826,14 +827,14 @@ const MetadataPanel = () => {
                     {translatedResource?.keywords?.title}
                   </h3>
                     <p
-                      className={`text-sm ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
+                      className={`flex items-center gap-2 flex-wrap`}
 
                     // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
                     >
-                      {translatedResource?.keywords?.content}
+                      {
+                        translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                      }
+                      {/* {translatedResource?.keywords?.content} */}
                     </p></>}
                 </>
                 {/* )} */}
@@ -946,13 +947,13 @@ const MetadataPanel = () => {
                 {translatedResource?.keywords?.title}
               </h3>
                 <p
-                  className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
-                    }`}
+                  className={`flex items-center gap-2 flex-wrap`}
 
-                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
+                // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
                 >
+                  {
+                    translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                  }
                   {/* {translatedResource?.keywords?.content} */}
                 </p></>)}
             </div>
@@ -1025,13 +1026,13 @@ const MetadataPanel = () => {
                 {translatedResource?.keywords?.title}
               </h3>
                 <p
-                  className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
-                    }`}
+                  className={`flex items-center gap-2 flex-wrap`}
 
-                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
+                // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
                 >
+                  {
+                    translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                  }
                   {/* {translatedResource?.keywords?.content} */}
                 </p></>}
             </div>
