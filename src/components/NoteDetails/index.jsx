@@ -536,6 +536,12 @@ function NoteDetails() {
                                     keyframeLinks: [],
                                     pdfLinks: [],
                                     imageLinks: [],
+                                },
+                                refs: {
+                                    videoObjects: [],
+                                    keyframeObjects: [],
+                                    pdfObjects: [],
+                                    imageObjects: [],
                                 }
                             }],
                             images: [],

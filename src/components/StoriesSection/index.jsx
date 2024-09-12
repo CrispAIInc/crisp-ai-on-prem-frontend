@@ -12,9 +12,9 @@ function StoriesSection() {
 
   function handleNewStoryClick() {
     setSelectedStory({
-      story_id: "",
+      story_id: new Date().getTime().toString() + Math.random().toString(36).substr(2, 9),
       text: [],
-      story_name: "",
+      story_name: "new story",
       models: [],
     });
     setIsNewStory(true);

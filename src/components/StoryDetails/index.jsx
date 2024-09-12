@@ -49,15 +49,6 @@ function StoryDetails() {
     const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] =
         useState(false);
 
-    useEffect(() => {
-        if (selectedStory.story_id === "") {
-            setSelectedStory((prev) => ({
-                ...prev,
-                story_id: new Date().getTime().toString() + Math.random().toString(36).substr(2, 9),
-            }));
-        }
-    }, [selectedStory.story_id]);
-
     const handleSave = async () => {
         if (!selectedStory.story_name) {
             toast("Story title cannot be empty", {

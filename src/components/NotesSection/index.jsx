@@ -20,7 +20,7 @@ const NotesSection = () => {
         setIsNewNote(true);
         setIsEditingTitle(true);
         setSelectedNote({
-            note_id: "",
+            note_id: new Date().toISOString().replace(/:/g, '-').split('.')[0],
             text: [{
                 content: "",
                 model: null,
@@ -29,18 +29,19 @@ const NotesSection = () => {
                 answer: '',
                 references: {
                     videoLinks: [],
-              keyframeLinks: [],
+                    keyframeLinks: [],
                     pdfLinks: [],
                     imageLinks: [],
                 },
                 refs: {
-                    videoLinks: [],
-                    pdfLinks: [],
-                    imgLinks: [],
+                    videoObjects: [],
+                    keyframeObjects: [],
+                    pdfObjects: [],
+                    imageObjects: [],
                 }
             }],
             images: [],
-            note_name: "",
+            note_name: "New insight",
         });
         setIsManualNote(true);
         setShowNoteDetails(true);
