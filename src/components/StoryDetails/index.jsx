@@ -50,9 +50,7 @@ function StoryDetails() {
         useState(false);
 
     useEffect(() => {
-        console.log("useEffect ran!");
         if (selectedStory.story_id === "") {
-            console.log("no id");
             setSelectedStory((prev) => ({
                 ...prev,
                 story_id: new Date().getTime().toString() + Math.random().toString(36).substr(2, 9),
