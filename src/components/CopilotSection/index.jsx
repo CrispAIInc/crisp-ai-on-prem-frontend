@@ -670,7 +670,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 message?.references?.pdfLinks &&
                 message?.references?.imgLinks && (
                   <div>
-                    <p className="m-0">References:</p>
+                    {/* <p className="m-0">References:</p> */}
                     {message.references.videoLinks && (
                       <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                         {message.references.videoLinks}
