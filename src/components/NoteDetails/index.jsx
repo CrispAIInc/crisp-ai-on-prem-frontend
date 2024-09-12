@@ -277,7 +277,7 @@ function NoteDetails() {
 
             const newNote = {
                 note_id: new Date().toISOString().replace(/:/g, '-').split('.')[0],
-                note_name: "aggregated insight",
+                note_name: selectedNote.note_name + " (aggregated)",
                 text: [
                     {
                         content: `<span style='color: ${hexToRGBString(llmColor || fallbackColor)}'>
