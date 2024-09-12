@@ -228,7 +228,7 @@ const ContentSection = ({
     return (
         <div className='relative flex flex-col items-start h-full'>
 
-            <div className="w-full max-w-4xl pr-3 mb-11">
+            <div className="w-full max-w-4xl pr-3">
                 {/* New resource */}
                 <div>
                     {
@@ -306,7 +306,7 @@ const ContentSection = ({
                 onHide={() => setShowFileFormatsModal(false)}
             />
 
-            <BaseHeading text='Selected sources' />
+            <BaseHeading text='Selected sources' className="mt-2" />
 
             {
                 <div className={`grid grid-cols-[repeat(auto-fill,_160px)] gap-5 justify-center items-start w-4/5 w-full max-w-full gap-8 mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
@@ -330,11 +330,11 @@ const ContentSection = ({
                 knowledgeBase.some((item) => item.is_selected) > 0
                     ?
                     <>
-                        <div className="sticky mx-auto bottom-5">
-                            <CustomButton onClick={commitSelectedSources} className="text-white bg-primary-300">Update sources</CustomButton>
+                        <div className="mx-auto">
+                            <CustomButton onClick={commitSelectedSources} className="my-1 text-white bg-primary-300">Update sources</CustomButton>
                         </div>
-                        <div className="sticky mx-auto bottom-6">
-                            <CustomButton onClick={handleUnselectAllCheckboxChange} className="text-primary-300">Unselect all sources</CustomButton>
+                        <div className="mx-auto">
+                            <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>
                         </div>
                     </>
                     :
