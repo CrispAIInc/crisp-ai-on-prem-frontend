@@ -124,7 +124,12 @@ function NoteDetails() {
         const questions = [];
         const answers = [];
         const references = [];
-        const refs = [];
+        let refs = {
+            videoObjects: [],
+            keyframeObjects: [],
+            pdfObjects: [],
+            imageObjects: [],
+        };
         const models = [];
 
         dataArray.forEach((item) => {
@@ -177,36 +182,37 @@ function NoteDetails() {
             if (item.refs) {
                 if (item.refs.videoObjects) {
                     item.refs.videoObjects.forEach((obj) => {
-                        refs.push(obj);
+                        refs.videoObjects.push(obj);
                     });
                 }
 
                 if (item.refs.keyframeObjects) {
                     item.refs.keyframeObjects.forEach((obj) => {
-                        refs.push(obj);
+                        refs.keyframeObjects.push(obj);
                     });
                 }
 
                 if (item.refs.pdfObjects) {
                     item.refs.pdfObjects.forEach((obj) => {
-                        refs.push(obj);
+                        refs.pdfObjects.push(obj);
                     });
                 }
 
                 if (item.refs.imageObjects) {
                     item.refs.imageObjects.forEach((obj) => {
-                        refs.push(obj);
+                        refs.imageObjects.push(obj);
                     });
                 }
             }
         });
+
 
         // Convert sets to arrays and return them
         return {
             questions: Array.from(questions),
             answers: Array.from(answers),
             references: Array.from(references),
-            refs: Array.from(refs),
+            refs,
             llm: Array.from(models),
         };
     }
@@ -224,12 +230,12 @@ function NoteDetails() {
             imageLinks: [],
         };
 
-        let __refs = {
-            videoObjects: [],
-            keyframeObjects: [],
-            pdfObjects: [],
-            imageObjects: [],
-        };
+        // let __refs = {
+        //     videoObjects: [],
+        //     keyframeObjects: [],
+        //     pdfObjects: [],
+        //     imageObjects: [],
+        // };
 
         references.map((ref) => {
             if (ref.includes('.mp4')) {
@@ -242,16 +248,18 @@ function NoteDetails() {
             }
         });
 
-        refs.map((ref) => {
-            if (ref.source_path.endsWith('.mp4')) {
-                __refs.videoObjects.push(ref);
-                // __refs.keyframeObjects.push(ref);
-            } else if (ref.source_path.endsWith('.pdf')) {
-                __refs.pdfObjects.push(ref);
-            } else if (ref.source_path.endsWith('.png') || ref.includes('.jpg') || ref.includes('.jpeg') || ref.includes('.svg')) {
-                __refs.imageObjects.push(ref);
-            }
-        });
+        // refs.map((ref) => {
+        //     if (ref.source_path.endsWith('.mp4')) {
+        //         __refs.videoObjects.push(ref);
+        //         // __refs.keyframeObjects.push(ref);
+        //     } else if (ref.source_path.endsWith('.pdf')) {
+        //         __refs.pdfObjects.push(ref);
+        //     } else if (ref.source_path.endsWith('.png') || ref.includes('.jpg') || ref.includes('.jpeg') || ref.includes('.svg')) {
+        //         __refs.imageObjects.push(ref);
+        //     }
+        // });
+
+        console.log(refs);
 
         const payload = {
             questions,
@@ -287,7 +295,7 @@ function NoteDetails() {
                         color: llmColor || fallbackColor,
                         question: questions.join(','),
                         references: _refs,
-                        refs: __refs,
+                        refs,
                         isAggregated: true,
                     }
                 ],
@@ -618,10 +626,10 @@ function NoteDetails() {
                                                 {/* display references */}
                                                 {(item.refs?.videoObjects?.length > 0 || item.refs?.keyframeObjects?.length > 0 || item.refs?.pdfObjects?.length > 0 || item.refs?.imgObjects?.length > 0) && <div className='flex flex-col gap-2'>
                                                     <h6 className='text-sm'>References:</h6>
-                                                    <ul className='break-all'>
+                                                    <ul className='break-all !mb-0'>
                                                         {
-                                                            item.refs?.videoObjects?.map((video) => (
-                                                                <li key={video.source_path} className="mb-3 ml-0">
+                                                            item.refs?.videoObjects?.map((video, index) => (
+                                                                <li key={video.source_path + "" + index} className="mb-3 ml-0">
                                                                     <Link onClick={(event) => handleVideoLinkClick(event, video)}>
                                                                         {video.source_path + " | Timestamp: " + video.timestamp}
                                                                     </Link>
@@ -629,10 +637,10 @@ function NoteDetails() {
                                                             ))
                                                         }
                                                     </ul>
-                                                    <ul className='break-all'>
+                                                    <ul className='break-all !mb-0'>
                                                         {
-                                                            item.refs?.keyframeObjects?.map((video) => (
-                                                                <li key={video.source_path} className="mb-3 ml-0">
+                                                            item.refs?.keyframeObjects?.map((video, index) => (
+                                                                <li key={video.source_path + "" + index} className="mb-3 ml-0">
                                                                     <Link onClick={(event) => handleVideoLinkClick(event, video)}>
                                                                         {video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
                                                                     </Link>
@@ -640,10 +648,10 @@ function NoteDetails() {
                                                             ))
                                                         }
                                                     </ul>
-                                                    <ul className='break-all'>
+                                                    <ul className='break-all !mb-0'>
                                                         {
-                                                            item.refs?.pdfObjects?.map((pdf) => (
-                                                                <li key={pdf.source_path} className="mb-3 ml-0">
+                                                            item.refs?.pdfObjects?.map((pdf, index) => (
+                                                                <li key={pdf.source_path + "" + index} className="mb-3 ml-0">
                                                                     <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
                                                                         {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
                                                                     </Link>
@@ -651,10 +659,10 @@ function NoteDetails() {
                                                             ))
                                                         }
                                                     </ul>
-                                                    <ul className='break-all'>
+                                                    <ul className='break-all !mb-0'>
                                                         {
-                                                            item.refs?.imaggObjects?.map((img) => (
-                                                                <li key={img.source_path} className="mb-3 ml-0">
+                                                            item.refs?.imaggObjects?.map((img, index) => (
+                                                                <li key={img.source_path + "" + index} className="mb-3 ml-0">
                                                                     <Link onClick={(event) => handlePDFLinkClick(event, img)}>
                                                                         {img.source_path}
                                                                     </Link>
