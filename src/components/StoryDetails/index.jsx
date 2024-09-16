@@ -518,17 +518,18 @@ function StoryDetails() {
                                                     `
                                             }
                                                 </div>
-                                                ${i.videosArr?.length > 0 ||
-                                                i.keyframesArr?.length > 0 ||
-                                                i.pdfsArr?.length > 0
+                                                ${(i.refs?.videoObjects?.length > 0 ||
+                                                i.refs?.keyframeObjects?.length > 0 ||
+                                                i.refs?.pdfObjects?.length > 0 ||
+                                                i.refs?.imageObjects?.length > 0)
                                                 ? `
                                                     <div>
                                                         <p>References:</p>
-                                                        ${i.videosArr?.length >
+                                                        ${i.refs?.videoObjects?.length >
                                                     0
                                                     ? `
                                                             <ul>
-                                                                ${i.videosArr
+                                                                ${i.refs?.videoObjects
                                                         ?.map(
                                                             (video) => `
                                                                     <li>${video.source_path +
@@ -542,11 +543,11 @@ function StoryDetails() {
                                                         `
                                                     : ""
                                                 }
-                                                        ${i.keyframesArr
+                                                        ${i?.refs?.keyframeObjects
                                                     ?.length > 0
                                                     ? `
                                                             <ul>
-                                                                ${i.keyframesArr
+                                                                ${i?.refs?.keyframeObjects
                                                         ?.map(
                                                             (video) => `
                                                                     <li>${video.source_path +
@@ -560,10 +561,10 @@ function StoryDetails() {
                                                         `
                                                     : ""
                                                 }
-                                                        ${i.pdfsArr?.length > 0
+                                                        ${i?.refs?.pdfObjects?.length > 0
                                                     ? `
                                                             <ul>
-                                                                ${i.pdfsArr
+                                                                ${i?.refs?.pdfObjects
                                                         ?.map(
                                                             (pdf) => `
                                                                     <li>${pdf.source_path +
@@ -580,10 +581,10 @@ function StoryDetails() {
                                                         `
                                                     : ""
                                                 }
-                                                        ${i.imgsArr?.length > 0
+                                                        ${i?.refs?.imageObjects?.length > 0
                                                     ? `
                                                             <ul>
-                                                                ${i.imgsArr
+                                                                ${i?.refs?.imageObjects
                                                         ?.map(
                                                             (img) => `
                                                                     <li>${img.source_path}</li>
@@ -820,15 +821,15 @@ function StoryDetails() {
                                                                     )}
                                                                     {/* {currentAnswerRef === i.id && <CheckIcon onClick={() => updateResponseWithReference(textIndex)} className='cursor-pointer' />} */}
                                                                 </div>
-                                                                {(i.videosArr?.length > 0 ||
-                                                                    i.keyframesArr?.length > 0 ||
-                                                                    i.pdfsArr?.length > 0 ||
-                                                                    i.imgsArr?.length > 0) && (
+                                                                {(i.refs?.videoObjects?.length > 0 ||
+                                                                    i.refs?.keyframeObjects?.length > 0 ||
+                                                                    i.refs?.pdfObjects?.length > 0 ||
+                                                                    i.refs?.imageObjects?.length > 0) && (
                                                                         <div>
                                                                             <p className="m-0">References:</p>
-                                                                            {i.videosArr?.length > 0 && (
+                                                                            {i.refs?.videoObjects?.length > 0 && (
                                                                                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                    {i.videosArr?.map((video, index) => (
+                                                                                    {i.refs?.videoObjects?.map((video, index) => (
                                                                                         <Link
                                                                                             key={index}
                                                                                             onClick={(event) =>
@@ -842,9 +843,9 @@ function StoryDetails() {
                                                                                     ))}
                                                                                 </ul>
                                                                             )}
-                                                                            {i.keyframesArr?.length > 0 && (
+                                                                            {i.refs?.keyframeObjects?.length > 0 && (
                                                                                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                    {i.keyframesArr?.map((video, index) => (
+                                                                                    {i.refs?.keyframeObjects?.map((video, index) => (
                                                                                         <Link
                                                                                             key={index}
                                                                                             onClick={(event) =>
@@ -858,9 +859,9 @@ function StoryDetails() {
                                                                                     ))}
                                                                                 </ul>
                                                                             )}
-                                                                            {i.pdfsArr?.length > 0 && (
+                                                                            {i.refs?.pdfObjects?.length > 0 && (
                                                                                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                    {i.pdfsArr?.map((pdf, index) => (
+                                                                                    {i.refs?.pdfObjects?.map((pdf, index) => (
                                                                                         <Link
                                                                                             key={index}
                                                                                             onClick={(event) =>
@@ -874,9 +875,9 @@ function StoryDetails() {
                                                                                     ))}
                                                                                 </ul>
                                                                             )}
-                                                                            {i.imgsArr?.length > 0 && (
+                                                                            {i.refs?.imageObjects?.length > 0 && (
                                                                                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                    {i.imgsArr?.map((img, index) => (
+                                                                                    {i.refs?.imageObjects?.map((img, index) => (
                                                                                         <Link
                                                                                             key={index}
                                                                                             onClick={(event) =>

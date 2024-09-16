@@ -37,7 +37,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
 
 
     const saveToStory = async () => {
-        const joinedAnswers = selectedNote.text.map(({ answer, references }) => {
+        const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
             if (answer.includes('https://oaidalleapiprodscus.blob')) {
                 return {
                     id: generateRandomHash(8),
@@ -53,29 +53,26 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
             let pdfsArr = [];
             let imgsArr = [];
 
-            references.videoLinks.forEach((video) => {
+            refs.videoObjects.forEach((video) => {
                 videosArr.push(video);
             });
 
-            references.keyframeLinks.forEach((video) => {
+            refs.keyframeObjects.forEach((video) => {
                 keyframesArr.push(video);
             });
 
-            references.pdfLinks.forEach((pdf) => {
+            refs.pdfObjects.forEach((pdf) => {
                 pdfsArr.push(pdf);
             });
 
-            references.imageLinks.forEach((img) => {
+            refs.imageObjects.forEach((img) => {
                 imgsArr.push(img);
             });
 
             return {
                 id: generateRandomHash(8),
                 answer,
-                videosArr,
-                keyframesArr,
-                pdfsArr,
-                imgsArr,
+                refs
             };
         });
         setSelectedStory(prev => {

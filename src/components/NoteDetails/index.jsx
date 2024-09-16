@@ -106,11 +106,11 @@ function NoteDetails() {
             setSelectedNote({
                 note_id: "",
                 text: [{
-                    content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
-                        videoLinks: [],
-                        keyframeLinks: [],
-                        pdfLinks: [],
-                        imageLinks: [],
+                    content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', refs: {
+                        videoObjects: [],
+                        keyframeObjects: [],
+                        pdfObjects: [],
+                        imageObjects: [],
                     }
                 }],
                 images: [],
@@ -123,7 +123,6 @@ function NoteDetails() {
         // Initialize empty sets to store unique questions, references, and models
         const questions = [];
         const answers = [];
-        const references = [];
         let refs = {
             videoObjects: [],
             keyframeObjects: [],
@@ -145,65 +144,21 @@ function NoteDetails() {
                 models.push(item.model);
             }
 
-            // references is not an array it's an object like this
-            // {
-            //     videoLinks: [],
-            //         keyframeLinks: [],
-            //     pdfLinks: [],
-            //     imageLinks: [],
-            // }
+            item?.refs?.videoObjects?.forEach((obj) => {
+                refs.videoObjects.push(obj);
+            });
 
-            if (item.references) {
-                if (item.references.videoLinks) {
-                    item.references.videoLinks.forEach((link) => {
-                        references.push(link);
-                    });
-                }
+            item?.refs?.keyframeObjects?.forEach((obj) => {
+                refs.keyframeObjects.push(obj);
+            });
 
-                if (item.references.keyframeLinks) {
-                    item.references.keyframeLinks.forEach((link) => {
-                        references.push(link);
-                    });
-                }
+            item?.refs?.pdfObjects?.forEach((obj) => {
+                refs.pdfObjects.push(obj);
+            });
 
-                if (item.references.pdfLinks) {
-                    item.references.pdfLinks.forEach((link) => {
-                        references.push(link);
-                    });
-                }
-
-                if (item.references.imageLinks) {
-                    item.references.imageLinks.forEach((link) => {
-                        references.push(link);
-                    });
-                }
-            }
-
-            if (item.refs) {
-                if (item.refs.videoObjects) {
-                    item.refs.videoObjects.forEach((obj) => {
-                        refs.videoObjects.push(obj);
-                    });
-                }
-
-                if (item.refs.keyframeObjects) {
-                    item.refs.keyframeObjects.forEach((obj) => {
-                        refs.keyframeObjects.push(obj);
-                    });
-                }
-
-                if (item.refs.pdfObjects) {
-                    item.refs.pdfObjects.forEach((obj) => {
-                        refs.pdfObjects.push(obj);
-                    });
-                }
-
-                if (item.refs.imageObjects) {
-                    item.refs.imageObjects.forEach((obj) => {
-                        refs.imageObjects.push(obj);
-                    });
-                }
-            }
+            item?.refs?.imageObjects?.forEach((obj) => {
+                refs.imageObjects.push(obj);
+            });
         });
 
 
@@ -211,7 +166,6 @@ function NoteDetails() {
         return {
             questions: Array.from(questions),
             answers: Array.from(answers),
-            references: Array.from(references),
             refs,
             llm: Array.from(models),
         };
@@ -220,55 +174,13 @@ function NoteDetails() {
     const aggregateInsight = async () => {
         setIsPending(true);
 
-        let { questions, answers, references, refs } = extractUniqueAttributes(selectedNote.text);
-
-        // insight referencesto be stored inside insight
-        let _refs = {
-            videoLinks: [],
-            keyframeLinks: [],
-            pdfLinks: [],
-            imageLinks: [],
-        };
-
-        // let __refs = {
-        //     videoObjects: [],
-        //     keyframeObjects: [],
-        //     pdfObjects: [],
-        //     imageObjects: [],
-        // };
-
-        references.map((ref) => {
-            if (ref.includes('.mp4')) {
-                _refs.videoLinks.push(ref);
-                // _refs.keyframeLinks.push(ref);
-            } else if (ref.includes('.pdf')) {
-                _refs.pdfLinks.push(ref);
-            } else if (ref.includes('.png') || ref.includes('.jpg') || ref.includes('.jpeg') || ref.includes('.svg')) {
-                _refs.imageLinks.push(ref);
-            }
-        });
-
-        // refs.map((ref) => {
-        //     if (ref.source_path.endsWith('.mp4')) {
-        //         __refs.videoObjects.push(ref);
-        //         // __refs.keyframeObjects.push(ref);
-        //     } else if (ref.source_path.endsWith('.pdf')) {
-        //         __refs.pdfObjects.push(ref);
-        //     } else if (ref.source_path.endsWith('.png') || ref.includes('.jpg') || ref.includes('.jpeg') || ref.includes('.svg')) {
-        //         __refs.imageObjects.push(ref);
-        //     }
-        // });
-
-        console.log(refs);
+        let { questions, answers, refs } = extractUniqueAttributes(selectedNote.text);
 
         const payload = {
             questions,
             answers,
             llm: llmAggregation,
         };
-
-        const llmColor = llmModels.find((model) => model.value === llmAggregation)?.color;
-        const fallbackColor = theme === 'light' ? '#333' : '#fff';
 
         try {
             const { aggregated_answer } = await makeApiRequest("/aggregate", "post", { ...payload }, {
@@ -280,21 +192,9 @@ function NoteDetails() {
                 note_name: selectedNote.note_name + " (aggregated)",
                 text: [
                     {
-                        content: `<span style='color: ${hexToRGBString(llmColor || fallbackColor)}'>
-                                        ${questions.map((question, index) => `<h2 key=${index} style='font-size: 20px; font-weight: bold; font-style: italic;'>${question}</h2>`).join('')}
-                                        <p>${aggregated_answer}</p>
-                                        <p style='margin-bottom: 0px;'>
-                                            <h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>references:</h3>
-                                            <ul style='list-style-type: none;'>
-                                                ${references.map((ref, index) => `<li key=${index}>${ref}</li>`).join('')}
-                                            </ul>
-                                        </p>
-                                    </span>`,
                         answer: aggregated_answer,
                         model: llmAggregation,
-                        color: llmColor || fallbackColor,
-                        question: questions.join(','),
-                        references: _refs,
+                        question: questions.join('<br />'),
                         refs,
                         isAggregated: true,
                     }
@@ -352,12 +252,6 @@ function NoteDetails() {
                 model: null,
                 color: theme === 'light' ? "#333" : '#fff',
                 question: newQuestion,
-                references: {
-                    videoLinks: [],
-                    keyframeLinks: [],
-                    pdfLinks: [],
-                    imageLinks: [],
-                },
                 refs: {
                     videoLinks: [],
                     keyframeLinks: [],
@@ -531,12 +425,7 @@ function NoteDetails() {
                         setSelectedNote({
                             note_id: "",
                             text: [{
-                                content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
-                                    videoLinks: [],
-                                    keyframeLinks: [],
-                                    pdfLinks: [],
-                                    imageLinks: [],
-                                },
+                                content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '',
                                 refs: {
                                     videoObjects: [],
                                     keyframeObjects: [],

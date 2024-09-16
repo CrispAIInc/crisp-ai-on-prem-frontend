@@ -442,7 +442,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
   const fetchReferences = async (botMessage) => {
     const response = await axios.get(`${API_ENDPOINT}/references`);
-    const data = response.data;// HERE
+    const data = response.data;
     noteReferences.videoLinks = [];
     noteReferences.pdfLinks = [];
     noteReferences.imageLinks = [];
@@ -459,7 +459,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
       refs["videoObjects"].push(video);
       return (
-        <li key={video.source_path} className="ml-0">
+        <li key={video.source_path} className="ml-0" data-object={video}>
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
             {video.source_path + " | Timestamp: " + video.timestamp}
           </Link>
@@ -471,7 +471,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
       refs["keyframeObjects"].push(video);
       return (
-        <li key={video.source_path} className="ml-0">
+        <li key={video.source_path} className="ml-0" data-object={video}>
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
             {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
           </Link>
@@ -483,7 +483,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
       refs["pdfObjects"].push(pdf);
       return (
-        <li key={pdf.source_path} className="ml-0">
+        <li key={pdf.source_path} className="ml-0" data-object={pdf}>
           <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
             {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
           </Link>
@@ -491,65 +491,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       );
     });
 
-    const imgLinks = data.img_references.map((img) => {
+    const imageLinks = data.img_references.map((img) => {
       noteReferences.imageLinks.push(img.source_path);
       refs["imageObjects"].push(img);
       return (
-        <li key={img.source_path} className="ml-0">
+        <li key={img.source_path} className="ml-0" data-object={img}>
           <Link onClick={(event) => handlePDFLinkClick(event, img)}>
             {img.source_path}
           </Link>
         </li>
       );
     });
-    // `<li><a href="${video}" target="_blank">${video}</a></li>`
-    // const references = {
-    //   videoLinks: data.video_references.map((video, index) => {
-    //     return (
-    //       `<span style="display:none;" data-id='${JSON.stringify(video)}'>${JSON.stringify(video).substring(0, 3)}</span>`
-    //     );
-    //   }),
-    //   pdfLinks: data.pdf_references.map((pdf, index) => {
-    //     return (
-    //       `<li key='${index}'><a href="${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}" target="_blank">${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</a></li>`
-    //     );
-    //   }),
-    //   imageLinks: data.img_references.map((img, index) => {
-    //     return (
-    //       `<li key='${index}'><a href="${img.source_path}" target="_blank">${img.source_path}</a></li>`
-    //     );
-    //   }),
-    // };keyframeLinks
-
-    const references = {
-      videoLinks: data.video_references.map((video, index) => {
-        return (
-          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Timestamps: " + video.timestamp}</li>`
-        );
-      }),
-      keyframeLinks: data.keyframe_references.map((video, index) => {
-        return (
-          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${video}' onClick='${e => handleVideoLinkClick(e, video)}'>${video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}</li>`
-        );
-      }),
-      pdfLinks: data.pdf_references.map((pdf, index) => {
-        return (
-          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${pdf}'>${pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}</li>`
-        );
-      }),
-      imageLinks: data.img_references.map((img, index) => {
-        return (
-          `<li style='cursor: pointer; font-size: 12px;' key='${index}' data-object='${img}'>${img.source_path}</li>`
-        );
-      }),
-    };
-
-    // set note references to videosLinks, pdfLinks and imgLinks
-    // setNoteReferences({
-    //   videoLinks,
-    //   pdfLinks,
-    //   imgLinks,
-    // });
 
     let newData = null;
 
@@ -581,7 +533,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
           isNewNote={isNewNote}
           setShowNoteModal={setShowNoteModal}
           updateSelectedNote={setSelectedNote}
-          references={references}
           showNoteModal={showNoteModal}
           selectedNote={selectedNote}
           notes={notes}
@@ -604,9 +555,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                 {pdfLinks}
               </ul>
             )}
-            {imgLinks && (
+            {imageLinks && (
               <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                {imgLinks}
+                {imageLinks}
               </ul>
             )}
           </div>
@@ -622,12 +573,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         newMessages[lastMessageIndex] = {
           ...newMessages[lastMessageIndex],
           text: botMessage,
-          references: {
-            videoLinks: videoLinks,
-            keyframeLinks: keyframeLinks,
-            pdfLinks: pdfLinks,
-            imgLinks: imgLinks,
-          },
           refs,
         };
       }
@@ -665,32 +610,70 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
               <div className="coorg-response">
                 {data.translated_responses[botIndex]}
               </div>
-              {message?.references?.videoLinks &&
-                message?.references?.keyframeLinks &&
-                message?.references?.pdfLinks &&
-                message?.references?.imgLinks && (
+              <AddOptionsModal
+                text={data.translated_responses[botIndex]}
+                addToNewNote={addToNewNote}
+                refs={message?.refs}
+                addToExistingNote={addToExistingNote}
+                setExistingNote={setExistingNote}
+                question={data.translated_queries[userIndex - 1]}
+                existingNote={existingNote}
+                onHide={onHide}
+                isNewNote={isNewNote}
+                setShowNoteModal={setShowNoteModal}
+                updateSelectedNote={setSelectedNote}
+                showNoteModal={showNoteModal}
+                selectedNote={selectedNote}
+                notes={notes}
+              />
+              {(message?.refs?.videoObjects.length > 0 ||
+                message?.refs?.keyframeObjects.length > 0 ||
+                message?.refs?.pdfObjects.length > 0 ||
+                message?.refs?.imageObjects.length > 0) && (
                   <div>
                     {/* <p className="m-0">References:</p> */}
-                    {message.references.videoLinks && (
-                      <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                        {message.references.videoLinks}
-                      </ul>
-                    )}
-                    {message.references.keyframeLinks && (
-                      <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                        {message.references.keyframeLinks}
-                      </ul>
-                    )}
-                    {message.references.pdfLinks && (
-                      <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                        {message.references.pdfLinks}
-                      </ul>
-                    )}
-                    {message.references.imgLinks && (
-                      <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                        {message.references.imgLinks}
-                      </ul>
-                    )}
+                    {
+                      message?.refs?.videoObjects.map((video) => {
+                        return (
+                          <li key={video.source_path} className="ml-4 list-none" data-object={video}>
+                            <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+                              {video.source_path + " | Timestamp: " + video.timestamp}
+                            </Link>
+                          </li>
+                        );
+                      })
+                    }
+                    {
+                      message?.refs?.keyframeObjects.map((video) => {
+                        return (
+                          <li key={video.source_path} className="ml-4 list-none" data-object={video}>
+                            <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+                              {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    {
+                      message?.refs?.pdfObjects.map((pdf) => {
+                        return (
+                          <li key={pdf.source_path} className="ml-4 list-none" data-object={pdf}>
+                            <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
+                              {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
+                            </Link>
+                          </li>
+                        );
+                      })
+                    }
+                    {
+                      message?.refs?.imageObjects.map((img) => {
+                        return (
+                          <li key={img.source_path} className="ml-4 list-none" data-object={img}>
+                            <Link onClick={(event) => handlePDFLinkClick(event, img)}>
+                              {img.source_path}
+                            </Link>
+                          </li>
+                        );
+                      })}
                   </div>
                 )}
             </div>
@@ -710,47 +693,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     );
   };
 
-  const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, references, refs) => {
-
-    const canRenderNoteRefs = (references?.videoLinks.length > 0 || references?.keyframeLinks.length > 0 || references?.pdfLinks.length > 0 || references?.imageLinks.length > 0);
-    const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
-    const fallbackColor = theme === 'light' ? '#333' : '#fff';
-
-    let imgUrl;
-    if (file) {
-      imgUrl = await toBase64(file);
-    }
+  const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, refs) => {
 
     const newText = {
       id: generateRandomHash(5),
-      content:
-        `<span>
-
-        <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
-          ${file ? `<img src='${imgUrl}' />` : question}
-        </h2>
-
-        <p>
-          ${textToAdd.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${textToAdd}' width="1000" />` : textToAdd}
-        </p>
-        
-        ${canRenderNoteRefs ?
-          `<h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
-              references:
-            </h3>
-            
-            <ul style='list-style-type: none;'>
-              ${references?.videoLinks?.join('')}
-              ${references?.keyframeLinks?.join('')}
-              ${references?.pdfLinks?.join('')}
-              ${references?.imageLinks?.join('')}
-            </ul>` : ''}
-      </span>`,
       model: models[0],
-      color: llmColor || fallbackColor,
       question,
       answer: textToAdd,
-      references,
       refs,
     };
     const newNote = {
@@ -781,70 +730,16 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     latestNotes.current = notes;
   }, [notes]);
 
-  const addToExistingNote = async (newTextContent, file, question = '', models = selectedLLMs, references, refs) => {
-    // setNoteReferences({
-    //   videoLinks: [],
-    //   pdfLinks: [],
-    //   imageLinks: [],
-    // });
-
-    // const videoLinks = noteReferences.videoLinks.map((video) => {
-    //   return (
-    //     `<li><a href="${video}" target="_blank">${video}</a></li>`
-    //   );
-    // });
-    // const pdfLinks = noteReferences.pdfLinks.map((pdf) => {
-    //   return (
-    //     `<li><a href="${pdf}" target="_blank">${pdf}</a></li>`
-    //   );
-    // });
-    // const imageLinks = noteReferences.imageLinks.map((img) => {
-    //   return (
-    //     `<li><a href="${img}" target="_blank">${img}</a></li>`
-    //   );
-    // });
-
-    const canRenderNoteRefs = (references?.videoLinks?.length > 0 || references?.keyframeLinks?.length > 0 || references?.pdfLinks?.length > 0 || references?.imageLinks?.length > 0);
-
-    const llmColor = llmModels.find((llm) => llm.value === models[0])?.color;
-    const fallbackColor = theme === 'light' ? '#333' : '#fff';
-
-    let imgUrl;
-    if (file) {
-      imgUrl = await toBase64(file);
-    }
+  const addToExistingNote = async (newTextContent, file, question = '', models = selectedLLMs, refs) => {
+    // if (file) {
+    //   imgUrl = await toBase64(file);
+    // }
 
     const newNoteTextEntry = {
       id: generateRandomHash(5),
-      content:
-        `<span style="margin-top: 0px; color: ${hexToRGBString(llmColor || fallbackColor)}">
-          <br />
-          
-          <h2 style='font-size: 20px; font-weight: bold; font-style: italic;'>
-            ${file ? `<img src='${imgUrl}' />` : question}
-          </h2>
-          
-          <p>
-            ${newTextContent.startsWith('https://oaidalleapiprodscus.blob') ? `<img src='${newTextContent}' width="1000" />` : newTextContent}
-          </p>
-
-          ${canRenderNoteRefs ?
-          `<h3 style='font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 0px;'>
-                references:
-              </h3>
-            
-              <ul style='list-style-type: none;'>
-                ${references?.videoLinks?.join('')}
-                ${references?.keyframeLinks?.join('')}
-                ${references?.pdfLinks?.join('')}
-                ${references?.imageLinks?.join('')}
-              </ul>` : ''}
-        </span>`,
       model: models[0],
-      color: llmColor || fallbackColor,
       question,
       answer: newTextContent,
-      references,
       refs
     };
 
@@ -891,11 +786,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         setSelectedNote({
           note_id: "",
           text: [{
-            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
-              videoLinks: [],
-              keyframeLinks: [],
-              pdfLinks: [],
-              imageLinks: [],
+            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', refs: {
+              videoObjects: [],
+              keyframeObjects: [],
+              pdfObjects: [],
+              imageObjects: [],
             }
           }],
           images: [],

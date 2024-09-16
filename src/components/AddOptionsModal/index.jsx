@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { MainContext } from '../../contexts/mainContext';
 
-const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, refs, question, models, references }) => {
+const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, refs, question, models }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -43,14 +43,14 @@ const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, refs, qu
         <Box sx={style} className={`${theme === 'light' ? '!border-none' : '!bg-textColor-300 !text-white !border-b-none'}`}>
           <div
             className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-            onClick={() => { addToNewNote(text, file, question, models, references, refs); handleClose(); }}
+            onClick={() => { addToNewNote(text, file, question, models, refs); handleClose(); }}
           >
             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to a new insight</span>
           </div>
 
           <div
             className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-            onClick={() => { addToExistingNote(text, file, question, models, references, refs); handleClose(); }}
+            onClick={() => { addToExistingNote(text, file, question, models, refs); handleClose(); }}
           >
             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} mb-4`}>Add to an existing insight</span>
           </div>
