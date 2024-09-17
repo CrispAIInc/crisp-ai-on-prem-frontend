@@ -626,7 +626,7 @@ function StoryDetails() {
         var fileDownload = document.createElement("a");
         document.body.appendChild(fileDownload);
         fileDownload.href = source;
-        fileDownload.download = "document.doc";
+        fileDownload.download = selectedStory.story_name + ".doc";
         fileDownload.click();
         document.body.removeChild(fileDownload);
     }
