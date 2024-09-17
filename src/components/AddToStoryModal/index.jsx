@@ -42,32 +42,9 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                 return {
                     id: generateRandomHash(8),
                     answer,
-                    videosArr: [],
-                    keyframesArr: [],
-                    pdfsArr: [],
-                    imgsArr: [],
+                    refs
                 };
             }
-            let videosArr = [];
-            let keyframesArr = [];
-            let pdfsArr = [];
-            let imgsArr = [];
-
-            refs.videoObjects.forEach((video) => {
-                videosArr.push(video);
-            });
-
-            refs.keyframeObjects.forEach((video) => {
-                keyframesArr.push(video);
-            });
-
-            refs.pdfObjects.forEach((pdf) => {
-                pdfsArr.push(pdf);
-            });
-
-            refs.imageObjects.forEach((img) => {
-                imgsArr.push(img);
-            });
 
             return {
                 id: generateRandomHash(8),
