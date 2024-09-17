@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
-import { decimalSecondsToHHMMSS, generateRandomHash, hexToRGBString } from '../../utils';
+import { decimalSecondsToHHMMSS, generateRandomHash } from '../../utils';
 import AddToStoryModal from '../AddToStoryModal';
 import AggregationLlmModal from '../AggregationLlmModal';
 import BaseHeading from '../BaseHeading';
@@ -23,7 +23,6 @@ function NoteDetails() {
         setCurrentResource,
         setNotes,
         setIsNewNote,
-        llmModels,
         setResourceURL,
         setSummary,
         setSummaries,
@@ -192,6 +191,7 @@ function NoteDetails() {
                 note_name: selectedNote.note_name + " (aggregated)",
                 text: [
                     {
+                        id: generateRandomHash(5),
                         answer: aggregated_answer,
                         model: llmAggregation,
                         question: questions.join('<br />'),
@@ -389,6 +389,9 @@ function NoteDetails() {
         setIsTitleEditing(false);
     }
 
+
+    const [currentHoveredId, setCurrentHoveredId] = useState(null);
+
     return (
         <div className="flex flex-col h-full max-w-6xl mx-auto">
             <div className='flex justify-between'>
@@ -466,14 +469,14 @@ function NoteDetails() {
             {/* questions/answers */}
             <div className={`mb-5 overflow-y-auto ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
                 {selectedNote.text?.map((item) => (
-                    <div key={item.id} className="flex flex-col gap-4 px-3">
+                    <div key={item.id} className="flex flex-col gap-4 px-3" onMouseLeave={() => setCurrentHoveredId(null)} onMouseOver={() => setCurrentHoveredId(item.id)}>
                         {/* question */}
                         {
                             item.question ?
                                 <div className='flex items-center gap-2 align-self-end'>
-                                    <div className="flex gap-2">
+                                    {currentHoveredId === item.id && <div className="flex gap-2">
                                         <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => handleDeleteContent(item.id)} />
-                                    </div>
+                                    </div>}
                                     <div className={`flex items-center gap-3 py-1 px-3 ${theme === 'light' ? 'bg-light-hover-200' : 'bg-textColor-300 w-fit rounded-md'}`}>
                                         {typeof item.question === 'string' ? (
                                             <div>

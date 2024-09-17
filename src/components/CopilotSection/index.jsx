@@ -5,7 +5,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
-import { decimalSecondsToHHMMSS, generateRandomHash, hexToRGBString, timeToSeconds, toBase64 } from '../../utils';
+import { decimalSecondsToHHMMSS, generateRandomHash, timeToSeconds, toBase64 } from '../../utils';
 import AddOptionsModal from "../AddOptionsModal";
 import CustomButton from "../CustomButton";
 import CustomSelectTwo from '../CustomSelectTwo';
@@ -14,7 +14,6 @@ import ImageUpload from '../ImageUpload';
 import { LLMModal } from "../LLMModal";
 import LoadingSpinner from "../LoadingSpinner";
 import PreviewModal from '../PreviewModal';
-// import parse, { domToReact } from 'html-react-parser';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
