@@ -631,6 +631,8 @@ function StoryDetails() {
         document.body.removeChild(fileDownload);
     }
 
+    const [currentHoveredId, setCurrentHoveredId] = useState(null);
+
     return (
         <div className="flex flex-col h-full max-w-6xl mx-auto mt-3">
             <div className="flex items-center justify-between">
@@ -704,7 +706,7 @@ function StoryDetails() {
                 onScroll={handleScroll}
             >
                 {selectedStory.text?.map((item) => (
-                    <div key={item.id} className="flex flex-col gap-4 px-3">
+                    <div key={item.id} className="flex flex-col gap-4 px-3" onMouseLeave={() => setCurrentHoveredId(null)} onMouseOver={() => setCurrentHoveredId(item.id)}>
                         {/* question */}
                         {item.outline.name ? (
                             <div>
@@ -740,13 +742,13 @@ function StoryDetails() {
                                             onFocus={() => handleFocus("question", item.id)}
                                         ></div>
                                     </div>
-                                    <div className="flex gap-2">
+                                    {currentHoveredId === item.id && <div className="flex gap-2">
                                         <CloseIcon
                                             fontSize="2"
                                             className="cursor-pointer"
                                             onClick={() => handleDeleteContent(item.id)}
                                         />
-                                    </div>
+                                    </div>}
                                 </div>
                             </div>
                         ) : null}
