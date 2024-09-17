@@ -954,7 +954,7 @@ function StoryDetails() {
                     </div>
                 ))}
 
-                {/* add new question/answer */}
+                {/* add new story section */}
                 <div className="flex flex-col gap-4 px-3 mt-2">
                     {!currentAddingQuestionId ? (
                         <div
@@ -1075,8 +1075,7 @@ function StoryDetails() {
                 </div>
             </div>
 
-            {/* questions/answers */}
-            <div className="flex items-center gap-3 ml-auto w-fit">
+            {selectedStory.text.length > 0 && <div className="flex items-center gap-3 ml-auto w-fit">
                 <CustomButton
                     className={`ml-auto ${theme === "light"
                         ? "bg-white border border-light-hover-200"
@@ -1104,7 +1103,7 @@ function StoryDetails() {
                 >
                     Export to Word
                 </CustomButton>
-            </div>
+            </div>}
         </div>
     );
 }
