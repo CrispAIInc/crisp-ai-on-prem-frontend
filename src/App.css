@@ -11,12 +11,16 @@ li {
   padding: 0;
 }
 
-html,
+a {
+  text-decoration: none !important;
+}
+
+/* html,
 body,
 #root,
 .App {
   height: 100%;
-}
+} */
 
 ::-webkit-scrollbar {
   width: 3px;
