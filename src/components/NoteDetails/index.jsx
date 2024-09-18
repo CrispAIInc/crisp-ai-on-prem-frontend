@@ -522,7 +522,7 @@ function NoteDetails() {
                                                     </div>}
                                                     <p dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}></p></div> : <img className="w-[400px] h-[300px]" width="400" height="300" src={item.answer} alt="image" />}
                                                 {/* display references */}
-                                                {(item.refs?.videoObjects?.length > 0 || item.refs?.keyframeObjects?.length > 0 || item.refs?.pdfObjects?.length > 0 || item.refs?.imgObjects?.length > 0) && <div className='flex flex-col gap-2'>
+                                                {(item.refs?.videoObjects?.length > 0 || item.refs?.keyframeObjects?.length > 0 || item.refs?.pdfObjects?.length > 0 || item.refs?.imageObjects?.length > 0) && <div className='flex flex-col gap-2'>
                                                     <h6 className='text-sm'>References:</h6>
                                                     <ul className='break-all !mb-0'>
                                                         {
