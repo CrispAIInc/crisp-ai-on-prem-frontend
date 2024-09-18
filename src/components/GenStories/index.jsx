@@ -221,7 +221,7 @@ const GenStories = () => {
                                                         : "text-textColor-100"
                                                         }`}
                                                 >
-                                                    Chatbot:{" "}
+                                                    Crisp Wiz:{" "}
                                                 </b>
                                                 <div
                                                     className={`${theme === "light"

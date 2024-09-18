@@ -559,7 +559,7 @@ function NoteDetails() {
                                                     </ul>
                                                     <ul className='break-all !mb-0'>
                                                         {
-                                                            item.refs?.imaggObjects?.map((img, index) => (
+                                                            item.refs?.imageObjects?.map((img, index) => (
                                                                 <li key={img.source_path + "" + index} className="mb-3 ml-0">
                                                                     <Link onClick={(event) => handlePDFLinkClick(event, img)}>
                                                                         {img.source_path}

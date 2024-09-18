@@ -2,6 +2,8 @@ import MainWorkspace from '../components/MainWorkspace';
 
 export default function MainWorkspacePage({ theme }) {
     return (
-        <MainWorkspace theme={theme} />
+        <div className="!h-full">
+            <MainWorkspace theme={theme} />
+        </div>
     );
 }

@@ -404,7 +404,7 @@ const MainWorkspace = ({ theme }) => {
 
   return (
     <MainContext.Provider value={value}>
-      <div className="flex h-full divide-x divide-separator main-workspace-container">
+      <div className="flex !h-full divide-x divide-separator main-workspace-container">
         <ContentPanel />
         <Workspace />
         <ChatPanel />

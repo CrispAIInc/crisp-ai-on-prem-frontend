@@ -113,7 +113,7 @@ const ContentPanel = () => {
     };
 
     return (
-        <div className={`user-select-none h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
+        <div className={`user-select-none !h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
             width: leftWidth
         }}>
             <div

@@ -8,7 +8,7 @@ import { ThemeContext } from "../contexts/themeContext.js";
 export default function HomePage({ theme }) {
     return (
         <ThemeContext.Provider value={{ theme }}>
-            <div className="bg-background_workspace main-workspace-container">
+            <div className="bg-background_workspace main-workspace-container !min-h-full">
                 <Container>
                     <Navbar />
                     <Hero />
