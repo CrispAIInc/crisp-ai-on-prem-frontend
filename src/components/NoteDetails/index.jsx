@@ -13,12 +13,14 @@ import AddToStoryModal from '../AddToStoryModal';
 import AggregationLlmModal from '../AggregationLlmModal';
 import BaseHeading from '../BaseHeading';
 import CustomButton from '../CustomButton';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
 function NoteDetails() {
     const {
         selectedNote,
         setSelectedNote,
         notes,
+        setFromChat,
         noteIndex,
         setCurrentResource,
         setNotes,
@@ -35,6 +37,8 @@ function NoteDetails() {
         currentResource,
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
+    const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+
     const [llmAggregation, setLlmAggregation] = useState('gpt-4');
     const [isLlmAggregationModalOpen, setIsAggregationModalOpen] = useState(false);
     const [isPending, setIsPending] = useState(false);
@@ -44,30 +48,30 @@ function NoteDetails() {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const handleVideoLinkClick = (event, video) => {
-        event.preventDefault();
-        // setFromChat(true);
-        const resourceURL = `${API_ENDPOINT}/${video.file_type
-            }/all/${encodeURIComponent(video.source_path)}`;
-        setCurrentResource(video);
-        setResourceURL(resourceURL);
-        setSummary(video.summary);
-        setSummaries(video.topic_summaries);
-        setActiveView('resource');
-        // setShowNoteDetails(false);
-    };
+    // const handleVideoLinkClick = (event, video) => {
+    //     event.preventDefault();
+    //     setFromChat(false);
+    //     const resourceURL = `${API_ENDPOINT}/${video.file_type
+    //         }/all/${encodeURIComponent(video.source_path)}`;
+    //     setCurrentResource(video);
+    //     setResourceURL(resourceURL);
+    //     setSummary(video.summary);
+    //     setSummaries(video.topic_summaries);
+    //     setActiveView('resource');
+    //     // setShowNoteDetails(false);
+    // };
 
-    const handlePDFLinkClick = (event, pdf) => {
-        event.preventDefault();
-        const resourceURL = `${API_ENDPOINT}/${pdf.file_type
-            }/all/${encodeURIComponent(pdf.source_path)}`;
-        setCurrentResource(pdf);
-        setResourceURL(resourceURL);
-        setSummary(pdf.summary);
-        setSummaries(pdf.topic_summaries);
-        setActiveView('resource');
-        setJumpToPage({ page: parseInt(pdf.page) + 1 });
-    };
+    // const handlePDFLinkClick = (event, pdf) => {
+    //     event.preventDefault();
+    //     const resourceURL = `${API_ENDPOINT}/${pdf.file_type
+    //         }/all/${encodeURIComponent(pdf.source_path)}`;
+    //     setCurrentResource(pdf);
+    //     setResourceURL(resourceURL);
+    //     setSummary(pdf.summary);
+    //     setSummaries(pdf.topic_summaries);
+    //     setActiveView('resource');
+    //     setJumpToPage({ page: parseInt(pdf.page) + 1 });
+    // };
 
     const handleSave = async (event) => {
         event && event.preventDefault();

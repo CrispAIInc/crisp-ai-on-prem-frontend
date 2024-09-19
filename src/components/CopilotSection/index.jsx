@@ -15,6 +15,8 @@ import { LLMModal } from "../LLMModal";
 import LoadingSpinner from "../LoadingSpinner";
 import PreviewModal from '../PreviewModal';
 
+import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
+
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
   const {
@@ -49,6 +51,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setActiveView
   } = useContext(MainContext);
 
+  const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
   const chatAppRef = useRef();
 
@@ -108,8 +111,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       currentResource.file_type === "video"
     ) {
       const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-      if (timestamp) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-      else;
+      if (timestamp !== undefined && timestamp !== null) {
+        player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+      }
       setFromChat(false);
     }
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
@@ -222,31 +226,31 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setInput("");
   };
 
-  const handleVideoLinkClick = (event, video) => {
-    event.preventDefault();
-    setFromChat(true);
-    const resourceURL = `${API_ENDPOINT}/${video.file_type
-      }/all/${encodeURIComponent(video.source_path)}`;
-    setCurrentResource({ ...video });
-    setResourceURL(resourceURL);
-    setSummary(video.summary);
-    setSummaries(video.topic_summaries);
-    setActiveView('resource');
-    // setShowNoteDetails(false);
-  };
+  // const handleVideoLinkClick = (event, video) => {
+  //   event.preventDefault();
+  //   setFromChat(true);
+  //   const resourceURL = `${API_ENDPOINT}/${video.file_type
+  //     }/all/${encodeURIComponent(video.source_path)}`;
+  //   setCurrentResource({ ...video });
+  //   setResourceURL(resourceURL);
+  //   setSummary(video.summary);
+  //   setSummaries(video.topic_summaries);
+  //   setActiveView('resource');
+  //   // setShowNoteDetails(false);
+  // };
 
-  const handlePDFLinkClick = (event, pdf) => {
-    event.preventDefault();
-    const resourceURL = `${API_ENDPOINT}/${pdf.file_type
-      }/all/${encodeURIComponent(pdf.source_path)}`;
-    setCurrentResource({ ...pdf });
-    setResourceURL(resourceURL);
-    setSummary(pdf.summary);
-    setSummaries(pdf.topic_summaries);
-    setActiveView('resource');
-    setJumpToPage({ page: parseInt(pdf.page) + 1 });
-    // setShowNoteDetails(false);
-  };
+  // const handlePDFLinkClick = (event, pdf) => {
+  //   event.preventDefault();
+  //   const resourceURL = `${API_ENDPOINT}/${pdf.file_type
+  //     }/all/${encodeURIComponent(pdf.source_path)}`;
+  //   setCurrentResource({ ...pdf });
+  //   setResourceURL(resourceURL);
+  //   setSummary(pdf.summary);
+  //   setSummaries(pdf.topic_summaries);
+  //   setActiveView('resource');
+  //   setJumpToPage({ page: parseInt(pdf.page) + 1 });
+  //   // setShowNoteDetails(false);
+  // };
 
   const fetchReferences = async (botMessage) => {
     const response = await axios.get(`${API_ENDPOINT}/references`);

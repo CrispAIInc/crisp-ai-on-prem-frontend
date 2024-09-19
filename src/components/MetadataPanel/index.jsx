@@ -42,7 +42,7 @@ const MetadataPanel = () => {
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
       const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-      if (timestamp) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+      if (timestamp !== undefined && timestamp !== null) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
       // setFromStory(false);
     }
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
