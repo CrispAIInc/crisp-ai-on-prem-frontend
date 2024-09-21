@@ -300,6 +300,8 @@ const MainWorkspace = ({ theme }) => {
     { value: "zu", label: "Zulu" },
   ];
 
+  const [isNotesLoading, setIsNotesLoading] = useState(false);
+
   // create value object with all the states
   const value = {
     API_ENDPOINT,
@@ -325,6 +327,7 @@ const MainWorkspace = ({ theme }) => {
     setVideoTimestamp,
     player,
     isPlayerReady,
+    isNotesLoading,
     setIsPlayerReady,
     showNoteDetails, setShowNoteDetails,
     notes,
@@ -360,16 +363,17 @@ const MainWorkspace = ({ theme }) => {
   useEffect(() => {
     const getNotes = async () => {
       try {
+        setIsNotesLoading(true);
         const data = await makeApiRequest("/notes", "post");
         setNotes(data);
         setSelectedNote({
           note_id: "",
           text: [{
-            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
-              videoLinks: [],
-              keyframeLinks: [],
-              pdfLinks: [],
-              imageLinks: [],
+            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', refs: {
+              videoObjects: [],
+              keyframeObjects: [],
+              pdfObjects: [],
+              imageObjects: [],
             }
           }],
           images: [],
@@ -377,6 +381,8 @@ const MainWorkspace = ({ theme }) => {
         });
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsNotesLoading(false);
       }
     };
 

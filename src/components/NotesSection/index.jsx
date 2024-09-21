@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import BaseHeading from '../BaseHeading';
 import NoData from "../NoData";
 import SavedNote from '../SavedNote';
+import SavedNoteSkeleton from '../Skeletons/SavedNoteSkeleton';
 
 const NotesSection = () => {
 
@@ -13,7 +14,7 @@ const NotesSection = () => {
         setSelectedNote,
         notes,
         setIsManualNote,
-        selectedNote, theme, setIsEditingTitle, setActiveView, setNoteIndex, setShowNoteDetails } = useContext(MainContext);
+        selectedNote, theme, setIsEditingTitle, setActiveView, isNotesLoading, setNoteIndex, setShowNoteDetails } = useContext(MainContext);
 
     const handleAddNote = (event) => {
         event.preventDefault();
@@ -68,27 +69,38 @@ const NotesSection = () => {
             </div>
 
             <BaseHeading text='Saved notes' />
-            {notes.length > 0 ? (
-                <div>
-                    <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
-                        {notes.map((note, i) => (
-                            <SavedNote
-                                note={note}
-                                key={note.note_id}
-                                index={i}
-                                setNoteIndex={setNoteIndex}
-                                handleDelete={handleDelete}
-                            // onHide={onHide}
-                            />
-                        ))}
-                    </div>
-                </div>
-            ) : (
-                <div className="mt-4">
-                    <NoData />
-                </div>
-            )}
-        </div>
+            {
+                isNotesLoading ? (
+                    <>
+                        {
+                            [1, 2, 3].map((item) => (
+                                <SavedNoteSkeleton key={item} className='px-1 mt-4 mr-2' />
+                            ))
+                        }
+                    </>
+                ) :
+                    notes.length > 0 ? (
+                        <div>
+                            <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
+                                {notes.map((note, i) => (
+                                    <SavedNote
+                                        note={note}
+                                        key={note.note_id}
+                                        index={i}
+                                        setNoteIndex={setNoteIndex}
+                                        handleDelete={handleDelete}
+                                    // onHide={onHide}
+                                    />
+                                ))}
+                            </div>
+                        </div >
+                    ) : (
+                        <div className="mt-4">
+                            <NoData />
+                        </div>
+                    )
+            }
+        </div >
     );
 };
 
