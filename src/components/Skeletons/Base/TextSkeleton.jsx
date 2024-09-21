@@ -1,10 +1,10 @@
 import { useContext } from 'react';
-import { ThemeContext } from '../../../contexts/themeContext.js';
+import { MainContext } from '../../../contexts/mainContext.js';
 
 function TextSkeleton({ className }) {
-    const { theme } = useContext(ThemeContext);
+    const { theme } = useContext(MainContext);
     return (
-        <div className={`${theme === 'light' ? 'bg-textColor-100' : 'bg-textColor-300'} w-full h-2 rounded-sm ${className}`}></div>
+        <div className={`${theme === 'light' ? 'bg-slate-300' : 'bg-textColor-300'} w-full h-2 rounded-sm ${className}`}></div>
     );
 }
 
