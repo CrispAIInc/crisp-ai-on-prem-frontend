@@ -5,10 +5,11 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import BaseHeading from '../BaseHeading';
 import SavedStory from '../SavedStory';
 import NoData from "../NoData";
+import SavedInsightSkeleton from '../Skeletons/SavedInsightSkeleton';
 
 function StoriesSection() {
 
-  const { theme, setActiveView, stories, setSelectedStory, setIsNewStory } = useContext(MainContext);
+  const { theme, setActiveView, stories, setSelectedStory, setIsNewStory, isInsightsLoading } = useContext(MainContext);
 
   function handleNewStoryClick() {
     setSelectedStory({
@@ -33,22 +34,32 @@ function StoriesSection() {
       </div>
 
       <BaseHeading text='Saved stories' />
-      {stories.length > 0 ? (
-        <div>
-          <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
-            {stories.map((story) => (
-              <SavedStory
-                key={story.story_id}
-                story={story}
-              />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="mt-4">
-          <NoData />
-        </div>
-      )}
+      {
+        isInsightsLoading ? (
+          <>
+            {
+              [1, 2, 3].map((item) => (
+                <SavedInsightSkeleton key={item} className='px-1 mt-4 mr-2' />
+              ))
+            }
+          </>
+        ) :
+          stories.length > 0 ? (
+            <div>
+              <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
+                {stories.map((story) => (
+                  <SavedStory
+                    key={story.story_id}
+                    story={story}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="mt-4">
+              <NoData />
+            </div>
+          )}
     </div>
   );
 }

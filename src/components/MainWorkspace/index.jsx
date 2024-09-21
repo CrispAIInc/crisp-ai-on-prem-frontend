@@ -301,6 +301,7 @@ const MainWorkspace = ({ theme }) => {
   ];
 
   const [isNotesLoading, setIsNotesLoading] = useState(false);
+  const [isInsightsLoading, setIsInsightsLoading] = useState(false);
 
   // create value object with all the states
   const value = {
@@ -352,6 +353,7 @@ const MainWorkspace = ({ theme }) => {
     setSelectedNote,
     isNewNote,
     setIsNewNote,
+    isInsightsLoading,
     summary,
     setSummary,
     noteIndex, setNoteIndex,
@@ -392,6 +394,7 @@ const MainWorkspace = ({ theme }) => {
   useEffect(() => {
     const getStories = async () => {
       try {
+        setIsInsightsLoading(true);
         const data = await makeApiRequest("/stories", "get");
         setStories(data);
         setSelectedStory({
@@ -402,6 +405,8 @@ const MainWorkspace = ({ theme }) => {
         });
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsInsightsLoading(false);
       }
     };
 
