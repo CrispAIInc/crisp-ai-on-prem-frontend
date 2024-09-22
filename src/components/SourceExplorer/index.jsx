@@ -75,29 +75,39 @@ export function SourceExplorer(props) {
         );
 
     const renderFolders = () => {
-        if (viewModes[viewModes.length - 1] === "categories") {
-            return props.categories.map((item, index) => (
-                <div
-                    className="folder"
-                    onClick={() => openCategoryFolder(item.value)}
-                    key={index}
-                >
-                    <FolderIcon sx={{ fontSize: 60 }} />
-                    <p>{item.label}</p>
-                </div>
-            ));
-        } else if (viewModes[viewModes.length - 1] === "formats") {
-            return props.formats.map((item, index) => (
-                <div
-                    className="folder"
-                    onClick={() => openFormatFolder(item.value)}
-                    key={index}
-                >
-                    <FolderIcon sx={{ fontSize: 60 }} />
-                    <p>{item.label}</p>
-                </div>
-            ));
-        }
+        return props[viewModes[viewModes.length - 1]].map((item, index) => (
+            <div
+                className="folder"
+                onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
+                key={index}
+            >
+                <FolderIcon sx={{ fontSize: 60 }} />
+                <p>{item.label}</p>
+            </div>
+        ));
+        // if (viewModes[viewModes.length - 1] === "categories") {
+        //     return props.categories.map((item, index) => (
+        //         <div
+        //             className="folder"
+        //             onClick={() => openCategoryFolder(item.value)}
+        //             key={index}
+        //         >
+        //             <FolderIcon sx={{ fontSize: 60 }} />
+        //             <p>{item.label}</p>
+        //         </div>
+        //     ));
+        // } else if (viewModes[viewModes.length - 1] === "formats") {
+        //     return props.formats.map((item, index) => (
+        //         <div
+        //             className="folder"
+        //             onClick={() => openFormatFolder(item.value)}
+        //             key={index}
+        //         >
+        //             <FolderIcon sx={{ fontSize: 60 }} />
+        //             <p>{item.label}</p>
+        //         </div>
+        //     ));
+        // }
     };
 
     const renderFiles = () => {
