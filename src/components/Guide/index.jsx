@@ -8,7 +8,12 @@ const Guide = ({ steps, tabIdentifier }) => {
     const [stepIndex, setStepIndex] = React.useState(0);
 
     const handleStepChange = (event) => {
-        console.log('Step Change Event:', event); // Debugging the event
+
+        // if (event.type === 'overlay' && event.action === 'click') {
+        //     // User clicked the overlay, stop the guide
+        //     setRun(false);
+        //     localStorage.setItem(`guide_cancelled_${tabIdentifier}`, 'true'); // Save the cancel state
+        // }
 
         // Only handle step changes
         if (event.type === 'step:after' || event.type === 'tour:end') {

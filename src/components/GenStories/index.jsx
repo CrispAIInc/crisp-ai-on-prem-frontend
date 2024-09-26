@@ -118,12 +118,12 @@ const GenStories = () => {
     return (
         <div className="relative flex flex-col flex-1 h-full overflow-y-auto">
             {/* models button */}
-            <div className="flex flex-wrap items-center justify-center gap-3">
+            <div className=" flex flex-wrap items-center justify-center gap-3">
                 <CustomButton
-                    className={`my-0 ${theme === "light"
+                    className={` my-0 ${theme === "light"
                         ? "bg-white !text-dark border border-textColor-100"
                         : " !text-textColor-100 !border !border-textColor-300"
-                        }`}
+                        } genstory-models-list-button`}
                     onClick={() => setShowLLMModal(true)}
                     style={{ width: "100%" }}
                 >
@@ -176,7 +176,7 @@ const GenStories = () => {
 
             {/* chat container */}
             <div
-                className={`flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
+                className={`genstory-chat-container flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
                     }`}
                 ref={chatAppRef}
             >

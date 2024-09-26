@@ -729,22 +729,26 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
             <p key={i}>{note.note_name}</p>;
           })
         }
-        <CustomSelectTwo
-          options={languageOptions}
-          onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage.value)}
-          placeholder="Select a language"
-        />
+        <div className="language-dropdown">
+          <CustomSelectTwo
+            options={languageOptions}
+            onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage.value)}
+            placeholder="Select a language"
+          />
+        </div>
 
-        <CustomButton
-          className={`my-0 ${theme === "light"
-            ? "bg-white !text-dark border border-textColor-100"
-            : " !text-textColor-100 !border !border-textColor-300"
-            }`}
-          style={{ width: "100%" }}
-          onClick={selectLLMModels}
-        >
-          Models
-        </CustomButton>
+        <div className="models-list-button">
+          <CustomButton
+            className={`my-0 ${theme === "light"
+              ? "bg-white !text-dark border border-textColor-100"
+              : " !text-textColor-100 !border !border-textColor-300"
+              }`}
+            style={{ width: "100%" }}
+            onClick={selectLLMModels}
+          >
+            Models
+          </CustomButton>
+        </div>
         <LLMModal
           show={showLLMModal}
           onHide={onHideLLMModal}
@@ -792,7 +796,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
 
       {/* <div className="flex items-center flex-1 gap-3"> */}
       <div
-        className={`flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
+        className={`copilot-chat-container flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
           }`}
         ref={chatAppRef}
       >
@@ -1017,7 +1021,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       </div>
 
       {/* </div> */}
-      <div className="flex items-center gap-2 input-area">
+      <div className="copilot-chat-container flex items-center gap-2 input-area">
 
         {
           selectedLLMs[0] === 'gpt-4-vision'

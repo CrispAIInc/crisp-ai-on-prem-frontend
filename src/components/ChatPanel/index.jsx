@@ -1,5 +1,6 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import GenStories from '../GenStories';
+import Guide from "../Guide";
 
 import CopilotSection from '../CopilotSection';
 import { MainContext } from '../../contexts/mainContext';
@@ -15,6 +16,41 @@ const ChatPanel = () => {
   const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
   const { chatLoaded, setChatLoaded, isRightSidebarOpen, theme } = useContext(MainContext);
+
+  let copilotSectionSteps = [
+    {
+      target: '.language-dropdown',
+      content: "Select a language to translate copilot chat",
+      disableBeacon: true,
+      placement: 'bottom'
+    },
+    {
+      target: '.models-list-button',
+      content: "Select an LLM to be used for the query processing",
+      placement: 'bottom'
+    },
+    {
+      target: '.copilot-chat-container',
+      content: "This is where you interact with the LLM to generate insights",
+      placement: 'bottom'
+    },
+  ];
+
+  let genStorieSectionSteps = [
+    {
+      target: '.genstory-models-list-button',
+      content: "Select an LLM to be used for the query processing",
+      disableBeacon: true,
+      placement: 'bottom'
+    },
+    {
+      target: '.genstory-chat-container',
+      content: "This is where you interact with the LLM to generate stories",
+      placement: 'bottom'
+    },
+  ];
+
+  const [activeTab, setActiveTab] = useState('genInsights');
 
   return (
     <div className={`relative w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
@@ -39,14 +75,17 @@ const ChatPanel = () => {
       <Tabs
         transition={false}
         defaultActiveKey="genInsights"
+        onSelect={(k) => setActiveTab(() => k)}
         id="uncontrolled-tab-example"
         className={`my-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
       >
         <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} style={{}}>
           <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} key={0} name="genInsights" />
+          {(activeTab === 'genInsights' && (Boolean(localStorage.getItem(`guide_completed_genInsights`)) === false || localStorage.getItem(`guide_completed_genInsights`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genInsights" />}
         </Tab>
-        <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`} style={{}}>
+        <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`}>
           <GenStories key={2} name="genStories" />
+          {(activeTab === 'genStories' && (Boolean(localStorage.getItem(`guide_completed_genStories`)) === false || localStorage.getItem(`guide_completed_genStories`) === "false")) && <Guide steps={genStorieSectionSteps} tabIdentifier="genStories" />}
         </Tab>
       </Tabs>
     </div>
