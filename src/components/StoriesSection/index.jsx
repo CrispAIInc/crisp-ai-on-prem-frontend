@@ -23,10 +23,10 @@ function StoriesSection() {
   }
 
   return (
-    <div className='mt-7'>
+    <div className='stories-section mt-7'>
       {/* New Story */}
       <div
-        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit mb-4 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+        className={`new-story-button flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit mb-4 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
         onClick={handleNewStoryClick}
       >
         <AddOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
@@ -34,32 +34,34 @@ function StoriesSection() {
       </div>
 
       <BaseHeading text='Saved stories' />
-      {
-        isInsightsLoading ? (
-          <>
-            {
-              [1, 2, 3].map((item) => (
-                <SavedInsightSkeleton key={item} className='px-1 mt-4 mr-2' />
-              ))
-            }
-          </>
-        ) :
-          stories.length > 0 ? (
-            <div>
-              <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
-                {stories.map((story) => (
-                  <SavedStory
-                    key={story.story_id}
-                    story={story}
-                  />
-                ))}
+      <div className="saved-stories">
+        {
+          isInsightsLoading ? (
+            <>
+              {
+                [1, 2, 3].map((item) => (
+                  <SavedInsightSkeleton key={item} className='px-1 mt-4 mr-2' />
+                ))
+              }
+            </>
+          ) :
+            stories.length > 0 ? (
+              <div>
+                <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
+                  {stories.map((story) => (
+                    <SavedStory
+                      key={story.story_id}
+                      story={story}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="mt-4">
-              <NoData />
-            </div>
-          )}
+            ) : (
+              <div className="mt-4">
+                <NoData />
+              </div>
+            )}
+      </div>
     </div>
   );
 }

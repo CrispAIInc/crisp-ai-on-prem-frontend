@@ -249,7 +249,7 @@ const ContentSection = ({
 
     return (
         <>
-            <Joyride
+            {/* <Joyride
                 steps={steps}
                 continuous
                 showProgress
@@ -265,11 +265,7 @@ const ContentSection = ({
                         zIndex: 1000, // Ensure the tooltip appears on top of other elements
                     },
                     buttonNext: {
-                        // backgroundColor: "#e63946", // Button background color
-                        // color: "#fff", // Button text color
-                        outline: "none", // Remove the button outline
-                        // boxShadow: "none", // Remove any shadow outline on focus
-                        // border: "none", // Remove borders (optional)
+                        outline: "none",
                     },
                     spotlight: {
                         borderRadius: '8px', // Add rounded corners to the spotlight
@@ -284,7 +280,7 @@ const ContentSection = ({
                         whiteSpace: 'normal', // Ensure the text wraps inside the tooltip
                     },
                 }}
-            />
+            /> */}
 
 
             <div className='relative flex flex-col items-start h-full'>

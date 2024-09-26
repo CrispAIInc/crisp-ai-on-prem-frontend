@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-
+import Guide from "../Guide";
 import makeApiRequest from "../../api";
 
 import Tab from 'react-bootstrap/Tab';
@@ -112,10 +112,94 @@ const ContentPanel = () => {
         setShowSearchModal(false);
     };
 
+    const contentSectionSteps = [
+        {
+            target: ".upload-source",
+            content: "Click here to upload a new source to your knowledge base.",
+            disableBeacon: true,
+            placement: 'bottom'
+        },
+        {
+            target: ".source-explorer",
+            content: "Click here to explore your uploaded sources  in your knowledge base.",
+        },
+        {
+            target: ".global-search",
+            content: "Click here to search for a source in your knowledge base.",
+        },
+        {
+            target: ".selected-sources-container",
+            content: "This section contains all the sources you have selected in the source explorer.",
+        },
+    ];
+
+    const notesSectionSteps = [
+        {
+            target: ".new-note-button",
+            content: "Click here to create a new insight.",
+            disableBeacon: true,
+            placement: "right",
+        },
+        {
+            target: ".saved-notes",
+            content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
+            placement: "right",
+        },
+    ];
+
+    const storiesSectionSteps = [
+        {
+            target: ".new-story-button",
+            content: "Click here to create a new story.",
+            disableBeacon: true,
+            placement: "right",
+        },
+        {
+            target: ".saved-stories",
+            content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
+            placement: "right",
+        }
+    ];
+
+    const [activeTab, setActiveTab] = useState('sources');
+
     return (
-        <div className={`user-select-none !h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
+        <div className={`select-none !h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
             width: leftWidth
         }}>
+            <Tabs
+                transition={false}
+                defaultActiveKey="sources"
+                onSelect={(k) => setActiveTab(() => k)}
+                id="uncontrolled-tab-example"
+                className="my-3 text-center flex justify-center items-center !border-b-0"
+            >
+                <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'>
+                    <ContentSection
+                        knowledgeBase={knowledgeBase}
+                        setKnowledgeBase={setKnowledgeBase}
+                        onThumbnailClick={onThumbnailClick}
+                        handleCheckboxChange={handleCheckboxChange}
+                        name="Sources"
+                        key={0}
+                    />
+                    {(activeTab === 'sources' && (Boolean(localStorage.getItem(`guide_completed_sources`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={contentSectionSteps} tabIdentifier="sources" />}
+                </Tab>
+                <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
+                    <NotesSection
+                        setNoteIndex={setNoteIndex}
+                        nodeIndex={noteIndex}
+                        key={2}
+                        name="Notes"
+                    />
+                    {(activeTab === 'insights' && (Boolean(localStorage.getItem(`guide_completed_insights`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={notesSectionSteps} tabIdentifier="insights" />}
+                </Tab>
+                <Tab eventKey="stories" title="Stories" className='flex-1 h-full overflow-y-auto'>
+                    <StoriesSection
+                    />
+                    {(activeTab === 'stories' && (Boolean(localStorage.getItem(`guide_completed_stories`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={storiesSectionSteps} tabIdentifier="stories" />}
+                </Tab>
+            </Tabs>
             <div
                 className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
             >
@@ -133,35 +217,7 @@ const ContentPanel = () => {
                 ></div>
             }
 
-            <Tabs
-                transition={false}
-                defaultActiveKey="sources"
-                id="uncontrolled-tab-example"
-                className="my-3 text-center flex justify-center items-center !border-b-0"
-            >
-                <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'>
-                    <ContentSection
-                        knowledgeBase={knowledgeBase}
-                        setKnowledgeBase={setKnowledgeBase}
-                        onThumbnailClick={onThumbnailClick}
-                        handleCheckboxChange={handleCheckboxChange}
-                        name="Sources"
-                        key={0}
-                    />
-                </Tab>
-                <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
-                    <NotesSection
-                        setNoteIndex={setNoteIndex}
-                        nodeIndex={noteIndex}
-                        key={2}
-                        name="Notes"
-                    />
-                </Tab>
-                <Tab eventKey="stories" title="Stories" className='flex-1 h-full overflow-y-auto'>
-                    <StoriesSection
-                    />
-                </Tab>
-            </Tabs>
+
 
             <SearchModal
                 show={showSearchModal}
