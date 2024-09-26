@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import Joyride from "react-joyride";
 
 import makeApiRequest from "../../api";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
@@ -225,122 +226,185 @@ const ContentSection = ({
         setSelectedSources([]);
     };
 
+    const steps = [
+        {
+            target: ".upload-source",
+            content: "Click here to upload a new source to your knowledge base.",
+            disableBeacon: true,
+            placement: 'bottom'
+        },
+        {
+            target: ".source-explorer",
+            content: "Click here to explore your uploaded sources  in your knowledge base.",
+        },
+        {
+            target: ".global-search",
+            content: "Click here to search for a source in your knowledge base.",
+        },
+        {
+            target: ".selected-sources-container",
+            content: "This section contains all the sources you have selected in the source explorer.",
+        },
+    ];
+
     return (
-        <div className='relative flex flex-col items-start h-full'>
+        <>
+            <Joyride
+                steps={steps}
+                continuous
+                showProgress
+                showSkipButton
+                disableScrollParentFix={true}
+                styles={{
+                    options: {
+                        arrowColor: "#5293FD",  // Arrow color for the tooltip
+                        backgroundColor: "#5293FD", // Background color of the tooltip
+                        overlayColor: "rgba(82, 147, 253, 0.1)",  // Dim background overlay
+                        primaryColor: "#5293FD", // Color of the primary buttons (e.g. Next)
+                        textColor: "#fff",  // Text color inside the tooltip
+                        zIndex: 1000, // Ensure the tooltip appears on top of other elements
+                    },
+                    buttonNext: {
+                        // backgroundColor: "#e63946", // Button background color
+                        // color: "#fff", // Button text color
+                        outline: "none", // Remove the button outline
+                        // boxShadow: "none", // Remove any shadow outline on focus
+                        // border: "none", // Remove borders (optional)
+                    },
+                    spotlight: {
+                        borderRadius: '8px', // Add rounded corners to the spotlight
+                        boxShadow: '0 0 15px rgba(0, 0, 0, 0.2)', // Subtle shadow effect
+                        backgroundColor: 'rgba(255, 255, 255, 0.6)', // Spotlight color to highlight the element
+                    },
+                    tooltipContainer: {
+                        maxWidth: '300px', // Limit the tooltip width
+                        wordWrap: 'break-word', // Ensure text doesn't overflow
+                    },
+                    tooltip: {
+                        whiteSpace: 'normal', // Ensure the text wraps inside the tooltip
+                    },
+                }}
+            />
 
-            <div className="w-full max-w-4xl pr-3">
-                {/* New resource */}
-                <div>
-                    {
-                        isUploading ? <LoadingSpinner videoSpinner={true} /> :
-                            <div
-                                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                                onClick={handleAddNewResource}
-                            >
-                                <AddOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Source</span>
-                            </div>
-                    }
-                </div>
 
-                {/* resource explorer */}
-                <div
-                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                    onClick={handleExploreSources}
-                >
-                    <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Source Explorer</span>
-                </div>
+            <div className='relative flex flex-col items-start h-full'>
 
-                {/* Search */}
-                <div>
-                    <div
-                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                        onClick={() => setIsSearching(!isSearching)}
-                    >
-                        <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Search</span>
+                <div className="w-full max-w-4xl pr-3">
+                    {/* New resource */}
+                    <div className="upload-source">
+                        {
+                            isUploading ? <LoadingSpinner videoSpinner={true} /> :
+                                <div
+                                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                                    onClick={handleAddNewResource}
+                                >
+                                    <AddOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Source</span>
+                                </div>
+                        }
                     </div>
+
+                    {/* resource explorer */}
+                    <div
+                        className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        onClick={handleExploreSources}
+                    >
+                        <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Source Explorer</span>
+                    </div>
+
+                    {/* Search */}
+                    <div className="global-search">
+                        <div
+                            className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                            onClick={() => setIsSearching(!isSearching)}
+                        >
+                            <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Search</span>
+                        </div>
+                        {
+                            isSearching && (
+                                <div className="flex items-center gap-2">
+                                    {/* <span className={`cursor-pointer text-2xl ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>&times;</span> */}
+                                    <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
+
+                {showSourceExplorer && (
+                    <SourceExplorer
+                        show={showSourceExplorer}
+                        onHide={onHideSourceExplorer}
+                        knowledgeBase={knowledgeBase}
+                        setKnowledgeBase={setKnowledgeBase}
+                        categories={categoryOptions}
+                        formats={formatOptions}
+                        isDeleting={isDeleting}
+                        clickedIndex={clickedIndex}
+                        onThumbnailClick={onThumbnailClick}
+                        deleteResource={deleteResource}
+                        handleCheckboxChange={handleCheckboxChange}
+                        handleSelectAllCheckboxChange={handleSelectAllCheckboxChange}
+                        isOpenedFromSourceExplorerBtn={isOpenedFromSourceExplorerBtn}
+                        className="modal"
+                    />
+                )}
+
+
+
+                <CategoriesModal
+                    show={showCategoriesModal}
+                    onHide={() => setShowCategoriesModal(false)}
+                    categoryOptions={categoryOptions}
+                    setShowFileFormatsModal={setShowFileFormatsModal}
+                />
+
+                <FileFormatsModal
+                    handleupload={handleUpload}
+                    show={showFileFormatsModal}
+                    onHide={() => setShowFileFormatsModal(false)}
+                />
+
+                <BaseHeading text='Selected sources' className="mt-2" />
+
+                <div className="selected-sources-container">
                     {
-                        isSearching && (
-                            <div className="flex items-center gap-2">
-                                {/* <span className={`cursor-pointer text-2xl ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>&times;</span> */}
-                                <SearchSection chatLoaded={chatLoaded} className='flex-1' />
-                            </div>
-                        )
+                        <div className={` grid grid-cols-[repeat(auto-fill,_160px)] gap-5 justify-center items-start w-4/5 w-full max-w-full gap-8 mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
+                            {knowledgeBase.slice(0).reverse().map((item, index) => {
+                                if (canRenderSourceThumbnail(item)) {
+                                    return (<ContentPanelThumbnail
+                                        key={index}
+                                        index={index}
+                                        isDeleting={isDeleting}
+                                        clickedIndex={clickedIndex}
+                                        item={item}
+                                        handleCheckboxChange={handleCheckboxChange}
+                                        onThumbnailClick={onThumbnailClick}
+                                        deleteResource={deleteResource}
+                                    />);
+                                }
+                            })}
+                        </div>
+                    }
+                    {
+                        knowledgeBase.some((item) => item.is_selected) > 0
+                            ?
+                            <>
+                                <div className="mx-auto">
+                                    <CustomButton onClick={commitSelectedSources} className="my-1 text-white bg-primary-300">Update sources</CustomButton>
+                                </div>
+                                <div className="mx-auto">
+                                    <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>
+                                </div>
+                            </>
+                            :
+                            <NoData />
                     }
                 </div>
             </div>
-
-            {showSourceExplorer && (
-                <SourceExplorer
-                    show={showSourceExplorer}
-                    onHide={onHideSourceExplorer}
-                    knowledgeBase={knowledgeBase}
-                    setKnowledgeBase={setKnowledgeBase}
-                    categories={categoryOptions}
-                    formats={formatOptions}
-                    isDeleting={isDeleting}
-                    clickedIndex={clickedIndex}
-                    onThumbnailClick={onThumbnailClick}
-                    deleteResource={deleteResource}
-                    handleCheckboxChange={handleCheckboxChange}
-                    handleSelectAllCheckboxChange={handleSelectAllCheckboxChange}
-                    isOpenedFromSourceExplorerBtn={isOpenedFromSourceExplorerBtn}
-                    className="modal"
-                />
-            )}
-
-
-
-            <CategoriesModal
-                show={showCategoriesModal}
-                onHide={() => setShowCategoriesModal(false)}
-                categoryOptions={categoryOptions}
-                setShowFileFormatsModal={setShowFileFormatsModal}
-            />
-
-            <FileFormatsModal
-                handleupload={handleUpload}
-                show={showFileFormatsModal}
-                onHide={() => setShowFileFormatsModal(false)}
-            />
-
-            <BaseHeading text='Selected sources' className="mt-2" />
-
-            {
-                <div className={`grid grid-cols-[repeat(auto-fill,_160px)] gap-5 justify-center items-start w-4/5 w-full max-w-full gap-8 mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
-                    {knowledgeBase.slice(0).reverse().map((item, index) => {
-                        if (canRenderSourceThumbnail(item)) {
-                            return (<ContentPanelThumbnail
-                                key={index}
-                                index={index}
-                                isDeleting={isDeleting}
-                                clickedIndex={clickedIndex}
-                                item={item}
-                                handleCheckboxChange={handleCheckboxChange}
-                                onThumbnailClick={onThumbnailClick}
-                                deleteResource={deleteResource}
-                            />);
-                        }
-                    })}
-                </div>
-            }
-            {
-                knowledgeBase.some((item) => item.is_selected) > 0
-                    ?
-                    <>
-                        <div className="mx-auto">
-                            <CustomButton onClick={commitSelectedSources} className="my-1 text-white bg-primary-300">Update sources</CustomButton>
-                        </div>
-                        <div className="mx-auto">
-                            <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>
-                        </div>
-                    </>
-                    :
-                    <NoData />
-            }
-        </div>
+        </>
     );
 };
 
