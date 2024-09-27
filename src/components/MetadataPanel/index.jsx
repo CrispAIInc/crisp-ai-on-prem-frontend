@@ -278,21 +278,24 @@ const MetadataPanel = () => {
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" &&
                   currentResource.source_path != "videoplayback.mp4" && ( */}
                 <>
-                  {translatedResource?.summary?.content !== undefined && <><h3
-                    className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                      }`}
-                  >
-                    {translatedResource?.summary?.title}
-                  </h3>
+                  {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
+                    <h3
+                      className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
+                        }`}
+                    >
+                      {translatedResource?.combined_summary?.title}
+                    </h3>
                     <p
                       className={`text-sm ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
-                      dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
+
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
                     >
-                      {/* {translatedResource?.summary?.content} */}
-                    </p></>}
+                      {/* {translatedResource?.combined_summary?.content} */}
+                    </p>
+                  </>}
 
                   {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
                     <h3
@@ -312,24 +315,21 @@ const MetadataPanel = () => {
                     </p>
                   </>}
 
-                  {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
-                    <h3
-                      className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                        }`}
-                    >
-                      {translatedResource?.combined_summary?.title}
-                    </h3>
+                  {translatedResource?.summary?.content !== undefined && <><h3
+                    className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
+                      }`}
+                  >
+                    {translatedResource?.summary?.title}
+                  </h3>
                     <p
                       className={`text-sm ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
-
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
                     >
-                      {/* {translatedResource?.combined_summary?.content} */}
-                    </p>
-                  </>}
+                      {/* {translatedResource?.summary?.content} */}
+                    </p></>}
 
                   {translatedResource?.topic_summaries?.content !== undefined && <><h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
