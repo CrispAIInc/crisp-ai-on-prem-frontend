@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import Joyride from "react-joyride";
 
 import makeApiRequest from "../../api";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
@@ -226,63 +225,8 @@ const ContentSection = ({
         setSelectedSources([]);
     };
 
-    const steps = [
-        {
-            target: ".upload-source",
-            content: "Click here to upload a new source to your knowledge base.",
-            disableBeacon: true,
-            placement: 'bottom'
-        },
-        {
-            target: ".source-explorer",
-            content: "Click here to explore your uploaded sources  in your knowledge base.",
-        },
-        {
-            target: ".global-search",
-            content: "Click here to search for a source in your knowledge base.",
-        },
-        {
-            target: ".selected-sources-container",
-            content: "This section contains all the sources you have selected in the source explorer.",
-        },
-    ];
-
     return (
         <>
-            {/* <Joyride
-                steps={steps}
-                continuous
-                showProgress
-                showSkipButton
-                disableScrollParentFix={true}
-                styles={{
-                    options: {
-                        arrowColor: "#5293FD",  // Arrow color for the tooltip
-                        backgroundColor: "#5293FD", // Background color of the tooltip
-                        overlayColor: "rgba(82, 147, 253, 0.1)",  // Dim background overlay
-                        primaryColor: "#5293FD", // Color of the primary buttons (e.g. Next)
-                        textColor: "#fff",  // Text color inside the tooltip
-                        zIndex: 1000, // Ensure the tooltip appears on top of other elements
-                    },
-                    buttonNext: {
-                        outline: "none",
-                    },
-                    spotlight: {
-                        borderRadius: '8px', // Add rounded corners to the spotlight
-                        boxShadow: '0 0 15px rgba(0, 0, 0, 0.2)', // Subtle shadow effect
-                        backgroundColor: 'rgba(255, 255, 255, 0.6)', // Spotlight color to highlight the element
-                    },
-                    tooltipContainer: {
-                        maxWidth: '300px', // Limit the tooltip width
-                        wordWrap: 'break-word', // Ensure text doesn't overflow
-                    },
-                    tooltip: {
-                        whiteSpace: 'normal', // Ensure the text wraps inside the tooltip
-                    },
-                }}
-            /> */}
-
-
             <div className='relative flex flex-col items-start h-full'>
 
                 <div className="w-full max-w-4xl pr-3">

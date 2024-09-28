@@ -1,4 +1,4 @@
-import Joyride from "react-joyride";
+
 import makeApiRequest from "../../api";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { MainContext } from '../../contexts/mainContext';
@@ -58,54 +58,8 @@ const NotesSection = () => {
         }
     };
 
-    const steps = [
-        {
-            target: ".new-note-button",
-            content: "Click here to create a new insight.",
-            disableBeacon: true,
-            placement: "right",
-        },
-        {
-            target: ".saved-notes",
-            content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
-            placement: "right",
-        },
-    ];
-
     return (
         <>
-            {/* <Joyride
-                steps={steps}
-                continuous
-                showProgress
-                showSkipButton
-                disableScrollParentFix={true}
-                styles={{
-                    options: {
-                        arrowColor: "#5293FD",  // Arrow color for the tooltip
-                        backgroundColor: "#5293FD", // Background color of the tooltip
-                        overlayColor: "rgba(82, 147, 253, 0.1)",  // Dim background overlay
-                        primaryColor: "#5293FD", // Color of the primary buttons (e.g. Next)
-                        textColor: "#fff",  // Text color inside the tooltip
-                        zIndex: 1000, // Ensure the tooltip appears on top of other elements
-                    },
-                    buttonNext: {
-                        outline: "none",
-                    },
-                    spotlight: {
-                        borderRadius: '8px', // Add rounded corners to the spotlight
-                        boxShadow: '0 0 15px rgba(0, 0, 0, 0.2)', // Subtle shadow effect
-                        backgroundColor: 'rgba(255, 255, 255, 0.6)', // Spotlight color to highlight the element
-                    },
-                    tooltipContainer: {
-                        maxWidth: '300px', // Limit the tooltip width
-                        wordWrap: 'break-word', // Ensure text doesn't overflow
-                    },
-                    tooltip: {
-                        whiteSpace: 'normal', // Ensure the text wraps inside the tooltip
-                    },
-                }}
-            /> */}
             <div className="notes-section mt-7">
                 {/* New Note */}
                 <div
