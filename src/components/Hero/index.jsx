@@ -1,17 +1,18 @@
 import { useContext } from 'react';
 import { ThemeContext } from '../../contexts/themeContext';
-import LinkButton from '../LinkButton';
+// import LinkButton from '../LinkButton';
 
 export default function Hero() {
 
     const { theme } = useContext(ThemeContext);
 
     return (
-        <div className="flex flex-col items-center justify-center mt-20 relative">
+        <div className="relative flex flex-col items-center justify-center mt-10">
             {/* Mesh gradient */}
             <div className="w-72 h-72 bg-blue-500 rounded-full absolute left-0 top-0 -z-0 blur-[100px]"></div>
 
-            <div className="mb-20 z-1 flex flex-col items-center">
+            <div className="flex flex-col items-center gap-5 z-1">
+                <img src='/crisp-ai-logo.png' alt="crisp-ai logo" className="w-28 h-28" />
                 {/* <p className={`z-1 ${theme === "light"
                     ? "text-textColor-300"
                     : "text-white"
@@ -21,6 +22,16 @@ export default function Hero() {
                     ? "text-textColor-300"
                     : "text-white"
                     } text-center text-3xl font-semibold  w-[900px] max-w-[90vw] mx-auto`}>Empowering interactive storytelling for businesses by harnessing AI via multimodal content discovery and transforming to clear, engaging narratives that drive significant business impact.</p>
+
+                <p className={`z-1 ${theme === "light"
+                    ? "text-textColor-300"
+                    : "text-white"
+                    } text-center text-2xl font-semibold  w-[900px] max-w-[90vw] mx-auto`}>Stay tuned for more details....</p>
+
+                <p className={`z-1 ${theme === "light"
+                    ? "text-textColor-300"
+                    : "text-white"
+                    } text-center text-md font-semibold  w-[900px] max-w-[90vw] mx-auto`}>harsha.viswanath@crisp-ai.com</p>
 
                 {/* <p className={`z-1 ${theme === "light"
                     ? "text-textColor-300"
@@ -34,7 +45,7 @@ export default function Hero() {
             <div className="w-72 h-72 bg-violet-500 rounded-full absolute right-0 top-72 -z-0 blur-[100px]"></div>
 
             {/* <div className='w-3/4 z-1'>
-                <img className="w-full shadow-2xl h-full" src={`crisp-ai-demo-${theme}.png`} />
+                <img className="w-full h-full shadow-2xl" src={`crisp-ai-demo-${theme}.png`} />
             </div> */}
         </div>
     );
