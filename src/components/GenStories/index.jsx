@@ -10,16 +10,18 @@ import CustomButton from "../CustomButton";
 import CustomInput from "../CustomInput";
 import GenStoriesLLMModal from "../GenStoriesLLMModal";
 
+import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
 import { extractSections, extractTitle, generateRandomHash, getLevelOfSectionInGenStories } from '../../utils';
 
-const GenStories = () => {
+const GenStories = ({ sidebarWidth }) => {
     const [showLLMModal, setShowLLMModal] = useState(false);
     const [input, setInput] = useState("");
     const [outlinesAnswers, setOutlinesAnswers] = useState([]);
     const [showCursor, setShowCursor] = useState(false);
     const [currentOutlineCursorId, setCurrentOutlineCursorId] = useState("");
+    const { maxWidth } = useResizableSidebar(200, false);
 
     const chatAppRef = useRef();
 
@@ -118,7 +120,7 @@ const GenStories = () => {
     return (
         <div className="relative flex flex-col flex-1 h-full overflow-y-auto">
             {/* models button */}
-            <div className=" flex flex-wrap items-center justify-center gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-3 ">
                 <CustomButton
                     className={` my-0 ${theme === "light"
                         ? "bg-white !text-dark border border-textColor-100"
@@ -212,7 +214,7 @@ const GenStories = () => {
                                             className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
                                                 ? "bg-separator text-textColor-200"
                                                 : "bg-background_workspace"
-                                                }`}
+                                                } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
                                         >
                                             <>
                                                 <b

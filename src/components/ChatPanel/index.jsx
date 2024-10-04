@@ -13,7 +13,7 @@ import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 const ChatPanel = () => {
-  const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
+  const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
   const { chatLoaded, setChatLoaded, isRightSidebarOpen, theme } = useContext(MainContext);
 
@@ -84,7 +84,7 @@ const ChatPanel = () => {
           {(activeTab === 'genInsights' && (Boolean(localStorage.getItem(`guide_completed_genInsights`)) === false || localStorage.getItem(`guide_completed_genInsights`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genInsights" />}
         </Tab>
         <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`}>
-          <GenStories key={2} name="genStories" />
+          <GenStories key={2} name="genStories" sidebarWidth={sidebarWidth} />
           {(activeTab === 'genStories' && (Boolean(localStorage.getItem(`guide_completed_genStories`)) === false || localStorage.getItem(`guide_completed_genStories`) === "false")) && <Guide steps={genStorieSectionSteps} tabIdentifier="genStories" />}
         </Tab>
       </Tabs>

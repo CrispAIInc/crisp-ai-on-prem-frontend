@@ -47,5 +47,5 @@ export const useResizableSidebar = (minWidth, isLeft) => {
         };
     }, [isResizing]);
 
-    return { sidebarWidth, setSidebarWidth, handleMouseDown, handleDoubleClick, maxWidth };
+    return { sidebarWidth, setSidebarWidth, handleMouseDown, handleDoubleClick, maxWidth, isExpanded: sidebarWidth === window.innerWidth * 0.75 };
 };
