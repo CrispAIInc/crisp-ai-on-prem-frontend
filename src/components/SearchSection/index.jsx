@@ -10,7 +10,7 @@ import { timeToSeconds } from '../../utils';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-const SearchSection = ({ chatLoaded, className = '' }) => {
+const SearchSection = ({ chatLoaded, className = '', buttonText = "Discover" }) => {
 
     const { currentResource, setCurrentResource, resourceURL, setResourceURL, player, isPlayerReady,
         selectedCategory, selectedFormat,
@@ -93,7 +93,7 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
                                 }
                             }} />
                             <CustomButton onClick={handleSubmitQuestion} className='w-full p-2 text-white bg-primary-300'>
-                                {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Discover'}
+                                {isSearching ? <LoadingSpinner videoSpinner={true} /> : buttonText}
                             </CustomButton>
                         </div>
                     ) : <div className='text-center'>

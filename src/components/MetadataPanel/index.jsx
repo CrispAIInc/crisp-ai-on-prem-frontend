@@ -13,12 +13,14 @@ import CustomSelectTwo from "../CustomSelectTwo";
 import { timeToSeconds } from '../../utils.js';
 import Chip from '../Chip/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
+import SearchSection from '../SearchSection/index.jsx';
 
 const MetadataPanel = () => {
   const {
     currentResource,
     setCurrentResource,
     resourceURL,
+    chatLoaded,
     setResourceURL,
     player,
     languageOptions,
@@ -268,13 +270,16 @@ const MetadataPanel = () => {
                     </span>
                   </div>
                 )}
-                <CustomSelectTwo
-                  options={languageOptions}
-                  onChange={(lang) =>
-                    translateMetadata(lang.value, translatedResource)
-                  }
-                  placeholder="Select a language"
-                />
+                <div className="flex items-center justify-between gap-1">
+                  <CustomSelectTwo
+                    options={languageOptions}
+                    onChange={(lang) =>
+                      translateMetadata(lang.value, translatedResource)
+                    }
+                    placeholder="Select a language"
+                  />
+                  <SearchSection buttonText="Search" chatLoaded={chatLoaded} className='flex-1' />
+                </div>
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" &&
                   currentResource.source_path != "videoplayback.mp4" && ( */}
                 <>
