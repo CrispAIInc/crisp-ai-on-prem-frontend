@@ -260,7 +260,7 @@ const ContentSection = ({
                             onClick={() => setIsSearching(!isSearching)}
                         >
                             <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Search</span>
+                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
                         </div>
                         {
                             isSearching && (

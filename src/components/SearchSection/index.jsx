@@ -87,13 +87,13 @@ const SearchSection = ({ chatLoaded, className = '' }) => {
                 chatLoaded ?
                     (
                         <div className="flex items-center gap-3">
-                            <CustomInput className="z-[51]" placeholder='Search for a source by asking questions' value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
+                            <CustomInput className="z-[51]" placeholder='Type query here' value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     handleSubmitQuestion(e);
                                 }
                             }} />
                             <CustomButton onClick={handleSubmitQuestion} className='w-full p-2 text-white bg-primary-300'>
-                                {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Search'}
+                                {isSearching ? <LoadingSpinner videoSpinner={true} /> : 'Discover'}
                             </CustomButton>
                         </div>
                     ) : <div className='text-center'>
