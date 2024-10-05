@@ -2,7 +2,7 @@
 import makeApiRequest from "../../api";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { MainContext } from '../../contexts/mainContext';
-import { useContext } from 'react';
+import { memo, useContext } from 'react';
 import BaseHeading from '../BaseHeading';
 import NoData from "../NoData";
 import SavedNote from '../SavedNote';
@@ -110,4 +110,4 @@ const NotesSection = () => {
     );
 };
 
-export default NotesSection;
+export default memo(NotesSection);
