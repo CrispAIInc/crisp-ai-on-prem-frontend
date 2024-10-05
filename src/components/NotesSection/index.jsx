@@ -7,6 +7,7 @@ import BaseHeading from '../BaseHeading';
 import NoData from "../NoData";
 import SavedNote from '../SavedNote';
 import SavedNoteSkeleton from '../Skeletons/SavedNoteSkeleton';
+import StickyNote from '../StickyNote';
 
 const NotesSection = () => {
 
@@ -86,7 +87,7 @@ const NotesSection = () => {
                                 <div>
                                     <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
                                         {notes.map((note, i) => (
-                                            <SavedNote
+                                            <StickyNote
                                                 note={note}
                                                 key={note.note_id}
                                                 index={i}
