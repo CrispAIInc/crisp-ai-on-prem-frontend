@@ -20,7 +20,7 @@ const ContentPanelThumbnail = ({
   const { theme } = useContext(MainContext);
 
   return (
-    <div className={`relative pt-4 rounded-md cursor-pointer ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} w-44 h-auto`} onClick={(event) => onThumbnailClick(event, item)}>
+    <div className={`relative pt-4 rounded-md cursor-pointer ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !w-28 h-auto`} onClick={(event) => onThumbnailClick(event, item)}>
       <>
         {isDeleting && clickedIndex === index ? (
           <div className="thumbnail-loader">
@@ -39,7 +39,7 @@ const ContentPanelThumbnail = ({
         {item.file_type === "img" && <StagedImageThumbnail item={item} />}
         <DeleteIcon
           onClick={(event) => { event.stopPropagation(); deleteResource(event, item); }}
-          color="error"
+          style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
           className="absolute cursor-pointer !top-0 !left-[calc(100%-24px)] mr-1"
         />
       </>

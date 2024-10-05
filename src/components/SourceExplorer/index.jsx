@@ -122,8 +122,8 @@ export function SourceExplorer(props) {
                     .filter((file) => file.file_type === format || format === "all")
                     .map((file, index) => (
                         <div
-                            className={`!border rounded-md thumbnail-container file ${theme === "dark" && "!border-textColor-200"
-                                }`}
+                            className={`!border rounded-md thumbnail-container file ${theme === "dark" && "!border-textColor-200 "
+                                } !w-28`}
                             key={index}
                         >
                             {props.isDeleting && props.clickedIndex === index && (
