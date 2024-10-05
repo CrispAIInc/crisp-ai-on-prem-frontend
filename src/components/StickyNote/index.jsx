@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, memo } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 // import DeleteIcon from "@mui/icons-material/Delete";
@@ -50,9 +50,9 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
     // };
 
     useEffect(() => {
-        // Function to generate a light random hex color
+        // Function to generate a very light random hex color for better contrast on a dark background
         const generateLightRandomColor = () => {
-            const letters = 'CDEF'; // Restricting to higher hex values for light colors
+            const letters = theme === "dark" ? 'EF' : "CDEF";
             let color = '#';
             for (let i = 0; i < 6; i++) {
                 color += letters[Math.floor(Math.random() * letters.length)];
@@ -61,11 +61,11 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
         };
 
         setColor(generateLightRandomColor());
-    }, []);
+    }, [theme]);
 
     return (
         <div
-            className={`p-1 rounded-lg w-36 h-36 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col`}
+            className={`p-1 rounded-lg w-36 h-36 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col cursor-pointer`}
             style={{
                 backgroundColor: color,
                 // boxShadow: '0 15px 25px rgba(0, 0, 0, 0.2)', // Bottom-only shadow
@@ -97,4 +97,5 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
     );
 };
 
-export default StickyNote;
+const MemoizedStickyNote = memo(StickyNote);
+export default MemoizedStickyNote;
