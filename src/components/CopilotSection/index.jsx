@@ -16,9 +16,10 @@ import LoadingSpinner from "../LoadingSpinner";
 import PreviewModal from '../PreviewModal';
 
 import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
+import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
+const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   const {
     theme,
     currentResource,
@@ -50,6 +51,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
     setShowNoteDetails,
     setActiveView
   } = useContext(MainContext);
+
+  const { maxWidth } = useResizableSidebar(200, false);
 
   const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
@@ -803,7 +806,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
         {chatLoaded ? (
           messages.map((message, index) =>
             index % 2 == 0 ? (
-              <div key={index} className="my-2 break-all w-fit min-w-[50%]">
+              <div key={index} className="my-2 break-all w-fit">
                 <div
                   className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
                 >
@@ -863,7 +866,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                     className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
                       ? "bg-separator text-textColor-200"
                       : "bg-background_workspace"
-                      }`}
+                      } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
                   >
                     {message.models.includes("dall-e-3") && message.img ? (
                       <>
@@ -880,7 +883,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
                             src={message.img}
                             alt="Image is Loading ..."
                             onClick={openLightbox}
-                            className="flex-1 cursor-pointer"
+                            className="flex-1 mx-auto cursor-pointer"
                           />
                           <div className="flex flex-wrap items-center gap-1 mt-3">
                             <span
@@ -1021,7 +1024,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded }) => {
       </div>
 
       {/* </div> */}
-      <div className="copilot-chat-container flex items-center gap-2 input-area">
+      <div className="flex items-center gap-2 copilot-chat-container input-area">
 
         {
           selectedLLMs[0] === 'gpt-4-vision'
