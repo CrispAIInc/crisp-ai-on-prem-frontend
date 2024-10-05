@@ -10,6 +10,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
 import { MainContext } from "../../contexts/mainContext";
 import "./source_explorer.css";
+import StagedVideoThumbnail from '../StagedVideoThumbnail';
 
 export function SourceExplorer(props) {
     const {
@@ -140,7 +141,7 @@ export function SourceExplorer(props) {
                                     inputProps={{ "aria-label": "Select source" }}
                                 />
                                 <div onClick={(event) => props.onThumbnailClick(event, file)}>
-                                    {file.file_type === "video" && <VideoThumbnail item={file} />}
+                                    {file.file_type === "video" && <StagedVideoThumbnail item={file} />}
                                     {file.file_type === "pdf" && <PDFThumbnail item={file} />}
                                     {file.file_type === "img" && <ImageThumbnail item={file} />}
                                 </div>
