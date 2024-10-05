@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { memo, useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
@@ -67,4 +67,4 @@ function StoriesSection() {
   );
 }
 
-export default StoriesSection;
+export default memo(StoriesSection);
