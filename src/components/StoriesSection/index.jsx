@@ -4,6 +4,7 @@ import { MainContext } from '../../contexts/mainContext';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import BaseHeading from '../BaseHeading';
 import SavedStory from '../SavedStory';
+import StickyStory from "../StickyStory";
 import NoData from "../NoData";
 import SavedInsightSkeleton from '../Skeletons/SavedInsightSkeleton';
 
@@ -47,9 +48,9 @@ function StoriesSection() {
           ) :
             stories.length > 0 ? (
               <div>
-                <div className="flex flex-col gap-10 px-1 pb-5 mt-4 mr-2 ">
+                <div className="flex flex-wrap gap-10 px-1 pb-5 mt-4 mr-2 ">
                   {stories.map((story) => (
-                    <SavedStory
+                    <StickyStory
                       key={story.story_id}
                       story={story}
                     />
