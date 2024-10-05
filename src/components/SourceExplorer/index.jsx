@@ -11,6 +11,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { MainContext } from "../../contexts/mainContext";
 import "./source_explorer.css";
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
+import StagedImageThumbnail from '../StagedImageThumbnail';
 
 export function SourceExplorer(props) {
     const {
@@ -143,7 +144,7 @@ export function SourceExplorer(props) {
                                 <div onClick={(event) => props.onThumbnailClick(event, file)}>
                                     {file.file_type === "video" && <StagedVideoThumbnail item={file} />}
                                     {file.file_type === "pdf" && <PDFThumbnail item={file} />}
-                                    {file.file_type === "img" && <ImageThumbnail item={file} />}
+                                    {file.file_type === "img" && <StagedImageThumbnail item={file} />}
                                 </div>
                                 <DeleteIcon
                                     color="error"
