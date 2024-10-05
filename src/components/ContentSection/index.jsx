@@ -292,8 +292,6 @@ const ContentSection = ({
                     />
                 )}
 
-
-
                 <CategoriesModal
                     show={showCategoriesModal}
                     onHide={() => setShowCategoriesModal(false)}
