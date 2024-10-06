@@ -85,7 +85,7 @@ const NotesSection = () => {
                         ) :
                             notes.length > 0 ? (
                                 <div>
-                                    <div className="flex flex-wrap gap-10 px-1 pb-5 mt-4 mr-2 ">
+                                    <div className="flex flex-wrap justify-around gap-10 px-1 pb-5 mt-4 mr-2 ">
                                         {notes.map((note, i) => (
                                             <StickyNote
                                                 note={note}
