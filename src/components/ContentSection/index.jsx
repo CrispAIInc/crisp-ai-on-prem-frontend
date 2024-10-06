@@ -307,7 +307,7 @@ const ContentSection = ({
 
                 <BaseHeading text='Selected sources' className="mt-2" />
 
-                <div className="w-full selected-sources-container">
+                <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                     {
                         <div className={` grid grid-cols-[repeat(auto-fill,_112px)] gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
                             {knowledgeBase.slice(0).reverse().map((item, index) => {
