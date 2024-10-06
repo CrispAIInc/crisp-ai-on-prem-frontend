@@ -66,7 +66,7 @@ const MetadataPanel = () => {
       setTranslatedResource(currentResource);
       if (currentResource) translateMetadata("en", currentResource);
     }
-  }, [currentResource]);
+  }, [currentResource.source_path]);
 
   const closeVideo = (event) => {
     event.preventDefault();
@@ -270,7 +270,7 @@ const MetadataPanel = () => {
                     </span>
                   </div>
                 )}
-                <div className="flex items-center justify-between gap-1">
+                <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
