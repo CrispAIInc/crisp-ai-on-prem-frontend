@@ -172,14 +172,20 @@ const ContentSection = ({
     const commitSelectedSources = () => {
         knowledgeBase.map((item) => {
             if (item.is_selected) {
-                setSelectedSources((prev) => [
-                    ...prev,
-                    {
-                        source_path: item.source_path,
-                        category: item.category,
-                        file_type: item.file_type,
-                    },
-                ]);
+                setSelectedSources((prev) => {
+                    const itemExist = prev.find(i => i.source_path === item.source_path);
+                    if (!itemExist) {
+                        return [
+                            ...prev,
+                            {
+                                source_path: item.source_path,
+                                category: item.category,
+                                file_type: item.file_type,
+                            },
+                        ];
+                    }
+                    return prev;
+                });
             } else {
                 setSelectedSources((prev) =>
                     prev.filter((source) => source !== item.source_path)
