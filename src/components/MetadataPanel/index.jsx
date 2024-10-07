@@ -278,7 +278,7 @@ const MetadataPanel = () => {
                     }
                     placeholder="Select a language"
                   />
-                  <SearchSection buttonText="Search" chatLoaded={chatLoaded} className='flex-1' />
+                  <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 </div>
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" &&
                   currentResource.source_path != "videoplayback.mp4" && ( */}
@@ -443,13 +443,17 @@ const MetadataPanel = () => {
                 "text-right"
                 }`}
             >
-              <CustomSelectTwo
-                options={languageOptions}
-                onChange={(lang) =>
-                  translateMetadata(lang.value, translatedResource)
-                }
-                placeholder="Select a language"
-              />
+              <div className="flex flex-wrap items-center justify-between gap-1">
+                <CustomSelectTwo
+                  options={languageOptions}
+                  onChange={(lang) =>
+                    translateMetadata(lang.value, translatedResource)
+                  }
+                  placeholder="Select a language"
+                />
+                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
+              </div>
+
               {translatedResource?.summary?.content !== undefined && <><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                   }`}
@@ -531,13 +535,16 @@ const MetadataPanel = () => {
                 "text-right"
                 }`}
             >
-              <CustomSelectTwo
-                options={languageOptions}
-                onChange={(lang) =>
-                  translateMetadata(lang.value, translatedResource)
-                }
-                placeholder="Select a language"
-              />
+              <div className="flex flex-wrap items-center justify-between gap-1">
+                <CustomSelectTwo
+                  options={languageOptions}
+                  onChange={(lang) =>
+                    translateMetadata(lang.value, translatedResource)
+                  }
+                  placeholder="Select a language"
+                />
+                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
+              </div>
               {translatedResource?.caption?.content !== undefined && <><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                   }`}

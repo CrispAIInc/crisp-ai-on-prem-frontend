@@ -10,7 +10,7 @@ import { timeToSeconds } from '../../utils';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-const SearchSection = ({ chatLoaded, className = '', buttonText = "Discover" }) => {
+const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true }) => {
 
     const { currentResource, setCurrentResource, resourceURL, setResourceURL, player, isPlayerReady,
         selectedCategory, selectedFormat,
@@ -30,7 +30,7 @@ const SearchSection = ({ chatLoaded, className = '', buttonText = "Discover" }) 
     useEffect(() => {
         if (isPlayerReady && resourceURL && currentResource.file_type === 'video') {
             const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-            if (timestamp !== undefined && timestamp !== null) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+            if (timestamp !== undefined && timestamp !== null) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             else;
             setFromChat(false);
         }
@@ -40,7 +40,7 @@ const SearchSection = ({ chatLoaded, className = '', buttonText = "Discover" }) 
         event.preventDefault();
         setIsSearching(true);
         try {
-            const response = await axios.post(`${API_ENDPOINT}/process-query`, { selectedCategory, searchQuestion, currentResource, selectedFormat });
+            const response = await axios.post(`${API_ENDPOINT}/process-query`, { selectedCategory, searchQuestion, currentResource: isGlobalSearch ? null : currentResource, selectedFormat });
             if (response.status === 200) {
                 let resourceURL = '';
                 let timestamp;
@@ -59,7 +59,7 @@ const SearchSection = ({ chatLoaded, className = '', buttonText = "Discover" }) 
                 setActiveView('resource');
                 setIsSearching(false);
                 response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
-                if (isPlayerReady) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+                if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
                 setAdditionalSources(response.data.additional_sources);
                 if (activeView !== 'resource') {
                     setShowSearchModal(true);
@@ -93,7 +93,7 @@ const SearchSection = ({ chatLoaded, className = '', buttonText = "Discover" }) 
                                 }
                             }} />
                             <CustomButton onClick={handleSubmitQuestion} className='w-full p-2 text-white bg-primary-300'>
-                                {isSearching ? <LoadingSpinner videoSpinner={true} /> : buttonText}
+                                {isSearching ? <LoadingSpinner videoSpinner={true} /> : isGlobalSearch ? 'Discover' : 'Search'}
                             </CustomButton>
                         </div>
                     ) : <div className='text-center'>
