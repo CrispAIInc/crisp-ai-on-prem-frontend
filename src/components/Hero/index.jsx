@@ -7,16 +7,21 @@ export default function Hero() {
     const { theme } = useContext(ThemeContext);
 
     return (
-        <div className="relative flex flex-col items-center justify-center mt-10">
+        <div className="relative flex flex-col items-center justify-center">
             {/* Mesh gradient */}
             <div className="w-72 h-72 bg-blue-500 rounded-full absolute left-0 top-0 -z-0 blur-[100px]"></div>
 
             <div className="flex flex-col items-center gap-5 z-1">
-                <img src='/crisp-ai-logo.png' alt="crisp-ai logo" className="w-28 h-28" />
+                {/* <img src='/crisp-ai-logo.png' alt="crisp-ai logo" className="w-28 h-28" /> */}
                 {/* <p className={`z-1 ${theme === "light"
                     ? "text-textColor-300"
                     : "text-white"
                     } text-center text-5xl font-semibold  w-[900px] max-w-[90vw] mx-auto`}>Interactive story creation made simple, efficient and accurate via <span className='text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-violet-500'>Multi-Modal</span> content discovery.</p> */}
+
+                <div className='flex items-center gap-2'>
+                    <img src="/crisp-ai-logo.png" alt="Crisp-ai logo" className="w-16 h-16" width="64" height="64" />
+                    <p className={`font-sans text-3xl font-extrabold text-center user-select-none ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Crisp AI</p>
+                </div>
 
                 <p className={`z-1 ${theme === "light"
                     ? "text-textColor-300"
@@ -31,7 +36,7 @@ export default function Hero() {
                 <p className={`z-1 ${theme === "light"
                     ? "text-textColor-300"
                     : "text-white"
-                    } text-center text-md font-semibold  w-[900px] max-w-[90vw] mx-auto`}>harsha.viswanath@crisp-ai.com</p>
+                    } text-center text-md font-semibold  w-[900px] max-w-[90vw] mx-auto`}>Contact: harsha.viswanath@crisp-ai.com</p>
 
                 {/* <p className={`z-1 ${theme === "light"
                     ? "text-textColor-300"

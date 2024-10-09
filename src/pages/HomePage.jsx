@@ -9,13 +9,13 @@ import { ThemeContext } from "../contexts/themeContext.js";
 export default function HomePage({ theme }) {
     return (
         <ThemeContext.Provider value={{ theme }}>
-            <div className="bg-background_workspace main-workspace-container !min-h-full">
-                <Container>
+            <div className="h-full overflow-hidden bg-background_workspace main-workspace-container">
+                <Container className="flex flex-col items-center justify-center text-center !h-screen">
                     <Navbar />
                     <Hero />
                     {/* <Ceo /> */}
                 </Container>
-                <Footer />
+                {/* <Footer /> */}
             </div>
         </ThemeContext.Provider>
     );

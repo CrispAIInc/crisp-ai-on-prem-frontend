@@ -13,7 +13,7 @@ import MainWorkspacePage from './pages/MainWorkspacePage';
 
 function App() {
 
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   toastConfig({ theme });
 
   useLayoutEffect(() => {
