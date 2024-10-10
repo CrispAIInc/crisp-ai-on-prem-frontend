@@ -11,7 +11,7 @@ function StagedImageThumbnail({ item }) {
     const { theme } = useContext(MainContext);
 
     const renderTooltip = props => (
-        <Tooltip className='truncate tooltip h-80' {...props}>{item.caption}</Tooltip>
+        <Tooltip className='h-auto truncate tooltip' {...props}>{item.caption.split(' ').slice(0, 30).join(' ')}...</Tooltip>
     );
 
     return (
