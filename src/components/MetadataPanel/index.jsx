@@ -250,6 +250,8 @@ const MetadataPanel = () => {
                   "text-right"
                   }`}
               >
+                {/* search */}
+                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {/* generate visual/combined summary */}
                 {!isGeneratingCombinedSummary ? <div
                   className={`user-select-none flex items-center justify-center gap-2 py-1 mb-2 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`} onClick={() => generateVisualAndCombinedSummary()}>
@@ -278,7 +280,6 @@ const MetadataPanel = () => {
                     }
                     placeholder="Select a language"
                   />
-                  <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 </div>
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" &&
                   currentResource.source_path != "videoplayback.mp4" && ( */}

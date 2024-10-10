@@ -87,7 +87,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true }) =>
                 chatLoaded ?
                     (
                         <div className="flex items-center gap-3">
-                            <CustomInput className="z-[51]" placeholder='Type query here' value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
+                            <CustomInput className="z-[51]" placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     handleSubmitQuestion(e);
                                 }
