@@ -65,7 +65,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
 
     return (
         <div
-            className={`p-1 rounded-lg w-36 h-36 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col cursor-pointer`}
+            className={`p-1 rounded-lg w-32 h-32 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col cursor-pointer`}
             style={{
                 backgroundColor: color,
                 // boxShadow: '0 15px 25px rgba(0, 0, 0, 0.2)', // Bottom-only shadow
