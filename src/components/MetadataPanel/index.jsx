@@ -444,6 +444,8 @@ const MetadataPanel = () => {
                 "text-right"
                 }`}
             >
+              {/* search */}
+                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
               <div className="flex flex-wrap items-center justify-between gap-1">
                 <CustomSelectTwo
                   options={languageOptions}
@@ -536,6 +538,8 @@ const MetadataPanel = () => {
                 "text-right"
                 }`}
             >
+              {/* search */}
+              <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
               <div className="flex flex-wrap items-center justify-between gap-1">
                 <CustomSelectTwo
                   options={languageOptions}
