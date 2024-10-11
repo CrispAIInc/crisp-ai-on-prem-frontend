@@ -516,13 +516,13 @@ const MetadataPanel = () => {
       )}
       {currentResource.file_type === "img" && (
         <div className="pb-10">
-          <div className="relative w-[70%] h-72 w-full h-full max-w-lg mx-auto">
+          <div className="relative w-full h-80 max-w-lg mx-auto">
             <CancelIcon
               onClick={closeImage}
               className="absolute right-[1%] top-[15px] cursor-pointer"
             />
             <img
-              className="w-full h-full pt-2 rounded-lg source-img"
+              className="w-full !h-full pt-2 rounded-lg source-img"
               src={resourceURL}
             />
           </div>
