@@ -445,7 +445,7 @@ const MetadataPanel = () => {
                 }`}
             >
               {/* search */}
-                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
+              <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
               <div className="flex flex-wrap items-center justify-between gap-1">
                 <CustomSelectTwo
                   options={languageOptions}
@@ -454,7 +454,6 @@ const MetadataPanel = () => {
                   }
                   placeholder="Select a language"
                 />
-                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
               </div>
 
               {translatedResource?.summary?.content !== undefined && <><h3
@@ -548,7 +547,6 @@ const MetadataPanel = () => {
                   }
                   placeholder="Select a language"
                 />
-                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
               </div>
               {translatedResource?.caption?.content !== undefined && <><h3
                 className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
