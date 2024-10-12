@@ -31,7 +31,7 @@ function StickyStory({ story }) {
     const renderTooltip = props => (
         <Tooltip className='h-auto truncate tooltip' {...props}>
             <p className="font-bold">{story.text[0]?.outline?.name}</p>
-            <span>{story.text[0]?.content[0]?.answer.split(' ').slice(0, 30).join(' ')}...</span>
+            <span>{story.text[0]?.content[0]?.answer?.split(' ').slice(0, 30).join(' ')}...</span>
         </Tooltip>
     );
 
