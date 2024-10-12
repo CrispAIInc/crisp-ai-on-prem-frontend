@@ -70,7 +70,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
     const renderTooltip = props => (
         <Tooltip className='h-auto truncate tooltip' {...props}>
             <p className="font-bold">{note.text[0]?.question}</p>
-            <span>{note.text[0]?.answer.split(' ').slice(0, 30).join(' ')}...</span>
+            <span>{note.text[0]?.answer?.split(' ').slice(0, 30).join(' ')}...</span>
         </Tooltip>
     );
 
