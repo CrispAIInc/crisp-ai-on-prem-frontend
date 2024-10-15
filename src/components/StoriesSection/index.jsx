@@ -7,6 +7,7 @@ import SavedStory from '../SavedStory';
 import StickyStory from "../StickyStory";
 import NoData from "../NoData";
 import SavedInsightSkeleton from '../Skeletons/SavedInsightSkeleton';
+import StackedPaperEffect from '../StackedPaperEffect';
 
 function StoriesSection() {
 
@@ -50,9 +51,19 @@ function StoriesSection() {
               <div>
                 <div className="flex flex-wrap justify-around gap-10 px-1 pb-5 mt-4 mr-2 ">
                   {stories.map((story) => (
-                    <StickyStory
+                    // <StickyStory
+                    //   key={story.story_id}
+                    //   story={story}
+                    // />
+                    <StackedPaperEffect
                       key={story.story_id}
-                      story={story}
+                      title={story.story_name}
+                      content={
+                        story.text[0]?.content[0]?.answer
+                          ?.split(' ')
+                          .slice(0, 8)
+                          .join(' ') + '...' || ''
+                      }
                     />
                   ))}
                 </div>
