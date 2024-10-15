@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 // import Select from 'react-select';
 import AddToExistingStoryModal from "../AddToExistingStoryModal";
 import { MainContext } from '../../contexts/mainContext';
+import AddToNewStoryModal from '../AddToNewStoryModal';
 // import { generateRandomHash } from '../../utils';
 
 function AddToStoryModal({ open, handleClose, setOpen }) {
@@ -12,6 +13,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
     // const [selectedSectionId, setSelectedSectionId] = useState("");
 
     const [openExistingStoryModal, setOpenExistingStoryModal] = useState(false);
+    const [openNewStoryModal, setOpenNewStoryModal] = useState(false);
 
     const style = {
         position: 'absolute',
@@ -31,6 +33,14 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
 
     function handleCloseExistingStoryModal() {
         setOpenExistingStoryModal(false);
+    }
+
+    function handleOpenNewStoryModal() {
+        setOpenNewStoryModal(true);
+    }
+
+    function handleCloseNewStoryModal() {
+        setOpenNewStoryModal(false);
     }
 
     // const handleStoryChange = (selectedOption) => {
@@ -85,9 +95,12 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                 <Box sx={style} className={`${theme === 'light' ? '!border-none' : '!bg-textColor-300 !text-white !border-b-none'}`}>
                     <div
                         className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        onClick={handleOpenNewStoryModal}
                     >
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to new Story</span>
                     </div>
+
+                    <AddToNewStoryModal open={openNewStoryModal} setOpen={setOpenExistingStoryModal} handleOpen={handleOpenNewStoryModal} handleClose={handleCloseNewStoryModal} />
 
                     <div
                         className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
@@ -96,7 +109,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to existing Story</span>
                     </div>
 
-                    <AddToExistingStoryModal open={openExistingStoryModal} setOpen={setOpenExistingStoryModal} handleOpen={handleOpenExistingStoryModal} handleClose={handleCloseExistingStoryModal} />
+                    <AddToExistingStoryModal open={openExistingStoryModal} setOpen={setOpenNewStoryModal} handleOpen={handleOpenExistingStoryModal} handleClose={handleCloseExistingStoryModal} />
                 </Box>
 
             </Modal>
