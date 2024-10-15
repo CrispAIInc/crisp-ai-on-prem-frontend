@@ -57,13 +57,7 @@ function StoriesSection() {
                     // />
                     <StackedPaperEffect
                       key={story.story_id}
-                      title={story.story_name}
-                      content={
-                        story.text[0]?.content[0]?.answer
-                          ?.split(' ')
-                          .slice(0, 8)
-                          .join(' ') + '...' || ''
-                      }
+                      story={story}
                     />
                   ))}
                 </div>
