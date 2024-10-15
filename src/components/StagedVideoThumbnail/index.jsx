@@ -23,7 +23,7 @@ function StagedVideoThumbnail({ item }) {
                 {/* thumbnail bottom title */}
                 <div className={`absolute bottom-0 left-0 flex items-center w-full h-8 gap-1 truncate ${theme === 'light' ? 'bg-white' : 'bg-[#333333]'}`}>
                     {/* <PlayCircleIcon fontSize="15" style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} /> */}
-                    <p className={`${theme === "light" ? 'text-black' : 'text-white'} text-sm truncate`}>{item.source_path}</p>
+                    <p className={`${theme === "light" ? 'text-black' : 'text-white'} pl-1 text-sm truncate`}>{item.source_path}</p>
                 </div>
             </div>
         </OverlayTrigger>
