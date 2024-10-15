@@ -5,10 +5,11 @@ import { useContext, useState } from 'react';
 import AddToExistingStoryModal from "../AddToExistingStoryModal";
 import { MainContext } from '../../contexts/mainContext';
 import AddToNewStoryModal from '../AddToNewStoryModal';
+import { generateRandomHash } from '../../utils';
 // import { generateRandomHash } from '../../utils';
 
 function AddToStoryModal({ open, handleClose, setOpen }) {
-    const { theme, selectedNote, stories, setSelectedStory } = useContext(MainContext);
+    const { theme, selectedNote, stories, setStories, setSelectedStory } = useContext(MainContext);
     // const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
     // const [selectedSectionId, setSelectedSectionId] = useState("");
 
@@ -54,6 +55,48 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
     //     setSelectedSectionId(selectedOption.value);
     // };
 
+    const saveToStory = async () => {
+        const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
+            if (answer.includes('https://oaidalleapiprodscus.blob')) {
+                return {
+                    id: generateRandomHash(8),
+                    answer,
+                    refs
+                };
+            }
+
+            return {
+                id: generateRandomHash(8),
+                answer,
+                refs
+            };
+        });
+        const newStory = {
+            story_id: generateRandomHash(8),
+            story_name: "New Story",
+            text: [
+                {
+                    id: generateRandomHash(8),
+                    outline: {
+                        id: generateRandomHash(8),
+                        name: "New Section"
+                    },
+                    content: joinedAnswers
+                }
+            ]
+        };
+
+        setStories(prev => [...prev, newStory]);
+        // setSelectedStory(prev => {
+        //     const newStory = { ...prev };
+        //     let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
+        //     currentText.content = joinedAnswers;
+        //     return { ...newStory };
+
+        // });
+
+        setOpen(false);
+    };
 
 
 
@@ -95,7 +138,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                 <Box sx={style} className={`${theme === 'light' ? '!border-none' : '!bg-textColor-300 !text-white !border-b-none'}`}>
                     <div
                         className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                        onClick={handleOpenNewStoryModal}
+                        onClick={saveToStory}
                     >
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to new Story</span>
                     </div>

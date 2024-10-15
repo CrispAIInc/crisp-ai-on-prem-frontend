@@ -33,9 +33,6 @@ function AddToExistingStoryModal({ open, handleClose, setOpen }) {
         setSelectedSectionId(selectedOption.value);
     };
 
-    console.log("modal ren");
-
-
     const saveToStory = async () => {
         const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
             if (answer.includes('https://oaidalleapiprodscus.blob')) {
@@ -57,7 +54,6 @@ function AddToExistingStoryModal({ open, handleClose, setOpen }) {
             let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
             currentText.content = joinedAnswers;
             return { ...newStory };
-
         });
 
         setOpen(false);

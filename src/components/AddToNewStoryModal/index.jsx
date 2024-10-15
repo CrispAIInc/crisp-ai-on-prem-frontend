@@ -6,9 +6,11 @@ import { MainContext } from '../../contexts/mainContext';
 import { generateRandomHash } from '../../utils';
 
 function AddToNewStoryModal({ open, handleClose, setOpen }) {
-    const { theme, selectedNote, stories, setSelectedStory } = useContext(MainContext);
+    const { theme, selectedNote, stories, setSelectedStory, setStories } = useContext(MainContext);
     const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
     const [selectedSectionId, setSelectedSectionId] = useState("");
+
+
 
     const style = {
         position: 'absolute',
@@ -29,13 +31,6 @@ function AddToNewStoryModal({ open, handleClose, setOpen }) {
 
     const sections = stories[selectedStoryIndex]?.text.map(({ outline }) => ({ value: outline.id, label: outline.name }));
 
-    const handleSectionChange = (selectedOption) => {
-        setSelectedSectionId(selectedOption.value);
-    };
-
-    console.log("modal ren");
-
-
     const saveToStory = async () => {
         const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
             if (answer.includes('https://oaidalleapiprodscus.blob')) {
@@ -52,13 +47,28 @@ function AddToNewStoryModal({ open, handleClose, setOpen }) {
                 refs
             };
         });
-        setSelectedStory(prev => {
-            const newStory = { ...prev };
-            let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
-            currentText.content = joinedAnswers;
-            return { ...newStory };
+        const newStory = {
+            id: generateRandomHash(8),
+            name: "New Story",
+            text: [
+                {
+                    outline: {
+                        id: generateRandomHash(8),
+                        name: "New Section"
+                    },
+                    content: joinedAnswers
+                }
+            ]
+        };
 
-        });
+        setStories(prev => [...prev, newStory]);
+        // setSelectedStory(prev => {
+        //     const newStory = { ...prev };
+        //     let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
+        //     currentText.content = joinedAnswers;
+        //     return { ...newStory };
+
+        // });
 
         setOpen(false);
     };
