@@ -72,17 +72,23 @@ function AddToExistingStoryModal({ open, handleClose, setOpen }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style} className={`${theme === 'light' ? '!border-none' : '!bg-textColor-300 !text-white !border-b-none'}`}>
-                    <div
-                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                    >
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to new Story</span>
-                    </div>
 
-                    <div
-                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                    >
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to existing Story</span>
-                    </div>
+                    <Select className='mb-4' placeholder="Select Story" styles={{
+                        option: provided => ({
+                            ...provided,
+                            color: '#333333'
+                        }),
+                    }}
+                        defaultValue={1} options={stories.map((story, i) => ({ value: i, label: story.story_name }))} onChange={handleStoryChange} />
+
+                    <Select className='note-select' placeholder="Select Section" styles={{
+                        option: provided => ({
+                            ...provided,
+                            color: '#333333'
+                        }),
+                    }}
+                        defaultValue={1} options={sections} onChange={handleSectionChange} />
+                    <p className={`cursor-pointer ml-full w-fit p-2 m-0 font-medium ${theme === 'light' ? 'text-textColor-300 hover:bg-light-hover-100' : 'text-textColor-100 hover:bg-background_workspace'}`} onClick={saveToStory}>Add</p>
                 </Box>
 
             </Modal>
