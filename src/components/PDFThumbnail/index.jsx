@@ -1,7 +1,7 @@
 import './pdf_thumbnail.css';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+// import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
@@ -23,7 +23,7 @@ function PDFThumbnail({ item }) {
 
         {/* thumbnail bottom title */}
         <div className={`absolute bottom-0 left-0 flex items-center w-full h-8 gap-1 truncate ${theme === 'light' ? 'bg-white' : 'bg-[#333333]'}`}>
-          <InsertDriveFileIcon fontSize="15" style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+          {/* <InsertDriveFileIcon fontSize="15" style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} /> */}
           <p className={`${theme === "light" ? 'text-black' : 'text-white'} text-xs truncate`}>{item.source_path}</p>
         </div>
       </div>
