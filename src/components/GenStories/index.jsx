@@ -196,7 +196,7 @@ const GenStories = ({ sidebarWidth }) => {
                                             <div
                                                 className="cursor-pointer"
                                                 onClick={() => {
-                                                    sendQuery(outline.query, outline.models);
+                                                    sendQuery(outline.query, selectedGenStoriesModels);
                                                 }}
                                             >
                                                 <ReplayOutlinedIcon />
