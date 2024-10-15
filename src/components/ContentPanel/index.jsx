@@ -17,7 +17,6 @@ import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import StoriesSection from '../StoriesSection';
 
 const ContentPanel = () => {
-    console.log("contentPanel re-rendered");
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
 
     const { setCurrentResource,
