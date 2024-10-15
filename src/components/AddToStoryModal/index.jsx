@@ -57,13 +57,13 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
 
     const saveToStory = async () => {
         const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
-            if (answer.includes('https://oaidalleapiprodscus.blob')) {
-                return {
-                    id: generateRandomHash(8),
-                    answer,
-                    refs
-                };
-            }
+            // if (answer.includes('https://oaidalleapiprodscus.blob')) {
+            //     return {
+            //         id: generateRandomHash(8),
+            //         answer,
+            //         refs
+            //     };
+            // }
 
             return {
                 id: generateRandomHash(8),

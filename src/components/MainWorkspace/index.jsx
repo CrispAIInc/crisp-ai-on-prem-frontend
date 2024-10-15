@@ -41,7 +41,7 @@ const MainWorkspace = ({ theme }) => {
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState({
     note_id: "",
-    text: [{ content: "", model: null, color: theme === "light" ? "#333" : "#fff" }],
+    text: [],
     images: [],
     note_name: "Note " + parseInt(notes.length + 1),
   });
