@@ -33,7 +33,7 @@ function AddToExistingStoryModal({ open, handleClose, setOpen }) {
         setSelectedSectionId(selectedOption.value);
     };
 
-
+    console.log("modal ren");
 
 
     const saveToStory = async () => {

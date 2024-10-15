@@ -1,14 +1,17 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useContext, useState } from 'react';
-import Select from 'react-select';
+// import Select from 'react-select';
+import AddToExistingStoryModal from "../AddToExistingStoryModal";
 import { MainContext } from '../../contexts/mainContext';
-import { generateRandomHash } from '../../utils';
+// import { generateRandomHash } from '../../utils';
 
-function AddToExistingStoryModal({ open, handleClose, setOpen }) {
+function AddToStoryModal({ open, handleClose, setOpen }) {
     const { theme, selectedNote, stories, setSelectedStory } = useContext(MainContext);
-    const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
-    const [selectedSectionId, setSelectedSectionId] = useState("");
+    // const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
+    // const [selectedSectionId, setSelectedSectionId] = useState("");
+
+    const [openExistingStoryModal, setOpenExistingStoryModal] = useState(false);
 
     const style = {
         position: 'absolute',
@@ -22,46 +25,54 @@ function AddToExistingStoryModal({ open, handleClose, setOpen }) {
         p: 4,
     };
 
-    const handleStoryChange = (selectedOption) => {
-        setSelectedStoryIndex(selectedOption.value);
-        setSelectedStory(stories[selectedOption.value]);
-    };
+    function handleOpenExistingStoryModal() {
+        setOpenExistingStoryModal(true);
+    }
 
-    const sections = stories[selectedStoryIndex]?.text.map(({ outline }) => ({ value: outline.id, label: outline.name }));
+    function handleCloseExistingStoryModal() {
+        setOpenExistingStoryModal(false);
+    }
 
-    const handleSectionChange = (selectedOption) => {
-        setSelectedSectionId(selectedOption.value);
-    };
+    // const handleStoryChange = (selectedOption) => {
+    //     setSelectedStoryIndex(selectedOption.value);
+    //     setSelectedStory(stories[selectedOption.value]);
+    // };
+
+    // const sections = stories[selectedStoryIndex]?.text.map(({ outline }) => ({ value: outline.id, label: outline.name }));
+
+    // const handleSectionChange = (selectedOption) => {
+    //     setSelectedSectionId(selectedOption.value);
+    // };
 
 
 
 
-    const saveToStory = async () => {
-        const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
-            if (answer.includes('https://oaidalleapiprodscus.blob')) {
-                return {
-                    id: generateRandomHash(8),
-                    answer,
-                    refs
-                };
-            }
+    // const saveToStory = async () => {
+    //     const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
+    //         if (answer.includes('https://oaidalleapiprodscus.blob')) {
+    //             return {
+    //                 id: generateRandomHash(8),
+    //                 answer,
+    //                 refs
+    //             };
+    //         }
 
-            return {
-                id: generateRandomHash(8),
-                answer,
-                refs
-            };
-        });
-        setSelectedStory(prev => {
-            const newStory = { ...prev };
-            let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
-            currentText.content = joinedAnswers;
-            return { ...newStory };
+    //         return {
+    //             id: generateRandomHash(8),
+    //             answer,
+    //             refs
+    //         };
+    //     });
+    //     setSelectedStory(prev => {
+    //         const newStory = { ...prev };
+    //         let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
+    //         currentText.content = joinedAnswers;
+    //         return { ...newStory };
 
-        });
+    //     });
 
-        setOpen(false);
-    };
+    //     setOpen(false);
+    // };
 
     return (
         <div>
@@ -80,9 +91,12 @@ function AddToExistingStoryModal({ open, handleClose, setOpen }) {
 
                     <div
                         className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        onClick={handleOpenExistingStoryModal}
                     >
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to existing Story</span>
                     </div>
+
+                    <AddToExistingStoryModal open={openExistingStoryModal} setOpen={setOpenExistingStoryModal} handleOpen={handleOpenExistingStoryModal} handleClose={handleCloseExistingStoryModal} />
                 </Box>
 
             </Modal>
@@ -90,4 +104,4 @@ function AddToExistingStoryModal({ open, handleClose, setOpen }) {
     );
 }
 
-export default AddToExistingStoryModal;
+export default AddToStoryModal;
