@@ -27,8 +27,8 @@ const StackedPaperEffect = ({ story }) => {
         <OverlayTrigger className='tooltip' placement="right" overlay={renderTooltip}>
             <div className="parent" onClick={showStory}>
                 <div className="letter">
-                    <h4 className="mb-2 text-sm font-semibold text-gray-800">{story.story_name}</h4>
-                    <p className="text-sm ">{story.text[0]?.content[0]?.answer?.split(' ').slice(0, 10).join(' ')}...</p>
+                    <h4 className="text-[12px] font-bold text-gray-800 mb-[2px]">{story.story_name}</h4>
+                    <p className="text-xs ">{story.text[0]?.content[0]?.answer?.split(' ').slice(0, 8).join(' ')}...</p>
                 </div>
                 <div className="before"></div>
                 <div className="after"></div>

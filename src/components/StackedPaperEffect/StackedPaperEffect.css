@@ -1,7 +1,7 @@
 .parent {
-  width: 150px;
-  height: 200px;
-  max-height: 200px;
+  width: 100px;
+  height: 150px;
+  max-height: 150px;
   position: relative;
 }
 
@@ -9,7 +9,7 @@
   background: #fafafa;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3),
     0 0 300px 25px rgba(222, 198, 122, 0.7) inset;
-  padding: 10px;
+  padding: 4px;
   position: absolute;
   left: 0;
   top: 0;
