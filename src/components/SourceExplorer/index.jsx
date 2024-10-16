@@ -12,6 +12,9 @@ import { MainContext } from "../../contexts/mainContext";
 import "./source_explorer.css";
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
+import ImageIcon from '@mui/icons-material/Image';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 export function SourceExplorer(props) {
     const {
@@ -134,23 +137,36 @@ export function SourceExplorer(props) {
                                 </div>
                             )}
                             <div className="relative">
-                                <Checkbox
-                                    className={`select-all-checkbox ${theme === "dark" && "border-white text-white"
-                                        } absolute p-0`}
-                                    checked={file.is_selected}
-                                    onChange={() => props.handleCheckboxChange(file)}
-                                    inputProps={{ "aria-label": "Select source" }}
-                                />
+                                <div className="flex items-center justify-between">
+                                    <Checkbox
+                                        className={`select-all-checkbox ${theme === "dark" && "border-white text-white"
+                                            } p-0`}
+                                        checked={file.is_selected}
+                                        onChange={() => props.handleCheckboxChange(file)}
+                                        inputProps={{ "aria-label": "Select source" }}
+                                    />
+
+                                    {
+                                        file.file_type === "video" ? (
+                                            <PlayCircleIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                        ) : file.file_type === "pdf" ? (
+                                            <InsertDriveFileIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                        ) : file.file_type === "img" ? (
+                                            <ImageIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                        ) : null
+                                    }
+
+                                    <DeleteIcon
+                                        style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                        onClick={(event) => props.deleteResource(event, file)}
+                                        className="delete-icon"
+                                    />
+                                </div>
                                 <div onClick={(event) => props.onThumbnailClick(event, file)}>
                                     {file.file_type === "video" && <StagedVideoThumbnail item={file} />}
                                     {file.file_type === "pdf" && <PDFThumbnail item={file} />}
                                     {file.file_type === "img" && <StagedImageThumbnail item={file} />}
                                 </div>
-                                <DeleteIcon
-                                    color="error"
-                                    onClick={(event) => props.deleteResource(event, file)}
-                                    className="absolute top-0 right-0 delete-icon"
-                                />
                             </div>
                         </div>
                     ));

@@ -43,9 +43,9 @@ const ContentPanelThumbnail = ({
             item.file_type === "video" ? (
               <PlayCircleIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
             ) : item.file_type === "pdf" ? (
-              <ImageIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-            ) : item.file_type === "img" ? (
               <InsertDriveFileIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+            ) : item.file_type === "img" ? (
+              <ImageIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
             ) : null
           }
 
