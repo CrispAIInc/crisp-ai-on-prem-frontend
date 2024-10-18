@@ -104,7 +104,17 @@ function StoryDetails() {
 
                 setSelectedStory((prev) => {
                     prev.text.forEach((textItem, index) => {
-                        textItem.content = sections[index];
+                        textItem.content = [
+                            {
+                                answer: sections[index][0].answer,
+                                refs: {
+                                    imageObjects: sections[index][0].imgsArr,
+                                    videoObjects: sections[index][0].videosArr,
+                                    keyframeObjects: sections[index][0].keyframesArr,
+                                    pdfObjects: sections[index][0].pdfsArr,
+                                }
+                            }
+                        ];
                     });
 
                     return prev;
@@ -113,6 +123,7 @@ function StoryDetails() {
                 console.log(error);
             } finally {
                 setIsGeneratingIntroConlusion(false);
+                console.log(selectedStory.text);
             }
         }
     }

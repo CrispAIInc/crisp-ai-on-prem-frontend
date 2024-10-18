@@ -96,6 +96,8 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
         // });
 
         setOpen(false);
+        setOpenExistingStoryModal(false);
+        setOpenNewStoryModal(false);
     };
 
 
