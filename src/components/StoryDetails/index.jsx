@@ -969,9 +969,9 @@ function StoryDetails() {
                 <div className="flex flex-col gap-4 px-3 mt-2">
                     {!currentAddingQuestionId ? (
                         <div
-                            className={`flex items-center  gap-3 py-1 px-3 ${theme === "light"
+                            className={`flex items-center w-fit rounded-md gap-3 py-1 px-3 ${theme === "light"
                                 ? "bg-light-hover-200"
-                                : "bg-textColor-300 w-fit rounded-md"
+                                : "bg-textColor-300"
                                 } cursor-pointer`}
                             onClick={handleOpenNewQuestionBox}
                         >
@@ -1026,9 +1026,9 @@ function StoryDetails() {
                     )}
                     {!currentAddingAnswerId && !currentAddingQuestionId ? (
                         <div
-                            className={`flex items-center gap-3 py-1 px-3 ${theme === "light"
+                            className={`flex items-center w-fit rounded-md gap-3 py-1 px-3 ${theme === "light"
                                 ? "bg-light-hover-200"
-                                : "bg-background w-fit rounded-md"
+                                : "bg-background"
                                 } align-self-start max-w-[80%] cursor-pointer`}
                             onClick={handleOpenNewAnswerBox}
                         >
