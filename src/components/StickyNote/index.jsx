@@ -77,7 +77,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
     return (
         <OverlayTrigger className='tooltip' placement="right" overlay={renderTooltip}>
             <div
-                className={`p-1 rounded-lg w-32 h-32 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col cursor-pointer`}
+                className={`p-1 rounded-lg w-32 h-32 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col cursor-pointer overflow-x-hidden`}
                 style={{
                     backgroundColor: color,
                     // boxShadow: '0 15px 25px rgba(0, 0, 0, 0.2)', // Bottom-only shadow
@@ -93,7 +93,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
                 }
 
                 {/* list of models used */}
-                <div className="flex flex-wrap items-center flex-1 gap-1 mt-3">
+                <div className="flex overflow-x-auto items-center flex-1 gap-1 mt-3" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                     {
                         Array.isArray(note.text) && note.text?.map((content, index) => {
                             if (content.model && !previousModels.includes(content.model)) {
