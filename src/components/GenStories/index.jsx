@@ -288,7 +288,7 @@ const GenStories = ({ sidebarWidth }) => {
                     }}
                 />
                 <div
-                    className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
+                    className={`p-2 rounded-md cursor-pointer z-[41] ${theme === "light" ? "border" : "!border !border-textColor-300"
                         } ${showCursor ? "cursor-not-allowed pointer-events-none" : ""}`}
                     onClick={() => sendQuery(input)}
                 >
