@@ -77,7 +77,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
     return (
         <OverlayTrigger className='tooltip' placement="right" overlay={renderTooltip}>
             <div
-                className={`p-1 rounded-lg w-32 h-32 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col cursor-pointer overflow-x-hidden`}
+                className={`p-1 rounded-lg w-24 h-24 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col cursor-pointer overflow-x-hidden`}
                 style={{
                     backgroundColor: color,
                     // boxShadow: '0 15px 25px rgba(0, 0, 0, 0.2)', // Bottom-only shadow
@@ -87,13 +87,13 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
             >
                 {/* Note Content */}
                 {/* <div> */}
-                <h4 className="mb-2 text-sm font-semibold text-gray-800">{note.note_name}</h4>
+                <h4 className="mb-2 text-[12px] font-semibold text-gray-800 truncate">{note.note_name}</h4>
                 {
-                    (Array.isArray(note.text) && note.text.length > 0) && <p className={`my-0 text-xs ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} line-clamp-2`}>{note.text[0]?.answer}</p>
+                    (Array.isArray(note.text) && note.text.length > 0) && <p className={`my-0 text-[10px] ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} line-clamp-2`}>{note.text[0]?.answer}</p>
                 }
 
                 {/* list of models used */}
-                <div className="flex overflow-x-auto items-center flex-1 gap-1 mt-3" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                <div className="flex items-center flex-1 gap-1 mt-3 overflow-x-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                     {
                         Array.isArray(note.text) && note.text?.map((content, index) => {
                             if (content.model && !previousModels.includes(content.model)) {
