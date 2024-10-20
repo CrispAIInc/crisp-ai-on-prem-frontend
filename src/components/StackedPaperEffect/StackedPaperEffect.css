@@ -1,12 +1,12 @@
 .parent {
-  width: 100px;
-  height: 150px;
-  max-height: 150px;
+  width: 80px;
+  height: 100px;
+  max-height: 100px;
   position: relative;
 }
 
 .letter {
-  background: #fafafa;
+  background: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3),
     0 0 300px 25px rgba(222, 198, 122, 0.7) inset;
   padding: 4px;
@@ -22,7 +22,7 @@
 .before,
 .after {
   position: absolute;
-  background: #fafafa;
+  background: #fff;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2),
     inset 0 0 300px rgba(222, 198, 122, 0.7);
   height: 100%;

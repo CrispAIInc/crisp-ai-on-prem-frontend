@@ -87,7 +87,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
             >
                 {/* Note Content */}
                 {/* <div> */}
-                <h4 className="mb-2 text-[12px] font-semibold text-gray-800 truncate">{note.note_name}</h4>
+                <h4 className="mb-1 text-[12px] font-semibold text-gray-800 truncate">{note.note_name}</h4>
                 {
                     (Array.isArray(note.text) && note.text.length > 0) && <p className={`my-0 text-[10px] ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} line-clamp-2`}>{note.text[0]?.answer}</p>
                 }
