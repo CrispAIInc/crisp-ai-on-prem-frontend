@@ -33,6 +33,44 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Base font size */
+html {
+  font-size: 14px; /* Default font size for the entire app */
+}
+
+/* Heading tags */
+h1 {
+  font-size: 28px; /* Instead of 32px */
+}
+
+h2 {
+  font-size: 22px; /* Instead of 24px */
+}
+
+h3 {
+  font-size: 18px; /* Instead of 18.72px */
+}
+
+h4 {
+  font-size: 15px; /* Instead of 16px */
+}
+
+h5 {
+  font-size: 12px; /* Instead of 13.28px */
+}
+
+h6 {
+  font-size: 10px; /* Instead of 10.72px */
+}
+
+/* Paragraph, list items, and other common text */
+p,
+li,
+div,
+span {
+  font-size: 14px; /* Decreased from 16px */
+}
+
 p {
   margin: 0 !important;
 }
