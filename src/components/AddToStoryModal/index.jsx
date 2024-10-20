@@ -9,7 +9,7 @@ import { generateRandomHash } from '../../utils';
 // import { generateRandomHash } from '../../utils';
 
 function AddToStoryModal({ open, handleClose, setOpen }) {
-    const { theme, selectedNote, stories, setStories, setSelectedStory } = useContext(MainContext);
+    const { theme, selectedNote, stories, setStories, setActiveView, setSelectedStory } = useContext(MainContext);
     // const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
     // const [selectedSectionId, setSelectedSectionId] = useState("");
 
@@ -72,7 +72,7 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
             };
         });
         const newStory = {
-            story_id: generateRandomHash(8),
+            story_id: new Date().getTime().toString() + Math.random().toString(36).substr(2, 9),
             story_name: "New Story",
             text: [
                 {
@@ -83,10 +83,11 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
                     },
                     content: joinedAnswers
                 }
-            ]
+            ],
+            models: [],
         };
-
-        setStories(prev => [...prev, newStory]);
+        displayStory(newStory);
+        // setStories(prev => [...prev, newStory]);
         // setSelectedStory(prev => {
         //     const newStory = { ...prev };
         //     let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
@@ -99,6 +100,11 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
         setOpenExistingStoryModal(false);
         setOpenNewStoryModal(false);
     };
+
+    function displayStory(story) {
+        setSelectedStory(story);
+        setActiveView('story');
+    }
 
 
 
