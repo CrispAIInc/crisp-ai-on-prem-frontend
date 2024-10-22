@@ -76,16 +76,18 @@ const NotesSection = () => {
                     {
                         isNotesLoading ? (
                             <>
-                                {
-                                    [1, 2, 3].map((item) => (
-                                        <SavedNoteSkeleton key={item} className='px-1 mt-4 mr-2' />
-                                    ))
-                                }
+                                <div className="flex flex-wrap gap-5 mt-4">
+                                    {
+                                        [1, 2, 3].map((item) => (
+                                            <SavedNoteSkeleton key={item} />
+                                        ))
+                                    }
+                                </div>
                             </>
                         ) :
                             notes.length > 0 ? (
                                 <div>
-                                    <div className="flex flex-wrap justify-around gap-10 px-1 pb-5 mt-4 mr-2 ">
+                                    <div className="flex flex-wrap gap-5 px-1 pb-5 mt-4 mr-2 ">
                                         {notes.map((note, i) => (
                                             <StickyNote
                                                 note={note}
