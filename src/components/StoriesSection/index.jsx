@@ -6,12 +6,12 @@ import BaseHeading from '../BaseHeading';
 import SavedStory from '../SavedStory';
 import StickyStory from "../StickyStory";
 import NoData from "../NoData";
-import SavedInsightSkeleton from '../Skeletons/SavedInsightSkeleton';
+import SavedStorySkeleton from '../Skeletons/SavedStorySkeleton';
 import StackedPaperEffect from '../StackedPaperEffect';
 
 function StoriesSection() {
 
-  const { theme, setActiveView, stories, setSelectedStory, setIsNewStory, isInsightsLoading } = useContext(MainContext);
+  const { theme, setActiveView, stories, setSelectedStory, setIsNewStory, isStoriesLoading } = useContext(MainContext);
 
   function handleNewStoryClick() {
     setSelectedStory({
@@ -23,7 +23,6 @@ function StoriesSection() {
     setIsNewStory(true);
     setActiveView('story');
   }
-
   return (
     <div className='stories-section mt-7'>
       {/* New Story */}
@@ -38,13 +37,15 @@ function StoriesSection() {
       <BaseHeading text='Saved stories' />
       <div className="saved-stories">
         {
-          isInsightsLoading ? (
+          isStoriesLoading ? (
             <>
-              {
-                [1, 2, 3].map((item) => (
-                  <SavedInsightSkeleton key={item} className='px-1 mt-4 mr-2' />
-                ))
-              }
+              <div className="flex flex-wrap gap-5">
+                {
+                  [1, 2, 3].map((item) => (
+                    <SavedStorySkeleton key={item} className='px-1 mt-4 mr-2' />
+                  ))
+                }
+              </div>
             </>
           ) :
             stories.length > 0 ? (
