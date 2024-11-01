@@ -60,14 +60,14 @@ export function extractTitle(responseString) {
 
 export function getLevelOfSection(section) {
     const indicator = section.split('. ')[0];
-    if (isRomanNumber(indicator)) return 1;
-    if (isNumber(indicator) || !isNaN(indicator)) return 3;
-    if (isString(indicator)) return 2;
+    if (isRomanNumber(indicator)) return 4;
+    if (isNumber(indicator) || !isNaN(indicator)) return 6;
+    if (isString(indicator)) return 5;
 }
 
 export function getLevelOfSectionInGenStories(section) {
     const indicator = section.split('. ')[0];
-    if (isRomanNumber(indicator)) return 5;
+    if (isRomanNumber(indicator)) return 6;
     if (isNumber(indicator) || !isNaN(indicator)) return -1;
     if (isString(indicator)) return 6;
 }
