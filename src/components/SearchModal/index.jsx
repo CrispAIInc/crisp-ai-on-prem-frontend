@@ -8,6 +8,8 @@ import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
 
 import { MainContext } from "../../contexts/mainContext";
+import StagedVideoThumbnail from '../StagedVideoThumbnail';
+import StagedImageThumbnail from '../StagedImageThumbnail';
 
 export function SearchModal(props) {
     const { additionalSources, theme } = useContext(MainContext);
@@ -56,9 +58,9 @@ export function SearchModal(props) {
                                     inputProps={{ "aria-label": "Select source" }}
                                 />
                                 <div onClick={(event) => props.onThumbnailClick(event, item)}>
-                                    {item.file_type === "video" && <VideoThumbnail item={item} />}
+                                    {item.file_type === "video" && <StagedVideoThumbnail item={item} />}
                                     {item.file_type === "pdf" && <PDFThumbnail item={item} />}
-                                    {item.file_type === "img" && <ImageThumbnail item={item} />}
+                                    {item.file_type === "img" && <StagedImageThumbnail item={item} />}
                                 </div>
                                 <DeleteIcon
                                     color='error'
