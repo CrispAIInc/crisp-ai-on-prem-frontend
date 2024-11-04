@@ -427,7 +427,7 @@ const MetadataPanel = () => {
                     _className="mx-auto !w-full !min-w-0"
                     className="!w-full mx-auto"
                     pageNumber={index + 1}
-                    scale={2.0}
+                    scale={1.0}
                   />
                 </div>
               ))}
@@ -516,7 +516,7 @@ const MetadataPanel = () => {
       )}
       {currentResource.file_type === "img" && (
         <div className="pb-10">
-          <div className="relative w-full h-80 max-w-lg mx-auto">
+          <div className="relative w-full max-w-lg mx-auto h-80">
             <CancelIcon
               onClick={closeImage}
               className="absolute right-[1%] top-[15px] cursor-pointer"
