@@ -28,7 +28,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     fromChat, setFromChat,
     isFoundationLlm,
     resourceURL,
-
     noteReferences,
     setResourceURL,
     player,
@@ -81,7 +80,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   const [selectedLLMs, setSelectedLLMs] = useState([llmModels[0].value]); // State to track multiple selected LLMs
   const [showLLMModal, setShowLLMModal] = useState(false);
 
-  // scroll chatAppRef to bottom whenever a new message is added to the chat
   useEffect(() => {
     // chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
     chatAppRef.current.scrollTop = chatAppRef.current?.scrollHeight;
