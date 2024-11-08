@@ -24,7 +24,7 @@ function StoriesSection() {
     setActiveView('story');
   }
   return (
-    <div className='stories-section mt-7'>
+    <section className='stories-section mt-7'>
       {/* New Story */}
       <div
         className={`new-story-button flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit mb-4 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
@@ -69,7 +69,7 @@ function StoriesSection() {
               </div>
             )}
       </div>
-    </div>
+    </section>
   );
 }
 

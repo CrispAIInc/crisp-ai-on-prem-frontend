@@ -233,7 +233,7 @@ const ContentSection = ({
 
     return (
         <>
-            <div className='relative flex flex-col items-start h-full'>
+            <section className='relative flex flex-col items-start h-full'>
 
                 <div className="w-full max-w-4xl pr-3">
                     {/* New resource */}
@@ -348,7 +348,7 @@ const ContentSection = ({
                             <NoData message="No sources selected" />
                     }
                 </div>
-            </div>
+            </section>
         </>
     );
 };

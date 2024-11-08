@@ -645,8 +645,8 @@ function StoryDetails() {
     const [currentHoveredId, setCurrentHoveredId] = useState(null);
 
     return (
-        <div className="flex flex-col h-full max-w-6xl mx-auto mt-3">
-            <div className="flex items-center justify-between">
+        <article className="flex flex-col h-full max-w-6xl mx-auto mt-3">
+            <section className="flex items-center justify-between">
                 {/*intro/conc generation */}
                 {selectedStory.text.length > 0 && (
                     <div
@@ -682,10 +682,10 @@ function StoryDetails() {
                         onClick={handleCloseStory}
                     />
                 </div>
-            </div>
+            </section>
 
             {/* title */}
-            <div
+            <section
                 className={`mt-2 mb-5 flex items-end gap-3 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                     }`}
             >
@@ -708,9 +708,9 @@ function StoryDetails() {
                 {isTitleEditing && (
                     <CheckIcon onClick={changeTitle} className="cursor-pointer" />
                 )}
-            </div>
+            </section>
 
-            <div
+            <section
                 className={`overflow-y-auto flex-1 flex flex-col gap-4 ${theme === "light" ? "text-textColor-300" : "text-light-hover-100"
                     }`}
                 ref={scrollRef}
@@ -1084,7 +1084,7 @@ function StoryDetails() {
                         )
                     ) : null}
                 </div>
-            </div>
+            </section>
 
             {selectedStory.text.length > 0 && <div className="flex items-center gap-3 ml-auto w-fit">
                 <CustomButton
@@ -1115,7 +1115,7 @@ function StoryDetails() {
                     Export to Word
                 </CustomButton>
             </div>}
-        </div>
+        </article>
     );
 }
 

@@ -164,7 +164,7 @@ const ContentPanel = () => {
     const [activeTab, setActiveTab] = useState('sources');
 
     return (
-        <div className={`select-none !h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
+        <aside className={`select-none !h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
             width: leftWidth
         }}>
             <Tabs
@@ -227,7 +227,7 @@ const ContentPanel = () => {
                 onThumbnailClick={onThumbnailClick}
                 className="modal"
             />
-        </div>
+        </aside>
     );
 };
 

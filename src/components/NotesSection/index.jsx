@@ -61,7 +61,7 @@ const NotesSection = () => {
 
     return (
         <>
-            <div className="notes-section mt-7">
+            <section className="notes-section mt-7">
                 {/* New Note */}
                 <div
                     className={`new-note-button flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit mb-4 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
@@ -107,7 +107,7 @@ const NotesSection = () => {
                             )
                     }
                 </div>
-            </div >
+            </section >
         </>
     );
 };

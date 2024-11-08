@@ -723,8 +723,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   };
 
   return (
-    <div className="relative flex flex-col flex-1 h-full overflow-y-auto">
-      <div className="flex flex-wrap items-center justify-center gap-3">
+    <article className="relative flex flex-col flex-1 h-full overflow-y-auto">
+      <section className="flex flex-wrap items-center justify-center gap-3">
         {
           notes.map((note, i) => {
             <p key={i}>{note.note_name}</p>;
@@ -758,9 +758,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           llmModels={llmModels}
           className="modal"
         />
-      </div>
+      </section>
 
-      <div className="flex items-center gap-1 mx-2 my-3 user-select-none">
+      <section className="flex items-center gap-1 mx-2 my-3 user-select-none">
         <span
           className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
             }`}
@@ -793,10 +793,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           )}
         </div>
         {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
-      </div>
+      </section>
 
       {/* <div className="flex items-center flex-1 gap-3"> */}
-      <div
+      <section
         className={`copilot-chat-container flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
           }`}
         ref={chatAppRef}
@@ -1019,10 +1019,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
             </p>
           </div>
         )}
-      </div>
+      </section>
 
       {/* </div> */}
-      <div className="flex items-center gap-2 copilot-chat-container input-area">
+      <section className="flex items-center gap-2 copilot-chat-container input-area">
 
         {
           selectedLLMs[0] === 'gpt-4-vision'
@@ -1072,8 +1072,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
               </div>
             </>}
 
-      </div>
-    </div>
+      </section>
+    </article>
   );
 };
 

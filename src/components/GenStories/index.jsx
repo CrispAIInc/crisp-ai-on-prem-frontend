@@ -118,9 +118,9 @@ const GenStories = ({ sidebarWidth }) => {
     }
 
     return (
-        <div className="relative flex flex-col flex-1 h-full overflow-y-auto">
+        <article className="relative flex flex-col flex-1 h-full overflow-y-auto">
             {/* models button */}
-            <div className="flex flex-wrap items-center justify-center gap-3 ">
+            <section className="flex flex-wrap items-center justify-center gap-3 ">
                 <CustomButton
                     className={` my-0 ${theme === "light"
                         ? "bg-white !text-dark border border-textColor-100"
@@ -139,10 +139,10 @@ const GenStories = ({ sidebarWidth }) => {
                     llmModels={llmModels}
                     className="modal"
                 />
-            </div>
+            </section>
 
             {/* selected models */}
-            <div className="flex items-center gap-1 mx-2 my-3">
+            <section className="flex items-center gap-1 mx-2 my-3">
                 <span
                     className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                         }`}
@@ -174,10 +174,10 @@ const GenStories = ({ sidebarWidth }) => {
                         ))
                     )}
                 </div>
-            </div>
+            </section>
 
             {/* chat container */}
-            <div
+            <section
                 className={`genstory-chat-container flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
                     }`}
                 ref={chatAppRef}
@@ -272,10 +272,10 @@ const GenStories = ({ sidebarWidth }) => {
                 ) : (
                     null
                 )}
-            </div>
+            </section>
 
             {/* message input container */}
-            <div className="flex items-center gap-2 input-area">
+            <section className="flex items-center gap-2 input-area">
                 <CustomInput
                     placeholder="Message model..."
                     value={input}
@@ -294,8 +294,8 @@ const GenStories = ({ sidebarWidth }) => {
                 >
                     <SendIcon color="primary" />
                 </div>
-            </div>
-        </div>
+            </section>
+        </article>
     );
 };
 

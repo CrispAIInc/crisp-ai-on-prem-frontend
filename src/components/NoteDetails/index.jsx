@@ -397,8 +397,8 @@ function NoteDetails() {
     const [currentHoveredId, setCurrentHoveredId] = useState(null);
 
     return (
-        <div className="flex flex-col h-full max-w-6xl mx-auto">
-            <div className='flex justify-between'>
+        <article className="flex flex-col h-full max-w-6xl mx-auto">
+            <section className='flex justify-between'>
                 <div>
                     {/* aggregated insights */}
                     <div
@@ -451,7 +451,7 @@ function NoteDetails() {
                         });
                     }} />
                 </div>
-            </div>
+            </section>
 
             {/* title */}
             <div className={`mt-2 mb-5 flex items-end gap-3 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
@@ -471,7 +471,7 @@ function NoteDetails() {
             {/* <div > */}
 
             {/* questions/answers */}
-            <div className={`mb-5 overflow-y-auto ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
+            <section className={`mb-5 overflow-y-auto ${theme === 'light' ? 'text-textColor-300' : 'text-light-hover-100'}`}>
                 {selectedNote.text?.map((item) => (
                     <div key={item.id} className="flex flex-col gap-4 px-3" onMouseLeave={() => setCurrentHoveredId(null)} onMouseOver={() => setCurrentHoveredId(item.id)}>
                         {/* question */}
@@ -631,13 +631,13 @@ function NoteDetails() {
                             </div>
                         </div>}
                 </div>
-            </div>
+            </section>
             <div className='flex items-center gap-3 ml-auto w-fit'>
                 <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={() => handleDelete()}>Delete</CustomButton>
                 <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton>
             </div>
             {/* <CustomButton className={`ml-auto ${theme === 'light' ? 'bg-white border border-light-hover-200' : 'text-white bg-black'}`} onClick={e => handleSave(e)}>Save</CustomButton> */}
-        </div>
+        </article>
     );
 }
 

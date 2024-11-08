@@ -22,12 +22,12 @@ const Workspace = () => {
 
     } = useContext(MainContext);
     return (
-        <div className={`relative flex-1 h-full px-10 overflow-y-auto media-container bg-background_workspace`}>
+        <main className={`relative flex-1 h-full px-10 overflow-y-auto media-container bg-background_workspace`}>
             {/* logo */}
-            <div className="flex items-center justify-center gap-1 mt-3">
+            <section className="flex items-center justify-center gap-1 mt-3">
                 <img src="/app-logo.svg" alt="logo" className="w-16 h-16" width="64" height="46" />
                 <p className={`font-sans font-extrabold text-3xl text-center user-select-none ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}>Crisp AI</p>
-            </div>
+            </section>
 
             <div
                 className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center top-0 z-50`}
@@ -52,7 +52,7 @@ const Workspace = () => {
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => { setIsRightSidebarOpen(!isRightSidebarOpen); }} />
             </div>
-        </div>
+        </main>
     );
 };
 

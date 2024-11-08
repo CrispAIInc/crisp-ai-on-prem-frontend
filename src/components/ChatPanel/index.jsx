@@ -53,7 +53,7 @@ const ChatPanel = () => {
   const [activeTab, setActiveTab] = useState('genInsights');
 
   return (
-    <div className={`relative w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
+    <aside className={`relative w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
       width: rightWidth
     }}>
       {isRightSidebarOpen && <div
@@ -88,7 +88,7 @@ const ChatPanel = () => {
           {(activeTab === 'genStories' && (Boolean(localStorage.getItem(`guide_completed_genStories`)) === false || localStorage.getItem(`guide_completed_genStories`) === "false")) && <Guide steps={genStorieSectionSteps} tabIdentifier="genStories" />}
         </Tab>
       </Tabs>
-    </div>
+    </aside>
   );
 };
 
