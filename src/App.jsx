@@ -9,6 +9,7 @@ import { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import HomePage from './pages/HomePage';
 import MainWorkspacePage from './pages/MainWorkspacePage';
+import NotFound from './pages/NotFound';
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage theme={theme} />} />
           <Route path="/workspace" element={<MainWorkspacePage theme={theme} />} />
+          <Route path="*" element={<NotFound theme={theme} />} />
         </Routes>
       </Router>
     </div>

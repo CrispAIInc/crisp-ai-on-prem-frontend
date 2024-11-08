@@ -19,7 +19,7 @@ export default function Hero() {
                     } text-center text-5xl font-semibold  w-[900px] max-w-[90vw] mx-auto`}>Interactive story creation made simple, efficient and accurate via <span className='text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-violet-500'>Multi-Modal</span> content discovery.</p> */}
 
                 <div className='flex items-center gap-2'>
-                    <img src="/crisp-ai-logo.png" alt="Crisp-ai logo" className="w-16 h-16" width="64" height="64" />
+                    <img src="/crisp-ai-logo.png" alt="Crisp AI - Interactive Story and Report Creation Platform" className="w-16 h-16" width="64" height="64" />
                     <p className={`font-sans text-3xl font-extrabold text-center user-select-none ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Crisp AI</p>
                 </div>
 
