@@ -7,5 +7,10 @@ export default defineConfig({
   server: {
     port: 3000,
     historyApiFallback: true, // Enable history-based routing
-  }
+    hmr: {
+      protocol: 'wss',
+      host: 'crisp-ai.com',
+      port: 443, // Default SSL port for WebSocket
+    }
+  },
 });
