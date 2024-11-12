@@ -1,16 +1,18 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import dotenv from 'dotenv';
 
-// https://vitejs.dev/config/
+// Load environment variables based on the mode (development or production)
+dotenv.config({ path: `.env.${process.env.NODE_ENV}.local` });
+
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    historyApiFallback: true, // Enable history-based routing
     hmr: {
-      protocol: 'wss',
-      host: 'crisp-ai.com',
-      port: 443, // Default SSL port for WebSocket
-    }
+      protocol: process.env.VITE_HMR_PROTOCOL,
+      host: process.env.VITE_HMR_HOST,
+      port: parseInt(process.env.VITE_HMR_PORT, 10),
+    },
   },
 });
