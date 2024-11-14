@@ -48,7 +48,7 @@ function StoriesSection() {
               </div>
             </>
           ) :
-            stories.length > 0 ? (
+            stories?.length > 0 ? (
               <div>
                 <div className="flex flex-wrap gap-10 px-1 pb-5 mt-4 mr-2 ">
                   {stories?.map((story) => (
