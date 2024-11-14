@@ -51,7 +51,7 @@ function StoriesSection() {
             stories.length > 0 ? (
               <div>
                 <div className="flex flex-wrap gap-10 px-1 pb-5 mt-4 mr-2 ">
-                  {stories.map((story) => (
+                  {stories?.map((story) => (
                     // <StickyStory
                     //   key={story.story_id}
                     //   story={story}
