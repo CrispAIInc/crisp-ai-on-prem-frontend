@@ -1,17 +1,13 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useContext, useState } from 'react';
-// import Select from 'react-select';
 import AddToExistingStoryModal from "../AddToExistingStoryModal";
 import { MainContext } from '../../contexts/mainContext';
 import AddToNewStoryModal from '../AddToNewStoryModal';
 import { generateRandomHash } from '../../utils';
-// import { generateRandomHash } from '../../utils';
 
 function AddToStoryModal({ open, handleClose, setOpen }) {
     const { theme, selectedNote, stories, setStories, setActiveView, setSelectedStory } = useContext(MainContext);
-    // const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
-    // const [selectedSectionId, setSelectedSectionId] = useState("");
 
     const [openExistingStoryModal, setOpenExistingStoryModal] = useState(false);
     const [openNewStoryModal, setOpenNewStoryModal] = useState(false);
