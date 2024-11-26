@@ -39,22 +39,24 @@ const chapters = [
 function Timeline({ theme }) {
     // const { theme } = useContext(MainContext);
     return (
-        <div className="main h-[400px] overflow-y-auto  m-auto w-8/12 max-w-[90vw]">
-            <div className="relative w-full mt-10 timeline before:absolute before:top-0 before:left-1/2 before:w-2 before:h-full before:bg-gradient-to-t before:from-white before:via-primary-300 before:to-white">
+        <div className="main  overflow-y-auto overflow-x-hidden relative  m-auto w-6/12  max-w-[90vw] ">
+            {/* <div className="sticky top-0 left-0 right-0 z-20 h-8 pointer-events-none bg-gradient-to-b from-background to-transparent"></div> */}
+
+            <div className="relative w-full timeline before:absolute before:rounded-lg before:top-0 before:left-1/2 before:w-2 before:h-full before:bg-primary-300">
                 {
                     chapters.map((chapter, index) => (
                         <>
-                            <div className={`timeline-item relative w-1/2 p-2 ${index % 2 === 0 ? 'left-0 before:right-[-13px]' : 'left-1/2 text-left before:left-[-5px]'} before:absolute before:top-1/2  before:w-5 before:h-5 before:bg-primary-200 before:border before:rounded-full before:z-10`}>
+                            <div className={`timeline-item relative w-1/2 p-2 ${index % 2 === 0 ? 'left-0 before:right-[-13px]' : 'left-1/2 text-left before:left-[-14px] ml-[9px]'} before:absolute before:top-1/2 before:-translate-y-1/2  before:w-5 before:h-5 before:bg-primary-200 before:border before:rounded-full before:z-10`}>
                                 <div className={`relative grid md:grid-cols-[30%,1fr] gap-3 p-3 bg-background rounded-md shadow-md content`}>
                                     <div className="w-full rounded-md min-w-2/6">
                                         <img src={chapter.img} alt="chapter" className="object-cover w-full h-full rounded-md" />
                                     </div>
                                     <div className={`flex flex-col gap-0 ${theme === 'dark' ? 'text-textColor-100' : " text-textColor-300"}`}>
-                                        <h5 className='mb-0 text-sm text-primary-300'>
+                                        <h5 className='mb-0 text-[9px] cursor-pointer text-primary-300 w-fit'>
                                             <AccessTimeIcon size="small" /> {chapter.timestamps[0]} - {chapter.timestamps[1]}
                                         </h5>
                                         <h5 className="mb-0 text-lg font-semibold line-clamp-1">{chapter.title}</h5>
-                                        <p className="text-sm truncate line-clamp-2 text-wrap">{chapter.description}</p>
+                                        <p className="text-xs truncate line-clamp-2 text-wrap">{chapter.description}</p>
                                     </div>
                                 </div>
                             </div>
@@ -62,6 +64,8 @@ function Timeline({ theme }) {
                     ))
                 }
             </div>
+
+            {/* <div className="sticky bottom-0 left-0 right-0 z-20 h-8 pointer-events-none bg-gradient-to-t from-background to-transparent"></div> */}
         </div>
     );
 }
