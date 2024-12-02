@@ -6,7 +6,8 @@ import Container from 'react-bootstrap/Container';
 // import Ceo from '../components/Ceo';
 
 import { ThemeContext } from "../contexts/themeContext.js";
-import Timeline from '../components/Timeline';
+// import Timeline from '../components/Timeline';
+// import Faqs from '../components/Faqs/index.jsx';
 
 export default function HomePage({ theme }) {
     return (
@@ -17,14 +18,15 @@ export default function HomePage({ theme }) {
                 <meta name="description" content="Crisp AI enables businesses to create interactive reports and stories by extracting factual information from multimodal content." />
             </Helmet>
             <ThemeContext.Provider value={{ theme }}>
-                <div className="bg-background_workspace main-workspace-container h-[4000px]">
+                <div className="overflow-y-hidden bg-background_workspace main-workspace-container">
                     <Container className="flex flex-col items-center justify-center text-center !h-screen">
                         <Navbar />
                         <Hero />
                         {/* <Ceo /> */}
                     </Container>
                     {/* <Footer /> */}
-                    <Timeline theme={theme} />
+                    {/* <Timeline theme={theme} /> */}
+                    {/* <Faqs /> */}
                 </div>
             </ThemeContext.Provider>
         </>
