@@ -115,6 +115,10 @@ export function SourceExplorer(props) {
         // }
     };
 
+    // useEffect(() => {
+    //     console.log(currentPath);
+    // }, [currentPath]);
+
     const renderFiles = () => {
         if (viewModes[viewModes.length - 1] === "files") {
             // Extracts category and format from the currentPath
@@ -271,7 +275,7 @@ export function SourceExplorer(props) {
                         className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
                             }`}
                         checked={selectedAll}
-                        onChange={() => props.handleSelectAllCheckboxChange()}
+                        onChange={() => props.handleSelectAllCheckboxChange(currentPath)}
                         inputProps={{ "aria-label": "Select All Sources" }}
                         label="Select All Sources"
                     />

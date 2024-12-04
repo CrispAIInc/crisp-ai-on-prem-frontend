@@ -208,12 +208,62 @@ const ContentSection = ({
         setShowCategoriesModal(true);
     };
 
-    const handleSelectAllCheckboxChange = () => {
-        const newSelectedValue = !selectedAll;
-        setSelectedAll(newSelectedValue);
-        knowledgeBase.forEach((item) => {
-            item.is_selected = newSelectedValue;
-        });
+    const handleSelectAllCheckboxChange = (path) => {
+        const pathSegments = path.split("/").filter(Boolean); // Removes empty strings from array
+        const category = pathSegments[0];
+        const format = pathSegments[1];
+
+        console.log(category, format);
+
+        if (category === undefined) {
+            const newSelectedValue = !selectedAll;
+            setSelectedAll(newSelectedValue);
+            knowledgeBase.forEach((item) => {
+                item.is_selected = newSelectedValue;
+            });
+        }
+        else {
+            const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                if (item.category.includes(category) && format === undefined) {
+                    item.is_selected = !selectedAll;
+                    // setSelectedSources((prev) => {
+                    //     const itemExist = prev.find(i => i.source_path === item.source_path);
+                    //     if (!itemExist) {
+                    //         return [
+                    //             ...prev,
+                    //             {
+                    //                 source_path: item.source_path,
+                    //                 category: item.category,
+                    //                 file_type: item.file_type,
+                    //             },
+                    //         ];
+                    //     }
+                    //     return prev;
+                    // });
+                }
+                else if (item.category.includes(category) && item.file_type === format) {
+                    console.log('heree');
+                    item.is_selected = !selectedAll;
+                    // setSelectedSources((prev) => {
+                    //     const itemExist = prev.find(i => i.source_path === item.source_path);
+                    //     if (!itemExist) {
+                    //         return [
+                    //             ...prev,
+                    //             {
+                    //                 source_path: item.source_path,
+                    //                 category: item.category,
+                    //                 file_type: item.file_type,
+                    //             },
+                    //         ];
+                    //     }
+                    //     return prev;
+                    // });
+                }
+                if (item.is_selected) setSelectedAll(false);
+                return item;
+            });
+            setKnowledgeBase(updatedKnowledgeBase);
+        }
     };
 
     /**
