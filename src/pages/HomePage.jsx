@@ -18,8 +18,8 @@ export default function HomePage({ theme }) {
                 <meta name="description" content="Crisp AI enables businesses to create interactive reports and stories by extracting factual information from multimodal content." />
             </Helmet>
             <ThemeContext.Provider value={{ theme }}>
-                <div className="overflow-y-hidden bg-background_workspace main-workspace-container">
-                    <Container className="flex flex-col items-center justify-center text-center !h-screen">
+                <div className=" bg-background_workspace ">
+                    <Container className="flex flex-col items-center text-center">
                         <Navbar />
                         <Hero />
                         {/* <Ceo /> */}
