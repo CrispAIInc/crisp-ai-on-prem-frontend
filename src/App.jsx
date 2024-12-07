@@ -14,7 +14,7 @@ import NotFound from './pages/NotFound';
 
 function App() {
 
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   toastConfig({ theme });
 
   useLayoutEffect(() => {
@@ -41,7 +41,7 @@ function App() {
   }, []);
 
   return (
-    <div className={`App ${theme}`}>
+    <div className={`App ${theme} ${window.location.pathname === "/" && '!min-h-screen h-auto'}`}>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage theme={theme} />} />
