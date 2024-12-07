@@ -36,6 +36,7 @@ body {
 /* Base font size */
 html {
   font-size: 14px; /* Default font size for the entire app */
+  min-height: 100vh;
 }
 
 /* Heading tags */
