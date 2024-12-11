@@ -354,18 +354,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const [visibleCount, setVisibleCount] = useState(2);
 
-  // Handler to increase the number of visible highlights
   const showMoreHighlights = () => {
     setVisibleCount((prevCount) => prevCount + 2);
   };
 
   const isMobile = useCheckMobileScreen();
-
-  // useEffect(() => {
-  //   if (currentResource.timestamp) {
-  //     window.scrollTo(0, 0);
-  //   }
-  // }, [currentResource.timestamp]);
 
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
@@ -431,8 +424,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     placeholder="Select a language"
                   />
                 </div>
-                {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" &&
-                  currentResource.source_path != "videoplayback.mp4" && ( */}
                 <>
                   {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
                     <Accordion heading={translatedResource?.combined_summary?.title}>
@@ -445,26 +436,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
                       ></p>
                     </Accordion>
-                    {/* <FaqItem item={{
-                      question: translatedResource?.combined_summary?.title,
-                      answer: translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')
-                    }} isFirstOpen /> */}
-                    {/* <h3
-                      className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                        }`}
-                    >
-                      {translatedResource?.combined_summary?.title}
-                    </h3>
-                    <p
-                      className={`text-sm ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
-                    > */}
-                    {/* {translatedResource?.combined_summary?.content} */}
-                    {/* </p> */}
                   </>}
 
                   {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
@@ -477,25 +448,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         dangerouslySetInnerHTML={{ __html: `${translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
                       ></p>
                     </Accordion>
-                    {/* <FaqItem item={{
-                      question: "Visual Flow",
-                      answer: translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')
-                    }} /> */}
-                    {/* <h3
-                      className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                        }`}
-                    >
-                      {translatedResource?.visual_summary?.title}
-                    </h3>
-                    <p
-                      className={`text-sm ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
-                    > */}
-                    {/* {translatedResource?.visual_summary?.content} */}
-                    {/* </p> */}
                   </>}
 
                   {translatedResource?.summary?.content !== undefined &&
@@ -509,25 +461,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                           dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
                         ></p>
                       </Accordion>
-                      {/* <FaqItem item={{
-                        question: translatedResource?.summary?.title,
-                        answer: translatedResource?.summary?.content?.replace(/\n/gi, '<br />')
-                      }} /> */}
-                      {/* <h3
-                    className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                      }`}
-                  >
-                    {translatedResource?.summary?.title}
-                  </h3>
-                    <p
-                      className={`text-sm ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-                      dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
-                    > */}
-                      {/* {translatedResource?.summary?.content} */}
-                      {/* </p> */}
                     </>}
 
                   {translatedResource?.topic_summaries?.content !== undefined &&
@@ -541,41 +474,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
                           dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
                         ></p>
                       </Accordion>
-                      {/* <FaqItem item={{
-                        question: translatedResource?.topic_summaries?.title,
-                        answer: translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')
-                      }} /> */}
-                      {/* <h3
-                    className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                      }`}
-                  >
-                    {translatedResource?.topic_summaries?.title}
-                  </h3>
-                    <p
-                      className={`text-sm ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
-                    > */}
-                      {/* {translatedResource?.topic_summaries?.content} */}
-                      {/* </p> */}
                     </>}
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
                 {translatedResource?.transcript?.content !== undefined && <>
-                  {/* <FaqItem item={{
-                    question: translatedResource?.transcript?.title,
-                    answer: translatedResource?.transcript?.content?.replace(/\n/gi, '<br />')
-                  }} /> */}
-                  {/* <h3
-                    className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                      }`}
-                  >
-                    {translatedResource?.transcript?.title}
-                  </h3> */}
                   <Accordion heading={translatedResource?.transcript?.title}>
                     <p
                       className={`text-sm ${theme === "light"
@@ -599,26 +502,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       {/* {translatedResource?.keywords?.content} */}
                     </p>
                   </Accordion>
-                  {/* <FaqItem item={{
-                    question: translatedResource?.keywords?.title,
-                    answer: translatedResource?.keywords?.content?.split(', ')
-                  }} answerType="keywords" /> */}
-                  {/* <h3
-                    className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                      }`}
-                  >
-                    {translatedResource?.keywords?.title}
-                  </h3>
-                    <p
-                      className={`flex items-center gap-2 flex-wrap`}
-
-                    // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
-                    >
-                      {
-                        translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
-                      } */}
-                  {/* {translatedResource?.keywords?.content}
-                  </p> */}
                 </>}
                 <Accordion heading="Highlights">
                   <div>
@@ -631,16 +514,13 @@ const MetadataPanel = ({ workspaceContainer }) => {
                           </div>
                           {/* highlight content */}
                           <div>
-                            <div className='flex items-center gap-1 mb-0 select-none cursor-pointer text-primary-300 w-fit' onClick={() => {
+                            <div className='flex items-center gap-1 mb-0 cursor-pointer select-none text-primary-300 w-fit' onClick={() => {
 
                               setCurrentResource(prev => ({ ...prev, timestamp: highlight.timestamps[0] }));
                               workspaceContainer.current.scrollTo({
                                 top: 0,
-                                behavior: "smooth", // Enables smooth scrolling
+                                behavior: "smooth",
                               });
-                              // console.log(window);
-                              // workspaceContainer.current.scrollTop = 0;
-                              // handleVideoLinkClick(event, currentResource);
                             }}>
                               <AccessTimeIcon style={{ fontSize: "15px", fontWeight: "semibold" }} />
                               <span className="text-sm font-semibold tracking-wider">{highlight.timestamps[0]} - {highlight.timestamps[1]}</span>
@@ -665,22 +545,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   )}
                 </Accordion>
 
-                {/* <FaqItem item={{
-                  question: "Chapters",
-                  answer: chapters
-                }} answerType="timeline" /> */}
-
                 <div className="mt-5 mb-5">
                   <Faqs faqs={faqs} />
                 </div>
-
-                {/* {
-                    faqs.map((faq, index) => <FaqItem key={index} item={{
-                      question: "FAQ",
-                      answer: faq
-                    }} />)
-                  } */}
-                {/* )} */}
               </div>
             ) : (
               <div className="flex items-center gap-3 mt-10">
@@ -759,26 +626,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
                     ></p>
                   </Accordion>
-                  {/* <FaqItem item={{ */}
-                  {/* question: translatedResource?.summary?.title,
-                  answer: translatedResource?.summary?.content?.replace(/\n/gi, '<br />')
-                  }} isFirstOpen /> */}
-                  {/* <h3
-                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                    }`}
-                >
-                  {translatedResource?.summary?.title}
-                </h3>
-                  <p
-                    className={`text-sm ${theme === "light"
-                      ? "text-textColor-300"
-                      : "text-textColor-100"
-                      }`}
-
-                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
-                  > */}
-                  {/* {translatedResource?.summary?.content} */}
-                  {/* </p> */}
                 </>}
 
                 {translatedResource?.topic_summaries?.content !== undefined && <>
@@ -792,26 +639,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
                     ></p>
                   </Accordion>
-                  {/* <FaqItem item={{
-                    question: translatedResource?.topic_summaries?.title,
-                    answer: translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')
-                  }} /> */}
-                  {/* <h3
-                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                    }`}
-                >
-                  {translatedResource?.topic_summaries?.title}
-                </h3>
-                  <p
-                    className={`text-sm ${theme === "light"
-                      ? "text-textColor-300"
-                      : "text-textColor-100"
-                      }`}
-
-                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
-                  > */}
-                  {/* {translatedResource?.topic_summaries?.content} */}
-                  {/* </p> */}
                 </>}
 
                 {translatedResource?.keywords?.content !== undefined && (<>
@@ -825,26 +652,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       {/* {translatedResource?.keywords?.content} */}
                     </p>
                   </Accordion>
-                  {/* <FaqItem item={{ */}
-                  {/* question: translatedResource?.keywords?.title,
-                  answer: translatedResource?.keywords?.content?.split(', ')
-                  }} answerType="keywords" /> */}
-                  {/* <h3
-                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                    }`}
-                >
-                  {translatedResource?.keywords?.title}
-                </h3>
-                  <p
-                    className={`flex items-center gap-2 flex-wrap`}
-
-                  // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
-                  >
-                    {
-                      translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
-                    } */}
-                  {/* {translatedResource?.keywords?.content} */}
-                  {/* </p> */}
                 </>)}
               </div>
             ) : (
@@ -902,27 +709,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     >
                     </p>
                   </Accordion>
-                  {/* <FaqItem item={{
-                    question: translatedResource?.caption?.title,
-                    answer: translatedResource?.caption?.content?.replace(/\n/gi, '<br />')
-                  }} isFirstOpen /> */}
-
-                  {/* <h3
-                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                    }`}
-                >
-                  {translatedResource?.caption?.title}
-                </h3>
-                  <p
-                    className={`text-sm ${theme === "light"
-                      ? "text-textColor-300"
-                      : "text-textColor-100"
-                      }`}
-
-                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.caption?.content?.replace(/\n/gi, '<br />')}` }}
-                  > */}
-                  {/* {translatedResource?.caption?.content} */}
-                  {/* </p> */}
                 </>}
 
                 {translatedResource?.keywords?.content !== undefined && <>
@@ -936,26 +722,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       {/* {translatedResource?.keywords?.content} */}
                     </p>
                   </Accordion>
-                  {/* <FaqItem item={{
-                    question: translatedResource?.keywords?.title,
-                    answer: translatedResource?.keywords?.content?.split(', ')
-                  }} answerType="keywords" /> */}
-                  {/* <h3
-                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                    }`}
-                >
-                  {translatedResource?.keywords?.title}
-                </h3>
-                  <p
-                    className={`flex items-center gap-2 flex-wrap`}
-
-                  // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
-                  >
-                    {
-                      translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
-                    } */}
-                  {/* {translatedResource?.keywords?.content} */}
-                  {/* </p> */}
                 </>}
               </div>
             ) : (
