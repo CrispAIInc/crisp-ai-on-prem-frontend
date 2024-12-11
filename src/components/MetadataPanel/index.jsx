@@ -141,7 +141,7 @@ const faqs = [
   },
 ];
 
-const MetadataPanel = () => {
+const MetadataPanel = ({ workspaceContainer }) => {
   const {
     currentResource,
     setCurrentResource,
@@ -634,12 +634,12 @@ const MetadataPanel = () => {
                             <div className='flex items-center gap-1 mb-0 select-none cursor-pointer text-primary-300 w-fit' onClick={() => {
 
                               setCurrentResource(prev => ({ ...prev, timestamp: highlight.timestamps[0] }));
-                              // metadataPanelContainer.current.scrollTo({
-                              //   top: 0,
-                              //   behavior: "smooth", // Enables smooth scrolling
-                              // });
+                              workspaceContainer.current.scrollTo({
+                                top: 0,
+                                behavior: "smooth", // Enables smooth scrolling
+                              });
                               // console.log(window);
-                              metadataPanelContainer.current.scrollTop = 0;
+                              // workspaceContainer.current.scrollTop = 0;
                               // handleVideoLinkClick(event, currentResource);
                             }}>
                               <AccessTimeIcon style={{ fontSize: "15px", fontWeight: "semibold" }} />
@@ -659,9 +659,9 @@ const MetadataPanel = () => {
 
                 <Accordion heading="Chapters">
                   {isMobile ? (
-                    <TimelineHorizontal theme={theme} chapters={chapters} />
+                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={chapters} />
                   ) : (
-                    <Timeline theme={theme} chapters={chapters} />
+                    <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={chapters} />
                   )}
                 </Accordion>
 

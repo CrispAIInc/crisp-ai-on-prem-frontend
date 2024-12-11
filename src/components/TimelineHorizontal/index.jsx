@@ -70,7 +70,9 @@ import Tooltip from "react-bootstrap/Tooltip";
 
 // ];
 
-function TimelineHorizontal({ theme, chapters }) {
+function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
+
+    const { setCurrentResource } = useContext(MainContext);
 
     const renderTooltip = (props, content) => (
         <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
@@ -106,7 +108,14 @@ function TimelineHorizontal({ theme, chapters }) {
                                     : 'text-textColor-300'
                                     }`}
                             >
-                                <h5 className="mb-0 text-[9px] cursor-pointer text-primary-300 w-fit">
+                                <h5 className="mb-0 text-[9px] cursor-pointer text-primary-300 w-fit" onClick={() => {
+
+                                    setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamps[0] }));
+                                    workspaceContainer.current.scrollTo({
+                                        top: 0,
+                                        behavior: "smooth", // Enables smooth scrolling
+                                    });
+                                }}>
                                     <AccessTimeIcon size="small" /> {chapter.timestamps[0]} -{' '}
                                     {chapter.timestamps[1]}
                                 </h5>

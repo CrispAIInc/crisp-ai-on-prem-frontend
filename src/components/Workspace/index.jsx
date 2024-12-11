@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { MainContext } from "../../contexts/mainContext";
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
@@ -11,6 +11,7 @@ import StoryDetails from '../StoryDetails';
 import MetadataPanel from '../MetadataPanel';
 
 const Workspace = () => {
+    const workspaceContainer = useRef(null);
     const {
 
         activeView,
@@ -22,7 +23,7 @@ const Workspace = () => {
 
     } = useContext(MainContext);
     return (
-        <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`}>
+        <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
             <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-1/2 top-10 -z-0 blur-[160px]"></div>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-0 blur-[160px]"></div>
             <div className="w-56 h-56 bg-green-500 rounded-full absolute left-3/4 top-80 -z-0 blur-[160px]"></div>
@@ -42,7 +43,7 @@ const Workspace = () => {
                     <NoData />
                 </div>
             ) : activeView === 'resource' ? (
-                <MetadataPanel />
+                <MetadataPanel workspaceContainer={workspaceContainer} />
             ) : activeView === 'note' ? (
                 <NoteDetails />
             ) : activeView === 'story' ? (

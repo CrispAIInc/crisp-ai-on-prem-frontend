@@ -39,7 +39,7 @@ import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 //     }
 // ];
 
-function Timeline({ theme, chapters }) {
+function Timeline({ theme, chapters, workspaceContainer }) {
 
     const { handleVideoLinkClick } = useReferenceLinkClick();
 
@@ -92,8 +92,10 @@ function Timeline({ theme, chapters }) {
                                         <h5 className='mb-0 text-[9px] cursor-pointer text-primary-300 w-fit' onClick={() => {
 
                                             setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamps[0] }));
-                                            window.scrollTo(0, 0);
-                                            // handleVideoLinkClick(event, currentResource);
+                                            workspaceContainer.current.scrollTo({
+                                                top: 0,
+                                                behavior: "smooth", // Enables smooth scrolling
+                                            });
                                         }}>
                                             <AccessTimeIcon size="small" /> {chapter.timestamps[0]} - {chapter.timestamps[1]}
                                         </h5>
