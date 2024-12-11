@@ -22,6 +22,7 @@ import Accordion from '../Accordion/index.jsx';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import Timeline from '../Timeline/index.jsx';
 import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
+import HorizontalCard from '../HorizontalCard/index.jsx';
 
 /**
  * chapters: [{id: number, thumbnail: string | file, timestamps: [number, number], title: string, description: string}]
@@ -507,29 +508,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   <div>
                     {
                       highlights.slice(0, visibleCount).map((highlight) => (
-                        <div key={highlight.id} className={`relative grid grid-cols-[30%,1fr] gap-3 p-3 bg-background rounded-md shadow-sm sm:w-2/3 md:w-[40%] mb-4`}>
-                          {/* highlight thumbnail */}
-                          <div className="w-full rounded-md min-w-2/6">
-                            <img src={highlight.thumbnail} alt="chapter" className="object-cover w-full h-full rounded-md" />
-                          </div>
-                          {/* highlight content */}
-                          <div>
-                            <div className='flex items-center gap-1 mb-0 cursor-pointer select-none text-primary-300 w-fit' onClick={() => {
-
-                              setCurrentResource(prev => ({ ...prev, timestamp: highlight.timestamps[0] }));
-                              workspaceContainer.current.scrollTo({
-                                top: 0,
-                                behavior: "smooth",
-                              });
-                            }}>
-                              <AccessTimeIcon style={{ fontSize: "15px", fontWeight: "semibold" }} />
-                              <span className="text-sm font-semibold tracking-wider">{highlight.timestamps[0]} - {highlight.timestamps[1]}</span>
-                            </div>
-                            <OverlayTrigger className='tooltip' placement="right" overlay={(props) => renderTooltip(props, highlight.title)}>
-                              <h5 className={`mb-0 text-sm font-semibold line-clamp-2 w-fit ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>{highlight.title}</h5>
-                            </OverlayTrigger>
-                          </div>
-                        </div>
+                        <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
                       ))
                     }
 

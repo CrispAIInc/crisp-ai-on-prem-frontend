@@ -29,6 +29,7 @@ const ContentPanel = () => {
         selectedSources,
         setJumpToPage,
         isLeftSidebarOpen,
+        setIsLeftSidebarOpen,
         setSummary, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
 
 
@@ -203,10 +204,13 @@ const ContentPanel = () => {
             <div
                 className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
             >
-                <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setSidebarWidth(prev => {
-                    if (prev !== maxWidth) return maxWidth;
-                    return window.innerWidth * 0.25;
-                })} />
+                <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
+                    setSidebarWidth(prev => {
+                        if (prev !== maxWidth) return maxWidth;
+                        return window.innerWidth * 0.25;
+                    });
+                    setIsLeftSidebarOpen(true);
+                }} />
             </div>
             {
                 isLeftSidebarOpen && <div

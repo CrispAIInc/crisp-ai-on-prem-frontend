@@ -15,7 +15,7 @@ import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded, setChatLoaded, isRightSidebarOpen, theme } = useContext(MainContext);
+  const { chatLoaded, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme } = useContext(MainContext);
 
   let copilotSectionSteps = [
     {
@@ -66,10 +66,15 @@ const ChatPanel = () => {
       <div
         className={`px-2 py-2 rounded-md w-fit absolute right-0 h-full flex flex-col justify-center items-center z-40`}
       >
-        <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setSidebarWidth(prev => {
-          if (prev !== maxWidth) return maxWidth;
-          return window.innerWidth * 0.25;
-        })} />
+        <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
+          setSidebarWidth(prev => {
+            if (prev !== maxWidth) {
+              return maxWidth;
+            }
+            return window.innerWidth * 0.25;
+          });
+          setIsRightSidebarOpen(true);
+        }} />
       </div>
 
       <Tabs
