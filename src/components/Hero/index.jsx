@@ -9,7 +9,7 @@ export default function Hero() {
     return (
         <div className="relative flex flex-col items-center justify-center">
             {/* Mesh gradient */}
-            <div className="w-72 h-72 bg-blue-500 rounded-full absolute left-0 top-0 -z-0 blur-[100px]"></div>
+            {/* <div className="w-72 h-72 bg-blue-500 rounded-full absolute left-0 top-0 -z-0 blur-[100px]"></div> */}
 
             <div className="flex flex-col items-center gap-5 z-1">
                 {/* <img src='/crisp-ai-logo.png' alt="crisp-ai logo" className="w-28 h-28" /> */}
@@ -83,7 +83,7 @@ export default function Hero() {
             </div>
 
             {/* Mesh gradient */}
-            <div className="w-72 h-72 bg-violet-500 rounded-full absolute right-0 top-72 -z-0 blur-[100px]"></div>
+            {/* <div className="w-72 h-72 bg-violet-500 rounded-full absolute right-0 top-72 -z-0 blur-[100px]"></div> */}
 
             {/* <div className='w-3/4 z-1'>
                 <img className="w-full h-full shadow-2xl" src={`crisp-ai-demo-${theme}.png`} />

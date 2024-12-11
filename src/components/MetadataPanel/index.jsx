@@ -5,15 +5,141 @@ import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import { Document, Page } from "react-pdf";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import LoadingSpinner from "../LoadingSpinner";
-
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import CustomSelectTwo from "../CustomSelectTwo";
 import { timeToSeconds } from '../../utils.js';
 import Chip from '../Chip/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
-import SearchSection from '../SearchSection/index.jsx';
+import SearchSection from '../SearchSection';
+import FaqItem from '../FaqItem';
+import Faqs from '../Faqs';
+import Accordion from '../Accordion/index.jsx';
+import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
+import Timeline from '../Timeline/index.jsx';
+import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
+
+/**
+ * chapters: [{id: number, thumbnail: string | file, timestamps: [number, number], title: string, description: string}]
+ * highlights: [{id: number, thumbnail: string | file, timestamps: [number, number], title: string }]
+ * faqs: [{id: number, question: string, answer: string}]
+*/
+
+const highlights = [
+  {
+    id: 1,
+    thumbnail: "https://placehold.co/600x400",
+    timestamps: ["00:00:00", "00:02:10"],
+    title: "Highlight 1",
+  },
+  {
+    id: 2,
+    thumbnail: "https://placehold.co/600x400",
+    timestamps: ["00:02:10", "00:04:20"],
+    title: "Highlight 2",
+  },
+  {
+    id: 3,
+    thumbnail: "https://placehold.co/600x400",
+    timestamps: ["00:00:00", "00:02:10"],
+    title: "Highlight 3",
+  },
+  {
+    id: 4,
+    thumbnail: "https://placehold.co/600x400",
+    timestamps: ["00:02:10", "00:04:20"],
+    title: "Highlight 4",
+  },
+  {
+    id: 5,
+    thumbnail: "https://placehold.co/600x400",
+    timestamps: ["00:00:00", "00:02:10"],
+    title: "Highlight 5",
+  },
+  {
+    id: 6,
+    thumbnail: "https://placehold.co/600x400",
+    timestamps: ["00:02:10", "00:04:20"],
+    title: "Highlight 6",
+  },
+  {
+    id: 7,
+    thumbnail: "https://placehold.co/600x400",
+    timestamps: ["00:00:00", "00:02:10"],
+    title: "Highlight 7",
+  },
+  {
+    id: 8,
+    thumbnail: "https://placehold.co/600x400",
+    timestamps: ["00:02:10", "00:04:20"],
+    title: "Highlight 8",
+  },
+];
+
+const chapters = [
+  {
+    id: 1,
+    img: "https://placehold.co/600x400",
+    timestamps: ["00:00:00", "00:02:10"],
+    title: "Chapter 1",
+    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+  },
+  {
+    id: 2,
+    img: "https://placehold.co/600x400",
+    timestamps: ["00:02:10", "00:04:20"],
+    title: "Chapter 2",
+    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+  },
+  {
+    id: 3,
+    img: "https://placehold.co/600x400",
+    timestamps: ["00:04:20", "00:06:30"],
+    title: "Chapter 3",
+    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+  },
+  {
+    id: 4,
+    img: "https://placehold.co/600x400",
+    timestamps: ["00:06:30", "00:08:40"],
+    title: "Chapter 4",
+    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+  },
+  {
+    id: 5,
+    img: "https://placehold.co/600x400",
+    timestamps: ["00:08:40", "00:10:50"],
+    title: "Chapter 5",
+    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+  }
+];
+
+const faqs = [
+  {
+    id: 1,
+    question: "What is West Point?",
+    answer: "West Point, officially known as the United States Military Academy (USMA), is a prestigious institution located in West Point, New York. It trains cadets to become officers in the United States Army."
+  },
+  {
+    id: 2,
+    question: "Where is West Point located?",
+    answer: "West Point is situated on the west bank of the Hudson River in New York State, approximately 50 miles north of New York City."
+  },
+  {
+    id: 3,
+    question: "How competitive is admission to West Point?",
+    answer: "West Point is highly selective, with an acceptance rate of around 10-12%. Applicants must meet rigorous academic, physical, and leadership criteria."
+  },
+  {
+    id: 4,
+    question: "What type of military training do cadets undergo?",
+    answer: "Cadets participate in rigorous military training programs, including field exercises, leadership training, and physical fitness programs."
+  },
+];
 
 const MetadataPanel = () => {
   const {
@@ -39,6 +165,8 @@ const MetadataPanel = () => {
   const [isPdfLoaded, setIsPdfLoaded] = useState(false);
   const [chosenLanguage, setChosenLanguage] = useState("en");
   const PdfContainer = useRef();
+  const metadataPanelContainer = useRef(null);
+
 
   let currentResourceType = currentResource.file_type;
 
@@ -219,26 +347,48 @@ const MetadataPanel = () => {
     }
   }
 
+
+  const renderTooltip = (props, content) => (
+    <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
+  );
+
+  const [visibleCount, setVisibleCount] = useState(2);
+
+  // Handler to increase the number of visible highlights
+  const showMoreHighlights = () => {
+    setVisibleCount((prevCount) => prevCount + 2);
+  };
+
+  const isMobile = useCheckMobileScreen();
+
+  // useEffect(() => {
+  //   if (currentResource.timestamp) {
+  //     window.scrollTo(0, 0);
+  //   }
+  // }, [currentResource.timestamp]);
+
   return (
-    <div className="max-w-4xl pt-10 mx-auto">
+    <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
       {currentResource.file_type === "video" && (
         <>
-          <div className="relative">
-            <CancelIcon
-              onClick={closeVideo}
-              color="error"
-              className="absolute z-50 cursor-pointer right-4 top-2"
-            />
-            <ReactPlayer
-              id="react-player"
-              width={"100%"}
-              height={"100%"}
-              playing={true}
-              url={resourceURL}
-              onReady={() => setIsPlayerReady(true)}
-              ref={player}
-              controls
-            />
+          <div className="relative ">
+            <div className="shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+              <CancelIcon
+                onClick={closeVideo}
+                color="black"
+                className="absolute z-50 shadow-lg cursor-pointer right-4 top-2"
+              />
+              <ReactPlayer
+                id="react-player"
+                width={"100%"}
+                height={"100%"}
+                playing={true}
+                url={resourceURL}
+                onReady={() => setIsPlayerReady(true)}
+                ref={player}
+                controls
+              />
+            </div>
             {/* video summary */}
             {!isTranslationLoading ? (
               <div
@@ -253,26 +403,26 @@ const MetadataPanel = () => {
                 {/* search */}
                 <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {/* generate visual/combined summary */}
-                {!isGeneratingCombinedSummary ? <div
-                  className={`user-select-none flex items-center justify-center gap-2 py-1 mb-2 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`} onClick={() => generateVisualAndCombinedSummary()}>
-                  <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                  <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                    Generate Visual & Combined Summary
-                  </span>
-                </div> : (
-                  <div className="flex items-center gap-2 mb-2">
-                    <LoadingSpinner isSmall={true} />
-                    <span
-                      className={`font-medium ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-                    >
-                      Generating Summaries...
+                <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
+                  {!isGeneratingCombinedSummary ? <div
+                    className={`user-select-none flex items-center justify-center gap-2 py-1 mb-2 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`} onClick={() => generateVisualAndCombinedSummary()}>
+                    <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                      Generate Visual & Combined Summary
                     </span>
-                  </div>
-                )}
-                <div className="flex flex-wrap items-center justify-between gap-1">
+                  </div> : (
+                    <div className="flex items-center gap-2 mb-2">
+                      <LoadingSpinner isSmall={true} />
+                      <span
+                        className={`font-medium ${theme === "light"
+                          ? "text-textColor-300"
+                          : "text-textColor-100"
+                          }`}
+                      >
+                        Generating Summaries...
+                      </span>
+                    </div>
+                  )}
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
@@ -285,7 +435,21 @@ const MetadataPanel = () => {
                   currentResource.source_path != "videoplayback.mp4" && ( */}
                 <>
                   {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
-                    <h3
+                    <Accordion heading={translatedResource?.combined_summary?.title}>
+                      <p
+                        className={`text-sm ${theme === "light"
+                          ? "text-textColor-300"
+                          : "text-textColor-100"
+                          }`}
+
+                        dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
+                      ></p>
+                    </Accordion>
+                    {/* <FaqItem item={{
+                      question: translatedResource?.combined_summary?.title,
+                      answer: translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')
+                    }} isFirstOpen /> */}
+                    {/* <h3
                       className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                         }`}
                     >
@@ -298,13 +462,26 @@ const MetadataPanel = () => {
                         }`}
 
                       dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
-                    >
-                      {/* {translatedResource?.combined_summary?.content} */}
-                    </p>
+                    > */}
+                    {/* {translatedResource?.combined_summary?.content} */}
+                    {/* </p> */}
                   </>}
 
                   {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
-                    <h3
+                    <Accordion heading={translatedResource?.visual_summary?.title}>
+                      <p
+                        className={`text-sm ${theme === "light"
+                          ? "text-textColor-300"
+                          : "text-textColor-100"
+                          }`}
+                        dangerouslySetInnerHTML={{ __html: `${translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
+                      ></p>
+                    </Accordion>
+                    {/* <FaqItem item={{
+                      question: "Visual Flow",
+                      answer: translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')
+                    }} /> */}
+                    {/* <h3
                       className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                         }`}
                     >
@@ -316,12 +493,27 @@ const MetadataPanel = () => {
                         : "text-textColor-100"
                         }`}
                       dangerouslySetInnerHTML={{ __html: `${translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
-                    >
-                      {/* {translatedResource?.visual_summary?.content} */}
-                    </p>
+                    > */}
+                    {/* {translatedResource?.visual_summary?.content} */}
+                    {/* </p> */}
                   </>}
 
-                  {translatedResource?.summary?.content !== undefined && <><h3
+                  {translatedResource?.summary?.content !== undefined &&
+                    <>
+                      <Accordion heading={translatedResource?.summary?.title}>
+                        <p
+                          className={`text-sm ${theme === "light"
+                            ? "text-textColor-300"
+                            : "text-textColor-100"
+                            }`}
+                          dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
+                        ></p>
+                      </Accordion>
+                      {/* <FaqItem item={{
+                        question: translatedResource?.summary?.title,
+                        answer: translatedResource?.summary?.content?.replace(/\n/gi, '<br />')
+                      }} /> */}
+                      {/* <h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                       }`}
                   >
@@ -333,11 +525,27 @@ const MetadataPanel = () => {
                         : "text-textColor-100"
                         }`}
                       dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
-                    >
+                    > */}
                       {/* {translatedResource?.summary?.content} */}
-                    </p></>}
+                      {/* </p> */}
+                    </>}
 
-                  {translatedResource?.topic_summaries?.content !== undefined && <><h3
+                  {translatedResource?.topic_summaries?.content !== undefined &&
+                    <>
+                      <Accordion heading={translatedResource?.topic_summaries?.title}>
+                        <p
+                          className={`text-sm ${theme === "light"
+                            ? "text-textColor-300"
+                            : "text-textColor-100"
+                            }`}
+                          dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                        ></p>
+                      </Accordion>
+                      {/* <FaqItem item={{
+                        question: translatedResource?.topic_summaries?.title,
+                        answer: translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')
+                      }} /> */}
+                      {/* <h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                       }`}
                   >
@@ -350,19 +558,25 @@ const MetadataPanel = () => {
                         }`}
 
                       dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
-                    >
+                    > */}
                       {/* {translatedResource?.topic_summaries?.content} */}
-                    </p></>}
+                      {/* </p> */}
+                    </>}
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
-                <>
-                  {translatedResource?.transcript?.content !== undefined && <><h3
+                {translatedResource?.transcript?.content !== undefined && <>
+                  {/* <FaqItem item={{
+                    question: translatedResource?.transcript?.title,
+                    answer: translatedResource?.transcript?.content?.replace(/\n/gi, '<br />')
+                  }} /> */}
+                  {/* <h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                       }`}
                   >
                     {translatedResource?.transcript?.title}
-                  </h3>
+                  </h3> */}
+                  <Accordion heading={translatedResource?.transcript?.title}>
                     <p
                       className={`text-sm ${theme === "light"
                         ? "text-textColor-300"
@@ -371,9 +585,25 @@ const MetadataPanel = () => {
 
                       dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
                     >
-                      {/* {translatedResource?.transcript?.content} */}
-                    </p></>}
-                  {translatedResource?.keywords?.content !== undefined && <><h3
+                    </p>
+                  </Accordion>
+                </>}
+                {translatedResource?.keywords?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.keywords?.title}>
+                    <p
+                      className={`flex items-center gap-2 flex-wrap`}
+                    >
+                      {
+                        translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                      }
+                      {/* {translatedResource?.keywords?.content} */}
+                    </p>
+                  </Accordion>
+                  {/* <FaqItem item={{
+                    question: translatedResource?.keywords?.title,
+                    answer: translatedResource?.keywords?.content?.split(', ')
+                  }} answerType="keywords" /> */}
+                  {/* <h3
                     className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                       }`}
                   >
@@ -386,10 +616,70 @@ const MetadataPanel = () => {
                     >
                       {
                         translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
-                      }
-                      {/* {translatedResource?.keywords?.content} */}
-                    </p></>}
-                </>
+                      } */}
+                  {/* {translatedResource?.keywords?.content}
+                  </p> */}
+                </>}
+                <Accordion heading="Highlights">
+                  <div>
+                    {
+                      highlights.slice(0, visibleCount).map((highlight) => (
+                        <div key={highlight.id} className={`relative grid grid-cols-[30%,1fr] gap-3 p-3 bg-background rounded-md shadow-sm sm:w-2/3 md:w-[40%] mb-4`}>
+                          {/* highlight thumbnail */}
+                          <div className="w-full rounded-md min-w-2/6">
+                            <img src={highlight.thumbnail} alt="chapter" className="object-cover w-full h-full rounded-md" />
+                          </div>
+                          {/* highlight content */}
+                          <div>
+                            <div className='flex items-center gap-1 mb-0 select-none cursor-pointer text-primary-300 w-fit' onClick={() => {
+
+                              setCurrentResource(prev => ({ ...prev, timestamp: highlight.timestamps[0] }));
+                              // metadataPanelContainer.current.scrollTo({
+                              //   top: 0,
+                              //   behavior: "smooth", // Enables smooth scrolling
+                              // });
+                              // console.log(window);
+                              metadataPanelContainer.current.scrollTop = 0;
+                              // handleVideoLinkClick(event, currentResource);
+                            }}>
+                              <AccessTimeIcon style={{ fontSize: "15px", fontWeight: "semibold" }} />
+                              <span className="text-sm font-semibold tracking-wider">{highlight.timestamps[0]} - {highlight.timestamps[1]}</span>
+                            </div>
+                            <OverlayTrigger className='tooltip' placement="right" overlay={(props) => renderTooltip(props, highlight.title)}>
+                              <h5 className={`mb-0 text-sm font-semibold line-clamp-2 w-fit ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>{highlight.title}</h5>
+                            </OverlayTrigger>
+                          </div>
+                        </div>
+                      ))
+                    }
+
+                    {highlights.slice(0, visibleCount).length < highlights.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
+                  </div>
+                </Accordion>
+
+                <Accordion heading="Chapters">
+                  {isMobile ? (
+                    <TimelineHorizontal theme={theme} chapters={chapters} />
+                  ) : (
+                    <Timeline theme={theme} chapters={chapters} />
+                  )}
+                </Accordion>
+
+                {/* <FaqItem item={{
+                  question: "Chapters",
+                  answer: chapters
+                }} answerType="timeline" /> */}
+
+                <div className="mt-5 mb-5">
+                  <Faqs faqs={faqs} />
+                </div>
+
+                {/* {
+                    faqs.map((faq, index) => <FaqItem key={index} item={{
+                      question: "FAQ",
+                      answer: faq
+                    }} />)
+                  } */}
                 {/* )} */}
               </div>
             ) : (
@@ -399,197 +689,284 @@ const MetadataPanel = () => {
             )}
           </div>
         </>
-      )}
-      {currentResource.file_type === "pdf" && (
-        <>
-          <div
-            className="relative h-[70vh] w-full mx-auto overflow-x-hidden overflow-y-auto"
-            ref={PdfContainer}
-          >
-            <Document
-              className="!w-full mx-auto relative"
-              file={resourceURL}
-              onLoadSuccess={onDocumentLoadSuccess}
+      )
+      }
+      {
+        currentResource.file_type === "pdf" && (
+          <>
+            <div
+              className="relative h-[70vh] w-full mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-x-hidden"
+              ref={PdfContainer}
             >
-              <CancelIcon
-                onClick={closePDF}
-                className="sticky top-0 z-50 cursor-pointer left-full"
-                color='error'
-              />
-              {Array.from(new Array(numPages), (el, index) => (
-                <div
-                  key={`page_${index + 1}`}
-                  ref={(el) => {
-                    pageRefs.current[index] = el;
-                  }}
-                >
-                  <Page
-                    _className="mx-auto !w-full !min-w-0"
-                    className="!w-full mx-auto"
-                    pageNumber={index + 1}
-                    scale={1.0}
+              <Document
+                className="!w-full mx-auto relative"
+                file={resourceURL}
+                onLoadSuccess={onDocumentLoadSuccess}
+              >
+                <CancelIcon
+                  onClick={closePDF}
+                  className="sticky top-0 z-50 shadow-lg cursor-pointer left-full"
+                  color='black'
+                />
+                {Array.from(new Array(numPages), (el, index) => (
+                  <div
+                    key={`page_${index + 1}`}
+                    ref={(el) => {
+                      pageRefs.current[index] = el;
+                    }}
+                  >
+                    <Page
+                      _className="mx-auto !w-full !min-w-0"
+                      className="!w-full mx-auto"
+                      pageNumber={index + 1}
+                      scale={1.0}
+                    />
+                  </div>
+                ))}
+              </Document>
+            </div>
+            {/* PDF summary */}
+            {!isTranslationLoading ? (
+              <div
+                className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
+                  chosenLanguage === "ku" ||
+                  chosenLanguage === "ckb" ||
+                  chosenLanguage === "iw" ||
+                  chosenLanguage === "ur") &&
+                  "text-right"
+                  }`}
+              >
+                {/* search */}
+                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
+                <div className="flex flex-wrap items-center justify-between gap-1">
+                  <CustomSelectTwo
+                    options={languageOptions}
+                    onChange={(lang) =>
+                      translateMetadata(lang.value, translatedResource)
+                    }
+                    placeholder="Select a language"
                   />
                 </div>
-              ))}
-            </Document>
-          </div>
-          {/* PDF summary */}
-          {!isTranslationLoading ? (
-            <div
-              className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
-                chosenLanguage === "ku" ||
-                chosenLanguage === "ckb" ||
-                chosenLanguage === "iw" ||
-                chosenLanguage === "ur") &&
-                "text-right"
-                }`}
-            >
-              {/* search */}
-              <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
-              <div className="flex flex-wrap items-center justify-between gap-1">
-                <CustomSelectTwo
-                  options={languageOptions}
-                  onChange={(lang) =>
-                    translateMetadata(lang.value, translatedResource)
-                  }
-                  placeholder="Select a language"
-                />
-              </div>
 
-              {translatedResource?.summary?.content !== undefined && <><h3
-                className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                  }`}
-              >
-                {translatedResource?.summary?.title}
-              </h3>
-                <p
-                  className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                {translatedResource?.summary?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.summary?.title}>
+                    <p
+                      className={`text-sm ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
+
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
+                    ></p>
+                  </Accordion>
+                  {/* <FaqItem item={{ */}
+                  {/* question: translatedResource?.summary?.title,
+                  answer: translatedResource?.summary?.content?.replace(/\n/gi, '<br />')
+                  }} isFirstOpen /> */}
+                  {/* <h3
+                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                     }`}
-
-                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
                 >
+                  {translatedResource?.summary?.title}
+                </h3>
+                  <p
+                    className={`text-sm ${theme === "light"
+                      ? "text-textColor-300"
+                      : "text-textColor-100"
+                      }`}
+
+                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
+                  > */}
                   {/* {translatedResource?.summary?.content} */}
-                </p></>}
+                  {/* </p> */}
+                </>}
 
-              {translatedResource?.topic_summaries?.content !== undefined && <><h3
-                className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                  }`}
-              >
-                {translatedResource?.topic_summaries?.title}
-              </h3>
-                <p
-                  className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                {translatedResource?.topic_summaries?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.topic_summaries?.title}>
+                    <p
+                      className={`text-sm ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
+
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                    ></p>
+                  </Accordion>
+                  {/* <FaqItem item={{
+                    question: translatedResource?.topic_summaries?.title,
+                    answer: translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')
+                  }} /> */}
+                  {/* <h3
+                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                     }`}
-
-                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
                 >
+                  {translatedResource?.topic_summaries?.title}
+                </h3>
+                  <p
+                    className={`text-sm ${theme === "light"
+                      ? "text-textColor-300"
+                      : "text-textColor-100"
+                      }`}
+
+                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                  > */}
                   {/* {translatedResource?.topic_summaries?.content} */}
-                </p></>}
+                  {/* </p> */}
+                </>}
 
-              {translatedResource?.keywords?.content !== undefined && (<><h3
-                className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                  }`}
-              >
-                {translatedResource?.keywords?.title}
-              </h3>
-                <p
-                  className={`flex items-center gap-2 flex-wrap`}
-
-                // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
-                >
-                  {
-                    translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
-                  }
-                  {/* {translatedResource?.keywords?.content} */}
-                </p></>)}
-            </div>
-          ) : (
-            <div className="flex items-center gap-3 mt-10">
-              <MetadataSkeleton className="w-full" />
-            </div>
-          )}
-        </>
-      )}
-      {currentResource.file_type === "img" && (
-        <div className="pb-10">
-          <div className="relative w-full max-w-lg mx-auto h-80">
-            <CancelIcon
-              onClick={closeImage}
-              className="absolute right-[1%] top-[15px] cursor-pointer"
-            />
-            <img
-              className="w-full !h-full pt-2 rounded-lg source-img"
-              src={resourceURL}
-            />
-          </div>
-          {/* Image Caption */}
-          {!isTranslationLoading ? (
-            <div
-              className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
-                chosenLanguage === "ku" ||
-                chosenLanguage === "ckb" ||
-                chosenLanguage === "iw" ||
-                chosenLanguage === "ur") &&
-                "text-right"
-                }`}
-            >
-              {/* search */}
-              <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
-              <div className="flex flex-wrap items-center justify-between gap-1">
-                <CustomSelectTwo
-                  options={languageOptions}
-                  onChange={(lang) =>
-                    translateMetadata(lang.value, translatedResource)
-                  }
-                  placeholder="Select a language"
-                />
-              </div>
-              {translatedResource?.caption?.content !== undefined && <><h3
-                className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
-                  }`}
-              >
-                {translatedResource?.caption?.title}
-              </h3>
-                <p
-                  className={`text-sm ${theme === "light"
-                    ? "text-textColor-300"
-                    : "text-textColor-100"
+                {translatedResource?.keywords?.content !== undefined && (<>
+                  <Accordion heading={translatedResource?.keywords?.title}>
+                    <p
+                      className={`flex items-center gap-2 flex-wrap`}
+                    >
+                      {
+                        translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                      }
+                      {/* {translatedResource?.keywords?.content} */}
+                    </p>
+                  </Accordion>
+                  {/* <FaqItem item={{ */}
+                  {/* question: translatedResource?.keywords?.title,
+                  answer: translatedResource?.keywords?.content?.split(', ')
+                  }} answerType="keywords" /> */}
+                  {/* <h3
+                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
                     }`}
-
-                  dangerouslySetInnerHTML={{ __html: `${translatedResource?.caption?.content?.replace(/\n/gi, '<br />')}` }}
                 >
-                  {/* {translatedResource?.caption?.content} */}
-                </p></>}
+                  {translatedResource?.keywords?.title}
+                </h3>
+                  <p
+                    className={`flex items-center gap-2 flex-wrap`}
 
-              {translatedResource?.keywords?.content !== undefined && <><h3
-                className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
+                  // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
+                  >
+                    {
+                      translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                    } */}
+                  {/* {translatedResource?.keywords?.content} */}
+                  {/* </p> */}
+                </>)}
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 mt-10">
+                <MetadataSkeleton className="w-full" />
+              </div>
+            )}
+          </>
+        )}
+      {
+        currentResource.file_type === "img" && (
+          <div className="pb-10">
+            <div className="relative w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+              <CancelIcon
+                color="black"
+                onClick={closeImage}
+                className="absolute right-[1%] top-[15px] cursor-pointer shadow-lg"
+              />
+              <img
+                className="w-full !h-full pt-2 rounded-lg source-img"
+                src={resourceURL}
+              />
+            </div>
+            {/* Image Caption */}
+            {!isTranslationLoading ? (
+              <div
+                className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
+                  chosenLanguage === "ku" ||
+                  chosenLanguage === "ckb" ||
+                  chosenLanguage === "iw" ||
+                  chosenLanguage === "ur") &&
+                  "text-right"
                   }`}
               >
-                {translatedResource?.keywords?.title}
-              </h3>
-                <p
-                  className={`flex items-center gap-2 flex-wrap`}
+                {/* search */}
+                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
+                <div className="flex flex-wrap items-center justify-between gap-1">
+                  <CustomSelectTwo
+                    options={languageOptions}
+                    onChange={(lang) =>
+                      translateMetadata(lang.value, translatedResource)
+                    }
+                    placeholder="Select a language"
+                  />
+                </div>
+                {translatedResource?.caption?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.caption?.title}>
+                    <p
+                      className={`text-sm ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
 
-                // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.caption?.content?.replace(/\n/gi, '<br />')}` }}
+                    >
+                    </p>
+                  </Accordion>
+                  {/* <FaqItem item={{
+                    question: translatedResource?.caption?.title,
+                    answer: translatedResource?.caption?.content?.replace(/\n/gi, '<br />')
+                  }} isFirstOpen /> */}
+
+                  {/* <h3
+                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
+                    }`}
                 >
-                  {
-                    translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
-                  }
+                  {translatedResource?.caption?.title}
+                </h3>
+                  <p
+                    className={`text-sm ${theme === "light"
+                      ? "text-textColor-300"
+                      : "text-textColor-100"
+                      }`}
+
+                    dangerouslySetInnerHTML={{ __html: `${translatedResource?.caption?.content?.replace(/\n/gi, '<br />')}` }}
+                  > */}
+                  {/* {translatedResource?.caption?.content} */}
+                  {/* </p> */}
+                </>}
+
+                {translatedResource?.keywords?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.keywords?.title}>
+                    <p
+                      className={`flex items-center gap-2 flex-wrap`}
+                    >
+                      {
+                        translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                      }
+                      {/* {translatedResource?.keywords?.content} */}
+                    </p>
+                  </Accordion>
+                  {/* <FaqItem item={{
+                    question: translatedResource?.keywords?.title,
+                    answer: translatedResource?.keywords?.content?.split(', ')
+                  }} answerType="keywords" /> */}
+                  {/* <h3
+                  className={`mt-4 text-md font-semiBold ${theme === "light" ? "text-textColor-300" : "text-white"
+                    }`}
+                >
+                  {translatedResource?.keywords?.title}
+                </h3>
+                  <p
+                    className={`flex items-center gap-2 flex-wrap`}
+
+                  // dangerouslySetInnerHTML={{ __html: `${translatedResource?.keywords?.content?.replace(/\n/gi, '<br />')}` }}
+                  >
+                    {
+                      translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                    } */}
                   {/* {translatedResource?.keywords?.content} */}
-                </p></>}
-            </div>
-          ) : (
-            <div className="flex items-center gap-3 mt-10">
-              <MetadataSkeleton className="w-full" />
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+                  {/* </p> */}
+                </>}
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 mt-10">
+                <MetadataSkeleton className="w-full" />
+              </div>
+            )}
+          </div>
+        )
+      }
+    </div >
   );
 };
 export default MetadataPanel;
