@@ -84,39 +84,40 @@ const highlights = [
 const chapters = [
   {
     id: 1,
-    img: "https://placehold.co/600x400",
+    thumbnail: "https://placehold.co/600x400",
     timestamps: ["00:00:00", "00:02:10"],
     title: "Chapter 1",
-    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
   },
   {
     id: 2,
-    img: "https://placehold.co/600x400",
+    thumbnail: "https://placehold.co/600x400",
     timestamps: ["00:02:10", "00:04:20"],
     title: "Chapter 2",
     description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
   },
   {
     id: 3,
-    img: "https://placehold.co/600x400",
+    thumbnail: "https://placehold.co/600x400",
     timestamps: ["00:04:20", "00:06:30"],
     title: "Chapter 3",
     description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
   },
   {
     id: 4,
-    img: "https://placehold.co/600x400",
+    thumbnail: "https://placehold.co/600x400",
     timestamps: ["00:06:30", "00:08:40"],
     title: "Chapter 4",
     description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
   },
   {
     id: 5,
-    img: "https://placehold.co/600x400",
+    thumbnail: "https://placehold.co/600x400",
     timestamps: ["00:08:40", "00:10:50"],
     title: "Chapter 5",
     description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  }
+  },
+
 ];
 
 const faqs = [

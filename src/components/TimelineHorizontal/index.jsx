@@ -96,7 +96,7 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                             {/* Image */}
                             <div className="w-full rounded-md">
                                 <img
-                                    src={chapter.img}
+                                    src={chapter.thumbnail}
                                     alt="chapter"
                                     className="object-cover w-full h-20 rounded-md"
                                 />
