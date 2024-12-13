@@ -1,9 +1,10 @@
-import React from 'react';
+import { useState } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { MainContext } from '../../contexts/mainContext';
 import { useContext } from 'react';
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+// import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+// import Tooltip from "react-bootstrap/Tooltip";
+import { ChapterDetailsModal } from '../ChapterDetailsModal';
 
 // const chapters = [
 //     {
@@ -74,9 +75,16 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
 
     const { setCurrentResource } = useContext(MainContext);
 
-    const renderTooltip = (props, content) => (
-        <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
-    );
+    // const renderTooltip = (props, content) => (
+    //     <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
+    // );
+
+    const [selectedChapter, setSelectedChapter] = useState(null);
+    const [showChapterDetailsModal, setShowChapterDetailsModal] = useState(false);
+
+    const hideChapterDetails = () => {
+        setShowChapterDetailsModal(false);
+    };
 
     return (
         <div className="main overflow-x-auto overflow-y-hidden relative m-auto w-11/12 max-w-[90vw] py-10 custom-scroll">
@@ -122,15 +130,20 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                                 <h5 className="mb-0 text-xs font-bold line-clamp-3">
                                     <abbr title={chapter.title}>{chapter.title}</abbr>
                                 </h5>
-                                <OverlayTrigger className='tooltip' placement="bottom" overlay={(props) => renderTooltip(props, chapter.description)}>
-                                    <p className="text-xs truncate line-clamp-2 text-wrap">
-                                        {chapter.description}
-                                    </p>
-                                </OverlayTrigger>
+                                {/* <OverlayTrigger className='tooltip' placement="bottom" overlay={(props) => renderTooltip(props, chapter.description)}> */}
+                                <p className="text-xs truncate line-clamp-2 text-wrap">
+                                    {chapter.description}
+                                </p>
+                                {/* </OverlayTrigger> */}
+                                <p onClick={() => {
+                                    setSelectedChapter(chapter);
+                                    setShowChapterDetailsModal(true);
+                                }} className="mt-2 text-sm font-semibold cursor-pointer text-primary-300">Read more</p>
                             </div>
                         </div>
                     </div>
                 ))}
+                {selectedChapter !== null && <ChapterDetailsModal show={showChapterDetailsModal} onHide={hideChapterDetails} chapter={selectedChapter} workspaceContainer={workspaceContainer} />}
             </div>
         </div>
     );

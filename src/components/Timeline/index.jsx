@@ -1,7 +1,7 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useContext, useEffect, useState } from 'react';
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+// import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+// import Tooltip from "react-bootstrap/Tooltip";
 import { MainContext } from '../../contexts/mainContext';
 import { timeToSeconds } from '../../utils';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
@@ -9,7 +9,7 @@ import { ChapterDetailsModal } from '../ChapterDetailsModal';
 
 function Timeline({ theme, chapters, workspaceContainer }) {
 
-    const { handleVideoLinkClick } = useReferenceLinkClick();
+    // const { handleVideoLinkClick } = useReferenceLinkClick();
 
     const { fromChat,
         isPlayerReady,
@@ -35,9 +35,9 @@ function Timeline({ theme, chapters, workspaceContainer }) {
         }
     }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
-    const renderTooltip = (props, content) => (
-        <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
-    );
+    // const renderTooltip = (props, content) => (
+    //     <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
+    // );
 
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [showChapterDetailsModal, setShowChapterDetailsModal] = useState(false);

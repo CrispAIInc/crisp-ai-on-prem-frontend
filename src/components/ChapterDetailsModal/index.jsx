@@ -26,9 +26,9 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
-                <div className='grid grid-cols-[30%,1fr] gap-4'>
+                <div className='sm:grid sm:grid-cols-[30%,1fr] sm:gap-4'>
                     {/* left part => thumbnail */}
-                    <div className="flex items-center justify-center w-full h-fit">
+                    <div className="flex items-center justify-center w-2/3 mx-auto mb-4 sm:w-full sm:h-fit sm:mb-0 ">
                         <img
                             src={chapter.thumbnail}
                             alt="chapter thumbnail"
