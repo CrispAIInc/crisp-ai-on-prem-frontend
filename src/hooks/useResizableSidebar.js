@@ -1,9 +1,11 @@
 // useResizableSidebar.js
 import { useState, useEffect } from 'react';
+import useCheckMobileScreen from './useCheckMobileScreen';
 
 export const useResizableSidebar = (minWidth, isLeft) => {
+    const isMobile = useCheckMobileScreen();
     const maxWidth = window.innerWidth * 0.75;
-    const [sidebarWidth, setSidebarWidth] = useState(window.innerWidth * 0.25);
+    const [sidebarWidth, setSidebarWidth] = useState(isMobile ? -100 : window.innerWidth * 0.2);
     const [isResizing, setIsResizing] = useState(false);
 
     const handleMouseDown = () => {
@@ -25,7 +27,7 @@ export const useResizableSidebar = (minWidth, isLeft) => {
     };
 
     const handleDoubleClick = () => {
-        setSidebarWidth(window.innerWidth * 0.25);
+        setSidebarWidth(isMobile ? -100 : window.innerWidth * 0.2);
     };
 
     useEffect(() => {
