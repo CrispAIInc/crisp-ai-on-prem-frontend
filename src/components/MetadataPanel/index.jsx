@@ -353,7 +353,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
   );
 
-  const [visibleCount, setVisibleCount] = useState(2);
+  const [visibleCount, setVisibleCount] = useState(3);
 
   const showMoreHighlights = () => {
     setVisibleCount((prevCount) => prevCount + 2);
