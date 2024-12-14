@@ -432,9 +432,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 </div>
                 <>
                   {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
-                    <Accordion heading={translatedResource?.combined_summary?.title}>
+                    <Accordion heading={translatedResource?.combined_summary?.title} isFirstOpen>
                       <p
-                        className={`text-sm ${theme === "light"
+                        className={`text-md ${theme === "light"
                           ? "text-textColor-300"
                           : "text-textColor-100"
                           }`}
@@ -447,7 +447,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
                     <Accordion heading={translatedResource?.visual_summary?.title}>
                       <p
-                        className={`text-sm ${theme === "light"
+                        className={`text-md ${theme === "light"
                           ? "text-textColor-300"
                           : "text-textColor-100"
                           }`}
@@ -460,7 +460,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     <>
                       <Accordion heading={translatedResource?.summary?.title}>
                         <p
-                          className={`text-sm ${theme === "light"
+                          className={`text-md ${theme === "light"
                             ? "text-textColor-300"
                             : "text-textColor-100"
                             }`}
@@ -473,7 +473,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     <>
                       <Accordion heading={translatedResource?.topic_summaries?.title}>
                         <p
-                          className={`text-sm ${theme === "light"
+                          className={`text-md ${theme === "light"
                             ? "text-textColor-300"
                             : "text-textColor-100"
                             }`}
@@ -487,7 +487,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 {translatedResource?.transcript?.content !== undefined && <>
                   <Accordion heading={translatedResource?.transcript?.title}>
                     <p
-                      className={`text-sm ${theme === "light"
+                      className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
@@ -605,7 +605,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 {translatedResource?.summary?.content !== undefined && <>
                   <Accordion heading={translatedResource?.summary?.title}>
                     <p
-                      className={`text-sm ${theme === "light"
+                      className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
@@ -618,7 +618,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 {translatedResource?.topic_summaries?.content !== undefined && <>
                   <Accordion heading={translatedResource?.topic_summaries?.title}>
                     <p
-                      className={`text-sm ${theme === "light"
+                      className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
@@ -687,7 +687,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 {translatedResource?.caption?.content !== undefined && <>
                   <Accordion heading={translatedResource?.caption?.title}>
                     <p
-                      className={`text-sm ${theme === "light"
+                      className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}

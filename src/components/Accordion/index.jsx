@@ -2,8 +2,8 @@ import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 // import useCheckMobileScreen from '../../hooks/useCheckMobileScreen';
 
-function Accordion({ heading, children, isBoxed = false }) {
-    const [isOpen, setIsOpen] = useState(false);
+function Accordion({ heading, children, isBoxed = false, isFirstOpen = false }) {
+    const [isOpen, setIsOpen] = useState(isFirstOpen);
     const { theme } = useContext(MainContext);
     // const isMobile = useCheckMobileScreen();
     const toggleFAQ = () => {
