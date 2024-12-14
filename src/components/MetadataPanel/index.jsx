@@ -354,10 +354,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
     <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
   );
 
-  const [visibleCount, setVisibleCount] = useState(3);
-
+  const [visibleHighlightCount, setVisibleHighlightCount] = useState(3);
   const showMoreHighlights = () => {
-    setVisibleCount((prevCount) => prevCount + 2);
+    setVisibleHighlightCount((prevCount) => prevCount + 3);
+  };
+
+  const [visibleChaptersCount, setVisibleChaptersCount] = useState(3);
+  const showMoreChapters = () => {
+    setVisibleChaptersCount((prevCount) => prevCount + 3);
   };
 
   const isMobile = useCheckMobileScreen();
@@ -508,12 +512,12 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 <Accordion heading="Highlights">
                   <div>
                     {
-                      highlights.slice(0, visibleCount).map((highlight) => (
+                      highlights.slice(0, visibleHighlightCount).map((highlight) => (
                         <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
                       ))
                     }
 
-                    {highlights.slice(0, visibleCount).length < highlights.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
+                    {highlights.slice(0, visibleHighlightCount).length < highlights.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
                   </div>
                 </Accordion>
 
@@ -521,7 +525,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   {isMobile ? (
                     <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={chapters} />
                   ) : (
-                    <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={chapters} />
+                    <>
+                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={chapters.slice(0, visibleChaptersCount)} />
+                      {chapters.slice(0, visibleChaptersCount).length < chapters.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
+                    </>
                   )}
                 </Accordion>
 
