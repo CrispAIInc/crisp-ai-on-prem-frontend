@@ -85,37 +85,37 @@ const chapters = [
   {
     id: 1,
     thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:00:00", "00:02:10"],
+    timestamp: ["00:00:00", "00:02:10"],
     title: "Chapter 1",
-    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
   },
   {
     id: 2,
     thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:02:10", "00:04:20"],
+    timestamp: ["00:02:10", "00:04:20"],
     title: "Chapter 2",
-    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
   },
   {
     id: 3,
     thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:04:20", "00:06:30"],
+    timestamp: ["00:04:20", "00:06:30"],
     title: "Chapter 3",
-    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
   },
   {
     id: 4,
     thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:06:30", "00:08:40"],
+    timestamp: ["00:06:30", "00:08:40"],
     title: "Chapter 4",
-    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
   },
   {
     id: 5,
     thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:08:40", "00:10:50"],
+    timestamp: ["00:08:40", "00:10:50"],
     title: "Chapter 5",
-    description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
   },
 
 ];
@@ -192,9 +192,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
   }, [jumpToPage, numPages, isPdfLoaded]);
 
   useEffect(() => {
+    console.log("hello");
     if (activeView === "resource") {
       setTranslatedResource(currentResource);
-      if (currentResource) translateMetadata("en", currentResource);
+      if (currentResource) { translateMetadata("en", currentResource); }
     }
   }, [currentResource.source_path]);
 
@@ -286,6 +287,18 @@ const MetadataPanel = ({ workspaceContainer }) => {
         title: "",
         content: "",
       },
+      chapters: {
+        title: "",
+        content: null,
+      },
+      highlights: {
+        title: "",
+        content: null,
+      },
+      faqs: {
+        title: "",
+        content: null,
+      },
     };
     const TRANSLATABLE_KEYS = [
       "summary",
@@ -295,6 +308,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
       "transcript",
       "caption",
       "keywords",
+      "chapters",
+      "highlights",
+      "faqs"
     ];
     // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
     for (const [key, value] of Object.entries(object)) {
@@ -348,6 +364,32 @@ const MetadataPanel = ({ workspaceContainer }) => {
       setIsGeneratingCombinedSummary(false);
     }
   }
+
+  /**
+   * response: {
+   *  lang: 'en',
+   *  summary: {
+   *    title: '',
+   *    content: ''
+   * },
+   * keywords: {
+   * title: '',
+   * content: [keyword1, keyword2, etc.]
+   * },
+   * chapters: {
+   * title: '',
+   * content: [
+   * {
+   * id,
+   * thumbnail,
+   * timastamps: []
+   * title,
+   * description
+   * }]
+   * }
+   * 
+   * }
+   */
 
 
   const renderTooltip = (props, content) => (
@@ -431,7 +473,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   />
                 </div>
                 <>
-                  {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
+                  {/* {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
                     <Accordion heading={translatedResource?.combined_summary?.title} isFirstOpen>
                       <p
                         className={`text-md ${theme === "light"
@@ -442,9 +484,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
                       ></p>
                     </Accordion>
-                  </>}
+                  </>} */}
 
-                  {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
+                  {/* {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
                     <Accordion heading={translatedResource?.visual_summary?.title}>
                       <p
                         className={`text-md ${theme === "light"
@@ -454,11 +496,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         dangerouslySetInnerHTML={{ __html: `${translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
                       ></p>
                     </Accordion>
-                  </>}
+                  </>} */}
 
                   {translatedResource?.summary?.content !== undefined &&
                     <>
-                      <Accordion heading={translatedResource?.summary?.title}>
+                      <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
                         <p
                           className={`text-md ${theme === "light"
                             ? "text-textColor-300"
@@ -469,7 +511,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       </Accordion>
                     </>}
 
-                  {translatedResource?.topic_summaries?.content !== undefined &&
+                  {/* {translatedResource?.topic_summaries?.content !== undefined &&
                     <>
                       <Accordion heading={translatedResource?.topic_summaries?.title}>
                         <p
@@ -480,11 +522,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
                           dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
                         ></p>
                       </Accordion>
-                    </>}
+                    </>} */}
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
-                {translatedResource?.transcript?.content !== undefined && <>
+                {/* {translatedResource?.transcript?.content !== undefined && <>
                   <Accordion heading={translatedResource?.transcript?.title}>
                     <p
                       className={`text-md ${theme === "light"
@@ -496,45 +538,45 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     >
                     </p>
                   </Accordion>
-                </>}
+                </>} */}
                 {translatedResource?.keywords?.content !== undefined && <>
                   <Accordion heading={translatedResource?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                        translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
                       }
                       {/* {translatedResource?.keywords?.content} */}
                     </p>
                   </Accordion>
                 </>}
-                <Accordion heading="Highlights">
+                {translatedResource?.highlights?.content !== undefined && <Accordion heading="Highlights">
                   <div>
                     {
-                      highlights.slice(0, visibleHighlightCount).map((highlight) => (
+                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
                         <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
                       ))
                     }
 
-                    {highlights.slice(0, visibleHighlightCount).length < highlights.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
+                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
                   </div>
-                </Accordion>
+                </Accordion>}
 
-                <Accordion heading="Chapters">
+                {translatedResource?.chapters?.content !== undefined && <Accordion heading="Chapters">
                   {isMobile ? (
-                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={chapters} />
+                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource.chapters.content} />
                   ) : (
                     <>
-                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={chapters.slice(0, visibleChaptersCount)} />
-                      {chapters.slice(0, visibleChaptersCount).length < chapters.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
+                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource.chapters.content.slice(0, visibleChaptersCount)} />
+                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
                     </>
                   )}
-                </Accordion>
+                </Accordion>}
 
-                <div className="mt-5 mb-5">
-                  <Faqs faqs={faqs} />
-                </div>
+                {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
+                  <Faqs faqs={translatedResource?.faqs?.content} />
+                </div>}
               </div>
             ) : (
               <div className="flex items-center gap-3 mt-10">
@@ -603,7 +645,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 </div>
 
                 {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.summary?.title}>
+                  <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
@@ -634,7 +676,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                        translatedResource?.keywords?.content?.split(', ').map(({ id, keyword }) => <Chip key={id} content={keyword} />)
                       }
                       {/* {translatedResource?.keywords?.content} */}
                     </p>
@@ -685,7 +727,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   />
                 </div>
                 {translatedResource?.caption?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.caption?.title}>
+                  <Accordion heading={translatedResource?.caption?.title} isFirstOpen>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
@@ -704,7 +746,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.keywords?.content?.split(', ').map((keyword, index) => <Chip key={index} content={keyword} />)
+                        translatedResource?.keywords?.content?.split(', ').map(({ keyword, id }) => <Chip key={id} content={keyword} />)
                       }
                       {/* {translatedResource?.keywords?.content} */}
                     </p>

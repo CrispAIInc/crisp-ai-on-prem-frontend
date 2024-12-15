@@ -64,13 +64,13 @@ function Timeline({ theme, chapters, workspaceContainer }) {
                                     <div className={`flex flex-col gap-0 ${theme === 'dark' ? 'text-textColor-100' : " text-textColor-300"}`}>
                                         <h5 className='mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
 
-                                            setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamps[0] }));
+                                            setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
                                             workspaceContainer.current.scrollTo({
                                                 top: 0,
                                                 behavior: "smooth", // Enables smooth scrolling
                                             });
                                         }}>
-                                            <AccessTimeIcon size="small" /> {chapter.timestamps[0]} - {chapter.timestamps[1]}
+                                            <AccessTimeIcon size="small" /> {chapter.timestamp[0]} - {chapter.timestamp[1]}
                                         </h5>
                                         <h5 className="mb-0 text-lg font-semibold line-clamp-1">{chapter.title}</h5>
                                         {/* <OverlayTrigger className='tooltip' placement={index % 2 === 0 ? 'bottom' : "bottom"} overlay={(props) => renderTooltip(props, chapter.description)}> */}

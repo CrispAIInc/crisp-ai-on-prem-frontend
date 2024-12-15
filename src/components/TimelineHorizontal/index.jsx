@@ -2,82 +2,11 @@ import { useState } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { MainContext } from '../../contexts/mainContext';
 import { useContext } from 'react';
-// import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-// import Tooltip from "react-bootstrap/Tooltip";
 import { ChapterDetailsModal } from '../ChapterDetailsModal';
-
-// const chapters = [
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:00:00", "00:02:10"],
-//         title: "Chapter 1 ",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:02:10", "00:04:20"],
-//         title: "Chapter 2",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:04:20", "00:06:30"],
-//         title: "Chapter 3",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:06:30", "00:08:40"],
-//         title: "Chapter 4",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:08:40", "00:10:50"],
-//         title: "Chapter 5",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:10:50", "00:13:00"],
-//         title: "Chapter 6",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:13:00", "00:15:10"],
-//         title: "Chapter 7",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:15:10", "00:17:20"],
-//         title: "Chapter 8",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:17:20", "00:19:30"],
-//         title: "Chapter 9",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-//     {
-//         img: "https://placehold.co/600x400",
-//         timestamps: ["00:19:30", "00:21:40"],
-//         title: "Chapter 10",
-//         description: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-//     },
-
-
-// ];
 
 function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
 
     const { setCurrentResource } = useContext(MainContext);
-
-    // const renderTooltip = (props, content) => (
-    //     <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
-    // );
 
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [showChapterDetailsModal, setShowChapterDetailsModal] = useState(false);
@@ -118,19 +47,19 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                             >
                                 <h5 className="mb-0 text-[9px] cursor-pointer text-primary-300 w-fit" onClick={() => {
 
-                                    setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamps[0] }));
+                                    setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
                                     workspaceContainer.current.scrollTo({
                                         top: 0,
                                         behavior: "smooth", // Enables smooth scrolling
                                     });
                                 }}>
-                                    <AccessTimeIcon size="small" /> {chapter.timestamps[0]} -{' '}
-                                    {chapter.timestamps[1]}
+                                    <AccessTimeIcon size="small" /> {chapter.timestamp[0]} -{' '}
+                                    {chapter.timestamp[1]}
                                 </h5>
                                 <h5 className="mb-0 text-xs font-bold line-clamp-3">
                                     <abbr title={chapter.title}>{chapter.title}</abbr>
                                 </h5>
-                                {/* <OverlayTrigger className='tooltip' placement="bottom" overlay={(props) => renderTooltip(props, chapter.description)}> */}
+                                {/* <OverlayTrigger className='tooltip' placement="bottom" overlay={(props) => renderTooltip(props, chapter.content)}> */}
                                 <p className="text-xs truncate line-clamp-2 text-wrap">
                                     {chapter.description}
                                 </p>

@@ -39,14 +39,14 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                     <div className="">
                         <h5 className='text-[15px] cursor-pointer text-primary-300  flex items-center gap-2 mb-2 w-fit tracking-wider' onClick={() => {
 
-                            setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamps[0] }));
+                            setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
                             onHide();
                             workspaceContainer.current.scrollTo({
                                 top: 0,
                                 behavior: "smooth", // Enables smooth scrolling
                             });
                         }}>
-                            <AccessTimeIcon size="medium" /> {chapter.timestamps[0]} - {chapter.timestamps[1]}
+                            <AccessTimeIcon size="medium" /> {chapter.timestamp[0]} - {chapter.timestamp[1]}
                         </h5>
                         <h3 className="text-xl font-semibold">{chapter.title}</h3>
                         <p className="mt-2 text-md">{chapter.description}</p>
