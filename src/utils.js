@@ -141,7 +141,7 @@ export function flattenMetadata(obj) {
                 content: metadata.chapters.content.map(chapter => ({
                     id: chapter.id,
                     title: chapter.title,
-                    content: chapter.content,
+                    description: chapter.description,
                 })),
             };
         }
@@ -165,7 +165,7 @@ export function flattenMetadata(obj) {
                 content: metadata.highlights.content.map(highlight => ({
                     id: highlight.id,
                     title: highlight.title,
-                    content: highlight.content,
+                    description: highlight.description,
                 })),
             };
         }
@@ -177,7 +177,7 @@ export function flattenMetadata(obj) {
                 content: metadata.keywords.content.map(keyword => ({
                     id: keyword.id,
                     title: keyword.title,
-                    content: keyword.content,
+                    keyword: keyword.keyword,
                 })),
             };
         }
