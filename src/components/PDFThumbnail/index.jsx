@@ -12,7 +12,7 @@ function PDFThumbnail({ item }) {
   const { theme } = useContext(MainContext);
 
   const renderTooltip = props => (
-    <Tooltip className='truncate tooltip h-80' {...props}>{item.summary.split(' ').slice(0, 30).join(' ')}...</Tooltip>
+    <Tooltip className='truncate tooltip h-80' {...props}>{item?.summary?.content?.split(' ').slice(0, 30).join(' ')}...</Tooltip>
   );
 
   return (

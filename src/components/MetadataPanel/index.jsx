@@ -284,7 +284,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       },
       keywords: {
         title: "",
-        content: "",
+        content: null,
       },
       chapters: {
         title: "",
@@ -314,8 +314,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
     let obj = object.metadata ? flattenMetadata(object) : object;
 
-    console.log(obj);
-
     // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
     for (const [key, value] of Object.entries(obj)) {
       if (
@@ -331,7 +329,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
     }
 
-    console.log(httpRequestBody);
     try {
       const httpResponseBody = await makeApiRequest(
         "/translate-metadata",
