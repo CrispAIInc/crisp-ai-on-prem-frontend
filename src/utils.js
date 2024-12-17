@@ -138,11 +138,7 @@ export function flattenMetadata(obj) {
         if (metadata.chapters) {
             flattenedMetadata.chapters = {
                 title: metadata.chapters.title,
-                content: metadata.chapters.content.map(chapter => ({
-                    id: chapter.id,
-                    title: chapter.title,
-                    description: chapter.description,
-                })),
+                content: metadata.chapters.content.map(chapter => ({ ...chapter })),
             };
         }
 
@@ -150,11 +146,7 @@ export function flattenMetadata(obj) {
         if (metadata.faqs) {
             flattenedMetadata.faqs = {
                 title: metadata.faqs.title,
-                content: metadata.faqs.content.map(faq => ({
-                    id: faq.id,
-                    question: faq.question,
-                    answer: faq.answer,
-                })),
+                content: metadata.faqs.content.map(faq => ({ ...faq }))
             };
         }
 
@@ -162,11 +154,7 @@ export function flattenMetadata(obj) {
         if (metadata.highlights) {
             flattenedMetadata.highlights = {
                 title: metadata.highlights.title,
-                content: metadata.highlights.content.map(highlight => ({
-                    id: highlight.id,
-                    title: highlight.title,
-                    description: highlight.description,
-                })),
+                content: metadata.highlights.content.map(highlight => ({ ...highlight })),
             };
         }
 
@@ -174,11 +162,7 @@ export function flattenMetadata(obj) {
         if (metadata.keywords) {
             flattenedMetadata.keywords = {
                 title: metadata.keywords.title,
-                content: metadata.keywords.content.map(keyword => ({
-                    id: keyword.id,
-                    title: keyword.title,
-                    keyword: keyword.keyword,
-                })),
+                content: metadata.keywords.content.map(keyword => ({ ...keyword })),
             };
         }
 
