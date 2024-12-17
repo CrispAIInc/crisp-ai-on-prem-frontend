@@ -1015,7 +1015,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
               <LoadingSpinner />
             </div>
             <p className="text-sm text-center loading-text text-textColor-200">
-              Loading Knowledge Base, Please wait a few seconds...
+              Loading Knowledgebase...
             </p>
           </div>
         )}
