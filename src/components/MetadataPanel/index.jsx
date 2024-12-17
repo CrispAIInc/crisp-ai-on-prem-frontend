@@ -12,7 +12,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import CustomSelectTwo from "../CustomSelectTwo";
-import { timeToSeconds } from '../../utils.js';
+import { flattenMetadata, timeToSeconds } from '../../utils.js';
 import Chip from '../Chip/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import SearchSection from '../SearchSection';
@@ -192,7 +192,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
   }, [jumpToPage, numPages, isPdfLoaded]);
 
   useEffect(() => {
-    console.log("hello");
     if (activeView === "resource") {
       setTranslatedResource(currentResource);
       if (currentResource) { translateMetadata("en", currentResource); }
@@ -312,8 +311,13 @@ const MetadataPanel = ({ workspaceContainer }) => {
       "highlights",
       "faqs"
     ];
+
+    let obj = object.metadata ? flattenMetadata(object) : object;
+
+    console.log(obj);
+
     // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
-    for (const [key, value] of Object.entries(object)) {
+    for (const [key, value] of Object.entries(obj)) {
       if (
         TRANSLATABLE_KEYS.includes(key) &&
         (key !== "transcript" || currentResourceType !== "pdf")
@@ -326,6 +330,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
           typeof value === "object" ? value.content : value;
       }
     }
+
+    console.log(httpRequestBody);
     try {
       const httpResponseBody = await makeApiRequest(
         "/translate-metadata",
@@ -676,7 +682,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.keywords?.content?.split(', ').map(({ id, keyword }) => <Chip key={id} content={keyword} />)
+                        translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
                       }
                       {/* {translatedResource?.keywords?.content} */}
                     </p>
@@ -746,7 +752,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.keywords?.content?.split(', ').map(({ keyword, id }) => <Chip key={id} content={keyword} />)
+                        translatedResource?.keywords?.content?.map(({ keyword, id }) => <Chip key={id} content={keyword} />)
                       }
                       {/* {translatedResource?.keywords?.content} */}
                     </p>

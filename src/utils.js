@@ -127,3 +127,81 @@ export function decimalSecondsToHHMMSS(decimalSeconds) {
 
     return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
+
+
+export function flattenMetadata(obj) {
+    const { metadata, ...rest } = obj;
+    const flattenedMetadata = {};
+
+    if (metadata) {
+        // Flatten chapters
+        if (metadata.chapters) {
+            flattenedMetadata.chapters = {
+                title: metadata.chapters.title,
+                content: metadata.chapters.content.map(chapter => ({
+                    id: chapter.id,
+                    title: chapter.title,
+                    content: chapter.content,
+                })),
+            };
+        }
+
+        // Flatten FAQs
+        if (metadata.faqs) {
+            flattenedMetadata.faqs = {
+                title: metadata.faqs.title,
+                content: metadata.faqs.content.map(faq => ({
+                    id: faq.id,
+                    question: faq.question,
+                    answer: faq.answer,
+                })),
+            };
+        }
+
+        // Flatten highlights
+        if (metadata.highlights) {
+            flattenedMetadata.highlights = {
+                title: metadata.highlights.title,
+                content: metadata.highlights.content.map(highlight => ({
+                    id: highlight.id,
+                    title: highlight.title,
+                    content: highlight.content,
+                })),
+            };
+        }
+
+        // Flatten keywords
+        if (metadata.keywords) {
+            flattenedMetadata.keywords = {
+                title: metadata.keywords.title,
+                content: metadata.keywords.content.map(keyword => ({
+                    id: keyword.id,
+                    title: keyword.title,
+                    content: keyword.content,
+                })),
+            };
+        }
+
+        // Flatten summary
+        if (metadata.summary) {
+            flattenedMetadata.summary = {
+                id: metadata.summary.id,
+                title: metadata.summary.title,
+                content: metadata.summary.content,
+            };
+        }
+
+        // Include other metadata keys, if any
+        Object.keys(metadata).forEach(key => {
+            if (!flattenedMetadata[key] && !['chapters', 'faqs', 'highlights', 'keywords', 'summary'].includes(key)) {
+                flattenedMetadata[key] = metadata[key];
+            }
+        });
+    }
+
+    // Combine the flattened metadata with the rest of the object
+    return {
+        ...rest,
+        ...flattenedMetadata,
+    };
+}
