@@ -3,10 +3,11 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { MainContext } from '../../contexts/mainContext';
 import { useContext } from 'react';
 import { ChapterDetailsModal } from '../ChapterDetailsModal';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
 
-    const { setCurrentResource } = useContext(MainContext);
+    const { setCurrentResource, setJumpToPage } = useContext(MainContext);
 
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [showChapterDetailsModal, setShowChapterDetailsModal] = useState(false);
@@ -45,17 +46,28 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                                     : 'text-textColor-300'
                                     }`}
                             >
-                                <h5 className="mb-0 text-[9px] cursor-pointer text-primary-300 w-fit" onClick={() => {
+                                {
+                                    chapter.timestamp ? <h5 className="mb-0 text-[9px] cursor-pointer text-primary-300 w-fit" onClick={() => {
 
-                                    setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
-                                    workspaceContainer.current.scrollTo({
-                                        top: 0,
-                                        behavior: "smooth", // Enables smooth scrolling
-                                    });
-                                }}>
-                                    <AccessTimeIcon size="small" /> {chapter.timestamp[0]} -{' '}
-                                    {chapter.timestamp[1]}
-                                </h5>
+                                        setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
+                                        workspaceContainer.current.scrollTo({
+                                            top: 0,
+                                            behavior: "smooth", // Enables smooth scrolling
+                                        });
+                                    }}>
+                                        <AccessTimeIcon size="small" /> {chapter.timestamp[0]} -{' '}
+                                        {chapter.timestamp[1]}
+                                    </h5> : <div className='flex items-center gap-2 mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
+
+                                        setJumpToPage({ page: parseInt(chapter.page) });
+                                        workspaceContainer.current.scrollTo({
+                                            top: 0,
+                                            behavior: "smooth", // Enables smooth scrolling
+                                        });
+                                    }}>
+                                        <MenuBookIcon /> <span className="text-md">{chapter.page}</span>
+                                    </div>
+                                }
                                 <h5 className="mb-0 text-xs font-bold line-clamp-3">
                                     <abbr title={chapter.title}>{chapter.title}</abbr>
                                 </h5>

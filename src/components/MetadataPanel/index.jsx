@@ -629,20 +629,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   </Accordion>
                 </>}
 
-                {translatedResource?.topic_summaries?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.topic_summaries?.title}>
-                    <p
-                      className={`text-md ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
-                    ></p>
-                  </Accordion>
-                </>}
-
-                {translatedResource?.keywords?.content !== undefined && (<>
+                {translatedResource?.keywords?.content !== undefined && <>
                   <Accordion heading={translatedResource?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
@@ -653,7 +640,58 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       {/* {translatedResource?.keywords?.content} */}
                     </p>
                   </Accordion>
-                </>)}
+                </>}
+                {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
+                  <div>
+                    {
+                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
+                        <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
+                      ))
+                    }
+
+                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
+                  </div>
+                </Accordion>}
+
+                {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
+                  {isMobile ? (
+                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
+                  ) : (
+                    <>
+                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
+                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
+                    </>
+                  )}
+                </Accordion>}
+
+                {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
+                  <Faqs heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
+                </div>}
+
+                {/* {translatedResource?.topic_summaries?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.topic_summaries?.title}>
+                    <p
+                      className={`text-md ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
+
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                    ></p>
+                  </Accordion>
+                </>} */}
+                {/* 
+                {translatedResource?.keywords?.content !== undefined && (<>
+                  <Accordion heading={translatedResource?.keywords?.title}>
+                    <p
+                      className={`flex items-center gap-2 flex-wrap`}
+                    >
+                      {
+                        translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
+                      }
+                    </p>
+                  </Accordion>
+                </>)} */}
               </div>
             ) : (
               <div className="flex items-center gap-3 mt-10">

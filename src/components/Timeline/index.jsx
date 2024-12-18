@@ -4,14 +4,14 @@ import { useContext, useEffect, useState } from 'react';
 // import Tooltip from "react-bootstrap/Tooltip";
 import { MainContext } from '../../contexts/mainContext';
 import { timeToSeconds } from '../../utils';
-import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { ChapterDetailsModal } from '../ChapterDetailsModal';
 
 function Timeline({ theme, chapters, workspaceContainer }) {
 
     // const { handleVideoLinkClick } = useReferenceLinkClick();
 
-    const { fromChat,
+    const { setJumpToPage,
         isPlayerReady,
         setCurrentResource,
         setFromChat,
@@ -62,16 +62,27 @@ function Timeline({ theme, chapters, workspaceContainer }) {
                                         <img src={chapter.thumbnail} alt="chapter" className="object-cover w-full h-full rounded-md" />
                                     </div>
                                     <div className={`flex flex-col gap-0 ${theme === 'dark' ? 'text-textColor-100' : " text-textColor-300"}`}>
-                                        <h5 className='mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
+                                        {
+                                            chapter.timestamp ? <h5 className='mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
 
-                                            setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
-                                            workspaceContainer.current.scrollTo({
-                                                top: 0,
-                                                behavior: "smooth", // Enables smooth scrolling
-                                            });
-                                        }}>
-                                            <AccessTimeIcon size="small" /> {chapter.timestamp[0]} - {chapter.timestamp[1]}
-                                        </h5>
+                                                setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
+                                                workspaceContainer.current.scrollTo({
+                                                    top: 0,
+                                                    behavior: "smooth", // Enables smooth scrolling
+                                                });
+                                            }}>
+                                                <AccessTimeIcon size="small" /> {chapter.timestamp[0]} - {chapter.timestamp[1]}
+                                            </h5> : <div className='flex items-center gap-2 mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
+
+                                                setJumpToPage({ page: parseInt(chapter.page) });
+                                                workspaceContainer.current.scrollTo({
+                                                    top: 0,
+                                                    behavior: "smooth", // Enables smooth scrolling
+                                                });
+                                            }}>
+                                                <MenuBookIcon /> <span className="text-md">{chapter.page}</span>
+                                            </div>
+                                        }
                                         <h5 className="mb-0 text-lg font-semibold line-clamp-1">{chapter.title}</h5>
                                         {/* <OverlayTrigger className='tooltip' placement={index % 2 === 0 ? 'bottom' : "bottom"} overlay={(props) => renderTooltip(props, chapter.description)}> */}
                                         <p className="text-xs truncate line-clamp-2 text-wrap" onMouseEnter={() => setHoveredChapterId(chapter.id)} onMouseOver={() => setHoveredChapterId(-1)}>{chapter.description}</p>
