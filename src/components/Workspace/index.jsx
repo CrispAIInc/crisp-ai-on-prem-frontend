@@ -24,9 +24,9 @@ const Workspace = () => {
     } = useContext(MainContext);
     return (
         <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
-            <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-1/2 top-10 -z-0 blur-[160px]"></div>
+            <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/2 top-10 -z-0 blur-[160px]"></div>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-0 blur-[160px]"></div>
-            <div className="w-56 h-56 bg-green-500 rounded-full absolute left-3/4 top-80 -z-0 blur-[160px]"></div>
+            <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-80 -z-0 blur-[160px]"></div>
             {/* logo */}
             <section className="flex items-center justify-center gap-1 mt-3">
                 <img src="/app-logo.svg" alt="logo" className="w-16 h-16" width="64" height="46" />

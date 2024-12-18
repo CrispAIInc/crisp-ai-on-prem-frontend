@@ -212,8 +212,8 @@ const GenStories = ({ sidebarWidth }) => {
                                     <div className={`message bot-message h-full`}>
                                         <div
                                             className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
-                                                ? "bg-separator text-textColor-200"
-                                                : "bg-background_workspace"
+                                                ? "bg-slate-300 text-textColor-200"
+                                                : "bg-textColor-300"
                                                 } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
                                         >
                                             <>
