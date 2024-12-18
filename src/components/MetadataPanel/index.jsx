@@ -368,37 +368,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
   }
 
-  /**
-   * response: {
-   *  lang: 'en',
-   *  summary: {
-   *    title: '',
-   *    content: ''
-   * },
-   * keywords: {
-   * title: '',
-   * content: [keyword1, keyword2, etc.]
-   * },
-   * chapters: {
-   * title: '',
-   * content: [
-   * {
-   * id,
-   * thumbnail,
-   * timastamps: []
-   * title,
-   * description
-   * }]
-   * }
-   * 
-   * }
-   */
-
-
-  const renderTooltip = (props, content) => (
-    <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
-  );
-
   const [visibleHighlightCount, setVisibleHighlightCount] = useState(3);
   const showMoreHighlights = () => {
     setVisibleHighlightCount((prevCount) => prevCount + 3);
@@ -448,7 +417,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {/* generate visual/combined summary */}
                 <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
-                  {!isGeneratingCombinedSummary ? <div
+                  {/* {!isGeneratingCombinedSummary ? <div
                     className={`user-select-none flex items-center justify-center gap-2 py-1 mb-2 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`} onClick={() => generateVisualAndCombinedSummary()}>
                     <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
@@ -466,7 +435,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         Generating Summaries...
                       </span>
                     </div>
-                  )}
+                  )} */}
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
