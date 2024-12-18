@@ -741,8 +741,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
         <div className="models-list-button">
           <CustomButton
             className={`my-0 ${theme === "light"
-              ? "bg-white !text-dark border border-textColor-100"
-              : " !text-textColor-100 !border !border-textColor-300"
+              ? "bg-light-hover-100/30 !text-dark border border-textColor-100"
+              : " !text-textColor-100 !border bg-light-hover-200/20 !border-textColor-300"
               }`}
             style={{ width: "100%" }}
             onClick={selectLLMModels}

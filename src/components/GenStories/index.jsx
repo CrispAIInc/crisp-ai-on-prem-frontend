@@ -123,8 +123,8 @@ const GenStories = ({ sidebarWidth }) => {
             <section className="flex flex-wrap items-center justify-center gap-3 ">
                 <CustomButton
                     className={` my-0 ${theme === "light"
-                        ? "bg-white !text-dark border border-textColor-100"
-                        : " !text-textColor-100 !border !border-textColor-300"
+                        ? "bg-light-hover-100/30 !text-dark border border-textColor-100"
+                        : " !text-textColor-100 !border !border-textColor-300 bg-light-hover-200/20"
                         } genstory-models-list-button`}
                     onClick={() => setShowLLMModal(true)}
                     style={{ width: "100%" }}
@@ -212,7 +212,7 @@ const GenStories = ({ sidebarWidth }) => {
                                     <div className={`message bot-message h-full`}>
                                         <div
                                             className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
-                                                ? "bg-slate-300 text-textColor-200"
+                                                ? "bg-light-hover-100/40 text-textColor-200"
                                                 : "bg-textColor-300"
                                                 } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
                                         >

@@ -90,3 +90,7 @@ code {
 input {
   padding: 0 !important;
 }
+
+.tab-content {
+  z-index: 2;
+}
