@@ -11,7 +11,7 @@ function StagedVideoThumbnail({ item }) {
     const { theme } = useContext(MainContext);
 
     const renderTooltip = props => (
-        <Tooltip className='h-auto truncate tooltip' {...props}>{item?.summary?.content?.split(' ').slice(0, 30).join(' ')}...</Tooltip>
+        <Tooltip className='h-auto truncate tooltip' {...props}>{item?.metadata?.summary?.content?.split(' ').slice(0, 30).join(' ')}...</Tooltip>
     );
 
     return (
