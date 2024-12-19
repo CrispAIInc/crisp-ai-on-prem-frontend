@@ -34,7 +34,7 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                             {/* Image */}
                             <div className="w-full rounded-md">
                                 <img
-                                    src={chapter.thumbnail}
+                                    src={import.meta.env.VITE_API_ENDPOINT + chapter.keyframe_url}
                                     alt="chapter"
                                     className="object-cover w-full h-20 rounded-md"
                                 />

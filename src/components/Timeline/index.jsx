@@ -59,7 +59,7 @@ function Timeline({ theme, chapters, workspaceContainer }) {
                                 <div className={`relative grid md:grid-cols-[30%,1fr] items-center gap-3 p-3 bg-background rounded-md shadow-md content`}>
                                     {/* <div className="absolute right-0 w-0 h-0 mr-4 border-t-8 border-b-8 border-r-8 border-transparent border-r-blue-500"></div> */}
                                     <div className="w-full rounded-md h-fit">
-                                        <img src={chapter.thumbnail} alt="chapter" className="object-cover w-full h-full rounded-md" />
+                                        <img src={import.meta.env.VITE_API_ENDPOINT + chapter.keyframe_url} alt="chapter" className="object-cover w-full h-full rounded-md" />
                                     </div>
                                     <div className={`flex flex-col gap-0 ${theme === 'dark' ? 'text-textColor-100' : " text-textColor-300"}`}>
                                         {

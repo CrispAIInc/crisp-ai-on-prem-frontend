@@ -4,13 +4,11 @@ import { MainContext } from '../../contexts/mainContext';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 function HorizontalCard({ item, workspaceContainer }) {
 
     const { setCurrentResource, theme, setJumpToPage } = useContext(MainContext);
-    const { handlePDFLinkClick } = useReferenceLinkClick(false);
 
     const renderTooltip = (props, content) => (
         <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
@@ -20,7 +18,7 @@ function HorizontalCard({ item, workspaceContainer }) {
         <div key={item.id} className={`relative grid grid-cols-[30%,1fr] gap-3 p-3 bg-background rounded-md shadow-sm sm:w-2/3 md:w-[40%] mb-4`}>
             {/* item thumbnail */}
             <div className="w-full rounded-md min-w-2/6">
-                <img src={item.thumbnail} alt="chapter" className="object-cover w-full h-full rounded-md" />
+                <img src={import.meta.env.VITE_API_ENDPOINT + item.keyframe_url} alt="chapter" className="object-cover w-full h-full rounded-md" />
             </div>
             {/* item content */}
             <div>
