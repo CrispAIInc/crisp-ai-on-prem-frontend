@@ -31,7 +31,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                     {/* left part => thumbnail */}
                     <div className="flex items-center justify-center w-2/3 mx-auto mb-4 sm:w-full sm:h-fit sm:mb-0 ">
                         <img
-                            src={chapter.thumbnail}
+                            src={import.meta.env.VITE_API_ENDPOINT + (chapter.keyframe_url ?? chapter.thumbnail_url)}
                             alt="chapter thumbnail"
                             className="object-cover w-full h-full border rounded-lg shadow-2xl border-primary-300"
                         />
