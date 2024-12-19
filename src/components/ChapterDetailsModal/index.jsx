@@ -2,10 +2,11 @@ import { useContext } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer }) {
 
-    const { theme, setCurrentResource } = useContext(MainContext);
+    const { theme, setCurrentResource, setJumpToPage } = useContext(MainContext);
 
     return (
         <Modal
@@ -37,17 +38,29 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                     </div>
                     {/* right part => details */}
                     <div className="">
-                        <h5 className='text-[15px] cursor-pointer text-primary-300  flex items-center gap-2 mb-2 w-fit tracking-wider' onClick={() => {
+                        {
+                            chapter.timestamp ? <div className='text-[15px] cursor-pointer text-primary-300  flex items-center gap-2 mb-2 w-fit tracking-wider' onClick={() => {
 
-                            setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
-                            onHide();
-                            workspaceContainer.current.scrollTo({
-                                top: 0,
-                                behavior: "smooth", // Enables smooth scrolling
-                            });
-                        }}>
-                            <AccessTimeIcon size="medium" /> {chapter.timestamp[0]} - {chapter.timestamp[1]}
-                        </h5>
+                                setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
+                                onHide();
+                                workspaceContainer.current.scrollTo({
+                                    top: 0,
+                                    behavior: "smooth", // Enables smooth scrolling
+                                });
+                            }}>
+                                <AccessTimeIcon size="medium" /> {chapter.timestamp[0]} - {chapter.timestamp[1]}
+                            </div> : <div className='flex items-center gap-2 mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
+
+                                setJumpToPage({ page: parseInt(chapter.page) });
+                                onHide();
+                                workspaceContainer.current.scrollTo({
+                                    top: 0,
+                                    behavior: "smooth", // Enables smooth scrolling
+                                });
+                            }}>
+                                <MenuBookIcon /> <span className="text-md">{chapter.page}</span>
+                            </div>
+                        }
                         <h3 className="text-xl font-semibold">{chapter.title}</h3>
                         <p className="mt-2 text-md">{chapter.description}</p>
                     </div>
