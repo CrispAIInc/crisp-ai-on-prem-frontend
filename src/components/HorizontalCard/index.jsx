@@ -18,7 +18,7 @@ function HorizontalCard({ item, workspaceContainer }) {
         <div key={item.id} className={`relative grid grid-cols-[30%,1fr] gap-3 p-3 bg-background rounded-md shadow-sm sm:w-2/3 md:w-[40%] mb-4`}>
             {/* item thumbnail */}
             <div className="w-full rounded-md min-w-2/6">
-                <img src={import.meta.env.VITE_API_ENDPOINT + item.keyframe_url} alt="chapter" className="object-cover w-full h-full rounded-md" />
+                <img src={import.meta.env.VITE_API_ENDPOINT + (item.keyframe_url ?? item.thumbnail_url)} alt="chapter" className="object-cover w-full h-full rounded-md" />
             </div>
             {/* item content */}
             <div>
