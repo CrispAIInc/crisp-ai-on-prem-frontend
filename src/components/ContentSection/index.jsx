@@ -224,8 +224,10 @@ const ContentSection = ({
         }
         else {
             const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                // console.log(item.category.includes(category));
+                // console.log(item.file_type === format || format === 'all');
                 if (item.category.includes(category) && format === undefined) {
-                    item.is_selected = !selectedAll;
+                    item.is_selected = !item.is_selected;
                     // setSelectedSources((prev) => {
                     //     const itemExist = prev.find(i => i.source_path === item.source_path);
                     //     if (!itemExist) {
@@ -241,9 +243,9 @@ const ContentSection = ({
                     //     return prev;
                     // });
                 }
-                else if (item.category.includes(category) && item.file_type === format) {
-                    console.log('heree');
-                    item.is_selected = !selectedAll;
+                else if (item.category.includes(category) && (item.file_type === format || format === 'all')) {
+                    // console.log('heree');
+                    item.is_selected = !item.is_selected;
                     // setSelectedSources((prev) => {
                     //     const itemExist = prev.find(i => i.source_path === item.source_path);
                     //     if (!itemExist) {
@@ -259,7 +261,7 @@ const ContentSection = ({
                     //     return prev;
                     // });
                 }
-                if (item.is_selected) setSelectedAll(false);
+                // if (item.is_selected) setSelectedAll(false);
                 return item;
             });
             setKnowledgeBase(updatedKnowledgeBase);

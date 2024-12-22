@@ -274,7 +274,7 @@ export function SourceExplorer(props) {
                     <Checkbox
                         className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
                             }`}
-                        checked={selectedAll}
+                        checked={selectedAll || props.knowledgeBase.some((item) => item.is_selected)}
                         onChange={() => props.handleSelectAllCheckboxChange(currentPath)}
                         inputProps={{ "aria-label": "Select All Sources" }}
                         label="Select All Sources"
