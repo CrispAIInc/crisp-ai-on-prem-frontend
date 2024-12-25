@@ -1,25 +1,38 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import PreviewModal from '../PreviewModal';
 
 function HorizontalCard({ item, workspaceContainer }) {
 
     const { setCurrentResource, theme, setJumpToPage } = useContext(MainContext);
+    const [isLightboxOpen, setLightboxOpen] = useState(false);
+
+
 
     const renderTooltip = (props, content) => (
         <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
     );
 
+    function closeLightbox() {
+        setLightboxOpen(false);
+    }
+
+    const thumbnail = import.meta.env.VITE_API_ENDPOINT + (item.keyframe_url ?? item.thumbnail_url);
+
     return (
         <div key={item.id} className={`relative grid grid-cols-[30%,1fr] gap-3 p-3 bg-background rounded-md shadow-sm sm:w-2/3 md:w-[40%] mb-4`}>
             {/* item thumbnail */}
-            <div className="w-full rounded-md min-w-2/6">
-                <img src={import.meta.env.VITE_API_ENDPOINT + (item.keyframe_url ?? item.thumbnail_url)} alt="chapter" className="object-cover w-full h-full rounded-md" />
+            <div className="w-full rounded-md cursor-pointer min-w-2/6" onClick={() => setLightboxOpen(true)}>
+                <img src={thumbnail} alt="chapter" className="object-cover w-full h-full rounded-md" />
             </div>
+            {isLightboxOpen && (
+                <PreviewModal closeLightbox={closeLightbox} content={thumbnail} classNames="w-1/3 h-full" />
+            )}
             {/* item content */}
             <div>
                 {
