@@ -44,8 +44,9 @@ function HorizontalCard({ item, workspaceContainer }) {
                         <MenuBookIcon /> <span className="text-md">{item.page}</span>
                     </div>
                 }
-                <OverlayTrigger className='tooltip' placement="right" overlay={(props) => renderTooltip(props, item.title)}>
-                    <h5 className={`mb-0 text-sm font-semibold line-clamp-2 w-fit ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>{item.title}</h5>
+                <h5 className={`mb-0 text-sm font-semibold line-clamp-2 w-fit ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>{item.title}</h5>
+                <OverlayTrigger className='tooltip' placement="right" overlay={(props) => renderTooltip(props, item.description)}>
+                    <p className="text-xs truncate line-clamp-3 text-wrap">{item.description}</p>
                 </OverlayTrigger>
             </div>
         </div>
