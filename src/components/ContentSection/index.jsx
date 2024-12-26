@@ -1,3 +1,6 @@
+
+import HomeIcon from '@mui/icons-material/Home';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useContext, useEffect, useState } from "react";
 
 import makeApiRequest from "../../api";
@@ -14,8 +17,19 @@ import BaseHeading from '../BaseHeading';
 import NoData from '../NoData';
 import CustomButton from '../CustomButton';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import UploadIcon from '@mui/icons-material/Upload';
 import SearchSection from '../SearchSection';
 import { timeToSeconds } from '../../utils';
+import ButtonDropdown from '../ButtonDropdown';
+import {
+    Home,
+    ArrowForward,
+    Edit,
+    Upload,
+    Settings,
+    Folder,
+    Search,
+} from "@mui/icons-material";
 
 const ContentSection = ({
     onThumbnailClick,
@@ -23,6 +37,30 @@ const ContentSection = ({
     knowledgeBase,
     setKnowledgeBase,
 }) => {
+
+
+
+    // Example menu data
+    const menuData = [
+        { label: "Home", icon: Home },
+        {
+            label: "Ingestion",
+            icon: ArrowForward,
+            children: [
+                { label: "Index", icon: Folder },
+                { label: "Upload", icon: Upload },
+            ],
+        },
+        {
+            label: "MRag",
+            icon: Folder,
+            children: [
+                { label: "Sources", icon: Folder },
+                { label: "Discovery", icon: Search },
+            ],
+        },
+        { label: "Settings", icon: Settings },
+    ];
     const {
         isPlayerReady,
         resourceURL,
@@ -288,46 +326,70 @@ const ContentSection = ({
             <section className='relative flex flex-col items-start h-full'>
 
                 <div className="w-full max-w-4xl pr-3">
-                    {/* New resource */}
-                    <div className="upload-source">
-                        {
-                            isUploading ? <LoadingSpinner videoSpinner={true} /> :
+                    {/* home */}
+                    <div
+                        className={`source-explorer ml-2 flex mb-1 items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                    >
+                        <HomeIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Home</span>
+                    </div>
+                    {/* Ingestion */}
+                    <div className="flex flex-col justify-start gap-2 mb-1">
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Ingestion</span>
+                        <div className="flex flex-col gap-0 ml-2">
+                            {/* <div
+                                className={`source-explorer  flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={handleExploreSources}
+                            >
+                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Indexer</span>
+                            </div> */}
+                            <ButtonDropdown openSourceExplorer={handleExploreSources} />
+                            <div
+                                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={handleAddNewResource}
+                            >
+                                <UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Upload</span>
+                            </div>
+                        </div>
+                    </div>
+                    {/* mrag */}
+                    <div className="flex flex-col justify-start gap-2 mb-2">
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>MRAG</span>
+                        <div className="flex flex-col ml-2">
+                            <div
+                                className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={handleExploreSources}
+                            >
+                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Sources</span>
+                            </div>
+                            <div className="global-search">
                                 <div
                                     className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={handleAddNewResource}
+                                    onClick={() => setIsSearching(!isSearching)}
                                 >
-                                    <AddOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Source</span>
+                                    <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
                                 </div>
-                        }
-                    </div>
-
-                    {/* resource explorer */}
-                    <div
-                        className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                        onClick={handleExploreSources}
-                    >
-                        <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Source Explorer</span>
-                    </div>
-
-                    {/* Search */}
-                    <div className="global-search">
-                        <div
-                            className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                            onClick={() => setIsSearching(!isSearching)}
-                        >
-                            <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
+                                {
+                                    isSearching && (
+                                        <div className="flex items-center gap-2">
+                                            {/* <span className={`cursor-pointer text-2xl ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>&times;</span> */}
+                                            <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                                        </div>
+                                    )
+                                }
+                            </div>
                         </div>
-                        {
-                            isSearching && (
-                                <div className="flex items-center gap-2">
-                                    {/* <span className={`cursor-pointer text-2xl ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>&times;</span> */}
-                                    <SearchSection chatLoaded={chatLoaded} className='flex-1' />
-                                </div>
-                            )
-                        }
+                    </div>
+                    {/* Settings */}
+                    <div
+                        className={`source-explorer ml-2 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                    >
+                        <SettingsIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
                     </div>
                 </div>
 
