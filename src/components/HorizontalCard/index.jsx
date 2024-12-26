@@ -31,7 +31,7 @@ function HorizontalCard({ item, workspaceContainer }) {
                 <img src={thumbnail} alt="chapter" className="object-cover w-full h-full rounded-md" />
             </div>
             {isLightboxOpen && (
-                <PreviewModal closeLightbox={closeLightbox} content={thumbnail} classNames="w-1/3 h-full" />
+                <PreviewModal closeLightbox={closeLightbox} content={thumbnail} classNames="!w-1/3 h-full" />
             )}
             {/* item content */}
             <div>
