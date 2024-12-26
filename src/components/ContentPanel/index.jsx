@@ -205,7 +205,7 @@ const ContentPanel = () => {
                 </Tab>
             </Tabs>
             <div
-                className={`px-2 py-2 rounded-md w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
+                className={`w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
                     setSidebarWidth(prev => {
