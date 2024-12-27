@@ -10,12 +10,16 @@
   --background-color: #171717;
   --background-workspace-color: #242424;
   --separator-color: #1e1e1e;
+  --hover-background: #d9e2ec21;
+  --text-color: "#ABAEB4";
 }
 
 .light {
   --background-color: #ffffff;
   --background-workspace-color: #fafafa;
   --separator-color: #e3e3e4;
+  --hover-background: #f0f4f830;
+  --text-color: "#333333";
 }
 
 * {

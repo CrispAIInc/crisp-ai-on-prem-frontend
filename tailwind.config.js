@@ -88,6 +88,8 @@ export default {
           200: "#77A8F9",
           300: "#5293FD",
         },
+        fontColor: "var(--text-color)",
+        hoverBg: "var(--hover-background)",
         textColor: {
           100: "#ABAEB4",
           200: "#78716C",

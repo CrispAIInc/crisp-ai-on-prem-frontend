@@ -3,6 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 import FileUploaderModal from "../FileUploaderModal";
 import toast from 'react-simple-toasts';
+import Dropdown from '../Dropdown';
 
 export function IndexModal({ show, onHide }) {
 

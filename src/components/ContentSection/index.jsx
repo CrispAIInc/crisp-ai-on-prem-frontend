@@ -41,29 +41,31 @@ const ContentSection = ({
 
 
     // Example menu data
-    const menuData = [
-        { label: "Home", icon: Home },
-        {
-            label: "Ingestion",
-            icon: ArrowForward,
-            children: [
-                { label: "Index", icon: Folder },
-                { label: "Upload", icon: Upload },
-            ],
-        },
-        {
-            label: "MRag",
-            icon: Folder,
-            children: [
-                { label: "Sources", icon: Folder },
-                { label: "Discovery", icon: Search },
-            ],
-        },
-        { label: "Settings", icon: Settings },
-    ];
+    // const menuData = [
+    //     { label: "Home", icon: Home },
+    //     {
+    //         label: "Ingestion",
+    //         icon: ArrowForward,
+    //         children: [
+    //             { label: "Index", icon: Folder },
+    //             { label: "Upload", icon: Upload },
+    //         ],
+    //     },
+    //     {
+    //         label: "MRag",
+    //         icon: Folder,
+    //         children: [
+    //             { label: "Sources", icon: Folder },
+    //             { label: "Discovery", icon: Search },
+    //         ],
+    //     },
+    //     { label: "Settings", icon: Settings },
+    // ];
+
     const {
         isPlayerReady,
         resourceURL,
+        categoryOptions,
         currentResource,
         setCurrentResource,
         player,
@@ -77,17 +79,17 @@ const ContentSection = ({
         chatLoaded
     } = useContext(MainContext);
 
-    const categoryOptions = [
-        { value: "all", label: "All" },
-        { value: "generic", label: "Generic" },
-        { value: "investment", label: "Investment" },
-        { value: "human resources", label: "Human Resources" },
-        { value: "customer interaction", label: "Customer Interaction" },
-        { value: "documentaries", label: "Documentaries" },
-        { value: "entertainment", label: "Entertainment" },
-        { value: "insurance", label: "Insurance" },
-        { value: "technical content", label: "Technical Content" },
-    ];
+    // const categoryOptions = [
+    //     { value: "all", label: "All" },
+    //     { value: "generic", label: "Generic" },
+    //     { value: "investment", label: "Investment" },
+    //     { value: "human resources", label: "Human Resources" },
+    //     { value: "customer interaction", label: "Customer Interaction" },
+    //     { value: "documentaries", label: "Documentaries" },
+    //     { value: "entertainment", label: "Entertainment" },
+    //     { value: "insurance", label: "Insurance" },
+    //     { value: "technical content", label: "Technical Content" },
+    // ];
 
     const categoryValues = categoryOptions.map((option) => option.value);
 
