@@ -1,6 +1,8 @@
 import { useContext, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
+import FileUploaderModal from "../FileUploaderModal";
+import toast from 'react-simple-toasts';
 
 export function IndexModal({ show, onHide }) {
 
@@ -8,9 +10,15 @@ export function IndexModal({ show, onHide }) {
 
     const [indexName, setIndexName] = useState('');
 
-    function createIndex() {
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
-        onHide();
+    function createIndex() {
+        if (indexName === '') {
+            toast('Index cannot be empty', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            return;
+        }
+        setIsUploadModalOpen(true);
+        // onHide();
     }
 
     return (
@@ -35,7 +43,9 @@ export function IndexModal({ show, onHide }) {
                         id='indexName' value={indexName} onChange={(e) => setIndexName(e.target.value)}
                         className={`block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${theme === 'dark' && 'bg-textColor-300'}`}
                         required
+                        onKeyDown={(e) => e.key === 'Enter' && createIndex()}
                     />
+                    {isUploadModalOpen && <FileUploaderModal show={isUploadModalOpen} hideIndexModal={onHide} onHide={() => setIsUploadModalOpen(false)} />}
                 </div>
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
