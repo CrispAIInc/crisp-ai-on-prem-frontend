@@ -22,11 +22,12 @@ const Dropdown = ({ options }) => {
                 className={`w-full px-4 py-2 text-left  rounded-md shadow-sm focus:!outline-none ${theme === 'light' ? 'hover:bg-light-hover-100 !border bg-white' : 'hover:bg-background_workspace !border !border-slate-500 bg-textColor-300'}`}
             >
                 {selectedOption}
-                <span className="float-right">▾</span>
+                <span className={`float-right text-xl p-0 ${isOpen ? "rotate-180" : "rotate-0"
+                    }`}>▾</span>
             </button>
 
             {isOpen && (
-                <ul className={`absolute z-10 pl-0 w-full mt-1 rounded-md shadow-lg ${theme === 'light' ? 'bg-white !border' : 'bg-textColor-300 !border !border-slate-500 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300'}`}>
+                <ul className={`absolute z-10 pl-0 w-full max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 mt-1 rounded-md shadow-lg ${theme === 'light' ? 'bg-white !border' : 'bg-textColor-300 !border !border-slate-500'}`}>
                     {options.map((option) => (
                         <li
                             key={option.label}
