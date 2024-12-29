@@ -4,6 +4,7 @@ import { MainContext } from '../../contexts/mainContext';
 import { useContext } from 'react';
 import { ChapterDetailsModal } from '../ChapterDetailsModal';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import PreviewModal from '../PreviewModal';
 
 function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
 
@@ -15,6 +16,13 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
     const hideChapterDetails = () => {
         setShowChapterDetailsModal(false);
     };
+
+    const [isLightboxOpen, setLightboxOpen] = useState(false);
+    function closeLightbox() {
+        setLightboxOpen(false);
+    }
+
+    // const [selectedChapter, setSelectedChapter] = useState(null)
 
     return (
         <div className="main overflow-x-auto overflow-y-hidden relative m-auto w-11/12 max-w-[90vw] py-10 custom-scroll">
@@ -32,13 +40,14 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                         {/* Timeline content */}
                         <div className="relative flex flex-col gap-2 p-2 rounded-md shadow-md bg-background">
                             {/* Image */}
-                            <div className="w-full rounded-md">
+                            <div className="w-full rounded-md cursor-pointer" onClick={() => { setSelectedChapter(chapter); setLightboxOpen(true); }}>
                                 <img
                                     src={import.meta.env.VITE_API_ENDPOINT + (chapter.keyframe_url ?? chapter.thumbnail_url)}
                                     alt="chapter"
                                     className="object-cover w-full h-20 rounded-md"
                                 />
                             </div>
+
                             {/* Text Content */}
                             <div
                                 className={`flex flex-col gap-0 ${theme === 'dark'
@@ -84,6 +93,9 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                         </div>
                     </div>
                 ))}
+                {(selectedChapter !== null && isLightboxOpen) && (
+                    <PreviewModal closeLightbox={closeLightbox} content={import.meta.env.VITE_API_ENDPOINT + (selectedChapter.keyframe_url ?? selectedChapter.thumbnail_url)} classNames="w-full sm:w-2/3 md:w-1/2 lg:w-1/3 h-full" />
+                )}
                 {selectedChapter !== null && <ChapterDetailsModal show={showChapterDetailsModal} onHide={hideChapterDetails} chapter={selectedChapter} workspaceContainer={workspaceContainer} />}
             </div>
         </div>
