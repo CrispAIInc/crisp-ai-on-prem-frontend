@@ -27,7 +27,7 @@ function TimelineItem({ chapter, index, theme, workspaceContainer, handleReadMor
                     <img src={thumbnail} alt="chapter" className="object-cover w-full h-full rounded-md" />
                 </div>
                 {isLightboxOpen && (
-                    <PreviewModal closeLightbox={closeLightbox} content={thumbnail} classNames="!w-1/3 h-full" />
+                    <PreviewModal closeLightbox={closeLightbox} content={thumbnail} classNames="w-full sm:w-1/2 lg:w-1/3 h-full" />
                 )}
                 <div className={`flex flex-col gap-0 ${theme === 'dark' ? 'text-textColor-100' : " text-textColor-300"}`}>
                     {
