@@ -323,7 +323,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         httpRequestBody[key].title =
           key === "topic_summaries"
             ? "Detailed summary"
-            : key.charAt(0).toUpperCase() + key.slice(1);
+            : key === "caption" ? "Summary" : key.charAt(0).toUpperCase() + key.slice(1);
         httpRequestBody[key].content =
           typeof value === "object" ? value.content : value;
       }
