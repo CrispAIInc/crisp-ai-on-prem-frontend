@@ -30,6 +30,7 @@ import {
     Folder,
     Search,
 } from "@mui/icons-material";
+import { IndexModal } from '../IndexModal';
 
 const ContentSection = ({
     onThumbnailClick,
@@ -323,6 +324,11 @@ const ContentSection = ({
         setSelectedSources([]);
     };
 
+    const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
+    function openIndexModal() {
+        setIsIndexModalOpen(true);
+    }
+
     return (
         <>
             <section className='relative flex flex-col items-start h-full'>
@@ -346,7 +352,17 @@ const ContentSection = ({
                                 <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Indexer</span>
                             </div> */}
-                            <ButtonDropdown openSourceExplorer={handleExploreSources} />
+                            {/* <ButtonDropdown openSourceExplorer={handleExploreSources} /> */}
+                            <div
+                                className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={openIndexModal}
+                            >
+                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Index</span>
+
+                                <IndexModal show={isIndexModalOpen} onHide={() => setIsIndexModalOpen(false)} />
+
+                            </div>
                             <div
                                 className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={handleAddNewResource}
