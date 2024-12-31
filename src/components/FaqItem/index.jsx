@@ -1,19 +1,12 @@
 import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
-import Chip from '../Chip';
-import Timeline from '../Timeline';
-import useCheckMobileScreen from '../../hooks/useCheckMobileScreen';
-import TimelineHorizontal from '../TimelineHorizontal';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
-/**
- * 
- * @param {'base' | 'keywords' | 'timeline'} answerType 
- * @returns 
- */
 function FaqItem({ item, isBoxed = false, answerType = "base", isFirstOpen = false }) {
+
     const [isOpen, setIsOpen] = useState(isFirstOpen);
-    const { theme } = useContext(MainContext);
-    const isMobile = useCheckMobileScreen();
+    const { theme, setCurrentResource, workspaceContainer, setJumpToPage } = useContext(MainContext);
 
 
     const toggleFAQ = () => {
@@ -49,31 +42,35 @@ function FaqItem({ item, isBoxed = false, answerType = "base", isFirstOpen = fal
                 </svg>
             </button>
             <div
-                className={`overflow-hidden transition-all ease-linear duration-500 ${isOpen ? "max-h-[20000px] p-2 mb-3 opacity-100" : "max-h-0 opacity-0"
+                className={`overflow-hidden transition-all ease-linear duration-500 ${isOpen ? "max-h-[20000px] p-2 opacity-100" : "max-h-0 opacity-0"
                     } `}
             >
-                {
-                    answerType === "keywords" ? (
-                        <div className={` text-gray-600 ${theme === 'dark' && 'text-textColor-100'} flex items-center gap-2 flex-wrap`}>
-                            {
-                                item.answer?.map((keyword, index) => keyword.length > 1 && <Chip key={index} content={keyword} />)
-                            }
-                        </div>
-                    )
-                        :
-                        answerType === "base" ?
-                            (
-                                <div className={` text-gray-600 ${theme === 'dark' && 'text-textColor-100'}`} dangerouslySetInnerHTML={{ __html: item.answer }}></div>
-                            )
-                            :
-                            answerType === "timeline" ? (
-                                isMobile ? (
-                                    <TimelineHorizontal theme={theme} chapters={item.answer} />
-                                ) : (
-                                    <Timeline theme={theme} chapters={item.answer} />
-                                ))
-                                : null
-                }
+                <div className={` text-gray-600 ${theme === 'dark' && 'text-textColor-100'}`} dangerouslySetInnerHTML={{ __html: item.answer }}></div>
+
+                {/* refs */}
+                {item.timestamp ? (
+                    <div className="flex items-center gap-1 mt-2 text-sm cursor-pointer text-primary-300 w-fit" onClick={() => {
+                        setCurrentResource(prev => ({ ...prev, timestamp: item.timestamp[0] }));
+                        workspaceContainer.current.scrollTo({
+                            top: 0,
+                            behavior: "smooth", // Enables smooth scrolling
+                        });
+                    }}>
+                        <AccessTimeIcon size="small" />
+                        <span>{item.timestamp[0]} - {item.timestamp[1]}</span>
+                    </div>
+                ) : (
+                    <div className='flex items-center gap-2 mt-2 mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
+
+                        setJumpToPage({ page: parseInt(item.page) });
+                        workspaceContainer.current.scrollTo({
+                            top: 0,
+                            behavior: "smooth", // Enables smooth scrolling
+                        });
+                    }}>
+                        <MenuBookIcon /> <span className="text-md">{item.page}</span>
+                    </div>
+                )}
             </div>
         </div>
     );

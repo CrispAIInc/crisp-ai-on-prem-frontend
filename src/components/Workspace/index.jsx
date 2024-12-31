@@ -11,9 +11,9 @@ import StoryDetails from '../StoryDetails';
 import MetadataPanel from '../MetadataPanel';
 
 const Workspace = () => {
-    const workspaceContainer = useRef(null);
-    const {
 
+    const {
+        workspaceContainer,
         activeView,
         theme,
         setIsLeftSidebarOpen,

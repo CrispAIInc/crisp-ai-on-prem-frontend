@@ -315,9 +315,12 @@ const MainWorkspace = ({ theme }) => {
   const [isNotesLoading, setIsNotesLoading] = useState(false);
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
+  const workspaceContainer = useRef(null);
+
   // create value object with all the states
   const value = {
     API_ENDPOINT,
+    workspaceContainer,
     languageOptions,
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
