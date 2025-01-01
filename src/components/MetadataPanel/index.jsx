@@ -175,7 +175,13 @@ const MetadataPanel = ({ workspaceContainer }) => {
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
       const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-      if (timestamp !== undefined && timestamp !== null) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+      if (timestamp !== undefined && timestamp !== null) {
+        player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+        setCurrentResource(prev => {
+          const { timestamp, ...rest } = prev;
+          return rest;
+        });
+      }
       // setFromStory(false);
     }
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
@@ -194,7 +200,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
   useEffect(() => {
     if (activeView === "resource") {
       setTranslatedResource(currentResource);
-      if (currentResource) { translateMetadata("en", currentResource); }
+      if (currentResource) {
+        translateMetadata("en", currentResource);
+      }
     }
   }, [currentResource.source_path]);
 
