@@ -32,6 +32,7 @@ export function IndexModal({ show, onHide }) {
             centered
             className=""
         >
+
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
                 <div className="flex flex-col">
                     <label htmlFor="indexName" className={`block text-sm font-medium ${theme === 'dark' && 'text-gray-300'}`}>

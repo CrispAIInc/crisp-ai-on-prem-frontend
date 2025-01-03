@@ -31,6 +31,7 @@ import {
     Search,
 } from "@mui/icons-material";
 import { IndexModal } from '../IndexModal';
+import MeatadataOptions from '../MetadataOptions';
 
 const ContentSection = ({
     onThumbnailClick,
@@ -336,7 +337,7 @@ const ContentSection = ({
                 <div className="w-full max-w-4xl pr-3">
                     {/* home */}
                     <div
-                        className={`source-explorer ml-2 flex mb-1 items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                        className={`source-explorer flex mb-1 items-center justify-center gap-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                     >
                         <HomeIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Home</span>
@@ -404,7 +405,7 @@ const ContentSection = ({
                     </div>
                     {/* Settings */}
                     <div
-                        className={`source-explorer ml-2 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                        className={`source-explorer flex items-center justify-center gap-2  py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                     >
                         <SettingsIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
@@ -442,6 +443,8 @@ const ContentSection = ({
                     show={showFileFormatsModal}
                     onHide={() => setShowFileFormatsModal(false)}
                 />
+
+                {/* <MeatadataOptions classNames="w-full" /> */}
 
                 <BaseHeading text='Selected sources' className="mt-2" />
 

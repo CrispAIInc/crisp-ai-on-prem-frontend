@@ -315,11 +315,14 @@ const MainWorkspace = ({ theme }) => {
   const [isNotesLoading, setIsNotesLoading] = useState(false);
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
+  const [isIngestionPhase, setIsIngestionPhase] = useState(true);
+
   const workspaceContainer = useRef(null);
 
   // create value object with all the states
   const value = {
     API_ENDPOINT,
+    isIngestionPhase, setIsIngestionPhase,
     workspaceContainer,
     languageOptions,
     theme, activeView, setActiveView,

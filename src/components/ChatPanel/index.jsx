@@ -11,11 +11,12 @@ import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
+import MetadataGen from '../MetadataGen';
 
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme } = useContext(MainContext);
+  const { chatLoaded, setChatLoaded, isIngestionPhase, isRightSidebarOpen, setIsRightSidebarOpen, theme } = useContext(MainContext);
 
   let copilotSectionSteps = [
     {
@@ -67,7 +68,7 @@ const ChatPanel = () => {
       ></div>}
 
       <div
-        className={`px-2 py-2 rounded-md w-fit absolute right-0 h-full flex flex-col justify-center items-center z-40`}
+        className={`px-2 py-2 rounded-md w-fit absolute right-0 h-auto top-1/2 flex flex-col justify-center items-center z-40`}
       >
         <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
           setSidebarWidth(prev => {
@@ -87,11 +88,15 @@ const ChatPanel = () => {
         id="uncontrolled-tab-example"
         className={`my-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
       >
-        <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} style={{}}>
+        <Tab eventKey="genMetadata" title="GenMetadata" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}} disabled={!isIngestionPhase}>
+          <MetadataGen key={0} name="genMetadata" />
+          {(activeTab === 'genMetadata' && (Boolean(localStorage.getItem(`guide_completed_genMetadata`)) === false || localStorage.getItem(`guide_completed_genMetadata`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genMetadata" />}
+        </Tab>
+        <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}} disabled={isIngestionPhase}>
           <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
           {(activeTab === 'genInsights' && (Boolean(localStorage.getItem(`guide_completed_genInsights`)) === false || localStorage.getItem(`guide_completed_genInsights`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genInsights" />}
         </Tab>
-        <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`}>
+        <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} disabled={isIngestionPhase}>
           <GenStories key={2} name="genStories" sidebarWidth={sidebarWidth} />
           {(activeTab === 'genStories' && (Boolean(localStorage.getItem(`guide_completed_genStories`)) === false || localStorage.getItem(`guide_completed_genStories`) === "false")) && <Guide steps={genStorieSectionSteps} tabIdentifier="genStories" />}
         </Tab>

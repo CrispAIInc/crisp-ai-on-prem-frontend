@@ -1,5 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  corePlugins: {
+    // Ensure these are not disabled
+    ringWidth: true,
+    ringColor: true,
+  },
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -76,9 +81,14 @@ export default {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0' },
         },
+        ripple: {
+          '0%': { transform: 'scale(0)', opacity: '0.4' },
+          '100%': { transform: 'scale(4)', opacity: '0' },
+        },
       },
       animation: {
         blink: 'blink 1s step-start infinite',
+        ripple: 'ripple 0.6s linear',
       },
       colors: {
         background: "var(--background-color)",
