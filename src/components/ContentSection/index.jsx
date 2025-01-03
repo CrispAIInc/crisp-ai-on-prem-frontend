@@ -159,7 +159,6 @@ const ContentSection = ({
             };
 
             await makeApiRequest(`/delete`, "post", requestBody);
-            setIsDeleting(false);
 
             setChatLoaded(false);
             const { chat_is_initialized } = await makeApiRequest(
@@ -184,6 +183,9 @@ const ContentSection = ({
         } catch (error) {
             setIsDeleting(false);
             console.log(error);
+        } finally {
+            setIsDeleting(false);
+            console.log(knowledgeBase);
         }
     };
     const handleUpload = async (event, fileFormat) => {

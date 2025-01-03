@@ -715,7 +715,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               <CancelIcon
                 color="black"
                 onClick={closeImage}
-                className="absolute right-[1%] top-[15px] cursor-pointer shadow-lg"
+                className="absolute right-[1%] top-[15px] cursor-pointer shadow-lg text-black"
               />
               <img
                 className="w-full !h-full pt-2 rounded-lg source-img"
