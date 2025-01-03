@@ -30,7 +30,7 @@ export function IndexModal({ show, onHide }) {
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
-            className=""
+            dialogClassName='text-left'
         >
 
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>

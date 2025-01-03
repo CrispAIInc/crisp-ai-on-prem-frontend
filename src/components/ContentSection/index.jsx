@@ -332,6 +332,10 @@ const ContentSection = ({
         setIsIndexModalOpen(true);
     }
 
+    function hideIndexModal() {
+        setIsIndexModalOpen(false);
+    }
+
     return (
         <>
             <section className='relative flex flex-col items-start h-full'>
@@ -363,7 +367,8 @@ const ContentSection = ({
                                 <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Index</span>
 
-                                <IndexModal show={isIndexModalOpen} onHide={() => setIsIndexModalOpen(false)} />
+                                {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} /> */}
+
 
                             </div>
                             <div
@@ -413,7 +418,7 @@ const ContentSection = ({
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
                     </div>
                 </div>
-
+                <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} />
                 {showSourceExplorer && (
                     <SourceExplorer
                         show={showSourceExplorer}
@@ -448,7 +453,7 @@ const ContentSection = ({
 
                 {/* <MeatadataOptions classNames="w-full" /> */}
 
-                <BaseHeading text='Selected sources' className="mt-2" />
+                <BaseHeading text='Selected sources' className="mt-4 mb-4" />
 
                 <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                     {
