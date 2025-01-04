@@ -6,23 +6,19 @@ import MetadataVerbosity from '../MetadataVerbosity';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 
-export default function MetadataAdvancedParams() {
+export default function MetadataAdvancedParams({ temperatureValue,
+    setTemperatureValue,
+    handleTemperatureChange,
+    verbosityValue,
+    setVerbosityValue,
+    handleChange, }) {
 
     const { sidebarWidth, maxWidth } = useResizableSidebar(200, false);
 
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
     const { theme } = useContext(MainContext);
 
-    const [temperatureValue, setTemperatureValue] = useState(0.2);
-    function handleTemperatureChange(e) {
-        setTemperatureValue(e.target.value);
-    }
 
-    const [verbosityValue, setVerbosityValue] = useState('low');
-
-    function handleChange(event) {
-        setVerbosityValue(event.target.value);
-    }
 
     return (
         <div className='flex flex-col gap-4'>

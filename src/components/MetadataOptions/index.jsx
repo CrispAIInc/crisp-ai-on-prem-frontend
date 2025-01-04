@@ -2,19 +2,11 @@ import { useContext, useEffect, useRef, useState } from "react";
 import Chip from "../Chip";
 import { MainContext } from '../../contexts/mainContext';
 
-const options = [
-    { id: "summary", name: "Summary", description: "Generate a concise video overview" },
-    { id: "highlights", name: "Highlights", description: "Capture key moments from the video" },
-    { id: "chapters", name: "Chapters", description: "Divide video into meaningful sections" },
-    { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
-    { id: "keywords", name: "Keywords", description: "Extract important terms from the video" },
-    { id: "knowledgeGraph", name: "Knowledge graph", description: "Visualize key concepts and relationships" },
-    { id: "embeddings", name: "Embeddings", description: "Create vector representations for search" },
-];
 
-export default function MetadataOptions({ classNames = "" }) {
+
+export default function MetadataOptions({ selectedOptions, setSelectedOptions, options }) {
     const { theme } = useContext(MainContext);
-    const [selectedOptions, setSelectedOptions] = useState([options[0]]);
+
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
     const dropdownRef = useRef(null);
 
