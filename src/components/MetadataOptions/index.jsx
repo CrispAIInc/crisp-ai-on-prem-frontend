@@ -47,9 +47,17 @@ export default function MetadataOptions({ classNames = "" }) {
         setIsDropdownMenuOpen(!isDropdownMenuOpen);
     }
 
+    function toggleAllOptions() {
+        if (selectedOptions.length === options.length) {
+            setSelectedOptions([]);
+        } else {
+            setSelectedOptions(options);
+        }
+    }
+
     return (
         <div>
-            <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Select Metadata output</label>
+            <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Metadata output</label>
             <div className="relative inline-block w-full" ref={dropdownRef}>
                 {/* upper section */}
                 <div onClick={handleOpenDropdownMenu} className={`rounded-md flex items-center justify-between h-10 py-4 pl-1 !border !border-slate-400 cursor-pointer relative`}>
@@ -83,6 +91,11 @@ export default function MetadataOptions({ classNames = "" }) {
                 {
                     isDropdownMenuOpen && (
                         <div className={`absolute z-10 w-full h-64 overflow-y-auto mt-2 rounded-md shadow-lg  ${theme === 'light' ? 'bg-white' : 'bg-[#382746] text-textColor-100'}`}>
+                            <div onClick={toggleAllOptions} className={`cursor-pointer border-b border-b-light-hover-200 p-2 active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'} flex items-center gap-2`}>
+                                {/* checkbox for selecting and unselecting all options */}
+                                <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length} />
+                                <span className="text-sm font-bold">Select all metadata</span>
+                            </div>
                             {
                                 options.map((option) => {
                                     return (
