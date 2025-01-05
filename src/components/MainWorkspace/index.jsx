@@ -26,7 +26,7 @@ const MainWorkspace = ({ theme }) => {
 
   const [selectedSources, setSelectedSources] = useState([]); // Selected Sources to stage before commiting into the current Knowledge Base
   const [selectedAll, setSelectedAll] = useState(false); // Flag to handle selecting all sources (all categories, all formats)
-
+  const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
   // From Content Panel
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFormat, setSelectedFormat] = useState("all");
@@ -315,14 +315,24 @@ const MainWorkspace = ({ theme }) => {
   const [isNotesLoading, setIsNotesLoading] = useState(false);
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
-  const [isIngestionPhase, setIsIngestionPhase] = useState(true);
+  const [isIngestionEnabled, setIsIngestionEnabled] = useState(false);
+
+  useEffect(() => {
+    if (knowledgeBase.every((item) => item.is_selected === false)) {
+      console.log("disabled");
+      setIsIngestionEnabled(false);
+    } else {
+      console.log("enable");
+      setIsIngestionEnabled(true);
+    }
+  }, [knowledgeBase]);
 
   const workspaceContainer = useRef(null);
 
   // create value object with all the states
   const value = {
     API_ENDPOINT,
-    isIngestionPhase, setIsIngestionPhase,
+    isIngestionEnabled, setIsIngestionEnabled,
     workspaceContainer,
     languageOptions,
     theme, activeView, setActiveView,
@@ -333,6 +343,7 @@ const MainWorkspace = ({ theme }) => {
     formats,
     categoryOptions,
     isEditingTitle, setIsEditingTitle,
+    knowledgeBase, setKnowledgeBase,
     currentResource,
     setCurrentResource,
     noteReferences, setNoteReferences,

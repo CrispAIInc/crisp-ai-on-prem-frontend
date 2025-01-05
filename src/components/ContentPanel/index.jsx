@@ -27,13 +27,11 @@ const ContentPanel = () => {
         setShowSearchModal,
         setSelectedSources,
         selectedSources,
+        knowledgeBase, setKnowledgeBase,
         setJumpToPage,
         isLeftSidebarOpen,
         setIsLeftSidebarOpen,
         setSummary, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
-
-
-    const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
 
     const [, setTranscription] = useState("");
 
@@ -93,6 +91,7 @@ const ContentPanel = () => {
      * Function to toggle 'isSelected' of an item inside 'knowledgeBase' array when the checkbox is clicked
      */
     const handleCheckboxChange = (file) => {
+        console.log("2");
         // Create a new array with updated items
         const updatedKnowledgeBase = knowledgeBase.map((item) => {
             if (item.source_path === file.source_path) {

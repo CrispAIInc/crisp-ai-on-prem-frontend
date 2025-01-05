@@ -16,7 +16,7 @@ import MetadataGen from '../MetadataGen';
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded, setChatLoaded, isIngestionPhase, isRightSidebarOpen, setIsRightSidebarOpen, theme } = useContext(MainContext);
+  const { chatLoaded, setChatLoaded, isIngestionEnabled, isRightSidebarOpen, setIsRightSidebarOpen, theme } = useContext(MainContext);
 
   let copilotSectionSteps = [
     {
@@ -88,15 +88,15 @@ const ChatPanel = () => {
         id="uncontrolled-tab-example"
         className={`my-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
       >
-        <Tab eventKey="genMetadata" title="GenMetadata" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}} disabled={!isIngestionPhase}>
+        <Tab eventKey="genMetadata" title="GenMetadata" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}} disabled={!isIngestionEnabled}>
           <MetadataGen key={0} name="genMetadata" />
           {(activeTab === 'genMetadata' && (Boolean(localStorage.getItem(`guide_completed_genMetadata`)) === false || localStorage.getItem(`guide_completed_genMetadata`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genMetadata" />}
         </Tab>
-        <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}} disabled={isIngestionPhase}>
+        <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}}>
           <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
           {(activeTab === 'genInsights' && (Boolean(localStorage.getItem(`guide_completed_genInsights`)) === false || localStorage.getItem(`guide_completed_genInsights`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genInsights" />}
         </Tab>
-        <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} disabled={isIngestionPhase}>
+        <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`}>
           <GenStories key={2} name="genStories" sidebarWidth={sidebarWidth} />
           {(activeTab === 'genStories' && (Boolean(localStorage.getItem(`guide_completed_genStories`)) === false || localStorage.getItem(`guide_completed_genStories`) === "false")) && <Guide steps={genStorieSectionSteps} tabIdentifier="genStories" />}
         </Tab>

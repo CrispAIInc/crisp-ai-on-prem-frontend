@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import MetadataAdvancedParams from '../MetadataAdvancedParams';
 import MetadataOptions from "../MetadataOptions";
+import { MainContext } from '../../contexts/mainContext';
+import toast from 'react-simple-toasts';
 
 
 const options = [
@@ -14,6 +16,8 @@ const options = [
 ];
 
 function MetadataGen() {
+    const { isIngestionEnabled } = useContext(MainContext);
+
     const [selectedOptions, setSelectedOptions] = useState([options[0]]);
 
     const [temperatureValue, setTemperatureValue] = useState(0.2);
@@ -27,6 +31,15 @@ function MetadataGen() {
         setVerbosityValue(event.target.value);
     }
 
+    function generateMetadata() {
+        if (!isIngestionEnabled) {
+            toast('You must select some sources to generate metadata');
+        }
+        else {
+            console.log({ selectedOptions, verbosityValue, temperatureValue });
+        }
+    }
+
     return (
         <div className='z-20 flex flex-col gap-4'>
             <MetadataOptions selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} options={options} />
@@ -36,7 +49,7 @@ function MetadataGen() {
                 verbosityValue={verbosityValue}
                 setVerbosityValue={setVerbosityValue}
                 handleChange={handleChange} />
-            <button className='w-full max-w-full py-2 m-auto text-center text-white rounded-md bg-primary-300/85 hover:bg-primary-300' onClick={() => console.log({ selectedOptions, verbosityValue, temperatureValue })}>Generate</button>
+            <button className='w-full max-w-full py-2 m-auto text-center text-white rounded-md bg-primary-300/85 hover:bg-primary-300' onClick={generateMetadata}>Generate</button>
         </div>
     );
 }

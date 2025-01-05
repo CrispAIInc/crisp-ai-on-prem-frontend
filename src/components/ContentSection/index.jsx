@@ -262,8 +262,13 @@ const ContentSection = ({
         if (category === undefined) {
             const newSelectedValue = !selectedAll;
             setSelectedAll(newSelectedValue);
-            knowledgeBase.forEach((item) => {
-                item.is_selected = newSelectedValue;
+            setKnowledgeBase((prev) => {
+                return prev.map((item) => {
+                    return { ...item, is_selected: newSelectedValue };
+                });
+                // knowledgeBase.forEach((item) => {
+                //     item.is_selected = newSelectedValue;
+                // });
             });
         }
         else {
@@ -308,7 +313,7 @@ const ContentSection = ({
                 // if (item.is_selected) setSelectedAll(false);
                 return item;
             });
-            setKnowledgeBase(updatedKnowledgeBase);
+            setKnowledgeBase({ ...updatedKnowledgeBase });
         }
     };
 
