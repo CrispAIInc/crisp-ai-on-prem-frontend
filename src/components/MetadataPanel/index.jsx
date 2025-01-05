@@ -170,7 +170,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   const metadataPanelContainer = useRef(null);
 
 
-  let currentResourceType = currentResource.file_type;
+  let currentResourceType = currentResource?.file_type;
 
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
