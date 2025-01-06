@@ -43,17 +43,24 @@ const MainWorkspace = ({ theme }) => {
   //   { value: "technical content", label: "Technical Content" },
   // ];
 
-  const [categoryOptions, setCategoryOptions] = useState([
-    { value: "all", label: "All" },
-    { value: "generic", label: "Generic" },
-    { value: "investment", label: "Investment" },
-    { value: "human resources", label: "Human Resources" },
-    { value: "customer interaction", label: "Customer Interaction" },
-    { value: "documentaries", label: "Documentaries" },
-    { value: "entertainment", label: "Entertainment" },
-    { value: "insurance", label: "Insurance" },
-    { value: "technical content", label: "Technical Content" },
-  ]);
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  useEffect(() => {
+    async function getIndexes() {
+      let { indexes } = await makeApiRequest("/get-indexes");
+      // transform the indexes to the format value/label
+      indexes = indexes.map((index) => {
+        return {
+          value: index,
+          label: index.charAt(0).toUpperCase() + index.slice(1),
+        };
+      });
+      console.log(indexes);
+      setCategoryOptions(indexes);
+    }
+
+    getIndexes();
+  }, []);
+
 
   // can either be 'resource', 'note' or null
   // indicates wether the user is viewing a resource or a note in workspace
