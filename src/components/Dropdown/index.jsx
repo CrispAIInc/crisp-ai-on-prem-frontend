@@ -28,16 +28,18 @@ const Dropdown = ({ options }) => {
 
             {isOpen && (
                 <ul className={`absolute z-10 pl-0 w-full max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 mt-1 rounded-md shadow-lg ${theme === 'light' ? 'bg-white !border' : 'bg-textColor-300 !border !border-slate-500'}`}>
-                    {options.map((option) => (
-                        <li
-                            key={option.label}
-                            onClick={() => handleOptionClick(option)}
-                            className="px-4 py-2 cursor-pointer hover:bg-primary-100/20"
-                        >
-                            <div className="font-medium">{option.label}</div>
-                            <div className="text-sm text-gray-500">{option.details}</div>
-                        </li>
-                    ))}
+                    {options.map((option) => {
+                        if (option.value !== "all") {
+                            return <li
+                                key={option.label}
+                                onClick={() => handleOptionClick(option)}
+                                className="px-4 py-2 cursor-pointer hover:bg-primary-100/20"
+                            >
+                                <div className="font-medium">{option.label}</div>
+                                <div className="text-sm text-gray-500">{option.details}</div>
+                            </li>;
+                        }
+                    })}
                 </ul>
             )}
         </div>
