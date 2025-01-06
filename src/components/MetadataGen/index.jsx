@@ -62,12 +62,16 @@ function MetadataGen() {
         else if (selectedOptions.length === 0) {
             toast('You must select at least one metadata option');
         }
-        else {
-            console.log({ selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue });
-        }
 
         try {
-            console.log('Generating metadata...');
+            const payload = {
+                sources: knowledgeBase.map(kb => {
+                    if (kb.is_selected) {
+                        return { file_type: kb.file_type, source_path: kb.source_path };
+                    }
+                }), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
+            };
+            console.log('Generating metadata...', payload);
         } catch (error) {
             console.error(error);
         } finally {
