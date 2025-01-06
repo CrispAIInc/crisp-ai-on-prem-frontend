@@ -396,7 +396,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
             <div className="shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
               <CancelIcon
                 onClick={closeVideo}
-                color="black"
+                color="error"
                 className="absolute z-50 shadow-lg cursor-pointer right-4 top-2"
               />
               <ReactPlayer
@@ -582,7 +582,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 <CancelIcon
                   onClick={closePDF}
                   className="sticky top-0 z-50 shadow-lg cursor-pointer left-full"
-                  color='black'
+                  color='error'
                 />
                 {Array.from(new Array(numPages), (el, index) => (
                   <div
@@ -713,9 +713,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
           <div className="pb-10">
             <div className="relative w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
               <CancelIcon
-                color="black"
+                color="error"
                 onClick={closeImage}
-                className="absolute right-[1%] top-[15px] cursor-pointer shadow-lg text-black"
+                className="absolute right-[1%] top-[15px] cursor-pointer shadow-lg "
               />
               <img
                 className="w-full !h-full pt-2 rounded-lg source-img"
