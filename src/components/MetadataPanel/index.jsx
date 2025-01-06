@@ -393,16 +393,17 @@ const MetadataPanel = ({ workspaceContainer }) => {
       {currentResource?.file_type === "video" && (
         <>
           <div className="relative ">
-            <div className="shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+            <div className="h-full shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
               <CancelIcon
                 onClick={closeVideo}
                 color="error"
                 className="absolute z-50 shadow-lg cursor-pointer right-4 top-2"
               />
               <ReactPlayer
+
                 id="react-player"
                 width={"100%"}
-                height={"100%"}
+                height='500px'
                 playing={true}
                 url={resourceURL}
                 onReady={() => setIsPlayerReady(true)}
