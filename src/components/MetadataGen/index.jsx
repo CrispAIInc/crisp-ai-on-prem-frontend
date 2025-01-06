@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import MetadataAdvancedParams from '../MetadataAdvancedParams';
 import MetadataOptions from "../MetadataOptions";
 import { MainContext } from '../../contexts/mainContext';
@@ -16,7 +16,7 @@ const options = [
 ];
 
 function MetadataGen() {
-    const { isIngestionEnabled } = useContext(MainContext);
+    const { knowledgeBase, theme } = useContext(MainContext);
 
     const [selectedOptions, setSelectedOptions] = useState([options[0]]);
 
@@ -31,14 +31,35 @@ function MetadataGen() {
         setVerbosityValue(event.target.value);
     }
 
+    const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_selected === false));
+
+    useEffect(() => {
+        setIsKnowledgeBaseEmpty(knowledgeBase.every(kb => kb.is_selected === false));
+    }, [knowledgeBase]);
+
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        setPosition({
+            x: e.clientX - rect.left + 10,
+            y: e.clientY - rect.top + 10,
+        });
+    };
+
+    const handleMouseEnter = () => isKnowledgeBaseEmpty && setTooltipVisible(true);
+    const handleMouseLeave = () => setTooltipVisible(false);
+
     function generateMetadata() {
-        if (!isIngestionEnabled) {
+        if (isKnowledgeBaseEmpty) {
             toast('You must select some sources to generate metadata');
         }
         else {
             console.log({ selectedOptions, verbosityValue, temperatureValue });
         }
     }
+
 
     return (
         <div className='z-20 flex flex-col gap-4'>
@@ -49,7 +70,25 @@ function MetadataGen() {
                 verbosityValue={verbosityValue}
                 setVerbosityValue={setVerbosityValue}
                 handleChange={handleChange} />
-            <button className='w-full max-w-full py-2 m-auto text-center text-white rounded-md bg-primary-300/85 hover:bg-primary-300' onClick={generateMetadata}>Generate</button>
+
+            {/* generate button */}
+            <div className='relative inline-block' onMouseMove={handleMouseMove}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}>
+                <button className='relative w-full max-w-full py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
+                    disabled={isKnowledgeBaseEmpty} onClick={generateMetadata}>
+                    Generate
+                </button>
+                {tooltipVisible && (
+                    <p
+                        // onMouseEnter={() => setTooltipVisible(false)}
+                        className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
+                        style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
+                    >
+                        No source is selected.
+                    </p>
+                )}
+            </div>
         </div>
     );
 }
