@@ -131,7 +131,7 @@ const ContentSection = ({
         };
 
         makeRequest();
-    }, []);
+    }, [categoryOptions]);
 
     useEffect(() => {
         if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
@@ -381,7 +381,7 @@ const ContentSection = ({
                                 className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={handleAddNewResource}
                             >
-                                <UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                {isUploading ? (<LoadingSpinner isSmall />) : (<UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />)}
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Upload</span>
                             </div>
                         </div>
@@ -424,7 +424,7 @@ const ContentSection = ({
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
                     </div>
                 </div>
-                <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} />
+                <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} />
                 {showSourceExplorer && (
                     <SourceExplorer
                         show={showSourceExplorer}
