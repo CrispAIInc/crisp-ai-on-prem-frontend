@@ -43,7 +43,7 @@ function MetadataGen() {
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         setPosition({
-            x: e.clientX - rect.left + 10,
+            x: e.clientX - rect.left - 60,
             y: e.clientY - rect.top + 10,
         });
     };
@@ -54,6 +54,9 @@ function MetadataGen() {
     function generateMetadata() {
         if (isKnowledgeBaseEmpty) {
             toast('You must select some sources to generate metadata');
+        }
+        else if (selectedOptions.length === 0) {
+            toast('You must select at least one metadata option');
         }
         else {
             console.log({ selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue });
