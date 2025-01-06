@@ -5,16 +5,18 @@ import FileUploaderModal from "../FileUploaderModal";
 import toast from 'react-simple-toasts';
 import Dropdown from '../Dropdown';
 import makeApiRequest from '../../api';
+import LoadingSpinner from "../LoadingSpinner";
 
-export function IndexModal({ show, onHide }) {
+export function IndexModal({ show, onHide, handleUpload }) {
 
     const { theme, categoryOptions } = useContext(MainContext);
 
     const [indexName, setIndexName] = useState('');
-
+    const [isLoading, setIsLoading] = useState(false);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
     async function createIndex() {
+        setIsLoading(true);
         if (indexName === '') {
             toast('Index cannot be empty', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
             return;
@@ -32,6 +34,8 @@ export function IndexModal({ show, onHide }) {
             console.log(error.response.data.error);
             toast(error.response.data.error || 'Error creating index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
             return;
+        } finally {
+            setIsLoading(false);
         }
 
         // onHide();
@@ -62,7 +66,7 @@ export function IndexModal({ show, onHide }) {
                         required
                         onKeyDown={(e) => e.key === 'Enter' && createIndex()}
                     />
-                    {isUploadModalOpen && <FileUploaderModal indexName={indexName} show={isUploadModalOpen} hideIndexModal={onHide} onHide={() => setIsUploadModalOpen(false)} />}
+                    {isUploadModalOpen && <FileUploaderModal handleUpload={handleUpload} indexName={indexName} show={isUploadModalOpen} hideIndexModal={onHide} onHide={() => setIsUploadModalOpen(false)} />}
                 </div>
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
@@ -70,7 +74,9 @@ export function IndexModal({ show, onHide }) {
                     className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={createIndex}
                 >
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Create</span>
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                        Create
+                    </span>}
                 </div>
             </Modal.Footer>
         </Modal>
