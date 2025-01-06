@@ -65,11 +65,7 @@ function MetadataGen() {
 
         try {
             const payload = {
-                sources: knowledgeBase.map(kb => {
-                    if (kb.is_selected) {
-                        return { file_type: kb.file_type, source_path: kb.source_path };
-                    }
-                }), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
+                sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             };
             console.log('Generating metadata...', payload);
         } catch (error) {
