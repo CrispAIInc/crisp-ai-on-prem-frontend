@@ -40,10 +40,10 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
     }
 
     function toggleAllOptions() {
-        if (selectedOptions.length === options.length) {
+        if (selectedOptions.length === options.length - 1) {
             setSelectedOptions([]);
         } else {
-            setSelectedOptions(options);
+            setSelectedOptions(options.filter(option => option.id !== 'knowledgeGraph'));
         }
     }
 
@@ -85,11 +85,19 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
                         <div className={`absolute z-10 w-full h-64 overflow-y-auto mt-2 rounded-md shadow-lg  ${theme === 'light' ? 'bg-white' : 'bg-[#382746] text-textColor-100'}`}>
                             <div onClick={toggleAllOptions} className={`cursor-pointer border-b border-b-light-hover-200 p-2 active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'} flex items-center gap-2`}>
                                 {/* checkbox for selecting and unselecting all options */}
-                                <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length} />
+                                <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length - 1} />
                                 <span className="text-sm font-bold">Select all metadata</span>
                             </div>
                             {
                                 options.map((option) => {
+                                    if (option.id === 'knowledgeGraph') {
+                                        return (
+                                            <div key={option.id} className={`cursor-not-allowed border-b border-b-light-hover-200 p-2 bg-light-hover-200`}>
+                                                <p className='font-semibold text-md'>{option.name}</p>
+                                                <span className="text-sm">{option.description}</span>
+                                            </div>
+                                        );
+                                    }
                                     return (
                                         <div key={option.id} onClick={() => toggleOption(option)} className={`cursor-pointer border-b border-b-light-hover-200 p-2 ${selectedOptions.includes(option) && 'bg-primary-200/20'} active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'}`}>
                                             <p className='font-semibold text-md'>{option.name}</p>
