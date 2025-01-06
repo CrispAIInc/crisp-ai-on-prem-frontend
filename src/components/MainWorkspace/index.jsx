@@ -315,24 +315,21 @@ const MainWorkspace = ({ theme }) => {
   const [isNotesLoading, setIsNotesLoading] = useState(false);
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
-  const [isIngestionEnabled, setIsIngestionEnabled] = useState(false);
-
-  useEffect(() => {
-    if (knowledgeBase.every((item) => item.is_selected === false)) {
-      console.log("disabled");
-      setIsIngestionEnabled(false);
-    } else {
-      console.log("enable");
-      setIsIngestionEnabled(true);
-    }
-  }, [knowledgeBase]);
+  // useEffect(() => {
+  //   if (knowledgeBase.every((item) => item.is_selected === false)) {
+  //     console.log("disabled");
+  //     setIsIngestionEnabled(false);
+  //   } else {
+  //     console.log("enable");
+  //     setIsIngestionEnabled(true);
+  //   }
+  // }, [knowledgeBase]);
 
   const workspaceContainer = useRef(null);
 
   // create value object with all the states
   const value = {
     API_ENDPOINT,
-    isIngestionEnabled, setIsIngestionEnabled,
     workspaceContainer,
     languageOptions,
     theme, activeView, setActiveView,
