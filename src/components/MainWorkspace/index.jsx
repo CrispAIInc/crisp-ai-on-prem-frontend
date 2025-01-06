@@ -31,7 +31,19 @@ const MainWorkspace = ({ theme }) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFormat, setSelectedFormat] = useState("all");
 
-  const categoryOptions = [
+  // const categoryOptions = [
+  //   { value: "all", label: "All" },
+  //   { value: "generic", label: "Generic" },
+  //   { value: "investment", label: "Investment" },
+  //   { value: "human resources", label: "Human Resources" },
+  //   { value: "customer interaction", label: "Customer Interaction" },
+  //   { value: "documentaries", label: "Documentaries" },
+  //   { value: "entertainment", label: "Entertainment" },
+  //   { value: "insurance", label: "Insurance" },
+  //   { value: "technical content", label: "Technical Content" },
+  // ];
+
+  const [categoryOptions, setCategoryOptions] = useState([
     { value: "all", label: "All" },
     { value: "generic", label: "Generic" },
     { value: "investment", label: "Investment" },
@@ -41,7 +53,7 @@ const MainWorkspace = ({ theme }) => {
     { value: "entertainment", label: "Entertainment" },
     { value: "insurance", label: "Insurance" },
     { value: "technical content", label: "Technical Content" },
-  ];
+  ]);
 
   // can either be 'resource', 'note' or null
   // indicates wether the user is viewing a resource or a note in workspace
@@ -331,6 +343,7 @@ const MainWorkspace = ({ theme }) => {
   const value = {
     API_ENDPOINT,
     workspaceContainer,
+    categoryOptions, setCategoryOptions,
     languageOptions,
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
@@ -338,7 +351,6 @@ const MainWorkspace = ({ theme }) => {
     isRightSidebarOpen, setIsRightSidebarOpen,
     modules,
     formats,
-    categoryOptions,
     isEditingTitle, setIsEditingTitle,
     knowledgeBase, setKnowledgeBase,
     currentResource,
