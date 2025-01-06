@@ -75,7 +75,7 @@ const ChatPanel = () => {
             if (prev !== maxWidth) {
               return maxWidth;
             }
-            return window.innerWidth * 0.2;
+            return window.innerWidth * 0.26;
           });
           setIsRightSidebarOpen(true);
         }} />
