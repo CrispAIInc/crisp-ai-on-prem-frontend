@@ -7,7 +7,7 @@ import Dropdown from '../Dropdown';
 
 export function IndexModal({ show, onHide }) {
 
-    const { theme } = useContext(MainContext);
+    const { theme, categoryOptions } = useContext(MainContext);
 
     const [indexName, setIndexName] = useState('');
 
@@ -16,6 +16,11 @@ export function IndexModal({ show, onHide }) {
     function createIndex() {
         if (indexName === '') {
             toast('Index cannot be empty', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            return;
+        }
+
+        if (categoryOptions.find(cat => cat.label?.toLowerCase() === indexName?.toLowerCase())) {
+            toast('Index already exists', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
             return;
         }
         setIsUploadModalOpen(true);
