@@ -173,7 +173,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   let currentResourceType = currentResource?.file_type;
 
   useEffect(() => {
-    if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
+    if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
       const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
       if (timestamp !== undefined && timestamp !== null) {
         player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
@@ -204,7 +204,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         translateMetadata("en", currentResource);
       }
     }
-  }, [currentResource.source_path]);
+  }, [currentResource?.source_path]);
 
   const closeVideo = (event) => {
     event.preventDefault();
@@ -356,7 +356,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   async function generateVisualAndCombinedSummary() {
     try {
       setIsGeneratingCombinedSummary(true);
-      const { visual_summary, combined_summary } = await makeApiRequest('/generate-combined-summary', 'post', { video_filename: currentResource.source_path });
+      const { visual_summary, combined_summary } = await makeApiRequest('/generate-combined-summary', 'post', { video_filename: currentResource?.source_path });
       setTranslatedResource((prev) => ({
         ...prev,
         visual_summary: {
@@ -390,7 +390,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
-      {currentResource.file_type === "video" && (
+      {currentResource?.file_type === "video" && (
         <>
           <div className="relative ">
             <div className="shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
@@ -568,7 +568,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       )
       }
       {
-        currentResource.file_type === "pdf" && (
+        currentResource?.file_type === "pdf" && (
           <>
             <div
               className="relative h-[70vh] w-full mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-x-hidden"
@@ -709,7 +709,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
           </>
         )}
       {
-        currentResource.file_type === "img" && (
+        currentResource?.file_type === "img" && (
           <div className="pb-10">
             <div className="relative w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
               <CancelIcon
