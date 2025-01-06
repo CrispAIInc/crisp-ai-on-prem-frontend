@@ -56,7 +56,7 @@ function MetadataGen() {
             toast('You must select some sources to generate metadata');
         }
         else {
-            console.log({ selectedOptions, verbosityValue, temperatureValue });
+            console.log({ selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue });
         }
     }
 
