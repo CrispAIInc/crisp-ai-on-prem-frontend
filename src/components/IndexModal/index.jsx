@@ -4,6 +4,7 @@ import { MainContext } from '../../contexts/mainContext';
 import FileUploaderModal from "../FileUploaderModal";
 import toast from 'react-simple-toasts';
 import Dropdown from '../Dropdown';
+import makeApiRequest from '../../api';
 
 export function IndexModal({ show, onHide }) {
 
@@ -13,7 +14,7 @@ export function IndexModal({ show, onHide }) {
 
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
-    function createIndex() {
+    async function createIndex() {
         if (indexName === '') {
             toast('Index cannot be empty', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
             return;
@@ -23,7 +24,16 @@ export function IndexModal({ show, onHide }) {
             toast('Index already exists', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
             return;
         }
-        setIsUploadModalOpen(true);
+
+        try {
+            await makeApiRequest('/create-new-index', 'post', { category: indexName });
+            setIsUploadModalOpen(true);
+        } catch (error) {
+            console.log(error.response.data.error);
+            toast(error.response.data.error || 'Error creating index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            return;
+        }
+
         // onHide();
     }
 
