@@ -3,6 +3,7 @@ import MetadataAdvancedParams from '../MetadataAdvancedParams';
 import MetadataOptions from "../MetadataOptions";
 import { MainContext } from '../../contexts/mainContext';
 import toast from 'react-simple-toasts';
+import LoadingSpinner from '../LoadingSpinner';
 
 
 const options = [
@@ -31,6 +32,8 @@ function MetadataGen() {
         setVerbosityValue(event.target.value);
     }
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_selected === false));
 
     useEffect(() => {
@@ -51,7 +54,8 @@ function MetadataGen() {
     const handleMouseEnter = () => isKnowledgeBaseEmpty && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
-    function generateMetadata() {
+    async function generateMetadata() {
+        setIsLoading(true);
         if (isKnowledgeBaseEmpty) {
             toast('You must select some sources to generate metadata');
         }
@@ -60,6 +64,14 @@ function MetadataGen() {
         }
         else {
             console.log({ selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue });
+        }
+
+        try {
+            console.log('Generating metadata...');
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -78,9 +90,9 @@ function MetadataGen() {
             <div className='relative inline-block' onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
-                <button className='relative w-full max-w-full py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
-                    disabled={isKnowledgeBaseEmpty} onClick={generateMetadata}>
-                    Generate
+                <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
+                    disabled={isKnowledgeBaseEmpty || isLoading} onClick={generateMetadata}>
+                    {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate'}
                 </button>
                 {tooltipVisible && (
                     <p
