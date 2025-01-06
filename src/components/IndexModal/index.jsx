@@ -52,7 +52,7 @@ export function IndexModal({ show, onHide }) {
                         required
                         onKeyDown={(e) => e.key === 'Enter' && createIndex()}
                     />
-                    {isUploadModalOpen && <FileUploaderModal show={isUploadModalOpen} hideIndexModal={onHide} onHide={() => setIsUploadModalOpen(false)} />}
+                    {isUploadModalOpen && <FileUploaderModal indexName={indexName} show={isUploadModalOpen} hideIndexModal={onHide} onHide={() => setIsUploadModalOpen(false)} />}
                 </div>
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>

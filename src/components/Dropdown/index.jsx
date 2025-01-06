@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { MainContext } from '../../contexts/mainContext';
 
-const Dropdown = ({ options }) => {
+const Dropdown = ({ options, indexName = '' }) => {
 
     const { theme } = useContext(MainContext);
 
-    const [selectedOption, setSelectedOption] = useState("HR");
+    const [selectedOption, setSelectedOption] = useState(indexName || options[0].label);
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => setIsOpen(!isOpen);

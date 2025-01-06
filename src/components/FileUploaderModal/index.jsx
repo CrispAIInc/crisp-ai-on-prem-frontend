@@ -4,7 +4,7 @@ import { MainContext } from '../../contexts/mainContext';
 import FileUploader from '../FileUploader';
 import Dropdown from '../Dropdown';
 
-export default function FileUploaderModal({ show, onHide, hideIndexModal }) {
+export default function FileUploaderModal({ show, onHide, hideIndexModal, indexName }) {
 
     const { theme, categoryOptions } = useContext(MainContext);
 
@@ -24,7 +24,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal }) {
             className=""
         >
             <Modal.Body className={`flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
-                <Dropdown options={categoryOptions} />
+                <Dropdown indexName={indexName} options={categoryOptions} />
                 <FileUploader />
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
