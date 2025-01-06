@@ -572,12 +572,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
         currentResource?.file_type === "pdf" && (
           <>
             <div
-              className="relative h-[70vh] w-full mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-x-hidden"
+              className="relative h-[100vh] w-[75%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-x-hidden"
               ref={PdfContainer}
+              style={{ height: '550px', overflow: 'auto' }}
             >
               <Document
                 className="!w-full mx-auto relative"
                 file={resourceURL}
+
                 onLoadSuccess={onDocumentLoadSuccess}
               >
                 <CancelIcon
@@ -596,7 +598,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       _className="mx-auto !w-full !min-w-0"
                       className="!w-full mx-auto"
                       pageNumber={index + 1}
-                      scale={1.0}
+                      scale={0.7}
+                      width={window.innerWidth * 0.8}
                     />
                   </div>
                 ))}
