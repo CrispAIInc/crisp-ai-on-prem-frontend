@@ -88,7 +88,7 @@ const ChatPanel = () => {
         id="uncontrolled-tab-example"
         className={`my-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
       >
-        <Tab eventKey="genMetadata" title="GenMetadata" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}} disabled={!isIngestionEnabled}>
+        <Tab eventKey="genMetadata" title="GenMetadata" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}} >
           <MetadataGen key={0} name="genMetadata" />
           {(activeTab === 'genMetadata' && (Boolean(localStorage.getItem(`guide_completed_genMetadata`)) === false || localStorage.getItem(`guide_completed_genMetadata`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genMetadata" />}
         </Tab>
