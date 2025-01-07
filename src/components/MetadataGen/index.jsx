@@ -5,6 +5,7 @@ import { MainContext } from '../../contexts/mainContext';
 import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
 import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
+import makeApiRequest from '../../api';
 
 
 const options = [
@@ -70,7 +71,8 @@ function MetadataGen() {
             const payload = {
                 category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             };
-            console.log('Generating metadata...', payload);
+            let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
+            console.log(results);
         } catch (error) {
             console.error(error);
         } finally {
