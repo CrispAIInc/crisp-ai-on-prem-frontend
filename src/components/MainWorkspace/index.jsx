@@ -197,6 +197,32 @@ const MainWorkspace = ({ theme }) => {
     'display',
   ];
 
+  const commitSelectedSources = () => {
+    knowledgeBase.map((item) => {
+      if (item.is_selected) {
+        setSelectedSources((prev) => {
+          const itemExist = prev.find(i => i.source_path === item.source_path);
+          if (!itemExist) {
+            return [
+              ...prev,
+              {
+                source_path: item.source_path,
+                category: item.category,
+                file_type: item.file_type,
+              },
+            ];
+          }
+          return prev;
+        });
+      } else {
+        setSelectedSources((prev) =>
+          prev.filter((source) => source !== item.source_path)
+        );
+      }
+      return item;
+    });
+  };
+
   const [fromChat, setFromChat] = useState(false);
   const [isManualNote, setIsManualNote] = useState(false);
   // this indicates wether the user is using the model in the wild (MiW)
@@ -383,6 +409,7 @@ const MainWorkspace = ({ theme }) => {
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
     fileFormats,
+    commitSelectedSources,
     isLeftSidebarOpen, setIsLeftSidebarOpen,
     isRightSidebarOpen, setIsRightSidebarOpen,
     modules,
