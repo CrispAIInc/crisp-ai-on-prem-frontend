@@ -4,6 +4,7 @@ import MetadataOptions from "../MetadataOptions";
 import { MainContext } from '../../contexts/mainContext';
 import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
+import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 
 
 const options = [
@@ -35,6 +36,8 @@ function MetadataGen() {
     const [isLoading, setIsLoading] = useState(false);
 
     const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_selected === false));
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
         setIsKnowledgeBaseEmpty(knowledgeBase.every(kb => kb.is_selected === false));
@@ -72,6 +75,7 @@ function MetadataGen() {
             console.error(error);
         } finally {
             setIsLoading(false);
+            setIsModalVisible(true);
         }
     }
 
@@ -104,6 +108,9 @@ function MetadataGen() {
                     </p>
                 )}
             </div>
+
+            {/* modal to add sources to current KB*/}
+            <AddToKnowledgeBaseModal show={isModalVisible} onHide={() => setIsModalVisible(false)} />
         </div>
     );
 }
