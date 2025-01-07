@@ -715,14 +715,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
       {
         currentResource?.file_type === "img" && (
           <div className="pb-10">
-            <div className="relative w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+            <div className="relative pt-[56.25%] w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
               <CancelIcon
                 color="error"
                 onClick={closeImage}
                 className="absolute right-[1%] top-[15px] cursor-pointer shadow-lg "
               />
               <img
-                className="w-full !h-full pt-2 rounded-lg source-img"
+                className="absolute top-0 left-0 object-contain w-full h-full"
                 src={resourceURL}
               />
             </div>
