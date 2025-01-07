@@ -19,11 +19,13 @@ export function IndexModal({ show, onHide, handleUpload }) {
         setIsLoading(true);
         if (indexName === '') {
             toast('Index cannot be empty', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            setIsLoading(false);
             return;
         }
 
         if (categoryOptions.find(cat => cat.label?.toLowerCase() === indexName?.toLowerCase())) {
             toast('Index already exists', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            setIsLoading(false);
             return;
         }
 
@@ -33,10 +35,11 @@ export function IndexModal({ show, onHide, handleUpload }) {
         } catch (error) {
             console.log(error.response.data.error);
             toast(error.response.data.error || 'Error creating index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
-            return;
+            setIsLoading(false);
         } finally {
             setIsLoading(false);
         }
+
 
         // onHide();
     }

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { MainContext } from '../../contexts/mainContext';
 
-const Dropdown = ({ options, indexName = '' }) => {
+const Dropdown = ({ options, indexName = '', label = '', onChange }) => {
 
     const { theme } = useContext(MainContext);
 
@@ -13,35 +13,39 @@ const Dropdown = ({ options, indexName = '' }) => {
     const handleOptionClick = (option) => {
         setSelectedOption(option.label);
         setIsOpen(false);
+        onChange(option);
     };
 
     return (
-        <div className="relative w-64">
-            <button
-                onClick={toggleDropdown}
-                className={`w-full px-4 py-2 text-left  rounded-md shadow-sm focus:!outline-none ${theme === 'light' ? 'hover:bg-light-hover-100 !border bg-white' : 'hover:bg-background_workspace !border !border-slate-500 bg-textColor-300'}`}
-            >
-                {selectedOption}
-                <span className={`float-right text-xl p-0 ${isOpen ? "rotate-180" : "rotate-0"
-                    }`}>▾</span>
-            </button>
+        <div>
+            <span className={`text-xs font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{label}</span>
+            <div className="relative w-64">
+                <button
+                    onClick={toggleDropdown}
+                    className={`w-full px-4 py-2 text-left  rounded-md shadow-sm focus:!outline-none ${theme === 'light' ? 'hover:bg-light-hover-100 !border bg-white' : 'hover:bg-background_workspace !border !border-slate-500 bg-textColor-300'}`}
+                >
+                    {selectedOption}
+                    <span className={`float-right text-xl p-0 ${isOpen ? "rotate-180" : "rotate-0"
+                        }`}>▾</span>
+                </button>
 
-            {isOpen && (
-                <ul className={`absolute z-10 pl-0 w-full max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 mt-1 rounded-md shadow-lg ${theme === 'light' ? 'bg-white !border' : 'bg-textColor-300 !border !border-slate-500'}`}>
-                    {options.map((option) => {
-                        if (option.value !== "all") {
-                            return <li
-                                key={option.label}
-                                onClick={() => handleOptionClick(option)}
-                                className="px-4 py-2 cursor-pointer hover:bg-primary-100/20"
-                            >
-                                <div className="font-medium">{option.label}</div>
-                                <div className="text-sm text-gray-500">{option.details}</div>
-                            </li>;
-                        }
-                    })}
-                </ul>
-            )}
+                {isOpen && (
+                    <ul className={`absolute z-10 pl-0 w-full max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 mt-1 rounded-md shadow-lg ${theme === 'light' ? 'bg-white !border' : 'bg-textColor-300 !border !border-slate-500'}`}>
+                        {options.map((option) => {
+                            if (option.value !== "all") {
+                                return <li
+                                    key={option.label}
+                                    onClick={() => handleOptionClick(option)}
+                                    className="px-4 py-2 cursor-pointer hover:bg-primary-100/20"
+                                >
+                                    <div className="font-medium">{option.label}</div>
+                                    <div className="text-sm text-gray-500">{option.details}</div>
+                                </li>;
+                            }
+                        })}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 };

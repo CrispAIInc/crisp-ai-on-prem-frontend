@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-const FileUploader = () => {
+const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '' }) => {
     const [fileThumbnails, setFileThumbnails] = useState([]);
 
     const handleFileUpload = (event) => {
         const files = Array.from(event.target.files);
+        setSelectedFiles(files);
         const thumbnails = files.map((file) => {
             const type = file.type;
             const preview =
@@ -79,7 +80,7 @@ const FileUploader = () => {
             <input
                 type="file"
                 multiple
-                accept="image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                accept={selectedFileFormat || ''}
                 className="hidden"
                 id="file-input"
                 onChange={handleFileUpload}

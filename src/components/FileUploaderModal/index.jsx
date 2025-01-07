@@ -1,17 +1,32 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 import FileUploader from '../FileUploader';
 import Dropdown from '../Dropdown';
 
-export default function FileUploaderModal({ show, onHide, hideIndexModal, indexName }) {
+export default function FileUploaderModal({ show, onHide, hideIndexModal, indexName, handleUpload }) {
 
-    const { theme, categoryOptions } = useContext(MainContext);
+    const { theme, categoryOptions, fileFormats, setSelectedCategory } = useContext(MainContext);
+
 
     function uploadSources() {
+        handleUpload(null, selectedFileFormat, selectedFiles);
         onHide();
         hideIndexModal();
     }
+
+    const [selectedIndex, setSelectedIndex] = useState(indexName || categoryOptions[0].value);
+    function handleIndexChange({ value }) {
+        setSelectedIndex(value);
+        setSelectedCategory(value);
+    }
+
+    const [selectedFileFormat, setSelectedFileFormat] = useState(fileFormats[0].value);
+    function handleFileFormatChange({ value }) {
+        setSelectedFileFormat(value);
+    }
+
+    const [selectedFiles, setSelectedFiles] = useState([]);
 
     return (
         <Modal
@@ -24,8 +39,11 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
             className=""
         >
             <Modal.Body className={`flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
-                <Dropdown indexName={indexName} options={categoryOptions} />
-                <FileUploader />
+                <div className="flex items-center gap-2">
+                    <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={indexName} options={categoryOptions} />
+                    <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} />
+                </div>
+                <FileUploader selectedFileFormat={selectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
                 <div

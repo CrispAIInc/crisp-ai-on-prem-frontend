@@ -33,6 +33,7 @@ import {
 } from "@mui/icons-material";
 import { IndexModal } from '../IndexModal';
 import MeatadataOptions from '../MetadataOptions';
+import toast from 'react-simple-toasts';
 
 const ContentSection = ({
     onThumbnailClick,
@@ -189,10 +190,10 @@ const ContentSection = ({
             console.log(knowledgeBase);
         }
     };
-    const handleUpload = async (event, fileFormat) => {
+    const handleUpload = async (event, fileFormat, _files) => {
         try {
             setIsUploading(true);
-            const files = Array.from(event.target.files);
+            const files = _files || Array.from(event.target.files);
             const formData = new FormData();
             files.forEach((file) => {
                 formData.append("file", file);
@@ -201,6 +202,7 @@ const ContentSection = ({
             });
 
             await makeApiRequest(`/upload`, "post", formData, { 'Content-type': "multipart/form-data" });
+            toast('File uploaded successfully', { className: `p-2 rounded-md`, theme });
             const data = await makeApiRequest(
                 `/content`,
                 "post",

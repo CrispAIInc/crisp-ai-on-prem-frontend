@@ -8,6 +8,10 @@ import ContentPanel from "../ContentPanel";
 import Workspace from "../Workspace";
 import ChatPanel from "../ChatPanel";
 
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
+import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
+
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const MainWorkspace = ({ theme }) => {
@@ -42,6 +46,30 @@ const MainWorkspace = ({ theme }) => {
   //   { value: "insurance", label: "Insurance" },
   //   { value: "technical content", label: "Technical Content" },
   // ];
+
+  /**
+   * .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, application/pdf, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation
+   */
+  const fileFormats = [
+    {
+      label: "PDF",
+      icon: <InsertDriveFileOutlinedIcon />,
+      extensions: [".pdf"],
+      value: "pdf"
+    },
+    {
+      label: "Image",
+      icon: <InsertPhotoOutlinedIcon />,
+      extensions: [".jpg", ".jpeg", ".png", "image/*", ".gif", ".bmp", ".webp"],
+      value: "img"
+    },
+    {
+      label: "Video",
+      icon: <SlideshowOutlinedIcon />,
+      extensions: [".mp4", ".mov", ".avi", ".wmv", ".mkv", ".webm", "video/*"],
+      value: "video"
+    }
+  ];
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   useEffect(() => {
@@ -354,6 +382,7 @@ const MainWorkspace = ({ theme }) => {
     languageOptions,
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
+    fileFormats,
     isLeftSidebarOpen, setIsLeftSidebarOpen,
     isRightSidebarOpen, setIsRightSidebarOpen,
     modules,

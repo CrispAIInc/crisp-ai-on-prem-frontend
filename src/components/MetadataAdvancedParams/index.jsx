@@ -4,6 +4,7 @@ import { MainContext } from '../../contexts/mainContext';
 import Slider from '../Slider';
 import MetadataVerbosity from '../MetadataVerbosity';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
+import InfoTooltip from '../InfoTooltip';
 
 
 export default function MetadataAdvancedParams({ temperatureValue,
@@ -46,7 +47,10 @@ export default function MetadataAdvancedParams({ temperatureValue,
                 {/* temperature */}
                 <div className={`flex flex-col gap-0`}>
                     <div className='flex items-center justify-between'>
-                        <p className={`select-none ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Temperature</p>
+                        <div className='flex items-center gap-2'>
+                            <p className={`select-none ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Temperature</p>
+                            {/* <InfoTooltip tooltipText="Temperature adjusts how random the text is. Higher means more creative, lower means more predictable." /> */}
+                        </div>
                         <input
                             type="number"
                             min="0"
@@ -64,7 +68,10 @@ export default function MetadataAdvancedParams({ temperatureValue,
 
                 {/* verbosity */}
                 <div className={`flex flex-col gap-0`}>
-                    <p className={`select-none ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Verbosity</p>
+                    <div className="flex items-center gap-2">
+                        <p className={`select-none ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Verbosity</p>
+                        {/* <InfoTooltip tooltipText="Verbosity controls response length: higher gives more detail, lower gives less." /> */}
+                    </div>
                     <MetadataVerbosity verbosityValue={verbosityValue} setVerbosityValue={handleChange} />
                 </div>
             </div>
