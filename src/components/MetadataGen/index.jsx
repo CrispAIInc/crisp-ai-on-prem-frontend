@@ -18,7 +18,7 @@ const options = [
 ];
 
 function MetadataGen() {
-    const { knowledgeBase, theme } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedCategory } = useContext(MainContext);
 
     const [selectedOptions, setSelectedOptions] = useState([options[0]]);
 
@@ -68,7 +68,7 @@ function MetadataGen() {
 
         try {
             const payload = {
-                sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
+                category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             };
             console.log('Generating metadata...', payload);
         } catch (error) {
