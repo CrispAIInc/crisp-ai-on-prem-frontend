@@ -388,6 +388,8 @@ const MainWorkspace = ({ theme }) => {
   const [isNotesLoading, setIsNotesLoading] = useState(false);
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
+  const [translatedResource, setTranslatedResource] = useState([]);
+
   // useEffect(() => {
   //   if (knowledgeBase.every((item) => item.is_selected === false)) {
   //     console.log("disabled");
@@ -404,6 +406,7 @@ const MainWorkspace = ({ theme }) => {
   const value = {
     API_ENDPOINT,
     workspaceContainer,
+    translatedResource, setTranslatedResource,
     categoryOptions, setCategoryOptions,
     languageOptions,
     theme, activeView, setActiveView,

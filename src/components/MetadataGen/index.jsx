@@ -19,7 +19,7 @@ const options = [
 ];
 
 function MetadataGen() {
-    const { knowledgeBase, theme, selectedCategory } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedCategory, translatedResource, setTranslatedResource } = useContext(MainContext);
 
     const [selectedOptions, setSelectedOptions] = useState([options[0]]);
 
@@ -72,7 +72,8 @@ function MetadataGen() {
                 category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             };
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
-            console.log(results);
+            console.log(Array.isArray(results));
+            setTranslatedResource(results);
         } catch (error) {
             console.error(error);
         } finally {

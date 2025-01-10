@@ -160,8 +160,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
     activeView,
     theme,
     selectedStory,
+    translatedResource, setTranslatedResource,
   } = useContext(MainContext);
-  const [translatedResource, setTranslatedResource] = useState(currentResource);
+  // const [generatedResource, setTranslatedResource] = useState(currentResource);
+  const [generatedResource, setGeneratedResource] = useState(null);
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
   const [numPages, setNumPages] = useState();
   const [isPdfLoaded, setIsPdfLoaded] = useState(false);
@@ -171,6 +173,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
 
   let currentResourceType = currentResource?.file_type;
+  console.log(generatedResource);
 
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
@@ -199,12 +202,16 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   useEffect(() => {
     if (activeView === "resource") {
-      setTranslatedResource(currentResource);
+      // setTranslatedResource(currentResource);
       if (currentResource) {
-        translateMetadata("en", currentResource);
+        setGeneratedResource(translatedResource?.find((item) => item.source_path === currentResource.source_path));
+        console.log(translatedResource?.find((item) => item.source_path === currentResource.source_path));
+        // console.log(item.source_path === currentResource.source_path)
+        console.log(generatedResource);
+        // translateMetadata("en", currentResource);
       }
     }
-  }, [currentResource?.source_path]);
+  }, [currentResource?.source_path, translatedResource]);
 
   const closeVideo = (event) => {
     event.preventDefault();
@@ -448,115 +455,115 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
-                      translateMetadata(lang.value, translatedResource)
+                      translateMetadata(lang.value, generatedResource)
                     }
                     placeholder="Select a language"
                   />
                 </div>
                 <>
-                  {/* {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
-                    <Accordion heading={translatedResource?.combined_summary?.title} isFirstOpen>
+                  {/* {(generatedResource?.combined_summary?.content !== "" && generatedResource?.combined_summary?.content !== undefined) && <>
+                    <Accordion heading={generatedResource?.combined_summary?.title} isFirstOpen>
                       <p
                         className={`text-md ${theme === "light"
                           ? "text-textColor-300"
                           : "text-textColor-100"
                           }`}
 
-                        dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
+                        dangerouslySetInnerHTML={{ __html: `${generatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
                       ></p>
                     </Accordion>
                   </>} */}
 
-                  {/* {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
-                    <Accordion heading={translatedResource?.visual_summary?.title}>
+                  {/* {(generatedResource?.visual_summary?.content !== "" && generatedResource?.visual_summary?.content !== undefined) && <>
+                    <Accordion heading={generatedResource?.visual_summary?.title}>
                       <p
                         className={`text-md ${theme === "light"
                           ? "text-textColor-300"
                           : "text-textColor-100"
                           }`}
-                        dangerouslySetInnerHTML={{ __html: `${translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
+                        dangerouslySetInnerHTML={{ __html: `${generatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
                       ></p>
                     </Accordion>
                   </>} */}
 
-                  {translatedResource?.summary?.content !== undefined &&
+                  {generatedResource?.metadata?.summary?.content !== undefined &&
                     <>
-                      <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
+                      <Accordion heading={generatedResource?.metadata?.summary?.title} isFirstOpen>
                         <p
                           className={`text-md ${theme === "light"
                             ? "text-textColor-300"
                             : "text-textColor-100"
                             }`}
-                          dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
+                          dangerouslySetInnerHTML={{ __html: `<p>${generatedResource?.metadata?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
                         ></p>
                       </Accordion>
                     </>}
 
-                  {/* {translatedResource?.topic_summaries?.content !== undefined &&
+                  {/* {generatedResource?.metadata?.topic_summaries?.content !== undefined &&
                     <>
-                      <Accordion heading={translatedResource?.topic_summaries?.title}>
+                      <Accordion heading={generatedResource?.metadata?.topic_summaries?.title}>
                         <p
                           className={`text-md ${theme === "light"
                             ? "text-textColor-300"
                             : "text-textColor-100"
                             }`}
-                          dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                          dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
                         ></p>
                       </Accordion>
                     </>} */}
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
-                {/* {translatedResource?.transcript?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.transcript?.title}>
+                {/* {generatedResource?.metadata?.transcript?.content !== undefined && <>
+                  <Accordion heading={generatedResource?.metadata?.transcript?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
                     >
                     </p>
                   </Accordion>
                 </>} */}
-                {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.keywords?.title}>
+                {generatedResource?.metadata?.keywords?.content !== undefined && <>
+                  <Accordion heading={generatedResource?.metadata?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
+                        generatedResource?.metadata?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
                       }
-                      {/* {translatedResource?.keywords?.content} */}
+                      {/* {generatedResource?.metadata?.keywords?.content} */}
                     </p>
                   </Accordion>
                 </>}
-                {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
+                {generatedResource?.metadata?.highlights?.content !== undefined && <Accordion heading={generatedResource?.metadata?.highlights?.title}>
                   <div>
                     {
-                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
+                      generatedResource?.metadata?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
                         <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
                       ))
                     }
 
-                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
+                    {generatedResource?.metadata?.highlights?.content.slice(0, visibleHighlightCount).length < generatedResource?.metadata?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
                   </div>
                 </Accordion>}
 
-                {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
+                {generatedResource?.metadata?.chapters?.content !== undefined && <Accordion heading={generatedResource?.metadata?.chapters?.title}>
                   {isMobile ? (
-                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
+                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={generatedResource?.metadata?.chapters?.content} />
                   ) : (
                     <>
-                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
-                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
+                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={generatedResource?.metadata?.chapters?.content?.slice(0, visibleChaptersCount)} />
+                      {generatedResource?.metadata?.chapters?.content?.slice(0, visibleChaptersCount).length < generatedResource?.metadata?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
                     </>
                   )}
                 </Accordion>}
 
-                {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
-                  <Faqs heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
+                {generatedResource?.metadata?.faqs?.content !== undefined && <div className="mt-5 mb-5">
+                  <Faqs heading={generatedResource?.metadata?.faqs?.title} faqs={generatedResource?.metadata?.faqs?.content} />
                 </div>}
               </div>
             ) : (
@@ -622,84 +629,84 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
-                      translateMetadata(lang.value, translatedResource)
+                      translateMetadata(lang.value, generatedResource)
                     }
                     placeholder="Select a language"
                   />
                 </div>
 
-                {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
+                {generatedResource?.metadata?.summary?.content !== undefined && <>
+                  <Accordion heading={generatedResource?.metadata?.summary?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.summary?.content?.replace(/\n/gi, '<br />')}` }}
                     ></p>
                   </Accordion>
                 </>}
 
-                {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.keywords?.title}>
+                {generatedResource?.metadata?.keywords?.content !== undefined && <>
+                  <Accordion heading={generatedResource?.metadata?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
+                        generatedResource?.metadata?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
                       }
-                      {/* {translatedResource?.keywords?.content} */}
+                      {/* {generatedResource?.metadata?.keywords?.content} */}
                     </p>
                   </Accordion>
                 </>}
-                {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
+                {generatedResource?.metadata?.highlights?.content !== undefined && <Accordion heading={generatedResource?.metadata?.highlights?.title}>
                   <div>
                     {
-                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
+                      generatedResource?.metadata?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
                         <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
                       ))
                     }
 
-                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
+                    {generatedResource?.metadata?.highlights?.content.slice(0, visibleHighlightCount).length < generatedResource?.metadata?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
                   </div>
                 </Accordion>}
 
-                {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
+                {generatedResource?.metadata?.chapters?.content !== undefined && <Accordion heading={generatedResource?.metadata?.chapters?.title}>
                   {isMobile ? (
-                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
+                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={generatedResource?.metadata?.chapters?.content} />
                   ) : (
                     <>
-                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
-                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
+                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={generatedResource?.metadata?.chapters?.content?.slice(0, visibleChaptersCount)} />
+                      {generatedResource?.metadata?.chapters?.content?.slice(0, visibleChaptersCount).length < generatedResource?.metadata?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
                     </>
                   )}
                 </Accordion>}
 
-                {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
-                  <Faqs heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
+                {generatedResource?.metadata?.faqs?.content !== undefined && <div className="mt-5 mb-5">
+                  <Faqs heading={generatedResource?.metadata?.faqs?.title} faqs={generatedResource?.metadata?.faqs?.content} />
                 </div>}
 
-                {/* {translatedResource?.topic_summaries?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.topic_summaries?.title}>
+                {/* {generatedResource?.metadata?.topic_summaries?.content !== undefined && <>
+                  <Accordion heading={generatedResource?.metadata?.topic_summaries?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
                     ></p>
                   </Accordion>
                 </>} */}
                 {/* 
-                {translatedResource?.keywords?.content !== undefined && (<>
-                  <Accordion heading={translatedResource?.keywords?.title}>
+                {generatedResource?.metadata?.keywords?.content !== undefined && (<>
+                  <Accordion heading={generatedResource?.metadata?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
+                        generatedResource?.metadata?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
                       }
                     </p>
                   </Accordion>
@@ -743,34 +750,34 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
-                      translateMetadata(lang.value, translatedResource)
+                      translateMetadata(lang.value, generatedResource)
                     }
                     placeholder="Select a language"
                   />
                 </div>
-                {translatedResource?.caption?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.caption?.title} isFirstOpen>
+                {generatedResource?.metadata?.caption?.content !== undefined && <>
+                  <Accordion heading={generatedResource?.metadata?.caption?.title} isFirstOpen>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.caption?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.caption?.content?.replace(/\n/gi, '<br />')}` }}
                     >
                     </p>
                   </Accordion>
                 </>}
 
-                {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.keywords?.title}>
+                {generatedResource?.metadata?.keywords?.content !== undefined && <>
+                  <Accordion heading={generatedResource?.metadata?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.keywords?.content?.map(({ keyword, id }) => <Chip key={id} content={keyword} />)
+                        generatedResource?.metadata?.keywords?.content?.map(({ keyword, id }) => <Chip key={id} content={keyword} />)
                       }
-                      {/* {translatedResource?.keywords?.content} */}
+                      {/* {generatedResource?.metadata?.keywords?.content} */}
                     </p>
                   </Accordion>
                 </>}
