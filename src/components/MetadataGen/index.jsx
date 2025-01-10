@@ -10,6 +10,7 @@ import makeApiRequest from '../../api';
 
 const options = [
     { id: "summary", name: "Summary", description: "Generate a concise video overview" },
+    { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
     { id: "highlights", name: "Highlights", description: "Capture key moments from the video" },
     { id: "chapters", name: "Chapters", description: "Divide video into meaningful sections" },
     { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
