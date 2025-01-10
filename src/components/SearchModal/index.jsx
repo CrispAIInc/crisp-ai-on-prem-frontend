@@ -1,9 +1,7 @@
 import { useContext } from "react";
 import Modal from "react-bootstrap/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
-import VideoThumbnail from "../VideoThumbnail";
 import PDFThumbnail from "../PDFThumbnail";
-import ImageThumbnail from "../ImageThumbnail";
 import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
 

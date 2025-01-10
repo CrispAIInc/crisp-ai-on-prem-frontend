@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 import FileUploaderModal from "../FileUploaderModal";
 import toast from 'react-simple-toasts';
-import Dropdown from '../Dropdown';
 import makeApiRequest from '../../api';
 import LoadingSpinner from "../LoadingSpinner";
 

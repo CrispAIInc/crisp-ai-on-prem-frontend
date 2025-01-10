@@ -4,14 +4,12 @@ import { MainContext } from '../../contexts/mainContext';
 import Slider from '../Slider';
 import MetadataVerbosity from '../MetadataVerbosity';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-import InfoTooltip from '../InfoTooltip';
 
 
 export default function MetadataAdvancedParams({ temperatureValue,
     setTemperatureValue,
     handleTemperatureChange,
     verbosityValue,
-    setVerbosityValue,
     handleChange, }) {
 
     const { sidebarWidth, maxWidth } = useResizableSidebar(200, false);

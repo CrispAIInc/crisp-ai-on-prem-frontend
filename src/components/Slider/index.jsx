@@ -1,6 +1,6 @@
 import { ThemeContext } from '@emotion/react';
 import { Box, Slider } from '@mui/material';
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
 
 const marks = [
     {

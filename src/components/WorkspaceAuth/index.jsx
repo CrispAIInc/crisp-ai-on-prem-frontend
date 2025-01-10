@@ -1,5 +1,3 @@
-import React from 'react';
-
 function WorkspaceAuth({ inputPassword, setInputPassword, handleLogin }) {
     return (
         <div className='h-screen bg-background text-textColor-200'>

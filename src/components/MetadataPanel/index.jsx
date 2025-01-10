@@ -3,12 +3,7 @@ import { MainContext } from "../../contexts/mainContext.js";
 import makeApiRequest from "../../api";
 import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
-import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import { Document, Page } from "react-pdf";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import LoadingSpinner from "../LoadingSpinner";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import CustomSelectTwo from "../CustomSelectTwo";
@@ -16,7 +11,6 @@ import { flattenMetadata, timeToSeconds } from '../../utils.js';
 import Chip from '../Chip/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import SearchSection from '../SearchSection';
-import FaqItem from '../FaqItem';
 import Faqs from '../Faqs';
 import Accordion from '../Accordion/index.jsx';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
@@ -30,118 +24,6 @@ import HorizontalCard from '../HorizontalCard/index.jsx';
  * faqs: [{id: number, question: string, answer: string}]
 */
 
-const highlights = [
-  {
-    id: 1,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:00:00", "00:02:10"],
-    title: "Highlight 1",
-  },
-  {
-    id: 2,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:02:10", "00:04:20"],
-    title: "Highlight 2",
-  },
-  {
-    id: 3,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:00:00", "00:02:10"],
-    title: "Highlight 3",
-  },
-  {
-    id: 4,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:02:10", "00:04:20"],
-    title: "Highlight 4",
-  },
-  {
-    id: 5,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:00:00", "00:02:10"],
-    title: "Highlight 5",
-  },
-  {
-    id: 6,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:02:10", "00:04:20"],
-    title: "Highlight 6",
-  },
-  {
-    id: 7,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:00:00", "00:02:10"],
-    title: "Highlight 7",
-  },
-  {
-    id: 8,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:02:10", "00:04:20"],
-    title: "Highlight 8",
-  },
-];
-
-const chapters = [
-  {
-    id: 1,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:00:00", "00:02:10"],
-    title: "Chapter 1",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-  {
-    id: 2,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:02:10", "00:04:20"],
-    title: "Chapter 2",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-  {
-    id: 3,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:04:20", "00:06:30"],
-    title: "Chapter 3",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-  {
-    id: 4,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:06:30", "00:08:40"],
-    title: "Chapter 4",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-  {
-    id: 5,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:08:40", "00:10:50"],
-    title: "Chapter 5",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-
-];
-
-const faqs = [
-  {
-    id: 1,
-    question: "What is West Point?",
-    answer: "West Point, officially known as the United States Military Academy (USMA), is a prestigious institution located in West Point, New York. It trains cadets to become officers in the United States Army."
-  },
-  {
-    id: 2,
-    question: "Where is West Point located?",
-    answer: "West Point is situated on the west bank of the Hudson River in New York State, approximately 50 miles north of New York City."
-  },
-  {
-    id: 3,
-    question: "How competitive is admission to West Point?",
-    answer: "West Point is highly selective, with an acceptance rate of around 10-12%. Applicants must meet rigorous academic, physical, and leadership criteria."
-  },
-  {
-    id: 4,
-    question: "What type of military training do cadets undergo?",
-    answer: "Cadets participate in rigorous military training programs, including field exercises, leadership training, and physical fitness programs."
-  },
-];
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {

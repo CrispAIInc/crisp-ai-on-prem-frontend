@@ -4,7 +4,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 // import FormLabel from '@mui/material/FormLabel';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 export default function MetadataVerbosity({ verbosityValue, setVerbosityValue }) {
