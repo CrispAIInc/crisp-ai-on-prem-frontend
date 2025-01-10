@@ -3,7 +3,7 @@ import { MainContext } from '../../contexts/mainContext';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
-function FaqItem({ item, isBoxed = false, answerType = "base", isFirstOpen = false }) {
+function FaqItem({ item, isBoxed = false, isFirstOpen = false }) {
 
     const [isOpen, setIsOpen] = useState(isFirstOpen);
     const { theme, setCurrentResource, workspaceContainer, setJumpToPage } = useContext(MainContext);

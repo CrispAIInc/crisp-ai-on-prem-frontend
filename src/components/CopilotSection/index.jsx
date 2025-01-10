@@ -24,12 +24,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     theme,
     currentResource,
     llmModels,
-    setCurrentResource,
     fromChat, setFromChat,
     isFoundationLlm,
     resourceURL,
     noteReferences,
-    setResourceURL,
     player,
     isPlayerReady,
     notes,
@@ -43,10 +41,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     selectedAll,
     isNewNote,
     setIsNewNote,
-    setSummary,
-    setJumpToPage,
     languageOptions, setIsManualNote,
-    setSummaries,
     setShowNoteDetails,
     setActiveView
   } = useContext(MainContext);

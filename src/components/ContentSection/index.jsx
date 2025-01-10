@@ -7,7 +7,6 @@ import { useContext, useEffect, useState } from "react";
 import makeApiRequest from "../../api";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 import FileFormatsModal from "../FileFormatsModal";
 import CategoriesModal from "../CategoriesModal";
@@ -21,18 +20,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import UploadIcon from '@mui/icons-material/Upload';
 import SearchSection from '../SearchSection';
 import { timeToSeconds } from '../../utils';
-import ButtonDropdown from '../ButtonDropdown';
-import {
-    Home,
-    ArrowForward,
-    Edit,
-    Upload,
-    Settings,
-    Folder,
-    Search,
-} from "@mui/icons-material";
 import { IndexModal } from '../IndexModal';
-import MeatadataOptions from '../MetadataOptions';
 import toast from 'react-simple-toasts';
 
 const ContentSection = ({
