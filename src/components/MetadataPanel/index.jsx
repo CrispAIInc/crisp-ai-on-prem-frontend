@@ -396,7 +396,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
-                {/* {generatedResource?.metadata?.transcript?.content !== undefined && <>
+                {generatedResource?.metadata?.transcript?.content !== undefined && <>
                   <Accordion heading={generatedResource?.metadata?.transcript?.title}>
                     <p
                       className={`text-md ${theme === "light"
@@ -408,7 +408,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     >
                     </p>
                   </Accordion>
-                </>} */}
+                </>}
                 {generatedResource?.metadata?.keywords?.content !== undefined && <>
                   <Accordion heading={generatedResource?.metadata?.keywords?.title}>
                     <p
@@ -569,18 +569,18 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   <Faqs heading={generatedResource?.metadata?.faqs?.title} faqs={generatedResource?.metadata?.faqs?.content} />
                 </div>}
 
-                {/* {generatedResource?.metadata?.topic_summaries?.content !== undefined && <>
-                  <Accordion heading={generatedResource?.metadata?.topic_summaries?.title}>
+                {generatedResource?.metadata?.transcript?.content !== undefined && <>
+                  <Accordion heading={generatedResource?.metadata?.transcript?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
                     ></p>
                   </Accordion>
-                </>} */}
+                </>}
                 {/* 
                 {generatedResource?.metadata?.keywords?.content !== undefined && (<>
                   <Accordion heading={generatedResource?.metadata?.keywords?.title}>
