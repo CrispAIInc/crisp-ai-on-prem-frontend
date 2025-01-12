@@ -10,7 +10,7 @@ import makeApiRequest from '../../api';
 
 const options = [
     { id: "summary", name: "Summary", description: "Generate a concise video overview" },
-    { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
+    // { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
     { id: "highlights", name: "Highlights", description: "Capture key moments from the video" },
     { id: "chapters", name: "Chapters", description: "Divide video into meaningful sections" },
     { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
@@ -20,7 +20,7 @@ const options = [
 ];
 
 function MetadataGen() {
-    const { knowledgeBase, theme, selectedCategory, translatedResource, setTranslatedResource } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, setTranslatedResource } = useContext(MainContext);
 
     const [selectedOptions, setSelectedOptions] = useState([options[0]]);
 
@@ -68,11 +68,21 @@ function MetadataGen() {
             toast('You must select at least one metadata option');
         }
 
+        const categoryValues = categoryOptions.map((option) => option.value);
+
         try {
             const payload = {
                 category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             };
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
+            // update content in /content
+            // ... /content
+            const data = await makeApiRequest(
+                "/content",
+                "post",
+                JSON.stringify(categoryValues)
+            );
+            setKnowledgeBase(data);
             console.log(Array.isArray(results));
             setTranslatedResource(results);
         } catch (error) {
