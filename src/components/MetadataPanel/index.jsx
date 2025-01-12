@@ -90,6 +90,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         console.log(translatedResource?.find((item) => item.source_path === currentResource.source_path));
         // console.log(item.source_path === currentResource.source_path)
         console.log(generatedResource);
+        console.log(translatedResource);
         // translateMetadata("en", currentResource);
       }
     }
@@ -569,7 +570,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   <Faqs heading={generatedResource?.metadata?.faqs?.title} faqs={generatedResource?.metadata?.faqs?.content} />
                 </div>}
 
-                {generatedResource?.metadata?.transcript?.content !== undefined && <>
+                {/* {generatedResource?.metadata?.transcript?.content !== undefined && <>
                   <Accordion heading={generatedResource?.metadata?.transcript?.title}>
                     <p
                       className={`text-md ${theme === "light"
@@ -580,7 +581,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
                     ></p>
                   </Accordion>
-                </>}
+                </>} */}
                 {/* 
                 {generatedResource?.metadata?.keywords?.content !== undefined && (<>
                   <Accordion heading={generatedResource?.metadata?.keywords?.title}>
@@ -637,15 +638,15 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     placeholder="Select a language"
                   />
                 </div>
-                {generatedResource?.metadata?.caption?.content !== undefined && <>
-                  <Accordion heading={generatedResource?.metadata?.caption?.title} isFirstOpen>
+                {generatedResource?.metadata?.summary?.content !== undefined && <>
+                  <Accordion heading={generatedResource?.metadata?.summary?.title} isFirstOpen>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.caption?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${generatedResource?.metadata?.summary?.content?.replace(/\n/gi, '<br />')}` }}
                     >
                     </p>
                   </Accordion>
