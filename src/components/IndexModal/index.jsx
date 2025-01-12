@@ -8,7 +8,7 @@ import LoadingSpinner from "../LoadingSpinner";
 
 export function IndexModal({ show, onHide, handleUpload }) {
 
-    const { theme, categoryOptions } = useContext(MainContext);
+    const { theme, categoryOptions, setCategoryOptions } = useContext(MainContext);
 
     const [indexName, setIndexName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +31,15 @@ export function IndexModal({ show, onHide, handleUpload }) {
         try {
             await makeApiRequest('/create-new-index', 'post', { category: indexName });
             setIsUploadModalOpen(true);
+            let { indexes } = await makeApiRequest("/get-indexes");
+            // transform the indexes to the format value/label
+            indexes = indexes.map((index) => {
+                return {
+                    value: index,
+                    label: index.charAt(0).toUpperCase() + index.slice(1),
+                };
+            });
+            setCategoryOptions(indexes);
         } catch (error) {
             console.log(error.response.data.error);
             toast(error.response.data.error || 'Error creating index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
