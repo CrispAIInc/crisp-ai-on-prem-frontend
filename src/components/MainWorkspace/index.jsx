@@ -35,6 +35,8 @@ const MainWorkspace = ({ theme }) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFormat, setSelectedFormat] = useState("all");
 
+  const [sourcesTobeCommited, setSourcesTobeCommited] = useState([]); // Sources to be commited to the Knowledge Base
+
   // const categoryOptions = [
   //   { value: "all", label: "All" },
   //   { value: "generic", label: "Generic" },
@@ -420,6 +422,7 @@ const MainWorkspace = ({ theme }) => {
     isEditingTitle, setIsEditingTitle,
     knowledgeBase, setKnowledgeBase,
     currentResource,
+    sourcesTobeCommited, setSourcesTobeCommited,
     setCurrentResource,
     noteReferences, setNoteReferences,
     resourceURL,

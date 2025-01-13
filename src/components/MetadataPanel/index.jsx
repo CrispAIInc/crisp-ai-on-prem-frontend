@@ -55,7 +55,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
 
   let currentResourceType = currentResource?.file_type;
-  console.log(generatedResource);
 
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
@@ -87,10 +86,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // setTranslatedResource(currentResource);
       if (currentResource) {
         setGeneratedResource(translatedResource?.find((item) => item.source_path === currentResource.source_path));
-        console.log(translatedResource?.find((item) => item.source_path === currentResource.source_path));
         // console.log(item.source_path === currentResource.source_path)
-        console.log(generatedResource);
-        console.log(translatedResource);
         // translateMetadata("en", currentResource);
       }
     }

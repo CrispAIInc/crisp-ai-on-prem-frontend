@@ -64,6 +64,7 @@ const ContentSection = ({
         commitSelectedSources,
         selectedCategory,
         setChatLoaded,
+        sourcesTobeCommited, setSourcesTobeCommited,
         selectedSources,
         setSelectedSources,
         selectedAll,
@@ -262,6 +263,7 @@ const ContentSection = ({
                 //     item.is_selected = newSelectedValue;
                 // });
             });
+            setSourcesTobeCommited(newSelectedValue ? knowledgeBase : []);
         }
         else {
             const updatedKnowledgeBase = knowledgeBase.map((item) => {
@@ -269,6 +271,7 @@ const ContentSection = ({
                 // console.log(item.file_type === format || format === 'all');
                 if (item.category.includes(category) && format === undefined) {
                     item.is_selected = !item.is_selected;
+
                     // setSelectedSources((prev) => {
                     //     const itemExist = prev.find(i => i.source_path === item.source_path);
                     //     if (!itemExist) {
@@ -304,8 +307,10 @@ const ContentSection = ({
                 }
                 // if (item.is_selected) setSelectedAll(false);
                 return item;
+
             });
             setKnowledgeBase({ ...updatedKnowledgeBase });
+            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
         }
     };
 

@@ -20,7 +20,7 @@ const options = [
 ];
 
 function MetadataGen() {
-    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, setTranslatedResource } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, setTranslatedResource, sourcesTobeCommited, setSourcesTobeCommited } = useContext(MainContext);
 
     const [selectedOptions, setSelectedOptions] = useState([options[0]]);
 
@@ -74,6 +74,7 @@ function MetadataGen() {
             const payload = {
                 category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             };
+            setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
             // update content in /content
             // ... /content
@@ -82,14 +83,25 @@ function MetadataGen() {
                 "post",
                 JSON.stringify(categoryValues)
             );
-            setKnowledgeBase(data);
-            console.log(Array.isArray(results));
+
+            setKnowledgeBase((prev) => {
+                const updatedKnowledgeBase = prev.map((kb) => {
+                    const updatedKb = data.find((d) => d.source_path === kb.source_path);
+                    if (updatedKb) {
+                        return { ...updatedKb, ...kb };
+                    }
+                    return kb;
+                });
+                return updatedKnowledgeBase;
+            });
             setTranslatedResource(results);
         } catch (error) {
             console.error(error);
         } finally {
             setIsLoading(false);
-            setIsModalVisible(true);
+            if (selectedOptions.find(op => op.id === 'embeddings')) {
+                setIsModalVisible(true);
+            }
         }
     }
 
