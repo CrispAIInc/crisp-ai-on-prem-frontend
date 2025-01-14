@@ -390,7 +390,7 @@ const MainWorkspace = ({ theme }) => {
   const [isNotesLoading, setIsNotesLoading] = useState(false);
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
-  const [translatedResource, setTranslatedResource] = useState([]);
+  const [generatedResources, setGeneratedResources] = useState([]);
 
   // useEffect(() => {
   //   if (knowledgeBase.every((item) => item.is_selected === false)) {
@@ -408,7 +408,7 @@ const MainWorkspace = ({ theme }) => {
   const value = {
     API_ENDPOINT,
     workspaceContainer,
-    translatedResource, setTranslatedResource,
+    generatedResources, setGeneratedResources,
     categoryOptions, setCategoryOptions,
     languageOptions,
     theme, activeView, setActiveView,

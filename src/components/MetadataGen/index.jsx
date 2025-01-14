@@ -20,7 +20,7 @@ const options = [
 ];
 
 function MetadataGen() {
-    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, setTranslatedResource, sourcesTobeCommited, setSourcesTobeCommited } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, generatedResources, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited } = useContext(MainContext);
 
     const [selectedOptions, setSelectedOptions] = useState([options[0]]);
 
@@ -84,17 +84,18 @@ function MetadataGen() {
                 JSON.stringify(categoryValues)
             );
 
-            setKnowledgeBase((prev) => {
-                const updatedKnowledgeBase = prev.map((kb) => {
-                    const updatedKb = data.find((d) => d.source_path === kb.source_path);
-                    if (updatedKb) {
-                        return { ...updatedKb, ...kb };
-                    }
-                    return kb;
-                });
-                return updatedKnowledgeBase;
-            });
-            setTranslatedResource(results);
+            // setKnowledgeBase((prev) => {
+            //     const updatedKnowledgeBase = prev.map((kb) => {
+            //         const updatedKb = data.find((d) => d.source_path === kb.source_path);
+            //         if (updatedKb) {
+            //             return { ...updatedKb, ...kb };
+            //         }
+            //         return kb;
+            //     });
+            //     return updatedKnowledgeBase;
+            // });
+            setKnowledgeBase(data);
+            setGeneratedResources(results);
         } catch (error) {
             console.error(error);
         } finally {
@@ -102,6 +103,9 @@ function MetadataGen() {
             if (selectedOptions.find(op => op.id === 'embeddings')) {
                 setIsModalVisible(true);
             }
+            // if (generatedResources.every(gr => gr.embeddings_generated === false)) {
+            //     setIsModalVisible(true);
+            // }
         }
     }
 
