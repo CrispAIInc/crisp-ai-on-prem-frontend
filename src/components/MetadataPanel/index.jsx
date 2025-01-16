@@ -410,6 +410,19 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     </Accordion>
                   </>} */}
 
+                  {translatedResource?.transcription?.content !== undefined && <>
+                    <Accordion heading={translatedResource?.transcription?.title}>
+                      <p
+                        className={`text-md ${theme === "light"
+                          ? "text-textColor-300"
+                          : "text-textColor-100"
+                          }`}
+
+                        dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
+                      >
+                      </p>
+                    </Accordion>
+                  </>}
                   {translatedResource?.summary?.content !== undefined &&
                     <>
                       <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
@@ -438,19 +451,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
-                {translatedResource?.transcription?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.transcription?.title}>
-                    <p
-                      className={`text-md ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
-                    >
-                    </p>
-                  </Accordion>
-                </>}
                 {translatedResource?.keywords?.content !== undefined && <>
                   <Accordion heading={translatedResource?.keywords?.title}>
                     <p
@@ -559,8 +560,21 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   />
                 </div>
 
+                {translatedResource?.transcription?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.transcription?.title}>
+                    <p
+                      className={`text-md ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
+
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
+                    >
+                    </p>
+                  </Accordion>
+                </>}
                 {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.summary?.title}>
+                  <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
@@ -611,15 +625,15 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   <Faqs heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
                 </div>}
 
-                {/* {translatedResource?.transcript?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.transcript?.title}>
+                {/* {translatedResource?.transcription?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.transcription?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
                     ></p>
                   </Accordion>
                 </>} */}
