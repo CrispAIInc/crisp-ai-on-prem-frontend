@@ -8,21 +8,12 @@ import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 import makeApiRequest from '../../api';
 
 
-const options = [
-    { id: "summary", name: "Summary", description: "Generate a concise video overview" },
-    // { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
-    { id: "highlights", name: "Highlights", description: "Capture key moments from the video" },
-    { id: "chapters", name: "Chapters", description: "Divide video into meaningful sections" },
-    { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
-    { id: "keywords", name: "Keywords", description: "Extract important terms from the video" },
-    { id: "knowledgeGraph", name: "Knowledge graph", description: "Visualize key concepts and relationships" },
-    { id: "embeddings", name: "Embeddings", description: "Create vector representations for search" },
-];
+
 
 function MetadataGen() {
-    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, generatedResources, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, metadataOptions } = useContext(MainContext);
 
-    const [selectedOptions, setSelectedOptions] = useState([options[0]]);
+    // const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
 
     const [temperatureValue, setTemperatureValue] = useState(0.2);
     function handleTemperatureChange(e) {
@@ -84,17 +75,17 @@ function MetadataGen() {
                 JSON.stringify(categoryValues)
             );
 
-            // setKnowledgeBase((prev) => {
-            //     const updatedKnowledgeBase = prev.map((kb) => {
-            //         const updatedKb = data.find((d) => d.source_path === kb.source_path);
-            //         if (updatedKb) {
-            //             return { ...updatedKb, ...kb };
-            //         }
-            //         return kb;
-            //     });
-            //     return updatedKnowledgeBase;
-            // });
-            setKnowledgeBase(data);
+            setKnowledgeBase((prev) => {
+                const updatedKnowledgeBase = prev.map((kb) => {
+                    const updatedKb = data.find((d) => d.source_path === kb.source_path);
+                    if (updatedKb) {
+                        return { ...updatedKb, ...kb };
+                    }
+                    return kb;
+                });
+                return updatedKnowledgeBase;
+            });
+            // setKnowledgeBase(data);
             setGeneratedResources(results);
         } catch (error) {
             console.error(error);
@@ -112,7 +103,7 @@ function MetadataGen() {
 
     return (
         <div className='z-20 flex flex-col gap-4'>
-            <MetadataOptions selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} options={options} />
+            <MetadataOptions selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} options={metadataOptions} />
             <MetadataAdvancedParams temperatureValue={temperatureValue}
                 setTemperatureValue={setTemperatureValue}
                 handleTemperatureChange={handleTemperatureChange}
