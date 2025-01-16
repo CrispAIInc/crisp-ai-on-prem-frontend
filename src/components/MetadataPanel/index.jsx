@@ -356,7 +356,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 {/* search */}
                 {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
                 {/* generate visual/combined summary */}
-                <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
+                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0) && <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
                   {/* {!isGeneratingCombinedSummary ? <div
                     className={`user-select-none flex items-center justify-center gap-2 py-1 mb-2 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`} onClick={() => generateVisualAndCombinedSummary()}>
                     <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
@@ -383,7 +383,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     }
                     placeholder="Select a language"
                   />
-                </div>
+                </div>}
                 <>
                   {/* {(generatedResource?.combined_summary?.content !== "" && generatedResource?.combined_summary?.content !== undefined) && <>
                     <Accordion heading={generatedResource?.combined_summary?.title} isFirstOpen>
