@@ -647,7 +647,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               <CancelIcon
                 color="error"
                 onClick={closeImage}
-                className="absolute right-[1%] top-[15px] cursor-pointer shadow-lg "
+                className="absolute right-[1%] top-[15px] z-10 cursor-pointer shadow-lg "
               />
               <img
                 className="absolute top-0 left-0 object-contain w-full h-full"
@@ -690,7 +690,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   </Accordion>
                 </>}
 
-                {translatedResource?.metadata?.keywords?.content !== undefined && <>
+                {translatedResource?.keywords?.content !== undefined && <>
                   <Accordion heading={translatedResource?.metadata?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
