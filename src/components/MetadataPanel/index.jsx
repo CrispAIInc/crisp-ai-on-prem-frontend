@@ -45,6 +45,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     activeView,
     theme,
     selectedStory,
+    knowledgeBase,
     generatedResources,
     setGeneratedResources,
   } = useContext(MainContext);
@@ -271,6 +272,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
       // console.log("httpResponseBody: ", httpResponseBody);
       setTranslatedResource({ ...httpResponseBody, lang: chosenLanguage });
+      // console.log(knowledgeBase?.find(item => item.source_path === currentResource.source_path));
+
     } catch (error) {
       console.log(error);
     } finally {
@@ -351,7 +354,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   }`}
               >
                 {/* search */}
-                {selectedOptions.find(op => op.id === "embeddings") && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
+                {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
                 {/* generate visual/combined summary */}
                 <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
                   {/* {!isGeneratingCombinedSummary ? <div
@@ -545,7 +548,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   }`}
               >
                 {/* search */}
-                {selectedOptions.find(op => op.id === "embeddings") && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
+                {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
                 <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}
@@ -666,7 +669,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   }`}
               >
                 {/* search */}
-                {selectedOptions.find(op => op.id === "embeddings") && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
+                {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
                 <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}
