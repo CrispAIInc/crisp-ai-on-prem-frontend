@@ -701,19 +701,19 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.metadata?.summary?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
                     >
                     </p>
                   </Accordion>
                 </>}
 
                 {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.metadata?.keywords?.title}>
+                  <Accordion heading={translatedResource?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
                       {
-                        translatedResource?.metadata?.keywords?.content?.map(({ keyword, id }) => <Chip key={id} content={keyword} />)
+                        translatedResource?.keywords?.content?.map(({ keyword, id }) => <Chip key={id} content={keyword} />)
                       }
                       {/* {translatedResource?.metadata?.keywords?.content} */}
                     </p>
