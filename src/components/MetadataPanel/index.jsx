@@ -550,7 +550,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               >
                 {/* search */}
                 {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
-                <div className="flex flex-wrap items-center justify-between gap-1">
+                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0) && <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
@@ -558,7 +558,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     }
                     placeholder="Select a language"
                   />
-                </div>
+                </div>}
 
                 {translatedResource?.transcription?.content !== undefined && <>
                   <Accordion heading={translatedResource?.transcription?.title}>
@@ -684,7 +684,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               >
                 {/* search */}
                 {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
-                <div className="flex flex-wrap items-center justify-between gap-1">
+                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0) && <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
@@ -692,7 +692,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     }
                     placeholder="Select a language"
                   />
-                </div>
+                </div>}
                 {translatedResource?.summary?.content !== undefined && <>
                   <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
                     <p
