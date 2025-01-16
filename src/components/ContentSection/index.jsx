@@ -26,7 +26,6 @@ import toast from 'react-simple-toasts';
 const ContentSection = ({
     onThumbnailClick,
     handleCheckboxChange,
-    knowledgeBase,
     setKnowledgeBase,
 }) => {
 
@@ -62,6 +61,7 @@ const ContentSection = ({
         setCurrentResource,
         player,
         commitSelectedSources,
+        knowledgeBase,
         selectedCategory,
         setChatLoaded,
         sourcesTobeCommited, setSourcesTobeCommited,
@@ -266,6 +266,7 @@ const ContentSection = ({
             setSourcesTobeCommited(newSelectedValue ? knowledgeBase : []);
         }
         else {
+            console.log(knowledgeBase.some((item) => item.is_selected));
             const updatedKnowledgeBase = knowledgeBase.map((item) => {
                 // console.log(item.category.includes(category));
                 // console.log(item.file_type === format || format === 'all');
@@ -309,7 +310,7 @@ const ContentSection = ({
                 return item;
 
             });
-            setKnowledgeBase({ ...updatedKnowledgeBase });
+            setKnowledgeBase(updatedKnowledgeBase);
             setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
         }
     };
@@ -458,6 +459,7 @@ const ContentSection = ({
                 <BaseHeading text='Selected sources' className="mt-4 mb-4" />
 
                 <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
+                    {console.log(knowledgeBase)}
                     {
                         knowledgeBase.some((item) => item.is_selected) > 0 && <div className={` grid grid-cols-[repeat(auto-fill,_112px)] h-full gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
                             {knowledgeBase.slice(0).reverse().map((item, index) => {
