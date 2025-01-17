@@ -425,7 +425,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   </>}
                   {translatedResource?.summary?.content !== undefined &&
                     <>
-                      <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
+                      <Accordion heading={translatedResource?.summary?.title}>
                         <p
                           className={`text-md ${theme === "light"
                             ? "text-textColor-300"
@@ -574,7 +574,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   </Accordion>
                 </>}
                 {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
+                  <Accordion heading={translatedResource?.summary?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
@@ -694,7 +694,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   />
                 </div>}
                 {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
+                  <Accordion heading={translatedResource?.summary?.title} >
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
