@@ -328,6 +328,7 @@ const ContentSection = ({
         });
         setKnowledgeBase(updatedKnowledgeBase);
         setSelectedSources([]);
+        setSourcesTobeCommited([]);
     };
 
     const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
@@ -483,9 +484,9 @@ const ContentSection = ({
                         knowledgeBase.some((item) => item.is_selected) > 0
                             ?
                             <>
-                                <div className="mx-auto w-fit">
+                                {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
                                     <CustomButton onClick={commitSelectedSources} className="my-1 text-white bg-primary-300">Update sources</CustomButton>
-                                </div>
+                                </div>}
                                 <div className="mx-auto w-fit">
                                     <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>
                                 </div>

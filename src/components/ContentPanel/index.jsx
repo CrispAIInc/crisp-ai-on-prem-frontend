@@ -26,6 +26,7 @@ const ContentPanel = () => {
         showSearchModal,
         setShowSearchModal,
         setSelectedSources,
+        setSourcesTobeCommited,
         selectedSources,
         knowledgeBase, setKnowledgeBase,
         setJumpToPage,
@@ -102,9 +103,19 @@ const ContentPanel = () => {
         });
         setKnowledgeBase(updatedKnowledgeBase);
 
+
         // item should exist in selectedSources and isSelected is true => remove it from selectedSources
         if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
             setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
+            setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+        }
+
+        // updated sourcesTobeCommiter
+        if (!file.is_selected) {
+            setSourcesTobeCommited((prev) => [...prev, file]);
+        }
+        else {
+            setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
         }
     };
 
