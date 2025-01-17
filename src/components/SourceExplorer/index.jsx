@@ -92,13 +92,13 @@ export function SourceExplorer(props) {
         return <>
             {props[viewModes[viewModes.length - 1]].map((item, index) => (
                 <div
-                    className="folder relative"
+                    className="relative folder"
                     onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
                     key={index}
                     onMouseOver={() => setItemToRemove(item.value)}
                 // onMouseLeave={() => setItemToRemove("")}
                 >
-                    {itemToRemove === item.value && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute right-3 top-0' />}
+                    {(itemToRemove === item.value && viewModes[viewModes.length - 1] === "categories") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
                     <FolderIcon sx={{ fontSize: 60 }} />
                     <p>{item.label}</p>
                 </div>
