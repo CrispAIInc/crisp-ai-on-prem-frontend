@@ -13,6 +13,7 @@ import StagedImageThumbnail from '../StagedImageThumbnail';
 import ImageIcon from '@mui/icons-material/Image';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import RemoveIndexModal from '../RemoveIndexModal';
 
 export function SourceExplorer(props) {
     const {
@@ -80,40 +81,30 @@ export function SourceExplorer(props) {
             </button>
         );
 
+    const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
+    function removeIndex(e) {
+        e.stopPropagation();
+        setShowRemoveIndexModal(true);
+    }
+    // const [showRemoveXItem, setShowRemoveXItem] = useState(null);
+    const [itemToRemove, setItemToRemove] = useState("");
     const renderFolders = () => {
-        return props[viewModes[viewModes.length - 1]].map((item, index) => (
-            <div
-                className="folder"
-                onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
-                key={index}
-            >
-                <FolderIcon sx={{ fontSize: 60 }} />
-                <p>{item.label}</p>
-            </div>
-        ));
-        // if (viewModes[viewModes.length - 1] === "categories") {
-        //     return props.categories.map((item, index) => (
-        //         <div
-        //             className="folder"
-        //             onClick={() => openCategoryFolder(item.value)}
-        //             key={index}
-        //         >
-        //             <FolderIcon sx={{ fontSize: 60 }} />
-        //             <p>{item.label}</p>
-        //         </div>
-        //     ));
-        // } else if (viewModes[viewModes.length - 1] === "formats") {
-        //     return props.formats.map((item, index) => (
-        //         <div
-        //             className="folder"
-        //             onClick={() => openFormatFolder(item.value)}
-        //             key={index}
-        //         >
-        //             <FolderIcon sx={{ fontSize: 60 }} />
-        //             <p>{item.label}</p>
-        //         </div>
-        //     ));
-        // }
+        return <>
+            {props[viewModes[viewModes.length - 1]].map((item, index) => (
+                <div
+                    className="folder relative"
+                    onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
+                    key={index}
+                    onMouseOver={() => setItemToRemove(item.value)}
+                // onMouseLeave={() => setItemToRemove("")}
+                >
+                    {itemToRemove === item.value && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute right-3 top-0' />}
+                    <FolderIcon sx={{ fontSize: 60 }} />
+                    <p>{item.label}</p>
+                </div>
+            ))}
+            <RemoveIndexModal index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
+        </>;
     };
 
     // useEffect(() => {
@@ -270,6 +261,7 @@ export function SourceExplorer(props) {
                     {viewModes[viewModes.length - 1] !== "files"
                         ? renderFolders()
                         : renderFiles()}
+                    {/* <RemoveIndexModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} /> */}
                 </div>
                 <div className="flex items-center mt-4 ">
                     <Checkbox
