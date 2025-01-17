@@ -353,7 +353,7 @@ const ContentSection = ({
                     </div>
                     {/* Ingestion */}
                     <div className="flex flex-col justify-start gap-2 mb-1">
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Ingestion</span>
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span>
                         <div className="flex flex-col gap-0 ml-2">
                             {/* <div
                                 className={`source-explorer  flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
@@ -385,7 +385,7 @@ const ContentSection = ({
                     </div>
                     {/* mrag */}
                     <div className="flex flex-col justify-start gap-2 mb-2">
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>MRAG</span>
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span>
                         <div className="flex flex-col ml-2">
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
