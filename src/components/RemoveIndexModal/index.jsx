@@ -5,7 +5,7 @@ import { MainContext } from '../../contexts/mainContext';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 
-function AddToKnowledgeBaseModal({ show, onHide, index }) {
+function AddToKnowledgeBaseModal({ show, onHide }) {
     const { theme } = useContext(MainContext);
 
     async function deleteIndex() {
@@ -36,7 +36,6 @@ function AddToKnowledgeBaseModal({ show, onHide, index }) {
                 <ReportProblemIcon style={{ fontSize: '100px', color: `orange` }} />
                 <h4>Are you sure you want to delete this index?</h4>
                 <h6 className='text-sm font-bold'>CAUTION: all sources from this category will be permanently deleted.</h6>
-                <h4>{index}</h4>
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
                 <div

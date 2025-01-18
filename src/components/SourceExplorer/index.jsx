@@ -103,7 +103,7 @@ export function SourceExplorer(props) {
                     <p>{item.label}</p>
                 </div>
             ))}
-            <RemoveIndexModal index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
+            <RemoveIndexModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
         </>;
     };
 
