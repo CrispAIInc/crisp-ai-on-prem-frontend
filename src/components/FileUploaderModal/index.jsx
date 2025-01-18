@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 import FileUploader from '../FileUploader';
@@ -8,6 +8,9 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
 
     const { theme, categoryOptions, fileFormats, setSelectedCategory } = useContext(MainContext);
 
+    useEffect(() => {
+        setSelectedCategory(indexName);
+    }, [indexName]);
 
     function uploadSources() {
         handleUpload(null, selectedFileFormat, selectedFiles);
@@ -15,7 +18,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
         hideIndexModal();
     }
 
-    const [selectedIndex, setSelectedIndex] = useState(indexName || categoryOptions[0].value);
+    const [selectedIndex, setSelectedIndex] = useState(indexName);
     function handleIndexChange({ value }) {
         setSelectedIndex(value);
         setSelectedCategory(value);
@@ -40,7 +43,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
         >
             <Modal.Body className={`flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
                 <div className="flex items-center gap-2">
-                    <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={indexName} options={categoryOptions} />
+                    <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={selectedIndex} options={categoryOptions} />
                     <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} />
                 </div>
                 <FileUploader selectedFileFormat={selectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />

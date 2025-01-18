@@ -22,15 +22,15 @@ export function IndexModal({ show, onHide, handleUpload }) {
             return;
         }
 
-        if (categoryOptions.find(cat => cat.label?.toLowerCase() === indexName?.toLowerCase())) {
-            toast('Index already exists', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
-            setIsLoading(false);
-            return;
-        }
+        // if (categoryOptions.find(cat => cat.label?.toLowerCase() === indexName?.toLowerCase())) {
+        //     toast('Index already exists', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+        //     setIsLoading(false);
+        //     return;
+        // }
 
         try {
-            await makeApiRequest('/create-new-index', 'post', { category: indexName });
-            setIsUploadModalOpen(true);
+            const newIndex = await makeApiRequest('/create-new-index', 'post', { category: indexName });
+            setIndexName(newIndex?.category);
             let { indexes } = await makeApiRequest("/get-indexes");
             // transform the indexes to the format value/label
             indexes = indexes.map((index) => {
@@ -46,6 +46,8 @@ export function IndexModal({ show, onHide, handleUpload }) {
             setIsLoading(false);
         } finally {
             setIsLoading(false);
+            // setIndexName(prev => (categoryOptions.find(index => index === prev)));
+            setIsUploadModalOpen(true);
         }
 
 
@@ -72,7 +74,9 @@ export function IndexModal({ show, onHide, handleUpload }) {
                         type="text"
                         name="indexName"
                         placeholder='Type index name here'
-                        id='indexName' value={indexName} onChange={(e) => setIndexName(e.target.value)}
+                        id='indexName'
+                        value={indexName}
+                        onChange={(e) => setIndexName(e.target.value)}
                         className={`block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${theme === 'dark' && 'bg-textColor-300'}`}
                         required
                         onKeyDown={(e) => e.key === 'Enter' && createIndex()}

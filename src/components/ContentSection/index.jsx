@@ -19,7 +19,7 @@ import CustomButton from '../CustomButton';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import UploadIcon from '@mui/icons-material/Upload';
 import SearchSection from '../SearchSection';
-import { checkSourcesInKnowledgeBase, timeToSeconds } from '../../utils';
+import { timeToSeconds } from '../../utils';
 import { IndexModal } from '../IndexModal';
 import toast from 'react-simple-toasts';
 
@@ -140,8 +140,6 @@ const ContentSection = ({
         // Update selectedAll state based on the check
         setSelectedAll(allSelected);
     }, [knowledgeBase]);
-
-    console.log(checkSourcesInKnowledgeBase(sourcesTobeCommited, knowledgeBase));
 
     const deleteResource = async (event, item) => {
         try {
