@@ -5,20 +5,30 @@ import { MainContext } from '../../contexts/mainContext';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 
-function AddToKnowledgeBaseModal({ show, onHide, index, deleteResource }) {
-    const { theme } = useContext(MainContext);
+function RemoveIndexModal({ show, onHide, index, deleteResource }) {
+    const { theme, knowledgeBase, setCategoryOptions } = useContext(MainContext);
 
     async function deleteIndex() {
         try {
             // remove sources before index
-            // deleteResource(null, )
-            // await makeApiRequest(`/remove-index/${index}`, 'delete');
-            // toast('Index deleted', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(index));
+            if (itemsToBeDeleted.length > 0) await deleteResource(null, itemsToBeDeleted);
+            await makeApiRequest(`/remove-index`, 'post', { index: index });
+            let { indexes } = await makeApiRequest("/get-indexes");
+            // transform the indexes to the format value/label
+            indexes = indexes.map((index) => {
+                return {
+                    value: index,
+                    label: index.charAt(0).toUpperCase() + index.slice(1),
+                };
+            });
+            console.log(indexes);
+            setCategoryOptions(indexes);
+            toast('Index deleted', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
         } catch (error) {
             console.log(error.response.data.error);
             toast(error.response.data.error || 'Error deleting index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
         }
-        console.log('Index deleted');
     }
 
     return (
@@ -56,4 +66,4 @@ function AddToKnowledgeBaseModal({ show, onHide, index, deleteResource }) {
     );
 }
 
-export default AddToKnowledgeBaseModal;
+export default RemoveIndexModal;
