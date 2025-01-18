@@ -19,7 +19,7 @@ import CustomButton from '../CustomButton';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import UploadIcon from '@mui/icons-material/Upload';
 import SearchSection from '../SearchSection';
-import { timeToSeconds } from '../../utils';
+import { checkSourcesInKnowledgeBase, timeToSeconds } from '../../utils';
 import { IndexModal } from '../IndexModal';
 import toast from 'react-simple-toasts';
 
@@ -140,6 +140,8 @@ const ContentSection = ({
         // Update selectedAll state based on the check
         setSelectedAll(allSelected);
     }, [knowledgeBase]);
+
+    console.log(checkSourcesInKnowledgeBase(sourcesTobeCommited, knowledgeBase));
 
     const deleteResource = async (event, item) => {
         try {
@@ -314,6 +316,11 @@ const ContentSection = ({
             setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
         }
     };
+
+    // update sourcesTobeCommited depending on knowledgeBase change
+    useEffect(() => {
+        setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
+    }, [knowledgeBase]);
 
     /**
      * Function to indicate wether a source thumbnail can be rendered in the selected sources section or not
