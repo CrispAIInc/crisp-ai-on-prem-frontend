@@ -5,13 +5,13 @@ import { MainContext } from '../../contexts/mainContext';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 
-function AddToKnowledgeBaseModal({ show, onHide }) {
+function AddToKnowledgeBaseModal({ show, onHide, index, deleteResource }) {
     const { theme } = useContext(MainContext);
 
     async function deleteIndex() {
         try {
             // remove sources before index
-            // ...
+            // deleteResource(null, )
             // await makeApiRequest(`/remove-index/${index}`, 'delete');
             // toast('Index deleted', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
         } catch (error) {

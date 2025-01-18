@@ -62,7 +62,7 @@ export function SearchModal(props) {
                                 </div>
                                 <DeleteIcon
                                     color='error'
-                                    onClick={(event) => props.deleteResource(event, index)}
+                                    onClick={(event) => props.deleteResource(event, [item])}
                                     className="absolute top-0 right-0"
                                 />
                             </div>

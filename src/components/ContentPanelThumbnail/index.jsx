@@ -50,7 +50,7 @@ const ContentPanelThumbnail = ({
           }
 
           <DeleteIcon
-            onClick={(event) => { event.stopPropagation(); deleteResource(event, item); }}
+            onClick={(event) => { event.stopPropagation(); deleteResource(event, [item]); }}
             style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
             className="cursor-pointermr-1"
           />

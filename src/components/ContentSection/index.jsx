@@ -141,16 +141,30 @@ const ContentSection = ({
         setSelectedAll(allSelected);
     }, [knowledgeBase]);
 
-    const deleteResource = async (event, item) => {
+    const deleteResource = async (event, items) => {
         try {
             setIsDeleting(true);
-            const requestBody = {
-                category: item.category,
-                fileName: item.source_path,
-                fileType: item.file_type,
-            };
+            // const formData = new FormData();
+            // items.forEach((file) => {
+            //     formData.append("category", file);
+            //     formData.append("category", selectedCategory);
+            //     formData.append("fileType", fileFormat);
+            // });
+            // const requestBody = {
+            //     category: item.category,
+            //     fileName: item.source_path,
+            //     fileType: item.file_type,
+            // };
 
-            await makeApiRequest(`/delete`, "post", requestBody);
+            const payload = items.map((item) => {
+                return {
+                    category: item.category,
+                    fileName: item.source_path,
+                    fileType: item.file_type,
+                };
+            });
+
+            await makeApiRequest(`/delete`, "post", { sources: payload });
 
             setChatLoaded(false);
             const { chat_is_initialized } = await makeApiRequest(

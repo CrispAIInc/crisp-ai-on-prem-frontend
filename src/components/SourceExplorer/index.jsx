@@ -103,7 +103,7 @@ export function SourceExplorer(props) {
                     <p>{item.label}</p>
                 </div>
             ))}
-            <RemoveIndexModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
+            <RemoveIndexModal deleteResource={props.deleteResource} index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
         </>;
     };
 
@@ -154,7 +154,7 @@ export function SourceExplorer(props) {
 
                                     <DeleteIcon
                                         style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                        onClick={(event) => props.deleteResource(event, file)}
+                                        onClick={(event) => props.deleteResource(event, [file])}
                                         className="delete-icon"
                                     />
                                 </div>
@@ -206,7 +206,7 @@ export function SourceExplorer(props) {
 
                                     <DeleteIcon
                                         style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                        onClick={(event) => props.deleteResource(event, file)}
+                                        onClick={(event) => props.deleteResource(event, [file])}
                                         className="delete-icon"
                                     />
                                 </div>
@@ -217,7 +217,7 @@ export function SourceExplorer(props) {
                                 </div>
                                 {/* <DeleteIcon
                                     color="error"
-                                    onClick={(event) => props.deleteResource(event, file)}
+                                    onClick={(event) => props.deleteResource(event, [file])}
                                     className="absolute top-0 right-0 delete-icon"
                                 /> */}
                             </div>
