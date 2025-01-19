@@ -81,6 +81,12 @@ export function SourceExplorer(props) {
             </button>
         );
 
+    useEffect(() => {
+        viewModes[viewModes.length - 1] !== "files"
+            ? renderFolders()
+            : renderFiles();
+    }, [knowledgeBase]);
+
     const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
     function removeIndex(e) {
         e.stopPropagation();
