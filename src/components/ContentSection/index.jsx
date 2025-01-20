@@ -100,7 +100,7 @@ const ContentSection = ({
     const [showFileFormatsModal, setShowFileFormatsModal] = useState(false);
     const [showCategoriesModal, setShowCategoriesModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false); // True when a resource is being deleted
-    const [clickedIndex] = useState(0);
+    const [clickedIndex, setClickedIndex] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     // Flag indicating weather source Explorer modal was opened by clicking the "Source Explorer" button
     // or not
@@ -144,6 +144,7 @@ const ContentSection = ({
     const deleteResource = async (event, items) => {
         try {
             setIsDeleting(true);
+            setClickedIndex(items[0]);
             // const formData = new FormData();
             // items.forEach((file) => {
             //     formData.append("category", file);
@@ -165,6 +166,8 @@ const ContentSection = ({
             });
 
             await makeApiRequest(`/delete`, "post", { sources: payload });
+
+            setKnowledgeBase((prev) => prev.filter(item => item.source_path !== items[0].source_path));
 
             setChatLoaded(false);
             const { chat_is_initialized } = await makeApiRequest(
