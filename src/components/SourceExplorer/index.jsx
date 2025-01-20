@@ -185,7 +185,7 @@ export function SourceExplorer(props) {
                                 }`}
                             key={index}
                         >
-                            {props.isDeleting && props.clickedIndex === index && (
+                            {props.isDeleting && props.clickedIndex === file && (
                                 <div className="thumbnail-loader">
                                     <LoadingSpinner />
                                 </div>
