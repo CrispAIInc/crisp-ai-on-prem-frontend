@@ -199,30 +199,61 @@ const MainWorkspace = ({ theme }) => {
     'display',
   ];
 
-  const commitSelectedSources = () => {
-    knowledgeBase.map((item) => {
-      if (item.is_selected) {
-        setSelectedSources((prev) => {
-          const itemExist = prev.find(i => i.source_path === item.source_path);
-          if (!itemExist) {
-            return [
-              ...prev,
-              {
-                source_path: item.source_path,
-                category: item.category,
-                file_type: item.file_type,
-              },
-            ];
-          }
-          return prev;
-        });
-      } else {
-        setSelectedSources((prev) =>
-          prev.filter((source) => source !== item.source_path)
-        );
+  const commitSelectedSources = (item) => {
+    if (!item) {
+      knowledgeBase.map((item) => {
+        if (item.is_selected) {
+          setSelectedSources((prev) => {
+            const itemExist = prev.find(i => i.source_path === item.source_path);
+            if (!itemExist) {
+              return [
+                ...prev,
+                {
+                  source_path: item.source_path,
+                  category: item.category,
+                  file_type: item.file_type,
+                },
+              ];
+            }
+            return prev;
+          });
+        } else {
+          setSelectedSources((prev) =>
+            prev.filter((source) => source !== item.source_path)
+          );
+        }
+        return item;
+      });
+    } else {
+      setSelectedSources([item]);
+    }
+  };
+
+  const handleCheckboxChange = (file) => {
+    // Create a new array with updated items
+    const updatedKnowledgeBase = knowledgeBase.map((item) => {
+      if (item.source_path === file.source_path) {
+        return { ...item, is_selected: !item.is_selected };
       }
+      if (item.is_selected) setSelectedAll(false);
       return item;
     });
+    setKnowledgeBase(updatedKnowledgeBase);
+
+
+    // item should exist in selectedSources and isSelected is true => remove it from selectedSources
+    if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
+      setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
+      setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+    }
+
+    // updated sourcesTobeCommiter
+    if (!file.is_selected) {
+      setSourcesTobeCommited((prev) => [...prev, file]);
+    }
+    else {
+      setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+    }
   };
 
   const [fromChat, setFromChat] = useState(false);
@@ -432,6 +463,7 @@ const MainWorkspace = ({ theme }) => {
     isLeftSidebarOpen, setIsLeftSidebarOpen,
     isRightSidebarOpen, setIsRightSidebarOpen,
     modules,
+    handleCheckboxChange,
     formats,
     isEditingTitle, setIsEditingTitle,
     knowledgeBase, setKnowledgeBase,

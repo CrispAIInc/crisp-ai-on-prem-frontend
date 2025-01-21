@@ -27,6 +27,7 @@ const ContentPanel = () => {
         setShowSearchModal,
         setSelectedSources,
         setSourcesTobeCommited,
+        handleCheckboxChange,
         selectedSources,
         knowledgeBase, setKnowledgeBase,
         setJumpToPage,
@@ -92,32 +93,7 @@ const ContentPanel = () => {
     /**
      * Function to toggle 'isSelected' of an item inside 'knowledgeBase' array when the checkbox is clicked
      */
-    const handleCheckboxChange = (file) => {
-        // Create a new array with updated items
-        const updatedKnowledgeBase = knowledgeBase.map((item) => {
-            if (item.source_path === file.source_path) {
-                return { ...item, is_selected: !item.is_selected };
-            }
-            if (item.is_selected) setSelectedAll(false);
-            return item;
-        });
-        setKnowledgeBase(updatedKnowledgeBase);
 
-
-        // item should exist in selectedSources and isSelected is true => remove it from selectedSources
-        if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
-            setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
-            setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-        }
-
-        // updated sourcesTobeCommiter
-        if (!file.is_selected) {
-            setSourcesTobeCommited((prev) => [...prev, file]);
-        }
-        else {
-            setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-        }
-    };
 
     const onHideSearchModal = () => {
         setShowSearchModal(false);

@@ -17,6 +17,8 @@ import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import Timeline from '../Timeline/index.jsx';
 import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
 import HorizontalCard from '../HorizontalCard/index.jsx';
+import { Button } from 'bootstrap';
+import CustomButton from '../CustomButton/index.jsx';
 
 /**
  * chapters: [{id: number, thumbnail: string | file, timestamps: [number, number], title: string, description: string}]
@@ -44,6 +46,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
     selectedNote,
     activeView,
     theme,
+    commitSelectedSources,
+    handleCheckboxChange,
     selectedStory,
     knowledgeBase,
     generatedResources,
@@ -319,8 +323,23 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const isMobile = useCheckMobileScreen();
 
+  const [isChecked, setIsChecked] = useState(false);
+  function handleToggle() {
+    setIsChecked(!isChecked);
+    setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
+    // handleCheckboxChange(currentResource);
+    if (!isChecked) {
+      commitSelectedSources(currentResource);
+    } else {
+      console.log("not checked");
+    }
+  }
+
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
+      {/* <input type='checkbox' checked={isChecked} onChange={handleToggle} />Toggle */}
+      <CustomButton onClick={() => commitSelectedSources(currentResource)} className="my-1 mb-5 text-white bg-primary-300">Exclusive source for Crisp Wiz</CustomButton>
+
       {currentResource?.file_type === "video" && (
         <>
           <div className="relative ">
