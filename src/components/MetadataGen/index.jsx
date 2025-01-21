@@ -75,16 +75,28 @@ function MetadataGen() {
                 JSON.stringify(categoryValues)
             );
 
-            setKnowledgeBase((prev) => {
-                const updatedKnowledgeBase = prev.map((kb) => {
-                    const updatedKb = data.find((d) => d.source_path === kb.source_path);
-                    if (updatedKb) {
-                        return { ...updatedKb, ...kb };
-                    }
-                    return kb;
-                });
-                return updatedKnowledgeBase;
+            let updatedKnowledgeBase = data.map(item => {
+                let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
+
+                if (selected) {
+                    return { ...item, is_selected: true };
+                } else {
+                    return item;
+                }
             });
+
+            setKnowledgeBase(updatedKnowledgeBase);
+
+            // setKnowledgeBase((prev) => {
+            //     const updatedKnowledgeBase = prev.map((kb) => {
+            //         const updatedKb = data.find((d) => d.source_path === kb.source_path);
+            //         if (updatedKb) {
+            //             return { ...updatedKb, ...kb };
+            //         }
+            //         return kb;
+            //     });
+            //     return updatedKnowledgeBase;
+            // });
             // setKnowledgeBase(data);
             setGeneratedResources(results);
         } catch (error) {

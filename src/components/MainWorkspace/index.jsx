@@ -516,6 +516,12 @@ const MainWorkspace = ({ theme }) => {
     showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
   };
 
+  // update sourcesTobeCommited depending on knowledgeBase change
+  useEffect(() => {
+    setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
+    console.log("knowledgeBase useEffect");
+  }, [knowledgeBase]);
+
   useEffect(() => {
     const getNotes = async () => {
       try {

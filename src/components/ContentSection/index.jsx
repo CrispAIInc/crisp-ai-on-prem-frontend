@@ -332,10 +332,7 @@ const ContentSection = ({
         }
     };
 
-    // update sourcesTobeCommited depending on knowledgeBase change
-    useEffect(() => {
-        setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
-    }, [knowledgeBase]);
+
 
     /**
      * Function to indicate wether a source thumbnail can be rendered in the selected sources section or not
