@@ -31,7 +31,7 @@ function HorizontalCard({ item, workspaceContainer }) {
                 <img src={thumbnail} alt="chapter" className="object-cover w-full h-full max-w-sm rounded-md lg:max-w-full" />
             </div>
             {isLightboxOpen && (
-                <PreviewModal closeLightbox={closeLightbox} content={thumbnail} classNames="!w-1/3 h-full" />
+                <PreviewModal closeLightbox={closeLightbox} content={thumbnail} classNames={`h-full ${item.keyframe_url ? '!w-[55vw] !h-[65vh]' : '!w-1/3 !h-full'}`} />
             )}
             {/* item content */}
             <div className="flex flex-col gap-1">
@@ -61,8 +61,8 @@ function HorizontalCard({ item, workspaceContainer }) {
                 {/* <OverlayTrigger className='tooltip' placement="right" overlay={(props) => renderTooltip(props, item.description)}> */}
                 <p className="text-[14px]">{item.description}</p>
                 {/* </OverlayTrigger> */}
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
 
