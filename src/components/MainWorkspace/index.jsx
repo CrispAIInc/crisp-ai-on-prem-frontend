@@ -199,8 +199,8 @@ const MainWorkspace = ({ theme }) => {
     'display',
   ];
 
-  const commitSelectedSources = (item) => {
-    if (!item) {
+  const commitSelectedSources = (items) => {
+    if (!items) {
       knowledgeBase.map((item) => {
         if (item.is_selected) {
           setSelectedSources((prev) => {
@@ -225,7 +225,7 @@ const MainWorkspace = ({ theme }) => {
         return item;
       });
     } else {
-      setSelectedSources([item]);
+      setSelectedSources(items.map(i => i));
     }
   };
 

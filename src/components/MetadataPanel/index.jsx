@@ -19,6 +19,8 @@ import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
 import HorizontalCard from '../HorizontalCard/index.jsx';
 import { Button } from 'bootstrap';
 import CustomButton from '../CustomButton/index.jsx';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import { lightBlue, pink } from '@mui/material/colors';
 
 /**
  * chapters: [{id: number, thumbnail: string | file, timestamps: [number, number], title: string, description: string}]
@@ -42,6 +44,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setActiveView,
     jumpToPage,
     categoryValues,
+    sourcesTobeCommited,
     setKnowledgeBase,
     selectedNote,
     activeView,
@@ -323,22 +326,36 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const isMobile = useCheckMobileScreen();
 
-  // const [isChecked, setIsChecked] = useState(false);
-  // function handleToggle() {
-  //   setIsChecked(!isChecked);
-  //   setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
-  //   // handleCheckboxChange(currentResource);
-  //   if (!isChecked) {
-  //     commitSelectedSources(currentResource);
-  //   } else {
-  //     console.log("not checked");
-  //   }
-  // }
+  const [isChecked, setIsChecked] = useState(false);
+  function handleToggle(checked) {
+    setIsChecked(checked);
+    // setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
+    // handleCheckboxChange(currentResource);
+    if (checked) {
+      commitSelectedSources([currentResource]);
+    } else {
+      commitSelectedSources(sourcesTobeCommited.filter(source => source.source_path !== currentResource.source_path));
+    }
+  }
 
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
       {/* <input type='checkbox' checked={isChecked} onChange={handleToggle} />Toggle */}
-      {currentResource?.metadata?.embeddings_generated && <CustomButton onClick={() => commitSelectedSources(currentResource)} className="my-1 mb-5 text-white bg-primary-300">Exclusive source for Crisp Wiz</CustomButton>}
+      {/* {currentResource?.metadata?.embeddings_generated && <CustomButton onClick={() => commitSelectedSources(currentResource)} className="my-1 mb-5 text-white bg-primary-300">Exclusive source for Crisp Wiz</CustomButton>} */}
+
+      {/* {currentResource?.metadata?.embeddings_generated && <div className="">
+        <input type='checkbox' checked={isChecked} onChange={e => handleToggle(e.target.checked)} />
+        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Exclusive source for Crisp Wiz</span></div>} */}
+
+      {currentResource?.metadata?.embeddings_generated && <FormControlLabel control={<Checkbox sx={{
+        color: lightBlue[800],
+        '&.Mui-checked': {
+          color: lightBlue[600],
+        },
+        borderColor: 'pink',
+        borderTopColor: pink[400],
+      }} />} checked={isChecked} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />}
+
 
       {currentResource?.file_type === "video" && (
         <>
