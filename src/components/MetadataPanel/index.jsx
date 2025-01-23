@@ -334,7 +334,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     if (checked) {
       commitSelectedSources([currentResource]);
     } else {
-      commitSelectedSources(sourcesTobeCommited.filter(source => source.source_path !== currentResource.source_path));
+      commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
     }
   }
 
