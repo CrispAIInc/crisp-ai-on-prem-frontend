@@ -87,6 +87,7 @@ const ChatPanel = () => {
         onSelect={(k) => {
           setActiveTab(() => k);
         }}
+        activeKey={activeTab}
         id="uncontrolled-tab-example"
         className={`my-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
       >
