@@ -16,7 +16,7 @@ import MetadataGen from '../MetadataGen';
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme } = useContext(MainContext);
+  const { chatLoaded, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
 
   let copilotSectionSteps = [
     {
@@ -51,7 +51,7 @@ const ChatPanel = () => {
     },
   ];
 
-  const [activeTab, setActiveTab] = useState('genInsights');
+
 
   return (
     <aside className={`relative w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
@@ -84,7 +84,9 @@ const ChatPanel = () => {
       <Tabs
         transition={false}
         defaultActiveKey="genInsights"
-        onSelect={(k) => setActiveTab(() => k)}
+        onSelect={(k) => {
+          setActiveTab(() => k);
+        }}
         id="uncontrolled-tab-example"
         className={`my-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
       >

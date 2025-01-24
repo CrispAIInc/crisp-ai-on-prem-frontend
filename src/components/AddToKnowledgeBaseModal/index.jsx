@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 function AddToKnowledgeBaseModal({ show, onHide }) {
-    const { theme, commitSelectedSources } = useContext(MainContext);
+    const { theme, commitSelectedSources, setActiveTab } = useContext(MainContext);
 
     return (
         <Modal
@@ -27,6 +27,7 @@ function AddToKnowledgeBaseModal({ show, onHide }) {
                 >
                     <button onClick={() => {
                         commitSelectedSources();
+                        setActiveTab('genInsights');
                         onHide();
                     }} className={`hover:text-primary-200 text-lg font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                         Yes

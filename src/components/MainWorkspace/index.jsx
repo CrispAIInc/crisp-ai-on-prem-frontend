@@ -175,6 +175,8 @@ const MainWorkspace = ({ theme }) => {
     { value: "gemini-pro", label: "Gemini Pro", type: "llm", color: "#D10363" },
   ];
 
+  const [activeTab, setActiveTab] = useState('genInsights');
+
   const modules = {
     toolbar: [
       [{ header: [1, 2, false] }],
@@ -200,7 +202,6 @@ const MainWorkspace = ({ theme }) => {
   ];
 
   const commitSelectedSources = (items) => {
-    console.log(items);
     if (items?.length === 0) {
       knowledgeBase.map((item) => {
         if (item.is_selected) {
@@ -465,6 +466,7 @@ const MainWorkspace = ({ theme }) => {
     isRightSidebarOpen, setIsRightSidebarOpen,
     modules,
     handleCheckboxChange,
+    activeTab, setActiveTab,
     formats,
     isEditingTitle, setIsEditingTitle,
     knowledgeBase, setKnowledgeBase,
