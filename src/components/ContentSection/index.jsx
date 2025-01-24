@@ -194,7 +194,7 @@ const ContentSection = ({
             console.log(error);
         } finally {
             setIsDeleting(false);
-            console.log(knowledgeBase);
+            if (items.find(i => i?.source_path === currentResource?.source_path)) setCurrentResource(null);
         }
     };
     const handleUpload = async (event, fileFormat, _files) => {
