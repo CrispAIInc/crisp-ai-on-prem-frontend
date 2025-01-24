@@ -26,7 +26,7 @@ function AddToKnowledgeBaseModal({ show, onHide }) {
                     className={`flex items-center justify-center gap-4 w-fit`}
                 >
                     <button onClick={() => {
-                        commitSelectedSources();
+                        commitSelectedSources([]);
                         setActiveTab('genInsights');
                         onHide();
                     }} className={`hover:text-primary-200 text-lg font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
