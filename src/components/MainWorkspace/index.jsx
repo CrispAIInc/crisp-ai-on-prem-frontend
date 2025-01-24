@@ -200,7 +200,8 @@ const MainWorkspace = ({ theme }) => {
   ];
 
   const commitSelectedSources = (items) => {
-    if (!items) {
+    console.log(items);
+    if (items?.length === 0) {
       knowledgeBase.map((item) => {
         if (item.is_selected) {
           setSelectedSources((prev) => {

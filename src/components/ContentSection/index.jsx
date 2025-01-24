@@ -504,7 +504,7 @@ const ContentSection = ({
                             ?
                             <>
                                 {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
-                                    <CustomButton onClick={commitSelectedSources} className="my-1 text-white bg-primary-300">Update sources</CustomButton>
+                                    <CustomButton onClick={() => commitSelectedSources([])} className="my-1 text-white bg-primary-300">Update sources</CustomButton>
                                 </div>}
                                 <div className="mx-auto w-fit">
                                     <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>
