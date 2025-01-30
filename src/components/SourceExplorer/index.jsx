@@ -133,12 +133,17 @@ export function SourceExplorer(props) {
                                 } !w-28`}
                             key={index}
                         >
-                            {props.isDeleting && props.clickedIndex === index && (
-                                <div className="thumbnail-loader">
-                                    <LoadingSpinner />
-                                </div>
-                            )}
+                            {/* {(props.isDeleting && props.clickedIndex.source_path === file.source_path) && (
+                            <div className="thumbnail-loader">
+                                <LoadingSpinner />
+                            </div>
+                            )} */}
                             <div className="relative">
+                                {(props.isDeleting && props.clickedIndex.source_path === file.source_path) && (
+                                    <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[2] translate-x-[-50%] translate-y-[-50%] transform">
+                                        <LoadingSpinner />
+                                    </div>
+                                )}
                                 <div className="flex items-center justify-between">
                                     <Checkbox
                                         className={`select-all-checkbox ${theme === "dark" && "border-white text-white"

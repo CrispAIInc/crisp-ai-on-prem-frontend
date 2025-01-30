@@ -181,7 +181,7 @@ const ContentSection = ({
                 })
             );
             setChatLoaded(chat_is_initialized);
-
+            toast('Source deleted successfully', { className: `p-2 rounded-md`, theme });
             const data = await makeApiRequest(
                 `/content`,
                 "post",
