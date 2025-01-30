@@ -11,9 +11,12 @@ function PDFThumbnail({ item }) {
 
   const { theme } = useContext(MainContext);
 
-  const renderTooltip = props => (
-    <Tooltip className='truncate tooltip h-80' {...props}>{item?.metadata?.summary?.content?.split(' ').slice(0, 30).join(' ')}...</Tooltip>
-  );
+  const renderTooltip = props => {
+    if (item?.metadata?.summary?.content?.length > 0) {
+      return <Tooltip className='truncate h-80 tooltip' {...props}>{item?.metadata?.summary?.content?.split(' ').slice(0, 30).join(' ')}...</Tooltip>;
+    }
+    return <></>;
+  };
 
   return (
     <OverlayTrigger className='tooltip' placement="right" overlay={renderTooltip}>
