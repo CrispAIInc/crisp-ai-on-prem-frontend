@@ -25,11 +25,12 @@ const ContentPanelThumbnail = ({
   return (
     <div className={`relative rounded-md cursor-pointer ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !w-28 h-auto`} onClick={(event) => onThumbnailClick(event, item)}>
       <>
-        {isDeleting && clickedIndex === index ? (
-          <div className="thumbnail-loader">
+        {(isDeleting && clickedIndex?.source_path === item?.source_path) && (
+          <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[2] translate-x-[-50%] translate-y-[-50%] transform">
             <LoadingSpinner />
           </div>
-        ) : null}
+        )}
+
         <div className="flex items-center justify-between">
           <Checkbox
             className="p-0 !ml-1"
