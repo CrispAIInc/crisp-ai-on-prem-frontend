@@ -6,6 +6,7 @@ import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
 import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 import makeApiRequest from '../../api';
+import SelectedSourcesDropdown from '../SelectedSourcesDropdown';
 
 
 
@@ -14,6 +15,8 @@ function MetadataGen() {
     const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, metadataOptions } = useContext(MainContext);
 
     // const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
+
+    const [selectedSourcesToGen, setSelectedSourcesToGen] = useState(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
 
     const [temperatureValue, setTemperatureValue] = useState(0.2);
     function handleTemperatureChange(e) {
@@ -59,11 +62,18 @@ function MetadataGen() {
             toast('You must select at least one metadata option');
         }
 
+        else if (selectedSourcesToGen.length === 0) {
+            toast('You must select at least one source');
+        }
+
         const categoryValues = categoryOptions.map((option) => option.value);
 
         try {
+            // const payload = {
+            //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
+            // };
             const payload = {
-                category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
+                category: selectedCategory, sources: selectedSourcesToGen.map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
@@ -75,6 +85,7 @@ function MetadataGen() {
                 JSON.stringify(categoryValues)
             );
 
+            //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
             let updatedKnowledgeBase = data.map(item => {
                 let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
 
@@ -116,6 +127,7 @@ function MetadataGen() {
     return (
         <div className='z-20 flex flex-col gap-4'>
             <MetadataOptions selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} options={metadataOptions} />
+            <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={sourcesTobeCommited} />
             <MetadataAdvancedParams temperatureValue={temperatureValue}
                 setTemperatureValue={setTemperatureValue}
                 handleTemperatureChange={handleTemperatureChange}
