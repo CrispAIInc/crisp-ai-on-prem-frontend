@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import MetadataAdvancedParams from '../MetadataAdvancedParams';
 import MetadataOptions from "../MetadataOptions";
 import { MainContext } from '../../contexts/mainContext';
@@ -17,6 +17,13 @@ function MetadataGen() {
     // const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
 
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
+
+    useEffect(() => {
+        // setSelectedSourcesToGen(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
+        setSelectedSourcesToGen(prev => {
+            return prev.filter(item => sourcesTobeCommited.find(s => s.source_path === item.source_path));
+        });
+    }, [sourcesTobeCommited]);
 
     const [temperatureValue, setTemperatureValue] = useState(0.2);
     function handleTemperatureChange(e) {
