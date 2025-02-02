@@ -63,6 +63,7 @@ const ContentSection = ({
         commitSelectedSources,
         knowledgeBase,
         selectedCategory,
+        setActiveView,
         setChatLoaded,
         sourcesTobeCommited, setSourcesTobeCommited,
         selectedSources,
@@ -166,6 +167,11 @@ const ContentSection = ({
             });
 
             await makeApiRequest(`/delete`, "post", { sources: payload });
+            toast('Source deleted successfully', { className: `p-2 rounded-md`, theme });
+            if (items.find(i => i?.source_path === currentResource?.source_path)) {
+                setCurrentResource(null);
+                setActiveView(null);
+            }
 
             setKnowledgeBase((prev) => prev.filter(item => item.source_path !== items[0].source_path));
 
@@ -181,7 +187,6 @@ const ContentSection = ({
                 })
             );
             setChatLoaded(chat_is_initialized);
-            toast('Source deleted successfully', { className: `p-2 rounded-md`, theme });
             const data = await makeApiRequest(
                 `/content`,
                 "post",
@@ -194,7 +199,6 @@ const ContentSection = ({
             console.log(error);
         } finally {
             setIsDeleting(false);
-            if (items.find(i => i?.source_path === currentResource?.source_path)) setCurrentResource(null);
         }
     };
     const handleUpload = async (event, fileFormat, _files) => {
