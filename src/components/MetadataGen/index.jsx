@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import MetadataAdvancedParams from '../MetadataAdvancedParams';
 import MetadataOptions from "../MetadataOptions";
 import { MainContext } from '../../contexts/mainContext';
@@ -31,13 +31,13 @@ function MetadataGen() {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_selected === false));
+    // const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_selected === false));
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
-    useEffect(() => {
-        setIsKnowledgeBaseEmpty(knowledgeBase.every(kb => kb.is_selected === false));
-    }, [knowledgeBase]);
+    // useEffect(() => {
+    //     setIsKnowledgeBaseEmpty(knowledgeBase.every(kb => kb.is_selected === false));
+    // }, [knowledgeBase]);
 
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -50,15 +50,15 @@ function MetadataGen() {
         });
     };
 
-    const handleMouseEnter = () => isKnowledgeBaseEmpty && setTooltipVisible(true);
+    const handleMouseEnter = () => selectedSourcesToGen.length === 0 && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMetadata() {
         setIsLoading(true);
-        if (isKnowledgeBaseEmpty) {
-            toast('You must select some sources to generate metadata');
-        }
-        else if (selectedOptions.length === 0) {
+        // if (isKnowledgeBaseEmpty) {
+        //     toast('You must select some sources to generate metadata');
+        // }
+        if (selectedOptions.length === 0) {
             toast('You must select at least one metadata option');
         }
 
@@ -114,7 +114,7 @@ function MetadataGen() {
             console.error(error);
         } finally {
             setIsLoading(false);
-            if (selectedOptions.find(op => op.id === 'embeddings')) {
+            if (selectedOptions.find(op => op.id === 'embeddings') && selectedSourcesToGen.length !== 0) {
                 setIsModalVisible(true);
             }
             // if (generatedResources.every(gr => gr.embeddings_generated === false)) {
@@ -140,7 +140,7 @@ function MetadataGen() {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
-                    disabled={isKnowledgeBaseEmpty || isLoading} onClick={generateMetadata}>
+                    disabled={selectedSourcesToGen.length === 0 || isLoading} onClick={generateMetadata}>
                     {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate'}
                 </button>
                 {tooltipVisible && (
@@ -149,7 +149,7 @@ function MetadataGen() {
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        No source is selected.
+                        No source is selected
                     </p>
                 )}
             </div>

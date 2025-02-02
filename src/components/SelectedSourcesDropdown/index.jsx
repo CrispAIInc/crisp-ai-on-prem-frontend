@@ -6,7 +6,6 @@ import { MainContext } from '../../contexts/mainContext';
 
 export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOptions, options }) {
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-    console.log(options);
     const { theme, sourcesTobeCommited } = useContext(MainContext);
 
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
@@ -52,7 +51,7 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
 
     return (
         <div>
-            <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>sources to use<span className="text-xs"> (min. 1 source)</span></label>
+            <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>source to use<span className="text-xs"> (min. 1 source)</span></label>
             <div className="relative inline-block w-full" ref={dropdownRef}>
                 {/* upper section */}
                 <div onClick={handleOpenDropdownMenu} className={`rounded-md flex items-center justify-between h-10 py-4 pl-1 !border !border-slate-400 cursor-pointer relative`}>
@@ -120,6 +119,7 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
                     )
                 }
             </div>
+            <label className={`text-xs mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>{selectedOptions.length} source(s) selected</label>
         </div>
     );
 }
