@@ -126,7 +126,7 @@ const ContentSection = ({
     }, [categoryOptions]);
 
     useEffect(() => {
-        if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
+        if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
             const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
             if (timestamp && Number.isInteger(+timestamp))
                 player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
