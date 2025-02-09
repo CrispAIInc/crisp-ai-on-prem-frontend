@@ -12,7 +12,7 @@ import SelectedSourcesDropdown from '../SelectedSourcesDropdown';
 
 
 function MetadataGen() {
-    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, metadataOptions } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedAll, setChatLoaded, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, metadataOptions } = useContext(MainContext);
 
     // const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
 
@@ -91,6 +91,18 @@ function MetadataGen() {
                 "post",
                 JSON.stringify(categoryValues)
             );
+            setChatLoaded(false);
+            const { chat_is_initialized } = await makeApiRequest(
+                `/chat/${selectedCategory}`,
+                "post",
+                JSON.stringify({
+                    sources: selectedSourcesToGen,
+                    category: selectedCategory,
+                    selectedAll,
+                    reinitialize: true,
+                })
+            );
+            setChatLoaded(chat_is_initialized);
 
             //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
             let updatedKnowledgeBase = data.map(item => {
