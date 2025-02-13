@@ -95,7 +95,7 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
                                         <div onClick={toggleAllOptions} className={`cursor-pointer border-b border-b-light-hover-200 p-2 active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'} flex items-center gap-2`}>
                                             {/* checkbox for selecting and unselecting all options */}
                                             <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length} />
-                                            <span className="text-sm font-bold">Select all sources</span>
+                                            <span className="text-sm font-bold select-none">Select all sources</span>
                                         </div>
                                         {
                                             options.map((option) => {
@@ -103,7 +103,7 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
                                                     <div key={option.source_path} onClick={() => toggleOption(option)} className={`cursor-pointer border-b border-b-light-hover-200 p-2 ${selectedOptions.includes(option) && 'bg-primary-200/20'} active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'} flex items-center gap-2`}>
                                                         <img className="w-10 h-10 rounded-md" src={`${API_ENDPOINT}/${option.file_type === 'video' ? 'thumbnails' : option.file_type === 'pdf' ? 'pdf-thumbnails' : 'img-thumbnails'}/${encodeURIComponent(option.category[0])}/${encodeURIComponent(option.thumbnail)}`}
                                                             alt="Video Thumbnail" />
-                                                        <span className="text-sm truncate">{option.source_path}</span>
+                                                        <span className="text-sm truncate select-none">{option.source_path}</span>
                                                     </div>
                                                 );
                                             })
