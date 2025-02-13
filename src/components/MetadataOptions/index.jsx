@@ -86,7 +86,7 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
                             <div onClick={toggleAllOptions} className={`cursor-pointer border-b border-b-light-hover-200 p-2 active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'} flex items-center gap-2`}>
                                 {/* checkbox for selecting and unselecting all options */}
                                 <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length - 1} />
-                                <span className="text-sm font-bold">Select all metadata</span>
+                                <span className="text-sm font-bold select-none">Select all metadata</span>
                             </div>
                             {
                                 options.map((option) => {
@@ -100,8 +100,8 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
                                     }
                                     return (
                                         <div key={option.id} onClick={() => toggleOption(option)} className={`cursor-pointer border-b border-b-light-hover-200 p-2 ${selectedOptions.includes(option) && 'bg-primary-200/20'} active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'}`}>
-                                            <p className='font-semibold text-md'>{option.name}</p>
-                                            <span className="text-sm">{option.description}</span>
+                                            <p className='font-semibold text-md select-none'>{option.name}</p>
+                                            <span className="text-sm select-none">{option.description}</span>
                                         </div>
                                     );
                                 })
