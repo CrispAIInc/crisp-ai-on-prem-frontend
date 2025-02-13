@@ -62,6 +62,7 @@ const ContentSection = ({
         player,
         commitSelectedSources,
         knowledgeBase,
+        isUpdatingSources,
         selectedCategory,
         setActiveView,
         setChatLoaded,
@@ -170,7 +171,14 @@ const ContentSection = ({
             toast('Source deleted successfully', { className: `p-2 rounded-md`, theme });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
-                setActiveView(null);
+                setActiveView(prev => {
+                    // remove last item from prev array
+                    if (prev?.length === 1) {
+                        return [];
+                    }
+                    // prev.pop();
+                    return prev?.filter(item => item !== "resource");
+                });
             }
 
             setKnowledgeBase((prev) => prev.filter(item => item.source_path !== items[0].source_path));
@@ -194,6 +202,8 @@ const ContentSection = ({
             );
             setKnowledgeBase(data);
             setCurrentResource(null);
+            // prev.pop();
+            setActiveView(prev => prev.filter(item => item !== "resource"));
         } catch (error) {
             setIsDeleting(false);
             console.log(error);
@@ -363,6 +373,8 @@ const ContentSection = ({
         setIsIndexModalOpen(false);
     }
 
+    console.log(chatLoaded);
+
     return (
         <>
             <section className='relative flex flex-col items-start h-full'>
@@ -483,7 +495,6 @@ const ContentSection = ({
                 <BaseHeading text='Selected sources' className="mt-4 mb-4" />
 
                 <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
-                    {console.log(knowledgeBase)}
                     {
                         knowledgeBase.some((item) => item.is_selected) > 0 && <div className={` grid grid-cols-[repeat(auto-fill,_112px)] h-full gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
                             {knowledgeBase.slice(0).reverse().map((item, index) => {
@@ -508,7 +519,7 @@ const ContentSection = ({
                             ?
                             <>
                                 {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
-                                    <CustomButton onClick={() => commitSelectedSources(commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated)))} className="my-1 text-white bg-primary-300">Update sources</CustomButton>
+                                    <CustomButton onClick={() => commitSelectedSources(commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated)))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
                                 </div>}
                                 <div className="mx-auto w-fit">
                                     <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>
