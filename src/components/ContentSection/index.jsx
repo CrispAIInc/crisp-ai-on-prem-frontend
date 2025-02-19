@@ -62,7 +62,7 @@ const ContentSection = ({
         player,
         commitSelectedSources,
         knowledgeBase,
-        isUpdatingSources,
+        setGeneratedResources,
         selectedCategory,
         setActiveView,
         setChatLoaded,
@@ -209,6 +209,7 @@ const ContentSection = ({
             console.log(error);
         } finally {
             setIsDeleting(false);
+            setGeneratedResources(prev => prev?.filter(item => item.source_path !== items[0].source_path));
         }
     };
     const handleUpload = async (event, fileFormat, _files) => {
