@@ -203,7 +203,7 @@ const ContentSection = ({
             setKnowledgeBase(data);
             setCurrentResource(null);
             // prev.pop();
-            setActiveView(prev => prev.filter(item => item !== "resource"));
+            setActiveView(prev => prev?.length > 1 ? prev?.filter(item => item !== "resource") : []);
         } catch (error) {
             setIsDeleting(false);
             console.log(error);
