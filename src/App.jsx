@@ -41,7 +41,7 @@ function App() {
   }, []);
 
   return (
-    <div className={`App ${theme} ${window.location.pathname === "/" && '!min-h-screen !h-auto'}`}>
+    <div className={`App ${theme}`}>
       <Router>
         <Routes>
           {/* <Route path="/" element={<HomePage theme={theme} />} /> */}
