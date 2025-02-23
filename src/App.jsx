@@ -44,8 +44,8 @@ function App() {
     <div className={`App ${theme} ${window.location.pathname === "/" && '!min-h-screen !h-auto'}`}>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage theme={theme} />} />
-          <Route path="/workspace" element={<MainWorkspacePage theme={theme} />} />
+          {/* <Route path="/" element={<HomePage theme={theme} />} /> */}
+          <Route path="/" element={<MainWorkspacePage theme={theme} />} />
           <Route path="*" element={<NotFound theme={theme} />} />
         </Routes>
       </Router>
