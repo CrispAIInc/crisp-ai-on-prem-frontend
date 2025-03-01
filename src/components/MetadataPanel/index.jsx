@@ -53,6 +53,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     handleCheckboxChange,
     selectedStory,
     knowledgeBase,
+    setActiveTab,
     generatedResources,
     setGeneratedResources,
   } = useContext(MainContext);
@@ -332,6 +333,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
     // setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
     // handleCheckboxChange(currentResource);
     if (checked) {
+      // console.log("checked 1");
+      setActiveTab('genInsights');
       commitSelectedSources([currentResource]);
     } else {
       commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
