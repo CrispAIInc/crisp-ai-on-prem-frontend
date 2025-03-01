@@ -10,6 +10,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setSummary,
         setJumpToPage,
         setSummaries,
+        workspaceContainer,
         setActiveView
     } = useContext(MainContext);
 
@@ -22,7 +23,11 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setResourceURL(resourceURL);
         setSummary(video.summary);
         setSummaries(video.topic_summaries);
-        setActiveView('resource');
+        setActiveView(prev => [...prev, 'resource']);
+        workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth", // Enables smooth scrolling
+        });
         // setShowNoteDetails(false);
     };
 
@@ -34,8 +39,12 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setResourceURL(resourceURL);
         setSummary(pdf.summary);
         setSummaries(pdf.topic_summaries);
-        setActiveView('resource');
+        setActiveView(prev => [...prev, 'resource']);
         setJumpToPage({ page: parseInt(pdf.page) + 1 });
+        workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth", // Enables smooth scrolling
+        });
         // setShowNoteDetails(false);
     };
 
