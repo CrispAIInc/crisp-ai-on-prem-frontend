@@ -325,6 +325,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setVisibleChaptersCount((prevCount) => prevCount + 3);
   };
 
+  useEffect(() => {
+    setIsChecked(false);
+  }, [currentResource]);
+
   const isMobile = useCheckMobileScreen();
 
   const [isChecked, setIsChecked] = useState(false);
