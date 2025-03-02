@@ -448,10 +448,12 @@ const MainWorkspace = ({ theme }) => {
     { id: "embeddings", name: "Embeddings", description: "Create vector representations for search" },
   ];
   const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
+  const [sourcesWithExclusive, setSourcesWithExclusive] = useState([]);
 
   // create value object with all the states
   const value = {
     API_ENDPOINT,
+    sourcesWithExclusive, setSourcesWithExclusive,
     metadataOptions,
     selectedOptions, setSelectedOptions,
     workspaceContainer,

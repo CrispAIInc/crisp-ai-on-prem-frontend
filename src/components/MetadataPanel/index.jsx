@@ -36,6 +36,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     resourceURL,
     chatLoaded,
     setResourceURL,
+    sourcesWithExclusive, setSourcesWithExclusive,
     player,
     selectedOptions, setSelectedOptions,
     languageOptions,
@@ -340,8 +341,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 1");
       setActiveTab('genInsights');
       commitSelectedSources([currentResource]);
+      setSourcesWithExclusive(prev => [...prev, currentResource?.source_path]);
     } else {
       commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
+      setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
     }
   }
 
@@ -361,7 +364,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         },
         borderColor: 'pink',
         borderTopColor: pink[400],
-      }} />} checked={isChecked} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />}
+      }} />} checked={Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path))} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />}
 
 
       {currentResource?.file_type === "video" && (
