@@ -330,6 +330,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
     if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)) {
       commitSelectedSources([currentResource]);
     }
+
+    return () => {
+      setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
+    };
   }, [currentResource]);
 
   const isMobile = useCheckMobileScreen();
