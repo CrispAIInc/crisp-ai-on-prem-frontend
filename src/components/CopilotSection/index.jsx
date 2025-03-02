@@ -35,6 +35,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     selectedNote,
     setSelectedNote,
     showNoteModal,
+    sourcesWithExclusive,
     setNoteIndex,
     setShowNoteModal,
     selectedSources,
@@ -180,7 +181,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           selectedCategoryChat
         )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
           selectedLLMs[0]
-        )}/${isFoundationLlm}`
+        )}/${isFoundationLlm}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path))}`
       );
 
       eventSource.onmessage = function (event) {
