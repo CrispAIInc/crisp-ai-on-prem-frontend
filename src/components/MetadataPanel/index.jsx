@@ -327,7 +327,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
   };
 
   useEffect(() => {
-    setIsChecked(false);
+    if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)) {
+      commitSelectedSources([currentResource]);
+    }
   }, [currentResource]);
 
   const isMobile = useCheckMobileScreen();
