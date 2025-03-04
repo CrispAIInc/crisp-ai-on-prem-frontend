@@ -281,10 +281,14 @@ const MainWorkspace = ({ theme }) => {
       return { ...prev, text: updatedText };
     });
   }, [theme]);
-
+  const [isExclusiveChecked, setIsExclusiveChecked] = useState(false);
   useEffect(() => {
     // set isFoundationLlm to true if there is no selectedSources, otherwise false
     setIsFoundationLlm(selectedSources.length === 0);
+    if (!isExclusiveChecked) {
+      console.log("exclusive checked?", isExclusiveChecked);
+      setCommittedSources(selectedSources);
+    }
   }, [selectedSources]);
 
   const languageOptions = [
@@ -453,6 +457,7 @@ const MainWorkspace = ({ theme }) => {
   const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
   const [sourcesWithExclusive, setSourcesWithExclusive] = useState([]);
   const [sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz] = useState([]);
+  const [committedSources, setCommittedSources] = useState([]);
 
   // create value object with all the states
   const value = {
@@ -460,6 +465,7 @@ const MainWorkspace = ({ theme }) => {
     sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
     sourcesWithExclusive, setSourcesWithExclusive,
     metadataOptions,
+    committedSources, setCommittedSources,
     selectedOptions, setSelectedOptions,
     workspaceContainer,
     generatedResources, setGeneratedResources,
@@ -475,6 +481,7 @@ const MainWorkspace = ({ theme }) => {
     handleCheckboxChange,
     activeTab, setActiveTab,
     formats,
+    isExclusiveChecked, setIsExclusiveChecked,
     isEditingTitle, setIsEditingTitle,
     knowledgeBase, setKnowledgeBase,
     currentResource,

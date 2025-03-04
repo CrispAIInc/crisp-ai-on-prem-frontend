@@ -47,7 +47,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
     categoryValues,
     sourcesTobeCommited,
     setKnowledgeBase,
-    selectedNote,
+    isExclusiveChecked,
+    setIsExclusiveChecked,
+    committedSources,
     activeView,
     theme,
     commitSelectedSources,
@@ -354,7 +356,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   const isMobile = useCheckMobileScreen();
 
   const [isChecked, setIsChecked] = useState(false);
-  function handleToggle(checked) {
+  async function handleToggle(checked) {
     setIsChecked(checked);
     // setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
     // handleCheckboxChange(currentResource);
@@ -362,15 +364,17 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 1");
       setActiveTab('genInsights');
       commitSelectedSources([currentResource]);
+      setIsExclusiveChecked(true);
       setSourcesWithExclusive(prev => [...prev, currentResource?.source_path]);
     } else {
-      commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
+      // console.log("checked 2");
+      // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      if (sourcesAfterUncheckCrispWiz !== sourcesTobeCommited) {
-        commitSelectedSources(sourcesAfterUncheckCrispWiz);
+      if (committedSources?.length !== sourcesTobeCommited?.length) {
+        commitSelectedSources(committedSources);
       } else {
         // something in backend
-        console.log("do something");
+        await makeApiRequest(`/previous-temp-chat`, 'post');
       }
     }
   }

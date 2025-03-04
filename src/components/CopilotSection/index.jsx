@@ -44,7 +44,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     setIsNewNote,
     languageOptions, setIsManualNote,
     setShowNoteDetails,
-    setActiveView
+    setActiveView,
+    committedSources, setCommittedSources
   } = useContext(MainContext);
 
   const { maxWidth } = useResizableSidebar(200, false);
