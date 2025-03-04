@@ -247,14 +247,17 @@ const MainWorkspace = ({ theme }) => {
     if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
       setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
       setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+      setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     }
 
     // updated sourcesTobeCommiter
     if (!file.is_selected) {
       setSourcesTobeCommited((prev) => [...prev, file]);
+      setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     }
     else {
       setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+      setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     }
   };
 
@@ -449,10 +452,12 @@ const MainWorkspace = ({ theme }) => {
   ];
   const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
   const [sourcesWithExclusive, setSourcesWithExclusive] = useState([]);
+  const [sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz] = useState([]);
 
   // create value object with all the states
   const value = {
     API_ENDPOINT,
+    sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
     sourcesWithExclusive, setSourcesWithExclusive,
     metadataOptions,
     selectedOptions, setSelectedOptions,
@@ -524,6 +529,7 @@ const MainWorkspace = ({ theme }) => {
   // update sourcesTobeCommited depending on knowledgeBase change
   useEffect(() => {
     setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
+    setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     console.log("knowledgeBase useEffect");
   }, [knowledgeBase]);
 

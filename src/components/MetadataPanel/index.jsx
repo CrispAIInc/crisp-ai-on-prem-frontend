@@ -38,7 +38,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setResourceURL,
     sourcesWithExclusive, setSourcesWithExclusive,
     player,
-    selectedOptions, setSelectedOptions,
+    sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
     languageOptions,
     isPlayerReady,
     setIsPlayerReady,
@@ -133,6 +133,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
+    if (sourcesAfterUncheckCrispWiz !== sourcesTobeCommited) {
+      commitSelectedSources(sourcesAfterUncheckCrispWiz);
+    } else {
+      // something in backend
+    }
   };
 
   const closePDF = (event) => {
@@ -148,6 +153,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
+    if (sourcesAfterUncheckCrispWiz !== sourcesTobeCommited) {
+      commitSelectedSources(sourcesAfterUncheckCrispWiz);
+    } else {
+      // something in backend
+    }
   };
 
   const closeImage = (event) => {
@@ -163,6 +173,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
+    if (sourcesAfterUncheckCrispWiz !== sourcesTobeCommited) {
+      commitSelectedSources(sourcesAfterUncheckCrispWiz);
+    } else {
+      // something in backend
+    }
   };
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -351,6 +366,12 @@ const MetadataPanel = ({ workspaceContainer }) => {
     } else {
       commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
+      if (sourcesAfterUncheckCrispWiz !== sourcesTobeCommited) {
+        commitSelectedSources(sourcesAfterUncheckCrispWiz);
+      } else {
+        // something in backend
+        console.log("do something");
+      }
     }
   }
 

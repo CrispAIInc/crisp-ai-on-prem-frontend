@@ -12,7 +12,7 @@ import SelectedSourcesDropdown from '../SelectedSourcesDropdown';
 
 
 function MetadataGen() {
-    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, metadataOptions } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, setSourcesAfterUncheckCrispWiz, metadataOptions } = useContext(MainContext);
 
     // const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
 
@@ -83,6 +83,7 @@ function MetadataGen() {
                 category: selectedCategory, sources: selectedSourcesToGen.map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
+            setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
             // update content in /content
             // ... /content
