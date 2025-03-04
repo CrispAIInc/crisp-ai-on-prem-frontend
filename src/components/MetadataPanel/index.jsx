@@ -359,11 +359,12 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const isMobile = useCheckMobileScreen();
 
+
+
+  const [isChecked, setIsChecked] = useState(false);
   useEffect(() => {
     setIsSourceUncheckedOrClosed(isChecked);
   }, [isChecked]);
-
-  const [isChecked, setIsChecked] = useState(false);
   async function handleToggle(checked) {
     setIsChecked(checked);
     // setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
