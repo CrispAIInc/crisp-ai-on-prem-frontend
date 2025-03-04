@@ -363,7 +363,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const [isChecked, setIsChecked] = useState(false);
   useEffect(() => {
-    setIsSourceUncheckedOrClosed(isChecked);
+    setIsSourceUncheckedOrClosed(!isChecked);
   }, [isChecked]);
   async function handleToggle(checked) {
     setIsChecked(checked);
