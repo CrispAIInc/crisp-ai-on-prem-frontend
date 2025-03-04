@@ -38,7 +38,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setResourceURL,
     sourcesWithExclusive, setSourcesWithExclusive,
     player,
-    sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
+    setIsSourceUncheckedOrClosed,
     languageOptions,
     isPlayerReady,
     setIsPlayerReady,
@@ -139,6 +139,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // something in backend
       await makeApiRequest(`/previous-temp-chat`, 'post');
     }
+    setIsSourceUncheckedOrClosed(true);
   };
 
   const closePDF = async (event) => {
@@ -160,6 +161,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // something in backend
       await makeApiRequest(`/previous-temp-chat`, 'post');
     }
+    setIsSourceUncheckedOrClosed(true);
   };
 
   const closeImage = async (event) => {
@@ -181,6 +183,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // something in backend
       await makeApiRequest(`/previous-temp-chat`, 'post');
     }
+    setIsSourceUncheckedOrClosed(true);
   };
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -355,6 +358,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
   }, [currentResource]);
 
   const isMobile = useCheckMobileScreen();
+
+  useEffect(() => {
+    setIsSourceUncheckedOrClosed(isChecked);
+  }, [isChecked]);
 
   const [isChecked, setIsChecked] = useState(false);
   async function handleToggle(checked) {

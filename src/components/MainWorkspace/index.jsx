@@ -286,7 +286,6 @@ const MainWorkspace = ({ theme }) => {
     // set isFoundationLlm to true if there is no selectedSources, otherwise false
     setIsFoundationLlm(selectedSources.length === 0);
     if (!isExclusiveChecked) {
-      console.log("exclusive checked?", isExclusiveChecked);
       setCommittedSources(selectedSources);
     }
   }, [selectedSources]);
@@ -458,9 +457,11 @@ const MainWorkspace = ({ theme }) => {
   const [sourcesWithExclusive, setSourcesWithExclusive] = useState([]);
   const [sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz] = useState([]);
   const [committedSources, setCommittedSources] = useState([]);
+  const [isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed] = useState(false);
 
   // create value object with all the states
   const value = {
+    isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed,
     API_ENDPOINT,
     sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
     sourcesWithExclusive, setSourcesWithExclusive,
@@ -537,7 +538,6 @@ const MainWorkspace = ({ theme }) => {
   useEffect(() => {
     setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
     setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-    console.log("knowledgeBase useEffect");
   }, [knowledgeBase]);
 
   useEffect(() => {
