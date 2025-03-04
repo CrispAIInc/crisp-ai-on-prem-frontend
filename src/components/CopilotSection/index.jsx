@@ -93,6 +93,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           sources: selectedSources,
           category: selectedCategoryChat,
           selectedAll,
+          is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path))
         })
       );
       setChatLoaded(data?.chat_is_initialized);

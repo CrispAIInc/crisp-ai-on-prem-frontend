@@ -103,8 +103,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
     if (activeView === "resource") {
       // setTranslatedResource(currentResource);
       if (currentResource) {
-        console.log(generatedResources);
-        console.log("useeffect runaazz");
         // generatedResource.current = generatedResources?.find((item) => item.source_path === currentResource.source_path);
         // console.log(item.source_path === currentResource.source_path)
         const updatedResource = {
@@ -121,7 +119,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
   }, [currentResource?.source_path, JSON.stringify(generatedResources)]);
 
-  const closeVideo = (event) => {
+  const closeVideo = async (event) => {
     event.preventDefault();
     setCurrentResource(null);
     setResourceURL(null);
@@ -135,14 +133,15 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-    if (sourcesAfterUncheckCrispWiz !== sourcesTobeCommited) {
-      commitSelectedSources(sourcesAfterUncheckCrispWiz);
+    if (committedSources?.length !== sourcesTobeCommited?.length) {
+      commitSelectedSources(committedSources);
     } else {
       // something in backend
+      await makeApiRequest(`/previous-temp-chat`, 'post');
     }
   };
 
-  const closePDF = (event) => {
+  const closePDF = async (event) => {
     event.preventDefault();
     setCurrentResource(null);
     setResourceURL(null);
@@ -155,14 +154,15 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-    if (sourcesAfterUncheckCrispWiz !== sourcesTobeCommited) {
-      commitSelectedSources(sourcesAfterUncheckCrispWiz);
+    if (committedSources?.length !== sourcesTobeCommited?.length) {
+      commitSelectedSources(committedSources);
     } else {
       // something in backend
+      await makeApiRequest(`/previous-temp-chat`, 'post');
     }
   };
 
-  const closeImage = (event) => {
+  const closeImage = async (event) => {
     event.preventDefault();
     setCurrentResource(null);
     setResourceURL(null);
@@ -175,10 +175,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-    if (sourcesAfterUncheckCrispWiz !== sourcesTobeCommited) {
-      commitSelectedSources(sourcesAfterUncheckCrispWiz);
+    if (committedSources?.length !== sourcesTobeCommited?.length) {
+      commitSelectedSources(committedSources);
     } else {
       // something in backend
+      await makeApiRequest(`/previous-temp-chat`, 'post');
     }
   };
 
