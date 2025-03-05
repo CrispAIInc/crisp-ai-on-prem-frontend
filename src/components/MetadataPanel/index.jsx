@@ -138,7 +138,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       commitSelectedSources(committedSources);
     } else {
       // something in backend
-      await makeApiRequest(`/previous-temp-chat`, 'post');
+      // await makeApiRequest(`/previous-temp-chat`, 'post');
     }
     setIsSourceUncheckedOrClosed(true);
   };
@@ -172,7 +172,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       commitSelectedSources(committedSources);
     } else {
       // something in backend
-      await makeApiRequest(`/previous-temp-chat`, 'post');
+      // await makeApiRequest(`/previous-temp-chat`, 'post');
     }
     setIsSourceUncheckedOrClosed(true);
   };
@@ -194,7 +194,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       commitSelectedSources(committedSources);
     } else {
       // something in backend
-      await makeApiRequest(`/previous-temp-chat`, 'post');
+      // await makeApiRequest(`/previous-temp-chat`, 'post');
     }
     setIsSourceUncheckedOrClosed(true);
   };
