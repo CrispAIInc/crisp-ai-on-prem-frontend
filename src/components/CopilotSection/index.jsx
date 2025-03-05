@@ -95,7 +95,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           sources: selectedSources,
           category: selectedCategoryChat,
           selectedAll,
-          is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path))
+          is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
         })
       );
       setChatLoaded(data?.chat_is_initialized);
@@ -185,7 +185,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           selectedCategoryChat
         )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
           selectedLLMs[0]
-        )}/${isFoundationLlm}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path))}/${isSourceUncheckedOrClosed}`
+        )}/${isFoundationLlm}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       );
 
       eventSource.onmessage = function (event) {

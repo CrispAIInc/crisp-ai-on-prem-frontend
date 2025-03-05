@@ -361,9 +361,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
   };
 
   useEffect(() => {
-    if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)) {
-      commitSelectedSources([currentResource]);
-    }
+    // if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)) {
+    //   commitSelectedSources([currentResource]);
+    // }
 
     return () => {
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
@@ -374,7 +374,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
 
 
-  const [isChecked, setIsChecked] = useState(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)));
+  const [isChecked, setIsChecked] = useState(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length));
+  console.log("metadatapanel re rendered");
   useEffect(() => {
     setIsSourceUncheckedOrClosed(!isChecked);
   }, [isChecked]);
@@ -397,7 +398,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         commitSelectedSources(committedSources);
       } else {
         // something in backend
-        await makeApiRequest(`/previous-temp-chat`, 'post');
+        // await makeApiRequest(`/previous-temp-chat`, 'post');
       }
       // setIsSourceUncheckedOrClosed(true)
     }
