@@ -28,8 +28,6 @@ export function SourceExplorer(props) {
     // const [currentPath, setCurrentPath] = useState('/');
     const [viewModes, setViewModes] = useState(["categories"]); // 'categories' or 'formats'
 
-    console.log(knowledgeBase);
-
     const [history, setHistory] = useState(["/"]);
     const currentPath = history[history.length - 1] || "/";
 

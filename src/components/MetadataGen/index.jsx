@@ -92,7 +92,20 @@ function MetadataGen() {
                 "post",
                 JSON.stringify(categoryValues)
             );
-
+            // if (selectedOptions.find(op => op.id === 'embeddings')) {
+            //     setChatLoaded(false);
+            //     const { chat_is_initialized } = await makeApiRequest(
+            //         `/chat/all`,
+            //         "post",
+            //         JSON.stringify({
+            //             sources: selectedSourcesToGen,
+            //             category: 'all',
+            //             selectedAll,
+            //             reinitialize: true,
+            //         })
+            //     );
+            //     setChatLoaded(chat_is_initialized);
+            // }
             //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
             let updatedKnowledgeBase = data.map(item => {
                 let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);

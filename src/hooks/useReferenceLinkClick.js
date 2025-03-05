@@ -23,7 +23,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setResourceURL(resourceURL);
         setSummary(video.summary);
         setSummaries(video.topic_summaries);
-        setActiveView(prev => [...prev, 'resource']);
+        setActiveView('resource');
         workspaceContainer.current.scrollTo({
             top: 0,
             behavior: "smooth", // Enables smooth scrolling
@@ -39,7 +39,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setResourceURL(resourceURL);
         setSummary(pdf.summary);
         setSummaries(pdf.topic_summaries);
-        setActiveView(prev => [...prev, 'resource']);
+        setActiveView('resource');
         setJumpToPage({ page: parseInt(pdf.page) + 1 });
         workspaceContainer.current.scrollTo({
             top: 0,

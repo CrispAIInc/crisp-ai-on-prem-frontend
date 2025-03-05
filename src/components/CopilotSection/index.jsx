@@ -85,7 +85,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
   useEffect(() => {
     setChatLoaded(false);
-
+    console.log(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)));
+    // setCommittedSources(selectedSources);
     async function fetchChat() {
       const data = await makeApiRequest(
         `/chat/${selectedCategoryChat}`,

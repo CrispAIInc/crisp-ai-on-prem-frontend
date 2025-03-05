@@ -44,6 +44,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setIsPlayerReady,
     setActiveView,
     jumpToPage,
+    selectedNote,
     categoryValues,
     sourcesTobeCommited,
     setKnowledgeBase,
@@ -146,6 +147,18 @@ const MetadataPanel = ({ workspaceContainer }) => {
     event.preventDefault();
     setCurrentResource(null);
     setResourceURL(null);
+    // setActiveView((prev) => {
+    //   // if (selectedStory.text.length > 0) {
+    //   //   return [...prev, 'resource'];
+    //   // }
+    //   // if (selectedNote.text.length > 1) {
+    //   //   return [...prev, 'resource'];
+    //   // }
+    //   if (prev?.length === 1) {
+    //     return [];
+    //   }
+    //   return prev?.filter(item => item !== "resource");
+    // });
     setActiveView(() => {
       if (selectedStory.text.length > 0) {
         return "story";
@@ -361,7 +374,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
 
 
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)));
   useEffect(() => {
     setIsSourceUncheckedOrClosed(!isChecked);
   }, [isChecked]);
@@ -375,6 +388,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       commitSelectedSources([currentResource]);
       setIsExclusiveChecked(true);
       setSourcesWithExclusive(prev => [...prev, currentResource?.source_path]);
+      // setIsSourceUncheckedOrClosed(false)
     } else {
       // console.log("checked 2");
       // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
@@ -385,6 +399,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         // something in backend
         await makeApiRequest(`/previous-temp-chat`, 'post');
       }
+      // setIsSourceUncheckedOrClosed(true)
     }
   }
 
@@ -404,7 +419,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         },
         borderColor: 'pink',
         borderTopColor: pink[400],
-      }} />} checked={Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path))} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />}
+      }} />} checked={isChecked} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />}
 
 
       {currentResource?.file_type === "video" && (
