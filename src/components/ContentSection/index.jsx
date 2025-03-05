@@ -297,7 +297,7 @@ const ContentSection = ({
                 // });
             });
             setSourcesTobeCommited(newSelectedValue ? knowledgeBase : []);
-            setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+            // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
         }
         else {
             console.log(knowledgeBase.some((item) => item.is_selected));
@@ -346,7 +346,7 @@ const ContentSection = ({
             });
             setKnowledgeBase(updatedKnowledgeBase);
             setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-            setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+            // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
         }
     };
 
@@ -366,7 +366,7 @@ const ContentSection = ({
         setKnowledgeBase(updatedKnowledgeBase);
         setSelectedSources([]);
         setSourcesTobeCommited([]);
-        setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+        // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     };
 
     const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);

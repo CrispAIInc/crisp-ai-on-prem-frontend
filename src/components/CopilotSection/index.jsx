@@ -40,6 +40,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     setNoteIndex,
     setShowNoteModal,
     selectedSources,
+    setSourcesAfterUncheckCrispWiz,
     selectedAll,
     isNewNote,
     setIsNewNote,
@@ -88,6 +89,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     console.log(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)));
     // setCommittedSources(selectedSources);
     async function fetchChat() {
+      setSourcesAfterUncheckCrispWiz(selectedSources);
       const data = await makeApiRequest(
         `/chat/${selectedCategoryChat}`,
         "post",

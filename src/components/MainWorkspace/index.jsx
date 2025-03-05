@@ -247,17 +247,17 @@ const MainWorkspace = ({ theme }) => {
     if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
       setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
       setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-      setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     }
 
     // updated sourcesTobeCommiter
     if (!file.is_selected) {
       setSourcesTobeCommited((prev) => [...prev, file]);
-      setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     }
     else {
       setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-      setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     }
   };
 
@@ -537,7 +537,7 @@ const MainWorkspace = ({ theme }) => {
   // update sourcesTobeCommited depending on knowledgeBase change
   useEffect(() => {
     setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
-    setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
   }, [knowledgeBase]);
 
   useEffect(() => {
