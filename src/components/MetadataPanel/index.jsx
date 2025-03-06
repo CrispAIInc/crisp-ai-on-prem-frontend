@@ -135,10 +135,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
       return null;
     });
     if (committedSources?.length !== sourcesTobeCommited?.length) {
-      commitSelectedSources(committedSources);
-    } else {
-      // something in backend
-      // await makeApiRequest(`/previous-temp-chat`, 'post');
+      // console.log("trueeeujl");
+      commitSelectedSources(sourcesTobeCommited);
     }
     setIsSourceUncheckedOrClosed(true);
   };
@@ -169,10 +167,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
       return null;
     });
     if (committedSources?.length !== sourcesTobeCommited?.length) {
-      commitSelectedSources(committedSources);
-    } else {
-      // something in backend
-      // await makeApiRequest(`/previous-temp-chat`, 'post');
+      // console.log("trueeeujl");
+      commitSelectedSources(sourcesTobeCommited);
     }
     setIsSourceUncheckedOrClosed(true);
   };
@@ -191,10 +187,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
       return null;
     });
     if (committedSources?.length !== sourcesTobeCommited?.length) {
-      commitSelectedSources(committedSources);
-    } else {
-      // something in backend
-      // await makeApiRequest(`/previous-temp-chat`, 'post');
+      // console.log("trueeeujl");
+      commitSelectedSources(sourcesTobeCommited);
     }
     setIsSourceUncheckedOrClosed(true);
   };
