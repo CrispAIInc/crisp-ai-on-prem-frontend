@@ -387,8 +387,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
   };
   const [isChecked, setIsChecked] = useState(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length));
 
+  const [sourcesAfterCheckCrispWiz, setSourcesAfterCheckCrispWiz] = useState([]);
+
   useEffect(() => {
     setIsSourceUncheckedOrClosed(!isChecked);
+
+    if (isChecked) {
+      setSourcesAfterCheckCrispWiz(committedSources);
+    }
   }, [isChecked]);
 
   async function handleToggle(checked) {
@@ -406,9 +412,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 2");
       // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      // if (committedSources?.length !== sourcesTobeCommited?.length) {
-      // console.log("trueeeujl");
-      commitSelectedSources(committedSources);
+      if (sourcesAfterCheckCrispWiz?.length !== committedSources?.length) {
+        // console.log("trueeeujl");
+        commitSelectedSources(sourcesAfterCheckCrispWiz);
+      }
       // } else {
       // something in backend
       // await makeApiRequest(`/previous-temp-chat`, 'post');
