@@ -45,6 +45,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setActiveView,
     jumpToPage,
     selectedNote,
+    setCommittedSources,
     sourcesAfterUncheckCrispWiz,
     sourcesTobeCommited,
     setKnowledgeBase,
@@ -399,6 +400,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 1");
       setActiveTab('genInsights');
       commitSelectedSources([currentResource]);
+      // setCommittedSources([currentResource]);
       setIsExclusiveChecked(true);
       setSourcesWithExclusive(prev => [...prev, currentResource?.source_path]);
       // setIsSourceUncheckedOrClosed(false)
@@ -406,8 +408,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 2");
       // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      if (committedSources?.length !== sourcesTobeCommited?.length) {
+      if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
         // console.log("trueeeujl");
+        console.log("are not same");
         commitSelectedSources(sourcesTobeCommited);
       }
       // } else {
