@@ -135,7 +135,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-    if (committedSources?.length !== sourcesTobeCommited?.length) {
+    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
       // console.log("trueeeujl");
       commitSelectedSources(sourcesTobeCommited);
     }
@@ -167,7 +167,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-    if (committedSources?.length !== sourcesTobeCommited?.length) {
+    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
       // console.log("trueeeujl");
       commitSelectedSources(sourcesTobeCommited);
     }
@@ -187,7 +187,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-    if (committedSources?.length !== sourcesTobeCommited?.length) {
+    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
       // console.log("trueeeujl");
       commitSelectedSources(sourcesTobeCommited);
     }
@@ -410,7 +410,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
       if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
         // console.log("trueeeujl");
-        console.log("are not same");
         commitSelectedSources(sourcesTobeCommited);
       }
       // } else {
