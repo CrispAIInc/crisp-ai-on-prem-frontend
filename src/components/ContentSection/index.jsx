@@ -522,7 +522,10 @@ const ContentSection = ({
                             ?
                             <>
                                 {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
+                                    <CustomButton onClick={() => commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
+                                    {/* 
                                     <CustomButton onClick={() => commitSelectedSources(commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated)))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
+                                     */}
                                 </div>}
                                 <div className="mx-auto w-fit">
                                     <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>

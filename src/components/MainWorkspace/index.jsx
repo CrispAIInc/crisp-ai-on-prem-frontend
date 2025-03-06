@@ -201,8 +201,14 @@ const MainWorkspace = ({ theme }) => {
     'display',
   ];
 
+  // useEffect(() => {
+  //   setSelectedSources(sourcesTobeCommited);
+  // }, [sourcesTobeCommited]);
+
   const commitSelectedSources = (items) => {
+    console.log(items);
     if (items?.length === 0) {
+      // setSelectedSources(sourcesTobeCommited);
       knowledgeBase.map((item) => {
         if (item.is_selected) {
           setSelectedSources((prev) => {

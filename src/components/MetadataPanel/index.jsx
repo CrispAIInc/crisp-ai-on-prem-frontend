@@ -45,7 +45,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setActiveView,
     jumpToPage,
     selectedNote,
-    categoryValues,
+    sourcesAfterUncheckCrispWiz,
     sourcesTobeCommited,
     setKnowledgeBase,
     isExclusiveChecked,
@@ -373,12 +373,24 @@ const MetadataPanel = ({ workspaceContainer }) => {
   const isMobile = useCheckMobileScreen();
 
 
+  const areSourcesSame = (arr1, arr2) => {
+    const set1 = new Set(arr1.map(obj => obj.source_path));
+    const set2 = new Set(arr2.map(obj => obj.source_path));
 
+    if (set1.size !== set2.size) return false; // Different sizes
+
+    for (const path of set1) {
+      if (!set2.has(path)) return false; // Different elements
+    }
+
+    return true; // Arrays contain the same objects (ignoring order)
+  };
   const [isChecked, setIsChecked] = useState(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length));
-  console.log("metadatapanel re rendered");
+
   useEffect(() => {
     setIsSourceUncheckedOrClosed(!isChecked);
   }, [isChecked]);
+
   async function handleToggle(checked) {
     setIsChecked(checked);
     // setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
@@ -394,12 +406,13 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 2");
       // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      if (committedSources?.length !== sourcesTobeCommited?.length) {
-        commitSelectedSources(committedSources);
-      } else {
-        // something in backend
-        // await makeApiRequest(`/previous-temp-chat`, 'post');
-      }
+      // if (committedSources?.length !== sourcesTobeCommited?.length) {
+      // console.log("trueeeujl");
+      commitSelectedSources(committedSources);
+      // } else {
+      // something in backend
+      // await makeApiRequest(`/previous-temp-chat`, 'post');
+      // }
       // setIsSourceUncheckedOrClosed(true)
     }
   }

@@ -41,6 +41,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     setShowNoteModal,
     selectedSources,
     setSourcesAfterUncheckCrispWiz,
+    sourcesTobeCommited,
     selectedAll,
     isNewNote,
     setIsNewNote,
@@ -86,15 +87,21 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
   useEffect(() => {
     setChatLoaded(false);
-    console.log(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)));
+    if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length > 0) {
+      // checked
+    } else {
+      // unchecked
+    }
     // setCommittedSources(selectedSources);
     async function fetchChat() {
-      setSourcesAfterUncheckCrispWiz(selectedSources);
+      // if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length === 0) {
+      //   setSourcesAfterUncheckCrispWiz(selectedSources);
+      // }
       const data = await makeApiRequest(
         `/chat/${selectedCategoryChat}`,
         "post",
         JSON.stringify({
-          sources: selectedSources,
+          sources: sourcesWithExclusive?.length === 0 ? committedSources : selectedSources.length > 0 ? selectedSources : sourcesTobeCommited,
           category: selectedCategoryChat,
           selectedAll,
           is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
