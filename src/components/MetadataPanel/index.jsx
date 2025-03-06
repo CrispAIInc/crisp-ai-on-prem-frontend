@@ -412,9 +412,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 2");
       // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      if (sourcesAfterCheckCrispWiz?.length !== committedSources?.length) {
+      if (committedSources?.length !== sourcesTobeCommited?.length) {
         // console.log("trueeeujl");
-        commitSelectedSources(sourcesAfterCheckCrispWiz);
+        commitSelectedSources(sourcesTobeCommited);
       }
       // } else {
       // something in backend
