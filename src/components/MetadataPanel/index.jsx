@@ -121,6 +121,12 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
   }, [currentResource?.source_path, JSON.stringify(generatedResources)]);
 
+  function areAllItemsInSecondArray(arr1, arr2) {
+    const pathsSet = new Set(arr2.map(item => item.source_path));
+
+    return arr1.every(item => pathsSet.has(item.source_path));
+  }
+
   const closeVideo = async (event) => {
     event.preventDefault();
     setCurrentResource(null);
@@ -135,7 +141,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
+    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
+      !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
       // console.log("trueeeujl");
       commitSelectedSources(sourcesTobeCommited);
     }
@@ -167,7 +174,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
+    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
+      !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
       // console.log("trueeeujl");
       commitSelectedSources(sourcesTobeCommited);
     }
@@ -187,7 +195,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
+    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
+      !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
       // console.log("trueeeujl");
       commitSelectedSources(sourcesTobeCommited);
     }
@@ -408,7 +417,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 2");
       // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
+      if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
+        !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
         // console.log("trueeeujl");
         commitSelectedSources(sourcesTobeCommited);
       }
