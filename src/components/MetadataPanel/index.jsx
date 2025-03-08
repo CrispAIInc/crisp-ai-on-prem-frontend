@@ -48,6 +48,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setCommittedSources,
     sourcesAfterUncheckCrispWiz,
     sourcesTobeCommited,
+    setIsFoundationLlm,
     setKnowledgeBase,
     isExclusiveChecked,
     setIsExclusiveChecked,
@@ -105,6 +106,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     if (activeView === "resource") {
       // setTranslatedResource(currentResource);
       if (currentResource) {
+        console.log("hehehe");
         // generatedResource.current = generatedResources?.find((item) => item.source_path === currentResource.source_path);
         // console.log(item.source_path === currentResource.source_path)
         const updatedResource = {
@@ -417,10 +419,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 2");
       // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
-        !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
+      if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
         // console.log("trueeeujl");
         commitSelectedSources(sourcesTobeCommited);
+        setCommittedSources(sourcesTobeCommited);
+      }
+
+      if (committedSources?.length === 0) {
+        setIsFoundationLlm(true);
       }
       // } else {
       // something in backend

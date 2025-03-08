@@ -40,7 +40,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setSummary(pdf.summary);
         setSummaries(pdf.topic_summaries);
         setActiveView('resource');
-        setJumpToPage({ page: parseInt(pdf.page) + 1 });
+        setJumpToPage({ page: parseInt(pdf?.page) + 1 });
         workspaceContainer.current.scrollTo({
             top: 0,
             behavior: "smooth", // Enables smooth scrolling

@@ -290,7 +290,7 @@ const MainWorkspace = ({ theme }) => {
   const [isExclusiveChecked, setIsExclusiveChecked] = useState(false);
   useEffect(() => {
     // set isFoundationLlm to true if there is no selectedSources, otherwise false
-    setIsFoundationLlm(selectedSources.length === 0);
+    setIsFoundationLlm(selectedSources.length === 0 || committedSources?.length === 0);
     if (!isExclusiveChecked) {
       setCommittedSources(selectedSources);
     }
