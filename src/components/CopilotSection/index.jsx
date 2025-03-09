@@ -101,7 +101,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
         `/chat/${selectedCategoryChat}`,
         "post",
         JSON.stringify({
-          sources: selectedSources,
+          sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
           category: selectedCategoryChat,
           selectedAll,
           is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
