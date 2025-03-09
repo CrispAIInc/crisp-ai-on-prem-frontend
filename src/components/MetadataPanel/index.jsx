@@ -419,7 +419,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 2");
       // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0) {
+      if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
+        !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
         // console.log("trueeeujl");
         commitSelectedSources(sourcesTobeCommited);
         setCommittedSources(sourcesTobeCommited);
