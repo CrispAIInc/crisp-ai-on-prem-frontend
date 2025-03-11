@@ -67,9 +67,10 @@ const ContentSection = ({
         setActiveView,
         setChatLoaded,
         sourcesTobeCommited, setSourcesTobeCommited,
-        setSourcesAfterUncheckCrispWiz,
+        selectedNote,
         selectedSources,
         setSelectedSources,
+        selectedStory,
         selectedAll,
         setSelectedAll,
         theme,
@@ -172,13 +173,14 @@ const ContentSection = ({
             toast('Source deleted successfully', { className: `p-2 rounded-md`, theme });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
-                setActiveView(prev => {
-                    // remove last item from prev array
-                    if (prev?.length === 1) {
-                        return [];
+                setActiveView(() => {
+                    if (selectedStory.text.length > 0) {
+                        return "story";
                     }
-                    // prev.pop();
-                    return prev?.filter(item => item !== "resource");
+                    if (selectedNote.text.length > 1) {
+                        return "note";
+                    }
+                    return null;
                 });
             }
 
@@ -204,7 +206,16 @@ const ContentSection = ({
             setKnowledgeBase(data);
             setCurrentResource(null);
             // prev.pop();
-            setActiveView(prev => prev?.length > 1 ? prev?.filter(item => item !== "resource") : []);
+            // setActiveView(prev => prev?.length > 1 ? prev?.filter(item => item !== "resource") : []);
+            setActiveView(() => {
+                if (selectedStory.text.length > 0) {
+                    return "story";
+                }
+                if (selectedNote.text.length > 1) {
+                    return "note";
+                }
+                return null;
+            });
         } catch (error) {
             setIsDeleting(false);
             console.log(error);
