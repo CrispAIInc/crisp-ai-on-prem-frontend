@@ -184,7 +184,11 @@ const ContentSection = ({
                 });
             }
 
-            setKnowledgeBase((prev) => prev.filter(item => item.source_path !== items[0].source_path));
+            // remove all items in the items array from knowledgebase
+            // item.source_path !== items[0].source_path
+            setKnowledgeBase((prev) => prev.filter(item => {
+                return !items.some(i => i.source_path === item.source_path);
+            }));
 
             setChatLoaded(false);
             const { chat_is_initialized } = await makeApiRequest(
@@ -203,7 +207,20 @@ const ContentSection = ({
                 "post",
                 JSON.stringify(categoryValues)
             );
-            setKnowledgeBase(data);
+            // setKnowledgeBase(data);
+            // update knowledgebase so that it gets populated with the data value and also update the is_selected value to either true or false depending if an item in data exists in the sourcesTobeCommitted array
+            let updatedKnowledgeBase = data.map(item => {
+                let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
+
+                if (selected) {
+                    return { ...item, is_selected: true };
+                } else {
+                    return item;
+                }
+            });
+
+            setKnowledgeBase(updatedKnowledgeBase);
+
             setCurrentResource(null);
             // prev.pop();
             // setActiveView(prev => prev?.length > 1 ? prev?.filter(item => item !== "resource") : []);
@@ -242,7 +259,20 @@ const ContentSection = ({
                 "post",
                 JSON.stringify(categoryValues)
             );
-            setKnowledgeBase(data);
+            // setKnowledgeBase(data);
+            let updatedKnowledgeBase = data.map(item => {
+                let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
+
+                if (selected) {
+                    return { ...item, is_selected: true };
+                } else {
+                    return item;
+                }
+            });
+
+            console.log(updatedKnowledgeBase);
+
+            setKnowledgeBase(updatedKnowledgeBase);
             setIsUploading(false);
         } catch (error) {
             console.log(error);
@@ -510,20 +540,20 @@ const ContentSection = ({
 
                 <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                     {
-                        knowledgeBase.some((item) => item.is_selected) > 0 && <div className={` grid grid-cols-[repeat(auto-fill,_112px)] h-full gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
-                            {knowledgeBase.slice(0).reverse().map((item, index) => {
-                                if (canRenderSourceThumbnail(item)) {
-                                    return (<ContentPanelThumbnail
-                                        key={index}
-                                        index={index}
-                                        isDeleting={isDeleting}
-                                        clickedIndex={clickedIndex}
-                                        item={item}
-                                        handleCheckboxChange={handleCheckboxChange}
-                                        onThumbnailClick={onThumbnailClick}
-                                        deleteResource={deleteResource}
-                                    />);
-                                }
+                        sourcesTobeCommited?.length > 0 && <div className={` grid grid-cols-[repeat(auto-fill,_112px)] h-full gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
+                            {sourcesTobeCommited?.slice(0).reverse().map((item, index) => {
+                                // if (canRenderSourceThumbnail(item)) {
+                                return (<ContentPanelThumbnail
+                                    key={index}
+                                    index={index}
+                                    isDeleting={isDeleting}
+                                    clickedIndex={clickedIndex}
+                                    item={item}
+                                    handleCheckboxChange={handleCheckboxChange}
+                                    onThumbnailClick={onThumbnailClick}
+                                    deleteResource={deleteResource}
+                                />);
+                                // }
                             })}
                         </div>
                     }
