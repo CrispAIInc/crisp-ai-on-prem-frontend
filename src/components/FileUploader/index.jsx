@@ -80,7 +80,8 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
             <input
                 type="file"
                 multiple
-                accept={selectedFileFormat || ''}
+                // accept={selectedFileFormat || ''}
+                accept=".pdf, image/*, video/*"
                 className="hidden"
                 id="file-input"
                 onChange={handleFileUpload}

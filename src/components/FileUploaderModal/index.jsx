@@ -44,7 +44,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
             <Modal.Body className={`flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
                 <div className="flex items-center gap-2">
                     <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={selectedIndex} options={categoryOptions} />
-                    <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} />
+                    {/* <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} /> */}
                 </div>
                 <FileUploader selectedFileFormat={selectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
             </Modal.Body>
