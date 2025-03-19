@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '' }) => {
+const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat }) => {
     const [fileThumbnails, setFileThumbnails] = useState([]);
 
     const handleFileUpload = (event) => {
@@ -8,6 +8,7 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
         setSelectedFiles(files);
         const thumbnails = files.map((file) => {
             const type = file.type;
+            setSelectedFileFormat(type);
             const preview =
                 type.startsWith('image/') || type.startsWith('video/')
                     ? URL.createObjectURL(file)

@@ -242,14 +242,16 @@ const ContentSection = ({
         }
     };
     const handleUpload = async (event, fileFormat, _files) => {
+        // console.log(_files[0]);
         try {
             setIsUploading(true);
             const files = _files || Array.from(event.target.files);
+            console.log(files);
             const formData = new FormData();
-            files.forEach((file) => {
+            files.forEach((file, index) => {
                 formData.append("file", file);
                 formData.append("category", selectedCategory);
-                formData.append("fileType", fileFormat);
+                formData.append("fileType", file.type);
             });
 
             await makeApiRequest(`/upload`, "post", formData, { 'Content-type': "multipart/form-data" });
@@ -270,10 +272,10 @@ const ContentSection = ({
                 }
             });
 
-            console.log(updatedKnowledgeBase);
-
             setKnowledgeBase(updatedKnowledgeBase);
             setIsUploading(false);
+            // get it from the backend
+            // setCurrentResource(files[0]);
         } catch (error) {
             console.log(error);
             setIsUploading(false);

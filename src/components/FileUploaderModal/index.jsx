@@ -46,7 +46,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                     <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={selectedIndex} options={categoryOptions} />
                     {/* <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} /> */}
                 </div>
-                <FileUploader selectedFileFormat={selectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
+                <FileUploader selectedFileFormat={selectedFileFormat} setSelectedFileFormat={setSelectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
                 <div

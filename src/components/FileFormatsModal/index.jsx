@@ -1,5 +1,6 @@
 import { useContext, useRef } from "react";
 
+import LibraryAddOutlinedIcon from '@mui/icons-material/LibraryAddOutlined';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 
@@ -39,7 +40,12 @@ function FileFormatsModal(props) {
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
                 <div className='flex flex-col items-start justify-start gap-3'>
                     {
-                        fileFormats.map((format, index) => (
+                        [...fileFormats, {
+                            label: "All of above",
+                            icon: <LibraryAddOutlinedIcon />,
+                            extensions: [".pdf", "image/*", "video/*"],
+                            value: "all"
+                        }].map((format, index) => (
                             <div key={index} className='flex items-center justify-center gap-2 cursor-pointer' onClick={() => handleFileFormatClick(index)}>
                                 {format.icon}
                                 <span>{format.label}</span>
