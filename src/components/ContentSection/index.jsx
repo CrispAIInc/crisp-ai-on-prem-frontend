@@ -528,13 +528,14 @@ const ContentSection = ({
                     onHide={() => setShowCategoriesModal(false)}
                     categoryOptions={categoryOptions}
                     setShowFileFormatsModal={setShowFileFormatsModal}
+                    handleupload={handleUpload}
                 />
 
-                <FileFormatsModal
+                {/* <FileFormatsModal
                     handleupload={handleUpload}
                     show={showFileFormatsModal}
                     onHide={() => setShowFileFormatsModal(false)}
-                />
+                /> */}
 
                 {/* <MeatadataOptions classNames="w-full" /> */}
 

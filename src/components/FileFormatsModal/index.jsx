@@ -41,7 +41,7 @@ function FileFormatsModal(props) {
                 <div className='flex flex-col items-start justify-start gap-3'>
                     {
                         [...fileFormats, {
-                            label: "All of above",
+                            label: "All of the above",
                             icon: <LibraryAddOutlinedIcon />,
                             extensions: [".pdf", "image/*", "video/*"],
                             value: "all"
