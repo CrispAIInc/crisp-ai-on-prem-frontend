@@ -258,7 +258,7 @@ const MainWorkspace = ({ theme }) => {
 
     // updated sourcesTobeCommiter
     if (!file.is_selected) {
-      setSourcesTobeCommited((prev) => [...prev, file]);
+      setSourcesTobeCommited((prev) => [...prev, { ...file, is_selected: true }]);
       // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     }
     else {
