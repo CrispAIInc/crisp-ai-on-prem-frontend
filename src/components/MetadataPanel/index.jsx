@@ -596,7 +596,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                                     });
                                   }}>
                                     {/* <AccessTimeIcon size="8px" className="text-[8px]" /> */}
-                                    <h6 className='mb-0 text-xs font-semibold '>{topic.start_time} - {topic.end_time}</h6>
+                                    <h6 className='mb-0 text-xs font-semibold text-primary-200 '>{topic.start_time} - {topic.end_time}</h6>
                                   </div>
                                 </div>
                                 <p>{topic.content}</p>
