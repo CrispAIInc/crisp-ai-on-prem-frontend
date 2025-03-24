@@ -8,12 +8,18 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
 
     const { theme, categoryOptions, fileFormats, setSelectedCategory } = useContext(MainContext);
 
+    const [selectedFiles, setSelectedFiles] = useState([]);
+
     useEffect(() => {
         setSelectedCategory(indexName);
     }, [indexName]);
 
+    useEffect(() => {
+        if (indexName === null) hideIndexModal();
+    }, []);
+
     function uploadSources() {
-        handleUpload(null, selectedFileFormat, selectedFiles);
+        handleUpload(null, null, selectedFiles);
         onHide();
         hideIndexModal();
     }
@@ -29,7 +35,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
         setSelectedFileFormat(value);
     }
 
-    const [selectedFiles, setSelectedFiles] = useState([]);
+
 
     return (
         <Modal
@@ -42,10 +48,10 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
             className=""
         >
             <Modal.Body className={`flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
-                <div className="flex items-center gap-2">
+                {indexName !== null && <div className="flex items-center gap-2">
                     <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={selectedIndex} options={categoryOptions} />
                     {/* <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} /> */}
-                </div>
+                </div>}
                 <FileUploader selectedFileFormat={selectedFileFormat} setSelectedFileFormat={setSelectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>

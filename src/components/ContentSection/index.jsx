@@ -523,14 +523,23 @@ const ContentSection = ({
                     />
                 )}
 
+                {/* <CategoriesModal
+                    show={showCategoriesModal}
+                    onHide={() => setShowCategoriesModal(false)}
+                    categoryOptions={categoryOptions}
+                    // setShowFileFormatsModal={setShowFileFormatsModal}
+                    // handleupload={handleUpload}
+                    uploadedSources={uploadedSources}
+                    setUploadedSources={setUploadedSources}
+                /> */}
+
                 <CategoriesModal
                     show={showCategoriesModal}
                     onHide={() => setShowCategoriesModal(false)}
                     categoryOptions={categoryOptions}
                     setShowFileFormatsModal={setShowFileFormatsModal}
-                    handleupload={handleUpload}
+                    handleUpload={handleUpload}
                 />
-
                 {/* <FileFormatsModal
                     handleupload={handleUpload}
                     show={showFileFormatsModal}
