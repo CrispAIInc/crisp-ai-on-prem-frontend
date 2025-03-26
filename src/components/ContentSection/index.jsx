@@ -321,75 +321,72 @@ const ContentSection = ({
         setShowCategoriesModal(true);
     };
 
-    const handleSelectAllCheckboxChange = (path) => {
+    const handleSelectAllCheckboxChange = (path, isChecked) => {
         const pathSegments = path.split("/").filter(Boolean); // Removes empty strings from array
         const category = pathSegments[0];
         const format = pathSegments[1];
 
-        console.log(category, format);
-
+        if (isChecked) {
         if (category === undefined) {
-            const newSelectedValue = !selectedAll;
-            setSelectedAll(newSelectedValue);
+                setSelectedAll(true);
             setKnowledgeBase((prev) => {
                 return prev.map((item) => {
-                    return { ...item, is_selected: newSelectedValue };
+                        return { ...item, is_selected: true };
+                    });
                 });
-                // knowledgeBase.forEach((item) => {
-                //     item.is_selected = newSelectedValue;
-                // });
-            });
-            setSourcesTobeCommited(newSelectedValue ? knowledgeBase : []);
-            // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-        }
-        else {
-            console.log(knowledgeBase.some((item) => item.is_selected));
-            const updatedKnowledgeBase = knowledgeBase.map((item) => {
-                // console.log(item.category.includes(category));
-                // console.log(item.file_type === format || format === 'all');
-                if (item.category.includes(category) && format === undefined) {
-                    item.is_selected = !item.is_selected;
+                setSourcesTobeCommited(knowledgeBase);
+            }
 
-                    // setSelectedSources((prev) => {
-                    //     const itemExist = prev.find(i => i.source_path === item.source_path);
-                    //     if (!itemExist) {
-                    //         return [
-                    //             ...prev,
-                    //             {
-                    //                 source_path: item.source_path,
-                    //                 category: item.category,
-                    //                 file_type: item.file_type,
-                    //             },
-                    //         ];
-                    //     }
-                    //     return prev;
-                    // });
-                }
-                else if (item.category.includes(category) && (item.file_type === format || format === 'all')) {
-                    // console.log('heree');
-                    item.is_selected = !item.is_selected;
-                    // setSelectedSources((prev) => {
-                    //     const itemExist = prev.find(i => i.source_path === item.source_path);
-                    //     if (!itemExist) {
-                    //         return [
-                    //             ...prev,
-                    //             {
-                    //                 source_path: item.source_path,
-                    //                 category: item.category,
-                    //                 file_type: item.file_type,
-                    //             },
-                    //         ];
-                    //     }
-                    //     return prev;
-                    // });
-                }
-                // if (item.is_selected) setSelectedAll(false);
+            else if (category !== undefined && format === undefined) {
+                const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                    //! what about if all the sources in KB have "all" by default?
+                    if (item.category.includes(category)) {
+                        item.is_selected = true;
+                    }
+                    return item;
+            });
+                setKnowledgeBase(updatedKnowledgeBase);
+                setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+        }
+            else if (category !== undefined && format !== undefined) {
+            const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                    if (item.category.includes(category) && item.file_type === format) {
+                        item.is_selected = true;
+                    }
                 return item;
 
             });
             setKnowledgeBase(updatedKnowledgeBase);
             setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-            // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+            }
+        } else {
+            if (category === undefined) {
+                setSelectedAll(false);
+                setKnowledgeBase((prev) => {
+                    return prev.map((item) => {
+                        return { ...item, is_selected: false };
+                    });
+                });
+                setSourcesTobeCommited([]);
+            } else if (category !== undefined && format === undefined) {
+                const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                    if (item.category.includes(category)) {
+                        item.is_selected = false;
+                    }
+                    return item;
+                });
+                setKnowledgeBase(updatedKnowledgeBase);
+                setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+            } else if (category !== undefined && format !== undefined) {
+                const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                    if (item.category.includes(category) && item.file_type === format) {
+                        item.is_selected = false;
+                    }
+                    return item;
+                });
+                setKnowledgeBase(updatedKnowledgeBase);
+                setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+            }
         }
     };
 
