@@ -3,12 +3,7 @@ import { MainContext } from "../../contexts/mainContext.js";
 import makeApiRequest from "../../api";
 import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
-import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import { Document, Page } from "react-pdf";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import LoadingSpinner from "../LoadingSpinner";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import CustomSelectTwo from "../CustomSelectTwo";
@@ -16,13 +11,16 @@ import { flattenMetadata, timeToSeconds } from '../../utils.js';
 import Chip from '../Chip/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import SearchSection from '../SearchSection';
-import FaqItem from '../FaqItem';
 import Faqs from '../Faqs';
 import Accordion from '../Accordion/index.jsx';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import Timeline from '../Timeline/index.jsx';
 import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
 import HorizontalCard from '../HorizontalCard/index.jsx';
+import { Button } from 'bootstrap';
+import CustomButton from '../CustomButton/index.jsx';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import { lightBlue, pink } from '@mui/material/colors';
 
 /**
  * chapters: [{id: number, thumbnail: string | file, timestamps: [number, number], title: string, description: string}]
@@ -30,118 +28,6 @@ import HorizontalCard from '../HorizontalCard/index.jsx';
  * faqs: [{id: number, question: string, answer: string}]
 */
 
-const highlights = [
-  {
-    id: 1,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:00:00", "00:02:10"],
-    title: "Highlight 1",
-  },
-  {
-    id: 2,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:02:10", "00:04:20"],
-    title: "Highlight 2",
-  },
-  {
-    id: 3,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:00:00", "00:02:10"],
-    title: "Highlight 3",
-  },
-  {
-    id: 4,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:02:10", "00:04:20"],
-    title: "Highlight 4",
-  },
-  {
-    id: 5,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:00:00", "00:02:10"],
-    title: "Highlight 5",
-  },
-  {
-    id: 6,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:02:10", "00:04:20"],
-    title: "Highlight 6",
-  },
-  {
-    id: 7,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:00:00", "00:02:10"],
-    title: "Highlight 7",
-  },
-  {
-    id: 8,
-    thumbnail: "https://placehold.co/600x400",
-    timestamps: ["00:02:10", "00:04:20"],
-    title: "Highlight 8",
-  },
-];
-
-const chapters = [
-  {
-    id: 1,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:00:00", "00:02:10"],
-    title: "Chapter 1",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-  {
-    id: 2,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:02:10", "00:04:20"],
-    title: "Chapter 2",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-  {
-    id: 3,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:04:20", "00:06:30"],
-    title: "Chapter 3",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-  {
-    id: 4,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:06:30", "00:08:40"],
-    title: "Chapter 4",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-  {
-    id: 5,
-    thumbnail: "https://placehold.co/600x400",
-    timestamp: ["00:08:40", "00:10:50"],
-    title: "Chapter 5",
-    content: "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-  },
-
-];
-
-const faqs = [
-  {
-    id: 1,
-    question: "What is West Point?",
-    answer: "West Point, officially known as the United States Military Academy (USMA), is a prestigious institution located in West Point, New York. It trains cadets to become officers in the United States Army."
-  },
-  {
-    id: 2,
-    question: "Where is West Point located?",
-    answer: "West Point is situated on the west bank of the Hudson River in New York State, approximately 50 miles north of New York City."
-  },
-  {
-    id: 3,
-    question: "How competitive is admission to West Point?",
-    answer: "West Point is highly selective, with an acceptance rate of around 10-12%. Applicants must meet rigorous academic, physical, and leadership criteria."
-  },
-  {
-    id: 4,
-    question: "What type of military training do cadets undergo?",
-    answer: "Cadets participate in rigorous military training programs, including field exercises, leadership training, and physical fitness programs."
-  },
-];
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
@@ -150,18 +36,37 @@ const MetadataPanel = ({ workspaceContainer }) => {
     resourceURL,
     chatLoaded,
     setResourceURL,
+    sourcesWithExclusive, setSourcesWithExclusive,
     player,
+    setIsSourceUncheckedOrClosed,
     languageOptions,
     isPlayerReady,
     setIsPlayerReady,
     setActiveView,
     jumpToPage,
     selectedNote,
+    setCommittedSources,
+    sourcesAfterUncheckCrispWiz,
+    sourcesTobeCommited,
+    setIsFoundationLlm,
+    setKnowledgeBase,
+    isExclusiveChecked,
+    setIsExclusiveChecked,
+    committedSources,
     activeView,
     theme,
+    commitSelectedSources,
+    handleCheckboxChange,
     selectedStory,
+    knowledgeBase,
+    setActiveTab,
+    generatedResources,
+    setGeneratedResources,
   } = useContext(MainContext);
-  const [translatedResource, setTranslatedResource] = useState(currentResource);
+
+  const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item.source_path === currentResource.source_path));
+  let generatedResource = useRef(generatedResources?.find((item) => item.source_path === currentResource.source_path));
+  // const [generatedResource, setGeneratedResource] = useState(null);
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
   const [numPages, setNumPages] = useState();
   const [isPdfLoaded, setIsPdfLoaded] = useState(false);
@@ -170,12 +75,18 @@ const MetadataPanel = ({ workspaceContainer }) => {
   const metadataPanelContainer = useRef(null);
 
 
-  let currentResourceType = currentResource.file_type;
+  let currentResourceType = currentResource?.file_type;
 
   useEffect(() => {
-    if (isPlayerReady && resourceURL && currentResource.file_type === "video") {
+    if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
       const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-      if (timestamp !== undefined && timestamp !== null) player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+      if (timestamp !== undefined && timestamp !== null) {
+        player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+        setCurrentResource(prev => {
+          const { timestamp, ...rest } = prev;
+          return rest;
+        });
+      }
       // setFromStory(false);
     }
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
@@ -193,12 +104,32 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   useEffect(() => {
     if (activeView === "resource") {
-      setTranslatedResource(currentResource);
-      if (currentResource) { translateMetadata("en", currentResource); }
-    }
-  }, [currentResource.source_path]);
+      // setTranslatedResource(currentResource);
+      if (currentResource) {
+        console.log("hehehe");
+        // generatedResource.current = generatedResources?.find((item) => item.source_path === currentResource.source_path);
+        // console.log(item.source_path === currentResource.source_path)
+        const updatedResource = {
+          ...currentResource,
+          ...generatedResources?.find(item => item.source_path === currentResource.source_path)
+        };
 
-  const closeVideo = (event) => {
+        // Update the currentResource state
+        setCurrentResource(updatedResource);
+
+        // Call translateMetadata with the updated resource
+        translateMetadata("en", updatedResource);
+      }
+    }
+  }, [currentResource?.source_path, JSON.stringify(generatedResources)]);
+
+  function areAllItemsInSecondArray(arr1, arr2) {
+    const pathsSet = new Set(arr2.map(item => item.source_path));
+
+    return arr1.every(item => pathsSet.has(item.source_path));
+  }
+
+  const closeVideo = async (event) => {
     event.preventDefault();
     setCurrentResource(null);
     setResourceURL(null);
@@ -212,9 +143,48 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
+    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
+      !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
+      // console.log("trueeeujl");
+      commitSelectedSources(sourcesTobeCommited);
+    }
+    setIsSourceUncheckedOrClosed(true);
   };
 
-  const closePDF = (event) => {
+  const closePDF = async (event) => {
+    event.preventDefault();
+    setCurrentResource(null);
+    setResourceURL(null);
+    // setActiveView((prev) => {
+    //   // if (selectedStory.text.length > 0) {
+    //   //   return [...prev, 'resource'];
+    //   // }
+    //   // if (selectedNote.text.length > 1) {
+    //   //   return [...prev, 'resource'];
+    //   // }
+    //   if (prev?.length === 1) {
+    //     return [];
+    //   }
+    //   return prev?.filter(item => item !== "resource");
+    // });
+    setActiveView(() => {
+      if (selectedStory.text.length > 0) {
+        return "story";
+      }
+      if (selectedNote.text.length > 1) {
+        return "note";
+      }
+      return null;
+    });
+    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
+      !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
+      // console.log("trueeeujl");
+      commitSelectedSources(sourcesTobeCommited);
+    }
+    setIsSourceUncheckedOrClosed(true);
+  };
+
+  const closeImage = async (event) => {
     event.preventDefault();
     setCurrentResource(null);
     setResourceURL(null);
@@ -227,21 +197,12 @@ const MetadataPanel = ({ workspaceContainer }) => {
       }
       return null;
     });
-  };
-
-  const closeImage = (event) => {
-    event.preventDefault();
-    setCurrentResource(null);
-    setResourceURL(null);
-    setActiveView(() => {
-      if (selectedStory.text.length > 0) {
-        return "story";
-      }
-      if (selectedNote.text.length > 1) {
-        return "note";
-      }
-      return null;
-    });
+    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
+      !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
+      // console.log("trueeeujl");
+      commitSelectedSources(sourcesTobeCommited);
+    }
+    setIsSourceUncheckedOrClosed(true);
   };
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -274,7 +235,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
         title: "",
         content: "",
       },
-      transcript: {
+      transcription: {
+        title: "",
+        content: "",
+      },
+      knowledgeGraoh: {
         title: "",
         content: "",
       },
@@ -304,21 +269,22 @@ const MetadataPanel = ({ workspaceContainer }) => {
       "visual_summary",
       "combined_summary",
       "topic_summaries",
-      "transcript",
+      "transcription",
       "caption",
       "keywords",
       "chapters",
       "highlights",
+      "knowledgeGraph",
       "faqs"
     ];
 
-    let obj = object.metadata ? flattenMetadata(object) : object;
+    // console.log("jsldfjkdf");
+    let obj = (object.metadata !== undefined || object.metadata !== null) ? flattenMetadata(object) : object;
 
     // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
     for (const [key, value] of Object.entries(obj)) {
       if (
-        TRANSLATABLE_KEYS.includes(key) &&
-        (key !== "transcript" || currentResourceType !== "pdf")
+        TRANSLATABLE_KEYS.includes(key)
       ) {
         httpRequestBody[key].title =
           key === "topic_summaries"
@@ -330,16 +296,38 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
 
     try {
+      console.log(object);
       const httpResponseBody = await makeApiRequest(
         "/translate-metadata",
         "post",
         httpRequestBody
       );
+      // const data = await makeApiRequest(
+      //   "/content",
+      //   "post",
+      //   JSON.stringify(categoryValues)
+      // );
+
+      // setKnowledgeBase((prev) => {
+      //   const updatedKnowledgeBase = prev.map((kb) => {
+      //     const updatedKb = data.find((d) => d.source_path === kb.source_path);
+      //     if (updatedKb) {
+      //       return { ...updatedKb, ...kb };
+      //     }
+      //     return kb;
+      //   });
+      //   return updatedKnowledgeBase;
+      // });
+
+      // console.log("httpResponseBody: ", httpResponseBody);
       setTranslatedResource({ ...httpResponseBody, lang: chosenLanguage });
+      // console.log(knowledgeBase?.find(item => item.source_path === currentResource.source_path));
+
     } catch (error) {
       console.log(error);
     } finally {
       setIsTranslationLoading(false);
+      console.log(translatedResource);
     }
   }
 
@@ -348,7 +336,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   async function generateVisualAndCombinedSummary() {
     try {
       setIsGeneratingCombinedSummary(true);
-      const { visual_summary, combined_summary } = await makeApiRequest('/generate-combined-summary', 'post', { video_filename: currentResource.source_path });
+      const { visual_summary, combined_summary } = await makeApiRequest('/generate-combined-summary', 'post', { video_filename: currentResource?.source_path });
       setTranslatedResource((prev) => ({
         ...prev,
         visual_summary: {
@@ -378,23 +366,110 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setVisibleChaptersCount((prevCount) => prevCount + 3);
   };
 
+  useEffect(() => {
+    // if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)) {
+    //   commitSelectedSources([currentResource]);
+    // }
+
+    return () => {
+      setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
+    };
+  }, [currentResource]);
+
   const isMobile = useCheckMobileScreen();
+
+
+  const areSourcesSame = (arr1, arr2) => {
+    const set1 = new Set(arr1.map(obj => obj.source_path));
+    const set2 = new Set(arr2.map(obj => obj.source_path));
+
+    if (set1.size !== set2.size) return false; // Different sizes
+
+    for (const path of set1) {
+      if (!set2.has(path)) return false; // Different elements
+    }
+
+    return true; // Arrays contain the same objects (ignoring order)
+  };
+  const [isChecked, setIsChecked] = useState(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length));
+
+  const [sourcesAfterCheckCrispWiz, setSourcesAfterCheckCrispWiz] = useState([]);
+
+  useEffect(() => {
+    setIsSourceUncheckedOrClosed(!isChecked);
+
+    if (isChecked) {
+      setSourcesAfterCheckCrispWiz(committedSources);
+    }
+  }, [isChecked]);
+
+  async function handleToggle(checked) {
+    setIsChecked(checked);
+    // setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
+    // handleCheckboxChange(currentResource);
+    if (checked) {
+      // console.log("checked 1");
+      setActiveTab('genInsights');
+      commitSelectedSources([currentResource]);
+      // setCommittedSources([currentResource]);
+      setIsExclusiveChecked(true);
+      setSourcesWithExclusive(prev => [...prev, currentResource?.source_path]);
+      // setIsSourceUncheckedOrClosed(false)
+    } else {
+      // console.log("checked 2");
+      // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
+      setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
+      if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
+        !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
+        // console.log("trueeeujl");
+        commitSelectedSources(sourcesTobeCommited);
+        setCommittedSources(sourcesTobeCommited);
+      }
+
+      if (committedSources?.length === 0) {
+        setIsFoundationLlm(true);
+      }
+      // } else {
+      // something in backend
+      // await makeApiRequest(`/previous-temp-chat`, 'post');
+      // }
+      // setIsSourceUncheckedOrClosed(true)
+    }
+  }
 
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
-      {currentResource.file_type === "video" && (
+      {/* <input type='checkbox' checked={isChecked} onChange={handleToggle} />Toggle */}
+      {/* {currentResource?.metadata?.embeddings_generated && <CustomButton onClick={() => commitSelectedSources(currentResource)} className="my-1 mb-5 text-white bg-primary-300">Exclusive source for Crisp Wiz</CustomButton>} */}
+
+      {/* {currentResource?.metadata?.embeddings_generated && <div className="">
+        <input type='checkbox' checked={isChecked} onChange={e => handleToggle(e.target.checked)} />
+        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Exclusive source for Crisp Wiz</span></div>} */}
+
+      {currentResource?.metadata?.embeddings_generated && <FormControlLabel control={<Checkbox sx={{
+        color: lightBlue[800],
+        '&.Mui-checked': {
+          color: lightBlue[600],
+        },
+        borderColor: 'pink',
+        borderTopColor: pink[400],
+      }} />} checked={isChecked} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />}
+
+
+      {currentResource?.file_type === "video" && (
         <>
           <div className="relative ">
-            <div className="shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+            <div className="h-full shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
               <CancelIcon
                 onClick={closeVideo}
-                color="black"
+                color="error"
                 className="absolute z-50 shadow-lg cursor-pointer right-4 top-2"
               />
               <ReactPlayer
+
                 id="react-player"
                 width={"100%"}
-                height={"100%"}
+                height='500px'
                 playing={true}
                 url={resourceURL}
                 onReady={() => setIsPlayerReady(true)}
@@ -414,9 +489,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   }`}
               >
                 {/* search */}
-                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
+                {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
                 {/* generate visual/combined summary */}
-                <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
+                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
                   {/* {!isGeneratingCombinedSummary ? <div
                     className={`user-select-none flex items-center justify-center gap-2 py-1 mb-2 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`} onClick={() => generateVisualAndCombinedSummary()}>
                     <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
@@ -443,36 +518,49 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     }
                     placeholder="Select a language"
                   />
-                </div>
+                </div>}
                 <>
-                  {/* {(translatedResource?.combined_summary?.content !== "" && translatedResource?.combined_summary?.content !== undefined) && <>
-                    <Accordion heading={translatedResource?.combined_summary?.title} isFirstOpen>
+                  {/* {(generatedResource?.combined_summary?.content !== "" && generatedResource?.combined_summary?.content !== undefined) && <>
+                    <Accordion heading={generatedResource?.combined_summary?.title} isFirstOpen>
                       <p
                         className={`text-md ${theme === "light"
                           ? "text-textColor-300"
                           : "text-textColor-100"
                           }`}
 
-                        dangerouslySetInnerHTML={{ __html: `${translatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
+                        dangerouslySetInnerHTML={{ __html: `${generatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
                       ></p>
                     </Accordion>
                   </>} */}
 
-                  {/* {(translatedResource?.visual_summary?.content !== "" && translatedResource?.visual_summary?.content !== undefined) && <>
-                    <Accordion heading={translatedResource?.visual_summary?.title}>
+                  {/* {(generatedResource?.visual_summary?.content !== "" && generatedResource?.visual_summary?.content !== undefined) && <>
+                    <Accordion heading={generatedResource?.visual_summary?.title}>
                       <p
                         className={`text-md ${theme === "light"
                           ? "text-textColor-300"
                           : "text-textColor-100"
                           }`}
-                        dangerouslySetInnerHTML={{ __html: `${translatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
+                        dangerouslySetInnerHTML={{ __html: `${generatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
                       ></p>
                     </Accordion>
                   </>} */}
 
+                  {translatedResource?.transcription?.content !== undefined && <>
+                    <Accordion heading={translatedResource?.transcription?.title}>
+                      <p
+                        className={`text-md ${theme === "light"
+                          ? "text-textColor-300"
+                          : "text-textColor-100"
+                          }`}
+
+                        dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
+                      >
+                      </p>
+                    </Accordion>
+                  </>}
                   {translatedResource?.summary?.content !== undefined &&
                     <>
-                      <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
+                      <Accordion heading={translatedResource?.summary?.title}>
                         <p
                           className={`text-md ${theme === "light"
                             ? "text-textColor-300"
@@ -498,19 +586,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
-                {/* {translatedResource?.transcript?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.transcript?.title}>
-                    <p
-                      className={`text-md ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcript?.content?.replace(/\n/gi, '<br />')}` }}
-                    >
-                    </p>
-                  </Accordion>
-                </>} */}
                 {translatedResource?.keywords?.content !== undefined && <>
                   <Accordion heading={translatedResource?.keywords?.title}>
                     <p
@@ -560,21 +636,23 @@ const MetadataPanel = ({ workspaceContainer }) => {
       )
       }
       {
-        currentResource.file_type === "pdf" && (
+        currentResource?.file_type === "pdf" && (
           <>
             <div
-              className="relative h-[70vh] w-full mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-x-hidden"
+              className="relative h-[100vh] w-[75%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-x-hidden"
               ref={PdfContainer}
+              style={{ height: '550px', overflow: 'auto' }}
             >
               <Document
                 className="!w-full mx-auto relative"
                 file={resourceURL}
+
                 onLoadSuccess={onDocumentLoadSuccess}
               >
                 <CancelIcon
                   onClick={closePDF}
                   className="sticky top-0 z-50 shadow-lg cursor-pointer left-full"
-                  color='black'
+                  color='error'
                 />
                 {Array.from(new Array(numPages), (el, index) => (
                   <div
@@ -587,7 +665,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       _className="mx-auto !w-full !min-w-0"
                       className="!w-full mx-auto"
                       pageNumber={index + 1}
-                      scale={1.0}
+                      scale={0.7}
+                      width={window.innerWidth * 0.8}
                     />
                   </div>
                 ))}
@@ -605,8 +684,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   }`}
               >
                 {/* search */}
-                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
-                <div className="flex flex-wrap items-center justify-between gap-1">
+                {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
+                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
@@ -614,10 +693,23 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     }
                     placeholder="Select a language"
                   />
-                </div>
+                </div>}
 
+                {translatedResource?.transcription?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.transcription?.title}>
+                    <p
+                      className={`text-md ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
+
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
+                    >
+                    </p>
+                  </Accordion>
+                </>}
                 {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.summary?.title} isFirstOpen>
+                  <Accordion heading={translatedResource?.summary?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
@@ -668,15 +760,15 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   <Faqs heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
                 </div>}
 
-                {/* {translatedResource?.topic_summaries?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.topic_summaries?.title}>
+                {/* {translatedResource?.transcription?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.transcription?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
                     ></p>
                   </Accordion>
                 </>} */}
@@ -701,16 +793,16 @@ const MetadataPanel = ({ workspaceContainer }) => {
           </>
         )}
       {
-        currentResource.file_type === "img" && (
+        currentResource?.file_type === "img" && (
           <div className="pb-10">
-            <div className="relative w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+            <div className="relative pt-[56.25%] w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
               <CancelIcon
-                color="black"
+                color="error"
                 onClick={closeImage}
-                className="absolute right-[1%] top-[15px] cursor-pointer shadow-lg"
+                className="absolute right-[1%] top-[15px] z-10 cursor-pointer shadow-lg "
               />
               <img
-                className="w-full !h-full pt-2 rounded-lg source-img"
+                className="absolute top-0 left-0 object-contain w-full h-full"
                 src={resourceURL}
               />
             </div>
@@ -726,8 +818,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   }`}
               >
                 {/* search */}
-                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
-                <div className="flex flex-wrap items-center justify-between gap-1">
+                {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
+                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
@@ -735,16 +827,16 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     }
                     placeholder="Select a language"
                   />
-                </div>
-                {translatedResource?.caption?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.caption?.title} isFirstOpen>
+                </div>}
+                {translatedResource?.summary?.content !== undefined && <>
+                  <Accordion heading={translatedResource?.summary?.title} >
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
 
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.caption?.content?.replace(/\n/gi, '<br />')}` }}
+                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
                     >
                     </p>
                   </Accordion>
@@ -758,7 +850,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       {
                         translatedResource?.keywords?.content?.map(({ keyword, id }) => <Chip key={id} content={keyword} />)
                       }
-                      {/* {translatedResource?.keywords?.content} */}
+                      {/* {translatedResource?.metadata?.keywords?.content} */}
                     </p>
                   </Accordion>
                 </>}

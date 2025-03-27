@@ -3,8 +3,6 @@ import { MainContext } from '../../contexts/mainContext';
 
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import BaseHeading from '../BaseHeading';
-import SavedStory from '../SavedStory';
-import StickyStory from "../StickyStory";
 import NoData from "../NoData";
 import SavedStorySkeleton from '../Skeletons/SavedStorySkeleton';
 import StackedPaperEffect from '../StackedPaperEffect';

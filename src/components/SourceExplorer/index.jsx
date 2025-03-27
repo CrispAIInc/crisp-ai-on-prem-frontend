@@ -2,9 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
-import VideoThumbnail from "../VideoThumbnail";
 import PDFThumbnail from "../PDFThumbnail";
-import ImageThumbnail from "../ImageThumbnail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
@@ -15,6 +13,7 @@ import StagedImageThumbnail from '../StagedImageThumbnail';
 import ImageIcon from '@mui/icons-material/Image';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import RemoveIndexModal from '../RemoveIndexModal';
 
 export function SourceExplorer(props) {
     const {
@@ -23,6 +22,7 @@ export function SourceExplorer(props) {
         selectedCategory,
         setSelectedCategory,
         theme,
+        knowledgeBase
     } = useContext(MainContext);
 
     // const [currentPath, setCurrentPath] = useState('/');
@@ -79,40 +79,36 @@ export function SourceExplorer(props) {
             </button>
         );
 
+    useEffect(() => {
+        viewModes[viewModes.length - 1] !== "files"
+            ? renderFolders()
+            : renderFiles();
+    }, [knowledgeBase]);
+
+    const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
+    function removeIndex(e) {
+        e.stopPropagation();
+        setShowRemoveIndexModal(true);
+    }
+    // const [showRemoveXItem, setShowRemoveXItem] = useState(null);
+    const [itemToRemove, setItemToRemove] = useState("");
     const renderFolders = () => {
-        return props[viewModes[viewModes.length - 1]].map((item, index) => (
-            <div
-                className="folder"
-                onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
-                key={index}
-            >
-                <FolderIcon sx={{ fontSize: 60 }} />
-                <p>{item.label}</p>
-            </div>
-        ));
-        // if (viewModes[viewModes.length - 1] === "categories") {
-        //     return props.categories.map((item, index) => (
-        //         <div
-        //             className="folder"
-        //             onClick={() => openCategoryFolder(item.value)}
-        //             key={index}
-        //         >
-        //             <FolderIcon sx={{ fontSize: 60 }} />
-        //             <p>{item.label}</p>
-        //         </div>
-        //     ));
-        // } else if (viewModes[viewModes.length - 1] === "formats") {
-        //     return props.formats.map((item, index) => (
-        //         <div
-        //             className="folder"
-        //             onClick={() => openFormatFolder(item.value)}
-        //             key={index}
-        //         >
-        //             <FolderIcon sx={{ fontSize: 60 }} />
-        //             <p>{item.label}</p>
-        //         </div>
-        //     ));
-        // }
+        return <>
+            {props[viewModes[viewModes.length - 1]].map((item, index) => (
+                <div
+                    className="relative folder"
+                    onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
+                    key={index}
+                    onMouseOver={() => setItemToRemove(item.value)}
+                // onMouseLeave={() => setItemToRemove("")}
+                >
+                    {(itemToRemove === item.value && viewModes[viewModes.length - 1] === "categories") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
+                    <FolderIcon sx={{ fontSize: 60 }} />
+                    <p>{item.label}</p>
+                </div>
+            ))}
+            <RemoveIndexModal deleteResource={props.deleteResource} index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
+        </>;
     };
 
     // useEffect(() => {
@@ -135,12 +131,17 @@ export function SourceExplorer(props) {
                                 } !w-28`}
                             key={index}
                         >
-                            {props.isDeleting && props.clickedIndex === index && (
-                                <div className="thumbnail-loader">
-                                    <LoadingSpinner />
-                                </div>
-                            )}
+                            {/* {(props.isDeleting && props.clickedIndex.source_path === file.source_path) && (
+                            <div className="thumbnail-loader">
+                                <LoadingSpinner />
+                            </div>
+                            )} */}
                             <div className="relative">
+                                {(props.isDeleting && props.clickedIndex.source_path === file.source_path) && (
+                                    <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[2] translate-x-[-50%] translate-y-[-50%] transform">
+                                        <LoadingSpinner />
+                                    </div>
+                                )}
                                 <div className="flex items-center justify-between">
                                     <Checkbox
                                         className={`select-all-checkbox ${theme === "dark" && "border-white text-white"
@@ -162,7 +163,7 @@ export function SourceExplorer(props) {
 
                                     <DeleteIcon
                                         style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                        onClick={(event) => props.deleteResource(event, file)}
+                                        onClick={(event) => props.deleteResource(event, [file])}
                                         className="delete-icon"
                                     />
                                 </div>
@@ -187,7 +188,7 @@ export function SourceExplorer(props) {
                                 }`}
                             key={index}
                         >
-                            {props.isDeleting && props.clickedIndex === index && (
+                            {props.isDeleting && props.clickedIndex === file && (
                                 <div className="thumbnail-loader">
                                     <LoadingSpinner />
                                 </div>
@@ -214,7 +215,7 @@ export function SourceExplorer(props) {
 
                                     <DeleteIcon
                                         style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                        onClick={(event) => props.deleteResource(event, file)}
+                                        onClick={(event) => props.deleteResource(event, [file])}
                                         className="delete-icon"
                                     />
                                 </div>
@@ -225,7 +226,7 @@ export function SourceExplorer(props) {
                                 </div>
                                 {/* <DeleteIcon
                                     color="error"
-                                    onClick={(event) => props.deleteResource(event, file)}
+                                    onClick={(event) => props.deleteResource(event, [file])}
                                     className="absolute top-0 right-0 delete-icon"
                                 /> */}
                             </div>
@@ -269,6 +270,7 @@ export function SourceExplorer(props) {
                     {viewModes[viewModes.length - 1] !== "files"
                         ? renderFolders()
                         : renderFiles()}
+                    {/* <RemoveIndexModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} /> */}
                 </div>
                 <div className="flex items-center mt-4 ">
                     <Checkbox

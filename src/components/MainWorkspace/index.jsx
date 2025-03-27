@@ -8,6 +8,10 @@ import ContentPanel from "../ContentPanel";
 import Workspace from "../Workspace";
 import ChatPanel from "../ChatPanel";
 
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
+import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
+
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const MainWorkspace = ({ theme }) => {
@@ -26,10 +30,67 @@ const MainWorkspace = ({ theme }) => {
 
   const [selectedSources, setSelectedSources] = useState([]); // Selected Sources to stage before commiting into the current Knowledge Base
   const [selectedAll, setSelectedAll] = useState(false); // Flag to handle selecting all sources (all categories, all formats)
-
+  const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
   // From Content Panel
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFormat, setSelectedFormat] = useState("all");
+
+  const [sourcesTobeCommited, setSourcesTobeCommited] = useState([]); // Sources to be commited to the Knowledge Base
+
+  // const categoryOptions = [
+  //   { value: "all", label: "All" },
+  //   { value: "generic", label: "Generic" },
+  //   { value: "investment", label: "Investment" },
+  //   { value: "human resources", label: "Human Resources" },
+  //   { value: "customer interaction", label: "Customer Interaction" },
+  //   { value: "documentaries", label: "Documentaries" },
+  //   { value: "entertainment", label: "Entertainment" },
+  //   { value: "insurance", label: "Insurance" },
+  //   { value: "technical content", label: "Technical Content" },
+  // ];
+
+  /**
+   * .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, application/pdf, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation
+   */
+  const fileFormats = [
+    {
+      label: "PDF",
+      icon: <InsertDriveFileOutlinedIcon />,
+      extensions: [".pdf"],
+      value: "pdf"
+    },
+    {
+      label: "Image",
+      icon: <InsertPhotoOutlinedIcon />,
+      extensions: [".jpg", ".jpeg", ".png", "image/*", ".gif", ".bmp", ".webp"],
+      value: "img"
+    },
+    {
+      label: "Video",
+      icon: <SlideshowOutlinedIcon />,
+      extensions: [".mp4", ".mov", ".avi", ".wmv", ".mkv", ".webm", "video/*"],
+      value: "video"
+    }
+  ];
+
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  useEffect(() => {
+    async function getIndexes() {
+      let { indexes } = await makeApiRequest("/get-indexes");
+      // transform the indexes to the format value/label
+      indexes = indexes.map((index) => {
+        return {
+          value: index,
+          label: index.charAt(0).toUpperCase() + index.slice(1),
+        };
+      });
+      console.log(indexes);
+      setCategoryOptions(indexes);
+    }
+
+    getIndexes();
+  }, []);
+
 
   // can either be 'resource', 'note' or null
   // indicates wether the user is viewing a resource or a note in workspace
@@ -114,6 +175,8 @@ const MainWorkspace = ({ theme }) => {
     { value: "gemini-pro", label: "Gemini Pro", type: "llm", color: "#D10363" },
   ];
 
+  const [activeTab, setActiveTab] = useState('genInsights');
+
   const modules = {
     toolbar: [
       [{ header: [1, 2, false] }],
@@ -138,6 +201,72 @@ const MainWorkspace = ({ theme }) => {
     'display',
   ];
 
+  // useEffect(() => {
+  //   setSelectedSources(sourcesTobeCommited);
+  // }, [sourcesTobeCommited]);
+
+  const commitSelectedSources = (items) => {
+    console.log(items);
+    if (items?.length === 0) {
+      // setSelectedSources(sourcesTobeCommited);
+      knowledgeBase.map((item) => {
+        if (item.is_selected) {
+          setSelectedSources((prev) => {
+            const itemExist = prev.find(i => i.source_path === item.source_path);
+            if (!itemExist) {
+              return [
+                ...prev,
+                {
+                  source_path: item.source_path,
+                  category: item.category,
+                  file_type: item.file_type,
+                },
+              ];
+            }
+            return prev;
+          });
+        } else {
+          setSelectedSources((prev) =>
+            prev.filter((source) => source !== item.source_path)
+          );
+        }
+        return item;
+      });
+    } else {
+      setSelectedSources(items.map(i => i));
+    }
+  };
+
+  const handleCheckboxChange = (file) => {
+    // Create a new array with updated items
+    const updatedKnowledgeBase = knowledgeBase.map((item) => {
+      if (item.source_path === file.source_path) {
+        return { ...item, is_selected: !item.is_selected };
+      }
+      if (item.is_selected) setSelectedAll(false);
+      return item;
+    });
+    setKnowledgeBase(updatedKnowledgeBase);
+
+
+    // item should exist in selectedSources and isSelected is true => remove it from selectedSources
+    if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
+      setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
+      setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    }
+
+    // updated sourcesTobeCommiter
+    if (!file.is_selected) {
+      setSourcesTobeCommited((prev) => [...prev, { ...file, is_selected: true }]);
+      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    }
+    else {
+      setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    }
+  };
+
   const [fromChat, setFromChat] = useState(false);
   const [isManualNote, setIsManualNote] = useState(false);
   // this indicates wether the user is using the model in the wild (MiW)
@@ -158,10 +287,13 @@ const MainWorkspace = ({ theme }) => {
       return { ...prev, text: updatedText };
     });
   }, [theme]);
-
+  const [isExclusiveChecked, setIsExclusiveChecked] = useState(false);
   useEffect(() => {
     // set isFoundationLlm to true if there is no selectedSources, otherwise false
     setIsFoundationLlm(selectedSources.length === 0);
+    if (!isExclusiveChecked) {
+      setCommittedSources(selectedSources);
+    }
   }, [selectedSources]);
 
   const languageOptions = [
@@ -303,18 +435,64 @@ const MainWorkspace = ({ theme }) => {
   const [isNotesLoading, setIsNotesLoading] = useState(false);
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
+  const [generatedResources, setGeneratedResources] = useState([]);
+
+  // useEffect(() => {
+  //   if (knowledgeBase.every((item) => item.is_selected === false)) {
+  //     console.log("disabled");
+  //     setIsIngestionEnabled(false);
+  //   } else {
+  //     console.log("enable");
+  //     setIsIngestionEnabled(true);
+  //   }
+  // }, [knowledgeBase]);
+
+  const workspaceContainer = useRef(null);
+
+  const metadataOptions = [
+    { id: "summary", name: "Summary", description: "Generate a concise video overview" },
+    // { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
+    { id: "highlights", name: "Highlights", description: "Capture key moments from the video" },
+    { id: "chapters", name: "Chapters", description: "Divide video into meaningful sections" },
+    { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
+    { id: "keywords", name: "Keywords", description: "Extract important terms from the video" },
+    { id: "knowledgeGraph", name: "Knowledge graph", description: "Visualize key concepts and relationships" },
+    { id: "embeddings", name: "Embeddings", description: "Create vector representations for search" },
+  ];
+  const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
+  const [sourcesWithExclusive, setSourcesWithExclusive] = useState([]);
+  const [sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz] = useState([]);
+  const [committedSources, setCommittedSources] = useState([]);
+  const [isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed] = useState(false);
+
   // create value object with all the states
   const value = {
+    isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed,
     API_ENDPOINT,
+    sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
+    sourcesWithExclusive, setSourcesWithExclusive,
+    metadataOptions,
+    committedSources, setCommittedSources,
+    selectedOptions, setSelectedOptions,
+    workspaceContainer,
+    generatedResources, setGeneratedResources,
+    categoryOptions, setCategoryOptions,
     languageOptions,
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
+    fileFormats,
+    commitSelectedSources,
     isLeftSidebarOpen, setIsLeftSidebarOpen,
     isRightSidebarOpen, setIsRightSidebarOpen,
     modules,
+    handleCheckboxChange,
+    activeTab, setActiveTab,
     formats,
+    isExclusiveChecked, setIsExclusiveChecked,
     isEditingTitle, setIsEditingTitle,
+    knowledgeBase, setKnowledgeBase,
     currentResource,
+    sourcesTobeCommited, setSourcesTobeCommited,
     setCurrentResource,
     noteReferences, setNoteReferences,
     resourceURL,
@@ -362,6 +540,12 @@ const MainWorkspace = ({ theme }) => {
     showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
   };
 
+  // update sourcesTobeCommited depending on knowledgeBase change
+  useEffect(() => {
+    setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
+    // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+  }, [knowledgeBase]);
+
   useEffect(() => {
     const getNotes = async () => {
       try {
@@ -390,6 +574,8 @@ const MainWorkspace = ({ theme }) => {
 
     getNotes();
   }, []);
+
+  useEffect(() => { console.log("gener changed!"); }, [generatedResources]);
 
   useEffect(() => {
     const getStories = async () => {

@@ -1,15 +1,22 @@
 import Modal from 'react-bootstrap/Modal';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 const CategoriesModal = (props) => {
 
-    const { setSelectedCategory, theme } = useContext(MainContext);
+    const { setSelectedCategory, setSelectedFormat, theme } = useContext(MainContext);
+
+    const fileUploaderRef = useRef([]);
 
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
-        props.setShowFileFormatsModal(true);
+        fileUploaderRef.current.click();
+    };
+
+    const handleOnChange = (e, format) => {
+        setSelectedFormat(format);
+        props.handleupload(e, format);
         props.onHide();
     };
 
@@ -42,6 +49,15 @@ const CategoriesModal = (props) => {
                         ))
                     }
                 </div>
+                {/* file input */}
+                <input
+                    type="file"
+                    accept={"image/*, video/*, application/pdf, .pdf"}
+                    multiple
+                    ref={fileUploaderRef}
+                    onChange={(e) => handleOnChange(e)}
+                    className='hidden'
+                />
             </Modal.Body>
         </Modal>
     );
