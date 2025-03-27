@@ -289,12 +289,17 @@ const ContentSection = ({
             const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValues));
 
             // Filter sources that match the uploaded files
-            const sourcesToAdd = [...data.filter(item => processedFiles.includes(item.source_path)).map(item => ({ ...item, is_selected: true })), ...knowledgeBase.filter(item => item.is_selected)];
+            const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
+
+            console.log(sourcesToAdd);
 
             // setSourcesTobeCommited(prev => [...new Set([...prev, ...sourcesToAdd.map(item => ({ ...item, is_selected: true }))])]); // Ensure uniqueness
 
             // Update knowledge base
-            setKnowledgeBase(sourcesToAdd);
+            setKnowledgeBase(data.map(item => ({
+                ...item,
+                is_selected: sourcesToAdd.some(s => s.source_path === item.source_path),
+            })));
 
             setIsUploading(false);
         } catch (error) {
