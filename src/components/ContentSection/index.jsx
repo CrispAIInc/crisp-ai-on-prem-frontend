@@ -298,7 +298,7 @@ const ContentSection = ({
             // Update knowledge base
             setKnowledgeBase(data.map(item => ({
                 ...item,
-                is_selected: sourcesToAdd.some(s => s.source_path === item.source_path),
+                is_selected: sourcesToAdd.some(s => s.source_path === item.source_path) || sourcesTobeCommited.find(i => i.source_path === item.source_path)?.is_selected,
             })));
 
             setIsUploading(false);
