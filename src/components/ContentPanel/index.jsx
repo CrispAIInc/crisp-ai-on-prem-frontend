@@ -33,9 +33,10 @@ const ContentPanel = () => {
         setJumpToPage,
         isLeftSidebarOpen,
         setIsLeftSidebarOpen,
-        setSummary, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
+        setSummary, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
 
     const [, setTranscription] = useState("");
+
 
 
     const noteIndexRef = useRef(noteIndex);
@@ -167,6 +168,8 @@ const ContentPanel = () => {
                 <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'>
                     <ContentSection
                         knowledgeBase={knowledgeBase}
+                        uploadedSources={uploadedSources}
+                        setUploadedSources={setUploadedSources}
                         setKnowledgeBase={setKnowledgeBase}
                         onThumbnailClick={onThumbnailClick}
                         handleCheckboxChange={handleCheckboxChange}

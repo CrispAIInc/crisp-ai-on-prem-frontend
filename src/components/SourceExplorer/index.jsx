@@ -22,7 +22,10 @@ export function SourceExplorer(props) {
         selectedCategory,
         setSelectedCategory,
         theme,
-        knowledgeBase
+        sourcesTobeCommited,
+        selectedFormat,
+        knowledgeBase,
+        setKnowledgeBase
     } = useContext(MainContext);
 
     // const [currentPath, setCurrentPath] = useState('/');
@@ -30,6 +33,36 @@ export function SourceExplorer(props) {
 
     const [history, setHistory] = useState(["/"]);
     const currentPath = history[history.length - 1] || "/";
+
+    function ge() {
+        let filteredItems;
+        const pathSegments = currentPath.split("/").filter(Boolean); // Removes empty strings from array
+        const category = pathSegments[0];
+        const format = pathSegments[1];
+
+        if (!category && !format) {
+            filteredItems = knowledgeBase; // Root `/` case: Select all items
+        } else if (category && !format) {
+            filteredItems = knowledgeBase.filter((item) => {
+                return item.category.includes(category);
+            }
+            ); // Category only
+        } else {
+            filteredItems = knowledgeBase.filter(item =>
+                item.category.includes(category) && item.file_type === format
+            ); // Category + Format
+        }
+
+        return filteredItems.length > 0 && filteredItems.every(item => item.is_selected);
+    }
+
+
+    const [isSelectAll, setIsSelectAll] = useState(false);
+
+    useEffect(() => {
+        setIsSelectAll(ge());
+    }, [currentPath, selectedCategory, selectedFormat, sourcesTobeCommited]);
+
 
     useEffect(() => {
         // update current path whenever selectedCategory changes in Parent component
@@ -276,8 +309,8 @@ export function SourceExplorer(props) {
                     <Checkbox
                         className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
                             }`}
-                        checked={selectedAll || props.knowledgeBase.some((item) => item.is_selected)}
-                        onChange={() => props.handleSelectAllCheckboxChange(currentPath)}
+                        checked={selectedAll || isSelectAll}
+                        onChange={(e) => props.handleSelectAllCheckboxChange(currentPath, e.target.checked)}
                         inputProps={{ "aria-label": "Select All Sources" }}
                         label="Select All Sources"
                     />

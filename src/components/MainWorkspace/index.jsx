@@ -465,8 +465,11 @@ const MainWorkspace = ({ theme }) => {
   const [committedSources, setCommittedSources] = useState([]);
   const [isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed] = useState(false);
 
+  const [uploadedSources, setUploadedSources] = useState([]);
+
   // create value object with all the states
   const value = {
+    uploadedSources, setUploadedSources,
     isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed,
     API_ENDPOINT,
     sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
@@ -543,7 +546,6 @@ const MainWorkspace = ({ theme }) => {
   // update sourcesTobeCommited depending on knowledgeBase change
   useEffect(() => {
     setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
-    // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
   }, [knowledgeBase]);
 
   useEffect(() => {
@@ -574,8 +576,6 @@ const MainWorkspace = ({ theme }) => {
 
     getNotes();
   }, []);
-
-  useEffect(() => { console.log("gener changed!"); }, [generatedResources]);
 
   useEffect(() => {
     const getStories = async () => {
