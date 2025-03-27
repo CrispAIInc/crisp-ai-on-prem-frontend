@@ -11,7 +11,9 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
     const [selectedFiles, setSelectedFiles] = useState([]);
 
     useEffect(() => {
-        setSelectedCategory(indexName);
+        if (indexName !== null) {
+            setSelectedCategory(indexName);
+        }
     }, [indexName]);
 
     useEffect(() => {
@@ -27,7 +29,9 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
     const [selectedIndex, setSelectedIndex] = useState(indexName);
     function handleIndexChange({ value }) {
         setSelectedIndex(value);
-        setSelectedCategory(value);
+        if (indexName !== null) {
+            setSelectedCategory(value);
+        }
     }
 
     const [selectedFileFormat, setSelectedFileFormat] = useState(fileFormats[0].value);

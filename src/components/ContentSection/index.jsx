@@ -27,7 +27,10 @@ const ContentSection = ({
     onThumbnailClick,
     handleCheckboxChange,
     setKnowledgeBase,
+    setUploadedSources,
+    uploadedSources
 }) => {
+
 
 
 
@@ -241,46 +244,65 @@ const ContentSection = ({
             setGeneratedResources(prev => prev?.filter(item => item.source_path !== items[0].source_path));
         }
     };
+
+    // useEffect(() => {
+    //     console.log("uploadedSources: ", uploadedSources);
+    //     const sourcesToAddToSelectedSources = knowledgeBase.filter(item =>
+    //         uploadedSources.includes(item.source_path)
+    //     );
+
+    //     console.log("sourcesToAddToSelectedSources: ", sourcesToAddToSelectedSources);
+
+    //     setSourcesTobeCommited(prev => {
+    //         console.log("Previous state:", prev);
+    //         const updatedSources = [...sourcesToAddToSelectedSources.map((item) => ({ ...item, is_selected: true })), ...prev];
+    //         console.log("Updated state:", updatedSources);
+    //         console.log("new set:", [...new Set(updatedSources)]);
+    //         return [...new Set(updatedSources)];
+    //     });
+
+    // }, [uploadedSources]);
+
+
+
     const handleUpload = async (event, fileFormat, _files) => {
-        // console.log(_files[0]);
         try {
-            setIsUploading(true);
             const files = _files || Array.from(event.target.files);
-            console.log(files);
+            const processedFiles = files.map(file =>
+                file.name.replace(/\s/g, "_").replace(/[()]/g, "")
+            );
+
+            setUploadedSources(processedFiles); // Updates state but is asynchronous
+
             const formData = new FormData();
-            files.forEach((file, index) => {
+            files.forEach(file => {
                 formData.append("file", file);
                 formData.append("category", selectedCategory);
                 formData.append("fileType", file.type);
             });
 
-            await makeApiRequest(`/upload`, "post", formData, { 'Content-type': "multipart/form-data" });
-            toast('File uploaded successfully', { className: `p-2 rounded-md`, theme });
-            const data = await makeApiRequest(
-                `/content`,
-                "post",
-                JSON.stringify(categoryValues)
-            );
-            // setKnowledgeBase(data);
-            let updatedKnowledgeBase = data.map(item => {
-                let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
+            await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
-                if (selected) {
-                    return { ...item, is_selected: true };
-                } else {
-                    return item;
-                }
-            });
+            toast('File uploaded successfully', { className: "p-2 rounded-md", theme });
 
-            setKnowledgeBase(updatedKnowledgeBase);
+            // Fetch updated content
+            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValues));
+
+            // Filter sources that match the uploaded files
+            const sourcesToAdd = [...data.filter(item => processedFiles.includes(item.source_path)).map(item => ({ ...item, is_selected: true })), ...knowledgeBase.filter(item => item.is_selected)];
+
+            // setSourcesTobeCommited(prev => [...new Set([...prev, ...sourcesToAdd.map(item => ({ ...item, is_selected: true }))])]); // Ensure uniqueness
+
+            // Update knowledge base
+            setKnowledgeBase(sourcesToAdd);
+
             setIsUploading(false);
-            // get it from the backend
-            // setCurrentResource(files[0]);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             setIsUploading(false);
         }
     };
+
 
     // const commitSelectedSources = () => {
     //     knowledgeBase.map((item) => {
@@ -327,10 +349,10 @@ const ContentSection = ({
         const format = pathSegments[1];
 
         if (isChecked) {
-        if (category === undefined) {
+            if (category === undefined) {
                 setSelectedAll(true);
-            setKnowledgeBase((prev) => {
-                return prev.map((item) => {
+                setKnowledgeBase((prev) => {
+                    return prev.map((item) => {
                         return { ...item, is_selected: true };
                     });
                 });
@@ -344,20 +366,20 @@ const ContentSection = ({
                         item.is_selected = true;
                     }
                     return item;
-            });
+                });
                 setKnowledgeBase(updatedKnowledgeBase);
                 setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-        }
+            }
             else if (category !== undefined && format !== undefined) {
-            const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                const updatedKnowledgeBase = knowledgeBase.map((item) => {
                     if (item.category.includes(category) && item.file_type === format) {
                         item.is_selected = true;
                     }
-                return item;
+                    return item;
 
-            });
-            setKnowledgeBase(updatedKnowledgeBase);
-            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+                });
+                setKnowledgeBase(updatedKnowledgeBase);
+                setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
             }
         } else {
             if (category === undefined) {
@@ -549,8 +571,8 @@ const ContentSection = ({
 
                 <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                     {
-                        sourcesTobeCommited?.length > 0 && <div className={` grid grid-cols-[repeat(auto-fill,_112px)] h-full gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
-                            {sourcesTobeCommited?.slice(0).reverse().map((item, index) => {
+                        knowledgeBase.filter(item => item.is_selected)?.length > 0 && <div className={` grid grid-cols-[repeat(auto-fill,_112px)] h-full gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
+                            {knowledgeBase.filter(item => item.is_selected)?.slice(0).reverse().map((item, index) => {
                                 // if (canRenderSourceThumbnail(item)) {
                                 return (<ContentPanelThumbnail
                                     key={index}
@@ -568,7 +590,7 @@ const ContentSection = ({
                     }
                     {
 
-                        knowledgeBase.some((item) => item.is_selected) > 0
+                        sourcesTobeCommited.length > 0
                             ?
                             <>
                                 {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">

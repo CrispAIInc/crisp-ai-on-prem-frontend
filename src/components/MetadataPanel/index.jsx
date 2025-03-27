@@ -237,7 +237,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       },
       transcription: {
         title: "",
-        content: "",
+        content: [],
       },
       knowledgeGraoh: {
         title: "",
@@ -280,7 +280,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
     // console.log("jsldfjkdf");
     let obj = (object.metadata !== undefined || object.metadata !== null) ? flattenMetadata(object) : object;
-
+    console.log(obj);
     // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
     for (const [key, value] of Object.entries(obj)) {
       if (
@@ -419,9 +419,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // console.log("checked 2");
       // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      console.log(!areSourcesSame(committedSources, sourcesTobeCommited));
-      console.log(committedSources?.length !== 0);
-      console.log(!areAllItemsInSecondArray(committedSources, sourcesTobeCommited));
       if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
         !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
         // console.log("trueeeujl");
@@ -568,7 +565,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                               </div>
                             );
                           })
-                        }
+                        } ²
                       </p>
                     </Accordion>
                   </>} */}
