@@ -586,7 +586,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                           {
                             translatedResource?.transcription?.content?.map((topic, index) => (
                               <div key={index} className="flex items-baseline gap-3">
-                                <div className='flex-1'>
+                                <div className=''>
                                   <h4 className='text-[16px] font-semibold '>{topic.speaker?.toLowerCase()}: </h4>
                                   <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                                     setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
