@@ -267,6 +267,7 @@ const ContentSection = ({
 
     const handleUpload = async (event, fileFormat, _files) => {
         try {
+            setIsUploading(true);
             const files = _files || Array.from(event.target.files);
             const processedFiles = files.map(file =>
                 file.name.replace(/\s/g, "_").replace(/[()]/g, "")
