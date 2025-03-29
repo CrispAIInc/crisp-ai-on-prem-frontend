@@ -17,8 +17,7 @@ import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import Timeline from '../Timeline/index.jsx';
 import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
 import HorizontalCard from '../HorizontalCard/index.jsx';
-import { Button } from 'bootstrap';
-import CustomButton from '../CustomButton/index.jsx';
+// import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { lightBlue, pink } from '@mui/material/colors';
 
@@ -125,6 +124,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   function areAllItemsInSecondArray(arr1, arr2) {
     const pathsSet = new Set(arr2.map(item => item.source_path));
+    console.log(pathsSet);
 
     return arr1.every(item => pathsSet.has(item.source_path));
   }
@@ -237,7 +237,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
       },
       transcription: {
         title: "",
-        content: "",
+        content: [],
       },
       knowledgeGraoh: {
         title: "",
@@ -280,7 +280,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
     // console.log("jsldfjkdf");
     let obj = (object.metadata !== undefined || object.metadata !== null) ? flattenMetadata(object) : object;
-
+    console.log(obj);
     // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
     for (const [key, value] of Object.entries(obj)) {
       if (
@@ -545,6 +545,30 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     </Accordion>
                   </>} */}
 
+                  {/* {translatedResource?.split_topics?.length > 0 && <>
+                    <Accordion heading={translatedResource?.transcription?.title}>
+                      <p
+                        className={`text-md ${theme === "light"
+                          ? "text-textColor-300"
+                          : "text-textColor-100"
+                          }`}
+                      >
+                        {
+                          translatedResource?.split_topics?.map((topic, index) => {
+                            return (
+                              <div key={index} className="flex gap-3">
+                                <div className='flex flex-col gap-1'>
+                                  <h3 className='text-lg font-semibold text-primary-300'>{topic.start_time} - {topic.end_time}</h3>
+                                  <h3 className='text-lg font-semibold text-primary-300'>{topic.speaker}</h3>
+                                </div>
+                                <p>{topic.content}</p>
+                              </div>
+                            );
+                          })
+                        } ²
+                      </p>
+                    </Accordion>
+                  </>} */}
                   {translatedResource?.transcription?.content !== undefined && <>
                     <Accordion heading={translatedResource?.transcription?.title}>
                       <p
@@ -553,8 +577,30 @@ const MetadataPanel = ({ workspaceContainer }) => {
                           : "text-textColor-100"
                           }`}
 
-                        dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
+                      // dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
                       >
+                        <div className="flex flex-col gap-3">
+                          {
+                            translatedResource?.transcription?.content?.map((topic, index) => (
+                              <div key={index} className="flex items-baseline gap-3">
+                                <div className=''>
+                                  <h4 className='text-[16px] font-semibold '>{topic.speaker?.toLowerCase()}: </h4>
+                                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
+                                    setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
+                                    workspaceContainer.current.scrollTo({
+                                      top: 0,
+                                      behavior: "smooth", // Enables smooth scrolling
+                                    });
+                                  }}>
+                                    {/* <AccessTimeIcon size="8px" className="text-[8px]" /> */}
+                                    <h6 className='mb-0 text-xs font-semibold text-primary-200 '>{topic.start_time} - {topic.end_time}</h6>
+                                  </div>
+                                </div>
+                                <p>{topic.content}</p>
+                              </div>
+                            ))
+                          }
+                        </div>
                       </p>
                     </Accordion>
                   </>}

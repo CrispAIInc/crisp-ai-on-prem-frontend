@@ -176,7 +176,10 @@ function MetadataGen() {
             </div>
 
             {/* modal to add sources to current KB*/}
-            <AddToKnowledgeBaseModal show={isModalVisible} onHide={() => setIsModalVisible(false)} />
+            <AddToKnowledgeBaseModal sources={knowledgeBase.filter(item => {
+                const sourcePaths = new Set(selectedSourcesToGen.map(item => item.source_path));
+                return sourcePaths.has(item.source_path);
+            })} show={isModalVisible} onHide={() => setIsModalVisible(false)} />
         </div>
     );
 }
