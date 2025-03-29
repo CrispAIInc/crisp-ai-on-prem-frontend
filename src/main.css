@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .app-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #77a8f9 transparent;
+  }
+
+  .app-scroll::-webkit-scrollbar {
+    width: 3px;
+    display: none;
+  }
+
+  .app-scroll::-webkit-scrollbar-track {
+    background: red;
+  }
+
+  .app-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  .app-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
 :root {
   --color-primary-200: #77a8f9;
 }
@@ -10,12 +34,16 @@
   --background-color: #171717;
   --background-workspace-color: #242424;
   --separator-color: #1e1e1e;
+  --hover-background: #d9e2ec21;
+  --text-color: "#ABAEB4";
 }
 
 .light {
   --background-color: #ffffff;
   --background-workspace-color: #fafafa;
   --separator-color: #e3e3e4;
+  --hover-background: #f0f4f830;
+  --text-color: "#333333";
 }
 
 * {

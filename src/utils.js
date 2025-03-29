@@ -130,6 +130,7 @@ export function decimalSecondsToHHMMSS(decimalSeconds) {
 
 
 export function flattenMetadata(obj) {
+    console.log(obj);
     const { metadata, ...rest } = obj;
     const flattenedMetadata = {};
 
@@ -188,4 +189,17 @@ export function flattenMetadata(obj) {
         ...rest,
         ...flattenedMetadata,
     };
+}
+
+export function formatTimestamp(timestamp) {
+    // Helper function to format a single number into HH:MM:SS
+    const formatTime = (time) => {
+        const hours = Math.floor(time / 3600).toString().padStart(2, "0");
+        const minutes = Math.floor((time % 3600) / 60).toString().padStart(2, "0");
+        const seconds = (time % 60).toString().padStart(2, "0");
+        return `${hours}:${minutes}:${seconds}`;
+    };
+
+    // Map each timestamp to its formatted version
+    return timestamp.map(formatTime);
 }

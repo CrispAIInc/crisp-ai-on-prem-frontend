@@ -26,16 +26,17 @@ const ContentPanel = () => {
         showSearchModal,
         setShowSearchModal,
         setSelectedSources,
+        setSourcesTobeCommited,
+        handleCheckboxChange,
         selectedSources,
+        knowledgeBase, setKnowledgeBase,
         setJumpToPage,
         isLeftSidebarOpen,
         setIsLeftSidebarOpen,
-        setSummary, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
-
-
-    const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
+        setSummary, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
 
     const [, setTranscription] = useState("");
+
 
 
     const noteIndexRef = useRef(noteIndex);
@@ -75,16 +76,17 @@ const ContentPanel = () => {
         event.preventDefault();
         const resourceURL = `${import.meta.env.VITE_API_ENDPOINT
             }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
-        setCurrentResource(file);
+        let fileToCommit = knowledgeBase.find((item) => item.source_path === file.source_path) || file;
+        setCurrentResource(fileToCommit);
         setResourceURL(resourceURL);
-        setTranscription(file.transcript);
-        if (file.file_type != "img") {
-            setSummary(file.summary);
-            setSummaries(file.topic_summaries);
+        setTranscription(fileToCommit.metadata ? fileToCommit.metadata.transcription : "");
+        if (fileToCommit.file_type != "img") {
+            setSummary(fileToCommit.summary);
+            setSummaries(fileToCommit.topic_summaries);
         }
 
         // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page life the case when clicking on a reference
-        if (file.file_type === "pdf") {
+        if (fileToCommit.file_type === "pdf") {
             setJumpToPage({ page: -1 });
         }
         setActiveView('resource');
@@ -92,22 +94,7 @@ const ContentPanel = () => {
     /**
      * Function to toggle 'isSelected' of an item inside 'knowledgeBase' array when the checkbox is clicked
      */
-    const handleCheckboxChange = (file) => {
-        // Create a new array with updated items
-        const updatedKnowledgeBase = knowledgeBase.map((item) => {
-            if (item.source_path === file.source_path) {
-                return { ...item, is_selected: !item.is_selected };
-            }
-            if (item.is_selected) setSelectedAll(false);
-            return item;
-        });
-        setKnowledgeBase(updatedKnowledgeBase);
 
-        // item should exist in selectedSources and isSelected is true => remove it from selectedSources
-        if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
-            setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
-        }
-    };
 
     const onHideSearchModal = () => {
         setShowSearchModal(false);
@@ -168,7 +155,7 @@ const ContentPanel = () => {
         <aside className={`relative select-none !h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
             width: leftWidth
         }}>
-            <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-90% top-10 -z-1 blur-[160px]"></div>
+            {/* <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-90% top-10 -z-1 blur-[160px]"></div> */}
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
             <Tabs
@@ -181,6 +168,8 @@ const ContentPanel = () => {
                 <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'>
                     <ContentSection
                         knowledgeBase={knowledgeBase}
+                        uploadedSources={uploadedSources}
+                        setUploadedSources={setUploadedSources}
                         setKnowledgeBase={setKnowledgeBase}
                         onThumbnailClick={onThumbnailClick}
                         handleCheckboxChange={handleCheckboxChange}
@@ -205,7 +194,7 @@ const ContentPanel = () => {
                 </Tab>
             </Tabs>
             <div
-                className={`w-fit absolute left-0 h-full flex flex-col justify-center items-center z-50`}
+                className={`w-fit absolute left-0 h-auto top-1/2 flex flex-col justify-center items-center z-50`}
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
                     setSidebarWidth(prev => {

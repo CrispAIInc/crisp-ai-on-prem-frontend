@@ -1,36 +1,14 @@
 import { useContext, useRef } from "react";
 
+import LibraryAddOutlinedIcon from '@mui/icons-material/LibraryAddOutlined';
 import Modal from 'react-bootstrap/Modal';
-
-import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
-import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
-import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import { MainContext } from '../../contexts/mainContext';
 
-const FORMATS = [
-    {
-        name: "PDF",
-        icon: <InsertDriveFileOutlinedIcon />,
-        extensions: [".pdf"],
-        value: "pdf"
-    },
-    {
-        name: "Image",
-        icon: <InsertPhotoOutlinedIcon />,
-        extensions: [".jpg", ".jpeg", ".png"],
-        value: "img"
-    },
-    {
-        name: "Video",
-        icon: <SlideshowOutlinedIcon />,
-        extensions: [".mp4"],
-        value: "video"
-    }
-];
+
 
 function FileFormatsModal(props) {
 
-    const { setSelectedFormat, theme } = useContext(MainContext);
+    const { setSelectedFormat, theme, fileFormats } = useContext(MainContext);
 
     const fileFormatInputRefs = useRef([]);
 
@@ -62,16 +40,21 @@ function FileFormatsModal(props) {
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
                 <div className='flex flex-col items-start justify-start gap-3'>
                     {
-                        FORMATS.map((format, index) => (
+                        [...fileFormats, {
+                            label: "All of the above",
+                            icon: <LibraryAddOutlinedIcon />,
+                            extensions: [".pdf", "image/*", "video/*"],
+                            value: "all"
+                        }].map((format, index) => (
                             <div key={index} className='flex items-center justify-center gap-2 cursor-pointer' onClick={() => handleFileFormatClick(index)}>
                                 {format.icon}
-                                <span>{format.name}</span>
+                                <span>{format.label}</span>
                                 {/* file input */}
                                 <input
                                     type="file"
                                     ref={(el) => (fileFormatInputRefs.current[index] = el)}
                                     accept={format.extensions.join(', ')}
-                                    name={format.name}
+                                    name={format.label}
                                     multiple
                                     onChange={(e) => handleOnChange(e, format.value)}
                                     className='hidden'

@@ -15,4 +15,7 @@ export default defineConfig({
     //   port: parseInt(process.env.VITE_HMR_PORT, 10),
     // },
   },
+  // optimizeDeps: {
+  //   exclude: ['problematic-dependency'], // Replace with the actual dependency name
+  // },
 });

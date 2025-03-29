@@ -24,31 +24,31 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     theme,
     currentResource,
     llmModels,
-    setCurrentResource,
     fromChat, setFromChat,
     isFoundationLlm,
     resourceURL,
     noteReferences,
-    setResourceURL,
     player,
     isPlayerReady,
     notes,
     setNotes,
     selectedNote,
+    isSourceUncheckedOrClosed,
     setSelectedNote,
     showNoteModal,
+    sourcesWithExclusive,
     setNoteIndex,
     setShowNoteModal,
     selectedSources,
+    setSourcesAfterUncheckCrispWiz,
+    sourcesTobeCommited,
     selectedAll,
     isNewNote,
     setIsNewNote,
-    setSummary,
-    setJumpToPage,
     languageOptions, setIsManualNote,
-    setSummaries,
     setShowNoteDetails,
-    setActiveView
+    setActiveView,
+    committedSources, setCommittedSources
   } = useContext(MainContext);
 
   const { maxWidth } = useResizableSidebar(200, false);
@@ -87,15 +87,24 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
   useEffect(() => {
     setChatLoaded(false);
-
+    if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length > 0) {
+      // checked
+    } else {
+      // unchecked
+    }
+    // setCommittedSources(selectedSources);
     async function fetchChat() {
+      // if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length === 0) {
+      //   setSourcesAfterUncheckCrispWiz(selectedSources);
+      // }
       const data = await makeApiRequest(
         `/chat/${selectedCategoryChat}`,
         "post",
         JSON.stringify({
-          sources: selectedSources,
+          sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
           category: selectedCategoryChat,
           selectedAll,
+          is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
         })
       );
       setChatLoaded(data?.chat_is_initialized);
@@ -185,7 +194,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           selectedCategoryChat
         )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
           selectedLLMs[0]
-        )}/${isFoundationLlm}`
+        )}/${isFoundationLlm}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       );
 
       eventSource.onmessage = function (event) {

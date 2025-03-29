@@ -5,7 +5,6 @@ import { MainContext } from '../../contexts/mainContext';
 import { memo, useContext } from 'react';
 import BaseHeading from '../BaseHeading';
 import NoData from "../NoData";
-import SavedNote from '../SavedNote';
 import SavedNoteSkeleton from '../Skeletons/SavedNoteSkeleton';
 import StickyNote from '../StickyNote';
 

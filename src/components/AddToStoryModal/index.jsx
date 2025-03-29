@@ -40,26 +40,8 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
         setOpenNewStoryModal(false);
     }
 
-    // const handleStoryChange = (selectedOption) => {
-    //     setSelectedStoryIndex(selectedOption.value);
-    //     setSelectedStory(stories[selectedOption.value]);
-    // };
-
-    // const sections = stories[selectedStoryIndex]?.text.map(({ outline }) => ({ value: outline.id, label: outline.name }));
-
-    // const handleSectionChange = (selectedOption) => {
-    //     setSelectedSectionId(selectedOption.value);
-    // };
-
     const saveToStory = async () => {
         const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
-            // if (answer.includes('https://oaidalleapiprodscus.blob')) {
-            //     return {
-            //         id: generateRandomHash(8),
-            //         answer,
-            //         refs
-            //     };
-            // }
 
             return {
                 id: generateRandomHash(8),
@@ -83,14 +65,6 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
             models: [],
         };
         displayStory(newStory);
-        // setStories(prev => [...prev, newStory]);
-        // setSelectedStory(prev => {
-        //     const newStory = { ...prev };
-        //     let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
-        //     currentText.content = joinedAnswers;
-        //     return { ...newStory };
-
-        // });
 
         setOpen(false);
         setOpenExistingStoryModal(false);
@@ -101,35 +75,6 @@ function AddToStoryModal({ open, handleClose, setOpen }) {
         setSelectedStory(story);
         setActiveView('story');
     }
-
-
-
-    // const saveToStory = async () => {
-    //     const joinedAnswers = selectedNote.text.map(({ answer, refs }) => {
-    //         if (answer.includes('https://oaidalleapiprodscus.blob')) {
-    //             return {
-    //                 id: generateRandomHash(8),
-    //                 answer,
-    //                 refs
-    //             };
-    //         }
-
-    //         return {
-    //             id: generateRandomHash(8),
-    //             answer,
-    //             refs
-    //         };
-    //     });
-    //     setSelectedStory(prev => {
-    //         const newStory = { ...prev };
-    //         let currentText = newStory.text.find(({ outline }) => outline.id === selectedSectionId);
-    //         currentText.content = joinedAnswers;
-    //         return { ...newStory };
-
-    //     });
-
-    //     setOpen(false);
-    // };
 
     return (
         <div>

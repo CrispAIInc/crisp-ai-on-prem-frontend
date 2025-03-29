@@ -15,7 +15,7 @@ const NAVBAR_LINKS = [
 ];
 
 export default function Navbar() {
-    const { theme } = useContext(ThemeContext);
+    // const { theme } = useContext(ThemeContext);
 
     return (
         <nav className="flex items-center justify-between gap-1 py-2">
