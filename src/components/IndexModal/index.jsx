@@ -22,12 +22,6 @@ export function IndexModal({ show, onHide, handleUpload }) {
             return;
         }
 
-        // if (categoryOptions.find(cat => cat.label?.toLowerCase() === indexName?.toLowerCase())) {
-        //     toast('Index already exists', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
-        //     setIsLoading(false);
-        //     return;
-        // }
-
         try {
             const newIndex = await makeApiRequest('/create-new-index', 'post', { category: indexName });
             setIndexName(newIndex?.category);

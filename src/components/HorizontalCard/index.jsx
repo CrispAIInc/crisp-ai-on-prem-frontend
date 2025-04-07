@@ -1,8 +1,5 @@
 import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
-
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewModal from '../PreviewModal';
@@ -11,12 +8,6 @@ function HorizontalCard({ item, workspaceContainer }) {
 
     const { setCurrentResource, theme, setJumpToPage } = useContext(MainContext);
     const [isLightboxOpen, setLightboxOpen] = useState(false);
-
-
-
-    const renderTooltip = (props, content) => (
-        <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>
-    );
 
     function closeLightbox() {
         setLightboxOpen(false);

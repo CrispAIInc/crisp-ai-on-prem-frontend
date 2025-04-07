@@ -8,7 +8,6 @@ import makeApiRequest from "../../api";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
 
-import FileFormatsModal from "../FileFormatsModal";
 import CategoriesModal from "../CategoriesModal";
 import ContentPanelThumbnail from "../ContentPanelThumbnail";
 import { MainContext } from "../../contexts/mainContext";
@@ -28,34 +27,8 @@ const ContentSection = ({
     handleCheckboxChange,
     setKnowledgeBase,
     setUploadedSources,
-    uploadedSources
+
 }) => {
-
-
-
-
-    // Example menu data
-    // const menuData = [
-    //     { label: "Home", icon: Home },
-    //     {
-    //         label: "Ingestion",
-    //         icon: ArrowForward,
-    //         children: [
-    //             { label: "Index", icon: Folder },
-    //             { label: "Upload", icon: Upload },
-    //         ],
-    //     },
-    //     {
-    //         label: "MRag",
-    //         icon: Folder,
-    //         children: [
-    //             { label: "Sources", icon: Folder },
-    //             { label: "Discovery", icon: Search },
-    //         ],
-    //     },
-    //     { label: "Settings", icon: Settings },
-    // ];
-
     const {
         isPlayerReady,
         resourceURL,
@@ -79,18 +52,6 @@ const ContentSection = ({
         theme,
         chatLoaded
     } = useContext(MainContext);
-
-    // const categoryOptions = [
-    //     { value: "all", label: "All" },
-    //     { value: "generic", label: "Generic" },
-    //     { value: "investment", label: "Investment" },
-    //     { value: "human resources", label: "Human Resources" },
-    //     { value: "customer interaction", label: "Customer Interaction" },
-    //     { value: "documentaries", label: "Documentaries" },
-    //     { value: "entertainment", label: "Entertainment" },
-    //     { value: "insurance", label: "Insurance" },
-    //     { value: "technical content", label: "Technical Content" },
-    // ];
 
     const categoryValues = categoryOptions.map((option) => option.value);
 
@@ -152,17 +113,6 @@ const ContentSection = ({
         try {
             setIsDeleting(true);
             setClickedIndex(items[0]);
-            // const formData = new FormData();
-            // items.forEach((file) => {
-            //     formData.append("category", file);
-            //     formData.append("category", selectedCategory);
-            //     formData.append("fileType", fileFormat);
-            // });
-            // const requestBody = {
-            //     category: item.category,
-            //     fileName: item.source_path,
-            //     fileType: item.file_type,
-            // };
 
             const payload = items.map((item) => {
                 return {
@@ -245,26 +195,6 @@ const ContentSection = ({
         }
     };
 
-    // useEffect(() => {
-    //     console.log("uploadedSources: ", uploadedSources);
-    //     const sourcesToAddToSelectedSources = knowledgeBase.filter(item =>
-    //         uploadedSources.includes(item.source_path)
-    //     );
-
-    //     console.log("sourcesToAddToSelectedSources: ", sourcesToAddToSelectedSources);
-
-    //     setSourcesTobeCommited(prev => {
-    //         console.log("Previous state:", prev);
-    //         const updatedSources = [...sourcesToAddToSelectedSources.map((item) => ({ ...item, is_selected: true })), ...prev];
-    //         console.log("Updated state:", updatedSources);
-    //         console.log("new set:", [...new Set(updatedSources)]);
-    //         return [...new Set(updatedSources)];
-    //     });
-
-    // }, [uploadedSources]);
-
-
-
     const handleUpload = async (event, fileFormat, _files) => {
         try {
             setIsUploading(true);
@@ -309,32 +239,6 @@ const ContentSection = ({
         }
     };
 
-
-    // const commitSelectedSources = () => {
-    //     knowledgeBase.map((item) => {
-    //         if (item.is_selected) {
-    //             setSelectedSources((prev) => {
-    //                 const itemExist = prev.find(i => i.source_path === item.source_path);
-    //                 if (!itemExist) {
-    //                     return [
-    //                         ...prev,
-    //                         {
-    //                             source_path: item.source_path,
-    //                             category: item.category,
-    //                             file_type: item.file_type,
-    //                         },
-    //                     ];
-    //                 }
-    //                 return prev;
-    //             });
-    //         } else {
-    //             setSelectedSources((prev) =>
-    //                 prev.filter((source) => source !== item.source_path)
-    //             );
-    //         }
-    //         return item;
-    //     });
-    // };
     const handleExploreSources = () => {
         setShowSourceExplorer(true);
         setIsOpenedFromSourceExplorerBtn(true);
@@ -418,15 +322,6 @@ const ContentSection = ({
         }
     };
 
-
-
-    /**
-     * Function to indicate wether a source thumbnail can be rendered in the selected sources section or not
-     */
-    const canRenderSourceThumbnail = (source) => {
-        return source.is_selected;
-    };
-
     const handleUnselectAllCheckboxChange = () => {
         const updatedKnowledgeBase = knowledgeBase.map((item) => {
             return { ...item, is_selected: false };
@@ -462,23 +357,12 @@ const ContentSection = ({
                     <div className="flex flex-col justify-start gap-2 mb-1">
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span>
                         <div className="flex flex-col gap-0 ml-2">
-                            {/* <div
-                                className={`source-explorer  flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={handleExploreSources}
-                            >
-                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Indexer</span>
-                            </div> */}
-                            {/* <ButtonDropdown openSourceExplorer={handleExploreSources} /> */}
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={openIndexModal}
                             >
                                 <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Index</span>
-
-                                {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} /> */}
-
 
                             </div>
                             <div
@@ -512,7 +396,6 @@ const ContentSection = ({
                                 {
                                     isSearching && (
                                         <div className="flex items-center gap-2">
-                                            {/* <span className={`cursor-pointer text-2xl ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>&times;</span> */}
                                             <SearchSection chatLoaded={chatLoaded} className='flex-1' />
                                         </div>
                                     )
@@ -548,16 +431,6 @@ const ContentSection = ({
                     />
                 )}
 
-                {/* <CategoriesModal
-                    show={showCategoriesModal}
-                    onHide={() => setShowCategoriesModal(false)}
-                    categoryOptions={categoryOptions}
-                    // setShowFileFormatsModal={setShowFileFormatsModal}
-                    // handleupload={handleUpload}
-                    uploadedSources={uploadedSources}
-                    setUploadedSources={setUploadedSources}
-                /> */}
-
                 <CategoriesModal
                     show={showCategoriesModal}
                     onHide={() => setShowCategoriesModal(false)}
@@ -565,13 +438,6 @@ const ContentSection = ({
                     setShowFileFormatsModal={setShowFileFormatsModal}
                     handleUpload={handleUpload}
                 />
-                {/* <FileFormatsModal
-                    handleupload={handleUpload}
-                    show={showFileFormatsModal}
-                    onHide={() => setShowFileFormatsModal(false)}
-                /> */}
-
-                {/* <MeatadataOptions classNames="w-full" /> */}
 
                 <BaseHeading text='Selected sources' className="mt-4 mb-4" />
 
@@ -601,9 +467,6 @@ const ContentSection = ({
                             <>
                                 {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
                                     <CustomButton onClick={() => commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
-                                    {/* 
-                                    <CustomButton onClick={() => commitSelectedSources(commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated)))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
-                                     */}
                                 </div>}
                                 <div className="mx-auto w-fit">
                                     <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>

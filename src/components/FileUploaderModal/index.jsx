@@ -35,12 +35,6 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
     }
 
     const [selectedFileFormat, setSelectedFileFormat] = useState(fileFormats[0].value);
-    function handleFileFormatChange({ value }) {
-        setSelectedFileFormat(value);
-    }
-
-
-
     return (
         <Modal
             show={show}

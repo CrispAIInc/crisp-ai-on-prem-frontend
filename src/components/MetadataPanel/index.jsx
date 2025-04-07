@@ -21,13 +21,6 @@ import HorizontalCard from '../HorizontalCard/index.jsx';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { lightBlue, pink } from '@mui/material/colors';
 
-/**
- * chapters: [{id: number, thumbnail: string | file, timestamps: [number, number], title: string, description: string}]
- * highlights: [{id: number, thumbnail: string | file, timestamps: [number, number], title: string }]
- * faqs: [{id: number, question: string, answer: string}]
-*/
-
-
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
     currentResource,
@@ -45,26 +38,19 @@ const MetadataPanel = ({ workspaceContainer }) => {
     jumpToPage,
     selectedNote,
     setCommittedSources,
-    sourcesAfterUncheckCrispWiz,
     sourcesTobeCommited,
     setIsFoundationLlm,
-    setKnowledgeBase,
-    isExclusiveChecked,
     setIsExclusiveChecked,
     committedSources,
     activeView,
     theme,
     commitSelectedSources,
-    handleCheckboxChange,
     selectedStory,
-    knowledgeBase,
     setActiveTab,
     generatedResources,
-    setGeneratedResources,
   } = useContext(MainContext);
 
   const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item.source_path === currentResource.source_path));
-  let generatedResource = useRef(generatedResources?.find((item) => item.source_path === currentResource.source_path));
   // const [generatedResource, setGeneratedResource] = useState(null);
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
   const [numPages, setNumPages] = useState();
@@ -72,9 +58,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
   const [chosenLanguage, setChosenLanguage] = useState("en");
   const PdfContainer = useRef();
   const metadataPanelContainer = useRef(null);
-
-
-  let currentResourceType = currentResource?.file_type;
 
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
@@ -106,8 +89,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
       // setTranslatedResource(currentResource);
       if (currentResource) {
         console.log("hehehe");
-        // generatedResource.current = generatedResources?.find((item) => item.source_path === currentResource.source_path);
-        // console.log(item.source_path === currentResource.source_path)
         const updatedResource = {
           ...currentResource,
           ...generatedResources?.find(item => item.source_path === currentResource.source_path)
@@ -155,18 +136,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
     event.preventDefault();
     setCurrentResource(null);
     setResourceURL(null);
-    // setActiveView((prev) => {
-    //   // if (selectedStory.text.length > 0) {
-    //   //   return [...prev, 'resource'];
-    //   // }
-    //   // if (selectedNote.text.length > 1) {
-    //   //   return [...prev, 'resource'];
-    //   // }
-    //   if (prev?.length === 1) {
-    //     return [];
-    //   }
-    //   return prev?.filter(item => item !== "resource");
-    // });
     setActiveView(() => {
       if (selectedStory.text.length > 0) {
         return "story";
@@ -302,23 +271,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
         "post",
         httpRequestBody
       );
-      // const data = await makeApiRequest(
-      //   "/content",
-      //   "post",
-      //   JSON.stringify(categoryValues)
-      // );
-
-      // setKnowledgeBase((prev) => {
-      //   const updatedKnowledgeBase = prev.map((kb) => {
-      //     const updatedKb = data.find((d) => d.source_path === kb.source_path);
-      //     if (updatedKb) {
-      //       return { ...updatedKb, ...kb };
-      //     }
-      //     return kb;
-      //   });
-      //   return updatedKnowledgeBase;
-      // });
-
       // console.log("httpResponseBody: ", httpResponseBody);
       setTranslatedResource({ ...httpResponseBody, lang: chosenLanguage });
       // console.log(knowledgeBase?.find(item => item.source_path === currentResource.source_path));
@@ -328,31 +280,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
     } finally {
       setIsTranslationLoading(false);
       console.log(translatedResource);
-    }
-  }
-
-  const [isGeneratingCombinedSummary, setIsGeneratingCombinedSummary] = useState(false);
-
-  async function generateVisualAndCombinedSummary() {
-    try {
-      setIsGeneratingCombinedSummary(true);
-      const { visual_summary, combined_summary } = await makeApiRequest('/generate-combined-summary', 'post', { video_filename: currentResource?.source_path });
-      setTranslatedResource((prev) => ({
-        ...prev,
-        visual_summary: {
-          title: "Visual Flow",
-          content: visual_summary,
-        },
-        combined_summary: {
-          title: "Combined Summary",
-          content: combined_summary,
-        },
-      }));
-      console.log(visual_summary, combined_summary);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsGeneratingCombinedSummary(false);
     }
   }
 
@@ -367,10 +294,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
   };
 
   useEffect(() => {
-    // if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)) {
-    //   commitSelectedSources([currentResource]);
-    // }
-
     return () => {
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
     };
@@ -429,22 +352,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
       if (committedSources?.length === 0) {
         setIsFoundationLlm(true);
       }
-      // } else {
-      // something in backend
-      // await makeApiRequest(`/previous-temp-chat`, 'post');
-      // }
-      // setIsSourceUncheckedOrClosed(true)
     }
   }
 
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
-      {/* <input type='checkbox' checked={isChecked} onChange={handleToggle} />Toggle */}
-      {/* {currentResource?.metadata?.embeddings_generated && <CustomButton onClick={() => commitSelectedSources(currentResource)} className="my-1 mb-5 text-white bg-primary-300">Exclusive source for Crisp Wiz</CustomButton>} */}
-
-      {/* {currentResource?.metadata?.embeddings_generated && <div className="">
-        <input type='checkbox' checked={isChecked} onChange={e => handleToggle(e.target.checked)} />
-        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Exclusive source for Crisp Wiz</span></div>} */}
 
       {currentResource?.metadata?.embeddings_generated && <FormControlLabel control={<Checkbox sx={{
         color: lightBlue[800],
@@ -492,25 +404,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
                 {/* generate visual/combined summary */}
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
-                  {/* {!isGeneratingCombinedSummary ? <div
-                    className={`user-select-none flex items-center justify-center gap-2 py-1 mb-2 rounded-md cursor-pointer w-fit text-sm ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`} onClick={() => generateVisualAndCombinedSummary()}>
-                    <AutoAwesomeOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                      Generate Visual & Combined Summary
-                    </span>
-                  </div> : (
-                    <div className="flex items-center gap-2 mb-2">
-                      <LoadingSpinner isSmall={true} />
-                      <span
-                        className={`font-medium ${theme === "light"
-                          ? "text-textColor-300"
-                          : "text-textColor-100"
-                          }`}
-                      >
-                        Generating Summaries...
-                      </span>
-                    </div>
-                  )} */}
                   <CustomSelectTwo
                     options={languageOptions}
                     onChange={(lang) =>
@@ -520,55 +413,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   />
                 </div>}
                 <>
-                  {/* {(generatedResource?.combined_summary?.content !== "" && generatedResource?.combined_summary?.content !== undefined) && <>
-                    <Accordion heading={generatedResource?.combined_summary?.title} isFirstOpen>
-                      <p
-                        className={`text-md ${theme === "light"
-                          ? "text-textColor-300"
-                          : "text-textColor-100"
-                          }`}
-
-                        dangerouslySetInnerHTML={{ __html: `${generatedResource?.combined_summary?.content?.replace(/\n/gi, '<br />')}` }}
-                      ></p>
-                    </Accordion>
-                  </>} */}
-
-                  {/* {(generatedResource?.visual_summary?.content !== "" && generatedResource?.visual_summary?.content !== undefined) && <>
-                    <Accordion heading={generatedResource?.visual_summary?.title}>
-                      <p
-                        className={`text-md ${theme === "light"
-                          ? "text-textColor-300"
-                          : "text-textColor-100"
-                          }`}
-                        dangerouslySetInnerHTML={{ __html: `${generatedResource?.visual_summary?.content?.replace(/\n/gi, '<br />')}` }}
-                      ></p>
-                    </Accordion>
-                  </>} */}
-
-                  {/* {translatedResource?.split_topics?.length > 0 && <>
-                    <Accordion heading={translatedResource?.transcription?.title}>
-                      <p
-                        className={`text-md ${theme === "light"
-                          ? "text-textColor-300"
-                          : "text-textColor-100"
-                          }`}
-                      >
-                        {
-                          translatedResource?.split_topics?.map((topic, index) => {
-                            return (
-                              <div key={index} className="flex gap-3">
-                                <div className='flex flex-col gap-1'>
-                                  <h3 className='text-lg font-semibold text-primary-300'>{topic.start_time} - {topic.end_time}</h3>
-                                  <h3 className='text-lg font-semibold text-primary-300'>{topic.speaker}</h3>
-                                </div>
-                                <p>{topic.content}</p>
-                              </div>
-                            );
-                          })
-                        } ²
-                      </p>
-                    </Accordion>
-                  </>} */}
                   {translatedResource?.transcription?.content !== undefined && <>
                     <Accordion heading={translatedResource?.transcription?.title}>
                       <p

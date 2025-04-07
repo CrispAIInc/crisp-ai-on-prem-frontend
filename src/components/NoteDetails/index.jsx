@@ -20,20 +20,10 @@ function NoteDetails() {
         selectedNote,
         setSelectedNote,
         notes,
-        setFromChat,
         noteIndex,
-        setCurrentResource,
         setNotes,
         setIsNewNote,
-        setResourceURL,
-        setSummary,
-        setSummaries,
-        setJumpToPage,
-        API_ENDPOINT,
-
         setActiveView,
-
-
         currentResource,
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
 
@@ -47,31 +37,6 @@ function NoteDetails() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    // const handleVideoLinkClick = (event, video) => {
-    //     event.preventDefault();
-    //     setFromChat(false);
-    //     const resourceURL = `${API_ENDPOINT}/${video.file_type
-    //         }/all/${encodeURIComponent(video.source_path)}`;
-    //     setCurrentResource(video);
-    //     setResourceURL(resourceURL);
-    //     setSummary(video.summary);
-    //     setSummaries(video.topic_summaries);
-    //     setActiveView('resource');
-    //     // setShowNoteDetails(false);
-    // };
-
-    // const handlePDFLinkClick = (event, pdf) => {
-    //     event.preventDefault();
-    //     const resourceURL = `${API_ENDPOINT}/${pdf.file_type
-    //         }/all/${encodeURIComponent(pdf.source_path)}`;
-    //     setCurrentResource(pdf);
-    //     setResourceURL(resourceURL);
-    //     setSummary(pdf.summary);
-    //     setSummaries(pdf.topic_summaries);
-    //     setActiveView('resource');
-    //     setJumpToPage({ page: parseInt(pdf.page) + 1 });
-    // };
 
     const handleSave = async (event) => {
         event && event.preventDefault();
@@ -301,11 +266,6 @@ function NoteDetails() {
             return newNote;
         });
     }
-
-    // useEffect(() => {
-    //     // save selectedNote
-    //     handleSave();
-    // }, []);
 
     const [currentRefType, setCurrentRefType] = useState('');
 
