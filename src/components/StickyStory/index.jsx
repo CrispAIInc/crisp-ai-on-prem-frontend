@@ -53,25 +53,6 @@ function StickyStory({ story }) {
             </div>
         </OverlayTrigger>
     );
-
-    // return (
-    //     <SideCard onClick={showStory}>
-    //         {/* top */}
-    //         <div className="flex items-center justify-between mb-1">
-    //             <p className={`mb-0 text-sm font-semibold truncate ${theme === 'light' ? 'text-textColor-200' : 'text-white'}`}>
-    //                 {story.story_name}
-    //             </p>
-    //             <span onClick={(e) => {
-    //                 deleteStory(e, story.story_id);
-    //             }}>
-    //                 <DeleteIcon color={`${theme === 'light' ? '#444' : 'error'}`} />
-    //             </span>
-    //         </div>
-    //         {
-    //             Array.isArray(story.text) && <div className={`my-0 text-xs ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} line-clamp-2`}>{story.text[0]?.content[0]?.answer}</div>
-    //         }
-    //     </SideCard>
-    // );
 }
 
 export default memo(StickyStory);

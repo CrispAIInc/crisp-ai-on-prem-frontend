@@ -2,7 +2,6 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
-// import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 

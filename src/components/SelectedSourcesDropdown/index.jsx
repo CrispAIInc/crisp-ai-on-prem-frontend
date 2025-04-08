@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import Chip from "../Chip";
 import { MainContext } from '../../contexts/mainContext';
 
 

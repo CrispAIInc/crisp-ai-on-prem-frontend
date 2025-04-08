@@ -25,7 +25,6 @@ export function SourceExplorer(props) {
         sourcesTobeCommited,
         selectedFormat,
         knowledgeBase,
-        setKnowledgeBase
     } = useContext(MainContext);
 
     // const [currentPath, setCurrentPath] = useState('/');

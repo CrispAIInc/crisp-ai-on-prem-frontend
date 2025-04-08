@@ -1,11 +1,6 @@
 import { useEffect, useState, useContext, memo } from 'react';
 import { MainContext } from '../../contexts/mainContext';
-
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import makeApiRequest from '../../api';
 import ModelChip from '../ModelChip';
-// import SideCard from '../../layouts/SideCard';
-// import ModelChip from '../ModelChip';
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -27,31 +22,6 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
         setShowNoteDetails(true);
         setActiveView('note');
     };
-
-    // const handleDelete = async () => {
-    //     try {
-    //         await makeApiRequest(`/delete-note`, 'post', { noteID: note.note_id, noteName: note.note_name });
-    //         // send request to update notes
-    //         const data = await makeApiRequest("/notes", "post");
-    //         setNotes(data);
-    //     } catch (error) {
-    //         console.log(error);
-    //     } finally {
-    //         setSelectedNote({
-    //             note_id: "",
-    //             text: [{
-    //                 content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
-    //                     videoLinks: [],
-    //                     keyframeLinks: [],
-    //                     pdfLinks: [],
-    //                     imageLinks: [],
-    //                 }
-    //             }],
-    //             images: [],
-    //             note_name: "",
-    //         });
-    //     }
-    // };
 
     useEffect(() => {
         // Function to generate a very light random hex color for better contrast on a dark background

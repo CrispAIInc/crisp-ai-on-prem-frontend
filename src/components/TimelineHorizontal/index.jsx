@@ -22,8 +22,6 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
         setLightboxOpen(false);
     }
 
-    // const [selectedChapter, setSelectedChapter] = useState(null)
-
     return (
         <div className="main overflow-x-auto overflow-y-hidden relative m-auto w-11/12 max-w-[90vw] py-10 custom-scroll">
             {/* Horizontal timeline container */}
@@ -34,8 +32,6 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                         className={`timeline-item  relative flex-shrink-0 w-48 p-4 ${index % 2 === 0 ? 'mt-10' : 'mb-10'
                             }`}
                     >
-                        {/* Connector line for each dot */}
-                        {/* <div className="absolute z-10 w-2 h-2 -translate-x-1/2 -translate-y-1/2 rounded-full top-1/2 left-1/2 bg-primary-300"></div> */}
 
                         {/* Timeline content */}
                         <div className="relative flex flex-col gap-2 p-2 rounded-md shadow-md bg-background">
