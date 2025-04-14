@@ -23,10 +23,6 @@ const marks = [
 
 const TemperatureSlider = ({ temperatureValue, setTemperatureValue }) => {
 
-    const { theme } = useContext(ThemeContext);
-
-    // const labelColor = theme === 'light' ? 'white' : 'currentColor';
-
     function valuetext(value) {
         return `${value}`;
     }

@@ -7,7 +7,7 @@ import AddToNewStoryModal from '../AddToNewStoryModal';
 import { generateRandomHash } from '../../utils';
 
 function AddToStoryModal({ open, handleClose, setOpen }) {
-    const { theme, selectedNote, stories, setStories, setActiveView, setSelectedStory } = useContext(MainContext);
+    const { theme, selectedNote, setActiveView, setSelectedStory } = useContext(MainContext);
 
     const [openExistingStoryModal, setOpenExistingStoryModal] = useState(false);
     const [openNewStoryModal, setOpenNewStoryModal] = useState(false);

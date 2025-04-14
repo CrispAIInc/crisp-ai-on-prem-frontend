@@ -36,7 +36,7 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false }) 
                 </svg>
             </button>
             <div
-                className={`overflow-hidden transition-all ease-linear duration-500 ${isOpen ? "max-h-[20000px] p-2 mb-3 opacity-100" : "max-h-0 opacity-0"
+                className={`overflow-hidden transition-all ease-linear duration-500 ${isOpen ? "max-h-[10000000px] p-2 mb-3 opacity-100" : "max-h-0 opacity-0"
                     } `}
             >
                 {children}

@@ -14,8 +14,6 @@ import SelectedSourcesDropdown from '../SelectedSourcesDropdown';
 function MetadataGen() {
     const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, setSourcesAfterUncheckCrispWiz, metadataOptions } = useContext(MainContext);
 
-    // const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
-
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
 
     useEffect(() => {
@@ -41,10 +39,6 @@ function MetadataGen() {
     // const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_selected === false));
 
     const [isModalVisible, setIsModalVisible] = useState(false);
-
-    // useEffect(() => {
-    //     setIsKnowledgeBaseEmpty(knowledgeBase.every(kb => kb.is_selected === false));
-    // }, [knowledgeBase]);
 
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -92,20 +86,6 @@ function MetadataGen() {
                 "post",
                 JSON.stringify(categoryValues)
             );
-            // if (selectedOptions.find(op => op.id === 'embeddings')) {
-            //     setChatLoaded(false);
-            //     const { chat_is_initialized } = await makeApiRequest(
-            //         `/chat/all`,
-            //         "post",
-            //         JSON.stringify({
-            //             sources: selectedSourcesToGen,
-            //             category: 'all',
-            //             selectedAll,
-            //             reinitialize: true,
-            //         })
-            //     );
-            //     setChatLoaded(chat_is_initialized);
-            // }
             //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
             let updatedKnowledgeBase = data.map(item => {
                 let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
@@ -118,18 +98,6 @@ function MetadataGen() {
             });
 
             setKnowledgeBase(updatedKnowledgeBase);
-
-            // setKnowledgeBase((prev) => {
-            //     const updatedKnowledgeBase = prev.map((kb) => {
-            //         const updatedKb = data.find((d) => d.source_path === kb.source_path);
-            //         if (updatedKb) {
-            //             return { ...updatedKb, ...kb };
-            //         }
-            //         return kb;
-            //     });
-            //     return updatedKnowledgeBase;
-            // });
-            // setKnowledgeBase(data);
             setGeneratedResources(results);
         } catch (error) {
             console.error(error);
@@ -138,9 +106,6 @@ function MetadataGen() {
             if (selectedOptions.find(op => op.id === 'embeddings') && selectedSourcesToGen.length !== 0) {
                 setIsModalVisible(true);
             }
-            // if (generatedResources.every(gr => gr.embeddings_generated === false)) {
-            //     setIsModalVisible(true);
-            // }
         }
     }
 

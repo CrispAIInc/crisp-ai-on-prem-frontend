@@ -13,7 +13,6 @@ import { MainContext } from '../../contexts/mainContext';
 const ContentPanelThumbnail = ({
   isDeleting,
   clickedIndex,
-  index,
   item,
   handleCheckboxChange,
   onThumbnailClick,

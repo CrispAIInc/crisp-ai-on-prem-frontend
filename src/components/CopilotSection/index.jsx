@@ -33,22 +33,18 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     notes,
     setNotes,
     selectedNote,
-    isSourceUncheckedOrClosed,
     setSelectedNote,
     showNoteModal,
     sourcesWithExclusive,
     setNoteIndex,
     setShowNoteModal,
     selectedSources,
-    setSourcesAfterUncheckCrispWiz,
-    sourcesTobeCommited,
     selectedAll,
     isNewNote,
     setIsNewNote,
     languageOptions, setIsManualNote,
     setShowNoteDetails,
     setActiveView,
-    committedSources, setCommittedSources
   } = useContext(MainContext);
 
   const { maxWidth } = useResizableSidebar(200, false);
@@ -94,9 +90,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     }
     // setCommittedSources(selectedSources);
     async function fetchChat() {
-      // if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length === 0) {
-      //   setSourcesAfterUncheckCrispWiz(selectedSources);
-      // }
       const data = await makeApiRequest(
         `/chat/${selectedCategoryChat}`,
         "post",
@@ -235,32 +228,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     setInput("");
   };
-
-  // const handleVideoLinkClick = (event, video) => {
-  //   event.preventDefault();
-  //   setFromChat(true);
-  //   const resourceURL = `${API_ENDPOINT}/${video.file_type
-  //     }/all/${encodeURIComponent(video.source_path)}`;
-  //   setCurrentResource({ ...video });
-  //   setResourceURL(resourceURL);
-  //   setSummary(video.summary);
-  //   setSummaries(video.topic_summaries);
-  //   setActiveView('resource');
-  //   // setShowNoteDetails(false);
-  // };
-
-  // const handlePDFLinkClick = (event, pdf) => {
-  //   event.preventDefault();
-  //   const resourceURL = `${API_ENDPOINT}/${pdf.file_type
-  //     }/all/${encodeURIComponent(pdf.source_path)}`;
-  //   setCurrentResource({ ...pdf });
-  //   setResourceURL(resourceURL);
-  //   setSummary(pdf.summary);
-  //   setSummaries(pdf.topic_summaries);
-  //   setActiveView('resource');
-  //   setJumpToPage({ page: parseInt(pdf.page) + 1 });
-  //   // setShowNoteDetails(false);
-  // };
 
   const fetchReferences = async (botMessage) => {
     const response = await axios.get(`${API_ENDPOINT}/references`);
@@ -939,13 +906,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
                           {isLightboxOpen && (
                             <PreviewModal closeLightbox={closeLightbox} content={message.img} />
                           )}
-                          {/* <ImageModal
-                              show={showImageModal}
-                              onHide={onHideImageModal}
-                              imageURL={message.img}
-                              className="modal"
-                              key={message.img}
-                            /> */}
                         </div>
                       </>
                     ) : (
@@ -969,26 +929,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
                         {showCursor && index == responseIndex ? (
                           <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
                         ) : null}
-
-                        {/* add to note */}
-                        {/* <AddOptionsModal
-                            text={message.text}
-                            file={message.file}
-                            models={["gpt-4-vision"]}
-                            addToNewNote={addToNewNote}
-                            addToExistingNote={addToExistingNote} D
-                            setExistingNote={setExistingNote}
-                            question={message.question}
-                            existingNote={existingNote}
-                            onHide={onHide}
-                            isNewNote={isNewNote}
-                            setShowNoteModal={setShowNoteModal}
-                            updateSelectedNote={setSelectedNote}
-                            showNoteModal={showNoteModal}
-                            selectedNote={selectedNote}
-                            notes={notes}
-                          /> */}
-
 
                         <div className="flex flex-wrap items-center gap-1">
                           <span
@@ -1036,31 +976,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
-            // <CustomButton className='flex items-center justify-center w-3/4 mx-auto text-white bg-primary-300' onClick={() => imageGenRefInput.current.click()}>
-            //   <div
-            //     className={`p-2 rounded-md cursor-pointer ${theme === "light" ? "border" : "!border !border-textColor-300"
-            //       }`}
-            //   >
-            //     <AttachFileOutlinedIcon color="white" />
-            //     {/* render file input and hide it */}
-            //     <input type='file' accept='.png,.jpg,.jpeg,.svg' ref={imageGenRefInput} name='image-generation' className='hidden' onChange={(e) => handleVisionUpload(e)} />
-            //   </div>
-            //   <p className="m-0">Upload an image</p>
-            // </CustomButton>
             <ImageUpload handleUpload={handleVisionUpload} />
             :
             <>
-              {/* <CustomInput
-                placeholder="Message model..."
-                value={input}
-                disabled={showCursor}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    sendMessage(input);
-                  }
-                }}
-              /> */}
               <CustomTextArea
                 placeholder="Message model..."
                 value={input}

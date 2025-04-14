@@ -19,10 +19,6 @@ function TimelineItem({ chapter, index, theme, workspaceContainer, handleReadMor
         {/* chapter card */}
         <div className={`timeline-item relative w-1/2 !px-5 ${index % 2 === 0 ? 'left-0 before:right-[0px] before:border-r-blue-500  before:border-r-8' : 'text-left before:left-[4px] ml-[9px] before:border-l-8 before:border-l-blue-500'} before:absolute before:top-1/2 before:-translate-y-1/2  before:w-0 before:h-0  before:border before:border-t-8 before:border-b-8  before:border-transparent before:z-10`}>
             <div className={`relative grid md:grid-cols-[30%,1fr] gap-3 p-3 bg-background rounded-md shadow-md content`}>
-                {/* <div className="absolute right-0 w-0 h-0 mr-4 border-t-8 border-b-8 border-r-8 border-transparent border-r-blue-500"></div> */}
-                {/* <div className="w-full rounded-md ">
-                                        <img src={import.meta.env.VITE_API_ENDPOINT + (chapter.keyframe_url ?? chapter.thumbnail_url)} alt="chapter" className="object-cover w-full h-full rounded-md" />
-                                    </div> */}
                 <div className="w-full rounded-md cursor-pointer min-w-2/6" onClick={() => setLightboxOpen(true)}>
                     <img src={thumbnail} alt="chapter" className="object-cover w-full h-full rounded-md" />
                 </div>
@@ -52,7 +48,6 @@ function TimelineItem({ chapter, index, theme, workspaceContainer, handleReadMor
                         </div>
                     }
                     <h5 className="mb-0 text-lg font-semibold line-clamp-1">{chapter.title}</h5>
-                    {/* <OverlayTrigger className='tooltip' placement={index % 2 === 0 ? 'bottom' : "bottom"} overlay={(props) => renderTooltip(props, chapter.description)}> */}
                     <p className="text-xs truncate line-clamp-2 text-wrap">{chapter.description}</p>
                     {/* </OverlayTrigger> */}
                     <p onClick={handleReadMoreClick} className="mt-2 text-sm font-semibold cursor-pointer text-primary-300">Read more</p>

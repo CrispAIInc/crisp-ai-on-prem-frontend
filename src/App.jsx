@@ -7,7 +7,6 @@ import {
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
-import HomePage from './pages/HomePage';
 import MainWorkspacePage from './pages/MainWorkspacePage';
 import NotFound from './pages/NotFound';
 
