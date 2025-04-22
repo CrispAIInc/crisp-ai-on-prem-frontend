@@ -585,7 +585,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   />
                 </div>}
 
-                {translatedResource?.transcription?.content !== undefined && <>
+                {/* {translatedResource?.transcription?.content !== undefined && <>
                   <Accordion heading={translatedResource?.transcription?.title}>
                     <p
                       className={`text-md ${theme === "light"
@@ -597,7 +597,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     >
                     </p>
                   </Accordion>
-                </>}
+                </>} */}
                 {translatedResource?.summary?.content !== undefined && <>
                   <Accordion heading={translatedResource?.summary?.title}>
                     <p
