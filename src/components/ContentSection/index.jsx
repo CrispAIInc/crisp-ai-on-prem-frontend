@@ -36,6 +36,7 @@ const ContentSection = ({
         currentResource,
         setCurrentResource,
         player,
+        setActiveTab,
         commitSelectedSources,
         knowledgeBase,
         setGeneratedResources,
@@ -214,15 +215,14 @@ const ContentSection = ({
 
             await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
-            toast('File uploaded successfully', { className: "p-2 rounded-md", theme });
+            toast('Upload complete. Generate metadata from the right panel', { className: "p-2 rounded-md", theme });
+            setActiveTab('genMetadata');
 
             // Fetch updated content
             const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValues));
 
             // Filter sources that match the uploaded files
             const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
-
-            console.log(sourcesToAdd);
 
             // setSourcesTobeCommited(prev => [...new Set([...prev, ...sourcesToAdd.map(item => ({ ...item, is_selected: true }))])]); // Ensure uniqueness
 
