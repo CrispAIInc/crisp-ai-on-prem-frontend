@@ -450,7 +450,7 @@ const MainWorkspace = ({ theme }) => {
   const workspaceContainer = useRef(null);
 
   const metadataOptions = [
-    { id: "summary", name: "Summary", description: "Generate a concise overview" },
+    { id: "summary", name: "Summary", description: "Generate concise overview" },
     // { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
     { id: "highlights", name: "Highlights", description: "Capture key moments" },
     { id: "chapters", name: "Chapters", description: "Divide source into meaningful sections" },
