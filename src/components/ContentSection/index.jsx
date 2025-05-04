@@ -37,6 +37,7 @@ const ContentSection = ({
         setCurrentResource,
         player,
         setActiveTab,
+        displayedSources,
         commitSelectedSources,
         knowledgeBase,
         setGeneratedResources,
@@ -443,8 +444,8 @@ const ContentSection = ({
 
                 <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                     {
-                        knowledgeBase.filter(item => item.is_selected)?.length > 0 && <div className={` grid grid-cols-[repeat(auto-fill,_112px)] h-full gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
-                            {knowledgeBase.filter(item => item.is_selected)?.slice(0).reverse().map((item, index) => {
+                        displayedSources?.length > 0 && <div className={` grid grid-cols-[repeat(auto-fill,_112px)] h-full gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
+                            {displayedSources?.slice(0).reverse().map((item, index) => {
                                 // if (canRenderSourceThumbnail(item)) {
                                 return (<ContentPanelThumbnail
                                     key={index}

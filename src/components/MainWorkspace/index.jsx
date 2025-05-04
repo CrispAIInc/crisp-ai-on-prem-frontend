@@ -133,6 +133,8 @@ const MainWorkspace = ({ theme }) => {
   const [showStoryDetails, setShowStoryDetails] = useState(false);
   const [isNewStory, setIsNewStory] = useState(false);
 
+  const [displayedSources, setDisplayedSources] = useState([]);
+
   const llmModels = [
     { value: "gpt-4", label: "GPT-4", type: "llm", color: "#D163DA" },
     {
@@ -237,6 +239,14 @@ const MainWorkspace = ({ theme }) => {
     }
   };
 
+  useEffect(() => {
+    // add all selected sources from knowledgebase to displayedsources
+    setDisplayedSources(prev => {
+      const newSources = knowledgeBase.filter(item => item.is_selected && !prev.some(i => i.source_path === item.source_path));
+      return [...prev, ...newSources];
+    });
+  }, [knowledgeBase]);
+
   const handleCheckboxChange = (file) => {
     // Create a new array with updated items
     const updatedKnowledgeBase = knowledgeBase.map((item) => {
@@ -248,6 +258,35 @@ const MainWorkspace = ({ theme }) => {
     });
     setKnowledgeBase(updatedKnowledgeBase);
 
+    // update displayedsources such that if file.is_source is true, add it to displayedsources otherwise if it is already in displayedsources, just make its property "is_selected" to false without removing it from displayedsources
+    setDisplayedSources((prev) => {
+      const exists = prev.find((item) => item.source_path === file.source_path);
+      // const fileFromKb = knowledgeBase.find((item) => item.source_path === file.source_path);
+      if (!file.is_selected) {
+        if (!exists) {
+          return [...prev, { ...file, is_selected: true }];
+        } else if (exists) {
+          return prev.map((item) => {
+            if (item.source_path === file.source_path) {
+              return { ...item, is_selected: true };
+            }
+            return item;
+          });
+          // return [...prev, {...file, is_selected: false}]
+        }
+      } else {
+        if (exists) {
+          return prev.map((item) => {
+            if (item.source_path === file.source_path) {
+              return { ...item, is_selected: false };
+            }
+            return item;
+          });
+        }
+      }
+
+      return prev;
+    });
 
     // item should exist in selectedSources and isSelected is true => remove it from selectedSources
     if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
@@ -484,6 +523,7 @@ const MainWorkspace = ({ theme }) => {
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
     fileFormats,
+    displayedSources, setDisplayedSources,
     commitSelectedSources,
     isLeftSidebarOpen, setIsLeftSidebarOpen,
     isRightSidebarOpen, setIsRightSidebarOpen,
