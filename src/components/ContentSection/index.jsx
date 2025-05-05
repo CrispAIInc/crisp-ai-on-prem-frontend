@@ -20,6 +20,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import SearchSection from '../SearchSection';
 import { timeToSeconds } from '../../utils';
 import { IndexModal } from '../IndexModal';
+import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 
 const ContentSection = ({
@@ -34,7 +35,9 @@ const ContentSection = ({
         resourceURL,
         categoryOptions,
         currentResource,
+        activeView,
         setCurrentResource,
+        workspaceContainer,
         player,
         setActiveTab,
         displayedSources,
@@ -342,22 +345,24 @@ const ContentSection = ({
         setIsIndexModalOpen(false);
     }
 
+    const [isMetadataVisible, setIsMetadataVisible] = useState(false);
+
     return (
         <>
-            <section className='relative flex flex-col items-start h-full'>
+            {activeView !== 'resource' && <section className='relative flex flex-col items-start h-full'>
 
                 <div className="w-full max-w-4xl pr-3">
                     {/* home */}
                     <div
-                        className={`source-explorer flex mb-1 items-center justify-center gap-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                        className={`source-explorer flex mb-1 items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                     >
                         <HomeIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Home</span>
                     </div>
                     {/* Ingestion */}
                     <div className="flex flex-col justify-start gap-2 mb-1">
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span>
-                        <div className="flex flex-col gap-0 ml-2">
+                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span> */}
+                        <div className="flex flex-col gap-0">
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={openIndexModal}
@@ -377,8 +382,8 @@ const ContentSection = ({
                     </div>
                     {/* mrag */}
                     <div className="flex flex-col justify-start gap-2 mb-2">
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span>
-                        <div className="flex flex-col ml-2">
+                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
+                        <div className="flex flex-col">
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={handleExploreSources}
@@ -406,7 +411,7 @@ const ContentSection = ({
                     </div>
                     {/* Settings */}
                     <div
-                        className={`source-explorer flex items-center justify-center gap-2  py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                        className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                     >
                         <SettingsIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
@@ -463,7 +468,7 @@ const ContentSection = ({
                     }
                     {
 
-                        sourcesTobeCommited.length > 0
+                        displayedSources.length > 0
                             ?
                             <>
                                 {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
@@ -477,7 +482,12 @@ const ContentSection = ({
                             <NoData message="No sources selected" />
                     }
                 </div>
-            </section>
+
+            </section>}
+            {/* metadata and source section */}
+            {activeView === 'resource' && (
+                <MetadataPanel workspaceContainer={workspaceContainer} />
+            )}
         </>
     );
 };

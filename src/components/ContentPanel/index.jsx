@@ -159,7 +159,7 @@ const ContentPanel = () => {
                 defaultActiveKey="sources"
                 onSelect={(k) => setActiveTab(() => k)}
                 id="uncontrolled-tab-example"
-                className="my-3 text-center flex justify-center items-center !border-b-0"
+                className="my-3  flex  items-center !border-b-0"
             >
                 <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'>
                     <ContentSection
@@ -174,7 +174,7 @@ const ContentPanel = () => {
                     />
                     {(activeTab === 'sources' && (Boolean(localStorage.getItem(`guide_completed_sources`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={contentSectionSteps} tabIdentifier="sources" />}
                 </Tab>
-                <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
+                {/* <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
                     <NotesSection
                         setNoteIndex={setNoteIndex}
                         nodeIndex={noteIndex}
@@ -187,7 +187,7 @@ const ContentPanel = () => {
                     <StoriesSection
                     />
                     {(activeTab === 'stories' && (Boolean(localStorage.getItem(`guide_completed_stories`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={storiesSectionSteps} tabIdentifier="stories" />}
-                </Tab>
+                </Tab> */}
             </Tabs>
             <div
                 className={`w-fit absolute left-0 h-auto top-1/2 flex flex-col justify-center items-center z-50`}

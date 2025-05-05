@@ -291,19 +291,19 @@ const MainWorkspace = ({ theme }) => {
     // item should exist in selectedSources and isSelected is true => remove it from selectedSources
     if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
       setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
-      setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+      // setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
       // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     }
 
     // updated sourcesTobeCommiter
-    if (!file.is_selected) {
-      setSourcesTobeCommited((prev) => [...prev, { ...file, is_selected: true }]);
-      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-    }
-    else {
-      setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-    }
+    // if (!file.is_selected) {
+    //   setSourcesTobeCommited((prev) => [...prev, { ...file, is_selected: true }]);
+    //   // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    // }
+    // else {
+    //   setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+    //   // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    // }
   };
 
   const [fromChat, setFromChat] = useState(false);

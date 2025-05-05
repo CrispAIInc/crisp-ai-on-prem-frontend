@@ -43,7 +43,9 @@ const Workspace = () => {
                     <NoData />
                 </div>
             ) : activeView === 'resource' ? (
-                <MetadataPanel workspaceContainer={workspaceContainer} />
+                <div className="mt-10">
+                    <NoData />
+                </div>
             ) : activeView === 'note' ? (
                 <NoteDetails />
             ) : activeView === 'story' ? (
