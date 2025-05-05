@@ -362,7 +362,7 @@ const ContentSection = ({
                     {/* Ingestion */}
                     <div className="flex flex-col justify-start gap-2 mb-1">
                         {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span> */}
-                        <div className="flex flex-col gap-0">
+                        <div className="flex items-center gap-0">
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={openIndexModal}
@@ -383,7 +383,7 @@ const ContentSection = ({
                     {/* mrag */}
                     <div className="flex flex-col justify-start gap-2 mb-2">
                         {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
-                        <div className="flex flex-col">
+                        <div className="flex items-center">
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={handleExploreSources}
