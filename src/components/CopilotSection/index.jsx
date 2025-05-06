@@ -187,7 +187,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
         `/handle-embeddings`,
         "post",
         JSON.stringify({
-          sources: displayedSources?.filter(item => item?.is_selected),
+          sources: displayedSources?.filter(item => item?.is_selected)?.map(item => { item?.source_path; }),
         })
       );
 
