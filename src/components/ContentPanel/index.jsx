@@ -154,27 +154,29 @@ const ContentPanel = () => {
             {/* <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-90% top-10 -z-1 blur-[160px]"></div> */}
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
-            <Tabs
+            {/* <Tabs
                 transition={false}
                 defaultActiveKey="sources"
                 onSelect={(k) => setActiveTab(() => k)}
                 id="uncontrolled-tab-example"
                 className="my-3  flex  items-center !border-b-0"
             >
-                <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'>
-                    <ContentSection
-                        knowledgeBase={knowledgeBase}
-                        uploadedSources={uploadedSources}
-                        setUploadedSources={setUploadedSources}
-                        setKnowledgeBase={setKnowledgeBase}
-                        onThumbnailClick={onThumbnailClick}
-                        handleCheckboxChange={handleCheckboxChange}
-                        name="Sources"
-                        key={0}
-                    />
-                    {(activeTab === 'sources' && (Boolean(localStorage.getItem(`guide_completed_sources`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={contentSectionSteps} tabIdentifier="sources" />}
-                </Tab>
-                {/* <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
+                <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'> */}
+            <div className="my-3 !border-b-0">
+                <ContentSection
+                    knowledgeBase={knowledgeBase}
+                    uploadedSources={uploadedSources}
+                    setUploadedSources={setUploadedSources}
+                    setKnowledgeBase={setKnowledgeBase}
+                    onThumbnailClick={onThumbnailClick}
+                    handleCheckboxChange={handleCheckboxChange}
+                    name="Sources"
+                    key={0}
+                />
+                {(activeTab === 'sources' && (Boolean(localStorage.getItem(`guide_completed_sources`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={contentSectionSteps} tabIdentifier="sources" />}
+            </div>
+            {/* </Tab>
+                <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
                     <NotesSection
                         setNoteIndex={setNoteIndex}
                         nodeIndex={noteIndex}
@@ -187,8 +189,8 @@ const ContentPanel = () => {
                     <StoriesSection
                     />
                     {(activeTab === 'stories' && (Boolean(localStorage.getItem(`guide_completed_stories`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={storiesSectionSteps} tabIdentifier="stories" />}
-                </Tab> */}
-            </Tabs>
+                </Tab>
+            </Tabs> */}
             <div
                 className={`w-fit absolute left-0 h-auto top-1/2 flex flex-col justify-center items-center z-50`}
             >
