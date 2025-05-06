@@ -25,7 +25,7 @@ function HorizontalCard({ item, workspaceContainer }) {
                 <PreviewModal closeLightbox={closeLightbox} content={thumbnail} classNames={`h-full ${item.keyframe_url ? '!w-[55vw] !h-[65vh]' : '!w-1/3 !h-full'}`} />
             )}
             {/* item content */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 select-text">
                 {
                     item.timestamp ? <div className='flex items-center gap-1 mb-0 cursor-pointer select-none text-primary-300 w-fit' onClick={() => {
 
@@ -50,7 +50,7 @@ function HorizontalCard({ item, workspaceContainer }) {
                 }
                 <h5 className={`text-[13px] mb-1 font-semibold line-clamp-2 w-fit ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>{item.title}</h5>
                 {/* <OverlayTrigger className='tooltip' placement="right" overlay={(props) => renderTooltip(props, item.description)}> */}
-                <p className="text-[14px]">{item.description}</p>
+                <p className="text-[14px] text-gray-600">{item.description}</p>
                 {/* </OverlayTrigger> */}
             </div >
         </div >
