@@ -358,14 +358,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
 
-      {currentResource?.metadata?.embeddings_generated && <FormControlLabel control={<Checkbox sx={{
+      {/* {currentResource?.metadata?.embeddings_generated && <FormControlLabel control={<Checkbox sx={{
         color: lightBlue[800],
         '&.Mui-checked': {
           color: lightBlue[600],
         },
         borderColor: 'pink',
         borderTopColor: pink[400],
-      }} />} checked={isChecked} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />}
+      }} />} checked={isChecked} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />} */}
 
 
       {currentResource?.file_type === "video" && (
