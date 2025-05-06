@@ -41,6 +41,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     sourcesTobeCommited,
     setIsFoundationLlm,
     setIsExclusiveChecked,
+    displayedSources,
     committedSources,
     activeView,
     theme,
@@ -349,9 +350,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
         setCommittedSources(sourcesTobeCommited);
       }
 
-      if (committedSources?.length === 0) {
+      if (committedSources?.length === 0 || (displayedSources?.some(item => item?.is_selected) ? false : true)) {
         setIsFoundationLlm(true);
       }
+
+      setIsFoundationLlm(displayedSources?.some(item => item?.is_selected) ? false : true);
     }
   }
 

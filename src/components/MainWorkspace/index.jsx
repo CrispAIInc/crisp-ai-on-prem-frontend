@@ -329,11 +329,15 @@ const MainWorkspace = ({ theme }) => {
   const [isExclusiveChecked, setIsExclusiveChecked] = useState(false);
   useEffect(() => {
     // set isFoundationLlm to true if there is no selectedSources, otherwise false
-    setIsFoundationLlm(selectedSources.length === 0);
+    setIsFoundationLlm(selectedSources.length === 0 || (displayedSources?.some(item => item?.is_selected) ? false : true));
     if (!isExclusiveChecked) {
       setCommittedSources(selectedSources);
     }
   }, [selectedSources]);
+
+  useEffect(() => {
+    setIsFoundationLlm(displayedSources?.some(item => item?.is_selected) ? false : true);
+  }, [displayedSources]);
 
   const languageOptions = [
     { value: "en", label: "English" },

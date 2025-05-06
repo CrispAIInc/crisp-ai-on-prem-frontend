@@ -38,6 +38,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     sourcesWithExclusive,
     setNoteIndex,
     setShowNoteModal,
+    displayedSources, setDisplayedSources,
     selectedSources,
     selectedAll,
     isNewNote,
@@ -187,7 +188,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           selectedCategoryChat
         )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
           selectedLLMs[0]
-        )}/${isFoundationLlm}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
+        )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       );
 
       eventSource.onmessage = function (event) {
