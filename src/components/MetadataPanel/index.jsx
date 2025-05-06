@@ -440,7 +440,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                                     <h6 className='mb-0 text-xs font-semibold text-primary-200 '>{topic.start_time} - {topic.end_time}</h6>
                                   </div>
                                 </div>
-                                <p>{topic.content}</p>
+                                <p className="select-text">{topic.content}</p>
                               </div>
                             ))
                           }
