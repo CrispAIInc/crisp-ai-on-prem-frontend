@@ -182,6 +182,15 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
       setShowCursor(false);
     } else {
 
+      // add or remove embeddings from VS
+      await makeApiRequest(
+        `/handle-embeddings`,
+        "post",
+        JSON.stringify({
+          sources: displayedSources?.filter(item => item?.is_selected),
+        })
+      );
+
       let sessionID = null; // Variable to store the session ID
       const eventSource = new EventSource(
         `${API_ENDPOINT}/message/${encodeURIComponent(
