@@ -5,7 +5,7 @@ import useCheckMobileScreen from './useCheckMobileScreen';
 export const useResizableSidebar = (minWidth, isLeft) => {
     const isMobile = useCheckMobileScreen();
     const maxWidth = window.innerWidth * 0.75;
-    const [sidebarWidth, setSidebarWidth] = useState(isMobile ? -100 : window.innerWidth * (isLeft ? 0.2 : 0.26));
+    const [sidebarWidth, setSidebarWidth] = useState(isMobile ? -100 : window.innerWidth / 3.3333);
     const [isResizing, setIsResizing] = useState(false);
 
     const handleMouseDown = () => {
