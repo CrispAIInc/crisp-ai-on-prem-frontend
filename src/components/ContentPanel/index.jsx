@@ -197,7 +197,7 @@ const ContentPanel = () => {
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
                     setSidebarWidth(prev => {
                         if (prev !== maxWidth) return maxWidth;
-                        return window.innerWidth * 0.2;
+                        return window.innerWidth / 3.3333;
                     });
                     setIsLeftSidebarOpen(true);
                 }} />
