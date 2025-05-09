@@ -9,7 +9,12 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
 
 import CategoriesModal from "../CategoriesModal";
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import GraphicEqOutlinedIcon from '@mui/icons-material/GraphicEqOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import ContentPanelThumbnail from "../ContentPanelThumbnail";
+import { Checkbox } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { MainContext } from "../../contexts/mainContext";
 import LoadingSpinner from "../LoadingSpinner";
 import BaseHeading from '../BaseHeading';
@@ -28,11 +33,13 @@ const ContentSection = ({
     handleCheckboxChange,
     setKnowledgeBase,
     setUploadedSources,
+    classes
 
 }) => {
     const {
         isPlayerReady,
         resourceURL,
+        setDisplayedSources,
         categoryOptions,
         currentResource,
         activeView,
@@ -68,7 +75,7 @@ const ContentSection = ({
     ];
 
     const [isSearching, setIsSearching] = useState(false);
-
+    const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
     const [showSourceExplorer, setShowSourceExplorer] = useState(false);
     const [showFileFormatsModal, setShowFileFormatsModal] = useState(false);
     const [showCategoriesModal, setShowCategoriesModal] = useState(false);
@@ -128,6 +135,7 @@ const ContentSection = ({
             });
 
             await makeApiRequest(`/delete`, "post", { sources: payload });
+            setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
             toast('Source deleted successfully', { className: `p-2 rounded-md`, theme });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
@@ -333,6 +341,7 @@ const ContentSection = ({
         setKnowledgeBase(updatedKnowledgeBase);
         setSelectedSources([]);
         setSourcesTobeCommited([]);
+        setDisplayedSources([]);
         // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     };
 
@@ -346,141 +355,197 @@ const ContentSection = ({
     }
 
     const [isMetadataVisible, setIsMetadataVisible] = useState(false);
+    const [hoveredSource, setHoveredSource] = useState(null);
+    const handleMouseEnter = (sourcePath) => {
+        setHoveredSource(sourcePath);
+    };
+    const handleMouseLeave = () => {
+        setHoveredSource(null);
+    };
 
     return (
         <>
-            {activeView !== 'resource' && <section className='relative flex flex-col items-start h-full'>
+            {activeView !== 'resource' && <section className={`relative flex flex-col items-start h-full`}>
 
-                <div className="w-full max-w-4xl pr-3">
-                    {/* home */}
-                    <div
-                        className={`source-explorer flex mb-1 items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                    >
-                        <HomeIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Home</span>
-                    </div>
-                    {/* Ingestion */}
-                    <div className="flex flex-col justify-start gap-2 mb-1">
-                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span> */}
-                        <div className="flex items-center gap-0">
-                            <div
-                                className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={openIndexModal}
-                            >
-                                <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Index</span>
-
-                            </div>
-                            <div
-                                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={handleAddNewResource}
-                            >
-                                {isUploading ? (<LoadingSpinner isSmall />) : (<UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />)}
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Upload</span>
-                            </div>
+                <div className="w-full">
+                    <div className="w-full max-w-4xl pr-3">
+                        {/* home */}
+                        <div
+                            className={`source-explorer flex mb-1 items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                        >
+                            <HomeIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Home</span>
                         </div>
-                    </div>
-                    {/* mrag */}
-                    <div className="flex flex-col justify-start gap-2 mb-2">
-                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
-                        <div className="flex items-center">
-                            <div
-                                className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={handleExploreSources}
-                            >
-                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Sources</span>
-                            </div>
-                            <div className="global-search">
+                        {/* Ingestion */}
+                        <div className="flex flex-col justify-start gap-2 mb-1">
+                            {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span> */}
+                            <div className="flex flex-wrap items-center gap-0">
+                                <div
+                                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                    onClick={openIndexModal}
+                                >
+                                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Index</span>
+
+                                </div>
                                 <div
                                     className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={() => setIsSearching(!isSearching)}
+                                    onClick={handleAddNewResource}
                                 >
-                                    <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
+                                    {isUploading ? (<LoadingSpinner isSmall />) : (<UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />)}
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Upload</span>
                                 </div>
-                                {
-                                    isSearching && (
-                                        <div className="flex items-center gap-2">
-                                            <SearchSection chatLoaded={chatLoaded} className='flex-1' />
-                                        </div>
-                                    )
-                                }
                             </div>
                         </div>
-                    </div>
-                    {/* Settings */}
-                    <div
-                        className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                    >
-                        <SettingsIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
-                    </div>
-                </div>
-                <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} />
-                {showSourceExplorer && (
-                    <SourceExplorer
-                        show={showSourceExplorer}
-                        onHide={onHideSourceExplorer}
-                        knowledgeBase={knowledgeBase}
-                        setKnowledgeBase={setKnowledgeBase}
-                        categories={categoryOptions}
-                        formats={formatOptions}
-                        isDeleting={isDeleting}
-                        clickedIndex={clickedIndex}
-                        onThumbnailClick={onThumbnailClick}
-                        deleteResource={deleteResource}
-                        handleCheckboxChange={handleCheckboxChange}
-                        handleSelectAllCheckboxChange={handleSelectAllCheckboxChange}
-                        isOpenedFromSourceExplorerBtn={isOpenedFromSourceExplorerBtn}
-                        className="modal"
-                    />
-                )}
-
-                <CategoriesModal
-                    show={showCategoriesModal}
-                    onHide={() => setShowCategoriesModal(false)}
-                    categoryOptions={categoryOptions}
-                    setShowFileFormatsModal={setShowFileFormatsModal}
-                    handleUpload={handleUpload}
-                />
-
-                <BaseHeading text='Selected sources' className="mt-4 mb-4" />
-
-                <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
-                    {
-                        displayedSources?.length > 0 && <div className={` grid grid-cols-[repeat(auto-fill,_112px)] h-full gap-5 justify-center items-start w-full max-w-full mx-auto mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
-                            {displayedSources?.slice(0).reverse().map((item, index) => {
-                                // if (canRenderSourceThumbnail(item)) {
-                                return (<ContentPanelThumbnail
-                                    key={index}
-                                    index={index}
-                                    isDeleting={isDeleting}
-                                    clickedIndex={clickedIndex}
-                                    item={item}
-                                    handleCheckboxChange={handleCheckboxChange}
-                                    onThumbnailClick={onThumbnailClick}
-                                    deleteResource={deleteResource}
-                                />);
-                                // }
-                            })}
-                        </div>
-                    }
-                    {
-
-                        displayedSources.length > 0
-                            ?
-                            <>
-                                {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
-                                    <CustomButton onClick={() => commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
-                                </div>}
-                                <div className="mx-auto w-fit">
-                                    <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>
+                        {/* mrag */}
+                        <div className="flex flex-col justify-start gap-2 mb-2">
+                            {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
+                            <div className="flex flex-wrap items-center">
+                                <div
+                                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                    onClick={handleExploreSources}
+                                >
+                                    <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Sources</span>
                                 </div>
-                            </>
-                            :
-                            <NoData message="No sources selected" />
-                    }
+                                <div className="global-search">
+                                    <div
+                                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                        onClick={() => setIsSearching(!isSearching)}
+                                    >
+                                        <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
+                                    </div>
+                                    {
+                                        isSearching && (
+                                            <div className="flex items-center gap-2">
+                                                <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        {/* Settings */}
+                        <div
+                            className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                        >
+                            <SettingsIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
+                        </div>
+                    </div>
+                    <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} />
+                    {showSourceExplorer && (
+                        <SourceExplorer
+                            show={showSourceExplorer}
+                            onHide={onHideSourceExplorer}
+                            knowledgeBase={knowledgeBase}
+                            setKnowledgeBase={setKnowledgeBase}
+                            categories={categoryOptions}
+                            formats={formatOptions}
+                            isDeleting={isDeleting}
+                            clickedIndex={clickedIndex}
+                            onThumbnailClick={onThumbnailClick}
+                            deleteResource={deleteResource}
+                            handleCheckboxChange={handleCheckboxChange}
+                            handleSelectAllCheckboxChange={handleSelectAllCheckboxChange}
+                            isOpenedFromSourceExplorerBtn={isOpenedFromSourceExplorerBtn}
+                            className="modal"
+                        />
+                    )}
+
+                    <CategoriesModal
+                        show={showCategoriesModal}
+                        onHide={() => setShowCategoriesModal(false)}
+                        categoryOptions={categoryOptions}
+                        setShowFileFormatsModal={setShowFileFormatsModal}
+                        handleUpload={handleUpload}
+                    />
+                </div>
+
+                <div className="flex flex-col flex-1 w-full h-full max-h-full overflow-y-auto">
+                    <BaseHeading text='Selected sources' className="mt-4" />
+
+                    <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
+                        {
+                            displayedSources?.length > 0 && <div className={` h-full gap-2  w-full max-w-full mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
+                                {/* {displayedSources?.slice(0).reverse().map((item, index) => {
+                                    // if (canRenderSourceThumbnail(item)) {
+                                    return (<ContentPanelThumbnail
+                                        key={index}
+                                        index={index}
+                                        isDeleting={isDeleting}
+                                        clickedIndex={clickedIndex}
+                                        item={item}
+                                        handleCheckboxChange={handleCheckboxChange}
+                                        onThumbnailClick={onThumbnailClick}
+                                        deleteResource={deleteResource}
+                                    />);
+                                    // }
+                                })} */}
+                                {
+                                    displayedSources?.slice(0).reverse().map((option) => <div onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`} onClick={(event) => onThumbnailClick(event, option)}>
+
+                                        <div className="flex items-center flex-1 w-full max-w-full gap-2">
+                                            {
+                                                hoveredSource === option?.source_path && (
+                                                    <DeleteIcon
+                                                        onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}
+                                                        style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                                        className="cursor-pointermr-1"
+                                                    />
+                                                )
+                                            }
+                                            {
+                                                option.file_type === "video" ? (
+                                                    <GraphicEqOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                ) : option.file_type === "pdf" ? (
+                                                    <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                ) : option.file_type === "img" ? (
+                                                    <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                ) : null
+                                            }
+                                            <div className="relative flex-shrink-0 w-10 h-10">
+                                                {(isDeleting && clickedIndex?.source_path === option?.source_path) && (
+                                                    <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[5] translate-x-[-50%] translate-y-[-50%] transform">
+                                                        <LoadingSpinner isSmall />
+                                                    </div>
+                                                )}
+                                                <img className="object-cover w-full h-full rounded-md" src={`${API_ENDPOINT}/${option?.file_type === 'video' ? 'thumbnails' : option?.file_type === 'pdf' ? 'pdf-thumbnails' : 'img-thumbnails'}/${encodeURIComponent(option?.category[0])}/${encodeURIComponent(option?.thumbnail)}`}
+                                                    alt="Video Thumbnail" />
+                                            </div>
+                                            <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
+                                        </div>
+                                        <div className="flex items-center ">
+                                            <Checkbox
+                                                className="p-0 !ml-1"
+                                                checked={option.is_selected}
+                                                onChange={() => handleCheckboxChange(option)}
+                                                onClick={(event) => event.stopPropagation()}
+                                                inputProps={{ "aria-label": "Select source" }}
+                                            />
+
+                                        </div>
+                                    </div>)
+                                }
+                            </div>
+                        }
+                        {
+
+                            displayedSources.length > 0
+                                ?
+                                <>
+                                    {/* {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
+                                        <CustomButton onClick={() => commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
+                                    </div>} */}
+                                    <div className="mx-auto w-fit">
+                                        <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>
+                                    </div>
+                                </>
+                                :
+                                <NoData message="No sources selected" />
+                        }
+                    </div>
                 </div>
 
             </section>}

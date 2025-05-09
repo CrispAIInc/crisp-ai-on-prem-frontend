@@ -148,7 +148,7 @@ const ContentPanel = () => {
     const [activeTab, setActiveTab] = useState('sources');
 
     return (
-        <aside className={`relative select-none !h-full content-panel w-1/4 pl-3 bg-background ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
+        <aside className={`relative select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
             width: leftWidth
         }}>
             {/* <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-90% top-10 -z-1 blur-[160px]"></div> */}
@@ -162,7 +162,7 @@ const ContentPanel = () => {
                 className="my-3  flex  items-center !border-b-0"
             >
                 <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'> */}
-            <div className="my-3 !border-b-0">
+            <div className="my-3 !border-b-0 !h-full">
                 <ContentSection
                     knowledgeBase={knowledgeBase}
                     uploadedSources={uploadedSources}
@@ -172,6 +172,7 @@ const ContentPanel = () => {
                     handleCheckboxChange={handleCheckboxChange}
                     name="Sources"
                     key={0}
+                    classes="flex-1 h-full overflow-y-auto"
                 />
                 {(activeTab === 'sources' && (Boolean(localStorage.getItem(`guide_completed_sources`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={contentSectionSteps} tabIdentifier="sources" />}
             </div>
