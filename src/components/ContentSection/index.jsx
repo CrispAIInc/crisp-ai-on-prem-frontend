@@ -422,14 +422,14 @@ const ContentSection = ({
                                         <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
                                     </div>
-                                    {
-                                        isSearching && (
-                                            <div className="flex items-center gap-2">
-                                                <SearchSection chatLoaded={chatLoaded} className='flex-1' />
-                                            </div>
-                                        )
-                                    }
                                 </div>
+                                {
+                                    isSearching && (
+                                        <div className="flex items-center gap-2">
+                                            <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                                        </div>
+                                    )
+                                }
                             </div>
                         </div>
                         {/* Settings */}
