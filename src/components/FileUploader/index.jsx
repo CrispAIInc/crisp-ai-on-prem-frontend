@@ -5,7 +5,8 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
 
     const handleFileUpload = (event) => {
         const files = Array.from(event.target.files);
-        setSelectedFiles(files);
+        // add files to previously set files in selectedFiles
+        setSelectedFiles((prev) => [...prev, ...files]);
         const thumbnails = files.map((file) => {
             const type = file.type;
             setSelectedFileFormat(type);
