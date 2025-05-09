@@ -244,6 +244,12 @@ const ContentSection = ({
                 is_selected: sourcesToAdd.some(s => s.source_path === item.source_path) || sourcesTobeCommited.find(i => i.source_path === item.source_path)?.is_selected,
             })));
 
+            // add new uploaded sources to displayedSources
+            setDisplayedSources(prev => {
+                const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
+                return [...prev, ...newSources.map(item => ({ ...item, is_selected: true }))];
+            });
+
             setIsUploading(false);
         } catch (error) {
             console.error(error);
