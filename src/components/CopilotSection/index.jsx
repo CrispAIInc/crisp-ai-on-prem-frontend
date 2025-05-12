@@ -27,6 +27,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     fromChat, setFromChat,
     isFoundationLlm,
     resourceURL,
+    workspaceContainer,
     noteReferences,
     player,
     isPlayerReady,
@@ -78,8 +79,14 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   const [showLLMModal, setShowLLMModal] = useState(false);
 
   useEffect(() => {
-    // chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
-    chatAppRef.current.scrollTop = chatAppRef.current?.scrollHeight;
+    if (messages?.length > 0) {// chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
+      chatAppRef.current.scrollTop = chatAppRef?.current?.scrollHeight;
+      // workspaceContainer.current.scrollTop = workspaceContainer.current?.scrollHeight;
+      workspaceContainer.current.scrollTo({
+        top: workspaceContainer.current?.scrollHeight,
+        behavior: "smooth", // Enables smooth scrolling
+      });
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -183,15 +190,15 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     } else {
 
       // add or remove embeddings from VS
-      if (!displayedSources?.every(item => item?.is_selected === false)) {
-        await makeApiRequest(
-          `/handle-embeddings`,
-          "post",
-          JSON.stringify({
-            sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-          })
-        );
-      }
+      // if (!displayedSources?.every(item => item?.is_selected === false)) {
+      //   await makeApiRequest(
+      //     `/handle-embeddings`,
+      //     "post",
+      //     JSON.stringify({
+      //       sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+      //     })
+      //   );
+      // }
 
       let sessionID = null; // Variable to store the session ID
       const eventSource = new EventSource(
@@ -712,7 +719,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
   return (
     <article className="relative flex flex-col flex-1 h-full overflow-y-auto">
-      <section className="flex flex-wrap items-center justify-center gap-3">
+      <section className="flex flex-wrap items-center gap-3">
         {
           notes.map((note, i) => {
             <p key={i}>{note.note_name}</p>;
@@ -784,8 +791,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
       </section>
 
       {/* <div className="flex items-center flex-1 gap-3"> */}
-      <section
-        className={`copilot-chat-container flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
+      {messages?.length > 0 && <section
+        className={`copilot-chat-container flex flex-col flex-1 flex-grow h-full gap-3 overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
           }`}
         ref={chatAppRef}
       >
@@ -980,7 +987,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
             </p>
           </div>
         )}
-      </section>
+      </section>}
 
       {/* </div> */}
       <section className="flex items-center gap-2 copilot-chat-container input-area">

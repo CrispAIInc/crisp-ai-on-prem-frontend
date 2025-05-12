@@ -29,7 +29,7 @@ const ContentPanel = () => {
         setJumpToPage,
         isLeftSidebarOpen,
         setIsLeftSidebarOpen,
-        setSummary, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
+        setSummary, setShowMetadata, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
 
     const [, setTranscription] = useState("");
 
@@ -86,6 +86,7 @@ const ContentPanel = () => {
             setJumpToPage({ page: -1 });
         }
         setActiveView('resource');
+        setShowMetadata(true);
     };
     /**
      * Function to toggle 'isSelected' of an item inside 'knowledgeBase' array when the checkbox is clicked

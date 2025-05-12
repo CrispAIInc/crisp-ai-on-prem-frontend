@@ -38,6 +38,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     jumpToPage,
     selectedNote,
     setCommittedSources,
+    setShowMetadata,
     sourcesTobeCommited,
     setIsFoundationLlm,
     setIsExclusiveChecked,
@@ -99,6 +100,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         setCurrentResource(updatedResource);
 
         // Call translateMetadata with the updated resource
+
         translateMetadata("en", updatedResource);
       }
     }
@@ -116,15 +118,16 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setCurrentResource(null);
     setResourceURL(null);
     setIsPlayerReady(false);
-    setActiveView(() => {
-      if (selectedStory.text.length > 0) {
-        return "story";
-      }
-      if (selectedNote.text.length > 1) {
-        return "note";
-      }
-      return null;
-    });
+    setShowMetadata(false);
+    // setActiveView(() => {
+    //   if (selectedStory.text.length > 0) {
+    //     return "story";
+    //   }
+    //   if (selectedNote.text.length > 1) {
+    //     return "note";
+    //   }
+    //   return null;
+    // });
     if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
       !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
       // console.log("trueeeujl");
@@ -137,15 +140,16 @@ const MetadataPanel = ({ workspaceContainer }) => {
     event.preventDefault();
     setCurrentResource(null);
     setResourceURL(null);
-    setActiveView(() => {
-      if (selectedStory.text.length > 0) {
-        return "story";
-      }
-      if (selectedNote.text.length > 1) {
-        return "note";
-      }
-      return null;
-    });
+    setShowMetadata(false);
+    // setActiveView(() => {
+    //   if (selectedStory.text.length > 0) {
+    //     return "story";
+    //   }
+    //   if (selectedNote.text.length > 1) {
+    //     return "note";
+    //   }
+    //   return null;
+    // });
     if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
       !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
       // console.log("trueeeujl");
@@ -158,15 +162,16 @@ const MetadataPanel = ({ workspaceContainer }) => {
     event.preventDefault();
     setCurrentResource(null);
     setResourceURL(null);
-    setActiveView(() => {
-      if (selectedStory.text.length > 0) {
-        return "story";
-      }
-      if (selectedNote.text.length > 1) {
-        return "note";
-      }
-      return null;
-    });
+    setShowMetadata(false);
+    // setActiveView(() => {
+    //   if (selectedStory.text.length > 0) {
+    //     return "story";
+    //   }
+    //   if (selectedNote.text.length > 1) {
+    //     return "note";
+    //   }
+    //   return null;
+    // });
     if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
       !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
       // console.log("trueeeujl");

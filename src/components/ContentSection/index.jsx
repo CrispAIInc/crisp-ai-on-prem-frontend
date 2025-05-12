@@ -40,6 +40,7 @@ const ContentSection = ({
         isPlayerReady,
         resourceURL,
         setDisplayedSources,
+        showMetadata,
         categoryOptions,
         currentResource,
         activeView,
@@ -371,7 +372,7 @@ const ContentSection = ({
 
     return (
         <>
-            {activeView !== 'resource' && <section className={`relative flex flex-col items-start h-full`}>
+            {!showMetadata && <section className={`relative flex flex-col items-start h-full`}>
 
                 <div className="w-full">
                     <div className="w-full max-w-4xl pr-3">
@@ -556,7 +557,7 @@ const ContentSection = ({
 
             </section>}
             {/* metadata and source section */}
-            {activeView === 'resource' && (
+            {showMetadata && (
                 <MetadataPanel workspaceContainer={workspaceContainer} />
             )}
         </>

@@ -491,6 +491,8 @@ const MainWorkspace = ({ theme }) => {
   // }, [knowledgeBase]);
 
   const workspaceContainer = useRef(null);
+  const [showMetadata, setShowMetadata] = useState(false);
+
 
   const metadataOptions = [
     { id: "summary", name: "Summary", description: "Generate concise overview" },
@@ -513,6 +515,7 @@ const MainWorkspace = ({ theme }) => {
   // create value object with all the states
   const value = {
     uploadedSources, setUploadedSources,
+    showMetadata, setShowMetadata,
     isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed,
     API_ENDPOINT,
     sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,

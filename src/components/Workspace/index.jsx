@@ -8,7 +8,8 @@ import NoteDetails from "../NoteDetails";
 import './workspace.css';
 import StoryDetails from '../StoryDetails';
 
-import MetadataPanel from '../MetadataPanel';
+import CenterPanel from "../CenterPanel";
+import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 const Workspace = () => {
 
@@ -22,6 +23,7 @@ const Workspace = () => {
         isLeftSidebarOpen,
 
     } = useContext(MainContext);
+
     return (
         <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
             <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/2 top-10 -z-10 blur-[160px]"></div>
@@ -43,9 +45,7 @@ const Workspace = () => {
                     <NoData />
                 </div>
             ) : activeView === 'resource' ? (
-                <div className="mt-10">
-                    <NoData />
-                </div>
+                <CenterPanel />
             ) : activeView === 'note' ? (
                 <NoteDetails />
             ) : activeView === 'story' ? (
