@@ -997,26 +997,28 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <>
-              <CustomTextArea
-                placeholder="Message model..."
-                value={input}
-                rows="1"
-                disabled={showCursor}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    sendMessage(input);
-                  }
-                }} />
+            <div className="flex w-full p-1 !border !border-textColor-300 rounded-md max-w-[650px] mx-auto">
+              <div className="flex-1">
+                <CustomTextArea
+                  placeholder="Message model..."
+                  value={input}
+                  rows="1"
+                  disabled={showCursor}
+                  onChange={(e) => setInput(e.target.value)}
+                  className="bg-transparent !border-none"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      sendMessage(input);
+                    }
+                  }} />
+              </div>
               <div
-                className={`p-2 rounded-md cursor-pointer z-[41] ${theme === "light" ? "border" : "!border !border-textColor-300"
-                  }`}
+                className={`p-2 rounded-md cursor-pointer z-[41]`}
                 onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
               >
                 <SendIcon color="primary" />
               </div>
-            </>}
+            </div>}
 
       </section>
     </article>

@@ -17,6 +17,7 @@ const Workspace = () => {
         workspaceContainer,
         activeView,
         theme,
+        displayedSources,
         setIsLeftSidebarOpen,
         setIsRightSidebarOpen,
         isRightSidebarOpen,
@@ -40,16 +41,16 @@ const Workspace = () => {
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
             </div>
-            {!activeView ? (
-                <div className="mt-10">
-                    <NoData />
-                </div>
-            ) : activeView === 'resource' ? (
+            {(activeView === 'resource' || displayedSources?.length > 0) ? (
                 <CenterPanel />
             ) : activeView === 'note' ? (
                 <NoteDetails />
             ) : activeView === 'story' ? (
                 <StoryDetails />
+            ) : !activeView ? (
+                <div className="mt-10">
+                    <NoData />
+                </div>
             ) : null}
 
             {/* right sidebar collapser */}
