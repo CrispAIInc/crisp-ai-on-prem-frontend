@@ -127,7 +127,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
             }
         }
 
-        getCombinedSum();
+        if (displayedSources?.length > 1) {
+            getCombinedSum();
+        } else {
+            setCombinedSummary(currentResource?.metadata?.summary?.content);
+        }
     }, [displayedSources?.length]);
 
     function areAllItemsInSecondArray(arr1, arr2) {
