@@ -109,14 +109,22 @@ const MetadataPanel = ({ workspaceContainer }) => {
     //     }
     // }, [currentResource?.source_path, JSON.stringify(generatedResources)]);
 
-    const [combinedSummary, setCombinedSummary] = useState(null);
+    const [combinedSummary, setCombinedSummary] = useState("");
+    const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
 
     useEffect(() => {
         async function getCombinedSum() {
-            const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
-                sources: displayedSources?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-            }));
-            setCombinedSummary(summary);
+            try {
+                setIsCombinedSummaryPending(true);
+                const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
+                    sources: displayedSources?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                }));
+                setCombinedSummary(summary?.combined_summary || "");
+            } catch (e) {
+                console.log(e);
+            } finally {
+                setIsCombinedSummaryPending(false);
+            }
         }
 
         getCombinedSum();
@@ -320,12 +328,12 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     </h2>
                     <span>{displayedSources?.length} Source{displayedSources?.length > 1 ? "s" : ""}</span>
                 </div>
-                {combinedSummary !== null ? <p
+                {!isCombinedSummaryPending ? <p
                     className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
-                    dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
+                    dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary?.replace(/\n/gi, '<br />')}</p>` }}
                 ></p> : (
                     <div className="animate-pulse">
                         {new Array(10).fill(null).map((_, index) => (
