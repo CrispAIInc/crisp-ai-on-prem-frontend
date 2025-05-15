@@ -113,7 +113,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
     useEffect(() => {
         async function getCombinedSum() {
-            const summary = await makeApiRequest('/combine-summaries', "POST", displayedSources);
+            const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
+                sources: displayedSources?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+            }));
             setCombinedSummary(summary);
         }
 
