@@ -65,49 +65,60 @@ const MetadataPanel = ({ workspaceContainer }) => {
     const PdfContainer = useRef();
     const metadataPanelContainer = useRef(null);
 
-    useEffect(() => {
-        if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
-            const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-            if (timestamp !== undefined && timestamp !== null) {
-                player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-                setCurrentResource(prev => {
-                    const { timestamp, ...rest } = prev;
-                    return rest;
-                });
-            }
-            // setFromStory(false);
-        }
-    }, [isPlayerReady, currentResource, currentResource?.timestamp]);
+    // useEffect(() => {
+    //     if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
+    //         const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
+    //         if (timestamp !== undefined && timestamp !== null) {
+    //             player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+    //             setCurrentResource(prev => {
+    //                 const { timestamp, ...rest } = prev;
+    //                 return rest;
+    //             });
+    //         }
+    //         // setFromStory(false);
+    //     }
+    // }, [isPlayerReady, currentResource, currentResource?.timestamp]);
+
+    // useEffect(() => {
+    //     if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
+    //         setTimeout(() => {
+    //             const targetRef = pageRefs.current[jumpToPage.page - 1];
+    //             if (targetRef && targetRef.scrollIntoView) {
+    //                 targetRef.scrollIntoView({ behavior: "smooth" });
+    //             }
+    //         }, 1500);
+    //     }
+    // }, [jumpToPage, numPages, isPdfLoaded]);
+
+    // useEffect(() => {
+    //     if (activeView === "resource") {
+    //         // setTranslatedResource(currentResource);
+    //         if (currentResource) {
+    //             console.log("hehehe");
+    //             const updatedResource = {
+    //                 ...currentResource,
+    //                 ...generatedResources?.find(item => item.source_path === currentResource.source_path)
+    //             };
+
+    //             // Update the currentResource state
+    //             setCurrentResource(updatedResource);
+
+    //             // Call translateMetadata with the updated resource
+    //             translateMetadata("en", updatedResource);
+    //         }
+    //     }
+    // }, [currentResource?.source_path, JSON.stringify(generatedResources)]);
+
+    const [combinedSummary, setCombinedSummary] = useState(null);
 
     useEffect(() => {
-        if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
-            setTimeout(() => {
-                const targetRef = pageRefs.current[jumpToPage.page - 1];
-                if (targetRef && targetRef.scrollIntoView) {
-                    targetRef.scrollIntoView({ behavior: "smooth" });
-                }
-            }, 1500);
+        async function getCombinedSum() {
+            const summary = await makeApiRequest('/combine-summaries', "POST", displayedSources);
+            setCombinedSummary(summary);
         }
-    }, [jumpToPage, numPages, isPdfLoaded]);
 
-    useEffect(() => {
-        if (activeView === "resource") {
-            // setTranslatedResource(currentResource);
-            if (currentResource) {
-                console.log("hehehe");
-                const updatedResource = {
-                    ...currentResource,
-                    ...generatedResources?.find(item => item.source_path === currentResource.source_path)
-                };
-
-                // Update the currentResource state
-                setCurrentResource(updatedResource);
-
-                // Call translateMetadata with the updated resource
-                translateMetadata("en", updatedResource);
-            }
-        }
-    }, [currentResource?.source_path, JSON.stringify(generatedResources)]);
+        getCombinedSum();
+    }, [displayedSources?.length]);
 
     function areAllItemsInSecondArray(arr1, arr2) {
         const pathsSet = new Set(arr2.map(item => item.source_path));
@@ -116,188 +127,119 @@ const MetadataPanel = ({ workspaceContainer }) => {
         return arr1.every(item => pathsSet.has(item.source_path));
     }
 
-    const closeVideo = async (event) => {
-        event.preventDefault();
-        setCurrentResource(null);
-        setResourceURL(null);
-        setIsPlayerReady(false);
-        setActiveView(() => {
-            if (selectedStory.text.length > 0) {
-                return "story";
-            }
-            if (selectedNote.text.length > 1) {
-                return "note";
-            }
-            return null;
-        });
-        if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
-            !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-            // console.log("trueeeujl");
-            commitSelectedSources(sourcesTobeCommited);
-        }
-        setIsSourceUncheckedOrClosed(true);
-    };
+    // const pageRefs = useRef({});
 
-    const closePDF = async (event) => {
-        event.preventDefault();
-        setCurrentResource(null);
-        setResourceURL(null);
-        setActiveView(() => {
-            if (selectedStory.text.length > 0) {
-                return "story";
-            }
-            if (selectedNote.text.length > 1) {
-                return "note";
-            }
-            return null;
-        });
-        if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
-            !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-            // console.log("trueeeujl");
-            commitSelectedSources(sourcesTobeCommited);
-        }
-        setIsSourceUncheckedOrClosed(true);
-    };
+    // async function translateMetadata(chosenLanguage, object) {
+    //     setChosenLanguage(chosenLanguage);
+    //     setIsTranslationLoading(true);
+    //     // make sure response body is also like httpRequestBody (w/o lang)
+    //     // the response body object must contain keys in English
+    //     let httpRequestBody = {
+    //         lang: chosenLanguage,
+    //         summary: {
+    //             title: "",
+    //             content: "",
+    //         },
+    //         visual_summary: {
+    //             title: "Visual Flow",
+    //             content: "",
+    //         },
+    //         combined_summary: {
+    //             title: "",
+    //             content: "",
+    //         },
+    //         topic_summaries: {
+    //             title: "",
+    //             content: "",
+    //         },
+    //         transcription: {
+    //             title: "",
+    //             content: [],
+    //         },
+    //         knowledgeGraoh: {
+    //             title: "",
+    //             content: "",
+    //         },
+    //         caption: {
+    //             title: "",
+    //             content: "",
+    //         },
+    //         keywords: {
+    //             title: "",
+    //             content: null,
+    //         },
+    //         chapters: {
+    //             title: "",
+    //             content: null,
+    //         },
+    //         highlights: {
+    //             title: "",
+    //             content: null,
+    //         },
+    //         faqs: {
+    //             title: "",
+    //             content: null,
+    //         },
+    //     };
+    //     const TRANSLATABLE_KEYS = [
+    //         "summary",
+    //         "visual_summary",
+    //         "combined_summary",
+    //         "topic_summaries",
+    //         "transcription",
+    //         "caption",
+    //         "keywords",
+    //         "chapters",
+    //         "highlights",
+    //         "knowledgeGraph",
+    //         "faqs"
+    //     ];
 
-    const closeImage = async (event) => {
-        event.preventDefault();
-        setCurrentResource(null);
-        setResourceURL(null);
-        setActiveView(() => {
-            if (selectedStory.text.length > 0) {
-                return "story";
-            }
-            if (selectedNote.text.length > 1) {
-                return "note";
-            }
-            return null;
-        });
-        if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
-            !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-            // console.log("trueeeujl");
-            commitSelectedSources(sourcesTobeCommited);
-        }
-        setIsSourceUncheckedOrClosed(true);
-    };
+    //     // console.log("jsldfjkdf");
+    //     let obj = (object.metadata !== undefined || object.metadata !== null) ? flattenMetadata(object) : object;
+    //     console.log(obj);
+    //     // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
+    //     for (const [key, value] of Object.entries(obj)) {
+    //         if (
+    //             TRANSLATABLE_KEYS.includes(key)
+    //         ) {
+    //             httpRequestBody[key].title =
+    //                 key === "topic_summaries"
+    //                     ? "Detailed summary"
+    //                     : key === "caption" ? "Summary" : key.charAt(0).toUpperCase() + key.slice(1);
+    //             httpRequestBody[key].content =
+    //                 typeof value === "object" ? value.content : value;
+    //         }
+    //     }
 
-    const onDocumentLoadSuccess = ({ numPages }) => {
-        setNumPages(numPages);
-        setIsPdfLoaded(true);
-    };
+    //     try {
+    //         console.log(object);
+    //         const httpResponseBody = await makeApiRequest(
+    //             "/translate-metadata",
+    //             "post",
+    //             httpRequestBody
+    //         );
+    //         // console.log("httpResponseBody: ", httpResponseBody);
+    //         setTranslatedResource({ ...httpResponseBody, lang: chosenLanguage });
+    //         // console.log(knowledgeBase?.find(item => item.source_path === currentResource.source_path));
 
-    const pageRefs = useRef({});
+    //     } catch (error) {
+    //         console.log(error);
+    //     } finally {
+    //         setIsTranslationLoading(false);
+    //         console.log(translatedResource);
+    //     }
+    // }
 
-    async function translateMetadata(chosenLanguage, object) {
-        setChosenLanguage(chosenLanguage);
-        setIsTranslationLoading(true);
-        // make sure response body is also like httpRequestBody (w/o lang)
-        // the response body object must contain keys in English
-        let httpRequestBody = {
-            lang: chosenLanguage,
-            summary: {
-                title: "",
-                content: "",
-            },
-            visual_summary: {
-                title: "Visual Flow",
-                content: "",
-            },
-            combined_summary: {
-                title: "",
-                content: "",
-            },
-            topic_summaries: {
-                title: "",
-                content: "",
-            },
-            transcription: {
-                title: "",
-                content: [],
-            },
-            knowledgeGraoh: {
-                title: "",
-                content: "",
-            },
-            caption: {
-                title: "",
-                content: "",
-            },
-            keywords: {
-                title: "",
-                content: null,
-            },
-            chapters: {
-                title: "",
-                content: null,
-            },
-            highlights: {
-                title: "",
-                content: null,
-            },
-            faqs: {
-                title: "",
-                content: null,
-            },
-        };
-        const TRANSLATABLE_KEYS = [
-            "summary",
-            "visual_summary",
-            "combined_summary",
-            "topic_summaries",
-            "transcription",
-            "caption",
-            "keywords",
-            "chapters",
-            "highlights",
-            "knowledgeGraph",
-            "faqs"
-        ];
+    // const [visibleHighlightCount, setVisibleHighlightCount] = useState(3);
+    // const showMoreHighlights = () => {
+    //     setVisibleHighlightCount((prevCount) => prevCount + 3);
+    // };
 
-        // console.log("jsldfjkdf");
-        let obj = (object.metadata !== undefined || object.metadata !== null) ? flattenMetadata(object) : object;
-        console.log(obj);
-        // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
-        for (const [key, value] of Object.entries(obj)) {
-            if (
-                TRANSLATABLE_KEYS.includes(key)
-            ) {
-                httpRequestBody[key].title =
-                    key === "topic_summaries"
-                        ? "Detailed summary"
-                        : key === "caption" ? "Summary" : key.charAt(0).toUpperCase() + key.slice(1);
-                httpRequestBody[key].content =
-                    typeof value === "object" ? value.content : value;
-            }
-        }
-
-        try {
-            console.log(object);
-            const httpResponseBody = await makeApiRequest(
-                "/translate-metadata",
-                "post",
-                httpRequestBody
-            );
-            // console.log("httpResponseBody: ", httpResponseBody);
-            setTranslatedResource({ ...httpResponseBody, lang: chosenLanguage });
-            // console.log(knowledgeBase?.find(item => item.source_path === currentResource.source_path));
-
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsTranslationLoading(false);
-            console.log(translatedResource);
-        }
-    }
-
-    const [visibleHighlightCount, setVisibleHighlightCount] = useState(3);
-    const showMoreHighlights = () => {
-        setVisibleHighlightCount((prevCount) => prevCount + 3);
-    };
-
-    const [visibleChaptersCount, setVisibleChaptersCount] = useState(3);
-    const showMoreChapters = () => {
-        setVisibleChaptersCount((prevCount) => prevCount + 3);
-    };
+    // const [visibleChaptersCount, setVisibleChaptersCount] = useState(3);
+    // const showMoreChapters = () => {
+    //     setVisibleChaptersCount((prevCount) => prevCount + 3);
+    // };
 
     useEffect(() => {
         return () => {
@@ -376,7 +318,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     </h2>
                     <span>{displayedSources?.length} Source{displayedSources?.length > 1 ? "s" : ""}</span>
                 </div>
-                {translatedResource?.summary?.content !== undefined ? <p
+                {combinedSummary !== null ? <p
                     className={`text-md ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
