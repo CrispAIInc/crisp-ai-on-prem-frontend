@@ -190,15 +190,15 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     } else {
 
       // add or remove embeddings from VS
-      // if (!displayedSources?.every(item => item?.is_selected === false)) {
-      //   await makeApiRequest(
-      //     `/handle-embeddings`,
-      //     "post",
-      //     JSON.stringify({
-      //       sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-      //     })
-      //   );
-      // }
+      if (!displayedSources?.every(item => item?.is_selected === false)) {
+        await makeApiRequest(
+          `/handle-embeddings`,
+          "post",
+          JSON.stringify({
+            sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+          })
+        );
+      }
 
       let sessionID = null; // Variable to store the session ID
       const eventSource = new EventSource(
