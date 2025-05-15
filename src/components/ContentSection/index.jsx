@@ -377,12 +377,12 @@ const ContentSection = ({
                 <div className="w-full">
                     <div className="w-full max-w-4xl pr-3">
                         {/* home */}
-                        <div
+                        {/* <div
                             className={`source-explorer flex mb-1 items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                         >
                             <HomeIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Home</span>
-                        </div>
+                        </div> */}
                         {/* Ingestion */}
                         <div className="flex flex-col justify-start gap-2 mb-1">
                             {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span> */}
@@ -434,12 +434,12 @@ const ContentSection = ({
                             </div>
                         </div>
                         {/* Settings */}
-                        <div
+                        {/* <div
                             className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                         >
                             <SettingsIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
-                        </div>
+                        </div> */}
                     </div>
                     <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} />
                     {showSourceExplorer && (

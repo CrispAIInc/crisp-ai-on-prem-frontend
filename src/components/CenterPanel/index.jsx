@@ -314,7 +314,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     }`}>
                     <h2 className="text-3xl font-semibold break-words">
                         {/* {currentResource?.source_path.replace(/\.[^/.]+$/, '')} */}
-                        Source Summary
+                        Sources Summary
                     </h2>
                     <span>{displayedSources?.length} Source{displayedSources?.length > 1 ? "s" : ""}</span>
                 </div>
