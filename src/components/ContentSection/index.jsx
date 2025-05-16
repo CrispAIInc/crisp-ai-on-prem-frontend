@@ -27,6 +27,7 @@ import { timeToSeconds } from '../../utils';
 import { IndexModal } from '../IndexModal';
 import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
+import AddSourceModal from "../AddSourceModal";
 
 const ContentSection = ({
     onThumbnailClick,
@@ -370,6 +371,11 @@ const ContentSection = ({
         setHoveredSource(null);
     };
 
+    const [showAddModal, setShowAddModal] = useState(false);
+    function handleAddModal(state) {
+        setShowAddModal(state);
+    }
+
     return (
         <>
             {!showMetadata && <section className={`relative flex flex-col items-start h-full`}>
@@ -389,59 +395,54 @@ const ContentSection = ({
                             <div className="flex flex-wrap items-center gap-0">
                                 <div
                                     className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={openIndexModal}
+                                    onClick={() => handleAddModal(true)}
                                 >
                                     <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Index</span>
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add</span>
 
                                 </div>
-                                <div
-                                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={handleAddNewResource}
-                                >
-                                    {isUploading ? (<LoadingSpinner isSmall />) : (<UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />)}
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Upload</span>
-                                </div>
+
                             </div>
                         </div>
                         {/* mrag */}
-                        <div className="flex flex-col justify-start gap-2 mb-2">
-                            {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
-                            <div className="flex flex-wrap items-center">
-                                <div
-                                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={handleExploreSources}
-                                >
-                                    <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Sources</span>
-                                </div>
-                                <div className="global-search">
-                                    <div
-                                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                        onClick={() => setIsSearching(!isSearching)}
-                                    >
-                                        <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
-                                    </div>
-                                </div>
-                                {
-                                    isSearching && (
-                                        <div className="flex items-center gap-2">
-                                            <SearchSection chatLoaded={chatLoaded} className='flex-1' />
-                                        </div>
-                                    )
-                                }
+                        {/* <div className="flex flex-col justify-start gap-2 mb-2"> */}
+                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
+                        {/* <div className="flex flex-wrap items-center"> */}
+                        <div
+                            className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                            onClick={handleExploreSources}
+                        >
+                            <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Sources</span>
+                        </div>
+                        <div className="global-search">
+                            <div
+                                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={() => setIsSearching(!isSearching)}
+                            >
+                                <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
                             </div>
                         </div>
-                        {/* Settings */}
-                        {/* <div
+                        {
+                            isSearching && (
+                                <div className="flex items-center gap-2">
+                                    <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                                </div>
+                            )
+                        }
+                    </div>
+                    {/* </div> */}
+                    {/* Settings */}
+                    {/* <div
                             className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                         >
                             <SettingsIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
                         </div> */}
-                    </div>
-                    <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} />
+                    {/* </div> */}
+                    {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} /> */}
+                    <AddSourceModal show={showAddModal} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
                     {showSourceExplorer && (
                         <SourceExplorer
                             show={showSourceExplorer}
@@ -461,13 +462,13 @@ const ContentSection = ({
                         />
                     )}
 
-                    <CategoriesModal
+                    {/* <CategoriesModal
                         show={showCategoriesModal}
                         onHide={() => setShowCategoriesModal(false)}
                         categoryOptions={categoryOptions}
                         setShowFileFormatsModal={setShowFileFormatsModal}
                         handleUpload={handleUpload}
-                    />
+                    /> */}
                 </div>
 
                 <div className="flex flex-col flex-1 w-full h-full max-h-full overflow-y-auto">
