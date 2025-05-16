@@ -718,7 +718,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   };
 
   return (
-    <article className="relative flex flex-col flex-1 h-full overflow-y-auto">
+    <article className="relative flex flex-col flex-1 h-full overflow-y-auto max-w-[650px] mx-auto">
       <section className="flex flex-wrap items-center gap-3">
         {
           notes.map((note, i) => {
