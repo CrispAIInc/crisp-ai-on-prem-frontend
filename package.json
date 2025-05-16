@@ -25,6 +25,7 @@
     "pdfjs-dist": "^3.11.174",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
+    "react-custom-roulette": "^1.4.1",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-joyride": "^2.9.2",
