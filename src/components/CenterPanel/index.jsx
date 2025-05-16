@@ -23,6 +23,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
 
     useEffect(() => {
+        console.log("qsdfjlsdfjkl kljdkqf kl");
         async function getCombinedSum() {
             try {
                 setIsCombinedSummaryPending(true);
@@ -37,15 +38,16 @@ const MetadataPanel = ({ workspaceContainer }) => {
             }
         }
 
-        if (displayedSources?.length > 1) {
+        if (displayedSources?.length > 1 && activeView === "resource") {
             getCombinedSum();
         } else {
             setCombinedSummary(currentResource?.metadata?.summary?.content);
         }
-    }, [displayedSources?.length]);
+    }, [displayedSources?.length, activeView]);
 
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
+            <p>centerpanel</p>
             {activeView === 'resource' && <div>
                 <div className={`mb-4 ${theme === "light"
                     ? "text-textColor-300"
@@ -62,7 +64,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}
-                    dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary?.replace(/\n/gi, '<br />')}</p>` }}
+                    dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content}</p>` }}
                 ></p> : (
                     <div className="animate-pulse">
                         {new Array(10).fill(null).map((_, index) => (
