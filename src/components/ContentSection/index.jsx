@@ -349,8 +349,24 @@ const ContentSection = ({
         setKnowledgeBase(updatedKnowledgeBase);
         setSelectedSources([]);
         setSourcesTobeCommited([]);
-        setDisplayedSources([]);
+        setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: false })));
+        // setDisplayedSources([]);
+        // setActiveView(null);
         // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    };
+
+    const handleSelectAllSources = () => {
+        setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: true })));
+        // update knowledgebase depending on the items selected in displayedSources
+        setKnowledgeBase(prev => {
+            console.log(prev?.source_path);
+            let itemExist = displayedSources?.find(i => i?.source_path === prev?.source_path);
+            console.log(itemExist);
+            if (itemExist) {
+                return { ...prev, is_selected: true };
+            }
+            return prev;
+        });
     };
 
     const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
@@ -360,6 +376,29 @@ const ContentSection = ({
 
     function hideIndexModal() {
         setIsIndexModalOpen(false);
+    }
+
+    function handleToggleCheckSources(isChecked) {
+        if (isChecked) {
+            setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: true })));
+            // update knowledgebase depending on the items selected in displayedSources
+            const updatedKnowledgeBase = knowledgeBase.map((prev) => {
+                let itemExist = displayedSources?.find(i => i?.source_path === prev?.source_path);
+                if (itemExist) {
+                    return { ...prev, is_selected: true };
+                }
+                return prev;
+            });
+            setKnowledgeBase(updatedKnowledgeBase);
+        } else {
+            const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                return { ...item, is_selected: false };
+            });
+            setKnowledgeBase(updatedKnowledgeBase);
+            setSelectedSources([]);
+            setSourcesTobeCommited([]);
+            setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: false })));
+        }
     }
 
     const [isMetadataVisible, setIsMetadataVisible] = useState(false);
@@ -474,6 +513,26 @@ const ContentSection = ({
                 <div className="flex flex-col flex-1 w-full h-full max-h-full overflow-y-auto">
                     <BaseHeading text='Selected sources' className="mt-4" />
 
+                    {/* <div className="w-fit">
+                        <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
+                    </div> */}
+                    <div className="flex items-center mt-4 ">
+                        <Checkbox
+                            className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
+                                }`}
+                            checked={displayedSources?.every(item => item?.is_selected)}
+                            onChange={(e) => handleToggleCheckSources(e.target.checked)}
+                            inputProps={{ "aria-label": "Select All Sources" }}
+                            label="Select All Sources"
+                        />
+                        <span
+                            className={`${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                                }`}
+                        >
+                            check all sources
+                        </span>
+                    </div>
+
                     <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                         {
                             displayedSources?.length > 0 && <div className={` h-full gap-2  w-full max-w-full mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
@@ -546,9 +605,12 @@ const ContentSection = ({
                                     {/* {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
                                         <CustomButton onClick={() => commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
                                     </div>} */}
-                                    <div className="mx-auto w-fit">
-                                        <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Unselect all sources</CustomButton>
+                                    {/* <div className="mx-auto w-fit">
+                                        <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
                                     </div>
+                                    <div className="mx-auto w-fit">
+                                        <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Uncheck all sources</CustomButton>
+                                    </div> */}
                                 </>
                                 :
                                 <NoData message="No sources selected" />
