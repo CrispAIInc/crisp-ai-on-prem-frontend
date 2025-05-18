@@ -395,7 +395,7 @@ const ContentSection = ({
                 return { ...item, is_selected: false };
             });
             setKnowledgeBase(updatedKnowledgeBase);
-            setSelectedSources([]);
+            // setSelectedSources([]);
             setSourcesTobeCommited([]);
             setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: false })));
         }
