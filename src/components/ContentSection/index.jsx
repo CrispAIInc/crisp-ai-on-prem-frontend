@@ -342,32 +342,32 @@ const ContentSection = ({
         }
     };
 
-    const handleUnselectAllCheckboxChange = () => {
-        const updatedKnowledgeBase = knowledgeBase.map((item) => {
-            return { ...item, is_selected: false };
-        });
-        setKnowledgeBase(updatedKnowledgeBase);
-        setSelectedSources([]);
-        setSourcesTobeCommited([]);
-        setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: false })));
-        // setDisplayedSources([]);
-        // setActiveView(null);
-        // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-    };
+    // const handleUnselectAllCheckboxChange = () => {
+    //     const updatedKnowledgeBase = knowledgeBase.map((item) => {
+    //         return { ...item, is_selected: false };
+    //     });
+    //     setKnowledgeBase(updatedKnowledgeBase);
+    //     setSelectedSources([]);
+    //     setSourcesTobeCommited([]);
+    //     setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: false })));
+    //     // setDisplayedSources([]);
+    //     // setActiveView(null);
+    //     // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    // };
 
-    const handleSelectAllSources = () => {
-        setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: true })));
-        // update knowledgebase depending on the items selected in displayedSources
-        setKnowledgeBase(prev => {
-            console.log(prev?.source_path);
-            let itemExist = displayedSources?.find(i => i?.source_path === prev?.source_path);
-            console.log(itemExist);
-            if (itemExist) {
-                return { ...prev, is_selected: true };
-            }
-            return prev;
-        });
-    };
+    // const handleSelectAllSources = () => {
+    //     setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: true })));
+    //     // update knowledgebase depending on the items selected in displayedSources
+    //     setKnowledgeBase(prev => {
+    //         console.log(prev?.source_path);
+    //         let itemExist = displayedSources?.find(i => i?.source_path === prev?.source_path);
+    //         console.log(itemExist);
+    //         if (itemExist) {
+    //             return { ...prev, is_selected: true };
+    //         }
+    //         return prev;
+    //     });
+    // };
 
     const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
     function openIndexModal() {
@@ -400,6 +400,14 @@ const ContentSection = ({
             setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: false })));
         }
     }
+
+    // function handleToggleSelectedSources(isChecked) {
+    //     if (isChecked) {
+
+    //     } else {
+
+    //     }
+    // }
 
     const [isMetadataVisible, setIsMetadataVisible] = useState(false);
     const [hoveredSource, setHoveredSource] = useState(null);
@@ -517,21 +525,38 @@ const ContentSection = ({
                         <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
                     </div> */}
                     <div className="flex items-center mt-4 ">
-                        <Checkbox
-                            className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
-                                }`}
-                            checked={displayedSources?.every(item => item?.is_selected)}
-                            onChange={(e) => handleToggleCheckSources(e.target.checked)}
-                            inputProps={{ "aria-label": "Select All Sources" }}
-                            label="Select All Sources"
-                        />
                         <span
-                            className={`${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                            className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                                 }`}
                         >
                             check all sources
                         </span>
+                        <Checkbox
+                            className={`select-all-checkbox p-0 "
+                                }`}
+                            checked={displayedSources?.every(item => item?.is_selected)}
+                            onChange={(e) => handleToggleCheckSources(e.target.checked)}
+                            inputProps={{ "aria-label": "Select All Sources" }}
+                            label="Check All Sources"
+                        />
                     </div>
+
+                    {/* <div className="flex items-center mt-4 ">
+                        <span
+                            className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                                }`}
+                        >
+                            select all sources
+                        </span>
+                        <Checkbox
+                            className={`select-all-checkbox p-0 "
+                                }`}
+                            checked={displayedSources?.every(item => item?.is_selected)}
+                            onChange={(e) => handleToggleSelectedSources(e.target.checked)}
+                            inputProps={{ "aria-label": "Select All Sources" }}
+                            label="Select All Sources"
+                        />
+                    </div> */}
 
                     <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                         {
