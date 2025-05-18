@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 import GenStories from '../GenStories';
 import Guide from "../Guide";
-
+import NotesSection from "../NotesSection";
+import StoriesSection from '../StoriesSection';
 import CopilotSection from '../CopilotSection';
 import { MainContext } from '../../contexts/mainContext';
 
@@ -16,39 +17,67 @@ import MetadataGen from '../MetadataGen';
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
+  const { chatLoaded, noteIndex, setNoteIndex, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
 
-  let copilotSectionSteps = [
+  // let copilotSectionSteps = [
+  //   {
+  //     target: '.language-dropdown',
+  //     content: "Select a language to translate copilot chat",
+  //     disableBeacon: true,
+  //     placement: 'bottom'
+  //   },
+  //   {
+  //     target: '.models-list-button',
+  //     content: "Select an LLM to be used for the query processing",
+  //     placement: 'bottom'
+  //   },
+  //   {
+  //     target: '.copilot-chat-container',
+  //     content: "This is where you interact with the LLM to generate insights",
+  //     placement: 'bottom'
+  //   },
+  // ];
+
+  // let genStorieSectionSteps = [
+  //   {
+  //     target: '.genstory-models-list-button',
+  //     content: "Select an LLM to be used for the query processing",
+  //     disableBeacon: true,
+  //     placement: 'bottom'
+  //   },
+  //   {
+  //     target: '.genstory-chat-container',
+  //     content: "This is where you interact with the LLM to generate stories",
+  //     placement: 'bottom'
+  //   },
+  // ];
+
+  const notesSectionSteps = [
     {
-      target: '.language-dropdown',
-      content: "Select a language to translate copilot chat",
+      target: ".new-note-button",
+      content: "Click here to create a new insight.",
       disableBeacon: true,
-      placement: 'bottom'
+      placement: "right",
     },
     {
-      target: '.models-list-button',
-      content: "Select an LLM to be used for the query processing",
-      placement: 'bottom'
-    },
-    {
-      target: '.copilot-chat-container',
-      content: "This is where you interact with the LLM to generate insights",
-      placement: 'bottom'
+      target: ".saved-notes",
+      content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
+      placement: "right",
     },
   ];
 
-  let genStorieSectionSteps = [
+  const storiesSectionSteps = [
     {
-      target: '.genstory-models-list-button',
-      content: "Select an LLM to be used for the query processing",
+      target: ".new-story-button",
+      content: "Click here to create a new story.",
       disableBeacon: true,
-      placement: 'bottom'
+      placement: "right",
     },
     {
-      target: '.genstory-chat-container',
-      content: "This is where you interact with the LLM to generate stories",
-      placement: 'bottom'
-    },
+      target: ".saved-stories",
+      content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
+      placement: "right",
+    }
   ];
 
 
@@ -95,14 +124,28 @@ const ChatPanel = () => {
           <MetadataGen key={0} name="genMetadata" />
           {/* {(activeTab === 'genMetadata' && (Boolean(localStorage.getItem(`guide_completed_genMetadata`)) === false || localStorage.getItem(`guide_completed_genMetadata`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genMetadata" />} */}
         </Tab>
-        <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}}>
+        <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
+          <NotesSection
+            setNoteIndex={setNoteIndex}
+            nodeIndex={noteIndex}
+            key={2}
+            name="Notes"
+          />
+          {(activeTab === 'insights' && (Boolean(localStorage.getItem(`guide_completed_insights`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={notesSectionSteps} tabIdentifier="insights" />}
+        </Tab>
+        <Tab eventKey="stories" title="Stories" className='flex-1 h-full overflow-y-auto'>
+          <StoriesSection
+          />
+          {(activeTab === 'stories' && (Boolean(localStorage.getItem(`guide_completed_stories`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={storiesSectionSteps} tabIdentifier="stories" />}
+        </Tab>
+        {/* <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}}>
           <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
           {(activeTab === 'genInsights' && (Boolean(localStorage.getItem(`guide_completed_genInsights`)) === false || localStorage.getItem(`guide_completed_genInsights`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genInsights" />}
         </Tab>
         <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`}>
           <GenStories key={2} name="genStories" sidebarWidth={sidebarWidth} />
           {(activeTab === 'genStories' && (Boolean(localStorage.getItem(`guide_completed_genStories`)) === false || localStorage.getItem(`guide_completed_genStories`) === "false")) && <Guide steps={genStorieSectionSteps} tabIdentifier="genStories" />}
-        </Tab>
+        </Tab> */}
       </Tabs>
     </aside>
   );
