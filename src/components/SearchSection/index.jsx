@@ -56,7 +56,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true }) =>
                 }
                 setCurrentResource(response.data);
                 setResourceURL(resourceURL);
-                setActiveView('resource');
+                // setActiveView('resource');
                 setIsSearching(false);
                 // response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
                 setSummary(response.data.summary);
