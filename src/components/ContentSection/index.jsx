@@ -445,7 +445,7 @@ const ContentSection = ({
                                     onClick={() => handleAddModal(true)}
                                 >
                                     <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add</span>
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
 
                                 </div>
 
@@ -460,7 +460,7 @@ const ContentSection = ({
                             onClick={handleExploreSources}
                         >
                             <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Sources</span>
+                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
                         </div>
                         <div className="global-search">
                             <div
