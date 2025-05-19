@@ -7,7 +7,7 @@ import { MainContext } from '../../contexts/mainContext';
 export default function MetadataOptions({ selectedOptions, setSelectedOptions, options }) {
     const { theme } = useContext(MainContext);
 
-    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
+    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
     const dropdownRef = useRef(null);
 
     // Close the dropdown when clicking outside

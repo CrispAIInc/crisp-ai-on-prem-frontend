@@ -7,7 +7,7 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
     const { theme, sourcesTobeCommited } = useContext(MainContext);
 
-    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
+    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
     const dropdownRef = useRef(null);
 
     // Close the dropdown when clicking outside
