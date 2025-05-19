@@ -36,7 +36,7 @@ function StickyStory({ story }) {
     );
 
     return (
-        <OverlayTrigger className='tooltip' placement="right" overlay={renderTooltip}>
+        <OverlayTrigger className='tooltip' placement="left" overlay={renderTooltip}>
             <div
                 className={`p-1 rounded-lg w-32 h-32 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col cursor-pointer`}
                 style={{
