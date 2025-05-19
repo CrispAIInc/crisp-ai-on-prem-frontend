@@ -24,6 +24,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     theme,
     currentResource,
     llmModels,
+    selectedCategoryChat,
     fromChat, setFromChat,
     isFoundationLlm,
     resourceURL,
@@ -63,7 +64,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   const [originalQueries, setOriginalQueries] = useState([]);
   const [originalResponses, setOriginalResponses] = useState([]);
   const [responseIndex, setResponseIndex] = useState(-1);
-  const [selectedCategoryChat] = useState("all");
+
 
   const [existingNote, setExistingNote] = useState(0);
 
