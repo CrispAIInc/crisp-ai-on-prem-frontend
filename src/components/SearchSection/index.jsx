@@ -62,9 +62,9 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true }) =>
                 setSummary(response.data.summary);
                 if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
                 setAdditionalSources(response.data.additional_sources);
-                if (activeView !== 'resource') {
-                    setShowSearchModal(true);
-                }
+                // if (activeView !== 'resource') {
+                setShowSearchModal(true);
+                // }
 
                 if (response.data.file_type === "pdf") {
                     setJumpToPage({ page: response.data.page });
