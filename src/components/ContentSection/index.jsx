@@ -524,7 +524,7 @@ const ContentSection = ({
                     {/* <div className="w-fit">
                         <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
                     </div> */}
-                    <div className="flex items-center mt-4 ">
+                    {displayedSources?.length > 0 && <div className="flex items-center mt-4 ">
                         <span
                             className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                                 }`}
@@ -539,7 +539,7 @@ const ContentSection = ({
                             inputProps={{ "aria-label": "Select All Sources" }}
                             label="Check All Sources"
                         />
-                    </div>
+                    </div>}
 
                     {/* <div className="flex items-center mt-4 ">
                         <span
