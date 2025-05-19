@@ -177,7 +177,7 @@ const MainWorkspace = ({ theme }) => {
     { value: "gemini-pro", label: "Gemini Pro", type: "llm", color: "#D10363" },
   ];
 
-  const [activeTab, setActiveTab] = useState('genInsights');
+  const [activeTab, setActiveTab] = useState('genMetadata');
 
   const modules = {
     toolbar: [
