@@ -112,7 +112,7 @@ const ChatPanel = () => {
 
       <Tabs
         transition={false}
-        defaultActiveKey="genInsights"
+        defaultActiveKey="genMetadata"
         onSelect={(k) => {
           setActiveTab(() => k);
         }}
