@@ -41,12 +41,12 @@ const Workspace = () => {
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
             </div>
-            {(activeView === 'resource' || displayedSources?.length > 0) ? (
-                <CenterPanel />
-            ) : activeView === 'note' ? (
+            {activeView === 'note' ? (
                 <NoteDetails />
             ) : activeView === 'story' ? (
                 <StoryDetails />
+            ) : (activeView === 'resource' || displayedSources?.length > 0) ? (
+                <CenterPanel />
             ) : !activeView ? (
                 <div className="mt-10">
                     <NoData />
