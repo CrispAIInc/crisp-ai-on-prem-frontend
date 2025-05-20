@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import GenStories from '../GenStories';
 import Guide from "../Guide";
 import NotesSection from "../NotesSection";
@@ -13,6 +13,9 @@ import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import MetadataGen from '../MetadataGen';
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
@@ -80,6 +83,28 @@ const ChatPanel = () => {
     }
   ];
 
+  const [showEditor, setShowEditor] = useState(true);
+  const [value, setValue] = useState('');
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, true] }],
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link', 'image'],
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'list',
+    'bullet',
+    'link',
+    'image',
+  ];
 
 
   return (
@@ -112,7 +137,21 @@ const ChatPanel = () => {
         }} />
       </div>
 
-      <Tabs
+      {showEditor ? (
+        <div className="flex flex-col flex-1 h-full">
+          <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <ReactQuill
+              theme="snow"
+              value={value}
+              onChange={setValue}
+              className="custom-quill"
+              style={{ flex: 1 }}
+              modules={modules}
+              formats={formats}
+            />
+          </div>
+        </div>
+      ) : <Tabs
         transition={false}
         defaultActiveKey="genMetadata"
         onSelect={(k) => {
@@ -148,7 +187,7 @@ const ChatPanel = () => {
           <GenStories key={2} name="genStories" sidebarWidth={sidebarWidth} />
           {(activeTab === 'genStories' && (Boolean(localStorage.getItem(`guide_completed_genStories`)) === false || localStorage.getItem(`guide_completed_genStories`) === "false")) && <Guide steps={genStorieSectionSteps} tabIdentifier="genStories" />}
         </Tab> */}
-      </Tabs>
+      </Tabs>}
     </aside>
   );
 };
