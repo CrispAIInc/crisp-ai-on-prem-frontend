@@ -106,13 +106,21 @@ const ChatPanel = () => {
     'image',
   ];
 
+  function closeEditor() {
+    setShowEditor(false);
+  }
+
 
   return (
     <aside className={`relative w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
       width: rightWidth
     }}>
-      <h5 className={`${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-        }`}>Studio</h5>
+      <div className="flex items-center justify-between">
+        <h5 className={`${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+          }`}>Studio</h5>
+        {showEditor && <h5 onClick={closeEditor} className={`cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+          }`}>x</h5>}
+      </div>
       <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-0 blur-[160px]"></div>
       <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-0 blur-[160px]"></div>
       <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-0 blur-[160px]"></div>
