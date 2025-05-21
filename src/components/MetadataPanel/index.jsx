@@ -425,7 +425,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       >
                         <div className="flex flex-col gap-3">
                           {
-                            translatedResource?.transcription?.content?.map((topic, index) => (
+                            Array.isArray(translatedResource?.transcription?.content) && translatedResource?.transcription?.content?.map((topic, index) => (
                               <div key={index} className="flex items-baseline gap-3">
                                 <div className=''>
                                   <h4 className='text-[16px] font-semibold '>{topic.speaker?.toLowerCase()}: </h4>
