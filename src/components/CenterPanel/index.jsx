@@ -6,6 +6,8 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
 import TextSkeleton from '../Skeletons/Base/TextSkeleton.jsx';
+import AddIcon from '@mui/icons-material/Add';
+import { generateRandomHash } from '../../utils.js';
 
 const MetadataPanel = ({ workspaceContainer }) => {
     const {
@@ -13,7 +15,15 @@ const MetadataPanel = ({ workspaceContainer }) => {
         chatLoaded, setChatLoaded,
         displayedSources,
         activeView,
+        selectedNote,
         theme,
+        notes,
+        setIsNewNote,
+        setNoteIndex,
+        setSelectedNote,
+        setIsManualNote,
+        setShowNoteDetails,
+        setActiveView,
     } = useContext(MainContext);
 
     const { sidebarWidth } = useResizableSidebar(200, false);
@@ -45,6 +55,30 @@ const MetadataPanel = ({ workspaceContainer }) => {
         }
     }, [displayedSources?.length, activeView]);
 
+    const addToInsight = async (textToAdd, file, question = '', models = "", refs) => {
+
+        const newText = {
+            id: generateRandomHash(5),
+            model: "GPT-4",
+            question,
+            answer: textToAdd,
+            refs,
+        };
+        const newNote = {
+            ...selectedNote,
+            note_name: `new title ${Math.floor(Math.random() * 100)}`,
+            text: [{
+                ...newText
+            }]
+        };
+        setIsNewNote(true);
+        setNoteIndex(notes.length);
+        setSelectedNote(newNote);
+        setIsManualNote(false);
+        setShowNoteDetails(true);
+        setActiveView('note');
+    };
+
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
             {activeView === 'resource' && <div>
@@ -58,13 +92,22 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     </h2>
                     <span>{displayedSources?.length} Source{displayedSources?.length > 1 ? "s" : ""}</span>
                 </div>
-                {!isCombinedSummaryPending ? <p
-                    className={`text-md ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-                    dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content}</p>` }}
-                ></p> : (
+                {!isCombinedSummaryPending ? <div>
+                    <p
+                        className={`text-md ${theme === "light"
+                            ? "text-textColor-300"
+                            : "text-textColor-100"
+                            }`}
+                        dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content}</p>` }}
+                    ></p>
+                    <div
+                        className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                        onClick={addToInsight}
+                    >
+                        <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to insight</span>
+                    </div>
+                </div> : (
                     <div className="animate-pulse">
                         {new Array(10).fill(null).map((_, index) => (
                             <TextSkeleton key={index} className='h-3 mb-2' />

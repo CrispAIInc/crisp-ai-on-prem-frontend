@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import GenStories from '../GenStories';
 import Guide from "../Guide";
 import NotesSection from "../NotesSection";
@@ -14,13 +14,16 @@ import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import MetadataGen from '../MetadataGen';
 
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill, { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import ImageResize from "quill-image-resize-module-react";
+
+Quill.register("modules/imageResize", ImageResize);
 
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded, noteIndex, setNoteIndex, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
+  const { chatLoaded, selectedNote, noteIndex, setNoteIndex, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
 
   // let copilotSectionSteps = [
   //   {
@@ -85,14 +88,20 @@ const ChatPanel = () => {
 
   const [showEditor, setShowEditor] = useState(true);
   const [value, setValue] = useState('');
+  const [noteTitle, setNoteTitle] = useState('');
 
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, true] }],
       ['bold', 'italic', 'underline'],
       [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link', 'image'],
+      ['link', 'image', 'video'],
     ],
+    imageResize: {
+      // optional configuration
+      parchment: Quill.import("parchment"),
+      modules: ["Resize", "DisplaySize", "Toolbar"],
+    },
   };
 
   const formats = [
@@ -110,9 +119,132 @@ const ChatPanel = () => {
     setShowEditor(false);
   }
 
+  useEffect(() => {
+    if (selectedNote?.note_id !== "") {
+      setValue(generateHtmlFromText(selectedNote?.text));
+      setNoteTitle(selectedNote?.note_name);
+      setShowEditor(true);
+    }
+  }, [selectedNote]);
+
+  // function generateHtmlFromText(textArray) {
+  //   return textArray
+  //     .map((item) => {
+  //       const refs = [];
+
+  //       if (item?.references?.pdfLinks?.length > 0) {
+  //         refs.push(
+  //           `<div><strong>PDF:</strong> ${item?.references?.pdfLinks?.map((link) => `<a href="#">${link}</a>`)
+  //             .join(", ")}</div>`
+  //         );
+  //       }
+
+  //       if (item?.references?.videoLinks?.length > 0) {
+  //         refs.push(
+  //           `<div><strong>Video:</strong> ${item?.references?.videoLinks?.map((link) => `<a href="#">${link}</a>`)
+  //             .join(", ")}</div>`
+  //         );
+  //       }
+
+  //       if (item?.references?.imageLinks?.length > 0) {
+  //         refs.push(
+  //           `<div><strong>Images:</strong> ${item?.references?.imageLinks?.map((link) => `<img src="${link}" alt="image" style="max-width: 100px;" />`)
+  //             .join(" ")}</div>`
+  //         );
+  //       }
+
+  //       return `
+  //         <div style="border-left: 4px solid ${item.color}; padding-left: 8px; margin-bottom: 16px;">
+  //           <h2><strong>${item.question}</strong></h2>
+  //           <br />
+  //           <p>${item.answer}</p>
+  //           <p><strong>Model:</strong> ${item.model}</p>
+  //           ${refs.join("")}
+  //           <br />
+  //           <br />
+  //         </div>
+  //       `;
+  //     })
+  //     .join("<hr/>");
+  // }
+  function generateHtmlFromText(textArray) {
+    return textArray
+      .map((item) => {
+        const refs = [];
+
+        if (item?.references?.pdfLinks?.length > 0) {
+          refs.push(
+            `<div><strong>PDF:</strong> ${item.references.pdfLinks
+              .map(
+                (link) =>
+                  `<a href="#" class="reference-link" data-ref-type="pdf" data-ref-value="${link}">${link}</a>`
+              )
+              .join(", ")}</div>`
+          );
+        }
+
+        if (item?.references?.videoLinks?.length > 0) {
+          refs.push(
+            `<div><strong>Video:</strong> ${item.references.videoLinks
+              .map(
+                (link) =>
+                  `<a href="#" class="reference-link" data-ref-type="video" data-ref-value="${link}">${link}</a>`
+              )
+              .join(", ")}</div>`
+          );
+        }
+
+        if (item?.references?.imageLinks?.length > 0) {
+          refs.push(
+            `<div><strong>Images:</strong> ${item.references.imageLinks
+              .map(
+                (link) =>
+                  `<img src="${link}" alt="image" style="max-width: 100px;" class="reference-link" data-ref-type="image" data-ref-value="${link}" />`
+              )
+              .join(" ")}</div>`
+          );
+        }
+
+        return `
+          <div style="border-left: 4px solid ${item.color}; padding-left: 8px; margin-bottom: 16px;">
+            <h2><strong>${item.question}</strong></h2>
+            <br />
+            <p>${item.answer}</p>
+            <p><strong>Model:</strong> ${item.model}</p>
+            ${refs.join("")}
+            <br /><br />
+          </div>
+        `;
+      })
+      .join("<hr/>");
+  }
+
+  const editorRef = useRef(null);
+  useEffect(() => {
+    const editorEl = editorRef.current?.getEditor()?.root;
+    if (!editorEl) return;
+
+    const handleClick = (e) => {
+      const target = e.target;
+      if (target.classList.contains("reference-link")) {
+        const type = target.getAttribute("data-ref-type");
+        const value = target.getAttribute("data-ref-value");
+
+        console.log("Clicked reference:", { type, value });
+
+        // ✨ Call your handler here
+        e.preventDefault();
+      }
+    };
+
+    editorEl.addEventListener("click", handleClick);
+    return () => editorEl.removeEventListener("click", handleClick);
+  }, []);
+
+
 
   return (
-    <aside className={`relative w-1/4 h-full bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
+    <aside className={`relative w-1/4 h-full overflow-hidden bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
       width: rightWidth
     }}>
       <div className="flex items-center justify-between">
@@ -147,16 +279,21 @@ const ChatPanel = () => {
 
       {showEditor ? (
         <div className="flex flex-col flex-1 h-full">
-          <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <ReactQuill
-              theme="snow"
-              value={value}
-              onChange={setValue}
-              className="custom-quill"
-              style={{ flex: 1 }}
-              modules={modules}
-              formats={formats}
-            />
+          <div className="h-full max-h-full overflow-y-auto">
+            <div>
+              <input className={`${theme === 'dark' && 'text-textColor-100'} font-medium py-2 px-1 bg-transparent !border border-textColor-300 !outline-none w-full`} placeholder="New title..." value={noteTitle} />
+            </div>
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <ReactQuill
+                theme="snow"
+                value={value}
+                onChange={setValue}
+                className="custom-quill"
+                style={{ flex: 1 }}
+                modules={modules}
+                formats={formats}
+              />
+            </div>
           </div>
         </div>
       ) : <Tabs
