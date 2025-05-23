@@ -34,7 +34,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
     const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
 
     useEffect(() => {
-        console.log("qsdfjlsdfjkl kljdkqf kl");
         async function getCombinedSum() {
             try {
                 setIsCombinedSummaryPending(true);

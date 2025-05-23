@@ -6,6 +6,7 @@ import StoriesSection from '../StoriesSection';
 import CopilotSection from '../CopilotSection';
 import { MainContext } from '../../contexts/mainContext';
 
+import AddIcon from '@mui/icons-material/Add';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
@@ -17,13 +18,18 @@ import MetadataGen from '../MetadataGen';
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
+import toast from 'react-simple-toasts';
+import makeApiRequest from '../../api';
 
 Quill.register("modules/imageResize", ImageResize);
 
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded, showEditor, setShowEditor, selectedNote, noteIndex, setNoteIndex, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
+  const { chatLoaded,
+    notes,
+    isNewNote,
+    setNotes, showEditor, setShowEditor, selectedNote, noteIndex, setNoteIndex, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
 
   // let copilotSectionSteps = [
   //   {
@@ -119,7 +125,7 @@ const ChatPanel = () => {
   }
 
   useEffect(() => {
-    if (selectedNote?.id !== "") {
+    if (selectedNote?.note_id !== "") {
       setValue(generateHtmlFromText(selectedNote?.text));
       setNoteTitle(selectedNote?.note_name);
       setShowEditor(true);
@@ -240,6 +246,28 @@ const ChatPanel = () => {
     return () => editorEl.removeEventListener("click", handleClick);
   }, []);
 
+  const handleSave = async (event) => {
+    event && event.preventDefault();
+    if (selectedNote.note_name === "") {
+      // add shadow to toast classnames
+      toast('Note title cannot be empty', { className: `p-2 rounded-md`, theme });
+      return;
+    }
+    if (isNewNote && notes.every(n => n.note_name !== selectedNote.note_name)) {
+      const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
+
+      selectedNote.note_id = dateTimeStr;
+    }
+    try {
+      await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex), isNewNote: isNewNote });
+
+      const data = await makeApiRequest("/notes", "post");
+      setNotes(() => data);
+      toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
   return (
@@ -292,6 +320,13 @@ const ChatPanel = () => {
                 modules={modules}
                 formats={formats}
               />
+            </div>
+            <div
+              className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+              onClick={handleSave}
+            >
+              <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+              <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Save insight</span>
             </div>
           </div>
         </div>
