@@ -8,7 +8,7 @@ export default function MainWorkspacePage({ theme }) {
     const [inputPassword, setInputPassword] = useState("");
 
     const handleLogin = () => {
-        const correctPassword = "CrispAI$321";
+        const correctPassword = "$Crisp-AI2025$";
         if (inputPassword === correctPassword) {
             setIsAuthenticated(true);
         } else {
