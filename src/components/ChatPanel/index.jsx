@@ -23,7 +23,7 @@ Quill.register("modules/imageResize", ImageResize);
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded, selectedNote, noteIndex, setNoteIndex, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
+  const { chatLoaded, showEditor, setShowEditor, selectedNote, noteIndex, setNoteIndex, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
 
   // let copilotSectionSteps = [
   //   {
@@ -86,7 +86,6 @@ const ChatPanel = () => {
     }
   ];
 
-  const [showEditor, setShowEditor] = useState(true);
   const [value, setValue] = useState('');
   const [noteTitle, setNoteTitle] = useState('');
 
@@ -120,7 +119,7 @@ const ChatPanel = () => {
   }
 
   useEffect(() => {
-    if (selectedNote?.note_id !== "") {
+    if (selectedNote?.id !== "") {
       setValue(generateHtmlFromText(selectedNote?.text));
       setNoteTitle(selectedNote?.note_name);
       setShowEditor(true);

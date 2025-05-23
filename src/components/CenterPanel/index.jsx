@@ -17,6 +17,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         activeView,
         selectedNote,
         theme,
+        setShowEditor,
         notes,
         setIsNewNote,
         setNoteIndex,
@@ -72,6 +73,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
             }]
         };
         setIsNewNote(true);
+        setShowEditor(true);
         setNoteIndex(notes.length);
         setSelectedNote(newNote);
         setIsManualNote(false);
@@ -102,7 +104,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     ></p>
                     <div
                         className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                        onClick={addToInsight}
+                        onClick={() => addToInsight(combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content)}
                     >
                         <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to insight</span>

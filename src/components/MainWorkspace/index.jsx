@@ -506,6 +506,7 @@ const MainWorkspace = ({ theme }) => {
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
   const [generatedResources, setGeneratedResources] = useState([]);
+  const [showEditor, setShowEditor] = useState(true);
 
   // useEffect(() => {
   //   if (knowledgeBase.every((item) => item.is_selected === false)) {
@@ -552,7 +553,7 @@ const MainWorkspace = ({ theme }) => {
     selectedOptions, setSelectedOptions,
     workspaceContainer,
     generatedResources, setGeneratedResources,
-    categoryOptions, setCategoryOptions,
+    categoryOptions, setCategoryOptions, showEditor, setShowEditor,
     languageOptions,
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
