@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import GenStories from '../GenStories';
 import Guide from "../Guide";
 import NotesSection from "../NotesSection";
@@ -23,46 +23,88 @@ import makeApiRequest from '../../api';
 
 Quill.register("modules/imageResize", ImageResize);
 
+// Custom module to handle reference link clicks
+class ReferenceClickHandler {
+  constructor(quill, options) {
+    this.quill = quill;
+    this.options = options;
+    this.handleClick = this.handleClick.bind(this);
+
+    // Add click event listener to the editor
+    this.quill.root.addEventListener('click', this.handleClick);
+  }
+
+  handleClick(e) {
+    const target = e.target;
+
+    // Check if clicked element is a reference link
+    if (target.classList.contains('reference-link')) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const type = target.getAttribute('data-ref-type');
+      const value = target.getAttribute('data-ref-value');
+
+      // Call the callback function passed from options
+      if (this.options.onReferenceClick && type && value) {
+        this.options.onReferenceClick(type, value);
+      }
+    }
+  }
+}
+
+// Extend the Block blot to allow custom attributes
+const Block = Quill.import("blots/block");
+
+class ReferenceLink extends Block {
+  static create(value) {
+    const node = super.create();
+    if (value?.["data-ref-type"]) {
+      node.setAttribute("data-ref-type", value["data-ref-type"]);
+    }
+    if (value?.["data-ref-value"]) {
+      node.setAttribute("data-ref-value", value["data-ref-value"]);
+    }
+    if (value?.["class"]) {
+      node.classList.add(value["class"]);
+    }
+    return node;
+  }
+
+  static formats(domNode) {
+    return {
+      "data-ref-type": domNode.getAttribute("data-ref-type"),
+      "data-ref-value": domNode.getAttribute("data-ref-value"),
+      class: domNode.getAttribute("class"),
+    };
+  }
+}
+
+ReferenceLink.blotName = "reference";
+ReferenceLink.tagName = "li"; // or 'div', depending on your use
+Quill.register(ReferenceLink, true);
+Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
+
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const { chatLoaded,
+  const {
+    chatLoaded,
     notes,
     isNewNote,
-    setNotes, showEditor, setShowEditor, selectedNote, noteIndex, setNoteIndex, setChatLoaded, isRightSidebarOpen, setIsRightSidebarOpen, theme, activeTab, setActiveTab } = useContext(MainContext);
-
-  // let copilotSectionSteps = [
-  //   {
-  //     target: '.language-dropdown',
-  //     content: "Select a language to translate copilot chat",
-  //     disableBeacon: true,
-  //     placement: 'bottom'
-  //   },
-  //   {
-  //     target: '.models-list-button',
-  //     content: "Select an LLM to be used for the query processing",
-  //     placement: 'bottom'
-  //   },
-  //   {
-  //     target: '.copilot-chat-container',
-  //     content: "This is where you interact with the LLM to generate insights",
-  //     placement: 'bottom'
-  //   },
-  // ];
-
-  // let genStorieSectionSteps = [
-  //   {
-  //     target: '.genstory-models-list-button',
-  //     content: "Select an LLM to be used for the query processing",
-  //     disableBeacon: true,
-  //     placement: 'bottom'
-  //   },
-  //   {
-  //     target: '.genstory-chat-container',
-  //     content: "This is where you interact with the LLM to generate stories",
-  //     placement: 'bottom'
-  //   },
-  // ];
+    setNotes,
+    showEditor,
+    setShowEditor,
+    selectedNote,
+    noteIndex,
+    setNoteIndex,
+    setChatLoaded,
+    isRightSidebarOpen,
+    setIsRightSidebarOpen,
+    theme,
+    activeTab,
+    setActiveTab
+  } = useContext(MainContext);
 
   const notesSectionSteps = [
     {
@@ -94,8 +136,36 @@ const ChatPanel = () => {
 
   const [value, setValue] = useState('');
   const [noteTitle, setNoteTitle] = useState('');
+  const editorRef = useRef(null);
 
-  const modules = {
+  // Test function to handle reference link clicks
+  const test = useCallback((type, value) => {
+    console.log('eee');
+    console.log(`Clicked ${type} reference:`, value);
+
+    // You can add specific logic for different reference types here
+    switch (type) {
+      case 'pdf':
+        // Handle PDF click
+        console.log('PDF link clicked:', value);
+        // Add your PDF handling logic here
+        break;
+      case 'video':
+        // Handle video click
+        console.log('Video link clicked:', value);
+        // Add your video handling logic here
+        break;
+      case 'image':
+        // Handle image click
+        console.log('Image link clicked:', value);
+        // Add your image handling logic here
+        break;
+      default:
+        console.log('Unknown reference type:', type);
+    }
+  }, []);
+
+  const modules = useMemo(() => ({
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, true] }],
       ['bold', 'italic', 'underline'],
@@ -103,11 +173,13 @@ const ChatPanel = () => {
       ['link', 'image', 'video'],
     ],
     imageResize: {
-      // optional configuration
       parchment: Quill.import("parchment"),
       modules: ["Resize", "DisplaySize", "Toolbar"],
     },
-  };
+    referenceClickHandler: {
+      onReferenceClick: test
+    }
+  }), [test]);
 
   const formats = [
     'header',
@@ -120,253 +192,360 @@ const ChatPanel = () => {
     'image',
   ];
 
-  function closeEditor() {
+  const closeEditor = useCallback(() => {
     setShowEditor(false);
-  }
+  }, [setShowEditor]);
 
-  useEffect(() => {
-    if (selectedNote?.note_id !== "") {
-      setValue(generateHtmlFromText(selectedNote?.text));
-      setNoteTitle(selectedNote?.note_name);
-      setShowEditor(true);
-    }
-  }, [selectedNote]);
-
-  // function generateHtmlFromText(textArray) {
+  // const generateHtmlFromText = useCallback((textArray) => {
   //   return textArray
   //     .map((item) => {
   //       const refs = [];
 
   //       if (item?.references?.pdfLinks?.length > 0) {
   //         refs.push(
-  //           `<div><strong>PDF:</strong> ${item?.references?.pdfLinks?.map((link) => `<a href="#">${link}</a>`)
+  //           `<div><strong>PDF:</strong> ${item.references.pdfLinks
+  //             .map(
+  //               (link) =>
+  //                 `<a style="font-weight: bold;" class="reference-link"  data-ref-type="pdf" data-ref-value="${link}">${link}</a>`
+  //             )
   //             .join(", ")}</div>`
   //         );
   //       }
 
   //       if (item?.references?.videoLinks?.length > 0) {
   //         refs.push(
-  //           `<div><strong>Video:</strong> ${item?.references?.videoLinks?.map((link) => `<a href="#">${link}</a>`)
+  //           `<div><strong>Video:</strong> ${item.references.videoLinks
+  //             .map(
+  //               (link) =>
+  //                 `<a onClick="${() => console.log("hehe")}" class="reference-link" data-ref-type="video" data-ref-value="${link}">${link}</a>`
+  //             )
   //             .join(", ")}</div>`
   //         );
   //       }
 
   //       if (item?.references?.imageLinks?.length > 0) {
   //         refs.push(
-  //           `<div><strong>Images:</strong> ${item?.references?.imageLinks?.map((link) => `<img src="${link}" alt="image" style="max-width: 100px;" />`)
+  //           `<div><strong>Images:</strong> ${item.references.imageLinks
+  //             .map(
+  //               (link) =>
+  //                 `<img src="${link}" alt="image" style="max-width: 100px;" class="reference-link" data-ref-type="image" data-ref-value="${link}" />`
+  //             )
   //             .join(" ")}</div>`
   //         );
   //       }
 
   //       return `
   //         <div style="border-left: 4px solid ${item.color}; padding-left: 8px; margin-bottom: 16px;">
-  //           <h2><strong>${item.question}</strong></h2>
+  //           <h2 style="color: #fff;"><strong>${item.question}</strong></h2>
   //           <br />
   //           <p>${item.answer}</p>
   //           <p><strong>Model:</strong> ${item.model}</p>
   //           ${refs.join("")}
-  //           <br />
-  //           <br />
+  //           <br /><br />
   //         </div>
   //       `;
   //     })
   //     .join("<hr/>");
-  // }
-  function generateHtmlFromText(textArray) {
-    return textArray
-      .map((item) => {
-        const refs = [];
+  // }, []);
 
-        if (item?.references?.pdfLinks?.length > 0) {
-          refs.push(
-            `<div><strong>PDF:</strong> ${item.references.pdfLinks
-              .map(
-                (link) =>
-                  `<a href="#" class="reference-link" data-ref-type="pdf" data-ref-value="${link}">${link}</a>`
-              )
-              .join(", ")}</div>`
-          );
-        }
+  // useEffect(() => {
+  //   const quill = editorRef.current?.getEditor();
+  //   console.log(quill);
+  //   console.log(value);
+  //   if (!quill) return;
 
-        if (item?.references?.videoLinks?.length > 0) {
-          refs.push(
-            `<div><strong>Video:</strong> ${item.references.videoLinks
-              .map(
-                (link) =>
-                  `<a href="#" class="reference-link" data-ref-type="video" data-ref-value="${link}">${link}</a>`
-              )
-              .join(", ")}</div>`
-          );
-        }
+  //   quill.clipboard.dangerouslyPasteHTML(0, value);
 
-        if (item?.references?.imageLinks?.length > 0) {
-          refs.push(
-            `<div><strong>Images:</strong> ${item.references.imageLinks
-              .map(
-                (link) =>
-                  `<img src="${link}" alt="image" style="max-width: 100px;" class="reference-link" data-ref-type="image" data-ref-value="${link}" />`
-              )
-              .join(" ")}</div>`
-          );
-        }
+  //   const root = quill.root;
+  //   const handleClick = (e) => {
+  //     const target = e.target.closest(".reference-link");
+  //     if (target) {
+  //       console.log("Clicked:", target.dataset.refType, target.dataset.refValue);
+  //     }
+  //   };
 
-        return `
-          <div style="border-left: 4px solid ${item.color}; padding-left: 8px; margin-bottom: 16px;">
-            <h2><strong>${item.question}</strong></h2>
-            <br />
-            <p>${item.answer}</p>
-            <p><strong>Model:</strong> ${item.model}</p>
-            ${refs.join("")}
-            <br /><br />
-          </div>
-        `;
-      })
-      .join("<hr/>");
-  }
+  //   root.addEventListener("click", handleClick);
+  //   return () => root.removeEventListener("click", handleClick);
+  // }, [value]);
 
-  const editorRef = useRef(null);
-  useEffect(() => {
-    const editorEl = editorRef.current?.getEditor()?.root;
-    if (!editorEl) return;
 
-    const handleClick = (e) => {
-      const target = e.target;
-      if (target.classList.contains("reference-link")) {
-        const type = target.getAttribute("data-ref-type");
-        const value = target.getAttribute("data-ref-value");
+  const handleSave = useCallback(async (event) => {
+    event?.preventDefault();
 
-        console.log("Clicked reference:", { type, value });
-
-        // ✨ Call your handler here
-        e.preventDefault();
-      }
-    };
-
-    editorEl.addEventListener("click", handleClick);
-    return () => editorEl.removeEventListener("click", handleClick);
-  }, []);
-
-  const handleSave = async (event) => {
-    event && event.preventDefault();
     if (selectedNote.note_name === "") {
-      // add shadow to toast classnames
-      toast('Note title cannot be empty', { className: `p-2 rounded-md`, theme });
+      toast('Note title cannot be empty', { className: 'p-2 rounded-md', theme });
       return;
     }
+
     if (isNewNote && notes.every(n => n.note_name !== selectedNote.note_name)) {
       const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
-
       selectedNote.note_id = dateTimeStr;
     }
+
     try {
-      await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex), isNewNote: isNewNote });
+      await makeApiRequest('/save-note', 'post', {
+        noteID: selectedNote.note_id,
+        selectedNote,
+        noteName: 'note_json',
+        noteNumber: parseInt(noteIndex),
+        isNewNote: isNewNote
+      });
 
       const data = await makeApiRequest("/notes", "post");
       setNotes(() => data);
       toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });
     } catch (error) {
-      console.log(error);
+      console.error('Error saving note:', error);
+      toast('Failed to save insight', { className: 'p-2 rounded-md', theme });
     }
+  }, [selectedNote, notes, noteIndex, isNewNote, theme, setNotes]);
+
+  const handleSidebarToggle = useCallback(() => {
+    setSidebarWidth(prev => {
+      if (prev !== maxWidth) {
+        return maxWidth;
+      }
+      return window.innerWidth / 3.3333;
+    });
+    setIsRightSidebarOpen(true);
+  }, [setSidebarWidth, maxWidth, setIsRightSidebarOpen]);
+
+  // Effect to handle selected note changes
+  // useEffect(() => {
+  //   if (selectedNote?.note_id !== "") {
+  //     setValue(generateHtmlFromText(selectedNote?.text));
+  //     setNoteTitle(selectedNote?.note_name);
+  //     setShowEditor(true);
+  //   }
+  // }, [selectedNote, generateHtmlFromText, setShowEditor]);
+  const handleReferenceClick = (refType, refValue) => {
+    console.log(`Clicked ${refType}:`, refValue);
   };
 
+  useEffect(() => {
+    setNoteTitle(selectedNote?.note_title);
+  }, [selectedNote?.note_name]);
 
   return (
-    <aside className={`relative w-1/4 h-full overflow-hidden bg-background  ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"}  flex flex-col`} style={{
-      width: rightWidth
-    }}>
+    <aside
+      className={`relative w-1/4 h-full overflow-hidden bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
+        } flex flex-col`}
+      style={{ width: rightWidth }}
+    >
       <div className="flex items-center justify-between">
         <h5 className={`${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-          }`}>Studio</h5>
-        {showEditor && <h5 onClick={closeEditor} className={`cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-          }`}>x</h5>}
+          }`}>
+          Studio
+        </h5>
+        {showEditor && (
+          <h5
+            onClick={closeEditor}
+            className={`cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+              }`}
+          >
+            ×
+          </h5>
+        )}
       </div>
+
+      {/* Background blur elements */}
       <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-0 blur-[160px]"></div>
       <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-0 blur-[160px]"></div>
       <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-0 blur-[160px]"></div>
-      {isRightSidebarOpen && <div
-        className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
-        style={{ right: rightWidth }}
-        onMouseDown={handleRightMouseDown}
-        onDoubleClick={handleDoubleClick}
-      ></div>}
 
-      <div
-        className={`px-2 py-2 rounded-md w-fit absolute right-0 h-auto top-1/2 flex flex-col justify-center items-center z-40`}
-      >
-        <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
-          setSidebarWidth(prev => {
-            if (prev !== maxWidth) {
-              return maxWidth;
-            }
-            return window.innerWidth / 3.3333;
-          });
-          setIsRightSidebarOpen(true);
-        }} />
+      {/* Resizer */}
+      {isRightSidebarOpen && (
+        <div
+          className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
+          style={{ right: rightWidth }}
+          onMouseDown={handleRightMouseDown}
+          onDoubleClick={handleDoubleClick}
+        />
+      )}
+
+      {/* Toggle button */}
+      <div className="px-2 py-2 rounded-md w-fit absolute right-0 h-auto top-1/2 flex flex-col justify-center items-center z-40">
+        <SwapHorizOutlinedIcon
+          className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`}
+          onClick={handleSidebarToggle}
+        />
       </div>
 
+      {/* Editor or Tabs */}
       {showEditor ? (
         <div className="flex flex-col flex-1 h-full">
           <div className="h-full max-h-full overflow-y-auto">
             <div>
-              <input className={`${theme === 'dark' && 'text-textColor-100'} font-medium py-2 px-1 bg-transparent !border border-textColor-300 !outline-none w-full`} placeholder="New title..." value={noteTitle} />
+              <input
+                className={`${theme === 'dark' && 'text-textColor-100'
+                  } font-medium py-2 px-1 bg-transparent !border border-textColor-300 !outline-none w-full`}
+                placeholder="New title..."
+                value={noteTitle}
+                onChange={(e) => setNoteTitle(e.target.value)}
+              />
             </div>
-            <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div style={{}}>
               <ReactQuill
+                ref={editorRef}
                 theme="snow"
                 value={value}
                 onChange={setValue}
+                readOnly={true}
                 className="custom-quill"
-                style={{ flex: 1 }}
                 modules={modules}
                 formats={formats}
               />
             </div>
+
+
+
+
+
+            <div className="space-y-6 !z-10 relative">
+              {selectedNote?.text.map((item, index) => (
+                <div
+                  key={index}
+                  style={{
+                    paddingLeft: '8px',
+                    marginBottom: '16px',
+                  }}
+                >
+                  <h4 className="text-white font-bold z-10">{item.question}</h4>
+                  <p className="text-textColor-100 z-10">{item.answer}</p>
+                  <p className="text-white font-bold z-10">
+                    <strong>Model:</strong> {item.model}
+                  </p>
+
+                  {/* PDF Links */}
+                  {item?.references?.pdfLinks?.length > 0 && (
+                    <div>
+                      <strong className="font-bold text-white z-10">PDF:</strong>{' '}
+                      {item.references.pdfLinks.map((link, i) => (
+                        <a
+                          key={i}
+                          href="#"
+                          onClick={() => handleReferenceClick('pdf', link)}
+                          className="reference-link mr-2 z-10"
+                        >
+                          {link}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Video Links */}
+                  {item?.references?.videoLinks?.length > 0 && (
+                    <div>
+                      <strong className="font-bold text-white z-10">Video:</strong>{' '}
+                      {item.references.videoLinks.map((link, i) => (
+                        <a
+                          key={i}
+                          href="#"
+                          onClick={() => handleReferenceClick('video', link)}
+                          className="reference-link mr-2 z-10"
+                        >
+                          {link}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Image Links */}
+                  {item?.references?.imageLinks?.length > 0 && (
+                    <div>
+                      <strong className="font-bold text-white z-10">Images:</strong>{' '}
+                      {item.references.imageLinks.map((link, i) => (
+                        <img
+                          key={i}
+                          src={link}
+                          alt="image"
+                          className="reference-link mr-2 max-w-full z-10"
+                          onClick={() => handleReferenceClick('image', link)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
             <div
-              className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+              className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                ? 'hover:bg-light-hover-100/30'
+                : 'hover:bg-light-hover-200/20'
+                }`}
               onClick={handleSave}
             >
-              <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-              <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Save insight</span>
+              <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+              <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                }`}>
+                Save insight
+              </span>
             </div>
           </div>
         </div>
-      ) : <Tabs
-        transition={false}
-        defaultActiveKey="genMetadata"
-        onSelect={(k) => {
-          setActiveTab(() => k);
-        }}
-        activeKey={activeTab}
-        id="uncontrolled-tab-example"
-        className={`mb-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'}`}
-      >
-        <Tab eventKey="genMetadata" title="GenMetadata" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}} >
-          <MetadataGen key={0} name="genMetadata" />
-          {/* {(activeTab === 'genMetadata' && (Boolean(localStorage.getItem(`guide_completed_genMetadata`)) === false || localStorage.getItem(`guide_completed_genMetadata`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genMetadata" />} */}
-        </Tab>
-        <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
-          <NotesSection
-            setNoteIndex={setNoteIndex}
-            nodeIndex={noteIndex}
-            key={2}
-            name="Notes"
-          />
-          {(activeTab === 'insights' && (Boolean(localStorage.getItem(`guide_completed_insights`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={notesSectionSteps} tabIdentifier="insights" />}
-        </Tab>
-        <Tab eventKey="stories" title="Stories" className='flex-1 h-full overflow-y-auto'>
-          <StoriesSection
-          />
-          {(activeTab === 'stories' && (Boolean(localStorage.getItem(`guide_completed_stories`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={storiesSectionSteps} tabIdentifier="stories" />}
-        </Tab>
-        {/* <Tab eventKey="genInsights" title="GenInsights" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`} style={{}}>
-          <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
-          {(activeTab === 'genInsights' && (Boolean(localStorage.getItem(`guide_completed_genInsights`)) === false || localStorage.getItem(`guide_completed_genInsights`) === "false")) && <Guide steps={copilotSectionSteps} tabIdentifier="genInsights" />}
-        </Tab>
-        <Tab eventKey="genStories" title="GenStories" className={`flex-1 h-full overflow-y-auto`} tabClassName={`text-primary-300`}>
-          <GenStories key={2} name="genStories" sidebarWidth={sidebarWidth} />
-          {(activeTab === 'genStories' && (Boolean(localStorage.getItem(`guide_completed_genStories`)) === false || localStorage.getItem(`guide_completed_genStories`) === "false")) && <Guide steps={genStorieSectionSteps} tabIdentifier="genStories" />}
-        </Tab> */}
-      </Tabs>}
+      ) : (
+        <Tabs
+          transition={false}
+          defaultActiveKey="genMetadata"
+          onSelect={(k) => setActiveTab(() => k)}
+          activeKey={activeTab}
+          id="uncontrolled-tab-example"
+          className={`mb-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'
+            }`}
+        >
+          <Tab
+            eventKey="genMetadata"
+            title="GenMetadata"
+            className="flex-1 h-full overflow-y-auto"
+            tabClassName="text-primary-300"
+          >
+            <MetadataGen key={0} name="genMetadata" />
+          </Tab>
+
+          <Tab
+            eventKey="insights"
+            title="Insights"
+            className="flex-1 h-full overflow-y-auto"
+          >
+            <NotesSection
+              setNoteIndex={setNoteIndex}
+              nodeIndex={noteIndex}
+              key={2}
+              name="Notes"
+            />
+            {(activeTab === 'insights' &&
+              (Boolean(localStorage.getItem('guide_completed_insights')) === false ||
+                localStorage.getItem('guide_completed_sources') === "false")) &&
+              <Guide steps={notesSectionSteps} tabIdentifier="insights" />
+            }
+          </Tab>
+
+          <Tab
+            eventKey="stories"
+            title="Stories"
+            className="flex-1 h-full overflow-y-auto"
+          >
+            <StoriesSection />
+            {(activeTab === 'stories' &&
+              (Boolean(localStorage.getItem('guide_completed_stories')) === false ||
+                localStorage.getItem('guide_completed_sources') === "false")) &&
+              <Guide steps={storiesSectionSteps} tabIdentifier="stories" />
+            }
+          </Tab>
+        </Tabs>
+      )}
     </aside>
   );
 };

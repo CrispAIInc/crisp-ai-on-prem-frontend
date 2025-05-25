@@ -25,10 +25,12 @@
   display: flex !important;
   flex-direction: column !important;
   max-height: 10000000px !important;
-  flex: 1;
+  /* flex: 1; */
 }
 .ql-container {
   border-color: #333 !important;
+  display: none !important;
+  height: 0 !important;
 }
 
 /* .ql-editor img {
@@ -38,6 +40,7 @@
 
 .ql-container .ql-snow {
   overflow-y: auto;
+  display: none !important;
 }
 
 .ql-toolbar {
@@ -50,6 +53,10 @@
   color: #fff !important;
   max-height: 100% !important;
   overflow-y: auto !important;
+}
+
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
+  display: none !important;
 }
 
 .ql-toolbar,

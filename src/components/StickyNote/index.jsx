@@ -11,7 +11,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
     const previousModels = [];
 
     const { setSelectedNote,
-        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setActiveView } = useContext(MainContext);
+        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setActiveView, setShowEditor } = useContext(MainContext);
 
     const showSelectedNote = (event, note, index) => {
         event.preventDefault();
@@ -21,6 +21,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
         setIsNewNote(false);
         setShowNoteDetails(true);
         setActiveView('note');
+        setShowEditor(true);
     };
 
     useEffect(() => {
