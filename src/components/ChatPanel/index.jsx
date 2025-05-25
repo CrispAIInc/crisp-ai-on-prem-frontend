@@ -94,7 +94,10 @@ const ChatPanel = () => {
   const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
   const {
-    chatLoaded,
+    setSelectedNote,
+    setIsEditingTitle,
+    setIsNewNote,
+    setShowNoteDetails,
     notes,
     isNewNote,
     setNotes,
@@ -356,6 +359,18 @@ const ChatPanel = () => {
     setNoteTitle(selectedNote?.note_name);
   }, [selectedNote?.note_name]);
 
+  const showSelectedNote = (event, note, index) => {
+    event.preventDefault();
+    // console.log(note);
+    setNoteIndex(index);
+    setSelectedNote(note);
+    setIsEditingTitle(false);
+    setIsNewNote(false);
+    setShowNoteDetails(true);
+    // setActiveView('note');
+    setShowEditor(true);
+  };
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
@@ -534,11 +549,11 @@ const ChatPanel = () => {
           <div className="overflow-y-auto flex flex-col">
             {/* notes */}
             {
-              notes?.map((note) => (
+              notes?.map((note, index) => (
                 <div key={note.note_id} className={`flex gap-2 ${theme === 'light'
                   ? 'hover:bg-light-hover-100/30'
                   : 'hover:bg-light-hover-200/20'
-                  } cursor-pointer p-2 rounded-md select-none`}>
+                  } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedNote(event, note, index)}>
                   <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
                   <p className="text-white font-semibold">{note.note_name}</p>
                 </div>
