@@ -116,7 +116,7 @@ function MetadataGen() {
 
 
     return (
-        <div className='z-20 flex flex-col gap-4'>
+        <div className='z-20 flex flex-col gap-2'>
 
             {/* context */}
             <div className="relative mt-6 w-full">
@@ -128,7 +128,7 @@ function MetadataGen() {
                 </label>
                 <textarea
                     className="bg-transparent w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-white"
-                    rows="4"
+                    rows="3"
                     onFocus={() => setContextFocused(true)}
                     onBlur={() => setContextFocused(false)}
                     value={context}

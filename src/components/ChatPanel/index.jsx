@@ -110,8 +110,10 @@ const ChatPanel = () => {
     isRightSidebarOpen,
     setIsRightSidebarOpen,
     theme,
-    activeTab,
-    setActiveTab
+    stories,
+    setSelectedStory,
+    selectedStory,
+    setIsNewStory,
   } = useContext(MainContext);
 
   const notesSectionSteps = [
@@ -201,6 +203,25 @@ const ChatPanel = () => {
   ];
 
   const closeEditor = useCallback(() => {
+    setSelectedNote({
+      note_id: "",
+      text: [{
+        content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
+          videoLinks: [],
+          keyframeLinks: [],
+          pdfLinks: [],
+          imageLinks: [],
+        }
+      }],
+      images: [],
+      note_name: "",
+    });
+    setSelectedStory({
+      story_id: "",
+      text: [],
+      story_name: "",
+      models: [],
+    });
     setShowEditor(false);
   }, [setShowEditor]);
 
@@ -276,6 +297,22 @@ const ChatPanel = () => {
   //   return () => root.removeEventListener("click", handleClick);
   // }, [value]);
 
+  function createNewInsight() {
+    setSelectedNote({
+      note_id: "",
+      text: [{
+        content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
+          videoLinks: [],
+          keyframeLinks: [],
+          pdfLinks: [],
+          imageLinks: [],
+        }
+      }],
+      images: [],
+      note_name: "",
+    });
+    setShowEditor(true);
+  }
 
   const handleSave = useCallback(async (event) => {
     event?.preventDefault();
@@ -360,6 +397,12 @@ const ChatPanel = () => {
   }, [selectedNote?.note_name]);
 
   const showSelectedNote = (event, note, index) => {
+    setSelectedStory({
+      story_id: "",
+      text: [],
+      story_name: "",
+      models: [],
+    });
     event.preventDefault();
     // console.log(note);
     setNoteIndex(index);
@@ -371,9 +414,30 @@ const ChatPanel = () => {
     setShowEditor(true);
   };
 
+  const [currentTab, setCurrentTab] = useState("insights");  // insights | stories
+
+  const showSelectedStory = (e, story, index) => {
+    setSelectedNote({
+      note_id: "",
+      text: [{
+        content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
+          videoLinks: [],
+          keyframeLinks: [],
+          pdfLinks: [],
+          imageLinks: [],
+        }
+      }],
+      images: [],
+      note_name: "",
+    });
+    setSelectedStory(story);
+    setIsNewStory(false);
+    setShowEditor(true);
+  };
+
   return (
     <aside
-      className={`relative w-1/4 h-full overflow-hidden bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
+      className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
         } flex flex-col`}
       style={{ width: rightWidth }}
     >
@@ -418,7 +482,7 @@ const ChatPanel = () => {
 
       {/* Editor or Tabs */}
       {showEditor ? (
-        <div className="flex flex-col flex-1 h-full overflow-y-auto">
+        <div className="flex-1 h-full overflow-y-auto">
           <div className="h-full max-h-full ml-auto overflow-y-auto">
             <div
               className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
@@ -430,13 +494,13 @@ const ChatPanel = () => {
               <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
               <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
                 }`}>
-                Save insight
+                Save {currentTab === "insights" ? "insight" : "story"}
               </span>
             </div>
             <div>
               <input
                 className={`${theme === 'dark' && 'text-textColor-100'
-                  } font-medium py-2 px-1 bg-transparent !border border-textColor-300 !outline-none w-full`}
+                  } font-medium p-2 bg-transparent !border border-textColor-300 !outline-none w-full`}
                 placeholder="New title..."
                 value={noteTitle}
                 onChange={(e) => setNoteTitle(e.target.value)}
@@ -459,14 +523,11 @@ const ChatPanel = () => {
 
 
 
-            <div className="space-y-6 !z-10 relative">
+            {selectedNote?.note_name !== "" ? <div className="space-y-6 !z-10 relative !border !border-textColor-300">
               {selectedNote?.text.map((item, index) => (
                 <div
                   key={index}
-                  style={{
-                    paddingLeft: '8px',
-                    marginBottom: '16px',
-                  }}
+                  className="pl-2 mb-4"
                 >
                   <h4 className="text-white font-bold z-10 mt-2">{item.question}</h4>
                   <p className="text-textColor-100 z-10" dangerouslySetInnerHTML={{ __html: item.answer }}></p>
@@ -525,6 +586,20 @@ const ChatPanel = () => {
                 </div>
               ))}
             </div>
+              :
+              <div className="space-y-6 !z-10 relative !border !border-textColor-300">
+                {
+                  selectedStory?.text?.map((heading, index) => {
+                    return (
+                      <div key={heading?.id} className="pl-2 mb-4">
+                        <h4 className="text-white font-bold z-10 mt-2">{heading?.outline?.name}</h4>
+                        <p className="text-white font-bold z-10">{heading?.content?.answer}</p>
+                      </div>
+                    );
+                  })
+                }
+              </div>
+            }
 
 
 
@@ -544,22 +619,75 @@ const ChatPanel = () => {
         <div className='flex flex-col h-full'>
           <div>
             <MetadataGen key={0} name="genMetadata" />
-            <BaseHeading text="Insights" className="mt-3" />
+            <div className="flex gap-3 items-center">
+              {
+                ["insights", "stories"].map((item, index) => <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''}`} onClick={() => setCurrentTab(item)} />)
+              }
+            </div>
           </div>
-          <div className="overflow-y-auto flex flex-col">
-            {/* notes */}
-            {
-              notes?.map((note, index) => (
-                <div key={note.note_id} className={`flex gap-2 ${theme === 'light'
-                  ? 'hover:bg-light-hover-100/30'
-                  : 'hover:bg-light-hover-200/20'
-                  } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedNote(event, note, index)}>
-                  <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                  <p className="text-white font-semibold">{note.note_name}</p>
+          {/* notes */}
+          {
+            currentTab === "insights" ?
+              <>
+                <div
+                  className={` flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                    ? 'hover:bg-light-hover-100/30'
+                    : 'hover:bg-light-hover-200/20'
+                    } z-10`}
+                  onClick={createNewInsight}
+                >
+                  <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                  <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                    }`}>
+                    New insight
+                  </span>
                 </div>
-              ))
-            }
-          </div>
+                <div className="overflow-y-auto flex flex-col">
+                  {/* single note */}
+                  {
+                    notes?.map((note, index) => (
+                      <div key={note.note_id} className={`flex gap-2 ${theme === 'light'
+                        ? 'hover:bg-light-hover-100/30'
+                        : 'hover:bg-light-hover-200/20'
+                        } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedNote(event, note, index)}>
+                        <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                        <p className="text-white font-semibold">{note.note_name}</p>
+                      </div>
+                    ))
+                  }
+                </div>
+              </>
+              :
+              <>
+                <div
+                  className={`mb-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                    ? 'hover:bg-light-hover-100/30'
+                    : 'hover:bg-light-hover-200/20'
+                    } z-10`}
+                  onClick={createNewInsight}
+                >
+                  <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                  <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                    }`}>
+                    New Story
+                  </span>
+                </div>
+                <div className="overflow-y-auto flex flex-col">
+                  {/* single note */}
+                  {
+                    stories?.map((story, index) => (
+                      <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
+                        ? 'hover:bg-light-hover-100/30'
+                        : 'hover:bg-light-hover-200/20'
+                        } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedStory(event, story, index)}>
+                        <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                        <p className="text-white font-semibold">{story.story_name}</p>
+                      </div>
+                    ))
+                  }
+                </div>
+              </>
+          }
         </div>
         // <Tabs
         //   transition={false}

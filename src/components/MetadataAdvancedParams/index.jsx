@@ -14,7 +14,7 @@ export default function MetadataAdvancedParams({ temperatureValue,
 
     const { sidebarWidth, maxWidth } = useResizableSidebar(200, false);
 
-    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
+    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
     const { theme } = useContext(MainContext);
 
 
