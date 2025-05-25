@@ -23,10 +23,10 @@ function MetadataGen() {
         });
     }, [sourcesTobeCommited]);
 
-    const [temperatureValue, setTemperatureValue] = useState(0.2);
-    function handleTemperatureChange(e) {
-        setTemperatureValue(e.target.value);
-    }
+    // const [temperatureValue, setTemperatureValue] = useState(0.2);
+    // function handleTemperatureChange(e) {
+    //     setTemperatureValue(e.target.value);
+    // }
 
     const [verbosityValue, setVerbosityValue] = useState('low');
 
@@ -42,6 +42,10 @@ function MetadataGen() {
 
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
+
+    const [contextFocused, setContextFocused] = useState(false);
+    const [context, setContext] = useState('');
+    const isActive = contextFocused || context.length > 0;
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -74,7 +78,7 @@ function MetadataGen() {
             //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             // };
             const payload = {
-                category: selectedCategory, sources: selectedSourcesToGen.map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
+                category: selectedCategory, sources: selectedSourcesToGen.map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, inputContext: context
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
@@ -109,9 +113,7 @@ function MetadataGen() {
         }
     }
 
-    const [contextFocused, setContextFocused] = useState(false);
-    const [context, setContext] = useState('');
-    const isActive = contextFocused || context.length > 0;
+
 
     return (
         <div className='z-20 flex flex-col gap-4'>
@@ -136,9 +138,10 @@ function MetadataGen() {
 
             <MetadataOptions selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} options={metadataOptions} />
             <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={sourcesTobeCommited} />
-            <MetadataAdvancedParams temperatureValue={temperatureValue}
-                setTemperatureValue={setTemperatureValue}
-                handleTemperatureChange={handleTemperatureChange}
+            <MetadataAdvancedParams
+                // temperatureValue={temperatureValue}
+                // setTemperatureValue={setTemperatureValue}
+                // handleTemperatureChange={handleTemperatureChange}
                 verbosityValue={verbosityValue}
                 setVerbosityValue={setVerbosityValue}
                 handleChange={handleChange} />
