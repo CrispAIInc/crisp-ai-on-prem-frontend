@@ -21,6 +21,7 @@ import ImageResize from "quill-image-resize-module-react";
 import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
+import BaseHeading from '../BaseHeading';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -524,55 +525,59 @@ const ChatPanel = () => {
           </div>
         </div>
       ) : (
-        <Tabs
-          transition={false}
-          defaultActiveKey="genMetadata"
-          onSelect={(k) => setActiveTab(() => k)}
-          activeKey={activeTab}
-          id="uncontrolled-tab-example"
-          className={`mb-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'
-            }`}
-        >
-          <Tab
-            eventKey="genMetadata"
-            title="GenMetadata"
-            className="flex-1 h-full overflow-y-auto"
-            tabClassName="text-primary-300"
-          >
-            <MetadataGen key={0} name="genMetadata" />
-          </Tab>
+        <div>
+          <MetadataGen key={0} name="genMetadata" />
+          <BaseHeading text="Insights" className="mt-5" />
+        </div>
+        // <Tabs
+        //   transition={false}
+        //   defaultActiveKey="genMetadata"
+        //   onSelect={(k) => setActiveTab(() => k)}
+        //   activeKey={activeTab}
+        //   id="uncontrolled-tab-example"
+        //   className={`mb-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'
+        //     }`}
+        // >
+        //   <Tab
+        //     eventKey="genMetadata"
+        //     title="GenMetadata"
+        //     className="flex-1 h-full overflow-y-auto"
+        //     tabClassName="text-primary-300"
+        //   >
+        //     <MetadataGen key={0} name="genMetadata" />
+        //   </Tab>
 
-          <Tab
-            eventKey="insights"
-            title="Insights"
-            className="flex-1 h-full overflow-y-auto"
-          >
-            <NotesSection
-              setNoteIndex={setNoteIndex}
-              nodeIndex={noteIndex}
-              key={2}
-              name="Notes"
-            />
-            {(activeTab === 'insights' &&
-              (Boolean(localStorage.getItem('guide_completed_insights')) === false ||
-                localStorage.getItem('guide_completed_sources') === "false")) &&
-              <Guide steps={notesSectionSteps} tabIdentifier="insights" />
-            }
-          </Tab>
+        //   <Tab
+        //     eventKey="insights"
+        //     title="Insights"
+        //     className="flex-1 h-full overflow-y-auto"
+        //   >
+        //     <NotesSection
+        //       setNoteIndex={setNoteIndex}
+        //       nodeIndex={noteIndex}
+        //       key={2}
+        //       name="Notes"
+        //     />
+        //     {(activeTab === 'insights' &&
+        //       (Boolean(localStorage.getItem('guide_completed_insights')) === false ||
+        //         localStorage.getItem('guide_completed_sources') === "false")) &&
+        //       <Guide steps={notesSectionSteps} tabIdentifier="insights" />
+        //     }
+        //   </Tab>
 
-          <Tab
-            eventKey="stories"
-            title="Stories"
-            className="flex-1 h-full overflow-y-auto"
-          >
-            <StoriesSection />
-            {(activeTab === 'stories' &&
-              (Boolean(localStorage.getItem('guide_completed_stories')) === false ||
-                localStorage.getItem('guide_completed_sources') === "false")) &&
-              <Guide steps={storiesSectionSteps} tabIdentifier="stories" />
-            }
-          </Tab>
-        </Tabs>
+        //   <Tab
+        //     eventKey="stories"
+        //     title="Stories"
+        //     className="flex-1 h-full overflow-y-auto"
+        //   >
+        //     <StoriesSection />
+        //     {(activeTab === 'stories' &&
+        //       (Boolean(localStorage.getItem('guide_completed_stories')) === false ||
+        //         localStorage.getItem('guide_completed_sources') === "false")) &&
+        //       <Guide steps={storiesSectionSteps} tabIdentifier="stories" />
+        //     }
+        //   </Tab>
+        // </Tabs>
       )}
     </aside>
   );
