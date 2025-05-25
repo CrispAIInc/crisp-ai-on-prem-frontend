@@ -20,7 +20,7 @@ export default function MetadataAdvancedParams({ temperatureValue,
 
 
     return (
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-2'>
             {/* collapser */}
             <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsDropdownMenuOpen(!isDropdownMenuOpen)}>
                 <p className={`select-none font-bold ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Advanced settings</p>

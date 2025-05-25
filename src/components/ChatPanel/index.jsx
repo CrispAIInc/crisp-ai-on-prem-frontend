@@ -11,6 +11,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import MetadataGen from '../MetadataGen';
@@ -525,9 +526,25 @@ const ChatPanel = () => {
           </div>
         </div>
       ) : (
-        <div>
-          <MetadataGen key={0} name="genMetadata" />
-          <BaseHeading text="Insights" className="mt-5" />
+        <div className='flex flex-col h-full'>
+          <div>
+            <MetadataGen key={0} name="genMetadata" />
+            <BaseHeading text="Insights" className="mt-3" />
+          </div>
+          <div className="overflow-y-auto flex flex-col">
+            {/* notes */}
+            {
+              notes?.map((note) => (
+                <div key={note.note_id} className={`flex gap-2 ${theme === 'light'
+                  ? 'hover:bg-light-hover-100/30'
+                  : 'hover:bg-light-hover-200/20'
+                  } cursor-pointer p-2 rounded-md select-none`}>
+                  <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                  <p className="text-white font-semibold">{note.note_name}</p>
+                </div>
+              ))
+            }
+          </div>
         </div>
         // <Tabs
         //   transition={false}
