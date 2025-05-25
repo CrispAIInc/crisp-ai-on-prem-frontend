@@ -351,7 +351,7 @@ const ChatPanel = () => {
   }
 
   useEffect(() => {
-    setNoteTitle(selectedNote?.note_title);
+    setNoteTitle(selectedNote?.note_name);
   }, [selectedNote?.note_name]);
 
   return (
@@ -402,7 +402,20 @@ const ChatPanel = () => {
       {/* Editor or Tabs */}
       {showEditor ? (
         <div className="flex flex-col flex-1 h-full">
-          <div className="h-full max-h-full overflow-y-auto">
+          <div className="h-full max-h-full ml-auto overflow-y-auto">
+            <div
+              className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                ? 'hover:bg-light-hover-100/30'
+                : 'hover:bg-light-hover-200/20'
+                } z-10`}
+              onClick={handleSave}
+            >
+              <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+              <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                }`}>
+                Save insight
+              </span>
+            </div>
             <div>
               <input
                 className={`${theme === 'dark' && 'text-textColor-100'
@@ -439,7 +452,7 @@ const ChatPanel = () => {
                   }}
                 >
                   <h4 className="text-white font-bold z-10 mt-2">{item.question}</h4>
-                  <p className="text-textColor-100 z-10">{item.answer}</p>
+                  <p className="text-textColor-100 z-10" dangerouslySetInnerHTML={{ __html: item.answer }}></p>
                   {/* <p className="text-white font-bold z-10">
                     <strong>Model:</strong> {item.model}
                   </p> */}
@@ -507,19 +520,7 @@ const ChatPanel = () => {
 
 
 
-            <div
-              className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                ? 'hover:bg-light-hover-100/30'
-                : 'hover:bg-light-hover-200/20'
-                }`}
-              onClick={handleSave}
-            >
-              <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-              <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                }`}>
-                Save insight
-              </span>
-            </div>
+
           </div>
         </div>
       ) : (

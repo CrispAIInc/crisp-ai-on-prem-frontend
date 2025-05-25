@@ -502,10 +502,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     );
   };
 
-  const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, refs) => {
+  const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, refs = { pdfLinks: [], videoLinks: [], imageLinks: [] }) => {
+    console.log(textToAdd);
     const newText = {
       id: generateRandomHash(5),
-      model: models[0],
+      model: models[0] || "",
       question,
       answer: textToAdd,
       refs,
@@ -523,7 +524,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     setIsManualNote(false);
     setShowNoteDetails(true);
     setShowEditor(true);
-    setActiveView('note');
+    // setActiveView('note');
   };
 
   useEffect(() => {

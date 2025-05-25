@@ -55,11 +55,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
         }
     }, [displayedSources?.length, activeView]);
 
-    const addToInsight = async (textToAdd, file, question = '', models = "", refs) => {
-
+    const addToInsight = async (textToAdd, file, question = '', models = "", refs = { pdfLinks: [], videoLinks: [], imageLinks: [] }) => {
         const newText = {
             id: generateRandomHash(5),
-            model: "GPT-4",
+            model: models,
             question,
             answer: textToAdd,
             refs,
@@ -77,7 +76,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         setSelectedNote(newNote);
         setIsManualNote(false);
         setShowNoteDetails(true);
-        setActiveView('note');
+        // setActiveView('note');
     };
 
     return (

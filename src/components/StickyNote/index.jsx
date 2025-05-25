@@ -20,7 +20,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
         setIsEditingTitle(false);
         setIsNewNote(false);
         setShowNoteDetails(true);
-        setActiveView('note');
+        // setActiveView('note');
         setShowEditor(true);
     };
 
