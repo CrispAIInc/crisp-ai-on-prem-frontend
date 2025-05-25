@@ -418,7 +418,7 @@ const ChatPanel = () => {
 
       {/* Editor or Tabs */}
       {showEditor ? (
-        <div className="flex flex-col flex-1 h-full">
+        <div className="flex flex-col flex-1 h-full overflow-y-auto">
           <div className="h-full max-h-full ml-auto overflow-y-auto">
             <div
               className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
