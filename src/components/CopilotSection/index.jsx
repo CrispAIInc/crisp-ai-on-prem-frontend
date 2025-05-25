@@ -40,7 +40,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     sourcesWithExclusive,
     setNoteIndex,
     setShowNoteModal,
-    displayedSources, setDisplayedSources,
+    displayedSources, setShowEditor,
     selectedSources,
     selectedAll,
     isNewNote,
@@ -258,7 +258,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     noteReferences.keyframeLinks = [];
 
     let refs = {
-      videoObjects: [],
+      videoLinks: [],
       keyframeObjects: [],
       pdfObjects: [],
       imageObjects: [],
@@ -266,7 +266,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     const videoLinks = data.video_references.map((video) => {
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
-      refs["videoObjects"].push(video);
+      refs["videoLinks"].push(video);
       return (
         <li key={video.source_path} className="ml-0" data-object={video}>
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -278,7 +278,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     const keyframeLinks = data.keyframe_references.map((video) => {
       noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
-      refs["keyframeObjects"].push(video);
+      refs["keyframeLinks"].push(video);
       return (
         <li key={video.source_path} className="ml-0" data-object={video}>
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -290,7 +290,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     const pdfLinks = data.pdf_references.map((pdf) => {
       noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
-      refs["pdfObjects"].push(pdf);
+      refs["pdfLinks"].push(pdf);
       return (
         <li key={pdf.source_path} className="ml-0" data-object={pdf}>
           <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
@@ -302,7 +302,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     const imageLinks = data.img_references.map((img) => {
       noteReferences.imageLinks.push(img.source_path);
-      refs["imageObjects"].push(img);
+      refs["imageLinks"].push(img);
       return (
         <li key={img.source_path} className="ml-0" data-object={img}>
           <Link onClick={(event) => handlePDFLinkClick(event, img)}>
@@ -435,14 +435,14 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
                 selectedNote={selectedNote}
                 notes={notes}
               />
-              {(message?.refs?.videoObjects.length > 0 ||
+              {(message?.refs?.videoLinks.length > 0 ||
                 message?.refs?.keyframeObjects.length > 0 ||
                 message?.refs?.pdfObjects.length > 0 ||
                 message?.refs?.imageObjects.length > 0) && (
                   <div>
                     {/* <p className="m-0">References:</p> */}
                     {
-                      message?.refs?.videoObjects.map((video) => {
+                      message?.refs?.videoLinks.map((video) => {
                         return (
                           <li key={video.source_path} className="ml-4 list-none" data-object={video}>
                             <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -503,7 +503,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   };
 
   const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, refs) => {
-
     const newText = {
       id: generateRandomHash(5),
       model: models[0],
@@ -523,6 +522,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     setSelectedNote(newNote);
     setIsManualNote(false);
     setShowNoteDetails(true);
+    setShowEditor(true);
     setActiveView('note');
   };
 
@@ -596,7 +596,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           note_id: "",
           text: [{
             content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', refs: {
-              videoObjects: [],
+              videoLinks: [],
               keyframeObjects: [],
               pdfObjects: [],
               imageObjects: [],

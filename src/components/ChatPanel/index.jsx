@@ -20,6 +20,7 @@ import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
 import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -86,7 +87,9 @@ Quill.register(ReferenceLink, true);
 Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 
 const ChatPanel = () => {
-  const { sidebarWidth: rightWidth, sidebarWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
+  const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
+
+  const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
   const {
     chatLoaded,
@@ -98,7 +101,7 @@ const ChatPanel = () => {
     selectedNote,
     noteIndex,
     setNoteIndex,
-    setChatLoaded,
+    knowledgeBase,
     isRightSidebarOpen,
     setIsRightSidebarOpen,
     theme,
@@ -298,7 +301,7 @@ const ChatPanel = () => {
       console.error('Error saving note:', error);
       toast('Failed to save insight', { className: 'p-2 rounded-md', theme });
     }
-  }, [selectedNote, notes, noteIndex, isNewNote, theme, setNotes]);
+  }, [selectedNote, selectedNote?.note_name, notes, noteIndex, isNewNote, theme, setNotes]);
 
   const handleSidebarToggle = useCallback(() => {
     setSidebarWidth(prev => {
@@ -318,9 +321,34 @@ const ChatPanel = () => {
   //     setShowEditor(true);
   //   }
   // }, [selectedNote, generateHtmlFromText, setShowEditor]);
-  const handleReferenceClick = (refType, refValue) => {
-    console.log(`Clicked ${refType}:`, refValue);
+  const handleReferenceClick = (e, { fileName, fileType }, file) => {
+
+    const _file = file || knowledgeBase?.find(item => item?.source_path === (fileName + "." + fileType));
+    console.log(_file);
+
+    if (_file) {
+      if (fileType === "mp4") {
+        handleVideoLinkClick(e, _file);
+      } else {
+        handlePDFLinkClick(e, _file);
+      }
+    }
   };
+
+  function extractFilenameAndType(input) {
+    const trimmed = input.split('|')[0].trim(); // Get part before '|'
+    const parts = trimmed.split('.');
+
+    if (parts.length < 2) return null; // Invalid format
+
+    const fileType = parts.pop(); // Get extension
+    const fileName = parts.join('.'); // Join rest in case filename has dots
+
+    return {
+      fileName,
+      fileType
+    };
+  }
 
   useEffect(() => {
     setNoteTitle(selectedNote?.note_title);
@@ -410,57 +438,56 @@ const ChatPanel = () => {
                     marginBottom: '16px',
                   }}
                 >
-                  <h4 className="text-white font-bold z-10">{item.question}</h4>
+                  <h4 className="text-white font-bold z-10 mt-2">{item.question}</h4>
                   <p className="text-textColor-100 z-10">{item.answer}</p>
-                  <p className="text-white font-bold z-10">
+                  {/* <p className="text-white font-bold z-10">
                     <strong>Model:</strong> {item.model}
-                  </p>
+                  </p> */}
 
                   {/* PDF Links */}
-                  {item?.references?.pdfLinks?.length > 0 && (
+                  {(item?.references?.pdfLinks?.length > 0 || item?.refs?.pdfLinks?.length > 0) && (
                     <div>
-                      <strong className="font-bold text-white z-10">PDF:</strong>{' '}
-                      {item.references.pdfLinks.map((link, i) => (
+                      {/* <strong className="font-bold text-white z-10">PDF:</strong>{' '} */}
+                      {item[item.refs ? 'refs' : 'references'].pdfLinks.map((link, i) => (
                         <a
                           key={i}
                           href="#"
-                          onClick={() => handleReferenceClick('pdf', link)}
+                          onClick={(e) => handleReferenceClick(e, extractFilenameAndType(typeof link === "string" ? link : link?.source_path), (typeof link === "string" ? null : link))}
                           className="reference-link mr-2 z-10"
                         >
-                          {link}
+                          {typeof link === "string" ? link : (link?.source_path + " | " + parseInt(link?.page) + 1)}
                         </a>
                       ))}
                     </div>
                   )}
 
                   {/* Video Links */}
-                  {item?.references?.videoLinks?.length > 0 && (
+                  {(item?.references?.videoLinks?.length > 0 || item?.refs?.videoLinks?.length > 0) && (
                     <div>
-                      <strong className="font-bold text-white z-10">Video:</strong>{' '}
-                      {item.references.videoLinks.map((link, i) => (
-                        <a
+                      {/* <strong className="font-bold text-white z-10">Video:</strong>{' '} */}
+                      {item[item.refs ? 'refs' : 'references'].videoLinks.map((link, i) => (
+                        <li
                           key={i}
-                          href="#"
-                          onClick={() => handleReferenceClick('video', link)}
-                          className="reference-link mr-2 z-10"
+                          onClick={(e) => handleReferenceClick(e, extractFilenameAndType(typeof link === "string" ? link : link?.source_path), (typeof link === "string" ? null : link))}
+                          className="reference-link mr-2 z-10 break-words text-blue-600 cursor-pointer list-none"
                         >
-                          {link}
-                        </a>
+                          {typeof link === "string" ? link : (link?.source_path + " | " + link?.timestamp)}
+                        </li>
                       ))}
                     </div>
                   )}
 
                   {/* Image Links */}
-                  {item?.references?.imageLinks?.length > 0 && (
+                  {(item?.references?.imageLinks?.length > 0 || item?.refs?.imageLinks?.length > 0) && (
                     <div>
-                      <strong className="font-bold text-white z-10">Images:</strong>{' '}
-                      {item.references.imageLinks.map((link, i) => (
+                      {/* <strong className="font-bold text-white z-10">Images:</strong>{' '} */}
+                      {item[item.refs ? 'refs' : 'references'].imageLinks.map((link, i) => (
                         <img
                           key={i}
-                          src={link}
+                          src={typeof link === "string" ? link : link?.source_path}
                           alt="image"
                           className="reference-link mr-2 max-w-full z-10"
-                          onClick={() => handleReferenceClick('image', link)}
+                          onClick={(e) => handleReferenceClick(e, typeof link === "string" ? link : link?.source_path, typeof link === "string" ? null : link)}
                         />
                       ))}
                     </div>

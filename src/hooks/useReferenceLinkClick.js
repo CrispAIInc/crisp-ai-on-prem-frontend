@@ -16,10 +16,11 @@ export default function useReferenceLinkClick(isFromChat = false) {
     } = useContext(MainContext);
 
     const handleVideoLinkClick = (event, video) => {
-        event.preventDefault();
+        if (event) event.preventDefault();
         setFromChat(isFromChat);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
             }/all/${encodeURIComponent(video.source_path)}`;
+        console.log(video);
         setCurrentResource({ ...video });
         setResourceURL(resourceURL);
         setSummary(video.summary);
@@ -34,7 +35,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
     };
 
     const handlePDFLinkClick = (event, pdf) => {
-        event.preventDefault();
+        if (event) event.preventDefault();
         const resourceURL = `${API_ENDPOINT}/${pdf.file_type
             }/all/${encodeURIComponent(pdf.source_path)}`;
         setCurrentResource({ ...pdf });

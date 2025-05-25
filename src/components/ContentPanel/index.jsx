@@ -69,7 +69,7 @@ const ContentPanel = () => {
     }, []);
 
     const onThumbnailClick = (event, file) => {
-        event.preventDefault();
+        if (event) event.preventDefault();
         const resourceURL = `${import.meta.env.VITE_API_ENDPOINT
             }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
         let fileToCommit = knowledgeBase.find((item) => item.source_path === file.source_path) || file;

@@ -36,10 +36,10 @@ const NotesSection = () => {
                     imageLinks: [],
                 },
                 refs: {
-                    videoObjects: [],
-                    keyframeObjects: [],
-                    pdfObjects: [],
-                    imageObjects: [],
+                    videoLinks: [],
+                    keyframeLinks: [],
+                    pdfLinks: [],
+                    imageLinks: [],
                 }
             }],
             images: [],
