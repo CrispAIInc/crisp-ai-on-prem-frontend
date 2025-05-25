@@ -109,9 +109,31 @@ function MetadataGen() {
         }
     }
 
+    const [contextFocused, setContextFocused] = useState(false);
+    const [context, setContext] = useState('');
+    const isActive = contextFocused || context.length > 0;
 
     return (
         <div className='z-20 flex flex-col gap-4'>
+
+            {/* context */}
+            <div className="relative mt-6 w-full">
+                <label
+                    className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
+                    ${isActive ? 'text-sm -top-6 left-1 text-blue-600' : 'text-base top-2.5'}`}
+                >
+                    Context
+                </label>
+                <textarea
+                    className="bg-transparent w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-white"
+                    rows="4"
+                    onFocus={() => setContextFocused(true)}
+                    onBlur={() => setContextFocused(false)}
+                    value={context}
+                    onChange={(e) => setContext(e.target.value)}
+                />
+            </div>
+
             <MetadataOptions selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} options={metadataOptions} />
             <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={sourcesTobeCommited} />
             <MetadataAdvancedParams temperatureValue={temperatureValue}
