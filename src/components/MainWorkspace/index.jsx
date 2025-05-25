@@ -506,7 +506,7 @@ const MainWorkspace = ({ theme }) => {
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
   const [generatedResources, setGeneratedResources] = useState([]);
-  const [showEditor, setShowEditor] = useState(true);
+  const [showEditor, setShowEditor] = useState(false);
 
   // useEffect(() => {
   //   if (knowledgeBase.every((item) => item.is_selected === false)) {
@@ -632,11 +632,11 @@ const MainWorkspace = ({ theme }) => {
         setSelectedNote({
           note_id: "",
           text: [{
-            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', refs: {
-              videoObjects: [],
-              keyframeObjects: [],
-              pdfObjects: [],
-              imageObjects: [],
+            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+              videoLinks: [],
+              keyframeLinks: [],
+              pdfLinks: [],
+              imageLinks: [],
             }
           }],
           images: [],
