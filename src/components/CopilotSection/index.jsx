@@ -246,13 +246,23 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
         }
       };
 
-      eventSource.onerror = function () {
+      eventSource.onerror = async function () {
         setShowCursor(false);
         eventSource.close();
 
         if (eventSource.readyState === EventSource.CLOSED) {
           // Extract session ID from the eventSource's URL
           fetchReferences(botMessage); // Function to fetch references
+          try {
+            const data = await makeApiRequest(
+              "/content",
+              "post",
+              JSON.stringify(categoryValues)
+            );
+            setKnowledgeBase(data);
+          } catch (error) {
+            console.warn(error);
+          }
           setOriginalResponses([...originalResponses, botMessage]);
         } else {
           console.error("Connection was closed due to an error.");
