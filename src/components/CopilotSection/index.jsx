@@ -38,6 +38,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     setSelectedNote,
     showNoteModal,
     sourcesWithExclusive,
+    categoryOptions,
+    setKnowledgeBase,
     setNoteIndex,
     setShowNoteModal,
     displayedSources, setShowEditor,
@@ -130,6 +132,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     }
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
+  const categoryValues = categoryOptions.map((option) => option.value);
+
   let noteQuestion = useRef('');
   const sendMessage = async (message, models = selectedLLMs) => {
     if (!chatLoaded) return;
@@ -189,7 +193,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
       });
       setShowCursor(false);
     } else {
-
       // add or remove embeddings from VS
       if (!displayedSources?.every(item => item?.is_selected === false)) {
         await makeApiRequest(
@@ -199,6 +202,17 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
             sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
           })
         );
+      }
+
+      try {
+        const data = await makeApiRequest(
+          "/content",
+          "post",
+          JSON.stringify(categoryValues)
+        );
+        setKnowledgeBase(data);
+      } catch (error) {
+        console.warn(error);
       }
 
       let sessionID = null; // Variable to store the session ID
