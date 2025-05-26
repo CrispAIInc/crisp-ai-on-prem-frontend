@@ -616,7 +616,7 @@ const ContentSection = ({
                                             <Checkbox
                                                 className="p-0 !ml-1"
                                                 checked={option.is_selected}
-                                                onChange={() => handleCheckboxChange(option)}
+                                                onChange={(e) => handleCheckboxChange(e?.target?.checked, option)}
                                                 onClick={(event) => event.stopPropagation()}
                                                 inputProps={{ "aria-label": "Select source" }}
                                             />

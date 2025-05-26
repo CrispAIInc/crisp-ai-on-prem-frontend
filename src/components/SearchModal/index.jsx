@@ -52,7 +52,7 @@ export function SearchModal(props) {
                                 <Checkbox
                                     className={`absolute left-0 p-0 ${theme === 'dark' && 'text-white'}`}
                                     checked={item.is_selected}
-                                    onChange={() => props.handleCheckboxChange(item)}
+                                    onChange={(e) => props.handleCheckboxChange(e?.target?.checked, item)}
                                     inputProps={{ "aria-label": "Select source" }}
                                 />
                                 <div onClick={(event) => props.onThumbnailClick(event, item)}>

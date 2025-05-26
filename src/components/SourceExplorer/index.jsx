@@ -179,7 +179,7 @@ export function SourceExplorer(props) {
                                         className={`select-all-checkbox ${theme === "dark" && "border-white text-white"
                                             } p-0`}
                                         checked={file.is_selected}
-                                        onChange={() => props.handleCheckboxChange(file)}
+                                        onChange={(e) => props.handleCheckboxChange(e.target?.checked, file)}
                                         inputProps={{ "aria-label": "Select source" }}
                                     />
 
@@ -231,7 +231,7 @@ export function SourceExplorer(props) {
                                         className={`select-all-checkbox ${theme === "dark" && "border-white text-white"
                                             } absolute p-0`}
                                         checked={file.is_selected}
-                                        onChange={() => props.handleCheckboxChange(file)}
+                                        onChange={(e) => props.handleCheckboxChange(e.target?.checked, file)}
                                         inputProps={{ "aria-label": "Select source" }}
                                     />
 

@@ -360,7 +360,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   async function handleToggle(checked) {
     setIsChecked(checked);
     // setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
-    // handleCheckboxChange(currentResource);
+    // handleCheckboxChange(checked, currentResource);
     if (checked) {
       // console.log("checked 1");
       setActiveTab('genInsights');

@@ -26,12 +26,12 @@ const ContentPanel = () => {
         setShowSearchModal,
         handleCheckboxChange,
         knowledgeBase, setKnowledgeBase,
-        setJumpToPage,
+        onThumbnailClick,
         isLeftSidebarOpen,
         setIsLeftSidebarOpen,
-        setSummary, setShowMetadata, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
+        setTranscription, setShowMetadata, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
 
-    const [, setTranscription] = useState("");
+
 
 
 
@@ -68,26 +68,26 @@ const ContentPanel = () => {
         makeRequest();
     }, []);
 
-    const onThumbnailClick = (event, file) => {
-        if (event) event.preventDefault();
-        const resourceURL = `${import.meta.env.VITE_API_ENDPOINT
-            }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
-        let fileToCommit = knowledgeBase.find((item) => item.source_path === file.source_path) || file;
-        setCurrentResource(fileToCommit);
-        setResourceURL(resourceURL);
-        setTranscription(fileToCommit.metadata ? fileToCommit.metadata.transcription : "");
-        if (fileToCommit.file_type != "img") {
-            setSummary(fileToCommit.summary);
-            setSummaries(fileToCommit.topic_summaries);
-        }
+    // const onThumbnailClick = (event, file) => {
+    //     if (event) event.preventDefault();
+    //     const resourceURL = `${import.meta.env.VITE_API_ENDPOINT
+    //         }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
+    //     let fileToCommit = knowledgeBase.find((item) => item.source_path === file.source_path) || file;
+    //     setCurrentResource(fileToCommit);
+    //     setResourceURL(resourceURL);
+    //     setTranscription(fileToCommit.metadata ? fileToCommit.metadata.transcription : "");
+    //     if (fileToCommit.file_type != "img") {
+    //         setSummary(fileToCommit.summary);
+    //         setSummaries(fileToCommit.topic_summaries);
+    //     }
 
-        // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page life the case when clicking on a reference
-        if (fileToCommit.file_type === "pdf") {
-            setJumpToPage({ page: -1 });
-        }
-        setActiveView('resource');
-        setShowMetadata(true);
-    };
+    //     // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page life the case when clicking on a reference
+    //     if (fileToCommit.file_type === "pdf") {
+    //         setJumpToPage({ page: -1 });
+    //     }
+    //     setActiveView('resource');
+    //     setShowMetadata(true);
+    // };
     /**
      * Function to toggle 'isSelected' of an item inside 'knowledgeBase' array when the checkbox is clicked
      */
@@ -118,33 +118,33 @@ const ContentPanel = () => {
         },
     ];
 
-    const notesSectionSteps = [
-        {
-            target: ".new-note-button",
-            content: "Click here to create a new insight.",
-            disableBeacon: true,
-            placement: "right",
-        },
-        {
-            target: ".saved-notes",
-            content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
-            placement: "right",
-        },
-    ];
+    // const notesSectionSteps = [
+    //     {
+    //         target: ".new-note-button",
+    //         content: "Click here to create a new insight.",
+    //         disableBeacon: true,
+    //         placement: "right",
+    //     },
+    //     {
+    //         target: ".saved-notes",
+    //         content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
+    //         placement: "right",
+    //     },
+    // ];
 
-    const storiesSectionSteps = [
-        {
-            target: ".new-story-button",
-            content: "Click here to create a new story.",
-            disableBeacon: true,
-            placement: "right",
-        },
-        {
-            target: ".saved-stories",
-            content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
-            placement: "right",
-        }
-    ];
+    // const storiesSectionSteps = [
+    //     {
+    //         target: ".new-story-button",
+    //         content: "Click here to create a new story.",
+    //         disableBeacon: true,
+    //         placement: "right",
+    //     },
+    //     {
+    //         target: ".saved-stories",
+    //         content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
+    //         placement: "right",
+    //     }
+    // ];
 
     const [activeTab, setActiveTab] = useState('sources');
 

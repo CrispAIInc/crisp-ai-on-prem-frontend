@@ -247,7 +247,30 @@ const MainWorkspace = ({ theme }) => {
     });
   }, [knowledgeBase]);
 
-  const handleCheckboxChange = (file) => {
+  const [, setTranscription] = useState("");
+
+  const onThumbnailClick = (event, file) => {
+    if (event) event.preventDefault();
+    const resourceURL = `${import.meta.env.VITE_API_ENDPOINT
+      }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
+    let fileToCommit = knowledgeBase.find((item) => item.source_path === file.source_path) || file;
+    setCurrentResource(fileToCommit);
+    setResourceURL(resourceURL);
+    setTranscription(fileToCommit.metadata ? fileToCommit.metadata.transcription : "");
+    if (fileToCommit.file_type != "img") {
+      setSummary(fileToCommit.summary);
+      setSummaries(fileToCommit.topic_summaries);
+    }
+
+    // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page life the case when clicking on a reference
+    if (fileToCommit.file_type === "pdf") {
+      setJumpToPage({ page: -1 });
+    }
+    setActiveView('resource');
+    // setShowMetadata(true);
+  };
+
+  const handleCheckboxChange = (isChecked, file) => {
     // Create a new array with updated items
     const updatedKnowledgeBase = knowledgeBase.map((item) => {
       if (item.source_path === file.source_path) {
@@ -304,6 +327,11 @@ const MainWorkspace = ({ theme }) => {
     //   setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
     //   // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     // }
+
+    if (isChecked === true) {
+      onThumbnailClick(undefined, file);
+      // setShowMetadata(false);
+    }
   };
 
   const [selectedCategoryChat] = useState("all");
@@ -547,6 +575,7 @@ const MainWorkspace = ({ theme }) => {
     showMetadata, setShowMetadata,
     isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed,
     API_ENDPOINT,
+    onThumbnailClick,
     sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
     sourcesWithExclusive, setSourcesWithExclusive,
     metadataOptions,

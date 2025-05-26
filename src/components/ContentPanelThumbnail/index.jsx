@@ -34,7 +34,7 @@ const ContentPanelThumbnail = ({
           <Checkbox
             className="p-0 !ml-1"
             checked={item.is_selected}
-            onChange={() => handleCheckboxChange(item)}
+            onChange={(e) => handleCheckboxChange(e?.target?.checked, item)}
             onClick={(event) => event.stopPropagation()}
             inputProps={{ "aria-label": "Select source" }}
           />
