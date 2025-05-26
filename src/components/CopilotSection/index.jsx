@@ -101,6 +101,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     }
     // setCommittedSources(selectedSources);
     async function fetchChat() {
+      console.log('here: copilot', selectedCategoryChat);
       const data = await makeApiRequest(
         `/chat/${selectedCategoryChat}`,
         "post",
@@ -204,16 +205,16 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
         );
       }
 
-      try {
-        const data = await makeApiRequest(
-          "/content",
-          "post",
-          JSON.stringify(categoryValues)
-        );
-        setKnowledgeBase(data);
-      } catch (error) {
-        console.warn(error);
-      }
+      // try {
+      //   const data = await makeApiRequest(
+      //     "/content",
+      //     "post",
+      //     JSON.stringify(categoryValues)
+      //   );
+      //   setKnowledgeBase(data);
+      // } catch (error) {
+      //   console.warn(error);
+      // }
 
       let sessionID = null; // Variable to store the session ID
       const eventSource = new EventSource(
@@ -253,16 +254,16 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
         if (eventSource.readyState === EventSource.CLOSED) {
           // Extract session ID from the eventSource's URL
           fetchReferences(botMessage); // Function to fetch references
-          try {
-            const data = await makeApiRequest(
-              "/content",
-              "post",
-              JSON.stringify(categoryValues)
-            );
-            setKnowledgeBase(data);
-          } catch (error) {
-            console.warn(error);
-          }
+          // try {
+          //   const data = await makeApiRequest(
+          //     "/content",
+          //     "post",
+          //     JSON.stringify(categoryValues)
+          //   );
+          //   setKnowledgeBase(data);
+          // } catch (error) {
+          //   console.warn(error);
+          // }
           setOriginalResponses([...originalResponses, botMessage]);
         } else {
           console.error("Connection was closed due to an error.");

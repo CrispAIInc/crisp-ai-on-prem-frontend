@@ -317,6 +317,7 @@ const MainWorkspace = ({ theme }) => {
     }
     // setCommittedSources(selectedSources);
     async function fetchChat() {
+      console.log('here: ', selectedCategoryChat);
       const data = await makeApiRequest(
         `/chat/${selectedCategoryChat}`,
         "post",
