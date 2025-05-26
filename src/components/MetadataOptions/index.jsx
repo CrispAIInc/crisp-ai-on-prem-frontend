@@ -48,7 +48,7 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
     }
 
     return (
-        <div>
+        <div className='relative z-30'>
             <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Metadata output</label>
             <div className="relative inline-block w-full" ref={dropdownRef}>
                 {/* upper section */}
