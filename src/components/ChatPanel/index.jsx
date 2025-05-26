@@ -23,6 +23,7 @@ import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import BaseHeading from '../BaseHeading';
+import { generateRandomHash, htmlToPlainText } from '../../utils';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -203,6 +204,7 @@ const ChatPanel = () => {
   ];
 
   const closeEditor = useCallback(() => {
+    setIsNewInsight(false);
     setSelectedNote({
       note_id: "",
       text: [{
@@ -296,7 +298,7 @@ const ChatPanel = () => {
   //   root.addEventListener("click", handleClick);
   //   return () => root.removeEventListener("click", handleClick);
   // }, [value]);
-
+  const [isNewInsight, setIsNewInsight] = useState(false);
   function createNewInsight() {
     setSelectedNote({
       note_id: "",
@@ -311,29 +313,30 @@ const ChatPanel = () => {
       images: [],
       note_name: "",
     });
+    setIsNewInsight(true);
     setShowEditor(true);
   }
 
-  const handleSave = useCallback(async (event) => {
+  const handleSave = async (event) => {
     event?.preventDefault();
-
-    if (selectedNote.note_name === "") {
+    if ((!isNewInsight && selectedNote.note_name === "") || (isNewInsight && noteTitle === "")) {
       toast('Note title cannot be empty', { className: 'p-2 rounded-md', theme });
       return;
     }
 
-    if (isNewNote && notes.every(n => n.note_name !== selectedNote.note_name)) {
+    if ((isNewNote || isNewInsight) && notes.every(n => n.note_name !== selectedNote.note_name)) {
       const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
       selectedNote.note_id = dateTimeStr;
     }
 
     try {
+      const noteId = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
       await makeApiRequest('/save-note', 'post', {
-        noteID: selectedNote.note_id,
-        selectedNote,
-        noteName: 'note_json',
+        noteID: selectedNote.note_id || noteId,
+        selectedNote: isNewInsight ? { ...selectedNote, note_id: noteId, note_name: noteTitle, text: [{ answer: htmlToPlainText(value), content: value, question: "", model: "", id: generateRandomHash(5), references: { videoLinks: [], pdfLinks: [], imageLinks: [] } }] } : selectedNote,
+        noteName: noteTitle,
         noteNumber: parseInt(noteIndex),
-        isNewNote: isNewNote
+        isNewNote: (isNewNote || isNewInsight)
       });
 
       const data = await makeApiRequest("/notes", "post");
@@ -343,7 +346,7 @@ const ChatPanel = () => {
       console.error('Error saving note:', error);
       toast('Failed to save insight', { className: 'p-2 rounded-md', theme });
     }
-  }, [selectedNote, selectedNote?.note_name, notes, noteIndex, isNewNote, theme, setNotes]);
+  };
 
   const handleSidebarToggle = useCallback(() => {
     setSidebarWidth(prev => {
@@ -506,14 +509,23 @@ const ChatPanel = () => {
                 onChange={(e) => setNoteTitle(e.target.value)}
               />
             </div>
-            <div style={{}}>
+            <div className={`${isNewInsight && 'h-full'}`}>
+              {!isNewInsight && (
+                <style>
+                  {`
+                    .ql-toolbar.ql-snow + .ql-container.ql-snow {
+                      display: none !important;
+                    }
+                  `}
+                </style>
+              )}
               <ReactQuill
                 ref={editorRef}
                 theme="snow"
                 value={value}
                 onChange={setValue}
-                readOnly={true}
-                className="custom-quill"
+                readOnly={!isNewInsight}
+                className="custom-quill h-full"
                 modules={modules}
                 formats={formats}
               />
@@ -589,7 +601,7 @@ const ChatPanel = () => {
               :
               <div className="space-y-6 !z-10 relative !border !border-textColor-300">
                 {
-                  selectedStory?.text?.map((heading, index) => {
+                  selectedStory?.text?.map((heading) => {
                     return (
                       <div key={heading?.id} className="pl-2 mb-4">
                         <h4 className="text-white font-bold z-10 mt-2">{heading?.outline?.name}</h4>
