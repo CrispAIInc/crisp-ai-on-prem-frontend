@@ -90,26 +90,26 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const categoryValues = categoryOptions.map((option) => option.value);
 
+  async function updateContent() {
+    const data = await makeApiRequest(
+      "/content",
+      "post",
+      JSON.stringify(categoryValues)
+    );
+    //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
+    let updatedKnowledgeBase = data.map(item => {
+      let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
+
+      if (selected) {
+        return { ...item, is_selected: true };
+      } else {
+        return item;
+      }
+    });
+
+    setKnowledgeBase(updatedKnowledgeBase);
+  }
   useEffect(() => {
-    async function updateContent() {
-      const data = await makeApiRequest(
-        "/content",
-        "post",
-        JSON.stringify(categoryValues)
-      );
-      //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
-      let updatedKnowledgeBase = data.map(item => {
-        let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
-
-        if (selected) {
-          return { ...item, is_selected: true };
-        } else {
-          return item;
-        }
-      });
-
-      setKnowledgeBase(updatedKnowledgeBase);
-    }
     if (activeView === "resource") {
       // setTranslatedResource(currentResource);
       if (currentResource) {
@@ -124,7 +124,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
         // Call translateMetadata with the updated resource
 
-        updateContent();
+        // updateContent();
         translateMetadata("en", updatedResource);
       }
     }
@@ -212,6 +212,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   const pageRefs = useRef({});
 
   async function translateMetadata(chosenLanguage, object) {
+    updateContent();
     setChosenLanguage(chosenLanguage);
     setIsTranslationLoading(true);
     // make sure response body is also like httpRequestBody (w/o lang)
