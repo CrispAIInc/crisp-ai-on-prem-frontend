@@ -210,8 +210,10 @@ const ContentSection = ({
         }
     };
 
+    // const [isUploading, setIsUploading] = useState(false);
     const handleUpload = async (event, fileFormat, _files) => {
         try {
+            console.log("UPloadinf...");
             setIsUploading(true);
             const files = _files || Array.from(event.target.files);
             const processedFiles = files.map(file =>
@@ -489,7 +491,7 @@ const ContentSection = ({
                         </div> */}
                     {/* </div> */}
                     {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} /> */}
-                    <AddSourceModal show={showAddModal} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
+                    <AddSourceModal show={showAddModal} isUploading={isUploading} setIsUploading={setIsUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
                     {showSourceExplorer && (
                         <SourceExplorer
                             show={showSourceExplorer}

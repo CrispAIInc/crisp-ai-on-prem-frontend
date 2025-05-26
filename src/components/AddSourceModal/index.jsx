@@ -14,7 +14,7 @@ export default function LLMModal(props) {
 
     const [showCategoriesModal, setShowCategoriesModal] = useState(false);
     const [showFileFormatsModal, setShowFileFormatsModal] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
+    // const [isUploading, setIsUploading] = useState(false);
     const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
     function openIndexModal() {
         setIsIndexModalOpen(true);
@@ -56,7 +56,7 @@ export default function LLMModal(props) {
                     className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                     onClick={handleAddNewResource}
                 >
-                    {isUploading ? (<LoadingSpinner isSmall />) : (<UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />)}
+                    {props?.isUploading ? (<LoadingSpinner isSmall />) : (<UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />)}
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Upload</span>
                 </div>
                 <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={props?.handleUpload} />
