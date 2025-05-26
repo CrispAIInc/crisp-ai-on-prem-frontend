@@ -28,11 +28,11 @@ function MetadataGen() {
     //     setTemperatureValue(e.target.value);
     // }
 
-    const [verbosityValue, setVerbosityValue] = useState('low');
+    // const [verbosityValue, setVerbosityValue] = useState('low');
 
-    function handleChange(event) {
-        setVerbosityValue(event.target.value);
-    }
+    // function handleChange(event) {
+    //     setVerbosityValue(event.target.value);
+    // }
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -78,7 +78,7 @@ function MetadataGen() {
             //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             // };
             const payload = {
-                category: selectedCategory, sources: selectedSourcesToGen.map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, inputContext: context
+                category: selectedCategory, sources: selectedSourcesToGen.map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
@@ -138,13 +138,13 @@ function MetadataGen() {
 
             <MetadataOptions selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} options={metadataOptions} />
             <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={sourcesTobeCommited} />
-            <MetadataAdvancedParams
-                // temperatureValue={temperatureValue}
-                // setTemperatureValue={setTemperatureValue}
-                // handleTemperatureChange={handleTemperatureChange}
+            {/* <MetadataAdvancedParams
+                temperatureValue={temperatureValue}
+                setTemperatureValue={setTemperatureValue}
+                handleTemperatureChange={handleTemperatureChange}
                 verbosityValue={verbosityValue}
                 setVerbosityValue={setVerbosityValue}
-                handleChange={handleChange} />
+                handleChange={handleChange} /> */}
 
             {/* generate button */}
             <div className='relative inline-block' onMouseMove={handleMouseMove}
