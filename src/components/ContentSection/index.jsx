@@ -254,10 +254,12 @@ const ContentSection = ({
                 return [...prev, ...newSources.map(item => ({ ...item, is_selected: true }))];
             });
 
-            setIsUploading(false);
         } catch (error) {
             console.error(error);
             setIsUploading(false);
+        } finally {
+            setIsUploading(false);
+            setShowAddModal(false);
         }
     };
 
@@ -491,7 +493,7 @@ const ContentSection = ({
                         </div> */}
                     {/* </div> */}
                     {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} /> */}
-                    <AddSourceModal show={showAddModal} isUploading={isUploading} setIsUploading={setIsUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
+                    <AddSourceModal show={showAddModal} setShowAddModal={setShowAddModal} isUploading={isUploading} setIsUploading={setIsUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
                     {showSourceExplorer && (
                         <SourceExplorer
                             show={showSourceExplorer}
