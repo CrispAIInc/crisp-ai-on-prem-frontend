@@ -116,7 +116,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     }
 
     fetchChat();
-  }, [selectedCategoryChat, selectedSources]);
+  }, [selectedCategoryChat, selectedSources, displayedSources]);
 
   useEffect(() => {
     if (
