@@ -53,7 +53,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         } else {
             setCombinedSummary(currentResource?.metadata?.summary?.content);
         }
-    }, [displayedSources?.length, activeView, currentResource?.source_path]);
+    }, [displayedSources?.length, activeView]);
 
     const addToInsight = async (textToAdd, file, question = '', models = "", refs = { pdfLinks: [], videoLinks: [], imageLinks: [] }) => {
         const newText = {

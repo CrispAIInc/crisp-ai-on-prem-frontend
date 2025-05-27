@@ -139,7 +139,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const closeVideo = async (event) => {
     event.preventDefault();
-    setCurrentResource(null);
+    // setCurrentResource(null);
     setResourceURL(null);
     setIsPlayerReady(false);
     setShowMetadata(false);
@@ -162,7 +162,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const closePDF = async (event) => {
     event.preventDefault();
-    setCurrentResource(null);
+    // setCurrentResource(null);
     setResourceURL(null);
     setShowMetadata(false);
     // setActiveView(() => {
@@ -184,7 +184,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const closeImage = async (event) => {
     event.preventDefault();
-    setCurrentResource(null);
+    // setCurrentResource(null);
     setResourceURL(null);
     setShowMetadata(false);
     // setActiveView(() => {

@@ -249,7 +249,7 @@ const MainWorkspace = ({ theme }) => {
 
   const [, setTranscription] = useState("");
 
-  const onThumbnailClick = (event, file) => {
+  const onThumbnailClick = (event, file, isFromCheckbox = false) => {
     if (event) event.preventDefault();
     const resourceURL = `${import.meta.env.VITE_API_ENDPOINT
       }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
@@ -267,7 +267,7 @@ const MainWorkspace = ({ theme }) => {
       setJumpToPage({ page: -1 });
     }
     setActiveView('resource');
-    // setShowMetadata(true);
+    if (!isFromCheckbox) { setShowMetadata(true); }
   };
 
   const handleCheckboxChange = (isChecked, file) => {
@@ -329,7 +329,7 @@ const MainWorkspace = ({ theme }) => {
     // }
 
     if (isChecked === true) {
-      onThumbnailClick(undefined, file);
+      onThumbnailClick(undefined, file, true);
       // setShowMetadata(false);
     }
   };
