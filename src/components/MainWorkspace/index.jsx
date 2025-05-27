@@ -267,7 +267,7 @@ const MainWorkspace = ({ theme }) => {
       setJumpToPage({ page: -1 });
     }
     setActiveView('resource');
-    // setShowMetadata(true);
+    setShowMetadata(true);
   };
 
   const handleCheckboxChange = (isChecked, file) => {

@@ -28,11 +28,11 @@ function MetadataGen() {
     //     setTemperatureValue(e.target.value);
     // }
 
-    // const [verbosityValue, setVerbosityValue] = useState('low');
+    const [verbosityValue, setVerbosityValue] = useState('low');
 
-    // function handleChange(event) {
-    //     setVerbosityValue(event.target.value);
-    // }
+    function handleChange(event) {
+        setVerbosityValue(event.target.value);
+    }
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -137,14 +137,14 @@ function MetadataGen() {
             </div>
 
             <MetadataOptions selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} options={metadataOptions} />
-            <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={sourcesTobeCommited} />
-            {/* <MetadataAdvancedParams
-                temperatureValue={temperatureValue}
-                setTemperatureValue={setTemperatureValue}
-                handleTemperatureChange={handleTemperatureChange}
+            {/* <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={sourcesTobeCommited} /> */}
+            <MetadataAdvancedParams
+                // temperatureValue={temperatureValue}
+                // setTemperatureValue={setTemperatureValue}
+                // handleTemperatureChange={handleTemperatureChange}
                 verbosityValue={verbosityValue}
                 setVerbosityValue={setVerbosityValue}
-                handleChange={handleChange} /> */}
+                handleChange={handleChange} />
 
             {/* generate button */}
             <div className='relative inline-block' onMouseMove={handleMouseMove}
