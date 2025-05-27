@@ -578,7 +578,7 @@ const MainWorkspace = ({ theme }) => {
     onThumbnailClick,
     sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
     sourcesWithExclusive, setSourcesWithExclusive,
-    metadataOptions,
+    metadataOptions, selectedCategoryChat,
     committedSources, setCommittedSources,
     selectedOptions, setSelectedOptions,
     workspaceContainer,
