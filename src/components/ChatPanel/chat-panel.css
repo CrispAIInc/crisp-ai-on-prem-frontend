@@ -45,6 +45,7 @@
 
 .ql-toolbar {
   border-color: transparent !important;
+  z-index: 30;
 }
 
 .custom-quill .ql-editor {
