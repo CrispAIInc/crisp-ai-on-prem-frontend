@@ -28,7 +28,7 @@ function MetadataGen() {
     //     setTemperatureValue(e.target.value);
     // }
 
-    const [verbosityValue, setVerbosityValue] = useState('low');
+    const [verbosityValue, setVerbosityValue] = useState('medium');
 
     function handleChange(event) {
         setVerbosityValue(event.target.value);
@@ -119,15 +119,15 @@ function MetadataGen() {
         <div className='z-20 flex flex-col gap-2'>
 
             {/* context */}
-            <div className="relative mt-6 w-full">
+            <div className="relative w-full mt-6">
                 <label
                     className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
-                    ${isActive ? 'text-sm -top-6 left-1 text-blue-600' : 'text-base top-2.5'}`}
+                    ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base top-2.5'}`}
                 >
                     Context
                 </label>
                 <textarea
-                    className="bg-transparent w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-white"
+                    className="w-full p-2 text-white bg-transparent border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                     rows="3"
                     onFocus={() => setContextFocused(true)}
                     onBlur={() => setContextFocused(false)}

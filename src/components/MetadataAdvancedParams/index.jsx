@@ -14,13 +14,13 @@ export default function MetadataAdvancedParams({ temperatureValue,
 
     const { sidebarWidth, maxWidth } = useResizableSidebar(200, false);
 
-    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
+    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
     const { theme } = useContext(MainContext);
 
 
 
     return (
-        <div className='flex flex-col gap-2'>
+        <div className='relative z-20 flex flex-col gap-2'>
             {/* collapser */}
             <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsDropdownMenuOpen(!isDropdownMenuOpen)}>
                 <p className={`select-none font-bold ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Advanced settings</p>

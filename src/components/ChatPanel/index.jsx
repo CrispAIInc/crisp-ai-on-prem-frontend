@@ -99,6 +99,8 @@ const ChatPanel = () => {
     setIsEditingTitle,
     setIsNewNote,
     setShowNoteDetails,
+    activeTab,
+    setActiveTab,
     notes,
     isNewNote,
     setNotes,
@@ -438,10 +440,20 @@ const ChatPanel = () => {
     setShowEditor(true);
   };
 
+  const [actualTab, setActualTab] = useState(null); //genMetadata | genStories
+
+  function handleTabClick(item) {
+    if (item === 'Generate metadata') {
+      setActualTab("genMetadata");
+    } else if (item === "Generate stories") {
+      setActualTab("genStories");
+    }
+  }
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
-        } flex flex-col`}
+        } flex flex-col max-h-full`}
       style={{ width: rightWidth }}
     >
       <div className="flex items-center justify-between">
@@ -476,12 +488,67 @@ const ChatPanel = () => {
       )}
 
       {/* Toggle button */}
-      <div className="px-2 py-2 rounded-md w-fit absolute right-0 h-auto top-1/2 flex flex-col justify-center items-center z-40">
+      <div className="absolute right-0 z-40 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md w-fit top-1/2">
         <SwapHorizOutlinedIcon
           className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`}
           onClick={handleSidebarToggle}
         />
       </div>
+
+      {/* GenMetadata & GenStories */}
+      {/* ::::::::::::::::::::::::::::::::::::::::::: */}
+
+      {/* <Tabs
+        transition={false}
+        defaultActiveKey="genMetadata"
+        onSelect={(k) => setActiveTab(() => k)}
+        activeKey={activeTab}
+        id="uncontrolled-tab-example"
+        className={`mb-3 user-select-none  text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'
+          }`}
+      >
+        <Tab
+          eventKey="genMetadata"
+          title="GenMetadata"
+          className="flex-1 overflow-y-auto bg-red-600"
+          tabClassName="text-primary-300"
+        >
+          <MetadataGen key={0} name="genMetadata" />
+        </Tab>
+
+        <Tab
+          eventKey="insights"
+          title="Insights"
+          className="flex-1 h-full overflow-y-auto"
+        >
+          <NotesSection
+            setNoteIndex={setNoteIndex}
+            nodeIndex={noteIndex}
+            key={2}
+            name="Notes"
+          />
+          {(activeTab === 'insights' &&
+            (Boolean(localStorage.getItem('guide_completed_insights')) === false ||
+              localStorage.getItem('guide_completed_sources') === "false")) &&
+            <Guide steps={notesSectionSteps} tabIdentifier="insights" />
+          }
+        </Tab>
+
+        <Tab
+          eventKey="stories"
+          title="GenStories"
+          className="flex-1 h-full overflow-y-auto"
+        >
+          <StoriesSection />
+          {(activeTab === 'stories' &&
+            (Boolean(localStorage.getItem('guide_completed_stories')) === false ||
+              localStorage.getItem('guide_completed_sources') === "false")) &&
+            <Guide steps={storiesSectionSteps} tabIdentifier="stories" />
+          }
+        </Tab>
+      </Tabs> */}
+
+      {/* ::::::::::::::::::::::::::::::::::::::::::: */}
 
       {/* Editor or Tabs */}
       {showEditor ? (
@@ -525,7 +592,7 @@ const ChatPanel = () => {
                 value={value}
                 onChange={setValue}
                 readOnly={!isNewInsight}
-                className="custom-quill h-full"
+                className="h-full custom-quill"
                 modules={modules}
                 formats={formats}
               />
@@ -541,22 +608,22 @@ const ChatPanel = () => {
                   key={index}
                   className="pl-2 mb-4"
                 >
-                  <h4 className="text-white font-bold z-10 mt-2">{item.question}</h4>
-                  <p className="text-textColor-100 z-10" dangerouslySetInnerHTML={{ __html: item.answer }}></p>
-                  {/* <p className="text-white font-bold z-10">
+                  <h4 className="z-10 mt-2 font-bold text-white">{item.question}</h4>
+                  <p className="z-10 text-textColor-100" dangerouslySetInnerHTML={{ __html: item.answer }}></p>
+                  {/* <p className="z-10 font-bold text-white">
                     <strong>Model:</strong> {item.model}
                   </p> */}
 
                   {/* PDF Links */}
                   {(item?.references?.pdfLinks?.length > 0 || item?.refs?.pdfLinks?.length > 0) && (
                     <div>
-                      {/* <strong className="font-bold text-white z-10">PDF:</strong>{' '} */}
+                      {/* <strong className="z-10 font-bold text-white">PDF:</strong>{' '} */}
                       {item[item.refs ? 'refs' : 'references'].pdfLinks.map((link, i) => (
                         <a
                           key={i}
                           href="#"
                           onClick={(e) => handleReferenceClick(e, extractFilenameAndType(typeof link === "string" ? link : link?.source_path), (typeof link === "string" ? null : link))}
-                          className="reference-link mr-2 z-10"
+                          className="z-10 mr-2 reference-link"
                         >
                           {typeof link === "string" ? link : (link?.source_path + " | " + parseInt(link?.page) + 1)}
                         </a>
@@ -567,12 +634,12 @@ const ChatPanel = () => {
                   {/* Video Links */}
                   {(item?.references?.videoLinks?.length > 0 || item?.refs?.videoLinks?.length > 0) && (
                     <div>
-                      {/* <strong className="font-bold text-white z-10">Video:</strong>{' '} */}
+                      {/* <strong className="z-10 font-bold text-white">Video:</strong>{' '} */}
                       {item[item.refs ? 'refs' : 'references'].videoLinks.map((link, i) => (
                         <li
                           key={i}
                           onClick={(e) => handleReferenceClick(e, extractFilenameAndType(typeof link === "string" ? link : link?.source_path), (typeof link === "string" ? null : link))}
-                          className="reference-link mr-2 z-10 break-words text-blue-600 cursor-pointer list-none"
+                          className="z-10 mr-2 text-blue-600 break-words list-none cursor-pointer reference-link"
                         >
                           {typeof link === "string" ? link : (link?.source_path + " | " + link?.timestamp)}
                         </li>
@@ -583,13 +650,13 @@ const ChatPanel = () => {
                   {/* Image Links */}
                   {(item?.references?.imageLinks?.length > 0 || item?.refs?.imageLinks?.length > 0) && (
                     <div>
-                      {/* <strong className="font-bold text-white z-10">Images:</strong>{' '} */}
+                      {/* <strong className="z-10 font-bold text-white">Images:</strong>{' '} */}
                       {item[item.refs ? 'refs' : 'references'].imageLinks.map((link, i) => (
                         <img
                           key={i}
                           src={typeof link === "string" ? link : link?.source_path}
                           alt="image"
-                          className="reference-link mr-2 max-w-full z-10"
+                          className="z-10 max-w-full mr-2 reference-link"
                           onClick={(e) => handleReferenceClick(e, typeof link === "string" ? link : link?.source_path, typeof link === "string" ? null : link)}
                         />
                       ))}
@@ -604,8 +671,8 @@ const ChatPanel = () => {
                   selectedStory?.text?.map((heading) => {
                     return (
                       <div key={heading?.id} className="pl-2 mb-4">
-                        <h4 className="text-white font-bold z-10 mt-2">{heading?.outline?.name}</h4>
-                        <p className="text-white font-bold z-10">{heading?.content?.answer}</p>
+                        <h4 className="z-10 mt-2 font-bold text-white">{heading?.outline?.name}</h4>
+                        <p className="z-10 font-bold text-white">{heading?.content?.answer}</p>
                       </div>
                     );
                   })
@@ -628,128 +695,98 @@ const ChatPanel = () => {
           </div>
         </div>
       ) : (
-        <div className='flex flex-col h-full'>
+        <div className='flex flex-col gap-2 overflow-y-hidden'>
+          {/* GenMetadata & GenStories */}
+          {/* ::::::::::::::::::::::::::::::::::::::::::: */}
           <div>
-            <MetadataGen key={0} name="genMetadata" />
-            <div className="flex gap-3 items-center relative z-10">
-              {
-                ["insights", "stories"].map((item, index) => <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''}`} onClick={() => setCurrentTab(item)} />)
-              }
+            <div>
+              {/* buttons */}
+              <div className="flex justify-center gap-5 flex-items">
+                {["Generate metadata", "Generate stories"].map(item => <h6 onClick={() => handleTabClick(item)} className={`cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} key={item}>{item}</h6>)}
+              </div>
             </div>
+            {
+              actualTab === "genMetadata" ? (
+                <MetadataGen />
+              ) : null
+            }
           </div>
-          {/* notes */}
-          {
-            currentTab === "insights" ?
-              <>
-                <div
-                  className={` flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                    ? 'hover:bg-light-hover-100/30'
-                    : 'hover:bg-light-hover-200/20'
-                    } z-10`}
-                  onClick={createNewInsight}
-                >
-                  <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-                  <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                    }`}>
-                    New insight
-                  </span>
-                </div>
-                <div className="overflow-y-auto flex flex-col">
-                  {/* single note */}
-                  {
-                    notes?.map((note, index) => (
-                      <div key={note.note_id} className={`flex gap-2 ${theme === 'light'
-                        ? 'hover:bg-light-hover-100/30'
-                        : 'hover:bg-light-hover-200/20'
-                        } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedNote(event, note, index)}>
-                        <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                        <p className="text-white font-semibold">{note.note_name}</p>
-                      </div>
-                    ))
-                  }
-                </div>
-              </>
-              :
-              <>
-                <div
-                  className={`mb-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                    ? 'hover:bg-light-hover-100/30'
-                    : 'hover:bg-light-hover-200/20'
-                    } z-10`}
-                  onClick={createNewInsight}
-                >
-                  <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-                  <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                    }`}>
-                    New Story
-                  </span>
-                </div>
-                <div className="overflow-y-auto flex flex-col">
-                  {/* single note */}
-                  {
-                    stories?.map((story, index) => (
-                      <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
-                        ? 'hover:bg-light-hover-100/30'
-                        : 'hover:bg-light-hover-200/20'
-                        } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedStory(event, story, index)}>
-                        <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                        <p className="text-white font-semibold">{story.story_name}</p>
-                      </div>
-                    ))
-                  }
-                </div>
-              </>
-          }
+          {/* ::::::::::::::::::::::::::::::::::::::::::: */}
+          {/* insights and stories list */}
+          {actualTab === null && <div className='relative z-10 flex-1 overflow-y-auto'>
+            <div>
+              {/* <MetadataGen key={0} name="genMetadata" /> */}
+              <div className="relative z-10 flex items-center gap-3">
+                {
+                  ["insights", "stories"].map((item, index) => <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''}`} onClick={() => setCurrentTab(item)} />)
+                }
+              </div>
+            </div>
+            {/* notes */}
+            {
+              currentTab === "insights" ?
+                <>
+                  <div
+                    className={` flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                      ? 'hover:bg-light-hover-100/30'
+                      : 'hover:bg-light-hover-200/20'
+                      } z-10`}
+                    onClick={createNewInsight}
+                  >
+                    <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                      }`}>
+                      New insight
+                    </span>
+                  </div>
+                  <div className="flex flex-col overflow-y-auto">
+                    {/* single note */}
+                    {
+                      notes?.map((note, index) => (
+                        <div key={note.note_id} className={`flex gap-2 ${theme === 'light'
+                          ? 'hover:bg-light-hover-100/30'
+                          : 'hover:bg-light-hover-200/20'
+                          } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedNote(event, note, index)}>
+                          <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                          <p className="font-semibold text-white">{note.note_name}</p>
+                        </div>
+                      ))
+                    }
+                  </div>
+                </>
+                :
+                <>
+                  <div
+                    className={`mb-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                      ? 'hover:bg-light-hover-100/30'
+                      : 'hover:bg-light-hover-200/20'
+                      } z-10`}
+                    onClick={createNewInsight}
+                  >
+                    <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                      }`}>
+                      New Story
+                    </span>
+                  </div>
+                  <div className="flex flex-col overflow-y-auto">
+                    {/* single note */}
+                    {
+                      stories?.map((story, index) => (
+                        <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
+                          ? 'hover:bg-light-hover-100/30'
+                          : 'hover:bg-light-hover-200/20'
+                          } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedStory(event, story, index)}>
+                          <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                          <p className="font-semibold text-white">{story.story_name}</p>
+                        </div>
+                      ))
+                    }
+                  </div>
+                </>
+            }
+          </div>}
         </div>
-        // <Tabs
-        //   transition={false}
-        //   defaultActiveKey="genMetadata"
-        //   onSelect={(k) => setActiveTab(() => k)}
-        //   activeKey={activeTab}
-        //   id="uncontrolled-tab-example"
-        //   className={`mb-3 user-select-none text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'
-        //     }`}
-        // >
-        //   <Tab
-        //     eventKey="genMetadata"
-        //     title="GenMetadata"
-        //     className="flex-1 h-full overflow-y-auto"
-        //     tabClassName="text-primary-300"
-        //   >
-        //     <MetadataGen key={0} name="genMetadata" />
-        //   </Tab>
-
-        //   <Tab
-        //     eventKey="insights"
-        //     title="Insights"
-        //     className="flex-1 h-full overflow-y-auto"
-        //   >
-        //     <NotesSection
-        //       setNoteIndex={setNoteIndex}
-        //       nodeIndex={noteIndex}
-        //       key={2}
-        //       name="Notes"
-        //     />
-        //     {(activeTab === 'insights' &&
-        //       (Boolean(localStorage.getItem('guide_completed_insights')) === false ||
-        //         localStorage.getItem('guide_completed_sources') === "false")) &&
-        //       <Guide steps={notesSectionSteps} tabIdentifier="insights" />
-        //     }
-        //   </Tab>
-
-        //   <Tab
-        //     eventKey="stories"
-        //     title="Stories"
-        //     className="flex-1 h-full overflow-y-auto"
-        //   >
-        //     <StoriesSection />
-        //     {(activeTab === 'stories' &&
-        //       (Boolean(localStorage.getItem('guide_completed_stories')) === false ||
-        //         localStorage.getItem('guide_completed_sources') === "false")) &&
-        //       <Guide steps={storiesSectionSteps} tabIdentifier="stories" />
-        //     }
-        //   </Tab>
-        // </Tabs>
       )}
     </aside>
   );
