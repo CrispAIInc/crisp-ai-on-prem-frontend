@@ -122,7 +122,7 @@ function MetadataGen() {
             <div className="relative w-full mt-6">
                 <label
                     className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
-                    ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base top-2.5'}`}
+                    ${isActive ? 'text-md -top-8 left-1 text-blue-600' : 'text-base top-2.5'}`}
                 >
                     Context
                 </label>
@@ -151,7 +151,7 @@ function MetadataGen() {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
-                    disabled={selectedSourcesToGen.length === 0 || isLoading} onClick={generateMetadata}>
+                    disabled={isLoading} onClick={generateMetadata}>
                     {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate'}
                 </button>
                 {tooltipVisible && (

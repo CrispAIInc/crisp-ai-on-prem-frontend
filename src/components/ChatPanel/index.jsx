@@ -24,6 +24,7 @@ import makeApiRequest from '../../api';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import BaseHeading from '../BaseHeading';
 import { generateRandomHash, htmlToPlainText } from '../../utils';
+import StoriesEditor from '../StoriesEditor';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -450,16 +451,24 @@ const ChatPanel = () => {
     }
   }
 
+  function closeTopTabs() {
+    setActualTab(null);
+  }
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
         } flex flex-col max-h-full`}
       style={{ width: rightWidth }}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <h5 onClick={closeTopTabs} className={`${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+          } ${(actualTab === "genMetadata" || actualTab === "genStories") && 'text-white cursor-pointer'}`}>
+          Studio</h5>
         <h5 className={`${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-          }`}>
-          Studio
+          }`}>{
+            actualTab === "genMetadata" ? " > Metadata generation" : actualTab === "genStories" ? " > Story generation" : null
+          }
         </h5>
         {showEditor && (
           <h5
@@ -695,22 +704,24 @@ const ChatPanel = () => {
           </div>
         </div>
       ) : (
-        <div className='flex flex-col gap-2 overflow-y-hidden'>
+        <div className='flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
           <div>
-            <div>
-              {/* buttons */}
-              <div className="flex justify-center gap-5 flex-items">
-                {["Generate metadata", "Generate stories"].map(item => <h6 onClick={() => handleTabClick(item)} className={`cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} key={item}>{item}</h6>)}
-              </div>
+            {/* buttons */}
+            <div className="flex justify-center gap-5 mt-4 flex-items">
+              {["Generate metadata", "Generate stories"].map(item => <h6 onClick={() => handleTabClick(item)} className={`cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} key={item}>{item}</h6>)}
             </div>
+          </div>
+          {actualTab !== null && <div className='h-full'>
             {
               actualTab === "genMetadata" ? (
                 <MetadataGen />
+              ) : actualTab === "genStories" ? (
+                <StoriesEditor />
               ) : null
             }
-          </div>
+          </div>}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
           {/* insights and stories list */}
           {actualTab === null && <div className='relative z-10 flex-1 overflow-y-auto'>
@@ -756,7 +767,7 @@ const ChatPanel = () => {
                 </>
                 :
                 <>
-                  <div
+                  {/* <div
                     className={`mb-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
                       ? 'hover:bg-light-hover-100/30'
                       : 'hover:bg-light-hover-200/20'
@@ -768,7 +779,7 @@ const ChatPanel = () => {
                       }`}>
                       New Story
                     </span>
-                  </div>
+                  </div> */}
                   <div className="flex flex-col overflow-y-auto">
                     {/* single note */}
                     {
