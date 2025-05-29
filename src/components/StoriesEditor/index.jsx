@@ -44,11 +44,6 @@ function StoriesEditor() {
             with_checked_sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category }))
         };
         try {
-            const res = await makeApiRequest(
-                "/auto-generate-story",
-                "post",
-                httpPayload
-            );
 
             if (!displayedSources?.every(item => item?.is_selected === false)) {
                 await makeApiRequest(
@@ -59,6 +54,12 @@ function StoriesEditor() {
                     })
                 );
             }
+
+            const res = await makeApiRequest(
+                "/auto-generate-story",
+                "post",
+                httpPayload
+            );
 
             console.log(res);
 
