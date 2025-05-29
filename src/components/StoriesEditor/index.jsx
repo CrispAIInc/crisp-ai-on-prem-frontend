@@ -41,7 +41,7 @@ function StoriesEditor() {
         setIsLoading(true);
         const httpPayload = {
             storyContext: context,
-            sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category }))
+            with_checked_sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category }))
         };
         try {
             const res = await makeApiRequest(
