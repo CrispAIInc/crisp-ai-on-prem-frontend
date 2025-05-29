@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import LoadingSpinner from '../LoadingSpinner';
+import makeApiRequest from '../../api';
 
 
 function StoriesEditor() {
@@ -9,7 +10,7 @@ function StoriesEditor() {
     const [context, setContext] = useState('');
     const isActive = contextFocused || context.length > 0;
 
-    const [isLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [value, setValue] = useState('');
     const editorRef = useRef(null);
@@ -34,6 +35,46 @@ function StoriesEditor() {
         'image',
     ];
 
+    async function autoGenerateStory() {
+        setIsLoading(true);
+        const httpPayload = {
+            storyContext: context
+        };
+        try {
+            const res = await makeApiRequest(
+                "/auto-generate-story",
+                "post",
+                httpPayload
+            );
+
+            console.log(res);
+
+            // setSelectedStory((prev) => {
+            //     prev.text.forEach((textItem, index) => {
+            //         textItem.content = [
+            //             {
+            //                 answer: sections[index][0].answer,
+            //                 refs: {
+            //                     imageLinks: sections[index][0].imgsArr,
+            //                     videoLinks: sections[index][0].videosArr,
+            //                     keyframeLinks: sections[index][0].keyframesArr,
+            //                     pdfLinks: sections[index][0].pdfsArr,
+            //                 }
+            //             }
+            //         ];
+            //     });
+
+            //     return prev;
+            // });
+        } catch (error) {
+            console.log(error);
+        } finally {
+            // setIsGeneratingIntroConlusion(false);
+            // console.log(selectedStory.text);
+            setIsLoading(false);
+        }
+    }
+
     return (
         <div className="relative z-10 flex flex-col h-full gap-1">
             {/* context */}
@@ -55,7 +96,7 @@ function StoriesEditor() {
             </div>
 
             {/* generate outline button */}
-            <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
+            <button onClick={autoGenerateStory} className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
                 disabled={isLoading}>
                 {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate outline'}
             </button>
