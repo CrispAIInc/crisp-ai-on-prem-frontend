@@ -1,11 +1,13 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import LoadingSpinner from '../LoadingSpinner';
 import makeApiRequest from '../../api';
+import { MainContext } from '../../contexts/mainContext';
 
 
 function StoriesEditor() {
+    const { displayedSources } = useContext(MainContext);
     const [contextFocused, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
     const isActive = contextFocused || context.length > 0;
@@ -38,7 +40,8 @@ function StoriesEditor() {
     async function autoGenerateStory() {
         setIsLoading(true);
         const httpPayload = {
-            storyContext: context
+            storyContext: context,
+            sources: displayedSources?.map(item => ({ source_path: item?.source_path, category: item?.category }))
         };
         try {
             const res = await makeApiRequest(
