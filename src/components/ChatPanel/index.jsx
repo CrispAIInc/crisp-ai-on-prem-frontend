@@ -461,14 +461,14 @@ const ChatPanel = () => {
         } flex flex-col max-h-full`}
       style={{ width: rightWidth }}
     >
-      <div className="flex items-center gap-2">
-        <h5 onClick={closeTopTabs} className={`${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-          } ${(actualTab === "genMetadata" || actualTab === "genStories") && 'text-white cursor-pointer'}`}>
+      <div className={`flex items-center gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+        }`}>
+        <h5 onClick={closeTopTabs} className={` ${(actualTab === "genMetadata" || actualTab === "genStories") && `${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+          } cursor-pointer`}`}>
           Studio</h5>
-        <h5 className={`${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-          }`}>{
-            actualTab === "genMetadata" ? " > Metadata generation" : actualTab === "genStories" ? " > Story generation" : null
-          }
+        <h5>{
+          actualTab === "genMetadata" ? " > Metadata generation" : actualTab === "genStories" ? " > Story generation" : null
+        }
         </h5>
         {showEditor && (
           <h5
@@ -579,7 +579,7 @@ const ChatPanel = () => {
             <div>
               <input
                 className={`${theme === 'dark' && 'text-textColor-100'
-                  } font-medium p-2 bg-transparent !border border-textColor-300 !outline-none w-full`}
+                  } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !outline-none w-full`}
                 placeholder="New title..."
                 value={noteTitle}
                 onChange={(e) => setNoteTitle(e.target.value)}
@@ -595,6 +595,44 @@ const ChatPanel = () => {
                   `}
                 </style>
               )}
+              {
+                theme === "light" ? (
+                  <style>
+                    {`
+                        .ql-toolbar {
+                          border-color: #78716C;
+                          background-color: rgba(119, 168, 249, 0.2) !important;
+                          color: red;
+                        }
+                        .ql-snow .ql-stroke {
+                          stroke: #333 !important;
+                        }
+
+                        .ql-picker-label {
+                          color: #333 !important;
+                        }
+                    `}
+                  </style>
+                ) : (
+                  <style>
+                    {`
+                        .ql-toolbar {
+                          border-color: #78716C;
+                          background-color: rgba(119, 168, 249, 0.2) !important;
+                          color: red;
+                        }
+                        .ql-snow .ql-stroke {
+                          stroke: #fff !important;
+                          fill: #fff !important;
+                        }
+
+                        .ql-picker-label {
+                          color: #fff !important;
+                        }
+                    `}
+                  </style>
+                )
+              }
               <ReactQuill
                 ref={editorRef}
                 theme="snow"
@@ -611,14 +649,15 @@ const ChatPanel = () => {
 
 
 
-            {selectedNote?.note_name !== "" ? <div className="space-y-6 !z-10 relative !border !border-textColor-300">
+            {selectedNote?.note_name !== "" ? <div className={`space-y-6 !z-10 relative !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'}`}>
               {selectedNote?.text.map((item, index) => (
                 <div
                   key={index}
                   className="pl-2 mb-4"
                 >
-                  <h4 className="z-10 mt-2 font-bold text-white">{item.question}</h4>
-                  <p className="z-10 text-textColor-100" dangerouslySetInnerHTML={{ __html: item.answer }}></p>
+                  <h4 className={`z-10 mt-2 font-bold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                    }`}>{item.question}</h4>
+                  <p className="z-10 text-textColor-200" dangerouslySetInnerHTML={{ __html: item.answer }}></p>
                   {/* <p className="z-10 font-bold text-white">
                     <strong>Model:</strong> {item.model}
                   </p> */}
@@ -759,7 +798,8 @@ const ChatPanel = () => {
                           : 'hover:bg-light-hover-200/20'
                           } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedNote(event, note, index)}>
                           <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                          <p className="font-semibold text-white">{note.note_name}</p>
+                          <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                            }`}>{note.note_name}</p>
                         </div>
                       ))
                     }
@@ -789,7 +829,8 @@ const ChatPanel = () => {
                           : 'hover:bg-light-hover-200/20'
                           } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedStory(event, story, index)}>
                           <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                          <p className="font-semibold text-white">{story.story_name}</p>
+                          <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                            }`}>{story.story_name}</p>
                         </div>
                       ))
                     }

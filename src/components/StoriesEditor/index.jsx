@@ -7,7 +7,7 @@ import { MainContext } from '../../contexts/mainContext';
 
 
 function StoriesEditor() {
-    const { displayedSources } = useContext(MainContext);
+    const { displayedSources, theme } = useContext(MainContext);
     const [contextFocused, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
     const isActive = contextFocused || context.length > 0;
@@ -50,7 +50,19 @@ function StoriesEditor() {
                 httpPayload
             );
 
+            if (!displayedSources?.every(item => item?.is_selected === false)) {
+                await makeApiRequest(
+                    `/handle-embeddings`,
+                    "post",
+                    JSON.stringify({
+                        sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                    })
+                );
+            }
+
             console.log(res);
+
+
 
             // setSelectedStory((prev) => {
             //     prev.text.forEach((textItem, index) => {
@@ -89,7 +101,7 @@ function StoriesEditor() {
                     Write your story outline
                 </label>
                 <textarea
-                    className="w-full p-2 text-white bg-transparent border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     rows="2"
                     onFocus={() => setContextFocused(true)}
                     onBlur={() => setContextFocused(false)}
@@ -114,6 +126,44 @@ function StoriesEditor() {
                 `}
             </style>
 
+            {
+                theme === "light" ? (
+                    <style>
+                        {`
+                        .ql-toolbar {
+                          border-color: #78716C;
+                          background-color: rgba(119, 168, 249, 0.2) !important;
+                          color: red;
+                        }
+                        .ql-snow .ql-stroke {
+                          stroke: #333 !important;
+                        }
+
+                        .ql-picker-label {
+                          color: #333 !important;
+                        }
+                    `}
+                    </style>
+                ) : (
+                    <style>
+                        {`
+                        .ql-toolbar {
+                          border-color: #78716C;
+                          background-color: rgba(119, 168, 249, 0.2) !important;
+                          color: red;
+                        }
+                        .ql-snow .ql-stroke {
+                          stroke: #fff !important;
+                          fill: #fff !important;
+                        }
+
+                        .ql-picker-label {
+                          color: #fff !important;
+                        }
+                    `}
+                    </style>
+                )
+            }
             <div className='flex flex-col flex-1'>
                 <ReactQuill
                     ref={editorRef}
@@ -126,7 +176,7 @@ function StoriesEditor() {
                     formats={formats}
                 />
 
-                <div className='flex-1 !border !border-textColor-300 overflow-y-auto h-full'></div>
+                <div className={`flex-1 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full`}></div>
             </div>
         </div>
     );

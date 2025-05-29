@@ -64,8 +64,8 @@
 .ql-toolbar,
 .ql-picker-options,
 .ql-picker-item {
-  background-color: #333 !important;
-  color: #fff !important;
+  /* background-color: #333 !important; */
+  /* color: #fff !important; */
 }
 é
 /* Optional: toolbar button text color */
@@ -79,13 +79,13 @@
   background-color: #333;
 }
 
-.ql-snow .ql-stroke {
+/* .ql-snow .ql-stroke {
   stroke: #fff !important;
 }
 
 .ql-picker-label {
   color: #fff !important;
-}
+} */
 
 /* .nav-tabs .nav-link {
   color: gray !important;
