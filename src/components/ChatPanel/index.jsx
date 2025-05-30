@@ -208,6 +208,7 @@ const ChatPanel = () => {
 
   const closeEditor = useCallback(() => {
     setIsNewInsight(false);
+    setActualTab(null);
     setSelectedNote({
       note_id: "",
       text: [{
@@ -461,20 +462,16 @@ const ChatPanel = () => {
         } flex flex-col max-h-full`}
       style={{ width: rightWidth }}
     >
-      <div className={`flex items-center gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+      <div className={`flex items-center justify-between gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
         }`}>
         <h5 onClick={closeTopTabs} className={` ${(actualTab === "genMetadata" || actualTab === "genStories") && `${theme === "light" ? "text-textColor-300" : "text-textColor-200"
           } cursor-pointer`}`}>
           Studio</h5>
-        <h5>{
-          actualTab === "genMetadata" ? " > Metadata generation" : actualTab === "genStories" ? " > Story generation" : null
-        }
-        </h5>
-        {showEditor && (
+        {(showEditor || actualTab !== null) && (
           <h5
             onClick={closeEditor}
             className={`cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-              }`}
+              } text-[22px]`}
           >
             ×
           </h5>
