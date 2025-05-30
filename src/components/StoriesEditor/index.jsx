@@ -5,7 +5,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
-
+import AddIcon from '@mui/icons-material/Add';
 
 function StoriesEditor() {
     const { displayedSources, theme } = useContext(MainContext);
@@ -110,6 +110,10 @@ function StoriesEditor() {
     const handleMouseEnter = () => context === "" && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
+    function handleSaveStory() {
+
+    }
+
     return (
         <div className="relative z-10 flex flex-col h-full gap-1">
             {/* context */}
@@ -152,6 +156,21 @@ function StoriesEditor() {
                         Please provide the context
                     </p>
                 )}
+            </div>
+
+            {/* save button */}
+            <div
+                className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                    ? 'hover:bg-light-hover-100/30'
+                    : 'hover:bg-light-hover-200/20'
+                    } z-10`}
+                onClick={handleSaveStory}
+            >
+                <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                    }`}>
+                    Save story
+                </span>
             </div>
 
             {/* editor */}
