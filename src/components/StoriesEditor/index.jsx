@@ -202,7 +202,7 @@ function StoriesEditor() {
                     </style>
                 )
             }
-            <div className='flex flex-col flex-1'>
+            <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
                 <ReactQuill
                     ref={editorRef}
                     theme="snow"
@@ -214,7 +214,7 @@ function StoriesEditor() {
                     formats={formats}
                 />
 
-                <div className={`flex-1 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                     }`}>
                     <h1>{story.story_name}</h1>
                     {

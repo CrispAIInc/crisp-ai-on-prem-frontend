@@ -752,7 +752,7 @@ const ChatPanel = () => {
               {["Generate metadata", "Generate stories"].map(item => <h6 onClick={() => handleTabClick(item)} className={`cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} key={item}>{item}</h6>)}
             </div>
           </div>
-          {actualTab !== null && <div className='h-full'>
+          {actualTab !== null && <div className='h-full overflow-y-hidden'>
             {
               actualTab === "genMetadata" ? (
                 <MetadataGen />
