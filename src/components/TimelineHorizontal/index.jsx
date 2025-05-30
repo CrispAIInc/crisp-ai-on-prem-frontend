@@ -8,7 +8,7 @@ import PreviewModal from '../PreviewModal';
 
 function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
 
-    const { setCurrentResource, setJumpToPage } = useContext(MainContext);
+    const { setCurrentResource, setJumpToPage, contentPanelContainerRef } = useContext(MainContext);
 
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [showChapterDetailsModal, setShowChapterDetailsModal] = useState(false);
@@ -55,7 +55,7 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                                     chapter.timestamp ? <h5 className="mb-0 text-[9px] cursor-pointer text-primary-300 w-fit" onClick={() => {
 
                                         setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
-                                        workspaceContainer.current.scrollTo({
+                                        contentPanelContainerRef.current.scrollTo({
                                             top: 0,
                                             behavior: "smooth", // Enables smooth scrolling
                                         });
@@ -65,7 +65,7 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                                     </h5> : <div className='flex items-center gap-2 mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
 
                                         setJumpToPage({ page: parseInt(chapter.page) });
-                                        workspaceContainer.current.scrollTo({
+                                        contentPanelContainerRef.current.scrollTo({
                                             top: 0,
                                             behavior: "smooth", // Enables smooth scrolling
                                         });

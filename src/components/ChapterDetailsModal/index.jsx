@@ -6,7 +6,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer }) {
 
-    const { theme, setCurrentResource, setJumpToPage } = useContext(MainContext);
+    const { theme, setCurrentResource, setJumpToPage, contentPanelContainerRef } = useContext(MainContext);
 
     return (
         <Modal
@@ -43,7 +43,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
 
                                 setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
                                 onHide();
-                                workspaceContainer.current.scrollTo({
+                                contentPanelContainerRef.current.scrollTo({
                                     top: 0,
                                     behavior: "smooth", // Enables smooth scrolling
                                 });
@@ -53,7 +53,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
 
                                 setJumpToPage({ page: parseInt(chapter.page) });
                                 onHide();
-                                workspaceContainer.current.scrollTo({
+                                contentPanelContainerRef.current.scrollTo({
                                     top: 0,
                                     behavior: "smooth", // Enables smooth scrolling
                                 });
