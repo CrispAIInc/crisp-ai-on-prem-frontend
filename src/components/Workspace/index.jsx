@@ -27,7 +27,7 @@ const Workspace = () => {
 
     return (
         <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
-            <h5 className={`-mx-8 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+            <h5 className={`-mx-8 select-none ${theme === "light" ? "text-textColor-100" : "text-textColor-200"
                 }`}>Chat</h5>
             <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/2 top-10 -z-10 blur-[160px]"></div>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-10 blur-[160px]"></div>

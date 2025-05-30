@@ -464,8 +464,8 @@ const ChatPanel = () => {
     >
       <div className={`flex items-center justify-between gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
         }`}>
-        <h5 onClick={closeTopTabs} className={` ${(actualTab === "genMetadata" || actualTab === "genStories") && `${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-          } cursor-pointer`}`}>
+        <h5 onClick={closeTopTabs} className={` select-none ${theme === "light" ? "text-textColor-100" : "text-textColor-200"
+          } cursor-pointer`}>
           Studio</h5>
         {(showEditor || actualTab !== null) && (
           <h5
@@ -749,7 +749,7 @@ const ChatPanel = () => {
           <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-4 flex-items">
-              {[{ id: "genMetadata", title: "Generate metadata" }, { id: "genStories", title: "Generate stories" }].map(item => <h6 onClick={() => handleTabClick(item.title)} className={`cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
+              {[{ id: "genMetadata", title: "Generate metadata" }, { id: "genStories", title: "Generate stories" }].map(item => <h6 onClick={() => handleTabClick(item.title)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
