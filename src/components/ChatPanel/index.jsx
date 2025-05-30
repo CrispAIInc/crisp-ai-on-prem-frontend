@@ -562,7 +562,7 @@ const ChatPanel = () => {
       {/* Editor or Tabs */}
       {showEditor ? (
         <div className="flex-1 h-full overflow-y-auto">
-          <div className="h-full max-h-full ml-auto overflow-y-auto">
+          <div className="h-full max-h-full ml-auto overflow-y-auto !overflow-y-hidden flex flex-col">
             <div
               className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
                 ? 'hover:bg-light-hover-100/30'
@@ -649,7 +649,7 @@ const ChatPanel = () => {
 
 
 
-            {selectedNote?.note_name !== "" ? <div className={`space-y-6 !z-10 relative !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'}`}>
+            {selectedNote?.note_name !== "" ? <div className={`overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'}`}>
               {selectedNote?.text.map((item, index) => (
                 <div
                   key={index}
@@ -714,7 +714,7 @@ const ChatPanel = () => {
               ))}
             </div>
               :
-              <div className="space-y-6 !z-10 relative !border !border-textColor-300">
+              <div className="overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border !border-textColor-300">
                 {
                   selectedStory?.text?.map((heading) => {
                     return (
