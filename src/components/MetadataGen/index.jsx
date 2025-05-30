@@ -122,7 +122,7 @@ function MetadataGen() {
             <div className="relative w-full mt-6">
                 <label
                     className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
-                    ${isActive ? 'text-md -top-8 left-1 text-blue-600' : 'text-base top-2.5'}`}
+                    ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base '}`}
                 >
                     Context
                 </label>
