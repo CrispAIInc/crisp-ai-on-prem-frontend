@@ -118,15 +118,16 @@ function StoriesEditor() {
         <div className="relative z-10 flex flex-col h-full gap-1">
             {/* context */}
             <div className="relative w-full mt-6">
-                <label
+                {/* <label
                     className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
                     ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base'}`}
                 >
                     Write your story outline
-                </label>
+                </label> */}
                 <textarea
                     className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     rows="2"
+                    placeholder="Write your story outline"
                     onFocus={() => setContextFocused(true)}
                     onBlur={() => setContextFocused(false)}
                     value={context}
