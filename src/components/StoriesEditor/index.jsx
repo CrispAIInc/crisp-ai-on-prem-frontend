@@ -4,10 +4,13 @@ import "react-quill/dist/quill.snow.css";
 import LoadingSpinner from '../LoadingSpinner';
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
 
 function StoriesEditor() {
     const { displayedSources, theme } = useContext(MainContext);
+    const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+
     const [contextFocused, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
     const isActive = contextFocused || context.length > 0;
@@ -37,6 +40,8 @@ function StoriesEditor() {
         'image',
     ];
 
+    const [story, setStory] = useState({});
+
     async function autoGenerateStory() {
         setIsLoading(true);
         const httpPayload = {
@@ -61,6 +66,7 @@ function StoriesEditor() {
                 httpPayload
             );
 
+            setStory(res);
             console.log(res);
 
 
@@ -91,6 +97,19 @@ function StoriesEditor() {
         }
     }
 
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        setPosition({
+            x: e.clientX - rect.left - 60,
+            y: e.clientY - rect.top + 10,
+        });
+    };
+
+    const handleMouseEnter = () => context === "" && setTooltipVisible(true);
+    const handleMouseLeave = () => setTooltipVisible(false);
+
     return (
         <div className="relative z-10 flex flex-col h-full gap-1">
             {/* context */}
@@ -112,10 +131,28 @@ function StoriesEditor() {
             </div>
 
             {/* generate outline button */}
-            <button onClick={autoGenerateStory} className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
+            {/* <button onClick={autoGenerateStory} className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
                 disabled={isLoading}>
                 {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate outline'}
-            </button>
+            </button> */}
+            {/* generate button */}
+            <div className='relative inline-block' onMouseMove={handleMouseMove}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}>
+                <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
+                    disabled={context === "" || isLoading} onClick={autoGenerateStory}>
+                    {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate'}
+                </button>
+                {tooltipVisible && (
+                    <p
+                        // onMouseEnter={() => setTooltipVisible(false)}
+                        className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} z-20`}
+                        style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
+                    >
+                        Please provide the context
+                    </p>
+                )}
+            </div>
 
             {/* editor */}
 
@@ -177,7 +214,45 @@ function StoriesEditor() {
                     formats={formats}
                 />
 
-                <div className={`flex-1 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full`}></div>
+                <div className={`flex-1 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                    }`}>
+                    <h1>{story.story_name}</h1>
+                    {
+                        story?.text?.map(section => (
+                            <div key={section.id}>
+                                <h2>{section.outline.name}</h2>
+                                {
+                                    section.content?.map((content, index) => (
+                                        <div key={index}>
+                                            <p>{content.answer}</p>
+                                            {/* refs */}
+                                            <div className="mt-2 mb-4">
+                                                {
+                                                    content?.videosArr?.map((ref, index) => (
+                                                        <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                                                    ))
+                                                }
+
+                                                {
+                                                    content?.pdfsArray?.map((ref, index) => (
+                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                                                    ))
+                                                }
+                                                {
+                                                    content?.imgsArray?.map((ref, index) => (
+                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                                                    ))
+                                                }
+
+                                            </div>
+                                            {/* ... */}
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        ))
+                    }
+                </div>
             </div>
         </div>
     );
