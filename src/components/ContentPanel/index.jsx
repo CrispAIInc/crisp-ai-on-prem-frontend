@@ -29,7 +29,7 @@ const ContentPanel = () => {
         onThumbnailClick,
         isLeftSidebarOpen,
         setIsLeftSidebarOpen,
-        setTranscription, setShowMetadata, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, setActiveView } = useContext(MainContext);
+        setTranscription, setShowMetadata, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, contentPanelContainerRef } = useContext(MainContext);
 
 
 
@@ -118,6 +118,7 @@ const ContentPanel = () => {
         },
     ];
 
+
     // const notesSectionSteps = [
     //     {
     //         target: ".new-note-button",
@@ -148,8 +149,10 @@ const ContentPanel = () => {
 
     const [activeTab, setActiveTab] = useState('sources');
 
+
+
     return (
-        <aside className={`relative z-10 select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} style={{
+        <aside className={`relative z-10 select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} ref={contentPanelContainerRef} style={{
             width: leftWidth
         }}>
             <h5 className={`select-none ${theme === "light" ? "text-textColor-100" : "text-textColor-200"

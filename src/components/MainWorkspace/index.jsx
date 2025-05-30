@@ -91,6 +91,8 @@ const MainWorkspace = ({ theme }) => {
     getIndexes();
   }, []);
 
+  const contentPanelContainerRef = useRef(null);
+
 
   // can either be 'resource', 'note' or null
   // indicates wether the user is viewing a resource or a note in workspace
@@ -592,7 +594,7 @@ const MainWorkspace = ({ theme }) => {
     commitSelectedSources,
     isLeftSidebarOpen, setIsLeftSidebarOpen,
     isRightSidebarOpen, setIsRightSidebarOpen,
-    modules,
+    modules, contentPanelContainerRef,
     handleCheckboxChange,
     activeTab, setActiveTab,
     formats,
