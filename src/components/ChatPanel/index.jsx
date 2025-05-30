@@ -655,9 +655,10 @@ const ChatPanel = () => {
                   key={index}
                   className="pl-2 mb-4"
                 >
-                  <h4 className={`z-10 mt-2 font-bold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                    }`}>{item.question}</h4>
-                  <p className="z-10 text-textColor-200" dangerouslySetInnerHTML={{ __html: item.answer }}></p>
+                  <h6 className={`z-10 mt-2 font-bold ${theme === "light" ? "text-textColor-300" : "text-textColor-200 text-md"
+                    }`}>{item.question}</h6>
+                  <p className={`z-10 text-textColor-200 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                    }`} dangerouslySetInnerHTML={{ __html: item.answer }}></p>
                   {/* <p className="z-10 font-bold text-white">
                     <strong>Model:</strong> {item.model}
                   </p> */}
@@ -714,13 +715,15 @@ const ChatPanel = () => {
               ))}
             </div>
               :
-              <div className="overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border !border-textColor-300">
+              <div className={`overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border !border-textColor-300`}>
                 {
                   selectedStory?.text?.map((heading) => {
                     return (
                       <div key={heading?.id} className="pl-2 mb-4">
-                        <h4 className="z-10 mt-2 font-bold text-white">{heading?.outline?.name}</h4>
-                        <p className="z-10 font-bold text-white">{heading?.content?.answer}</p>
+                        <h6 className={`text-md z-10 mt-2 font-bold  ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                          }`}>{heading?.outline?.name}</h6>
+                        <p className={`z-10 font-bold text-white ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                          }`}>{heading?.content?.answer}</p>
                       </div>
                     );
                   })
@@ -763,7 +766,7 @@ const ChatPanel = () => {
           </div>}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
           {/* insights and stories list */}
-          {actualTab === null && <div className='relative z-10 flex-1 overflow-y-auto'>
+          {actualTab === null && <div className='relative z-10 flex flex-col flex-1 h-full overflow-y-hidden'>
             <div>
               {/* <MetadataGen key={0} name="genMetadata" /> */}
               <div className="relative z-10 flex items-center gap-3">
