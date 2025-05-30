@@ -63,12 +63,12 @@ function MetadataGen() {
         // if (isKnowledgeBaseEmpty) {
         //     toast('You must select some sources to generate metadata');
         // }
-        if (selectedOptions.length === 0) {
-            toast('You must select at least one metadata option');
-        }
+        // if (selectedOptions.length === 0) {
+        //     toast('You must select at least one metadata option');
+        // }
 
-        else if (selectedSourcesToGen.length === 0) {
-            toast('You must select at least one source');
+        if (displayedSources.filter(item => item.is_selected).length === 0) {
+            toast('You must check at least one source');
         }
 
         const categoryValues = categoryOptions.map((option) => option.value);
@@ -78,7 +78,7 @@ function MetadataGen() {
             //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             // };
             const payload = {
-                category: selectedCategory, sources: selectedSourcesToGen.map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context
+                category: selectedCategory, sources: displayedSources.filter(item => item.is_selected).map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
@@ -160,7 +160,7 @@ function MetadataGen() {
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        No source is selected
+                        No source is checked
                     </p>
                 )}
             </div>
