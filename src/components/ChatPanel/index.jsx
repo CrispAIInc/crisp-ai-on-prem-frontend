@@ -752,7 +752,7 @@ const ChatPanel = () => {
           <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-4 flex-items">
-              {["Generate metadata", "Generate stories"].map(item => <h6 onClick={() => handleTabClick(item)} className={`cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} key={item}>{item}</h6>)}
+              {[{ id: "genMetadata", title: "Generate metadata" }, { id: "genStories", title: "Generate stories" }].map(item => <h6 onClick={() => handleTabClick(item.title)} className={`cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
