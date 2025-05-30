@@ -12,7 +12,7 @@ import SelectedSourcesDropdown from '../SelectedSourcesDropdown';
 
 
 function MetadataGen() {
-    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, setSourcesAfterUncheckCrispWiz, metadataOptions } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
 
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
 
@@ -55,7 +55,7 @@ function MetadataGen() {
         });
     };
 
-    const handleMouseEnter = () => selectedSourcesToGen.length === 0 && setTooltipVisible(true);
+    const handleMouseEnter = () => displayedSources.filter(item => item.is_selected).length === 0 && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMetadata() {
@@ -151,7 +151,7 @@ function MetadataGen() {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
-                    disabled={isLoading} onClick={generateMetadata}>
+                    disabled={isLoading || displayedSources.filter(item => item.is_selected).length === 0} onClick={generateMetadata}>
                     {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate'}
                 </button>
                 {tooltipVisible && (
