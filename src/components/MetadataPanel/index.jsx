@@ -435,7 +435,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               >
                 {/* search */}
                 {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
-                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
+                <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {/* generate visual/combined summary */}
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
                   <CustomSelectTwo
@@ -611,7 +611,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               >
                 {/* search */}
                 {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
-                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
+                <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}
@@ -749,7 +749,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               >
                 {/* search */}
                 {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
-                <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
+                <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}

@@ -10,7 +10,7 @@ import { timeToSeconds } from '../../utils';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true }) => {
+const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, fromMetadata = false }) => {
 
     const { currentResource, setCurrentResource, resourceURL, setResourceURL, player, isPlayerReady,
         selectedCategory, selectedFormat,
@@ -63,7 +63,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true }) =>
                 if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
                 setAdditionalSources(response.data.additional_sources);
                 // if (activeView !== 'resource') {
-                setShowSearchModal(true);
+                if (!fromMetadata) { setShowSearchModal(true); }
                 // }
 
                 if (response.data.file_type === "pdf") {
