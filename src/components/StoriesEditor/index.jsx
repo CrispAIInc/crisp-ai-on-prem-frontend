@@ -117,7 +117,7 @@ function StoriesEditor() {
     return (
         <div className="relative z-10 flex flex-col h-full gap-1">
             {/* context */}
-            <div className="relative w-full mt-6">
+            <div className="relative w-full">
                 {/* <label
                     className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
                     ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base'}`}
@@ -161,7 +161,7 @@ function StoriesEditor() {
 
             {/* save button */}
             <div
-                className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
                     ? 'hover:bg-light-hover-100/30'
                     : 'hover:bg-light-hover-200/20'
                     } z-10`}
@@ -236,11 +236,11 @@ function StoriesEditor() {
 
                 <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                     }`}>
-                    <h1>{story.story_name}</h1>
+                    <h3 className="mb-2 italic text-center">{story.story_name}</h3>
                     {
                         story?.text?.map(section => (
                             <div key={section.id}>
-                                <h2>{section.outline.name}</h2>
+                                <h4>{section.outline.name}</h4>
                                 {
                                     section.content?.map((content, index) => (
                                         <div key={index}>
