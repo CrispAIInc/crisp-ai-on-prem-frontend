@@ -284,9 +284,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     let refs = {
       videoLinks: [],
-      keyframeObjects: [],
-      pdfObjects: [],
-      imageObjects: [],
+      keyframeLinks: [],
+      pdfLinks: [],
+      imageLinks: [],
     };
 
     const videoLinks = data.video_references.map((video) => {
