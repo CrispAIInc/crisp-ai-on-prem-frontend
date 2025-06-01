@@ -127,7 +127,7 @@ function StoriesEditor() {
                 <textarea
                     className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     rows="2"
-                    placeholder="Write your story outline"
+                    placeholder="Provide story context"
                     onFocus={() => setContextFocused(true)}
                     onBlur={() => setContextFocused(false)}
                     value={context}
