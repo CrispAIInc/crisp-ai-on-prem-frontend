@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import toast from 'react-simple-toasts';
 
 function StoriesEditor() {
-    const { displayedSources, theme } = useContext(MainContext);
+    const { displayedSources, theme, setStories } = useContext(MainContext);
     const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
     const [contextFocused, setContextFocused] = useState(false);
@@ -117,6 +117,10 @@ function StoriesEditor() {
             setIsPending(true);
             await makeApiRequest('/stories', "POST", JSON.stringify(story));
             toast('Story saved successfully', { className: 'p-2 rounded-md', theme });
+
+            // update stories
+            const data = await makeApiRequest("/stories", "get");
+            setStories(data);
         }
         catch (e) {
             console.log(e);
