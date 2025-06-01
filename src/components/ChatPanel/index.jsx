@@ -5,7 +5,7 @@ import NotesSection from "../NotesSection";
 import StoriesSection from '../StoriesSection';
 import CopilotSection from '../CopilotSection';
 import { MainContext } from '../../contexts/mainContext';
-
+import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -25,6 +25,7 @@ import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import BaseHeading from '../BaseHeading';
 import { generateRandomHash, htmlToPlainText } from '../../utils';
 import StoriesEditor from '../StoriesEditor';
+import LoadingSpinner from '../LoadingSpinner';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -118,6 +119,7 @@ const ChatPanel = () => {
     setSelectedStory,
     selectedStory,
     setIsNewStory,
+    setStories
   } = useContext(MainContext);
 
   const notesSectionSteps = [
@@ -443,6 +445,64 @@ const ChatPanel = () => {
   };
 
   const [actualTab, setActualTab] = useState(null); //genMetadata | genStories
+
+  const [hoveredInsight, setHoveredInsight] = useState(null);
+  const handleMouseEnterInsight = (id) => {
+    setHoveredInsight(id);
+  };
+  const handleMouseLeaveInsight = () => {
+    setHoveredInsight(null);
+  };
+
+  const [isInsightDeleting, setIsInsightDeleting] = useState(false);
+  async function deleteInsight(id, name) {
+    try {
+      setIsInsightDeleting(true);
+      await makeApiRequest(`/delete-note`, 'post', { noteID: id, noteName: name });
+      // send request to update notes
+      const data = await makeApiRequest("/notes", "post");
+      setNotes(data);
+      toast('Insight deleted successfully', { className: 'p-2 rounded-md', theme });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsInsightDeleting(false);
+    }
+  }
+
+  const [hoveredStory, setHoveredStory] = useState(null);
+  const handleMouseEnterStory = (id) => {
+    setHoveredStory(id);
+  };
+  const handleMouseLeaveStory = () => {
+    setHoveredStory(null);
+  };
+
+  const [isStoryDeleting, setIsStoryDeleting] = useState(false);
+  async function deleteStory(event, id) {
+    event.preventDefault();
+    console.log("hehe");
+    setIsStoryDeleting(true);
+    try {
+      await makeApiRequest(`/stories/${id}`, 'delete');
+      // setSelectedStory({
+      //   story_id: "",
+      //   text: [],
+      //   story_name: "",
+      //   models: [],
+      // });
+
+      toast('Story deleted successfully', { className: 'p-2 rounded-md', theme });
+      // fetch stories
+      const data = await makeApiRequest("/stories", "get");
+      setStories(data);
+    } catch (error) {
+      console.log(error);
+      toast('An error occurred while deleting story', { className: 'p-2 rounded-md', theme });
+    } finally {
+      setIsStoryDeleting(false);
+    }
+  }
 
   function handleTabClick(item) {
     if (item === 'Generate metadata') {
@@ -796,7 +856,16 @@ const ChatPanel = () => {
                         <div key={note.note_id} className={`flex gap-2 ${theme === 'light'
                           ? 'hover:bg-light-hover-100/30'
                           : 'hover:bg-light-hover-200/20'
-                          } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedNote(event, note, index)}>
+                          } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
+                          {
+                            hoveredInsight === note?.note_id && (
+                              isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
+                                style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                className="cursor-pointermr-1"
+                              />
+                            )
+                          }
                           <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
                           <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                             }`}>{note.note_name}</p>
@@ -827,7 +896,16 @@ const ChatPanel = () => {
                         <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
                           ? 'hover:bg-light-hover-100/30'
                           : 'hover:bg-light-hover-200/20'
-                          } cursor-pointer p-2 rounded-md select-none`} onClick={(event) => showSelectedStory(event, story, index)}>
+                          } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
+                          {
+                            hoveredStory === story?.story_id && (
+                              isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
+                                style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                className="cursor-pointermr-1"
+                              />
+                            )
+                          }
                           <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
                           <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                             }`}>{story.story_name}</p>
