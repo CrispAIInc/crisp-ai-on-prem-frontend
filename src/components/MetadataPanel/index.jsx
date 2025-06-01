@@ -567,7 +567,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
             <div
               className="relative h-[100vh] w-[75%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-x-hidden"
               ref={PdfContainer}
-              style={{ height: '550px', overflow: 'auto' }}
+              style={{ height: '370px', overflow: 'auto' }}
             >
               <Document
                 className="!w-full mx-auto relative"
@@ -591,7 +591,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       _className="mx-auto !w-full !min-w-0"
                       className="!w-full mx-auto"
                       pageNumber={index + 1}
-                      scale={0.7}
+                      scale={1}
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
                       width={window.innerWidth * 0.8}
                     />
                   </div>
