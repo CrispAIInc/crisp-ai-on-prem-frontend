@@ -128,7 +128,7 @@ function MetadataGen() {
                 <textarea
                     className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     rows="3"
-                    placeholder='Customize results with context'
+                    placeholder='Customize Metadata Generation results with context'
                     onFocus={() => setContextFocused(true)}
                     onBlur={() => setContextFocused(false)}
                     value={context}
