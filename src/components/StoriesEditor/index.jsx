@@ -110,8 +110,14 @@ function StoriesEditor() {
     const handleMouseEnter = () => context === "" && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
-    function handleSaveStory() {
-
+    async function handleSaveStory() {
+        try {
+            const res = await makeApiRequest('/stories', "POST", JSON.stringify(story));
+            console.log(res);
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 
     return (
