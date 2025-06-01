@@ -155,7 +155,7 @@ const ContentPanel = () => {
         <aside className={`relative z-10 select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} ref={contentPanelContainerRef} style={{
             width: leftWidth
         }}>
-            <h5 className={`select-none ${theme === "light" ? "text-textColor-100" : "text-textColor-200"
+            <h5 className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-100" : "text-textColor-200 !border-b !border-b-textColor-300"
                 }`}>Sources</h5>
             {/* <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-90% top-10 -z-1 blur-[160px]"></div> */}
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
