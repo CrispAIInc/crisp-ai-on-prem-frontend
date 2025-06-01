@@ -6,6 +6,7 @@ import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import AddIcon from '@mui/icons-material/Add';
+import toast from 'react-simple-toasts';
 
 function StoriesEditor() {
     const { displayedSources, theme } = useContext(MainContext);
@@ -16,6 +17,7 @@ function StoriesEditor() {
     const isActive = contextFocused || context.length > 0;
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isPending, setIsPending] = useState(false);
 
     const [value, setValue] = useState('');
     const editorRef = useRef(null);
@@ -40,7 +42,7 @@ function StoriesEditor() {
         'image',
     ];
 
-    const [story, setStory] = useState({});
+    const [story, setStory] = useState(null);
 
     async function autoGenerateStory() {
         setIsLoading(true);
@@ -112,11 +114,14 @@ function StoriesEditor() {
 
     async function handleSaveStory() {
         try {
-            const res = await makeApiRequest('/stories', "POST", JSON.stringify(story));
-            console.log(res);
+            setIsPending(true);
+            await makeApiRequest('/stories', "POST", JSON.stringify(story));
+            toast('Story saved successfully', { className: 'p-2 rounded-md', theme });
         }
         catch (e) {
             console.log(e);
+        } finally {
+            setIsPending(false);
         }
     }
 
@@ -166,19 +171,19 @@ function StoriesEditor() {
             </div>
 
             {/* save button */}
-            <div
+            {story !== null && <div
                 className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
                     ? 'hover:bg-light-hover-100/30'
                     : 'hover:bg-light-hover-200/20'
                     } z-10`}
                 onClick={handleSaveStory}
             >
-                <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                {isPending ? <LoadingSpinner isSmall /> : <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />}
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
                     }`}>
                     Save story
                 </span>
-            </div>
+            </div>}
 
             {/* editor */}
 
@@ -240,7 +245,7 @@ function StoriesEditor() {
                     formats={formats}
                 />
 
-                <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                {story !== null && <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                     }`}>
                     <h3 className="mb-2 italic text-center">{story.story_name}</h3>
                     {
@@ -278,7 +283,7 @@ function StoriesEditor() {
                             </div>
                         ))
                     }
-                </div>
+                </div>}
             </div>
         </div>
     );
