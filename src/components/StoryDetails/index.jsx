@@ -108,10 +108,10 @@ function StoryDetails() {
                             {
                                 answer: sections[index][0].answer,
                                 refs: {
-                                    imageObjects: sections[index][0].imgsArr,
-                                    videoObjects: sections[index][0].videosArr,
-                                    keyframeObjects: sections[index][0].keyframesArr,
-                                    pdfObjects: sections[index][0].pdfsArr,
+                                    imageLinks: sections[index][0].imgsArr,
+                                    videoLinks: sections[index][0].videosArr,
+                                    keyframeLinks: sections[index][0].keyframesArr,
+                                    pdfLinks: sections[index][0].pdfsArr,
                                 }
                             }
                         ];
@@ -408,6 +408,7 @@ function StoryDetails() {
     }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
     const handleVideoLinkClick = (event, video) => {
+        console.log("klklkl");
         event.preventDefault();
         setFromChat(false);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
@@ -529,18 +530,18 @@ function StoryDetails() {
                                                     `
                                             }
                                                 </div>
-                                                ${(i.refs?.videoObjects?.length > 0 ||
-                                                i.refs?.keyframeObjects?.length > 0 ||
-                                                i.refs?.pdfObjects?.length > 0 ||
-                                                i.refs?.imageObjects?.length > 0)
+                                                ${(i.refs?.videoLinks?.length > 0 ||
+                                                i.refs?.keyframeLinks?.length > 0 ||
+                                                i.refs?.pdfLinks?.length > 0 ||
+                                                i.refs?.imageLinks?.length > 0)
                                                 ? `
                                                     <div>
                                                         <p>References:</p>
-                                                        ${i.refs?.videoObjects?.length >
+                                                        ${i.refs?.videoLinks?.length >
                                                     0
                                                     ? `
                                                             <ul>
-                                                                ${i.refs?.videoObjects
+                                                                ${i.refs?.videoLinks
                                                         ?.map(
                                                             (video) => `
                                                                     <li>${video.source_path +
@@ -554,11 +555,11 @@ function StoryDetails() {
                                                         `
                                                     : ""
                                                 }
-                                                        ${i?.refs?.keyframeObjects
+                                                        ${i?.refs?.keyframeLinks
                                                     ?.length > 0
                                                     ? `
                                                             <ul>
-                                                                ${i?.refs?.keyframeObjects
+                                                                ${i?.refs?.keyframeLinks
                                                         ?.map(
                                                             (video) => `
                                                                     <li>${video.source_path +
@@ -572,10 +573,10 @@ function StoryDetails() {
                                                         `
                                                     : ""
                                                 }
-                                                        ${i?.refs?.pdfObjects?.length > 0
+                                                        ${i?.refs?.pdfLinks?.length > 0
                                                     ? `
                                                             <ul>
-                                                                ${i?.refs?.pdfObjects
+                                                                ${i?.refs?.pdfLinks
                                                         ?.map(
                                                             (pdf) => `
                                                                     <li>${pdf.source_path +
@@ -592,10 +593,10 @@ function StoryDetails() {
                                                         `
                                                     : ""
                                                 }
-                                                        ${i?.refs?.imageObjects?.length > 0
+                                                        ${i?.refs?.imageLinks?.length > 0
                                                     ? `
                                                             <ul>
-                                                                ${i?.refs?.imageObjects
+                                                                ${i?.refs?.imageLinks
                                                         ?.map(
                                                             (img) => `
                                                                     <li>${img.source_path}</li>
@@ -834,15 +835,15 @@ function StoryDetails() {
                                                                     )}
                                                                     {/* {currentAnswerRef === i.id && <CheckIcon onClick={() => updateResponseWithReference(textIndex)} className='cursor-pointer' />} */}
                                                                 </div>
-                                                                {(i.refs?.videoObjects?.length > 0 ||
-                                                                    i.refs?.keyframeObjects?.length > 0 ||
-                                                                    i.refs?.pdfObjects?.length > 0 ||
-                                                                    i.refs?.imageObjects?.length > 0) && (
+                                                                {(i.refs?.videoLinks?.length > 0 ||
+                                                                    i.refs?.keyframeLinks?.length > 0 ||
+                                                                    i.refs?.pdfLinks?.length > 0 ||
+                                                                    i.refs?.imageLinks?.length > 0) && (
                                                                         <div>
                                                                             <p className="m-0">References:</p>
-                                                                            {i.refs?.videoObjects?.length > 0 && (
+                                                                            {i.refs?.videoLinks?.length > 0 && (
                                                                                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                    {i.refs?.videoObjects?.map((video, index) => (
+                                                                                    {i.refs?.videoLinks?.map((video, index) => (
                                                                                         <Link
                                                                                             key={index}
                                                                                             onClick={(event) =>
@@ -856,9 +857,9 @@ function StoryDetails() {
                                                                                     ))}
                                                                                 </ul>
                                                                             )}
-                                                                            {i.refs?.keyframeObjects?.length > 0 && (
+                                                                            {i.refs?.keyframeLinks?.length > 0 && (
                                                                                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                    {i.refs?.keyframeObjects?.map((video, index) => (
+                                                                                    {i.refs?.keyframeLinks?.map((video, index) => (
                                                                                         <Link
                                                                                             key={index}
                                                                                             onClick={(event) =>
@@ -872,9 +873,9 @@ function StoryDetails() {
                                                                                     ))}
                                                                                 </ul>
                                                                             )}
-                                                                            {i.refs?.pdfObjects?.length > 0 && (
+                                                                            {i.refs?.pdfLinks?.length > 0 && (
                                                                                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                    {i.refs?.pdfObjects?.map((pdf, index) => (
+                                                                                    {i.refs?.pdfLinks?.map((pdf, index) => (
                                                                                         <Link
                                                                                             key={index}
                                                                                             onClick={(event) =>
@@ -888,9 +889,9 @@ function StoryDetails() {
                                                                                     ))}
                                                                                 </ul>
                                                                             )}
-                                                                            {i.refs?.imageObjects?.length > 0 && (
+                                                                            {i.refs?.imageLinks?.length > 0 && (
                                                                                 <ul className="pl-1 text-sm break-all truncate whitespace-normal">
-                                                                                    {i.refs?.imageObjects?.map((img, index) => (
+                                                                                    {i.refs?.imageLinks?.map((img, index) => (
                                                                                         <Link
                                                                                             key={index}
                                                                                             onClick={(event) =>

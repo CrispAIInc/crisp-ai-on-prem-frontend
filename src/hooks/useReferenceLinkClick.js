@@ -9,30 +9,33 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setResourceURL,
         setSummary,
         setJumpToPage,
+        setShowMetadata,
         setSummaries,
         workspaceContainer,
         setActiveView
     } = useContext(MainContext);
 
     const handleVideoLinkClick = (event, video) => {
-        event.preventDefault();
+        if (event) event.preventDefault();
         setFromChat(isFromChat);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
             }/all/${encodeURIComponent(video.source_path)}`;
+        console.log(video);
         setCurrentResource({ ...video });
         setResourceURL(resourceURL);
         setSummary(video.summary);
         setSummaries(video.topic_summaries);
         setActiveView('resource');
-        workspaceContainer.current.scrollTo({
-            top: 0,
-            behavior: "smooth", // Enables smooth scrolling
-        });
+        // workspaceContainer.current.scrollTo({
+        //     top: 0,
+        //     behavior: "smooth", // Enables smooth scrolling
+        // });
+        setShowMetadata(true);
         // setShowNoteDetails(false);
     };
 
     const handlePDFLinkClick = (event, pdf) => {
-        event.preventDefault();
+        if (event) event.preventDefault();
         const resourceURL = `${API_ENDPOINT}/${pdf.file_type
             }/all/${encodeURIComponent(pdf.source_path)}`;
         setCurrentResource({ ...pdf });
@@ -41,10 +44,11 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setSummaries(pdf.topic_summaries);
         setActiveView('resource');
         setJumpToPage({ page: parseInt(pdf?.page) + 1 });
-        workspaceContainer.current.scrollTo({
-            top: 0,
-            behavior: "smooth", // Enables smooth scrolling
-        });
+        // workspaceContainer.current.scrollTo({
+        //     top: 0,
+        //     behavior: "smooth", // Enables smooth scrolling
+        // });
+        setShowMetadata(true);
         // setShowNoteDetails(false);
     };
 

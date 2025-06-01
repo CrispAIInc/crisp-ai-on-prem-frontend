@@ -7,7 +7,7 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
     const { theme, sourcesTobeCommited } = useContext(MainContext);
 
-    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
+    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
     const dropdownRef = useRef(null);
 
     // Close the dropdown when clicking outside
@@ -49,7 +49,7 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
     }
 
     return (
-        <div>
+        <div className="relative z-20">
             <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>source to use<span className="text-xs"> (min. 1 source)</span></label>
             <div className="relative inline-block w-full" ref={dropdownRef}>
                 {/* upper section */}

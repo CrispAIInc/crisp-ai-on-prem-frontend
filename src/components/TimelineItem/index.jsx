@@ -8,7 +8,7 @@ function TimelineItem({ chapter, index, theme, workspaceContainer, handleReadMor
 
     const thumbnail = import.meta.env.VITE_API_ENDPOINT + (chapter.keyframe_url ?? chapter.thumbnail_url);
     const { setJumpToPage,
-        setCurrentResource } = useContext(MainContext);
+        setCurrentResource, contentPanelContainerRef } = useContext(MainContext);
 
     const [isLightboxOpen, setLightboxOpen] = useState(false);
     function closeLightbox() {
@@ -30,7 +30,7 @@ function TimelineItem({ chapter, index, theme, workspaceContainer, handleReadMor
                         chapter.timestamp ? <h5 className='mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
 
                             setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
-                            workspaceContainer.current.scrollTo({
+                            contentPanelContainerRef.current.scrollTo({
                                 top: 0,
                                 behavior: "smooth", // Enables smooth scrolling
                             });
@@ -39,7 +39,7 @@ function TimelineItem({ chapter, index, theme, workspaceContainer, handleReadMor
                         </h5> : <div className='flex items-center gap-2 mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
 
                             setJumpToPage({ page: parseInt(chapter.page) });
-                            workspaceContainer.current.scrollTo({
+                            contentPanelContainerRef.current.scrollTo({
                                 top: 0,
                                 behavior: "smooth", // Enables smooth scrolling
                             });

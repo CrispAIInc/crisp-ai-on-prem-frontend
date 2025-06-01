@@ -10,7 +10,7 @@ import { timeToSeconds } from '../../utils';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true }) => {
+const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, fromMetadata = false }) => {
 
     const { currentResource, setCurrentResource, resourceURL, setResourceURL, player, isPlayerReady,
         selectedCategory, selectedFormat,
@@ -56,15 +56,15 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true }) =>
                 }
                 setCurrentResource(response.data);
                 setResourceURL(resourceURL);
-                setActiveView('resource');
+                // setActiveView('resource');
                 setIsSearching(false);
                 // response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
                 setSummary(response.data.summary);
                 if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
                 setAdditionalSources(response.data.additional_sources);
-                if (activeView !== 'resource') {
-                    setShowSearchModal(true);
-                }
+                // if (activeView !== 'resource') {
+                if (!fromMetadata) { setShowSearchModal(true); }
+                // }
 
                 if (response.data.file_type === "pdf") {
                     setJumpToPage({ page: response.data.page });

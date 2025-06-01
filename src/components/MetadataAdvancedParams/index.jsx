@@ -20,7 +20,7 @@ export default function MetadataAdvancedParams({ temperatureValue,
 
 
     return (
-        <div className='flex flex-col gap-4'>
+        <div className='relative z-20 flex flex-col gap-2'>
             {/* collapser */}
             <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsDropdownMenuOpen(!isDropdownMenuOpen)}>
                 <p className={`select-none font-bold ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Advanced settings</p>
@@ -43,11 +43,10 @@ export default function MetadataAdvancedParams({ temperatureValue,
 
             <div className={`flex flex-col gap-0 ${isDropdownMenuOpen ? 'block' : 'hidden'}`}>
                 {/* temperature */}
-                <div className={`flex flex-col gap-0`}>
+                {/* <div className={`flex flex-col gap-0`}>
                     <div className='flex items-center justify-between'>
                         <div className='flex items-center gap-2'>
                             <p className={`select-none ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Temperature</p>
-                            {/* <InfoTooltip tooltipText="Temperature adjusts how random the text is. Higher means more creative, lower means more predictable." /> */}
                         </div>
                         <input
                             type="number"
@@ -62,7 +61,7 @@ export default function MetadataAdvancedParams({ temperatureValue,
                     <div className={`${sidebarWidth === maxWidth && '!w-2/3 !mx-auto'}`}>
                         <Slider temperatureValue={temperatureValue} setTemperatureValue={setTemperatureValue} />
                     </div>
-                </div>
+                </div> */}
 
                 {/* verbosity */}
                 <div className={`flex flex-col gap-0`}>

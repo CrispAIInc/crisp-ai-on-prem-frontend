@@ -38,14 +38,18 @@ const MetadataPanel = ({ workspaceContainer }) => {
     jumpToPage,
     selectedNote,
     setCommittedSources,
+    setShowMetadata,
     sourcesTobeCommited,
     setIsFoundationLlm,
     setIsExclusiveChecked,
+    displayedSources,
     committedSources,
     activeView,
     theme,
     commitSelectedSources,
     selectedStory,
+    categoryOptions,
+    setKnowledgeBase,
     setActiveTab,
     generatedResources,
   } = useContext(MainContext);
@@ -84,6 +88,27 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
   }, [jumpToPage, numPages, isPdfLoaded]);
 
+  const categoryValues = categoryOptions.map((option) => option.value);
+
+  async function updateContent() {
+    const data = await makeApiRequest(
+      "/content",
+      "post",
+      JSON.stringify(categoryValues)
+    );
+    //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
+    let updatedKnowledgeBase = data.map(item => {
+      let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
+
+      if (selected) {
+        return { ...item, is_selected: true };
+      } else {
+        return item;
+      }
+    });
+
+    setKnowledgeBase(updatedKnowledgeBase);
+  }
   useEffect(() => {
     if (activeView === "resource") {
       // setTranslatedResource(currentResource);
@@ -98,6 +123,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
         setCurrentResource(updatedResource);
 
         // Call translateMetadata with the updated resource
+
+        // updateContent();
         translateMetadata("en", updatedResource);
       }
     }
@@ -112,18 +139,19 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const closeVideo = async (event) => {
     event.preventDefault();
-    setCurrentResource(null);
+    // setCurrentResource(null);
     setResourceURL(null);
     setIsPlayerReady(false);
-    setActiveView(() => {
-      if (selectedStory.text.length > 0) {
-        return "story";
-      }
-      if (selectedNote.text.length > 1) {
-        return "note";
-      }
-      return null;
-    });
+    setShowMetadata(false);
+    // setActiveView(() => {
+    //   if (selectedStory.text.length > 0) {
+    //     return "story";
+    //   }
+    //   if (selectedNote.text.length > 1) {
+    //     return "note";
+    //   }
+    //   return null;
+    // });
     if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
       !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
       // console.log("trueeeujl");
@@ -134,17 +162,18 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const closePDF = async (event) => {
     event.preventDefault();
-    setCurrentResource(null);
+    // setCurrentResource(null);
     setResourceURL(null);
-    setActiveView(() => {
-      if (selectedStory.text.length > 0) {
-        return "story";
-      }
-      if (selectedNote.text.length > 1) {
-        return "note";
-      }
-      return null;
-    });
+    setShowMetadata(false);
+    // setActiveView(() => {
+    //   if (selectedStory.text.length > 0) {
+    //     return "story";
+    //   }
+    //   if (selectedNote.text.length > 1) {
+    //     return "note";
+    //   }
+    //   return null;
+    // });
     if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
       !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
       // console.log("trueeeujl");
@@ -155,17 +184,18 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const closeImage = async (event) => {
     event.preventDefault();
-    setCurrentResource(null);
+    // setCurrentResource(null);
     setResourceURL(null);
-    setActiveView(() => {
-      if (selectedStory.text.length > 0) {
-        return "story";
-      }
-      if (selectedNote.text.length > 1) {
-        return "note";
-      }
-      return null;
-    });
+    setShowMetadata(false);
+    // setActiveView(() => {
+    //   if (selectedStory.text.length > 0) {
+    //     return "story";
+    //   }
+    //   if (selectedNote.text.length > 1) {
+    //     return "note";
+    //   }
+    //   return null;
+    // });
     if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
       !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
       // console.log("trueeeujl");
@@ -182,6 +212,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   const pageRefs = useRef({});
 
   async function translateMetadata(chosenLanguage, object) {
+    updateContent();
     setChosenLanguage(chosenLanguage);
     setIsTranslationLoading(true);
     // make sure response body is also like httpRequestBody (w/o lang)
@@ -329,7 +360,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   async function handleToggle(checked) {
     setIsChecked(checked);
     // setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
-    // handleCheckboxChange(currentResource);
+    // handleCheckboxChange(checked, currentResource);
     if (checked) {
       // console.log("checked 1");
       setActiveTab('genInsights');
@@ -349,23 +380,25 @@ const MetadataPanel = ({ workspaceContainer }) => {
         setCommittedSources(sourcesTobeCommited);
       }
 
-      if (committedSources?.length === 0) {
+      if (committedSources?.length === 0 || (displayedSources?.some(item => item?.is_selected) ? false : true)) {
         setIsFoundationLlm(true);
       }
+
+      setIsFoundationLlm(displayedSources?.some(item => item?.is_selected) ? false : true);
     }
   }
 
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
 
-      {currentResource?.metadata?.embeddings_generated && <FormControlLabel control={<Checkbox sx={{
+      {/* {currentResource?.metadata?.embeddings_generated && <FormControlLabel control={<Checkbox sx={{
         color: lightBlue[800],
         '&.Mui-checked': {
           color: lightBlue[600],
         },
         borderColor: 'pink',
         borderTopColor: pink[400],
-      }} />} checked={isChecked} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />}
+      }} />} checked={isChecked} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />} */}
 
 
       {currentResource?.file_type === "video" && (
@@ -401,7 +434,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   }`}
               >
                 {/* search */}
-                {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
+                {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
+                <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {/* generate visual/combined summary */}
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
                   <CustomSelectTwo
@@ -440,7 +474,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                                     <h6 className='mb-0 text-xs font-semibold text-primary-200 '>{topic.start_time} - {topic.end_time}</h6>
                                   </div>
                                 </div>
-                                <p>{topic.content}</p>
+                                <p className="select-text">{topic.content}</p>
                               </div>
                             ))
                           }
@@ -476,6 +510,29 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
+                {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
+                  {isMobile ? (
+                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
+                  ) : (
+                    <>
+                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
+                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
+                    </>
+                  )}
+                </Accordion>}
+
+
+                {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
+                  <div>
+                    {
+                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
+                        <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
+                      ))
+                    }
+
+                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
+                  </div>
+                </Accordion>}
 
                 {translatedResource?.keywords?.content !== undefined && <>
                   <Accordion heading={translatedResource?.keywords?.title}>
@@ -489,28 +546,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     </p>
                   </Accordion>
                 </>}
-                {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
-                  <div>
-                    {
-                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
-                        <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
-                      ))
-                    }
 
-                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
-                  </div>
-                </Accordion>}
-
-                {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
-                  {isMobile ? (
-                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
-                  ) : (
-                    <>
-                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
-                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
-                    </>
-                  )}
-                </Accordion>}
 
                 {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
                   <Faqs heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
@@ -531,7 +567,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
             <div
               className="relative h-[100vh] w-[75%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-x-hidden"
               ref={PdfContainer}
-              style={{ height: '550px', overflow: 'auto' }}
+              style={{ height: '370px', overflow: 'auto' }}
             >
               <Document
                 className="!w-full mx-auto relative"
@@ -555,7 +591,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       _className="mx-auto !w-full !min-w-0"
                       className="!w-full mx-auto"
                       pageNumber={index + 1}
-                      scale={0.7}
+                      scale={1}
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
                       width={window.innerWidth * 0.8}
                     />
                   </div>
@@ -574,7 +612,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   }`}
               >
                 {/* search */}
-                {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
+                {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
+                <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}
@@ -610,6 +649,28 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     ></p>
                   </Accordion>
                 </>}
+                {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
+                  {isMobile ? (
+                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
+                  ) : (
+                    <>
+                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
+                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
+                    </>
+                  )}
+                </Accordion>}
+
+                {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
+                  <div>
+                    {
+                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
+                        <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
+                      ))
+                    }
+
+                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
+                  </div>
+                </Accordion>}
 
                 {translatedResource?.keywords?.content !== undefined && <>
                   <Accordion heading={translatedResource?.keywords?.title}>
@@ -623,28 +684,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     </p>
                   </Accordion>
                 </>}
-                {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
-                  <div>
-                    {
-                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
-                        <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
-                      ))
-                    }
 
-                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
-                  </div>
-                </Accordion>}
 
-                {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
-                  {isMobile ? (
-                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
-                  ) : (
-                    <>
-                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
-                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
-                    </>
-                  )}
-                </Accordion>}
+
 
                 {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
                   <Faqs heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
@@ -708,7 +750,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   }`}
               >
                 {/* search */}
-                {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />}
+                {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
+                <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1">
                   <CustomSelectTwo
                     options={languageOptions}

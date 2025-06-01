@@ -75,10 +75,10 @@ function NoteDetails() {
                 note_id: "",
                 text: [{
                     content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', refs: {
-                        videoObjects: [],
-                        keyframeObjects: [],
-                        pdfObjects: [],
-                        imageObjects: [],
+                        videoLinks: [],
+                        keyframeLinks: [],
+                        pdfLinks: [],
+                        imageLinks: [],
                     }
                 }],
                 images: [],
@@ -92,10 +92,10 @@ function NoteDetails() {
         const questions = [];
         const answers = [];
         let refs = {
-            videoObjects: [],
-            keyframeObjects: [],
-            pdfObjects: [],
-            imageObjects: [],
+            videoLinks: [],
+            keyframeLinks: [],
+            pdfLinks: [],
+            imageLinks: [],
         };
         const models = [];
 
@@ -112,20 +112,20 @@ function NoteDetails() {
                 models.push(item.model);
             }
 
-            item?.refs?.videoObjects?.forEach((obj) => {
-                refs.videoObjects.push(obj);
+            item?.refs?.videoLinks?.forEach((obj) => {
+                refs.videoLinks.push(obj);
             });
 
-            item?.refs?.keyframeObjects?.forEach((obj) => {
-                refs.keyframeObjects.push(obj);
+            item?.refs?.keyframeLinks?.forEach((obj) => {
+                refs.keyframeLinks.push(obj);
             });
 
-            item?.refs?.pdfObjects?.forEach((obj) => {
-                refs.pdfObjects.push(obj);
+            item?.refs?.pdfLinks?.forEach((obj) => {
+                refs.pdfLinks.push(obj);
             });
 
-            item?.refs?.imageObjects?.forEach((obj) => {
-                refs.imageObjects.push(obj);
+            item?.refs?.imageLinks?.forEach((obj) => {
+                refs.imageLinks.push(obj);
             });
         });
 
@@ -394,10 +394,10 @@ function NoteDetails() {
                             text: [{
                                 content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '',
                                 refs: {
-                                    videoObjects: [],
-                                    keyframeObjects: [],
-                                    pdfObjects: [],
-                                    imageObjects: [],
+                                    videoLinks: [],
+                                    keyframeLinks: [],
+                                    pdfLinks: [],
+                                    imageLinks: [],
                                 }
                             }],
                             images: [],
@@ -486,11 +486,11 @@ function NoteDetails() {
                                                     </div>}
                                                     <p dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br>') }} contentEditable suppressContentEditableWarning={true} ref={el => (answerRefs.current[item.id] = el)} onFocus={() => handleFocus("answer", item.id)}></p></div> : <img className="w-[400px] h-[300px]" width="400" height="300" src={item.answer} alt="image" />}
                                                 {/* display references */}
-                                                {(item.refs?.videoObjects?.length > 0 || item.refs?.keyframeObjects?.length > 0 || item.refs?.pdfObjects?.length > 0 || item.refs?.imageObjects?.length > 0) && <div className='flex flex-col gap-2'>
+                                                {(item.refs?.videoLinks?.length > 0 || item.refs?.keyframeLinks?.length > 0 || item.refs?.pdfLinks?.length > 0 || item.refs?.imageLinks?.length > 0) && <div className='flex flex-col gap-2'>
                                                     <h6 className='text-sm'>References:</h6>
                                                     <ul className='break-all !mb-0'>
                                                         {
-                                                            item.refs?.videoObjects?.map((video, index) => (
+                                                            item.refs?.videoLinks?.map((video, index) => (
                                                                 <li key={video.source_path + "" + index} className="mb-3 ml-0">
                                                                     <Link onClick={(event) => handleVideoLinkClick(event, video)}>
                                                                         {video.source_path + " | Timestamp: " + video.timestamp}
@@ -501,7 +501,7 @@ function NoteDetails() {
                                                     </ul>
                                                     <ul className='break-all !mb-0'>
                                                         {
-                                                            item.refs?.keyframeObjects?.map((video, index) => (
+                                                            item.refs?.keyframeLinks?.map((video, index) => (
                                                                 <li key={video.source_path + "" + index} className="mb-3 ml-0">
                                                                     <Link onClick={(event) => handleVideoLinkClick(event, video)}>
                                                                         {video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
@@ -512,7 +512,7 @@ function NoteDetails() {
                                                     </ul>
                                                     <ul className='break-all !mb-0'>
                                                         {
-                                                            item.refs?.pdfObjects?.map((pdf, index) => (
+                                                            item.refs?.pdfLinks?.map((pdf, index) => (
                                                                 <li key={pdf.source_path + "" + index} className="mb-3 ml-0">
                                                                     <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
                                                                         {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
@@ -523,7 +523,7 @@ function NoteDetails() {
                                                     </ul>
                                                     <ul className='break-all !mb-0'>
                                                         {
-                                                            item.refs?.imageObjects?.map((img, index) => (
+                                                            item.refs?.imageLinks?.map((img, index) => (
                                                                 <li key={img.source_path + "" + index} className="mb-3 ml-0">
                                                                     <Link onClick={(event) => handlePDFLinkClick(event, img)}>
                                                                         {img.source_path}
