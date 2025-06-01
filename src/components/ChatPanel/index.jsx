@@ -652,10 +652,10 @@ const ChatPanel = () => {
                   key={index}
                   className="pl-2 mb-4"
                 >
-                  <h6 className={`z-10 mt-2 font-bold ${theme === "light" ? "text-textColor-300" : "text-textColor-200 text-md"
-                    }`}>{item.question}</h6>
+                  <h5 className={`z-10 mt-2 font-bold ${theme === "light" ? "text-textColor-300" : "text-textColor-200 text-md"
+                    }`}>{typeof item?.question === "string" ? item?.question : item?.question?.query}</h5>
                   <p className={`z-10 text-textColor-200 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                    }`} dangerouslySetInnerHTML={{ __html: item.answer }}></p>
+                    }`} dangerouslySetInnerHTML={{ __html: item?.answer }}></p>
                   {/* <p className="z-10 font-bold text-white">
                     <strong>Model:</strong> {item.model}
                   </p> */}
@@ -664,7 +664,7 @@ const ChatPanel = () => {
                   {(item?.references?.pdfLinks?.length > 0 || item?.refs?.pdfLinks?.length > 0) && (
                     <div>
                       {/* <strong className="z-10 font-bold text-white">PDF:</strong>{' '} */}
-                      {item[item.refs ? 'refs' : 'references'].pdfLinks.map((link, i) => (
+                      {item[item.refs ? 'refs' : 'references']?.pdfLinks?.map((link, i) => (
                         <a
                           key={i}
                           href="#"
@@ -681,7 +681,7 @@ const ChatPanel = () => {
                   {(item?.references?.videoLinks?.length > 0 || item?.refs?.videoLinks?.length > 0) && (
                     <div>
                       {/* <strong className="z-10 font-bold text-white">Video:</strong>{' '} */}
-                      {item[item.refs ? 'refs' : 'references'].videoLinks.map((link, i) => (
+                      {item[item.refs ? 'refs' : 'references']?.videoLinks?.map((link, i) => (
                         <li
                           key={i}
                           onClick={(e) => handleReferenceClick(e, extractFilenameAndType(typeof link === "string" ? link : link?.source_path), (typeof link === "string" ? null : link))}
@@ -697,7 +697,7 @@ const ChatPanel = () => {
                   {(item?.references?.imageLinks?.length > 0 || item?.refs?.imageLinks?.length > 0) && (
                     <div>
                       {/* <strong className="z-10 font-bold text-white">Images:</strong>{' '} */}
-                      {item[item.refs ? 'refs' : 'references'].imageLinks.map((link, i) => (
+                      {item[item.refs ? 'refs' : 'references']?.imageLinks?.map((link, i) => (
                         <img
                           key={i}
                           src={typeof link === "string" ? link : link?.source_path}
