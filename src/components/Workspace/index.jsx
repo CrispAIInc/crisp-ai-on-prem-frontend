@@ -27,8 +27,8 @@ const Workspace = () => {
 
     return (
         <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
-            <h5 className={`select-none py-[10px]  ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-100" : "text-textColor-200 !border-b !border-b-textColor-300"
-                }`}>Chat</h5>
+            <h5 className={`select-none text-center ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
+                } py-[10px]`}>Chat</h5>
             <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/2 top-10 -z-10 blur-[160px]"></div>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-10 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-80 -z-10 blur-[160px]"></div>
