@@ -81,7 +81,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
-            {activeView === 'resource' && <div>
+            {activeView === 'resource' && <div className="flex-1">
                 <div className={`mb-4 ${theme === "light"
                     ? "text-textColor-300"
                     : "text-textColor-100"
@@ -116,7 +116,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 )}
             </div>}
 
-            <div className={`flex-1 mt-10 overflow-y-auto`}>
+            <div className={`mt-10 overflow-y-hidden h-[500px]`}>
                 <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
             </div>
         </div >
