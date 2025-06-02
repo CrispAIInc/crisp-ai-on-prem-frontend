@@ -525,8 +525,8 @@ const ChatPanel = () => {
     >
       <div className={`flex items-center justify-between gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
         }`}>
-        <h5 onClick={closeTopTabs} className={` select-none ${theme === "light" ? "text-textColor-100" : "text-textColor-200"
-          } cursor-pointer`}>
+        <h5 onClick={closeTopTabs} className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
+          } cursor-pointer text-center w-full`}>
           Studio</h5>
         {(showEditor || actualTab !== null) && (
           <h5

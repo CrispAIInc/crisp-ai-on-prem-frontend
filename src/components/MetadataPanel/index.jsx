@@ -511,14 +511,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
                 {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
-                  {isMobile ? (
-                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
-                  ) : (
+                  {/* {isMobile ? ( */}
+                  <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
+                  {/* ) : (
                     <>
                       <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
                       {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
                     </>
-                  )}
+                  )} */}
                 </Accordion>}
 
 
@@ -650,14 +650,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   </Accordion>
                 </>}
                 {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
-                  {isMobile ? (
-                    <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
-                  ) : (
+                  {/* {isMobile ? ( */}
+                  <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
+                  {/* ) : (
                     <>
                       <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
                       {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
                     </>
-                  )}
+                  )} */}
                 </Accordion>}
 
                 {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
