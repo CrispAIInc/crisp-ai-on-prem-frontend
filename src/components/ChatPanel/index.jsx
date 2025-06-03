@@ -842,7 +842,7 @@ const ChatPanel = () => {
                 </span>
               </div>
               {/* export */}
-              <div
+              {selectedStory?.story_id !== "" && <div
                 className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
                   ? 'hover:bg-light-hover-100/30'
                   : 'hover:bg-light-hover-200/20'
@@ -854,7 +854,7 @@ const ChatPanel = () => {
                   }`}>
                   Export
                 </span>
-              </div>
+              </div>}
             </div>
             <div>
               <input
