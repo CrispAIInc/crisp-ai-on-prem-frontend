@@ -34,7 +34,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     languageOptions,
     isPlayerReady,
     setIsPlayerReady,
-    setActiveView,
+    contentPanelContainerRef,
     jumpToPage,
     selectedNote,
     setCommittedSources,
@@ -465,7 +465,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                                   <h4 className='text-[16px] font-semibold '>{topic.speaker?.toLowerCase()}: </h4>
                                   <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                                     setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
-                                    workspaceContainer.current.scrollTo({
+                                    contentPanelContainerRef?.current.scrollTo({
                                       top: 0,
                                       behavior: "smooth", // Enables smooth scrolling
                                     });
