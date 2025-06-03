@@ -530,18 +530,18 @@ function StoryDetails() {
                                                     `
                                             }
                                                 </div>
-                                                ${(i.refs?.videoLinks?.length > 0 ||
-                                                i.refs?.keyframeLinks?.length > 0 ||
-                                                i.refs?.pdfLinks?.length > 0 ||
-                                                i.refs?.imageLinks?.length > 0)
+                                                ${(i?.videosArr?.length > 0 ||
+                                                i?.keyframesArr?.length > 0 ||
+                                                i?.pdfsArr?.length > 0 ||
+                                                i?.imgsArr?.length > 0)
                                                 ? `
                                                     <div>
                                                         <p>References:</p>
-                                                        ${i.refs?.videoLinks?.length >
+                                                        ${i?.videoArr?.length >
                                                     0
                                                     ? `
                                                             <ul>
-                                                                ${i.refs?.videoLinks
+                                                                ${i?.videoArr
                                                         ?.map(
                                                             (video) => `
                                                                     <li>${video.source_path +
@@ -555,11 +555,11 @@ function StoryDetails() {
                                                         `
                                                     : ""
                                                 }
-                                                        ${i?.refs?.keyframeLinks
+                                                        ${i?.keyframeArr
                                                     ?.length > 0
                                                     ? `
                                                             <ul>
-                                                                ${i?.refs?.keyframeLinks
+                                                                ${i?.keyframeArr
                                                         ?.map(
                                                             (video) => `
                                                                     <li>${video.source_path +
@@ -573,10 +573,10 @@ function StoryDetails() {
                                                         `
                                                     : ""
                                                 }
-                                                        ${i?.refs?.pdfLinks?.length > 0
+                                                        ${i?.pdfArr?.length > 0
                                                     ? `
                                                             <ul>
-                                                                ${i?.refs?.pdfLinks
+                                                                ${i?.pdfArr
                                                         ?.map(
                                                             (pdf) => `
                                                                     <li>${pdf.source_path +
@@ -593,15 +593,14 @@ function StoryDetails() {
                                                         `
                                                     : ""
                                                 }
-                                                        ${i?.refs?.imageLinks?.length > 0
+                                                        ${i?.imgsArr?.length > 0
                                                     ? `
                                                             <ul>
-                                                                ${i?.refs?.imageLinks
-                                                        ?.map(
-                                                            (img) => `
+                                                                ${i?.imgsArr?.map(
+                                                        (img) => `
                                                                     <li>${img.source_path}</li>
                                                                 `
-                                                        )
+                                                    )
                                                         .join("")}
                                                             </ul>
                                                         `
