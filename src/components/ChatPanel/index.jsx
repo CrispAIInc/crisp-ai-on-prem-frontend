@@ -339,7 +339,7 @@ const ChatPanel = () => {
       const noteId = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
       await makeApiRequest('/save-note', 'post', {
         noteID: selectedNote.note_id || noteId,
-        selectedNote: isNewInsight ? { ...selectedNote, note_id: noteId, note_name: noteTitle, text: [{ answer: htmlToPlainText(value), content: value, question: "", model: "", id: generateRandomHash(5), references: { videoLinks: [], pdfLinks: [], imageLinks: [] } }] } : selectedNote,
+        selectedNote: isNewInsight ? { ...selectedNote, note_id: noteId, note_name: noteTitle, text: [{ answer: htmlToPlainText(value), content: value, question: "", model: "", id: generateRandomHash(5), references: { videoLinks: [], pdfLinks: [], imageLinks: [] } }] } : { ...selectedNote, note_name: noteTitle },
         noteName: noteTitle,
         noteNumber: parseInt(noteIndex),
         isNewNote: (isNewNote || isNewInsight)

@@ -14,12 +14,9 @@ import SearchSection from '../SearchSection';
 import Faqs from '../Faqs';
 import Accordion from '../Accordion/index.jsx';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
-import Timeline from '../Timeline/index.jsx';
 import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
 import HorizontalCard from '../HorizontalCard/index.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { Checkbox, FormControlLabel } from '@mui/material';
-import { lightBlue, pink } from '@mui/material/colors';
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
