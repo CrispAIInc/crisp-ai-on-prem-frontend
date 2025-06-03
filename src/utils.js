@@ -156,3 +156,29 @@ export function flattenMetadata(obj) {
         ...flattenedMetadata,
     };
 }
+
+export function htmlToPlainText(input) {
+    if (typeof input !== 'string') return '';
+
+    // Quick check: if it doesn't look like HTML, return as-is
+    const isProbablyHtml = /<\/?[a-z][\s\S]*>/i.test(input);
+    if (!isProbablyHtml) return input.trim();
+
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = input;
+
+    // Replace <br> with newline
+    tempDiv.querySelectorAll('br').forEach(br => {
+        const newline = document.createTextNode('\n');
+        br.parentNode.replaceChild(newline, br);
+    });
+
+    // Add newline after each <p> unless it's the last one
+    tempDiv.querySelectorAll('p').forEach((p, index, all) => {
+        if (index !== all.length - 1) {
+            p.innerHTML += '\n';
+        }
+    });
+
+    return tempDiv.textContent.trim();
+}

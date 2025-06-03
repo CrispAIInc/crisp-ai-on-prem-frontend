@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat }) => {
     const [fileThumbnails, setFileThumbnails] = useState([]);
 
     const handleFileUpload = (event) => {
         const files = Array.from(event.target.files);
-        setSelectedFiles(files);
+        // add files to previously set files in selectedFiles
+        setSelectedFiles((prev) => [...prev, ...files]);
         const thumbnails = files.map((file) => {
             const type = file.type;
             setSelectedFileFormat(type);
@@ -28,6 +29,10 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
             return updated;
         });
     };
+
+    useEffect(() => {
+        setSelectedFiles(fileThumbnails?.map(item => item?.file));
+    }, [fileThumbnails]);
 
     const renderThumbnail = (thumbnail, index) => {
         const { file, preview } = thumbnail;

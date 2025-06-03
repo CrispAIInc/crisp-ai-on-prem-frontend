@@ -11,7 +11,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
     const previousModels = [];
 
     const { setSelectedNote,
-        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setActiveView } = useContext(MainContext);
+        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setActiveView, setShowEditor } = useContext(MainContext);
 
     const showSelectedNote = (event, note, index) => {
         event.preventDefault();
@@ -20,7 +20,8 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
         setIsEditingTitle(false);
         setIsNewNote(false);
         setShowNoteDetails(true);
-        setActiveView('note');
+        // setActiveView('note');
+        setShowEditor(true);
     };
 
     useEffect(() => {
@@ -45,7 +46,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
     );
 
     return (
-        <OverlayTrigger className='tooltip' placement="right" overlay={renderTooltip}>
+        <OverlayTrigger className='tooltip' placement="left" overlay={renderTooltip}>
             <div
                 className={`p-1 rounded-lg w-24 h-24 relative transform shadow-[rgba(0,0,15,0.5)_0px_8px_19px_-10px] flex flex-col cursor-pointer overflow-x-hidden`}
                 style={{

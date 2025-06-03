@@ -12,7 +12,7 @@ import SelectedSourcesDropdown from '../SelectedSourcesDropdown';
 
 
 function MetadataGen() {
-    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, setSourcesAfterUncheckCrispWiz, metadataOptions } = useContext(MainContext);
+    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
 
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
 
@@ -23,12 +23,12 @@ function MetadataGen() {
         });
     }, [sourcesTobeCommited]);
 
-    const [temperatureValue, setTemperatureValue] = useState(0.2);
-    function handleTemperatureChange(e) {
-        setTemperatureValue(e.target.value);
-    }
+    // const [temperatureValue, setTemperatureValue] = useState(0.2);
+    // function handleTemperatureChange(e) {
+    //     setTemperatureValue(e.target.value);
+    // }
 
-    const [verbosityValue, setVerbosityValue] = useState('low');
+    const [verbosityValue, setVerbosityValue] = useState('medium');
 
     function handleChange(event) {
         setVerbosityValue(event.target.value);
@@ -43,6 +43,10 @@ function MetadataGen() {
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
+    const [contextFocused, setContextFocused] = useState(false);
+    const [context, setContext] = useState('');
+    const isActive = contextFocused || context.length > 0;
+
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         setPosition({
@@ -51,7 +55,7 @@ function MetadataGen() {
         });
     };
 
-    const handleMouseEnter = () => selectedSourcesToGen.length === 0 && setTooltipVisible(true);
+    const handleMouseEnter = () => displayedSources.filter(item => item.is_selected).length === 0 && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMetadata() {
@@ -59,12 +63,12 @@ function MetadataGen() {
         // if (isKnowledgeBaseEmpty) {
         //     toast('You must select some sources to generate metadata');
         // }
-        if (selectedOptions.length === 0) {
-            toast('You must select at least one metadata option');
-        }
+        // if (selectedOptions.length === 0) {
+        //     toast('You must select at least one metadata option');
+        // }
 
-        else if (selectedSourcesToGen.length === 0) {
-            toast('You must select at least one source');
+        if (displayedSources.filter(item => item.is_selected).length === 0) {
+            toast('You must check at least one source');
         }
 
         const categoryValues = categoryOptions.map((option) => option.value);
@@ -74,7 +78,7 @@ function MetadataGen() {
             //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             // };
             const payload = {
-                category: selectedCategory, sources: selectedSourcesToGen.map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
+                category: selectedCategory, sources: displayedSources.filter(item => item.is_selected).map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context, verbosityValue: verbosityValue
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
@@ -110,13 +114,34 @@ function MetadataGen() {
     }
 
 
+
     return (
-        <div className='z-20 flex flex-col gap-4'>
+        <div className='z-20 flex flex-col gap-2'>
+
+            {/* context */}
+            <div className="relative w-full mt-6">
+                {/* <label
+                    className={`absolute left-2 top-2 text-gray-500 px-1 pointer-events-none`}
+                >
+                    Context
+                </label> */}
+                <textarea
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    rows="3"
+                    placeholder='Customize Metadata Generation results with context'
+                    onFocus={() => setContextFocused(true)}
+                    onBlur={() => setContextFocused(false)}
+                    value={context}
+                    onChange={(e) => setContext(e.target.value)}
+                />
+            </div>
+
             <MetadataOptions selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} options={metadataOptions} />
-            <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={sourcesTobeCommited} />
-            <MetadataAdvancedParams temperatureValue={temperatureValue}
-                setTemperatureValue={setTemperatureValue}
-                handleTemperatureChange={handleTemperatureChange}
+            {/* <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={sourcesTobeCommited} /> */}
+            <MetadataAdvancedParams
+                // temperatureValue={temperatureValue}
+                // setTemperatureValue={setTemperatureValue}
+                // handleTemperatureChange={handleTemperatureChange}
                 verbosityValue={verbosityValue}
                 setVerbosityValue={setVerbosityValue}
                 handleChange={handleChange} />
@@ -126,7 +151,7 @@ function MetadataGen() {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
-                    disabled={selectedSourcesToGen.length === 0 || isLoading} onClick={generateMetadata}>
+                    disabled={isLoading || displayedSources.filter(item => item.is_selected).length === 0} onClick={generateMetadata}>
                     {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate'}
                 </button>
                 {tooltipVisible && (
@@ -135,7 +160,7 @@ function MetadataGen() {
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        No source is selected
+                        No source is checked
                     </p>
                 )}
             </div>

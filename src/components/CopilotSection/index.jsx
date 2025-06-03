@@ -24,9 +24,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     theme,
     currentResource,
     llmModels,
+    selectedCategoryChat,
     fromChat, setFromChat,
     isFoundationLlm,
     resourceURL,
+    workspaceContainer,
     noteReferences,
     player,
     isPlayerReady,
@@ -36,8 +38,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     setSelectedNote,
     showNoteModal,
     sourcesWithExclusive,
+    categoryOptions,
+    setKnowledgeBase,
     setNoteIndex,
     setShowNoteModal,
+    displayedSources, setShowEditor,
     selectedSources,
     selectedAll,
     isNewNote,
@@ -61,7 +66,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   const [originalQueries, setOriginalQueries] = useState([]);
   const [originalResponses, setOriginalResponses] = useState([]);
   const [responseIndex, setResponseIndex] = useState(-1);
-  const [selectedCategoryChat] = useState("all");
+
 
   const [existingNote, setExistingNote] = useState(0);
 
@@ -77,8 +82,14 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   const [showLLMModal, setShowLLMModal] = useState(false);
 
   useEffect(() => {
-    // chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
-    chatAppRef.current.scrollTop = chatAppRef.current?.scrollHeight;
+    if (messages?.length > 0) {// chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
+      chatAppRef.current.scrollTop = chatAppRef?.current?.scrollHeight;
+      // workspaceContainer.current.scrollTop = workspaceContainer.current?.scrollHeight;
+      workspaceContainer.current.scrollTo({
+        top: workspaceContainer.current?.scrollHeight,
+        behavior: "smooth", // Enables smooth scrolling
+      });
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -90,6 +101,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     }
     // setCommittedSources(selectedSources);
     async function fetchChat() {
+      console.log('here: copilot', selectedCategoryChat);
       const data = await makeApiRequest(
         `/chat/${selectedCategoryChat}`,
         "post",
@@ -104,7 +116,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     }
 
     fetchChat();
-  }, [selectedCategoryChat, selectedSources]);
+  }, [selectedCategoryChat, selectedSources, displayedSources]);
 
   useEffect(() => {
     if (
@@ -120,6 +132,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
       setFromChat(false);
     }
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
+
+  const categoryValues = categoryOptions.map((option) => option.value);
 
   let noteQuestion = useRef('');
   const sendMessage = async (message, models = selectedLLMs) => {
@@ -180,6 +194,27 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
       });
       setShowCursor(false);
     } else {
+      // add or remove embeddings from VS
+      if (!displayedSources?.every(item => item?.is_selected === false)) {
+        await makeApiRequest(
+          `/handle-embeddings`,
+          "post",
+          JSON.stringify({
+            sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+          })
+        );
+      }
+
+      // try {
+      //   const data = await makeApiRequest(
+      //     "/content",
+      //     "post",
+      //     JSON.stringify(categoryValues)
+      //   );
+      //   setKnowledgeBase(data);
+      // } catch (error) {
+      //   console.warn(error);
+      // }
 
       let sessionID = null; // Variable to store the session ID
       const eventSource = new EventSource(
@@ -187,7 +222,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           selectedCategoryChat
         )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
           selectedLLMs[0]
-        )}/${isFoundationLlm}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
+        )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       );
 
       eventSource.onmessage = function (event) {
@@ -212,13 +247,23 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
         }
       };
 
-      eventSource.onerror = function () {
+      eventSource.onerror = async function () {
         setShowCursor(false);
         eventSource.close();
 
         if (eventSource.readyState === EventSource.CLOSED) {
           // Extract session ID from the eventSource's URL
           fetchReferences(botMessage); // Function to fetch references
+          // try {
+          //   const data = await makeApiRequest(
+          //     "/content",
+          //     "post",
+          //     JSON.stringify(categoryValues)
+          //   );
+          //   setKnowledgeBase(data);
+          // } catch (error) {
+          //   console.warn(error);
+          // }
           setOriginalResponses([...originalResponses, botMessage]);
         } else {
           console.error("Connection was closed due to an error.");
@@ -238,15 +283,15 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     noteReferences.keyframeLinks = [];
 
     let refs = {
-      videoObjects: [],
-      keyframeObjects: [],
-      pdfObjects: [],
-      imageObjects: [],
+      videoLinks: [],
+      keyframeLinks: [],
+      pdfLinks: [],
+      imageLinks: [],
     };
 
     const videoLinks = data.video_references.map((video) => {
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
-      refs["videoObjects"].push(video);
+      refs["videoLinks"].push(video);
       return (
         <li key={video.source_path} className="ml-0" data-object={video}>
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -258,7 +303,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     const keyframeLinks = data.keyframe_references.map((video) => {
       noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
-      refs["keyframeObjects"].push(video);
+      refs["keyframeLinks"].push(video);
       return (
         <li key={video.source_path} className="ml-0" data-object={video}>
           <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -270,7 +315,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     const pdfLinks = data.pdf_references.map((pdf) => {
       noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
-      refs["pdfObjects"].push(pdf);
+      refs["pdfLinks"].push(pdf);
       return (
         <li key={pdf.source_path} className="ml-0" data-object={pdf}>
           <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
@@ -282,7 +327,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     const imageLinks = data.img_references.map((img) => {
       noteReferences.imageLinks.push(img.source_path);
-      refs["imageObjects"].push(img);
+      refs["imageLinks"].push(img);
       return (
         <li key={img.source_path} className="ml-0" data-object={img}>
           <Link onClick={(event) => handlePDFLinkClick(event, img)}>
@@ -415,14 +460,14 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
                 selectedNote={selectedNote}
                 notes={notes}
               />
-              {(message?.refs?.videoObjects.length > 0 ||
+              {(message?.refs?.videoLinks.length > 0 ||
                 message?.refs?.keyframeObjects.length > 0 ||
                 message?.refs?.pdfObjects.length > 0 ||
                 message?.refs?.imageObjects.length > 0) && (
                   <div>
                     {/* <p className="m-0">References:</p> */}
                     {
-                      message?.refs?.videoObjects.map((video) => {
+                      message?.refs?.videoLinks.map((video) => {
                         return (
                           <li key={video.source_path} className="ml-4 list-none" data-object={video}>
                             <Link onClick={(event) => handleVideoLinkClick(event, video)}>
@@ -482,11 +527,11 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     );
   };
 
-  const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, refs) => {
-
+  const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, refs = { pdfLinks: [], videoLinks: [], imageLinks: [] }) => {
+    console.log(textToAdd);
     const newText = {
       id: generateRandomHash(5),
-      model: models[0],
+      model: models[0] || "",
       question,
       answer: textToAdd,
       refs,
@@ -503,7 +548,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
     setSelectedNote(newNote);
     setIsManualNote(false);
     setShowNoteDetails(true);
-    setActiveView('note');
+    setShowEditor(true);
+    // setActiveView('note');
   };
 
   useEffect(() => {
@@ -576,7 +622,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
           note_id: "",
           text: [{
             content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', refs: {
-              videoObjects: [],
+              videoLinks: [],
               keyframeObjects: [],
               pdfObjects: [],
               imageObjects: [],
@@ -699,8 +745,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   };
 
   return (
-    <article className="relative flex flex-col flex-1 h-full overflow-y-auto">
-      <section className="flex flex-wrap items-center justify-center gap-3">
+    <article className="relative flex flex-col flex-1 mb-3 h-full overflow-y-auto max-w-[650px] mx-auto">
+      <section className="flex flex-wrap items-center gap-3">
         {
           notes.map((note, i) => {
             <p key={i}>{note.note_name}</p>;
@@ -772,8 +818,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
       </section>
 
       {/* <div className="flex items-center flex-1 gap-3"> */}
-      <section
-        className={`copilot-chat-container flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
+      {messages?.length > 0 && <section
+        className={`copilot-chat-container flex flex-col flex-1 flex-grow h-full gap-3 overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
           }`}
         ref={chatAppRef}
       >
@@ -968,7 +1014,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
             </p>
           </div>
         )}
-      </section>
+      </section>}
 
       {/* </div> */}
       <section className="flex items-center gap-2 copilot-chat-container input-area">
@@ -978,26 +1024,28 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <>
-              <CustomTextArea
-                placeholder="Message model..."
-                value={input}
-                rows="1"
-                disabled={showCursor}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    sendMessage(input);
-                  }
-                }} />
+            <div className="flex w-full p-1 !border !border-textColor-300 rounded-md max-w-[650px] mx-auto">
+              <div className="flex-1">
+                <CustomTextArea
+                  placeholder="Ask Crisp Wiz..."
+                  value={input}
+                  rows="1"
+                  disabled={showCursor}
+                  onChange={(e) => setInput(e.target.value)}
+                  className="bg-transparent !border-none"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      sendMessage(input);
+                    }
+                  }} />
+              </div>
               <div
-                className={`p-2 rounded-md cursor-pointer z-[41] ${theme === "light" ? "border" : "!border !border-textColor-300"
-                  }`}
+                className={`p-2 rounded-md cursor-pointer z-[41]`}
                 onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
               >
                 <SendIcon color="primary" />
               </div>
-            </>}
+            </div>}
 
       </section>
     </article>

@@ -5,7 +5,7 @@ import useCheckMobileScreen from './useCheckMobileScreen';
 export const useResizableSidebar = (minWidth, isLeft) => {
     const isMobile = useCheckMobileScreen();
     const maxWidth = window.innerWidth * 0.75;
-    const [sidebarWidth, setSidebarWidth] = useState(isMobile ? -100 : window.innerWidth * (isLeft ? 0.2 : 0.26));
+    const [sidebarWidth, setSidebarWidth] = useState(isMobile ? -100 : window.innerWidth / 3.3333);
     const [isResizing, setIsResizing] = useState(false);
 
     const handleMouseDown = () => {
@@ -27,7 +27,7 @@ export const useResizableSidebar = (minWidth, isLeft) => {
     };
 
     const handleDoubleClick = () => {
-        setSidebarWidth(isMobile ? -100 : window.innerWidth * 0.2);
+        setSidebarWidth(isMobile ? -100 : window.innerWidth / 3.3333);
     };
 
     useEffect(() => {
@@ -49,5 +49,5 @@ export const useResizableSidebar = (minWidth, isLeft) => {
         };
     }, [isResizing]);
 
-    return { sidebarWidth, setSidebarWidth, handleMouseDown, handleDoubleClick, maxWidth, isExpanded: sidebarWidth === window.innerWidth * 0.75 };
+    return { sidebarWidth, setSidebarWidth, handleMouseDown, handleDoubleClick, maxWidth, isExpanded: sidebarWidth === window.innerWidth / 3.3333 };
 };

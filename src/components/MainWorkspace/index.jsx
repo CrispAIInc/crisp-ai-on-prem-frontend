@@ -91,6 +91,8 @@ const MainWorkspace = ({ theme }) => {
     getIndexes();
   }, []);
 
+  const contentPanelContainerRef = useRef(null);
+
 
   // can either be 'resource', 'note' or null
   // indicates wether the user is viewing a resource or a note in workspace
@@ -132,6 +134,8 @@ const MainWorkspace = ({ theme }) => {
   });
   const [showStoryDetails, setShowStoryDetails] = useState(false);
   const [isNewStory, setIsNewStory] = useState(false);
+
+  const [displayedSources, setDisplayedSources] = useState([]);
 
   const llmModels = [
     { value: "gpt-4", label: "GPT-4", type: "llm", color: "#D163DA" },
@@ -175,7 +179,7 @@ const MainWorkspace = ({ theme }) => {
     { value: "gemini-pro", label: "Gemini Pro", type: "llm", color: "#D10363" },
   ];
 
-  const [activeTab, setActiveTab] = useState('genInsights');
+  const [activeTab, setActiveTab] = useState('genMetadata');
 
   const modules = {
     toolbar: [
@@ -237,7 +241,38 @@ const MainWorkspace = ({ theme }) => {
     }
   };
 
-  const handleCheckboxChange = (file) => {
+  useEffect(() => {
+    // add all selected sources from knowledgebase to displayedsources
+    setDisplayedSources(prev => {
+      const newSources = knowledgeBase.filter(item => item.is_selected && !prev.some(i => i.source_path === item.source_path));
+      return [...prev, ...newSources];
+    });
+  }, [knowledgeBase]);
+
+  const [, setTranscription] = useState("");
+
+  const onThumbnailClick = (event, file, isFromCheckbox = false) => {
+    if (event) event.preventDefault();
+    const resourceURL = `${import.meta.env.VITE_API_ENDPOINT
+      }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
+    let fileToCommit = knowledgeBase.find((item) => item.source_path === file.source_path) || file;
+    setCurrentResource(fileToCommit);
+    setResourceURL(resourceURL);
+    setTranscription(fileToCommit.metadata ? fileToCommit.metadata.transcription : "");
+    if (fileToCommit.file_type != "img") {
+      setSummary(fileToCommit.summary);
+      setSummaries(fileToCommit.topic_summaries);
+    }
+
+    // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page life the case when clicking on a reference
+    if (fileToCommit.file_type === "pdf") {
+      setJumpToPage({ page: -1 });
+    }
+    setActiveView('resource');
+    if (!isFromCheckbox) { setShowMetadata(true); }
+  };
+
+  const handleCheckboxChange = (isChecked, file) => {
     // Create a new array with updated items
     const updatedKnowledgeBase = knowledgeBase.map((item) => {
       if (item.source_path === file.source_path) {
@@ -248,24 +283,86 @@ const MainWorkspace = ({ theme }) => {
     });
     setKnowledgeBase(updatedKnowledgeBase);
 
+    // update displayedsources such that if file.is_source is true, add it to displayedsources otherwise if it is already in displayedsources, just make its property "is_selected" to false without removing it from displayedsources
+    setDisplayedSources((prev) => {
+      const exists = prev.find((item) => item.source_path === file.source_path);
+      // const fileFromKb = knowledgeBase.find((item) => item.source_path === file.source_path);
+      if (!file.is_selected) {
+        if (!exists) {
+          return [...prev, { ...file, is_selected: true }];
+        } else if (exists) {
+          return prev.map((item) => {
+            if (item.source_path === file.source_path) {
+              return { ...item, is_selected: true };
+            }
+            return item;
+          });
+          // return [...prev, {...file, is_selected: false}]
+        }
+      } else {
+        if (exists) {
+          return prev.map((item) => {
+            if (item.source_path === file.source_path) {
+              return { ...item, is_selected: false };
+            }
+            return item;
+          });
+        }
+      }
+
+      return prev;
+    });
 
     // item should exist in selectedSources and isSelected is true => remove it from selectedSources
     if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
       setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
-      setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+      // setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
       // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
     }
 
     // updated sourcesTobeCommiter
-    if (!file.is_selected) {
-      setSourcesTobeCommited((prev) => [...prev, { ...file, is_selected: true }]);
-      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-    }
-    else {
-      setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-      // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    // if (!file.is_selected) {
+    //   setSourcesTobeCommited((prev) => [...prev, { ...file, is_selected: true }]);
+    //   // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    // }
+    // else {
+    //   setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
+    //   // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
+    // }
+
+    if (isChecked === true) {
+      onThumbnailClick(undefined, file, true);
+      // setShowMetadata(false);
     }
   };
+
+  const [selectedCategoryChat] = useState("all");
+
+  useEffect(() => {
+    setChatLoaded(false);
+    if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length > 0) {
+      // checked
+    } else {
+      // unchecked
+    }
+    // setCommittedSources(selectedSources);
+    async function fetchChat() {
+      console.log('here: ', selectedCategoryChat);
+      const data = await makeApiRequest(
+        `/chat/${selectedCategoryChat}`,
+        "post",
+        JSON.stringify({
+          sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
+          category: selectedCategoryChat,
+          selectedAll,
+          is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
+        })
+      );
+      setChatLoaded(data?.chat_is_initialized);
+    }
+
+    fetchChat();
+  }, [selectedCategoryChat, selectedSources]);
 
   const [fromChat, setFromChat] = useState(false);
   const [isManualNote, setIsManualNote] = useState(false);
@@ -290,11 +387,15 @@ const MainWorkspace = ({ theme }) => {
   const [isExclusiveChecked, setIsExclusiveChecked] = useState(false);
   useEffect(() => {
     // set isFoundationLlm to true if there is no selectedSources, otherwise false
-    setIsFoundationLlm(selectedSources.length === 0);
+    setIsFoundationLlm(selectedSources.length === 0 || (displayedSources?.some(item => item?.is_selected) ? false : true));
     if (!isExclusiveChecked) {
       setCommittedSources(selectedSources);
     }
   }, [selectedSources]);
+
+  useEffect(() => {
+    setIsFoundationLlm(displayedSources?.some(item => item?.is_selected) ? false : true);
+  }, [displayedSources]);
 
   const languageOptions = [
     { value: "en", label: "English" },
@@ -436,6 +537,7 @@ const MainWorkspace = ({ theme }) => {
   const [isStoriesLoading, setIsStoriesLoading] = useState(false);
 
   const [generatedResources, setGeneratedResources] = useState([]);
+  const [showEditor, setShowEditor] = useState(false);
 
   // useEffect(() => {
   //   if (knowledgeBase.every((item) => item.is_selected === false)) {
@@ -448,16 +550,18 @@ const MainWorkspace = ({ theme }) => {
   // }, [knowledgeBase]);
 
   const workspaceContainer = useRef(null);
+  const [showMetadata, setShowMetadata] = useState(false);
+
 
   const metadataOptions = [
-    { id: "summary", name: "Summary", description: "Generate concise overview" },
+    // { id: "summary", name: "Summary", description: "Generate concise overview" },
     // { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
     { id: "highlights", name: "Highlights", description: "Capture key moments" },
     { id: "chapters", name: "Chapters", description: "Divide source into meaningful sections" },
     { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
     { id: "keywords", name: "Keywords", description: "Extract important terms" },
     { id: "knowledgeGraph", name: "Knowledge graph", description: "Visualize key concepts and relationships" },
-    { id: "embeddings", name: "Embeddings", description: "Create vector representations for search" },
+    // { id: "embeddings", name: "Embeddings", description: "Create vector representations for search" },
   ];
   const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
   const [sourcesWithExclusive, setSourcesWithExclusive] = useState([]);
@@ -470,24 +574,27 @@ const MainWorkspace = ({ theme }) => {
   // create value object with all the states
   const value = {
     uploadedSources, setUploadedSources,
+    showMetadata, setShowMetadata,
     isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed,
     API_ENDPOINT,
+    onThumbnailClick,
     sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
     sourcesWithExclusive, setSourcesWithExclusive,
-    metadataOptions,
+    metadataOptions, selectedCategoryChat,
     committedSources, setCommittedSources,
     selectedOptions, setSelectedOptions,
     workspaceContainer,
     generatedResources, setGeneratedResources,
-    categoryOptions, setCategoryOptions,
+    categoryOptions, setCategoryOptions, showEditor, setShowEditor,
     languageOptions,
     theme, activeView, setActiveView,
     chatLoaded, setChatLoaded,
     fileFormats,
+    displayedSources, setDisplayedSources,
     commitSelectedSources,
     isLeftSidebarOpen, setIsLeftSidebarOpen,
     isRightSidebarOpen, setIsRightSidebarOpen,
-    modules,
+    modules, contentPanelContainerRef,
     handleCheckboxChange,
     activeTab, setActiveTab,
     formats,
@@ -557,11 +664,11 @@ const MainWorkspace = ({ theme }) => {
         setSelectedNote({
           note_id: "",
           text: [{
-            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', refs: {
-              videoObjects: [],
-              keyframeObjects: [],
-              pdfObjects: [],
-              imageObjects: [],
+            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+              videoLinks: [],
+              keyframeLinks: [],
+              pdfLinks: [],
+              imageLinks: [],
             }
           }],
           images: [],
