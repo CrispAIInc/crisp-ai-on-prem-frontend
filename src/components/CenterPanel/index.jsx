@@ -81,7 +81,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
-            {activeView === 'resource' && <div className="flex-1">
+            {(activeView === 'resource' && !displayedSources?.every(source => source?.file_type === "img")) && <div className="flex-1">
                 <div className={`mb-4 ${theme === "light"
                     ? "text-textColor-300"
                     : "text-textColor-100"
