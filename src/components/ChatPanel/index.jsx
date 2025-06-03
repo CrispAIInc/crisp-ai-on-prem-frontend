@@ -879,6 +879,7 @@ const ChatPanel = () => {
                 theme === "light" ? (
                   <style>
                     {`
+                    .custom-quill .ql-editor { color: #333 !important; }
                         .ql-toolbar {
                           border-color: #78716C;
                           background-color: rgba(119, 168, 249, 0.2) !important;
@@ -896,6 +897,7 @@ const ChatPanel = () => {
                 ) : (
                   <style>
                     {`
+                    .custom-quill .ql-editor { color: #FFF !important; }
                         .ql-toolbar {
                           border-color: #78716C;
                           background-color: rgba(119, 168, 249, 0.2) !important;
