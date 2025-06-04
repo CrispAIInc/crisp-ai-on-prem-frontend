@@ -7,6 +7,7 @@ import CopilotSection from '../CopilotSection';
 import { MainContext } from '../../contexts/mainContext';
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
@@ -339,7 +340,7 @@ const ChatPanel = () => {
       const noteId = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
       await makeApiRequest('/save-note', 'post', {
         noteID: selectedNote.note_id || noteId,
-        selectedNote: isNewInsight ? { ...selectedNote, note_id: noteId, note_name: noteTitle, text: [{ answer: htmlToPlainText(value), content: value, question: "", model: "", id: generateRandomHash(5), references: { videoLinks: [], pdfLinks: [], imageLinks: [] } }] } : selectedNote,
+        selectedNote: isNewInsight ? { ...selectedNote, note_id: noteId, note_name: noteTitle, text: [{ answer: htmlToPlainText(value), content: value, question: "", model: "", id: generateRandomHash(5), references: { videoLinks: [], pdfLinks: [], imageLinks: [] } }] } : { ...selectedNote, note_name: noteTitle },
         noteName: noteTitle,
         noteNumber: parseInt(noteIndex),
         isNewNote: (isNewNote || isNewInsight)
@@ -517,6 +518,211 @@ const ChatPanel = () => {
     setActualTab(null);
   }
 
+  function exportHTML() {
+    var header =
+      "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+      "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+      "xmlns='http://www.w3.org/TR/REC-html40'>" +
+      `<head><meta charset='utf-8'><title>Story:${selectedStory.story_name}</title></head><body>`;
+    var footer = "</body></html>";
+    const htmlString = `
+<div>
+    <h1 style='text-align: center; margin-bottom: 30px;'>${selectedStory.story_name
+      }</h1>
+</div>
+
+<div>
+    ${selectedStory.text
+        ?.map(
+          (item) => `
+        <div>
+            ${item.outline.name
+              ? `
+                <div>
+                    <div>
+                        <div>
+                            ${item.sectionImages?.length > 0
+                ? `
+                                <div>
+                                    ${item.sectionImages
+                  .map(
+                    (imgBlob) => `
+                                        <img width="300" height="300" src="${imgBlob}" alt="img" />
+                                    `
+                  )
+                  .join("")}
+                                </div>
+                            `
+                : ""
+              }
+                            <h3>${item.outline.name.replace(
+                /\n/g,
+                "<br>"
+              )}</h3>
+                        </div>
+                    </div>
+                </div>
+            `
+              : ""
+            }
+            <div>
+                <div>
+                    ${item.content
+              ? `
+                        <div>
+                            <div>
+                                ${typeof item.content === "string"
+                ? `
+                                    ${item.contentImages?.length > 0
+                  ? `
+                                        <div>
+                                            ${item.contentImages
+                    .map(
+                      (imgBlob) => `
+                                                <img width="300" height="300" src="${imgBlob}" alt="img" />
+                                            `
+                    )
+                    .join("")}
+                                        </div>
+                                    `
+                  : ""
+                }
+                                    <h5>${item.content.replace(
+                  /\n/g,
+                  "<br>"
+                )}</h5>
+                                `
+                : `
+                                    ${item.content?.map(
+                  (i) => `
+                                        <div>
+                                            <div>
+                                                ${!i.answer.includes(
+                    "https://oaidalleapiprodscus.blob"
+                  )
+                      ? `
+                                                    <p>${i.answer.replace(
+                        /\n/g,
+                        "<br>"
+                      )}</p>
+                                                `
+                      : `
+                                                    <img width="300" height="300" src="${i.answer}" alt="image" />
+                                                `
+                    }
+                                            </div>
+                                            ${(i?.videosArr?.length > 0 ||
+                      i?.keyframesArr?.length > 0 ||
+                      i?.pdfsArr?.length > 0 ||
+                      i?.imgsArr?.length > 0)
+                      ? `
+                                                <div>
+                                                    <p>References:</p>
+                                                    ${i?.videosArr?.length >
+                        0
+                        ? `
+                                                        <ul>
+                                                            ${i?.videosArr
+                          ?.map(
+                            (video) => `
+                                                                <li>${video.source_path +
+                              " | Timestamp: " +
+                              video.timestamp
+                              }</li>
+                                                            `
+                          )
+                          .join("")}
+                                                        </ul>
+                                                    `
+                        : ""
+                      }
+                                                    ${i?.keyframeArr
+                        ?.length > 0
+                        ? `
+                                                        <ul>
+                                                            ${i?.keyframeArr
+                          ?.map(
+                            (video) => `
+                                                                <li>${video.source_path +
+                              " | Keyframe: " +
+                              video.timestamp
+                              }</li>
+                                                            `
+                          )
+                          .join("")}
+                                                        </ul>
+                                                    `
+                        : ""
+                      }
+                                                    ${i?.pdfsArr?.length > 0
+                        ? `
+                                                        <ul>
+                                                            ${i?.pdfsArr
+                          ?.map(
+                            (pdf) => `
+                                                                <li>${pdf.source_path +
+                              " | Page: " +
+                              (parseInt(
+                                pdf.page
+                              ) +
+                                1)
+                              }</li>
+                                                            `
+                          )
+                          .join("")}
+                                                        </ul>
+                                                    `
+                        : ""
+                      }
+                                                    ${i?.imgsArr?.length > 0
+                        ? `
+                                                        <ul>
+                                                            ${i?.imgsArr?.map(
+                          (img) => `
+                                                                <li>${img.source_path}</li>
+                                                            `
+                        )
+                          .join("")}
+                                                        </ul>
+                                                    `
+                        : ""
+                      }
+                                                </div>
+                                            `
+                      : ""
+                    }
+                                        </div>
+                                    `
+                )
+                  .join("")}
+                                `
+              }
+                            </div>
+                        </div>
+                    `
+              : `<p></p>`
+            }
+                </div>
+            </div>
+        </div>
+    `
+        )
+        .join("")}
+</div>
+`;
+    var sourceHTML = header + htmlString + footer;
+
+    var source =
+      "data:application/vnd.ms-word;charset=utf-8," +
+      encodeURIComponent(sourceHTML);
+    var fileDownload = document.createElement("a");
+    document.body.appendChild(fileDownload);
+    fileDownload.href = source;
+    fileDownload.download = selectedStory.story_name + ".doc";
+    fileDownload.click();
+    document.body.removeChild(fileDownload);
+  }
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
@@ -621,18 +827,34 @@ const ChatPanel = () => {
       {showEditor ? (
         <div className="flex-1 h-full overflow-y-auto">
           <div className="h-full max-h-full ml-auto overflow-y-auto !overflow-y-hidden flex flex-col">
-            <div
-              className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                ? 'hover:bg-light-hover-100/30'
-                : 'hover:bg-light-hover-200/20'
-                } z-10`}
-              onClick={handleSave}
-            >
-              <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-              <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                }`}>
-                Save {currentTab === "insights" ? "insight" : "story"}
-              </span>
+            <div className="flex items-center justify-between">
+              <div
+                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                  ? 'hover:bg-light-hover-100/30'
+                  : 'hover:bg-light-hover-200/20'
+                  } z-10`}
+                onClick={handleSave}
+              >
+                <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                  }`}>
+                  Save {currentTab === "insights" ? "insight" : "story"}
+                </span>
+              </div>
+              {/* export */}
+              {selectedStory?.story_id !== "" && <div
+                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                  ? 'hover:bg-light-hover-100/30'
+                  : 'hover:bg-light-hover-200/20'
+                  } z-10`}
+                onClick={exportHTML}
+              >
+                <FileDownloadIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                  }`}>
+                  Export
+                </span>
+              </div>}
             </div>
             <div>
               <input
@@ -657,6 +879,7 @@ const ChatPanel = () => {
                 theme === "light" ? (
                   <style>
                     {`
+                    .custom-quill .ql-editor { color: #333 !important; }
                         .ql-toolbar {
                           border-color: #78716C;
                           background-color: rgba(119, 168, 249, 0.2) !important;
@@ -674,6 +897,7 @@ const ChatPanel = () => {
                 ) : (
                   <style>
                     {`
+                    .custom-quill .ql-editor { color: #FFF !important; }
                         .ql-toolbar {
                           border-color: #78716C;
                           background-color: rgba(119, 168, 249, 0.2) !important;

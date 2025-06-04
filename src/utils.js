@@ -128,8 +128,8 @@ export function flattenMetadata(obj) {
         // Flatten keywords
         if (metadata.keywords) {
             flattenedMetadata.keywords = {
-                title: metadata.keywords.title,
-                content: metadata.keywords.content.map(keyword => ({ ...keyword })),
+                title: metadata?.keywords?.title,
+                content: metadata?.keywords?.content?.map(keyword => ({ ...keyword })),
             };
         }
 

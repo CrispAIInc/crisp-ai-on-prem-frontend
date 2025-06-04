@@ -14,12 +14,9 @@ import SearchSection from '../SearchSection';
 import Faqs from '../Faqs';
 import Accordion from '../Accordion/index.jsx';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
-import Timeline from '../Timeline/index.jsx';
 import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
 import HorizontalCard from '../HorizontalCard/index.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { Checkbox, FormControlLabel } from '@mui/material';
-import { lightBlue, pink } from '@mui/material/colors';
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
@@ -34,7 +31,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     languageOptions,
     isPlayerReady,
     setIsPlayerReady,
-    setActiveView,
+    contentPanelContainerRef,
     jumpToPage,
     selectedNote,
     setCommittedSources,
@@ -465,7 +462,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                                   <h4 className='text-[16px] font-semibold '>{topic.speaker?.toLowerCase()}: </h4>
                                   <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                                     setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
-                                    workspaceContainer.current.scrollTo({
+                                    contentPanelContainerRef?.current.scrollTo({
                                       top: 0,
                                       behavior: "smooth", // Enables smooth scrolling
                                     });
