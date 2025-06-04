@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import LoadingSpinner from '../LoadingSpinner';
@@ -43,6 +43,10 @@ function StoriesEditor() {
     ];
 
     const [story, setStory] = useState(null);
+
+    useEffect(() => {
+        story?.story_name?.replace(/#/g, "").trim();
+    }, [story?.story_name]);
 
     async function autoGenerateStory() {
         setIsLoading(true);
