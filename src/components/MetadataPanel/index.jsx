@@ -208,14 +208,16 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const pageRefs = useRef({});
 
-  async function translateMetadata(chosenLanguage, object) {
+  async function translateMetadata(_chosenLanguage, object) {
     updateContent();
-    setChosenLanguage(chosenLanguage);
+    let prevLang = chosenLanguage;
+    setChosenLanguage(_chosenLanguage);
     setIsTranslationLoading(true);
     // make sure response body is also like httpRequestBody (w/o lang)
     // the response body object must contain keys in English
     let httpRequestBody = {
-      lang: chosenLanguage,
+      lang: _chosenLanguage,
+      prevLang,
       summary: {
         title: "",
         content: "",
@@ -260,6 +262,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         title: "",
         content: null,
       },
+
     };
     const TRANSLATABLE_KEYS = [
       "summary",
@@ -277,7 +280,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
     // console.log("jsldfjkdf");
     let obj = (object.metadata !== undefined || object.metadata !== null) ? flattenMetadata(object) : object;
-    console.log(obj);
     // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
     for (const [key, value] of Object.entries(obj)) {
       if (
@@ -293,21 +295,19 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
 
     try {
-      console.log(object);
       const httpResponseBody = await makeApiRequest(
         "/translate-metadata",
         "post",
         httpRequestBody
       );
       // console.log("httpResponseBody: ", httpResponseBody);
-      setTranslatedResource({ ...httpResponseBody, lang: chosenLanguage });
+      setTranslatedResource({ ...httpResponseBody, lang: _chosenLanguage, prevLang });
       // console.log(knowledgeBase?.find(item => item.source_path === currentResource.source_path));
 
     } catch (error) {
       console.log(error);
     } finally {
       setIsTranslationLoading(false);
-      console.log(translatedResource);
     }
   }
 
@@ -562,9 +562,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
         currentResource?.file_type === "pdf" && (
           <>
             <div
-              className="relative h-[100vh] w-[75%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-x-hidden"
+              className="relative h-[500px] w-[90%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-hidden"
               ref={PdfContainer}
-              style={{ height: '370px', overflow: 'auto' }}
+            // style={{ height: '370px', overflow: 'auto' }}
             >
               <Document
                 className="!w-full mx-auto relative"
@@ -588,7 +588,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                       _className="mx-auto !w-full !min-w-0"
                       className="!w-full mx-auto"
                       pageNumber={index + 1}
-                      scale={1}
+                      scale={0.55}
                       renderTextLayer={false}
                       renderAnnotationLayer={false}
                       width={window.innerWidth * 0.8}
