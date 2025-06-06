@@ -6,7 +6,7 @@ import Dropdown from '../Dropdown';
 
 export default function FileUploaderModal({ show, onHide, hideIndexModal, indexName, handleUpload }) {
 
-    const { theme, categoryOptions, fileFormats, setSelectedCategory } = useContext(MainContext);
+    const { theme, categoryOptions, isFileUploading, fileFormats, setSelectedCategory } = useContext(MainContext);
 
     const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -22,7 +22,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
 
     function uploadSources() {
         handleUpload(null, null, selectedFiles);
-        onHide();
+        // onHide();
         hideIndexModal();
     }
 
@@ -45,7 +45,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
             centered
             className=""
         >
-            <Modal.Body className={`flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
+            <Modal.Body className={`flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'} select-none`}>
                 {indexName !== null && <div className="flex items-center gap-2">
                     <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={selectedIndex} options={categoryOptions} />
                     {/* <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} /> */}
@@ -54,8 +54,8 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
                 <div
-                    className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                    onClick={uploadSources}
+                    className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'} ${isFileUploading && '!cursor-not-allowed'}`}
+                    onClick={!isFileUploading && uploadSources}
                 >
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Upload</span>
                 </div>

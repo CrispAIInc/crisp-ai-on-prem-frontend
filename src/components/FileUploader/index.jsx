@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { MainContext } from "../../contexts/mainContext.js";
+import FakeProgress from '../FakeProgressbar';
 
 const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat }) => {
     const [fileThumbnails, setFileThumbnails] = useState([]);
+    const { isFileUploading } = useContext(MainContext);
 
     const handleFileUpload = (event) => {
         const files = Array.from(event.target.files);
@@ -82,7 +85,10 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
     };
 
     return (
-        <div className="flex flex-col items-center p-4 border-2 border-dashed rounded-md border-primary-200">
+        <div className="relative flex flex-col items-center p-4 border-2 border-dashed rounded-md border-primary-200">
+            {isFileUploading && <div className="absolute z-40 w-[90%] h-12 mx-auto">
+                <FakeProgress isLoading={isFileUploading} />
+            </div>}
             <input
                 type="file"
                 multiple

@@ -570,9 +570,10 @@ const MainWorkspace = ({ theme }) => {
   const [isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed] = useState(false);
 
   const [uploadedSources, setUploadedSources] = useState([]);
-
+  const [isFileUploading, setIsFileUploading] = useState(false);
   // create value object with all the states
   const value = {
+    isFileUploading, setIsFileUploading,
     uploadedSources, setUploadedSources,
     showMetadata, setShowMetadata,
     isSourceUncheckedOrClosed, setIsSourceUncheckedOrClosed,
@@ -708,7 +709,10 @@ const MainWorkspace = ({ theme }) => {
 
   return (
     <MainContext.Provider value={value}>
-      <div className="flex !h-full divide-x divide-separator main-workspace-container">
+      <div className="flex relative !h-full divide-x divide-separator main-workspace-container">
+        {/* <div className="absolute z-40 w-full h-12">
+          <ProgressBar />
+        </div> */}
         <ContentPanel />
         <Workspace />
         <ChatPanel />
