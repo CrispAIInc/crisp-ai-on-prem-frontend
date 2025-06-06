@@ -22,7 +22,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
 
     function uploadSources() {
         handleUpload(null, null, selectedFiles);
-        onHide();
+        // onHide();
         hideIndexModal();
     }
 

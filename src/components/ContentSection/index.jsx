@@ -3,7 +3,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useContext, useEffect, useState } from "react";
-
+import ProgressBar from "../ProgressBar";
 import makeApiRequest from "../../api";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
@@ -40,6 +40,7 @@ const ContentSection = ({
     const {
         isPlayerReady,
         resourceURL,
+        isFileUploading, setIsFileUploading,
         setDisplayedSources,
         showMetadata,
         categoryOptions,
@@ -83,7 +84,7 @@ const ContentSection = ({
     const [showCategoriesModal, setShowCategoriesModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false); // True when a resource is being deleted
     const [clickedIndex, setClickedIndex] = useState(null);
-    const [isUploading, setIsUploading] = useState(false);
+    // const [isUploading, setIsUploading] = useState(false);
     // Flag indicating weather source Explorer modal was opened by clicking the "Source Explorer" button
     // or not
     const [isOpenedFromSourceExplorerBtn, setIsOpenedFromSourceExplorerBtn] =
@@ -213,8 +214,7 @@ const ContentSection = ({
     // const [isUploading, setIsUploading] = useState(false);
     const handleUpload = async (event, fileFormat, _files) => {
         try {
-            console.log("UPloadinf...");
-            setIsUploading(true);
+            setIsFileUploading(true);
             const files = _files || Array.from(event.target.files);
             const processedFiles = files.map(file =>
                 file.name.replace(/\s/g, "_").replace(/[()]/g, "")
@@ -256,9 +256,9 @@ const ContentSection = ({
 
         } catch (error) {
             console.error(error);
-            setIsUploading(false);
+            setIsFileUploading(false);
         } finally {
-            setIsUploading(false);
+            setIsFileUploading(false);
             setShowAddModal(false);
         }
     };
@@ -431,6 +431,8 @@ const ContentSection = ({
         <>
             {!showMetadata && <section className={`relative flex flex-col items-start h-full`}>
 
+
+
                 <div className="w-full">
                     <div className="w-full max-w-4xl pr-3">
                         {/* home */}
@@ -493,7 +495,7 @@ const ContentSection = ({
                         </div> */}
                     {/* </div> */}
                     {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} /> */}
-                    <AddSourceModal show={showAddModal} setShowAddModal={setShowAddModal} isUploading={isUploading} setIsUploading={setIsUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
+                    <AddSourceModal show={showAddModal} setShowAddModal={setShowAddModal} isUploading={isFileUploading} setIsUploading={setIsFileUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
                     {showSourceExplorer && (
                         <SourceExplorer
                             show={showSourceExplorer}
