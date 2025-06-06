@@ -4,8 +4,6 @@ import { MainContext } from "../../contexts/mainContext.js";
 
 import makeApiRequest from "../../api";
 
-import ProgressBar from "../ProgressBar";
-
 import ContentPanel from "../ContentPanel";
 import Workspace from "../Workspace";
 import ChatPanel from "../ChatPanel";
