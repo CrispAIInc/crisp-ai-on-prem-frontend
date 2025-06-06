@@ -3,7 +3,6 @@ import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useContext, useEffect, useState } from "react";
-import ProgressBar from "../ProgressBar";
 import makeApiRequest from "../../api";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
