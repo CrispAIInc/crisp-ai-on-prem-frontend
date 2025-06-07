@@ -1,15 +1,15 @@
 import HeadingSkeleton from '../Base/HeadingSkeleton';
 import TextSkeleton from '../Base/TextSkeleton';
 
-function MetadataSkeleton({ className }) {
+function MetadataSkeleton({ className, numOfLines = 10, numOfOccurences = 3, showHeading = true }) {
     return (
         <div className={`flex flex-col gap-4 animate-pulse ${className}`}>
             {
-                [1, 2, 4].map(item => (
+                new Array(numOfOccurences).fill(null).map(item => (
                     <div key={item}>
-                        <HeadingSkeleton className='!w-36 h-6 mb-3' />
+                        {showHeading && <HeadingSkeleton className='!w-36 h-6 mb-3' />}
                         {
-                            new Array(10).fill(null).map((_, index) => (
+                            new Array(numOfLines).fill(null).map((_, index) => (
                                 <TextSkeleton key={index} className='h-3 mb-2' />
                             ))
                         }

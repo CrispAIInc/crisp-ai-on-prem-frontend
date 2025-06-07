@@ -13,7 +13,7 @@ import NotFound from './pages/NotFound';
 
 function App() {
 
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   toastConfig({ theme });
 
   useLayoutEffect(() => {
@@ -24,7 +24,7 @@ function App() {
     function handleKeyDown(event) {
       // Check if CTRL key and 't' key are pressed simultaneously
       // handle the case for command on mac as well
-      if ((event.ctrlKey && event.key === 't') || (event.ctrlKey && event.key === 'T') || (event.metaKey && event.key === 't') || (event.metaKey && event.key === 'T')) {
+      if ((event.ctrlKey && event.key === 't') || (event.ctrlKey && event.key === 'T') || (event.metaKey && event.key === 't') || (event.metaKey && event.key === 'T') || (event.metaKey && event.key === 't')) {
         // Call your function here
         setTheme((theme) => theme === 'light' ? 'dark' : 'light');
       }

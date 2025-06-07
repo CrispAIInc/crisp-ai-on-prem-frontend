@@ -10,6 +10,7 @@ import AddOptionsModal from "../AddOptionsModal";
 import CustomButton from "../CustomButton";
 import CustomSelectTwo from '../CustomSelectTwo';
 import CustomTextArea from '../CustomTextArea';
+import MetadataSkeleton from "../Skeletons/MetadataSkeleton";
 import ImageUpload from '../ImageUpload';
 import { LLMModal } from "../LLMModal";
 import LoadingSpinner from "../LoadingSpinner";
@@ -161,6 +162,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
 
     noteQuestion.current = userMessage;
 
+    setInput("");
+
     setOriginalQueries([...originalQueries, userMessage]);
     setMessages([
       ...messages,
@@ -271,7 +274,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
       };
     }
 
-    setInput("");
+
   };
 
   const fetchReferences = async (botMessage) => {
@@ -973,7 +976,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
                           {message.text}
                         </div>
                         {showCursor && index == responseIndex ? (
-                          <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
+                          // <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
+                          <MetadataSkeleton numOfOccurences={1} showHeading={false} numOfLines={4} />
                         ) : null}
 
                         <div className="flex flex-wrap items-center gap-1">
