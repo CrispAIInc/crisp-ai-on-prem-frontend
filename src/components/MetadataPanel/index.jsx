@@ -563,7 +563,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
           <>
             <div
               className="relative h-[530px] w-[90%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-hidden"
-              ref={containerRef}
+              ref={contentPanelContainerRef}
             // style={{ height: '370px', overflow: 'auto' }}
             >
               <Document

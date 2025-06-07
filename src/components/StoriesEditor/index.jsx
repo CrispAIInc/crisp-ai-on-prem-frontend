@@ -273,13 +273,13 @@ function StoriesEditor() {
                                                 }
 
                                                 {
-                                                    content?.pdfsArray?.map((ref, index) => (
-                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                                                    content?.pdfsArr?.map((ref, index) => (
+                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path + " | Page: " + (parseInt(ref?.page) + 1)}</p>
                                                     ))
                                                 }
                                                 {
-                                                    content?.imgsArray?.map((ref, index) => (
-                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                                                    content?.imgsArr?.map((ref, index) => (
+                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path}</p>
                                                     ))
                                                 }
 
