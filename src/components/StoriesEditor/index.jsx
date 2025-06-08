@@ -44,8 +44,10 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
 
     // const [story, setStory] = useState(generatedStory);
 
+    const [storyTitle, setStoryTitle] = useState(story?.story_name);
     useEffect(() => {
         story?.story_name?.replace(/#/g, "").trim();
+        setStoryTitle(story?.story_name);
     }, [story?.story_name]);
 
     async function autoGenerateStory() {
@@ -119,7 +121,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
     async function handleSaveStory() {
         try {
             setIsPending(true);
-            await makeApiRequest('/stories', "POST", JSON.stringify(story));
+            await makeApiRequest('/stories', "POST", JSON.stringify({ ...story, story_name: storyTitle || story?.story_name }));
             toast('Story saved successfully', { className: 'p-2 rounded-md', theme });
 
             // update stories
@@ -198,7 +200,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
                         ? 'hover:bg-light-hover-100/30'
                         : 'hover:bg-light-hover-200/20'
                         } z-10`}
-                    onClick={() => setStory(null)}
+                    onClick={() => { setStory(null); setStoryTitle(''); setContext(''); }}
                 >
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
                         }`}>
@@ -258,6 +260,14 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
                 )
             }
             <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
+                {/* story title */}
+                <input
+                    className={`${theme === 'dark' && 'text-textColor-100'
+                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !outline-none w-full`}
+                    placeholder="New title..."
+                    value={storyTitle}
+                    onChange={(e) => setStoryTitle(e.target.value)}
+                />
                 <ReactQuill
                     ref={editorRef}
                     theme="snow"
