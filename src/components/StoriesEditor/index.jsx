@@ -179,19 +179,35 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
             </div>
 
             {/* save button */}
-            {story !== null && <div
-                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                    ? 'hover:bg-light-hover-100/30'
-                    : 'hover:bg-light-hover-200/20'
-                    } z-10`}
-                onClick={handleSaveStory}
-            >
-                {isPending ? <LoadingSpinner isSmall /> : <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />}
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                    }`}>
-                    Save story
-                </span>
-            </div>}
+            {story !== null && <div className="flex items-center justify-between">
+                <div
+                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                        ? 'hover:bg-light-hover-100/30'
+                        : 'hover:bg-light-hover-200/20'
+                        } z-10`}
+                    onClick={handleSaveStory}
+                >
+                    {isPending ? <LoadingSpinner isSmall /> : <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />}
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                        }`}>
+                        Save story
+                    </span>
+                </div>
+                <div
+                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                        ? 'hover:bg-light-hover-100/30'
+                        : 'hover:bg-light-hover-200/20'
+                        } z-10`}
+                    onClick={() => setStory(null)}
+                >
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                        }`}>
+                        Clear story
+                    </span>
+                </div>
+
+            </div>
+            }
 
             {/* editor */}
 
