@@ -377,22 +377,22 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
         {!isFoundationLlm && videoLinks && keyframeLinks && pdfLinks && (
           <div>
             <p className="m-0">References:</p>
-            {videoLinks && (
+            {videoLinks?.length > 0 && (
               <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                 {videoLinks}
               </ul>
             )}
-            {keyframeLinks && (
+            {keyframeLinks?.length > 0 && (
               <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                 {keyframeLinks}
               </ul>
             )}
-            {pdfLinks && (
+            {pdfLinks?.length > 0 && (
               <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                 {pdfLinks}
               </ul>
             )}
-            {imageLinks && (
+            {imageLinks?.length > 0 && (
               <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                 {imageLinks}
               </ul>
@@ -976,8 +976,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
                           {message.text}
                         </div>
                         {showCursor && index == responseIndex ? (
+                          <div className="flex"><LoadingSpinner isSmall /></div>
                           // <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
-                          <MetadataSkeleton numOfOccurences={1} showHeading={false} numOfLines={4} />
+                          // <MetadataSkeleton numOfOccurences={1} showHeading={false} numOfLines={4} />
                         ) : null}
 
                         <div className="flex flex-wrap items-center gap-1">
