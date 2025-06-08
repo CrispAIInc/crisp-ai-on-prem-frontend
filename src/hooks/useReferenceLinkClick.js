@@ -1,8 +1,11 @@
 import { useContext } from 'react';
 import { MainContext } from '../contexts/mainContext';
+import { useResizableSidebar } from './useResizableSidebar';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 export default function useReferenceLinkClick(isFromChat = false) {
+
+    const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
 
     const {
         setCurrentResource, setFromChat,
@@ -11,7 +14,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setJumpToPage,
         setShowMetadata,
         setSummaries,
-        workspaceContainer,
+        setIsLeftSidebarOpen,
         setActiveView
     } = useContext(MainContext);
 
@@ -26,6 +29,11 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setSummary(video.summary);
         setSummaries(video.topic_summaries);
         setActiveView('resource');
+        setSidebarWidth(prev => {
+            if (prev !== maxWidth) return maxWidth;
+            return window.innerWidth / 3.3333;
+        });
+        setIsLeftSidebarOpen(true);
         // workspaceContainer.current.scrollTo({
         //     top: 0,
         //     behavior: "smooth", // Enables smooth scrolling
@@ -44,6 +52,11 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setSummaries(pdf.topic_summaries);
         setActiveView('resource');
         setJumpToPage({ page: parseInt(pdf?.page) + 1 });
+        setSidebarWidth(prev => {
+            if (prev !== maxWidth) return maxWidth;
+            return window.innerWidth / 3.3333;
+        });
+        setIsLeftSidebarOpen(true);
         // workspaceContainer.current.scrollTo({
         //     top: 0,
         //     behavior: "smooth", // Enables smooth scrolling
