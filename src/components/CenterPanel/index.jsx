@@ -116,7 +116,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 )}
             </div>}
 
-            <div className={`mt-10 overflow-y-hidden h-[500px]`}>
+            <div className={`mt-10 overflow-y-hidden h-[700px]`}>
                 <CopilotSection chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
             </div>
         </div >

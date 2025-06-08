@@ -976,7 +976,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
                           {message.text}
                         </div>
                         {showCursor && index == responseIndex ? (
-                          <div className="flex"><LoadingSpinner isSmall /></div>
+                          <div className="flex my-2"><LoadingSpinner isSmall /></div>
                           // <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
                           // <MetadataSkeleton numOfOccurences={1} showHeading={false} numOfLines={4} />
                         ) : null}
