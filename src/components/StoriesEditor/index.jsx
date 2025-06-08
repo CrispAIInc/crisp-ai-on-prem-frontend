@@ -14,6 +14,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
 
     const [contextFocused, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
+    const [storyline, setStoryline] = useState('');
     const isActive = contextFocused || context.length > 0;
 
     const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +53,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
         setIsLoading(true);
         const httpPayload = {
             storyContext: context,
+            storyline,
             with_checked_sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category }))
         };
         try {
@@ -73,7 +75,6 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
             );
 
             setStory(res);
-            console.log(res);
 
 
 
@@ -145,12 +146,27 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
                 </label> */}
                 <textarea
                     className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    rows="2"
+                    rows="1"
                     placeholder="Provide story context"
-                    onFocus={() => setContextFocused(true)}
-                    onBlur={() => setContextFocused(false)}
                     value={context}
                     onChange={(e) => setContext(e.target.value)}
+                />
+            </div>
+
+            {/* storyline */}
+            <div className="relative w-full">
+                {/* <label
+                    className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
+                    ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base'}`}
+                >
+                    Write your story outline
+                </label> */}
+                <textarea
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    rows="1"
+                    placeholder="Storyline"
+                    value={storyline}
+                    onChange={(e) => setStoryline(e.target.value)}
                 />
             </div>
 
