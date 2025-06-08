@@ -8,7 +8,7 @@ import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import AddIcon from '@mui/icons-material/Add';
 import toast from 'react-simple-toasts';
 
-function StoriesEditor() {
+function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
     const { displayedSources, theme, setStories } = useContext(MainContext);
     const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
@@ -42,7 +42,7 @@ function StoriesEditor() {
         'image',
     ];
 
-    const [story, setStory] = useState(null);
+    // const [story, setStory] = useState(generatedStory);
 
     useEffect(() => {
         story?.story_name?.replace(/#/g, "").trim();

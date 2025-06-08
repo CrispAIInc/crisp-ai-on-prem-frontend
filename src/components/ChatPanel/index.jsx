@@ -97,6 +97,8 @@ const ChatPanel = () => {
 
   const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
+  const [generatedStory, setGeneratedStory] = useState(null);
+
   const {
     setSelectedNote,
     setIsEditingTitle,
@@ -1081,7 +1083,7 @@ const ChatPanel = () => {
               actualTab === "genMetadata" ? (
                 <MetadataGen />
               ) : actualTab === "genStories" ? (
-                <StoriesEditor />
+                <StoriesEditor generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
               ) : null
             }
           </div>}
