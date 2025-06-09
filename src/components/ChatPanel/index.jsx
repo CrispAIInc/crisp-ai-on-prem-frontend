@@ -234,6 +234,7 @@ const ChatPanel = () => {
       models: [],
     });
     setShowEditor(false);
+    setShowStoriesEditor(false);
   }, [setShowEditor]);
 
   // const generateHtmlFromText = useCallback((textArray) => {
@@ -740,7 +741,7 @@ const ChatPanel = () => {
         <h5 onClick={closeTopTabs} className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
           } cursor-pointer text-center w-full`}>
           Studio</h5>
-        {(showEditor || actualTab !== null) && (
+        {(showEditor || actualTab !== null || showStoriesEditor) && (
           <h5
             onClick={closeEditor}
             className={`cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
