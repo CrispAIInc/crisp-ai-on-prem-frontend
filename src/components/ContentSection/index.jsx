@@ -255,6 +255,7 @@ const ContentSection = ({
 
         } catch (error) {
             console.error(error);
+            toast(error?.response?.data?.error, { className: 'p-2 rounded-md z-20', theme });
             setIsFileUploading(false);
         } finally {
             setIsFileUploading(false);

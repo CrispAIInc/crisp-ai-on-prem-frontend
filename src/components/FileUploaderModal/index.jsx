@@ -20,10 +20,14 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
         if (indexName === null) hideIndexModal();
     }, []);
 
+    function closeModals() {
+        onHide();
+        hideIndexModal();
+    }
+
     function uploadSources() {
         handleUpload(null, null, selectedFiles);
-        // onHide();
-        hideIndexModal();
+        // closeModals();
     }
 
     const [selectedIndex, setSelectedIndex] = useState(indexName);
@@ -50,7 +54,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                     <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={selectedIndex} options={categoryOptions} />
                     {/* <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} /> */}
                 </div>}
-                <FileUploader selectedFileFormat={selectedFileFormat} setSelectedFileFormat={setSelectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
+                <FileUploader closeModals={closeModals} selectedFileFormat={selectedFileFormat} setSelectedFileFormat={setSelectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
                 <div

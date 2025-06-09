@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from "../../contexts/mainContext.js";
 import FakeProgress from '../FakeProgressbar';
 
-const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat }) => {
+const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, closeModals }) => {
     const [fileThumbnails, setFileThumbnails] = useState([]);
     const { isFileUploading } = useContext(MainContext);
 
@@ -87,7 +87,7 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
     return (
         <div className="relative flex flex-col items-center p-4 border-2 border-dashed rounded-md border-primary-200">
             {isFileUploading && <div className="absolute z-40 w-[90%] h-12 mx-auto">
-                <FakeProgress isLoading={isFileUploading} />
+                <FakeProgress isLoading={isFileUploading} closeModals={closeModals} />
             </div>}
             <input
                 type="file"
@@ -102,7 +102,7 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
                 htmlFor="file-input"
                 className="w-full p-4 text-center cursor-pointer text-primary-300"
             >
-                <p className="font-medium">Click to browse files</p>
+                {!isFileUploading && <p className="font-medium">Click to browse files</p>}
                 <p className="mt-1 text-sm">
                     Supported: Images, Videos, PDFs | Duration 4sec-30min for videos | File size ≤2GB
                 </p>

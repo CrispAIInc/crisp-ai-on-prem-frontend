@@ -1,42 +1,50 @@
 import React, { useEffect, useState } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 
-export default function FakeProgress({ isLoading }) {
+export default function FakeProgress({ isLoading, closeModals }) {
     const [progress, setProgress] = useState(0);
     const [intervalId, setIntervalId] = useState(null);
 
     useEffect(() => {
+        let resetTimeout;
+
         if (isLoading) {
             setProgress(0);
 
             const id = setInterval(() => {
                 setProgress((prev) => {
-                    if (prev >= 90) return prev; // pause around 90%
-                    const speed = prev < 90 ? 0.2 : 0.3; // slow down later
-                    return Math.min(prev + speed, 90);
+                    if (prev >= 96) return prev; // cap before 100%
+
+                    let speed;
+                    if (prev >= 80 && prev < 96) {
+                        speed = 0.01; // very slow in final stretch
+                    } else if (prev >= 50) {
+                        speed = 0.06;
+                    } else {
+                        speed = 0.2;
+                    }
+
+                    return Math.min(prev + speed, 99);
                 });
-            }, 100); // adjust for speed
+            }, 80);
 
             setIntervalId(id);
         } else {
-            // API is done, instantly complete
+            // API done — complete instantly
             setProgress(100);
 
-            // Cleanup
             if (intervalId) clearInterval(intervalId);
 
-            // Optionally reset after a delay
-            const resetTimeout = setTimeout(() => {
+            closeModals();
+
+            resetTimeout = setTimeout(() => {
                 setProgress(0);
             }, 500);
-
-            return () => {
-                clearTimeout(resetTimeout);
-            };
         }
 
         return () => {
             if (intervalId) clearInterval(intervalId);
+            if (resetTimeout) clearTimeout(resetTimeout);
         };
     }, [isLoading]);
 
