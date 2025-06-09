@@ -8,7 +8,7 @@ import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import AddIcon from '@mui/icons-material/Add';
 import toast from 'react-simple-toasts';
 
-function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
+function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, setShowStoriesEditor }) {
     const { displayedSources, theme, setStories } = useContext(MainContext);
     const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
@@ -130,6 +130,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
         }
         catch (e) {
             console.log(e);
+            toast('Something bad happened', { className: `p-2 rounded-md`, theme });
         } finally {
             setIsPending(false);
         }
@@ -200,7 +201,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory }) {
                         ? 'hover:bg-light-hover-100/30'
                         : 'hover:bg-light-hover-200/20'
                         } z-10`}
-                    onClick={() => { setStory(null); setStoryTitle(''); setContext(''); }}
+                    onClick={() => { setStory(null); setStoryTitle(''); setContext(''); setShowStoriesEditor(false); }}
                 >
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
                         }`}>

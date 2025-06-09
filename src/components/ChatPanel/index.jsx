@@ -408,6 +408,7 @@ const ChatPanel = () => {
     setNoteTitle(selectedNote?.note_name);
   }, [selectedNote?.note_name]);
 
+  const [showStoriesEditor, setShowStoriesEditor] = useState(false);
   const showSelectedNote = (event, note, index) => {
     setSelectedStory({
       story_id: "",
@@ -442,10 +443,12 @@ const ChatPanel = () => {
       images: [],
       note_name: "",
     });
-    setNoteTitle(story?.story_name);
+    // setNoteTitle(story?.story_name);
     setSelectedStory(story);
+    setGeneratedStory(story);
     setIsNewStory(false);
-    setShowEditor(true);
+    // setShowEditor(true);
+    setShowStoriesEditor(true);
   };
 
   const [actualTab, setActualTab] = useState(null); //genMetadata | genStories
@@ -761,6 +764,8 @@ const ChatPanel = () => {
           onDoubleClick={handleDoubleClick}
         />
       )}
+
+      {showStoriesEditor && <StoriesEditor setShowStoriesEditor={setShowStoriesEditor} generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />}
 
       {/* Toggle button */}
       <div className="absolute right-0 z-40 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md w-fit top-1/2">
