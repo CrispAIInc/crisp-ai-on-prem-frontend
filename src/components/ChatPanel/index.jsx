@@ -521,6 +521,7 @@ const ChatPanel = () => {
 
   function closeTopTabs() {
     setActualTab(null);
+    setShowStoriesEditor(false);
   }
 
   function exportHTML() {
