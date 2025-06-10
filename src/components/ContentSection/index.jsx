@@ -414,13 +414,13 @@ const ContentSection = ({
     // }
 
     const [isMetadataVisible, setIsMetadataVisible] = useState(false);
-    // const [hoveredSource, setHoveredSource] = useState(null);
-    // const handleMouseEnter = (sourcePath) => {
-    //     setHoveredSource(sourcePath);
-    // };
-    // const handleMouseLeave = () => {
-    //     setHoveredSource(null);
-    // };
+    const [hoveredSource, setHoveredSource] = useState(null);
+    const handleMouseEnter = (sourcePath) => {
+        setHoveredSource(sourcePath);
+    };
+    const handleMouseLeave = () => {
+        setHoveredSource(null);
+    };
 
     const [showAddModal, setShowAddModal] = useState(false);
     function handleAddModal(state) {
@@ -582,10 +582,10 @@ const ContentSection = ({
                                     // }
                                 })} */}
                                 {
-                                    displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`} onClick={(event) => onThumbnailClick(event, option)}>
+                                    displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
                                         <div className="flex items-center flex-1 w-full max-w-full gap-2">
-                                            {/* {
+                                            {
                                                 hoveredSource === option?.source_path && (
                                                     <DeleteIcon
                                                         onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}
@@ -593,7 +593,7 @@ const ContentSection = ({
                                                         className="cursor-pointermr-1"
                                                     />
                                                 )
-                                            } */}
+                                            }
                                             {
                                                 option.file_type === "video" ? (
                                                     <GraphicEqOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
