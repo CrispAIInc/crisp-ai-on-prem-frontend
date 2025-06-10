@@ -560,7 +560,7 @@ const MainWorkspace = ({ theme }) => {
     { id: "chapters", name: "Chapters", description: "Divide source into meaningful sections" },
     { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
     { id: "keywords", name: "Keywords", description: "Extract important terms" },
-    { id: "knowledgeGraph", name: "Knowledge graph", description: "Visualize key concepts and relationships" },
+    // { id: "knowledgeGraph", name: "Knowledge graph", description: "Visualize key concepts and relationships" },
     // { id: "embeddings", name: "Embeddings", description: "Create vector representations for search" },
   ];
   const [selectedOptions, setSelectedOptions] = useState([metadataOptions[0]]);
