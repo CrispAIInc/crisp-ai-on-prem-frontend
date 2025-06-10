@@ -976,9 +976,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
                           {message.text}
                         </div>
                         {showCursor && index == responseIndex ? (
-                          <div className="flex my-2"><LoadingSpinner isSmall /></div>
-                          // <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
-                          // <MetadataSkeleton numOfOccurences={1} showHeading={false} numOfLines={4} />
+                          <div className="relative w-2 h-2 my-2">
+                            <span className="absolute inline-flex w-full h-full rounded-full opacity-75 bg-textColor-200 animate-smoothPing"></span>
+                            {/* <span className="relative inline-flex w-2 h-2 rounded-full bg-textColor-300"></span> */}
+                          </div>
                         ) : null}
 
                         <div className="flex flex-wrap items-center gap-1">
@@ -1053,6 +1054,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
             </div>}
 
       </section>
+
+
     </article>
   );
 };

@@ -85,10 +85,16 @@ export default {
           '0%': { transform: 'scale(0)', opacity: '0.4' },
           '100%': { transform: 'scale(4)', opacity: '0' },
         },
+        smoothPing: {
+          '0%': { transform: 'scale(1)', opacity: '1' },
+          '50%': { transform: 'scale(2)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
       },
       animation: {
         blink: 'blink 1s step-start infinite',
         ripple: 'ripple 0.6s linear',
+        smoothPing: 'smoothPing 1.4s ease-in-out infinite',
       },
       colors: {
         background: "var(--background-color)",
