@@ -1,5 +1,5 @@
 
-import HomeIcon from '@mui/icons-material/Home';
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useContext, useEffect, useState } from "react";
@@ -596,7 +596,7 @@ const ContentSection = ({
                                             }
                                             {
                                                 option.file_type === "video" ? (
-                                                    <GraphicEqOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                    <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                                 ) : option.file_type === "pdf" ? (
                                                     <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                                 ) : option.file_type === "img" ? (

@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FolderIcon from "@mui/icons-material/Folder";
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PDFThumbnail from "../PDFThumbnail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoadingSpinner from "../LoadingSpinner";
@@ -10,8 +12,6 @@ import { MainContext } from "../../contexts/mainContext";
 import "./source_explorer.css";
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
-import ImageIcon from '@mui/icons-material/Image';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import RemoveIndexModal from '../RemoveIndexModal';
 
@@ -185,11 +185,11 @@ export function SourceExplorer(props) {
 
                                     {
                                         file.file_type === "video" ? (
-                                            <PlayCircleIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                         ) : file.file_type === "pdf" ? (
-                                            <InsertDriveFileIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                         ) : file.file_type === "img" ? (
-                                            <ImageIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                         ) : null
                                     }
 
@@ -237,11 +237,11 @@ export function SourceExplorer(props) {
 
                                     {
                                         file.file_type === "video" ? (
-                                            <PlayCircleIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                         ) : file.file_type === "pdf" ? (
-                                            <InsertDriveFileIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                         ) : file.file_type === "img" ? (
-                                            <ImageIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                         ) : null
                                     }
 
