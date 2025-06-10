@@ -37,6 +37,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         async function getCombinedSum() {
             try {
                 setIsCombinedSummaryPending(true);
+                setActiveView('resource');
                 const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
                     sources: displayedSources?.map(item => ({ source_path: item?.source_path, category: item?.category })),
                 }));
@@ -45,10 +46,12 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 console.log(e);
             } finally {
                 setIsCombinedSummaryPending(false);
+
             }
         }
 
-        if (displayedSources?.length > 1 && activeView === "resource") {
+        if (displayedSources?.length > 1 || (displayedSources?.length > 1 && activeView === "resource")) {
+            console.log("hell");
             getCombinedSum();
         } else {
             setCombinedSummary(currentResource?.metadata?.summary?.content);
