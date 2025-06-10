@@ -1101,7 +1101,7 @@ const ChatPanel = () => {
               {/* <MetadataGen key={0} name="genMetadata" /> */}
               <div className="relative z-10 flex items-center gap-3">
                 {
-                  ["insights", "stories"].map((item, index) => <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''}`} onClick={() => setCurrentTab(item)} />)
+                  ["insights", "stories"].map((item, index) => <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''} font-extrabold italic !text-lg`} onClick={() => setCurrentTab(item)} />)
                 }
               </div>
             </div>
