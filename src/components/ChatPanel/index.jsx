@@ -7,6 +7,7 @@ import CopilotSection from '../CopilotSection';
 import { MainContext } from '../../contexts/mainContext';
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -1120,7 +1121,7 @@ const ChatPanel = () => {
                       } z-10`}
                     onClick={createNewInsight}
                   >
-                    <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                    <CreateOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
                       }`}>
                       New insight
