@@ -561,8 +561,13 @@ const MetadataPanel = ({ workspaceContainer }) => {
       {
         currentResource?.file_type === "pdf" && (
           <>
+            <CancelIcon
+              onClick={closePDF}
+              className="sticky top-0 z-50 shadow-lg cursor-pointer left-full"
+              color='error'
+            />
             <div
-              className="relative h-[530px] w-[90%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-hidden"
+              className="relative h-[630px] w-[90%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
               ref={contentPanelContainerRef}
             // style={{ height: '370px', overflow: 'auto' }}
             >
@@ -572,11 +577,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
                 onLoadSuccess={onDocumentLoadSuccess}
               >
-                <CancelIcon
-                  onClick={closePDF}
-                  className="sticky top-0 z-50 shadow-lg cursor-pointer left-full"
-                  color='error'
-                />
+
                 {Array.from(new Array(numPages), (el, index) => (
                   <div
                     key={`page_${index + 1}`}
@@ -585,13 +586,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     }}
                   >
                     <Page
-                      _className="mx-auto !w-full !min-w-0"
-                      className="!w-full mx-auto"
+                      _className="mx-auto"
+                      className="mx-auto"
                       pageNumber={index + 1}
-                      scale={0.55}
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                      width={window.innerWidth * 0.8}
+                      renderTextLayer={true}
+                      renderAnnotationLayer={true}
+                      scale={0.7}
+                      // width={Math.min(window.innerWidth * 0.9, 900)} // cap it for large screens
+                      width={window.innerWidth * 0.7}
                     />
                   </div>
                 ))}
