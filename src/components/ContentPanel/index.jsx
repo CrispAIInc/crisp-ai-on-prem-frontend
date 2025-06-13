@@ -170,6 +170,8 @@ const ContentPanel = () => {
                 <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'> */}
             <div className="my-3 !border-b-0 !h-full">
                 <ContentSection
+                    leftWidth={leftWidth}
+                    maxWidth={maxWidth}
                     knowledgeBase={knowledgeBase}
                     uploadedSources={uploadedSources}
                     setUploadedSources={setUploadedSources}
@@ -203,7 +205,7 @@ const ContentPanel = () => {
             >
                 <button className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
                     setSidebarWidth(prev => {
-                        if (prev !== maxWidth) return maxWidth;
+                        if (prev !== (maxWidth - (maxWidth * 0.3))) return maxWidth - (maxWidth * 0.3);
                         return window.innerWidth / 3.3333;
                     });
                     setIsLeftSidebarOpen(true);

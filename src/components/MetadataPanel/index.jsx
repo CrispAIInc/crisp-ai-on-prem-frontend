@@ -18,7 +18,7 @@ import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
 import HorizontalCard from '../HorizontalCard/index.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-const MetadataPanel = ({ workspaceContainer }) => {
+const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   const {
     currentResource,
     setCurrentResource,
@@ -385,6 +385,14 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
   }
 
+  const [parentWidth, setParentWidth] = useState(0);
+
+  useEffect(() => {
+    if (metadataPanelContainer.current) {
+      setParentWidth(metadataPanelContainer.current.offsetWidth);
+    }
+  }, []);
+
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
 
@@ -567,8 +575,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
               color='error'
             />
             <div
-              className="relative h-[630px] w-[90%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
+              className="relative w-[90%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
               ref={contentPanelContainerRef}
+              style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             // style={{ height: '370px', overflow: 'auto' }}
             >
               <Document
@@ -586,15 +595,13 @@ const MetadataPanel = ({ workspaceContainer }) => {
                     }}
                   >
                     <Page
-                      _className="mx-auto"
                       className="mx-auto"
                       pageNumber={index + 1}
                       renderTextLayer={true}
                       renderAnnotationLayer={true}
-                      scale={0.7}
-                      // width={Math.min(window.innerWidth * 0.9, 900)} // cap it for large screens
-                      width={window.innerWidth * 0.7}
+                      scale={1}
                     />
+
                   </div>
                 ))}
               </Document>

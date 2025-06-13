@@ -33,7 +33,7 @@ const ContentSection = ({
     handleCheckboxChange,
     setKnowledgeBase,
     setUploadedSources,
-    classes
+    leftWidth, maxWidth
 
 }) => {
     const {
@@ -652,7 +652,8 @@ const ContentSection = ({
             </section>}
             {/* metadata and source section */}
             {showMetadata && (
-                <MetadataPanel workspaceContainer={workspaceContainer} />
+                <MetadataPanel leftWidth={leftWidth}
+                    maxWidth={maxWidth} workspaceContainer={workspaceContainer} />
             )}
         </>
     );
