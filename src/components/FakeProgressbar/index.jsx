@@ -13,15 +13,15 @@ export default function FakeProgress({ isLoading, closeModals }) {
 
             const id = setInterval(() => {
                 setProgress((prev) => {
-                    if (prev >= 96) return prev; // cap before 100%
+                    if (prev >= 97) return prev; // cap before 100%
 
                     let speed;
-                    if (prev >= 80 && prev < 96) {
+                    if (prev >= 80 && prev < 97) {
                         speed = 0.01; // very slow in final stretch
-                    } else if (prev >= 50) {
-                        speed = 0.06;
+                    } else if (prev >= 40) {
+                        speed = 0.02;
                     } else {
-                        speed = 0.2;
+                        speed = 0.03;
                     }
 
                     return Math.min(prev + speed, 99);
