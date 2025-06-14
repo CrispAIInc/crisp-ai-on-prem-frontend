@@ -20,7 +20,7 @@ import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
 import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
+const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
   const {
     theme,
     currentResource,
@@ -418,116 +418,126 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth }) => {
   };
 
   const handleLanguageChange = async (chosenLanguage) => {
-    setSelectedLanguage(chosenLanguage);
-    const data = await makeApiRequest(
-      "/translate-chat",
-      "post",
-      JSON.stringify({
-        queries: originalQueries,
-        responses: originalResponses,
-        language: chosenLanguage,
-      })
-    );
+    try {
+      setSelectedLanguage(chosenLanguage);
+      setIsCombinedSummaryPending(true);
+      const data = await makeApiRequest(
+        "/translate-chat",
+        "post",
+        JSON.stringify({
+          queries: originalQueries,
+          responses: originalResponses,
+          language: chosenLanguage,
+          combinedSummary
+        })
+      );
 
-    let userIndex = 0;
-    let botIndex = 0;
+      let userIndex = 0;
+      let botIndex = 0;
 
-    setMessages(
-      messages.map((message, index) => {
-        if (message.sender === "user") {
-          const updatedMessage = {
-            ...message,
-            text: data.translated_queries[userIndex],
-          };
-          userIndex++;
-          return updatedMessage;
-        } else if (message.sender === "bot") {
-          const botMessage = (
-            <div key={index}>
-              <div className="coorg-response">
-                {data.translated_responses[botIndex]}
+      setMessages(
+        messages.map((message, index) => {
+          if (message.sender === "user") {
+            const updatedMessage = {
+              ...message,
+              text: data.translated_queries[userIndex],
+            };
+            userIndex++;
+            return updatedMessage;
+          } else if (message.sender === "bot") {
+            const botMessage = (
+              <div key={index}>
+                <div className="coorg-response">
+                  {data.translated_responses[botIndex]}
+                </div>
+                <AddOptionsModal
+                  text={data.translated_responses[botIndex]}
+                  addToNewNote={addToNewNote}
+                  refs={message?.refs}
+                  addToExistingNote={addToExistingNote}
+                  setExistingNote={setExistingNote}
+                  question={data.translated_queries[userIndex - 1]}
+                  existingNote={existingNote}
+                  onHide={onHide}
+                  isNewNote={isNewNote}
+                  setShowNoteModal={setShowNoteModal}
+                  updateSelectedNote={setSelectedNote}
+                  showNoteModal={showNoteModal}
+                  selectedNote={selectedNote}
+                  notes={notes}
+                />
+                {(message?.refs?.videoLinks.length > 0 ||
+                  message?.refs?.keyframeObjects.length > 0 ||
+                  message?.refs?.pdfObjects.length > 0 ||
+                  message?.refs?.imageObjects.length > 0) && (
+                    <div>
+                      {/* <p className="m-0">References:</p> */}
+                      {
+                        message?.refs?.videoLinks?.map((video) => {
+                          return (
+                            <li key={video.source_path} className="ml-4 list-none" data-object={video}>
+                              <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+                                {video.source_path + " | Timestamp: " + video.timestamp}
+                              </Link>
+                            </li>
+                          );
+                        })
+                      }
+                      {
+                        message?.refs?.keyframeObjects?.map((video) => {
+                          return (
+                            <li key={video.source_path} className="ml-4 list-none" data-object={video}>
+                              <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+                                {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      {
+                        message?.refs?.pdfObjects?.map((pdf) => {
+                          return (
+                            <li key={pdf.source_path} className="ml-4 list-none" data-object={pdf}>
+                              <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
+                                {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
+                              </Link>
+                            </li>
+                          );
+                        })
+                      }
+                      {
+                        message?.refs?.imageObjects?.map((img) => {
+                          return (
+                            <li key={img.source_path} className="ml-4 list-none" data-object={img}>
+                              <Link onClick={(event) => handlePDFLinkClick(event, img)}>
+                                {img.source_path}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                    </div>
+                  )}
               </div>
-              <AddOptionsModal
-                text={data.translated_responses[botIndex]}
-                addToNewNote={addToNewNote}
-                refs={message?.refs}
-                addToExistingNote={addToExistingNote}
-                setExistingNote={setExistingNote}
-                question={data.translated_queries[userIndex - 1]}
-                existingNote={existingNote}
-                onHide={onHide}
-                isNewNote={isNewNote}
-                setShowNoteModal={setShowNoteModal}
-                updateSelectedNote={setSelectedNote}
-                showNoteModal={showNoteModal}
-                selectedNote={selectedNote}
-                notes={notes}
-              />
-              {(message?.refs?.videoLinks.length > 0 ||
-                message?.refs?.keyframeObjects.length > 0 ||
-                message?.refs?.pdfObjects.length > 0 ||
-                message?.refs?.imageObjects.length > 0) && (
-                  <div>
-                    {/* <p className="m-0">References:</p> */}
-                    {
-                      message?.refs?.videoLinks.map((video) => {
-                        return (
-                          <li key={video.source_path} className="ml-4 list-none" data-object={video}>
-                            <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-                              {video.source_path + " | Timestamp: " + video.timestamp}
-                            </Link>
-                          </li>
-                        );
-                      })
-                    }
-                    {
-                      message?.refs?.keyframeObjects.map((video) => {
-                        return (
-                          <li key={video.source_path} className="ml-4 list-none" data-object={video}>
-                            <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-                              {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    {
-                      message?.refs?.pdfObjects.map((pdf) => {
-                        return (
-                          <li key={pdf.source_path} className="ml-4 list-none" data-object={pdf}>
-                            <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
-                              {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
-                            </Link>
-                          </li>
-                        );
-                      })
-                    }
-                    {
-                      message?.refs?.imageObjects.map((img) => {
-                        return (
-                          <li key={img.source_path} className="ml-4 list-none" data-object={img}>
-                            <Link onClick={(event) => handlePDFLinkClick(event, img)}>
-                              {img.source_path}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                  </div>
-                )}
-            </div>
-          );
+            );
 
-          const updatedMessage = {
-            ...message,
-            text: botMessage,
-            references: message.references,
-          };
-          botIndex++;
-          return updatedMessage;
-        } else {
-          return message;
-        }
-      })
-    );
+            const updatedMessage = {
+              ...message,
+              text: botMessage,
+              references: message.references,
+            };
+            botIndex++;
+            return updatedMessage;
+          } else {
+            return message;
+          }
+        })
+      );
+
+      setCombinedSummary(data?.translated_combined_summary);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsCombinedSummaryPending(false);
+    }
   };
 
   const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, refs = { pdfLinks: [], videoLinks: [], imageLinks: [] }) => {
