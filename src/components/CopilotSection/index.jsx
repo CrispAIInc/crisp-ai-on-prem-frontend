@@ -773,7 +773,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           />
         </div>
 
-        <div className="models-list-button">
+        {/* <div className="models-list-button">
           <CustomButton
             className={`my-0 ${theme === "light"
               ? "bg-light-hover-100/30 !text-dark border border-textColor-100"
@@ -792,7 +792,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           setSelectedLLMs={setSelectedLLMs}
           llmModels={llmModels}
           className="modal"
-        />
+        /> */}
       </section>
 
       <section className="flex items-center gap-1 mx-2 my-3 user-select-none">
