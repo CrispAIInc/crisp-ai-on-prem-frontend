@@ -8,6 +8,7 @@ import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
 import TextSkeleton from '../Skeletons/Base/TextSkeleton.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import { generateRandomHash } from '../../utils.js';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 
 const MetadataPanel = ({ workspaceContainer }) => {
     const {
@@ -35,31 +36,39 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
     const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
-    useEffect(() => {
-        async function getCombinedSum() {
-            try {
-                setIsCombinedSummaryPending(true);
-                setActiveView('resource');
-                const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
-                    sources: displayedSources?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-                    lang: selectedLanguage
-                }));
-                setCombinedSummary(summary?.combined_summary || "");
-            } catch (e) {
-                console.log(e);
-            } finally {
-                setIsCombinedSummaryPending(false);
+    async function getCombinedSum() {
+        try {
+            setIsCombinedSummaryPending(true);
+            setActiveView('resource');
+            const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
+                sources: displayedSources?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                lang: selectedLanguage
+            }));
+            setCombinedSummary(summary?.combined_summary || "");
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setIsCombinedSummaryPending(false);
 
-            }
         }
+    }
 
+    function refreshSummary() {
         if (displayedSources?.length > 1 || (displayedSources?.length > 1 && activeView === "resource")) {
-            console.log("hell");
             getCombinedSum();
         } else {
             setCombinedSummary(currentResource?.metadata?.summary?.content);
         }
-    }, [displayedSources?.length, activeView]);
+    }
+
+
+    useEffect(() => {
+        if (displayedSources?.length > 1 || (displayedSources?.length > 1 && activeView === "resource")) {
+            getCombinedSum();
+        } else {
+            setCombinedSummary(currentResource?.metadata?.summary?.content);
+        }
+    }, []);
 
     const addToInsight = async (textToAdd, file, question = '', models = "", refs = { pdfLinks: [], videoLinks: [], imageLinks: [] }) => {
         const newText = {
@@ -87,6 +96,15 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
+            {/* refresh summary */}
+            <div
+                className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                onClick={() => refreshSummary()}
+            >
+                <RefreshOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Refresh summary</span>
+            </div>
+
             {(activeView === 'resource') && <div className="flex-1">
                 <div className={`mb-4 ${theme === "light"
                     ? "text-textColor-300"
