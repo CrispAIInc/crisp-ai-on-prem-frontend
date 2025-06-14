@@ -33,6 +33,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
     const [combinedSummary, setCombinedSummary] = useState("");
     const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
 
+    const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
+
     useEffect(() => {
         async function getCombinedSum() {
             try {
@@ -40,6 +42,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                 setActiveView('resource');
                 const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
                     sources: displayedSources?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                    lang: selectedLanguage
                 }));
                 setCombinedSummary(summary?.combined_summary || "");
             } catch (e) {
@@ -120,7 +123,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
             </div>}
 
             <div className={`mt-10 overflow-y-hidden h-[700px]`}>
-                <CopilotSection setIsCombinedSummaryPending={setIsCombinedSummaryPending} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
+                <CopilotSection selectedLanguage={selectedLanguage} setSelectedLanguage={setSelectedLanguage} setIsCombinedSummaryPending={setIsCombinedSummaryPending} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
             </div>
         </div >
     );

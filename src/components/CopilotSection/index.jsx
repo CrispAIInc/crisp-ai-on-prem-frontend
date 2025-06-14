@@ -20,7 +20,7 @@ import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
 import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
+const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
   const {
     theme,
     currentResource,
@@ -62,7 +62,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, sidebarWidth, combinedSumma
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
+  // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
   const [originalQueries, setOriginalQueries] = useState([]);
   const [originalResponses, setOriginalResponses] = useState([]);
