@@ -9,6 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
@@ -739,16 +740,16 @@ const ChatPanel = () => {
     >
       <div className={`flex items-center justify-between gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
         }`}>
-        <h5 onClick={closeTopTabs} className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
-          } cursor-pointer text-center w-full`}>
+        <h5 className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
+          }  text-center w-full`}>
           Studio</h5>
         {(showEditor || actualTab !== null || showStoriesEditor) && (
           <h5
             onClick={closeEditor}
-            className={`cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+            className={`rotate-180 cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
               } text-[22px]`}
           >
-            ×
+            <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
           </h5>
         )}
       </div>
@@ -771,7 +772,7 @@ const ChatPanel = () => {
       {showStoriesEditor && <StoriesEditor setShowStoriesEditor={setShowStoriesEditor} generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />}
 
       {/* Toggle button */}
-      <div className="absolute top-0 left-0 z-40 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md w-fit">
+      <div className="absolute left-0 z-40 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md top-1.5 w-fit">
         <button
           className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'} rotate-180`}
           onClick={handleSidebarToggle}
