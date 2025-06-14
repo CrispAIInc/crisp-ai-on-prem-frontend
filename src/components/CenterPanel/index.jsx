@@ -31,6 +31,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     const { sidebarWidth } = useResizableSidebar(200, false);
     const metadataPanelContainer = useRef(null);
 
+    const [selectedSources, setSelectedSources] = useState(0);
     const [combinedSummary, setCombinedSummary] = useState("");
     const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
 
@@ -54,6 +55,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
 
     function refreshSummary() {
+        setSelectedSources(displayedSources?.length);
         if (displayedSources?.length > 1 || (displayedSources?.length > 1 && activeView === "resource")) {
             getCombinedSum();
         } else {
@@ -63,11 +65,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
 
     useEffect(() => {
-        if (displayedSources?.length > 1 || (displayedSources?.length > 1 && activeView === "resource")) {
-            getCombinedSum();
-        } else {
-            setCombinedSummary(currentResource?.metadata?.summary?.content);
-        }
+        refreshSummary();
     }, []);
 
     const addToInsight = async (textToAdd, file, question = '', models = "", refs = { pdfLinks: [], videoLinks: [], imageLinks: [] }) => {
@@ -114,7 +112,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         {/* {currentResource?.source_path.replace(/\.[^/.]+$/, '')} */}
                         Sources Summary
                     </h2>
-                    <span>{displayedSources?.length} Source{displayedSources?.length > 1 ? "s" : ""}</span>
+                    <span>{selectedSources} Source{selectedSources > 1 ? "s" : ""}</span>
                 </div>
                 {!isCombinedSummaryPending ? <div>
                     <p
