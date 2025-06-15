@@ -76,7 +76,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                 httpPayload
             );
 
-            setStory(res);
+            setStory({ ...res, story_name: storyTitle || res?.story_name });
 
 
 
