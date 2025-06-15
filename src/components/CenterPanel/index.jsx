@@ -92,6 +92,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
         // setActiveView('note');
     };
 
+    const isRtlLanguage = (langCode) => ["ar", "iw", "fa", "ur", "ps", "sd"].includes(langCode);
+
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
             {/* refresh summary */}
@@ -120,6 +122,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                             ? "text-textColor-300"
                             : "text-textColor-100"
                             }`}
+                        dir={isRtlLanguage(selectedLanguage) ? "rtl" : "ltr"}
                         dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content}</p>` }}
                     ></p>
                     <div
