@@ -836,7 +836,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           }`}
         ref={chatAppRef}
       >
-        {chatLoaded ? (
+        {chatLoaded && (
           messages.map((message, index) =>
             index % 2 == 0 ? (
               <div key={index} className="my-2 break-all w-fit">
@@ -1020,16 +1020,18 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
               </div>
             )
           )
-        ) : (
-          <div className="flex flex-col items-center justify-center h-full loading-container">
-            <div className="chat-spinner">
-              <LoadingSpinner />
-            </div>
-            <p className="text-sm text-center loading-text text-textColor-200">
-              Loading Knowledgebase...
-            </p>
-          </div>
-        )}
+        )
+          // : (
+          //   <div className="flex flex-col items-center justify-center h-full loading-container">
+          //     <div className="chat-spinner">
+          //       <LoadingSpinner />
+          //     </div>
+          //     <p className="text-sm text-center loading-text text-textColor-200">
+          //       Loading Knowledgebase...
+          //     </p>
+          //   </div>
+          // )  
+        }
       </section>}
 
       {/* </div> */}
