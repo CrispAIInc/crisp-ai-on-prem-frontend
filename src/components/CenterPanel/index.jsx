@@ -112,7 +112,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         {/* {currentResource?.source_path.replace(/\.[^/.]+$/, '')} */}
                         Sources Summary
                     </h2>
-                    <span>{selectedSources} Source{selectedSources > 1 ? "s" : ""}</span>
+                    {selectedSources > 0 && <span>{selectedSources} Source{selectedSources > 1 ? "s" : ""}</span>}
                 </div>
                 {!isCombinedSummaryPending ? <div>
                     <p
