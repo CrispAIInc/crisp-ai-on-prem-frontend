@@ -525,7 +525,7 @@ const ContentSection = ({
                 </div>
 
                 <div className="flex flex-col flex-1 w-full h-full max-h-full overflow-y-auto">
-                    <BaseHeading text='Selected sources' className="mt-4" />
+                    <BaseHeading text={`Sources (${displayedSources?.length} selected & ${displayedSources?.filter(i => i?.is_selected)?.length} checked.)`} className="mt-4" />
 
                     {/* <div className="w-fit">
                         <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
