@@ -125,13 +125,13 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         dir={isRtlLanguage(selectedLanguage) ? "rtl" : "ltr"}
                         dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content}</p>` }}
                     ></p>
-                    <div
+                    {combinedSummary != "" && <div
                         className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                         onClick={() => addToInsight(combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content)}
                     >
                         <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to insight</span>
-                    </div>
+                    </div>}
                 </div> : (
                     <div className="animate-pulse">
                         {new Array(10).fill(null).map((_, index) => (
