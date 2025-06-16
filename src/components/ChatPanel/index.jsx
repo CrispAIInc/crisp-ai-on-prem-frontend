@@ -362,9 +362,7 @@ const ChatPanel = () => {
 
   const handleSidebarToggle = useCallback(() => {
     setSidebarWidth(prev => {
-      if (prev !== maxWidth) {
-        return maxWidth;
-      }
+      if (prev !== (maxWidth - (maxWidth * 0.3))) return maxWidth - (maxWidth * 0.3);
       return window.innerWidth / 3.3333;
     });
     setIsRightSidebarOpen(true);
