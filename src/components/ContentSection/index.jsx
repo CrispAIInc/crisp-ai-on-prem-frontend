@@ -231,7 +231,7 @@ const ContentSection = ({
             await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
             toast('Upload complete. Generate metadata from the right panel', { className: "p-2 rounded-md", theme });
-            setActiveTab('genMetadata');
+            // setActiveTab('genMetadata');
 
             // Fetch updated content
             const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValues));
@@ -252,6 +252,12 @@ const ContentSection = ({
                 const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
                 return [...prev, ...newSources.map(item => ({ ...item, is_selected: true }))];
             });
+
+            setCurrentResource(sourcesToAdd[0]);
+
+            if (sourcesToAdd.length > 0) {
+                setActiveView('resource');
+            }
 
         } catch (error) {
             console.error(error);
