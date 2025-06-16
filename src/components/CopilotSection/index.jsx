@@ -18,6 +18,7 @@ import PreviewModal from '../PreviewModal';
 
 import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
 import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
+import AnimatedText from '../AnimatedText/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
@@ -277,7 +278,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
 
   };
 
+  const [isFetchingRefs, setIsFetchingRefs] = useState(false);
   const fetchReferences = async (botMessage) => {
+    setIsFetchingRefs(true);
     const response = await axios.get(`${API_ENDPOINT}/references`);
     const data = response.data;
     noteReferences.videoLinks = [];
@@ -415,6 +418,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
       }
       return newMessages;
     });
+
+    setIsFetchingRefs(false);
   };
 
   const handleLanguageChange = async (chosenLanguage) => {
@@ -985,6 +990,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                         >
                           {message.text}
                         </div>
+                        {
+                          (isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
+                        }
                         {showCursor && index == responseIndex ? (
                           <div className="relative w-2 h-2 my-2">
                             <span className="absolute inline-flex w-full h-full rounded-full opacity-75 bg-textColor-200 animate-smoothPing"></span>

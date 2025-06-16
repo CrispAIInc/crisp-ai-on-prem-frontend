@@ -90,11 +90,16 @@ export default {
           '50%': { transform: 'scale(2)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
+        fadeIn: {
+          '0%': { opacity: 0.5 },
+          '100%': { opacity: 1 },
+        },
       },
       animation: {
         blink: 'blink 1s step-start infinite',
         ripple: 'ripple 0.6s linear',
         smoothPing: 'smoothPing 1.4s ease-in-out infinite',
+        'fade-in': 'fadeIn 1s forwards infinite',
       },
       colors: {
         background: "var(--background-color)",
