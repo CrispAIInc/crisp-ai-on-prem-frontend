@@ -288,74 +288,76 @@ const ContentSection = ({
         const category = pathSegments[0];
         const format = pathSegments[1];
 
-        if (isChecked) {
-            if (category === undefined) {
-                setSelectedAll(true);
-                setKnowledgeBase((prev) => {
-                    return prev.map((item) => {
-                        return { ...item, is_selected: true };
-                    });
+        // if (isChecked) {
+        if (category === undefined) {
+            setSelectedAll(isChecked);
+            setKnowledgeBase((prev) => {
+                return prev.map((item) => {
+                    return { ...item, is_selected: isChecked };
                 });
-                setSourcesTobeCommited(knowledgeBase);
-                setDisplayedSources(knowledgeBase.map((item) => {
-                    return { ...item, is_selected: true };
-                }));
-            }
-
-            else if (category !== undefined && format === undefined) {
-                const updatedKnowledgeBase = knowledgeBase.map((item) => {
-                    //! what about if all the sources in KB have "all" by default?
-                    if (item.category.includes(category)) {
-                        item.is_selected = true;
-                    }
-                    return item;
-                });
-                setKnowledgeBase(updatedKnowledgeBase);
-                setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-            }
-            else if (category !== undefined && format !== undefined) {
-                const updatedKnowledgeBase = knowledgeBase.map((item) => {
-                    if (item.category.includes(category) && item.file_type === format) {
-                        item.is_selected = true;
-                    }
-                    return item;
-
-                });
-                setKnowledgeBase(updatedKnowledgeBase);
-                setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-            }
-        } else {
-            if (category === undefined) {
-                setSelectedAll(false);
-                setKnowledgeBase((prev) => {
-                    return prev.map((item) => {
-                        return { ...item, is_selected: false };
-                    });
-                });
-                setSourcesTobeCommited([]);
-                setDisplayedSources(knowledgeBase.map((item) => {
-                    return { ...item, is_selected: false };
-                }));
-            } else if (category !== undefined && format === undefined) {
-                const updatedKnowledgeBase = knowledgeBase.map((item) => {
-                    if (item.category.includes(category)) {
-                        item.is_selected = false;
-                    }
-                    return item;
-                });
-                setKnowledgeBase(updatedKnowledgeBase);
-                setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-            } else if (category !== undefined && format !== undefined) {
-                const updatedKnowledgeBase = knowledgeBase.map((item) => {
-                    if (item.category.includes(category) && item.file_type === format) {
-                        item.is_selected = false;
-                    }
-                    return item;
-                });
-                setKnowledgeBase(updatedKnowledgeBase);
-                setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-            }
+            });
+            setSourcesTobeCommited(isChecked ? knowledgeBase : []);
+            setDisplayedSources(knowledgeBase.map((item) => {
+                return { ...item, is_selected: isChecked };
+            }));
         }
+
+        else if (category !== undefined && format === undefined) {
+            const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                //! what about if all the sources in KB have "all" by default?
+                if (item.category.includes(category)) {
+                    item.is_selected = isChecked;
+                }
+                return item;
+            });
+            setKnowledgeBase(updatedKnowledgeBase);
+            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+        }
+        else if (category !== undefined && format !== undefined) {
+            const updatedKnowledgeBase = knowledgeBase.map((item) => {
+                if ((category === 'all' || item.category.includes(category)) && (item.file_type === format || format === "all")) {
+                    item.is_selected = isChecked;
+                }
+                return item;
+
+            });
+            setKnowledgeBase(updatedKnowledgeBase);
+            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+            // setDisplayedSources(updatedKnowledgeBase.filter((item) => item.is_selected));
+        }
+        // } else {
+        //     if (category === undefined) {
+        //         setSelectedAll(false);
+        //         setKnowledgeBase((prev) => {
+        //             return prev.map((item) => {
+        //                 return { ...item, is_selected: false };
+        //             });
+        //         });
+        //         setSourcesTobeCommited([]);
+        //         setDisplayedSources(knowledgeBase.map((item) => {
+        //             return { ...item, is_selected: false };
+        //         }));
+        //     } else if (category !== undefined && format === undefined) {
+        //         const updatedKnowledgeBase = knowledgeBase.map((item) => {
+        //             if (item.category.includes(category)) {
+        //                 item.is_selected = false;
+        //             }
+        //             return item;
+        //         });
+        //         setKnowledgeBase(updatedKnowledgeBase);
+        //         setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+        //     } else if (category !== undefined && format !== undefined) {
+        //         const updatedKnowledgeBase = knowledgeBase.map((item) => {
+        //             if ((category === 'all' || item.category.includes(category)) && (item.file_type === format || format === "all")) {
+        //                 item.is_selected = false;
+        //             }
+        //             return item;
+        //         });
+        //         setKnowledgeBase(updatedKnowledgeBase);
+        //         setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+        //         setDisplayedSources(updatedKnowledgeBase.filter((item) => item.is_selected));
+        //     }
+        // }
     };
 
     // const handleUnselectAllCheckboxChange = () => {
