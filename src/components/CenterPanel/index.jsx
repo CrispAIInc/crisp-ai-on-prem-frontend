@@ -10,7 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { generateRandomHash } from '../../utils.js';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 
-const MetadataPanel = ({ workspaceContainer }) => {
+const CenterPanel = ({ workspaceContainer }) => {
     const {
         currentResource,
         chatLoaded, setChatLoaded,
@@ -147,4 +147,4 @@ const MetadataPanel = ({ workspaceContainer }) => {
         </div >
     );
 };
-export default MetadataPanel;
+export default CenterPanel;
