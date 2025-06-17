@@ -1,18 +1,10 @@
 import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import GenStories from '../GenStories';
-import Guide from "../Guide";
-import NotesSection from "../NotesSection";
-import StoriesSection from '../StoriesSection';
-import CopilotSection from '../CopilotSection';
 import { MainContext } from '../../contexts/mainContext';
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import './chat-panel.css';

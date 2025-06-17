@@ -3,13 +3,10 @@ import { MainContext } from "../../contexts/mainContext";
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
 import NoData from "../NoData";
-import NoteDetails from "../NoteDetails";
 
 import './workspace.css';
-import StoryDetails from '../StoryDetails';
 
 import CenterPanel from "../CenterPanel";
-import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 const Workspace = () => {
 

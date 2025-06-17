@@ -6,7 +6,6 @@ import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
 import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 import makeApiRequest from '../../api';
-import SelectedSourcesDropdown from '../SelectedSourcesDropdown';
 
 
 

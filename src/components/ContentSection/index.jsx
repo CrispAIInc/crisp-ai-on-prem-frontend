@@ -1,29 +1,22 @@
 
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import AddIcon from '@mui/icons-material/Add';
-import SettingsIcon from '@mui/icons-material/Settings';
 import { useContext, useEffect, useState } from "react";
 import makeApiRequest from "../../api";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
 
-import CategoriesModal from "../CategoriesModal";
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import GraphicEqOutlinedIcon from '@mui/icons-material/GraphicEqOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import ContentPanelThumbnail from "../ContentPanelThumbnail";
 import { Checkbox } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MainContext } from "../../contexts/mainContext";
 import LoadingSpinner from "../LoadingSpinner";
 import BaseHeading from '../BaseHeading';
 import NoData from '../NoData';
-import CustomButton from '../CustomButton';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import UploadIcon from '@mui/icons-material/Upload';
 import SearchSection from '../SearchSection';
 import { timeToSeconds } from '../../utils';
-import { IndexModal } from '../IndexModal';
 import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
@@ -44,23 +37,17 @@ const ContentSection = ({
         showMetadata,
         categoryOptions,
         currentResource,
-        activeView,
         setCurrentResource,
         workspaceContainer,
         player,
-        setActiveTab,
         displayedSources,
-        commitSelectedSources,
         knowledgeBase,
         setGeneratedResources,
         selectedCategory,
         setActiveView,
         setChatLoaded,
         sourcesTobeCommited, setSourcesTobeCommited,
-        selectedNote,
         selectedSources,
-        setSelectedSources,
-        selectedStory,
         selectedAll,
         setSelectedAll,
         theme,

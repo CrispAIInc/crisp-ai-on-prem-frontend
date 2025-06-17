@@ -2,25 +2,18 @@ import { useState, useEffect, useRef, useContext } from "react";
 import Guide from "../Guide";
 import makeApiRequest from "../../api";
 
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
-
 import SearchModal from "../SearchModal";
 
-import NotesSection from "../NotesSection";
 import ContentSection from "../ContentSection";
 import { MainContext } from '../../contexts/mainContext';
 
 import './content-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-import StoriesSection from '../StoriesSection';
 
 const ContentPanel = () => {
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
 
-    const { setCurrentResource,
-        setResourceURL,
+    const {
         setNotes,
         showSearchModal,
         setShowSearchModal,
@@ -28,8 +21,7 @@ const ContentPanel = () => {
         knowledgeBase, setKnowledgeBase,
         onThumbnailClick,
         isLeftSidebarOpen,
-        setIsLeftSidebarOpen,
-        setTranscription, setShowMetadata, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, setNoteIndex, setSummaries, contentPanelContainerRef } = useContext(MainContext);
+        setIsLeftSidebarOpen, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, contentPanelContainerRef } = useContext(MainContext);
 
 
 

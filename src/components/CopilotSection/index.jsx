@@ -7,13 +7,9 @@ import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
 import { decimalSecondsToHHMMSS, generateRandomHash, timeToSeconds, toBase64 } from '../../utils';
 import AddOptionsModal from "../AddOptionsModal";
-import CustomButton from "../CustomButton";
 import CustomSelectTwo from '../CustomSelectTwo';
 import CustomTextArea from '../CustomTextArea';
-import MetadataSkeleton from "../Skeletons/MetadataSkeleton";
 import ImageUpload from '../ImageUpload';
-import { LLMModal } from "../LLMModal";
-import LoadingSpinner from "../LoadingSpinner";
 import PreviewModal from '../PreviewModal';
 
 import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
@@ -41,7 +37,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     showNoteModal,
     sourcesWithExclusive,
     categoryOptions,
-    setKnowledgeBase,
     setNoteIndex,
     setShowNoteModal,
     displayedSources, setShowEditor,
