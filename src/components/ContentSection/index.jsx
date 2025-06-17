@@ -297,6 +297,9 @@ const ContentSection = ({
                     });
                 });
                 setSourcesTobeCommited(knowledgeBase);
+                setDisplayedSources(knowledgeBase.map((item) => {
+                    return { ...item, is_selected: true };
+                }));
             }
 
             else if (category !== undefined && format === undefined) {
@@ -330,6 +333,9 @@ const ContentSection = ({
                     });
                 });
                 setSourcesTobeCommited([]);
+                setDisplayedSources(knowledgeBase.map((item) => {
+                    return { ...item, is_selected: false };
+                }));
             } else if (category !== undefined && format === undefined) {
                 const updatedKnowledgeBase = knowledgeBase.map((item) => {
                     if (item.category.includes(category)) {
