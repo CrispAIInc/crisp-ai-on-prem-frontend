@@ -42,7 +42,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
             setIsCombinedSummaryPending(true);
             setActiveView('resource');
             const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
-                sources: displayedSources?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                sources: displayedSources?.filter(source => source?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
                 lang: selectedLanguage
             }));
             setCombinedSummary(summary?.combined_summary || "");
