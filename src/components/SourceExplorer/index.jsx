@@ -4,7 +4,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import FolderIcon from "@mui/icons-material/Folder";
+// import FolderIcon from "@mui/icons-material/Folder";
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import PDFThumbnail from "../PDFThumbnail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoadingSpinner from "../LoadingSpinner";
@@ -143,7 +144,8 @@ export function SourceExplorer(props) {
                 // onMouseLeave={() => setItemToRemove("")}
                 >
                     {(itemToRemove === item.value && viewModes[viewModes.length - 1] === "categories") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
-                    <FolderIcon sx={{ fontSize: 60 }} />
+                    {/* <FolderIcon sx={{ fontSize: 60 }} /> */}
+                    <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} sx={{ fontSize: 50 }} />
                     <p>{item.label}</p>
                 </div>
             ))}
@@ -321,13 +323,11 @@ export function SourceExplorer(props) {
         >
             <Modal.Header
                 closeButton
-                className={`${theme === "light"
-                    ? ""
-                    : "bg-textColor-300 text-white !border-b-textColor-200"
-                    }`}
+                className={`${theme === "dark" && "bg-textColor-300 text-textColor-100 !border-b-textColor-200"}`}
             >
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Source Explorer
+                <Modal.Title id="contained-modal-title-vcenter" className="flex flex-col gap-0">
+                    <h3 className="mb-0 text-xl">Source Explorer</h3>
+                    <p className="font-normal">Select sources to add to your workspace, enabling metadata extraction and deeper insights.</p>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body
