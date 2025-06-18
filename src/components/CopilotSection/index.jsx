@@ -1033,7 +1033,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           //   </div>
           // )  
         }
-      </section>};
+      </section>}
 
       {/* </div> */}
       <section className="flex items-center gap-2 copilot-chat-container input-area">
