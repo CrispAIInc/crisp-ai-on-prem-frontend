@@ -1,5 +1,6 @@
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import SendIcon from "@mui/icons-material/Send";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -989,10 +990,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                           (isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                         }
                         {showCursor && index == responseIndex ? (
-                          <div className="relative w-2 h-2 my-2">
-                            <span className="absolute inline-flex w-full h-full rounded-full opacity-75 bg-textColor-200 animate-smoothPing"></span>
-                            {/* <span className="relative inline-flex w-2 h-2 rounded-full bg-textColor-300"></span> */}
-                          </div>
+                          <AutoAwesomeIcon color="primary" className="animate-customPulse" />
                         ) : null}
 
                         <div className="flex flex-wrap items-center gap-1">
@@ -1035,7 +1033,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           //   </div>
           // )  
         }
-      </section>}
+      </section>};
 
       {/* </div> */}
       <section className="flex items-center gap-2 copilot-chat-container input-area">
@@ -1071,7 +1069,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
       </section>
 
 
-    </article>
+    </article >
   );
 };
 

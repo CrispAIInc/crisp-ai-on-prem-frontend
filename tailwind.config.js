@@ -94,12 +94,17 @@ export default {
           '0%': { opacity: 0.5 },
           '100%': { opacity: 1 },
         },
+        customPulse: {
+          '0%, 100%': { opacity: 1 },
+          '50%': { opacity: 0.1 }, // customize this value
+        },
       },
       animation: {
         blink: 'blink 1s step-start infinite',
         ripple: 'ripple 0.6s linear',
-        smoothPing: 'smoothPing 1.4s ease-in-out infinite',
+        smoothPing: 'smoothPing 1.8s linear infinite',
         'fade-in': 'fadeIn 1s forwards infinite',
+        customPulse: 'customPulse 1.5s ease-in-out infinite',
       },
       colors: {
         background: "var(--background-color)",
