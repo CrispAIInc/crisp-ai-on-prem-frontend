@@ -55,7 +55,7 @@ const CenterPanel = ({ workspaceContainer }) => {
     }
 
     function refreshSummary() {
-        setSelectedSources(displayedSources?.length);
+        setSelectedSources(displayedSources?.filter(item => item?.is_selected)?.length);
         if (displayedSources?.length > 1 || (displayedSources?.length > 1 && activeView === "resource")) {
             getCombinedSum();
         } else {
