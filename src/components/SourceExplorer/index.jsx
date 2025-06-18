@@ -346,7 +346,9 @@ export function SourceExplorer(props) {
                         : renderFiles()}
                     {/* <RemoveIndexModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} /> */}
                 </div>
-                {itemsFoundInsideCategoryOrFormat && <div className="flex items-center mt-4 ">
+            </Modal.Body>
+            <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+                {itemsFoundInsideCategoryOrFormat && <div className="flex">
                     <Checkbox
                         className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
                             }`}
@@ -362,8 +364,6 @@ export function SourceExplorer(props) {
                         Select all sources
                     </span>
                 </div>}
-            </Modal.Body>
-            <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
                 <div
                     className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={props.onHide}
