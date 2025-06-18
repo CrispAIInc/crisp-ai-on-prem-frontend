@@ -144,7 +144,7 @@ const ContentPanel = () => {
 
 
     return (
-        <aside className={`relative z-10 select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} flex flex-col relative`} ref={contentPanelContainerRef} style={{
+        <aside className={`relative z-10 select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col relative`} ref={contentPanelContainerRef} style={{
             width: leftWidth
         }}>
             <h5 className={`select-none p-[10px] text-center  ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
