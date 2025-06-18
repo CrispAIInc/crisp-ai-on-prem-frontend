@@ -32,7 +32,7 @@ export function SourceExplorer(props) {
     const [viewModes, setViewModes] = useState(["categories"]); // 'categories' or 'formats'
 
     const [history, setHistory] = useState(["/"]);
-    const currentPath = history[history.length - 1] || "/";
+    const [currentPath, setCurrentPath] = useState(history[history.length - 1] || "/");
 
     function ge() {
         let filteredItems;
@@ -81,6 +81,7 @@ export function SourceExplorer(props) {
     const openCategoryFolder = (category) => {
         setSelectedCategory(category);
         const newPath = currentPath + category + "/";
+        setCurrentPath(newPath);
         setViewModes((prevViewModes) => [...prevViewModes, "formats"]);
         setHistory((prevHistory) => [...prevHistory, newPath]);
     };
@@ -88,9 +89,14 @@ export function SourceExplorer(props) {
     const openFormatFolder = (format) => {
         setSelectedFormat(format);
         const newPath = currentPath + format + "/";
+        setCurrentPath(newPath);
         setViewModes((prevViewModes) => [...prevViewModes, "files"]);
         setHistory((prevHistory) => [...prevHistory, newPath]);
     };
+
+    useEffect(() => {
+        setCurrentPath(history[history.length - 1] || "/");
+    }, [JSON.stringify(history)]);
 
     const goBack = () => {
         setHistory((prevHistory) => {
@@ -125,6 +131,7 @@ export function SourceExplorer(props) {
     }
     // const [showRemoveXItem, setShowRemoveXItem] = useState(null);
     const [itemToRemove, setItemToRemove] = useState("");
+    const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
     const renderFolders = () => {
         return <>
             {props[viewModes[viewModes.length - 1]].map((item, index) => (
@@ -148,12 +155,36 @@ export function SourceExplorer(props) {
     //     console.log(currentPath);
     // }, [currentPath]);
 
+    // function test() {
+    //     setItemsFoundInsideCategoryOrFormat(false);
+    // }
+
+    useEffect(() => {
+        if (viewModes[viewModes.length - 1] === "files") {
+            // Extracts category and format from the currentPath
+            const pathSegments = currentPath.split("/").filter(Boolean); // Removes empty strings from array
+            const category = pathSegments[0];
+            const format = pathSegments[1];
+
+            const items = props.knowledgeBase
+                .filter(
+                    (file) =>
+                        (file.file_type === format || format === "all") &&
+                        (file.category[1] === category || category === "all")
+                );
+
+            setItemsFoundInsideCategoryOrFormat(items.length > 0);
+        }
+    }, [JSON.stringify(currentPath), JSON.stringify(history)]);
+
     const renderFiles = () => {
         if (viewModes[viewModes.length - 1] === "files") {
             // Extracts category and format from the currentPath
             const pathSegments = currentPath.split("/").filter(Boolean); // Removes empty strings from array
             const category = pathSegments[0];
             const format = pathSegments[1];
+
+
 
             if (category === "all") {
                 return props.knowledgeBase
@@ -209,13 +240,15 @@ export function SourceExplorer(props) {
                         </div>
                     ));
             } else {
-                return props.knowledgeBase
+                const items = props.knowledgeBase
                     .filter(
                         (file) =>
                             (file.file_type === format || format === "all") &&
                             file.category[1] === category
-                    )
-                    .map((file, index) => (
+                    );
+
+                if (items.length > 0) {
+                    return items.map((file, index) => (
                         <div
                             className={`border rounded-md thumbnail-container file ${theme === "dark" && "!border-textColor-300"
                                 }`}
@@ -265,6 +298,14 @@ export function SourceExplorer(props) {
                             </div>
                         </div>
                     ));
+                } else {
+                    // setItemsFoundInsideCategoryOrFormat(false);
+                    return (
+                        <p className={`no-files-found ${theme === "dark" ? "text-textColor-100" : "text-textColor-200"}`}>
+                            No files found in this category.
+                        </p>
+                    );
+                }
             }
         }
     };
@@ -305,7 +346,7 @@ export function SourceExplorer(props) {
                         : renderFiles()}
                     {/* <RemoveIndexModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} /> */}
                 </div>
-                <div className="flex items-center mt-4 ">
+                {itemsFoundInsideCategoryOrFormat && <div className="flex items-center mt-4 ">
                     <Checkbox
                         className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
                             }`}
@@ -320,7 +361,7 @@ export function SourceExplorer(props) {
                     >
                         Select all sources
                     </span>
-                </div>
+                </div>}
             </Modal.Body>
             <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
                 <div

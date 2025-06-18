@@ -84,7 +84,6 @@ const MainWorkspace = ({ theme }) => {
           label: index.charAt(0).toUpperCase() + index.slice(1),
         };
       });
-      console.log(indexes);
       setCategoryOptions(indexes);
     }
 
