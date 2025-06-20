@@ -102,10 +102,13 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
                 htmlFor="file-input"
                 className="w-full p-4 text-center cursor-pointer text-primary-300"
             >
-                {!isFileUploading && <p className="font-medium">Click to browse files</p>}
-                <p className="mt-1 text-sm">
-                    Supported: Images, Videos, PDFs | Duration 4sec-30min for videos | File size ≤2GB
-                </p>
+                {!isFileUploading ? <>
+                    <p className="font-medium">Click to browse files</p>
+                    <p className="mt-1 text-sm">
+                        Supported: Images, Videos, PDFs
+                    </p>
+                </> : <p className="text-sm">Processing source upload...</p>
+                }
             </label>
             <div className="grid w-full grid-cols-3 gap-4 mt-4">
                 {fileThumbnails.map((thumbnail, index) => (
