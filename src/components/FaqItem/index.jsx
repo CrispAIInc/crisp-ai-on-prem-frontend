@@ -2,8 +2,9 @@ import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import { isRtlLanguage } from '../../utils';
 
-function FaqItem({ item, isBoxed = false, isFirstOpen = false }) {
+function FaqItem({ item, isBoxed = false, isFirstOpen = false, chosenLanguage }) {
 
     const [isOpen, setIsOpen] = useState(isFirstOpen);
     const { theme, setCurrentResource, workspaceContainer, contentPanelContainerRef, setJumpToPage } = useContext(MainContext);
@@ -22,7 +23,7 @@ function FaqItem({ item, isBoxed = false, isFirstOpen = false }) {
         >
             <button
                 onClick={toggleFAQ}
-                className={`flex items-center justify-between  w-full p-2 text-lg font-medium text-left text-gray-700 focus:outline-none`}
+                className={`flex items-center justify-between  w-full p-2 text-lg font-medium text-left text-gray-700 focus:outline-none ${isRtlLanguage(chosenLanguage) && 'flex-row-reverse'}`}
             >
                 <span className={`${theme === 'dark' && 'text-textColor-100'} uppercase text-sm font-bold tracking-widest `}>{item.question}</span>
                 <svg

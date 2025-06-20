@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import { isRtlLanguage } from '../../utils';
 // import useCheckMobileScreen from '../../hooks/useCheckMobileScreen';
 
-function Accordion({ heading, children, isBoxed = false, isFirstOpen = false }) {
+function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, chosenLanguage }) {
     const [isOpen, setIsOpen] = useState(isFirstOpen);
     const { theme } = useContext(MainContext);
     // const isMobile = useCheckMobileScreen();
@@ -16,7 +17,7 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false }) 
         >
             <button
                 onClick={toggleFAQ}
-                className={`flex items-center justify-between  w-full p-2 text-lg font-medium text-left text-gray-700 focus:outline-none`}
+                className={`flex items-center justify-between  w-full p-2 text-lg font-medium text-left text-gray-700 focus:outline-none ${isRtlLanguage(chosenLanguage) && 'flex-row-reverse'}`}
             >
                 <span className={`${theme === 'dark' && 'text-textColor-100'} uppercase text-sm font-bold tracking-widest `}>{heading}</span>
                 <svg

@@ -397,139 +397,671 @@ const MainWorkspace = ({ theme }) => {
   }, [displayedSources]);
 
   const languageOptions = [
-    { value: "en", label: "English" },
-    { value: "af", label: "Afrikaans" },
-    { value: "sq", label: "Albanian" },
-    { value: "am", label: "Amharic" },
-    { value: "ar", label: "Arabic" },
-    { value: "hy", label: "Armenian" },
-    { value: "as", label: "Assamese" },
-    { value: "ay", label: "Aymara" },
-    { value: "az", label: "Azerbaijani" },
-    { value: "bm", label: "Bambara" },
-    { value: "eu", label: "Basque" },
-    { value: "be", label: "Belarusian" },
-    { value: "bn", label: "Bengali" },
-    { value: "bho", label: "Bhojpuri" },
-    { value: "bs", label: "Bosnian" },
-    { value: "bg", label: "Bulgarian" },
-    { value: "ca", label: "Catalan" },
-    { value: "ceb", label: "Cebuano" },
-    { value: "ny", label: "Chichewa" },
-    { value: "zh-CN", label: "Chinese (simplified)" },
-    { value: "zh-TW", label: "Chinese (traditional)" },
-    { value: "co", label: "Corsican" },
-    { value: "hr", label: "Croatian" },
-    { value: "cs", label: "Czech" },
-    { value: "da", label: "Danish" },
-    { value: "dv", label: "Dhivehi" },
-    { value: "doi", label: "Dogri" },
-    { value: "nl", label: "Dutch" },
-    { value: "eo", label: "Esperanto" },
-    { value: "et", label: "Estonian" },
-    { value: "ee", label: "Ewe" },
-    { value: "tl", label: "Filipino" },
-    { value: "fi", label: "Finnish" },
-    { value: "fr", label: "French" },
-    { value: "fy", label: "Frisian" },
-    { value: "gl", label: "Galician" },
-    { value: "ka", label: "Georgian" },
-    { value: "de", label: "German" },
-    { value: "el", label: "Greek" },
-    { value: "gn", label: "Guarani" },
-    { value: "gu", label: "Gujarati" },
-    { value: "ht", label: "Haitian Creole" },
-    { value: "ha", label: "Hausa" },
-    { value: "haw", label: "Hawaiian" },
-    { value: "iw", label: "Hebrew" },
-    { value: "hi", label: "Hindi" },
-    { value: "hmn", label: "Hmong" },
-    { value: "hu", label: "Hungarian" },
-    { value: "is", label: "Icelandic" },
-    { value: "ig", label: "Igbo" },
-    { value: "ilo", label: "Ilocano" },
-    { value: "id", label: "Indonesian" },
-    { value: "ga", label: "Irish" },
-    { value: "it", label: "Italian" },
-    { value: "ja", label: "Japanese" },
-    { value: "jw", label: "Javanese" },
-    { value: "kn", label: "Kannada" },
-    { value: "kk", label: "Kazakh" },
-    { value: "km", label: "Khmer" },
-    { value: "rw", label: "Kinyarwanda" },
-    { value: "gom", label: "Konkani" },
-    { value: "ko", label: "Korean" },
-    { value: "kri", label: "Krio" },
-    { value: "ku", label: "Kurdish (Kurmanji)" },
-    { value: "ckb", label: "Kurdish (Sorani)" },
-    { value: "ky", label: "Kyrgyz" },
-    { value: "lo", label: "Lao" },
-    { value: "la", label: "Latin" },
-    { value: "lv", label: "Latvian" },
-    { value: "ln", label: "Lingala" },
-    { value: "lt", label: "Lithuanian" },
-    { value: "lg", label: "Luganda" },
-    { value: "lb", label: "Luxembourgish" },
-    { value: "mk", label: "Macedonian" },
-    { value: "mai", label: "Maithili" },
-    { value: "mg", label: "Malagasy" },
-    { value: "ms", label: "Malay" },
-    { value: "ml", label: "Malayalam" },
-    { value: "mt", label: "Maltese" },
-    { value: "mi", label: "Maori" },
-    { value: "mr", label: "Marathi" },
-    { value: "mni-Mtei", label: "Meiteilon (Manipuri)" },
-    { value: "lus", label: "Mizo" },
-    { value: "mn", label: "Mongolian" },
-    { value: "my", label: "Myanmar" },
-    { value: "ne", label: "Nepali" },
-    { value: "no", label: "Norwegian" },
-    { value: "or", label: "Odia (Oriya)" },
-    { value: "om", label: "Oromo" },
-    { value: "ps", label: "Pashto" },
-    { value: "fa", label: "Persian" },
-    { value: "pl", label: "Polish" },
-    { value: "pt", label: "Portuguese" },
-    { value: "pa", label: "Punjabi" },
-    { value: "qu", label: "Quechua" },
-    { value: "ro", label: "Romanian" },
-    { value: "ru", label: "Russian" },
-    { value: "sm", label: "Samoan" },
-    { value: "sa", label: "Sanskrit" },
-    { value: "gd", label: "Scots Gaelic" },
-    { value: "nso", label: "Sepedi" },
-    { value: "sr", label: "Serbian" },
-    { value: "st", label: "Sesotho" },
-    { value: "sn", label: "Shona" },
-    { value: "sd", label: "Sindhi" },
-    { value: "si", label: "Sinhala" },
-    { value: "sk", label: "Slovak" },
-    { value: "sl", label: "Slovenian" },
-    { value: "so", label: "Somali" },
-    { value: "es", label: "Spanish" },
-    { value: "su", label: "Sundanese" },
-    { value: "sw", label: "Swahili" },
-    { value: "sv", label: "Swedish" },
-    { value: "tg", label: "Tajik" },
-    { value: "ta", label: "Tamil" },
-    { value: "tt", label: "Tatar" },
-    { value: "te", label: "Telugu" },
-    { value: "th", label: "Thai" },
-    { value: "ti", label: "Tigrinya" },
-    { value: "ts", label: "Tsonga" },
-    { value: "tr", label: "Turkish" },
-    { value: "tk", label: "Turkmen" },
-    { value: "ak", label: "Twi" },
-    { value: "uk", label: "Ukrainian" },
-    { value: "ur", label: "Urdu" },
-    { value: "ug", label: "Uyghur" },
-    { value: "uz", label: "Uzbek" },
-    { value: "vi", label: "Vietnamese" },
-    { value: "cy", label: "Welsh" },
-    { value: "xh", label: "Xhosa" },
-    { value: "yi", label: "Yiddish" },
-    { value: "yo", label: "Yoruba" },
-    { value: "zu", label: "Zulu" },
+    {
+      value: "en",
+      label: "English",
+      originalLabel: "English"
+    },
+    {
+      value: "af",
+      label: "Afrikaans",
+      originalLabel: "Afrikaans"
+    },
+    {
+      value: "sq",
+      label: "Albanian",
+      originalLabel: "shqip"
+    },
+    {
+      value: "am",
+      label: "Amharic",
+      originalLabel: "አማርኛ"
+    },
+    {
+      value: "ar",
+      label: "Arabic",
+      originalLabel: "العربية"
+    },
+    {
+      value: "hy",
+      label: "Armenian",
+      originalLabel: "հայերեն"
+    },
+    {
+      value: "as",
+      label: "Assamese",
+      originalLabel: "অসমীয়া"
+    },
+    {
+      value: "ay",
+      label: "Aymara",
+      originalLabel: "Aymara"
+    },
+    {
+      value: "az",
+      label: "Azerbaijani",
+      originalLabel: "azərbaycan"
+    },
+    {
+      value: "bm",
+      label: "Bambara",
+      originalLabel: "bamanakan"
+    },
+    {
+      value: "eu",
+      label: "Basque",
+      originalLabel: "euskara"
+    },
+    {
+      value: "be",
+      label: "Belarusian",
+      originalLabel: "беларуская"
+    },
+    {
+      value: "bn",
+      label: "Bengali",
+      originalLabel: "বাংলা"
+    },
+    {
+      value: "bho",
+      label: "Bhojpuri",
+      originalLabel: "भोजपुरी"
+    },
+    {
+      value: "bs",
+      label: "Bosnian",
+      originalLabel: "bosanski"
+    },
+    {
+      value: "bg",
+      label: "Bulgarian",
+      originalLabel: "български"
+    },
+    {
+      value: "ca",
+      label: "Catalan",
+      originalLabel: "català"
+    },
+    {
+      value: "ceb",
+      label: "Cebuano",
+      originalLabel: "Cebuano"
+    },
+    {
+      value: "ny",
+      label: "Chichewa",
+      originalLabel: "Nyanja"
+    },
+    {
+      value: "zh-CN",
+      label: "Chinese (simplified)",
+      originalLabel: "中文（中国）"
+    },
+    {
+      value: "zh-TW",
+      label: "Chinese (traditional)",
+      originalLabel: "Chinese（Taiwan）"
+    },
+    {
+      value: "co",
+      label: "Corsican",
+      originalLabel: "corsu"
+    },
+    {
+      value: "hr",
+      label: "Croatian",
+      originalLabel: "hrvatski"
+    },
+    {
+      value: "cs",
+      label: "Czech",
+      originalLabel: "čeština"
+    },
+    {
+      value: "da",
+      label: "Danish",
+      originalLabel: "dansk"
+    },
+    {
+      value: "dv",
+      label: "Dhivehi",
+      originalLabel: "Divehi"
+    },
+    {
+      value: "doi",
+      label: "Dogri",
+      originalLabel: "डोगरी"
+    },
+    {
+      value: "nl",
+      label: "Dutch",
+      originalLabel: "Nederlands"
+    },
+    {
+      value: "eo",
+      label: "Esperanto",
+      originalLabel: "Esperanto"
+    },
+    {
+      value: "et",
+      label: "Estonian",
+      originalLabel: "eesti"
+    },
+    {
+      value: "ee",
+      label: "Ewe",
+      originalLabel: "Eʋegbe"
+    },
+    {
+      value: "tl",
+      label: "Filipino",
+      originalLabel: "Filipino"
+    },
+    {
+      value: "fi",
+      label: "Finnish",
+      originalLabel: "suomi"
+    },
+    {
+      value: "fr",
+      label: "French",
+      originalLabel: "français"
+    },
+    {
+      value: "fy",
+      label: "Frisian",
+      originalLabel: "Frysk"
+    },
+    {
+      value: "gl",
+      label: "Galician",
+      originalLabel: "galego"
+    },
+    {
+      value: "ka",
+      label: "Georgian",
+      originalLabel: "ქართული"
+    },
+    {
+      value: "de",
+      label: "German",
+      originalLabel: "Deutsch"
+    },
+    {
+      value: "el",
+      label: "Greek",
+      originalLabel: "Ελληνικά"
+    },
+    {
+      value: "gn",
+      label: "Guarani",
+      originalLabel: "avañe’ẽ"
+    },
+    {
+      value: "gu",
+      label: "Gujarati",
+      originalLabel: "ગુજરાતી"
+    },
+    {
+      value: "ht",
+      label: "Haitian Creole",
+      originalLabel: "Haitian Creole"
+    },
+    {
+      value: "ha",
+      label: "Hausa",
+      originalLabel: "Hausa"
+    },
+    {
+      value: "haw",
+      label: "Hawaiian",
+      originalLabel: "ʻŌlelo Hawaiʻi"
+    },
+    {
+      value: "iw",
+      label: "Hebrew",
+      originalLabel: "עברית"
+    },
+    {
+      value: "hi",
+      label: "Hindi",
+      originalLabel: "हिन्दी"
+    },
+    {
+      value: "hmn",
+      label: "Hmong",
+      originalLabel: "Hmong"
+    },
+    {
+      value: "hu",
+      label: "Hungarian",
+      originalLabel: "magyar"
+    },
+    {
+      value: "is",
+      label: "Icelandic",
+      originalLabel: "íslenska"
+    },
+    {
+      value: "ig",
+      label: "Igbo",
+      originalLabel: "Igbo"
+    },
+    {
+      value: "ilo",
+      label: "Ilocano",
+      originalLabel: "Ilokano"
+    },
+    {
+      value: "id",
+      label: "Indonesian",
+      originalLabel: "bahasa Indonesia"
+    },
+    {
+      value: "ga",
+      label: "Irish",
+      originalLabel: "Gaeilge"
+    },
+    {
+      value: "it",
+      label: "Italian",
+      originalLabel: "italiano"
+    },
+    {
+      value: "ja",
+      label: "Japanese",
+      originalLabel: "日本語"
+    },
+    {
+      value: "jw",
+      label: "Javanese",
+      originalLabel: "Jawa"
+    },
+    {
+      value: "kn",
+      label: "Kannada",
+      originalLabel: "ಕನ್ನಡ"
+    },
+    {
+      value: "kk",
+      label: "Kazakh",
+      originalLabel: "қазақ тілі"
+    },
+    {
+      value: "km",
+      label: "Khmer",
+      originalLabel: "ខ្មែរ"
+    },
+    {
+      value: "rw",
+      label: "Kinyarwanda",
+      originalLabel: "Kinyarwanda"
+    },
+    {
+      value: "gom",
+      label: "Konkani",
+      originalLabel: "Goan Konkani"
+    },
+    {
+      value: "ko",
+      label: "Korean",
+      originalLabel: "한국어"
+    },
+    {
+      value: "kri",
+      label: "Krio",
+      originalLabel: "Krio"
+    },
+    {
+      value: "ku",
+      label: "Kurdish (Kurmanji)",
+      originalLabel: "kurdî (kurmancî)"
+    },
+    {
+      value: "ckb",
+      label: "Kurdish (Sorani)",
+      originalLabel: "کوردیی ناوەندی"
+    },
+    {
+      value: "ky",
+      label: "Kyrgyz",
+      originalLabel: "кыргызча"
+    },
+    {
+      value: "lo",
+      label: "Lao",
+      originalLabel: "ລາວ"
+    },
+    {
+      value: "la",
+      label: "Latin",
+      originalLabel: "Lingua latina"
+    },
+    {
+      value: "lv",
+      label: "Latvian",
+      originalLabel: "latviešu"
+    },
+    {
+      value: "ln",
+      label: "Lingala",
+      originalLabel: "lingála"
+    },
+    {
+      value: "lt",
+      label: "Lithuanian",
+      originalLabel: "lietuvių"
+    },
+    {
+      value: "lg",
+      label: "Luganda",
+      originalLabel: "Luganda"
+    },
+    {
+      value: "lb",
+      label: "Luxembourgish",
+      originalLabel: "Lëtzebuergesch"
+    },
+    {
+      value: "mk",
+      label: "Macedonian",
+      originalLabel: "македонски"
+    },
+    {
+      value: "mai",
+      label: "Maithili",
+      originalLabel: "मैथिली"
+    },
+    {
+      value: "mg",
+      label: "Malagasy",
+      originalLabel: "Malagasy"
+    },
+    {
+      value: "ms",
+      label: "Malay",
+      originalLabel: "bahasa Malaysia"
+    },
+    {
+      value: "ml",
+      label: "Malayalam",
+      originalLabel: "മലയാളം"
+    },
+    {
+      value: "mt",
+      label: "Maltese",
+      originalLabel: "Malti"
+    },
+    {
+      value: "mi",
+      label: "Maori",
+      originalLabel: "Māori"
+    },
+    {
+      value: "mr",
+      label: "Marathi",
+      originalLabel: "मराठी"
+    },
+    {
+      value: "mni-Mtei",
+      label: "Meiteilon (Manipuri)",
+      originalLabel: "ꯃꯤꯇꯩꯂꯣꯟ (ꯃꯤꯇꯩ ꯃꯌꯦꯛ)"
+    },
+    {
+      value: "lus",
+      label: "Mizo",
+      originalLabel: "Mizo"
+    },
+    {
+      value: "mn",
+      label: "Mongolian",
+      originalLabel: "монгол"
+    },
+    {
+      value: "my",
+      label: "Myanmar",
+      originalLabel: "မြန်မာ"
+    },
+    {
+      value: "ne",
+      label: "Nepali",
+      originalLabel: "नेपाली"
+    },
+    {
+      value: "no",
+      label: "Norwegian",
+      originalLabel: "norsk"
+    },
+    {
+      value: "or",
+      label: "Odia (Oriya)",
+      originalLabel: "ଓଡ଼ିଆ"
+    },
+    {
+      value: "om",
+      label: "Oromo",
+      originalLabel: "Oromoo"
+    },
+    {
+      value: "ps",
+      label: "Pashto",
+      originalLabel: "پښتو"
+    },
+    {
+      value: "fa",
+      label: "Persian",
+      originalLabel: "فارسی"
+    },
+    {
+      value: "pl",
+      label: "Polish",
+      originalLabel: "polski"
+    },
+    {
+      value: "pt",
+      label: "Portuguese",
+      originalLabel: "português"
+    },
+    {
+      value: "pa",
+      label: "Punjabi",
+      originalLabel: "ਪੰਜਾਬੀ"
+    },
+    {
+      value: "qu",
+      label: "Quechua",
+      originalLabel: "Runasimi"
+    },
+    {
+      value: "ro",
+      label: "Romanian",
+      originalLabel: "română"
+    },
+    {
+      value: "ru",
+      label: "Russian",
+      originalLabel: "русский"
+    },
+    {
+      value: "sm",
+      label: "Samoan",
+      originalLabel: "Samoan"
+    },
+    {
+      value: "sa",
+      label: "Sanskrit",
+      originalLabel: "संस्कृत भाषा"
+    },
+    {
+      value: "gd",
+      label: "Scots Gaelic",
+      originalLabel: "Gàidhlig"
+    },
+    {
+      value: "nso",
+      label: "Sepedi",
+      originalLabel: "Northern Sotho"
+    },
+    {
+      value: "sr",
+      label: "Serbian",
+      originalLabel: "српски"
+    },
+    {
+      value: "st",
+      label: "Sesotho",
+      originalLabel: "Sesotho"
+    },
+    {
+      value: "sn",
+      label: "Shona",
+      originalLabel: "chiShona"
+    },
+    {
+      value: "sd",
+      label: "Sindhi",
+      originalLabel: "سنڌي"
+    },
+    {
+      value: "si",
+      label: "Sinhala",
+      originalLabel: "සිංහල"
+    },
+    {
+      value: "sk",
+      label: "Slovak",
+      originalLabel: "slovenčina"
+    },
+    {
+      value: "sl",
+      label: "Slovenian",
+      originalLabel: "slovenščina"
+    },
+    {
+      value: "so",
+      label: "Somali",
+      originalLabel: "Soomaali"
+    },
+    {
+      value: "es",
+      label: "Spanish",
+      originalLabel: "español"
+    },
+    {
+      value: "su",
+      label: "Sundanese",
+      originalLabel: "Basa Sunda"
+    },
+    {
+      value: "sw",
+      label: "Swahili",
+      originalLabel: "Kiswahili"
+    },
+    {
+      value: "sv",
+      label: "Swedish",
+      originalLabel: "svenska"
+    },
+    {
+      value: "tg",
+      label: "Tajik",
+      originalLabel: "тоҷикӣ"
+    },
+    {
+      value: "ta",
+      label: "Tamil",
+      originalLabel: "தமிழ்"
+    },
+    {
+      value: "tt",
+      label: "Tatar",
+      originalLabel: "татар"
+    },
+    {
+      value: "te",
+      label: "Telugu",
+      originalLabel: "తెలుగు"
+    },
+    {
+      value: "th",
+      label: "Thai",
+      originalLabel: "ไทย"
+    },
+    {
+      value: "ti",
+      label: "Tigrinya",
+      originalLabel: "ትግርኛ"
+    },
+    {
+      value: "ts",
+      label: "Tsonga",
+      originalLabel: "Tsonga"
+    },
+    {
+      value: "tr",
+      label: "Turkish",
+      originalLabel: "Türkçe"
+    },
+    {
+      value: "tk",
+      label: "Turkmen",
+      originalLabel: "türkmen dili"
+    },
+    {
+      value: "ak",
+      label: "Twi",
+      originalLabel: "Akan"
+    },
+    {
+      value: "uk",
+      label: "Ukrainian",
+      originalLabel: "українська"
+    },
+    {
+      value: "ur",
+      label: "Urdu",
+      originalLabel: "اردو"
+    },
+    {
+      value: "ug",
+      label: "Uyghur",
+      originalLabel: "ئۇيغۇرچە"
+    },
+    {
+      value: "uz",
+      label: "Uzbek",
+      originalLabel: "o‘zbek"
+    },
+    {
+      value: "vi",
+      label: "Vietnamese",
+      originalLabel: "Tiếng Việt"
+    },
+    {
+      value: "cy",
+      label: "Welsh",
+      originalLabel: "Cymraeg"
+    },
+    {
+      value: "xh",
+      label: "Xhosa",
+      originalLabel: "IsiXhosa"
+    },
+    {
+      value: "yi",
+      label: "Yiddish",
+      originalLabel: "ייִדיש"
+    },
+    {
+      value: "yo",
+      label: "Yoruba",
+      originalLabel: "Èdè Yorùbá"
+    },
+    {
+      value: "zu",
+      label: "Zulu",
+      originalLabel: "isiZulu"
+    }
   ];
 
   const [isNotesLoading, setIsNotesLoading] = useState(false);

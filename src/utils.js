@@ -182,3 +182,5 @@ export function htmlToPlainText(input) {
 
     return tempDiv.textContent.trim();
 }
+
+export const isRtlLanguage = (langCode) => ["ar", "iw", "fa", "ur", "ps", "sd"].includes(langCode);

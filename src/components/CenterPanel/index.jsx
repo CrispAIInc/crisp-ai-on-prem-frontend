@@ -7,7 +7,7 @@ import "react-pdf/dist/Page/TextLayer.css";
 import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
 import TextSkeleton from '../Skeletons/Base/TextSkeleton.jsx';
 import AddIcon from '@mui/icons-material/Add';
-import { generateRandomHash } from '../../utils.js';
+import { generateRandomHash, isRtlLanguage } from '../../utils.js';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 
 const CenterPanel = ({ workspaceContainer }) => {
@@ -92,7 +92,7 @@ const CenterPanel = ({ workspaceContainer }) => {
         // setActiveView('note');
     };
 
-    const isRtlLanguage = (langCode) => ["ar", "iw", "fa", "ur", "ps", "sd"].includes(langCode);
+    // const isRtlLanguage = (langCode) => ["ar", "iw", "fa", "ur", "ps", "sd"].includes(langCode);
 
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>

@@ -418,7 +418,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     setIsFetchingRefs(false);
   };
 
-  const [dropdownText, setDropdownText] = useState("");
   const handleLanguageChange = async (chosenLanguage) => {
     try {
       setSelectedLanguage(chosenLanguage);
@@ -431,11 +430,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           responses: originalResponses,
           language: chosenLanguage,
           combinedSummary,
-          dropdownText: languageOptions.find(l => l.value === chosenLanguage)?.label
         })
       );
-
-      setDropdownText(data.translated_dropdownText);
 
       let userIndex = 0;
       let botIndex = 0;
@@ -774,8 +770,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           <CustomSelectTwo
             options={languageOptions}
             onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage.value)}
-            placeholder={`${dropdownText || 'Select a language'}`}
-            dropdownText={dropdownText}
+            placeholder='Select a language'
           />
         </div>
 

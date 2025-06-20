@@ -453,7 +453,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 </div>}
                 <>
                   {translatedResource?.transcription?.content !== undefined && <>
-                    <Accordion heading={translatedResource?.transcription?.title}>
+                    <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.transcription?.title}>
                       <p
                         className={`text-md ${theme === "light"
                           ? "text-textColor-300"
@@ -489,7 +489,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                   </>}
                   {translatedResource?.summary?.content !== undefined &&
                     <>
-                      <Accordion heading={translatedResource?.summary?.title}>
+                      <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.summary?.title}>
                         <p
                           className={`text-md ${theme === "light"
                             ? "text-textColor-300"
@@ -502,7 +502,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
 
                   {/* {translatedResource?.topic_summaries?.content !== undefined &&
                     <>
-                      <Accordion heading={translatedResource?.topic_summaries?.title}>
+                      <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.topic_summaries?.title}>
                         <p
                           className={`text-md ${theme === "light"
                             ? "text-textColor-300"
@@ -515,7 +515,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
-                {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
+                {translatedResource?.chapters?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.chapters?.title}>
                   {/* {isMobile ? ( */}
                   <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
                   {/* ) : (
@@ -527,7 +527,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 </Accordion>}
 
 
-                {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
+                {translatedResource?.highlights?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.highlights?.title}>
                   <div>
                     {
                       translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
@@ -540,7 +540,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 </Accordion>}
 
                 {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.keywords?.title}>
+                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
@@ -554,7 +554,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
 
 
                 {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
-                  <Faqs heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
+                  <Faqs chosenLanguage={chosenLanguage} heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
                 </div>}
               </div>
             ) : (
@@ -631,7 +631,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 </div>}
 
                 {/* {translatedResource?.transcription?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.transcription?.title}>
+                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.transcription?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
@@ -644,7 +644,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                   </Accordion>
                 </>} */}
                 {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.summary?.title}>
+                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.summary?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
@@ -655,7 +655,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                     ></p>
                   </Accordion>
                 </>}
-                {translatedResource?.chapters?.content !== undefined && <Accordion heading={translatedResource?.chapters?.title}>
+                {translatedResource?.chapters?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.chapters?.title}>
                   {/* {isMobile ? ( */}
                   <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
                   {/* ) : (
@@ -666,7 +666,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                   )} */}
                 </Accordion>}
 
-                {translatedResource?.highlights?.content !== undefined && <Accordion heading={translatedResource?.highlights?.title}>
+                {translatedResource?.highlights?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.highlights?.title}>
                   <div>
                     {
                       translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
@@ -679,7 +679,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 </Accordion>}
 
                 {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.keywords?.title}>
+                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
@@ -695,11 +695,11 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
 
 
                 {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
-                  <Faqs heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
+                  <Faqs chosenLanguage={chosenLanguage} heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
                 </div>}
 
                 {/* {translatedResource?.transcription?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.transcription?.title}>
+                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.transcription?.title}>
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
@@ -712,7 +712,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 </>} */}
                 {/* 
                 {translatedResource?.keywords?.content !== undefined && (<>
-                  <Accordion heading={translatedResource?.keywords?.title}>
+                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
@@ -768,7 +768,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                   />
                 </div>}
                 {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.summary?.title} >
+                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.summary?.title} >
                     <p
                       className={`text-md ${theme === "light"
                         ? "text-textColor-300"
@@ -782,7 +782,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 </>}
 
                 {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion heading={translatedResource?.keywords?.title}>
+                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.keywords?.title}>
                     <p
                       className={`flex items-center gap-2 flex-wrap`}
                     >
