@@ -40,7 +40,7 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
     }
 
     function toggleAllOptions() {
-        if (selectedOptions.length === options.length - 1) {
+        if (selectedOptions.length === options.length) {
             setSelectedOptions([]);
         } else {
             setSelectedOptions(options.filter(option => option.id !== 'knowledgeGraph'));
@@ -85,7 +85,7 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
                         <div className={`absolute z-10 w-full h-64 overflow-y-auto mt-2 rounded-md shadow-lg  ${theme === 'light' ? 'bg-white' : 'bg-[#382746] text-textColor-100'}`}>
                             <div onClick={toggleAllOptions} className={`cursor-pointer border-b border-b-light-hover-200 p-2 active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'} flex items-center gap-2`}>
                                 {/* checkbox for selecting and unselecting all options */}
-                                <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length - 1} />
+                                <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length} />
                                 <span className="text-sm font-bold select-none">Select all metadata</span>
                             </div>
                             {
