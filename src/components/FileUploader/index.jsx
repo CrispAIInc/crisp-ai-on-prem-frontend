@@ -61,7 +61,7 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
             return (
                 <div className="flex flex-col items-center justify-center w-full h-32 bg-gray-200 rounded-md">
                     <p className="font-bold text-red-500">PDF</p>
-                    <p className="text-xs text-center text-gray-500">{file.name}</p>
+                    <p className="text-xs text-center text-gray-500 break-all">{file.name}</p>
                 </div>
             );
         } else if (
@@ -71,7 +71,7 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
             return (
                 <div className="flex flex-col items-center justify-center w-full h-32 bg-blue-200 rounded-md">
                     <p className="font-bold text-blue-700">DOC</p>
-                    <p className="text-xs text-center text-gray-500">{file.name}</p>
+                    <p className="text-xs text-center text-gray-500 break-all">{file.name}</p>
                 </div>
             );
         } else {
