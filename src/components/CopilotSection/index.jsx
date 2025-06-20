@@ -430,7 +430,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           responses: originalResponses,
           language: chosenLanguage,
           combinedSummary,
-          dropdownText: languageOptions.find(l => l.value === selectedLanguage)?.label
+          dropdownText: languageOptions.find(l => l.value === chosenLanguage)?.label
         })
       );
 
