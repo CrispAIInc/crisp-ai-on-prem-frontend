@@ -21,6 +21,7 @@ import BaseHeading from '../BaseHeading';
 import { generateRandomHash, htmlToPlainText } from '../../utils';
 import StoriesEditor from '../StoriesEditor';
 import LoadingSpinner from '../LoadingSpinner';
+import MediaEntertainment from '../MediaEntertainment';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -1083,6 +1084,8 @@ const ChatPanel = () => {
                 <MetadataGen />
               ) : actualTab === "genStories" ? (
                 <StoriesEditor generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
+              ) : actualTab === "genMedia" ? (
+                <MediaEntertainment />
               ) : null
             }
           </div>}

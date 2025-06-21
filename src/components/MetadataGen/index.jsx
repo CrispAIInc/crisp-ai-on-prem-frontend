@@ -4,6 +4,7 @@ import MetadataOptions from "../MetadataOptions";
 import { MainContext } from '../../contexts/mainContext';
 import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 import makeApiRequest from '../../api';
 
@@ -151,7 +152,7 @@ function MetadataGen() {
                 onMouseLeave={handleMouseLeave}>
                 <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
                     disabled={isLoading || displayedSources.filter(item => item.is_selected).length === 0} onClick={generateMetadata}>
-                    {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate'}
+                    {isLoading ? <><AutoAwesomeIcon color="primary" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </button>
                 {tooltipVisible && (
                     <p

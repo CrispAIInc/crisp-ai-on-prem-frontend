@@ -5,7 +5,7 @@ import { MainContext } from '../../contexts/mainContext';
 
 export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOptions, options }) {
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-    const { theme, sourcesTobeCommited } = useContext(MainContext);
+    const { theme, knowledgeBase } = useContext(MainContext);
 
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
     const dropdownRef = useRef(null);
@@ -30,9 +30,10 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
     const toggleOption = (item) => {
         setSelectedOptions((prev) =>
             prev.find(p => p?.source_path === item?.source_path)
-                ? prev.filter((option) => option?.source_path !== item?.source_path)
-                : [...prev, item]
+                ? []
+                : [item]
         );
+        setIsDropdownMenuOpen(false);
     };
 
     function handleOpenDropdownMenu() {
@@ -40,24 +41,26 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
         setIsDropdownMenuOpen(!isDropdownMenuOpen);
     }
 
-    function toggleAllOptions() {
-        if (selectedOptions.length === options.length) {
-            setSelectedOptions([]);
-        } else {
-            setSelectedOptions(options);
-        }
-    }
+    // function toggleAllOptions() {
+    //     if (selectedOptions.length === options.length) {
+    //         setSelectedOptions([]);
+    //     } else {
+    //         setSelectedOptions(options);
+    //     }
+    // }
 
     return (
         <div className="relative z-20">
-            <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>source to use<span className="text-xs"> (min. 1 source)</span></label>
+            <label className={`font-semibold ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>source to use
+                {/* <span className="text-xs"> (min. 1 source)</span> */}
+            </label>
             <div className="relative inline-block w-full" ref={dropdownRef}>
                 {/* upper section */}
                 <div onClick={handleOpenDropdownMenu} className={`rounded-md flex items-center justify-between h-10 py-4 pl-1 !border !border-slate-400 cursor-pointer relative`}>
                     {/* <div className="absolute inset-y-0 left-0 w-8 pointer-events-none z-3 bg-gradient-to-r from-white to-transparent"></div> */}
                     <div className="relative flex items-center flex-1 gap-1 overflow-x-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                         {
-                            selectedOptions.length === 0 && <p className="text-slate-400">Select sources</p>
+                            selectedOptions.length === 0 && <p className="text-slate-400">Select a source</p>
                         }
                         {
                             selectedOptions.map((option) => <div key={option?.source_path} className='flex items-center gap-2'>
@@ -89,13 +92,12 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
                     isDropdownMenuOpen && (
                         <div className={`absolute z-10 w-full h-64 overflow-y-auto mt-2 rounded-md shadow-lg  ${theme === 'light' ? 'bg-white' : 'bg-[#382746] text-textColor-100'}`}>
                             {
-                                sourcesTobeCommited?.length > 0 ? (
+                                knowledgeBase?.length > 0 ? (
                                     <>
-                                        <div onClick={toggleAllOptions} className={`cursor-pointer border-b border-b-light-hover-200 p-2 active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'} flex items-center gap-2`}>
-                                            {/* checkbox for selecting and unselecting all options */}
+                                        {/* <div onClick={toggleAllOptions} className={`cursor-pointer border-b border-b-light-hover-200 p-2 active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'} flex items-center gap-2`}>
                                             <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length} />
                                             <span className="text-sm font-bold select-none">Select all sources</span>
-                                        </div>
+                                        </div> */}
                                         {
                                             options.map((option) => {
                                                 return (
@@ -110,7 +112,7 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
                                     </>
                                 ) : (
                                     <div className="p-2">
-                                        <p className="text-sm text-center text-slate-400">No selected sources available</p>
+                                        <p className="text-sm text-center text-slate-400">No source available</p>
                                     </div>
                                 )
                             }
@@ -118,7 +120,7 @@ export default function SelectedSourcesDropdown({ selectedOptions, setSelectedOp
                     )
                 }
             </div>
-            <label className={`text-xs mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>{selectedOptions.length} source(s) selected</label>
+            {/* <label className={`text-xs mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>{selectedOptions.length} source(s) selected</label> */}
         </div>
     );
 }
