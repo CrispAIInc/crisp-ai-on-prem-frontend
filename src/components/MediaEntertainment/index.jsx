@@ -35,11 +35,11 @@ function MediaEntertainment() {
     async function generateMedia() {
         try {
             setIsLoading(true);
-            const res = await makeApiRequest('/generate-reel', JSON.stringify({
+            const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
                 filename: selectedSourcesToGen[0].source_path,
                 category: selectedSourcesToGen[0].category,
                 context
-            }), 'POST');
+            }));
 
             console.log(res);
 
