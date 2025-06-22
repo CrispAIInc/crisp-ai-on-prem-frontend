@@ -105,7 +105,7 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
                 {!isFileUploading ? <>
                     <p className="font-medium">Click to browse files</p>
                     <p className="mt-1 text-sm">
-                        Supported: Images, Videos, PDFs
+                        Supported: Images, Videos, PDFs | File size ≤2GB
                     </p>
                 </> : <p className="text-sm">Processing source upload...</p>
                 }
