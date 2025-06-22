@@ -4,7 +4,8 @@ import { MainContext } from '../../contexts/mainContext';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 import SelectedSourcesDropdown from "../SelectedSourcesDropdown";
-import LoadingSpinner from '../LoadingSpinner';
+import makeApiRequest from '../../api';
+import toast from 'react-simple-toasts';
 
 
 function MediaEntertainment() {
@@ -31,16 +32,23 @@ function MediaEntertainment() {
     const handleMouseEnter = () => selectedSourcesToGen.length === 0 && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
-    function generateMedia() {
+    async function generateMedia() {
         try {
             setIsLoading(true);
-            // Api req...
+            const res = await makeApiRequest('/generate-reel', JSON.stringify({
+                filename: selectedSourcesToGen[0].source_path,
+                category: selectedSourcesToGen[0].category,
+                context
+            }), 'POST');
 
-            // show video here or in another tab or something
+            console.log(res);
+
+            //TODO show video here or in another tab or something
         } catch (error) {
             console.log(error);
+            toast(error?.response?.data?.error || "Something went wrong", { className: 'p-2 rounded-md z-20', theme });
         } finally {
-            // setIsLoading(false);
+            setIsLoading(false);
         }
     }
 
