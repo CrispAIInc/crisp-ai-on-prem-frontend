@@ -440,6 +440,7 @@ const ChatPanel = () => {
     setSelectedStory(story);
     setGeneratedStory(story);
     setIsNewStory(false);
+    setActualTab("lkjljkl");
     // setShowEditor(true);
     setShowStoriesEditor(true);
   };
@@ -1075,12 +1076,12 @@ const ChatPanel = () => {
         <div className='flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-          <div>
+          {actualTab === null && <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-4 flex-items">
               {[{ id: "genMetadata", title: "Generate metadata" }, { id: "genStories", title: "Generate stories" }].map(item => <h6 onClick={() => handleTabClick(item.title)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
-          </div>
+          </div>}
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
             {
               actualTab === "genMetadata" ? (

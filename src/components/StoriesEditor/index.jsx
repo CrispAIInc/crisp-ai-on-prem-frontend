@@ -298,9 +298,11 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
 
                 {story !== null && <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                     }`}>
-                    <h3 className="mb-2 italic text-center">{story.story_name}</h3>
+                    {/* <h3 className="mb-2 italic text-center">{story.story_name}</h3> */}
                     {
-                        story?.text?.map(section => (
+                        (story.text.length === 0 && story?.content !== "") ? (
+                            <p dangerouslySetInnerHTML={{ __html: story?.content }}></p>
+                        ) : story?.text?.map(section => (
                             <div key={section.id}>
                                 <h4>{section.outline.name}</h4>
                                 {
