@@ -6,6 +6,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import SelectedSourcesDropdown from "../SelectedSourcesDropdown";
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
+import MetadataVerbosity from '../MetadataVerbosity';
 
 
 function MediaEntertainment() {
@@ -16,6 +17,11 @@ function MediaEntertainment() {
     const [context, setContext] = useState('');
 
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState([]);
+
+    const [verbosityValue, setVerbosityValue] = useState('low');
+    function handleChange(event) {
+        setVerbosityValue(event.target.value);
+    }
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -68,6 +74,9 @@ function MediaEntertainment() {
 
             {/* Source to generate reel */}
             {/* <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={knowledgeBase} /> */}
+
+            {/* verbosity */}
+            <MetadataVerbosity verbosityValue={verbosityValue} setVerbosityValue={handleChange} disabilityLevel={2} />
 
             {/* generate button */}
             <div className='relative inline-block' onMouseMove={handleMouseMove}

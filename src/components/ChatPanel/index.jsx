@@ -1075,7 +1075,7 @@ const ChatPanel = () => {
           <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-4 flex-items">
-              {[{ id: "genMetadata", title: "Metadata" }, { id: "genStories", title: "Stories" }, { id: "genMedia", title: "Media & entertainment" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
+              {[{ id: "genMetadata", title: "Metadata" }, { id: "genStories", title: "Stories" }, { id: "genMedia", title: "Sizzle & reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>

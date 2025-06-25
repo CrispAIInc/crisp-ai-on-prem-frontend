@@ -7,7 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
-export default function MetadataVerbosity({ verbosityValue, setVerbosityValue }) {
+export default function MetadataVerbosity({ verbosityValue, setVerbosityValue, disabilityLevel = 10 }) {
 
     const { theme } = useContext(MainContext);
 
@@ -21,9 +21,9 @@ export default function MetadataVerbosity({ verbosityValue, setVerbosityValue })
                 value={verbosityValue}
                 onChange={setVerbosityValue}
             >
-                <FormControlLabel value="low" control={<Radio />} label="Low" className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
-                <FormControlLabel value="medium" control={<Radio />} label="Medium" className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
-                <FormControlLabel value="high" control={<Radio />} label="High" className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                {["low", "medium", "high"].map((level, index) => (
+                    <FormControlLabel key={index} disabled={index >= disabilityLevel} value={level} control={<Radio />} label={level} className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                ))}
             </RadioGroup>
         </FormControl>
     );
