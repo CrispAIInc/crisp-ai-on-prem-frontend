@@ -10,7 +10,7 @@ import toast from 'react-simple-toasts';
 
 function MediaEntertainment() {
 
-    const { theme, knowledgeBase } = useContext(MainContext);
+    const { theme, knowledgeBase, displayedSources } = useContext(MainContext);
 
     const [, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
@@ -36,8 +36,7 @@ function MediaEntertainment() {
         try {
             setIsLoading(true);
             const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
-                filename: selectedSourcesToGen[0].source_path,
-                category: selectedSourcesToGen[0].category?.filter(item => item !== 'all')[0],
+                sources: displayedSources.filter(item => item.is_selected).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
                 context
             }));
 
@@ -68,7 +67,7 @@ function MediaEntertainment() {
             </div>
 
             {/* Source to generate reel */}
-            <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={knowledgeBase} />
+            {/* <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={knowledgeBase} /> */}
 
             {/* generate button */}
             <div className='relative inline-block' onMouseMove={handleMouseMove}
