@@ -797,7 +797,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
       </section>
 
       <section className="flex items-center gap-1 mx-2 my-3 user-select-none">
-        <span
+        {/* <span
           className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
             }`}
         >
@@ -827,7 +827,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
               </span>
             ))
           )}
-        </div>
+        </div> */}
         {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
       </section>
 
@@ -993,7 +993,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                           <AutoAwesomeIcon color="primary" className="animate-customPulse" />
                         ) : null}
 
-                        <div className="flex flex-wrap items-center gap-1">
+                        {/* <div className="flex flex-wrap items-center gap-1">
                           <span
                             className={`text-xs ${theme === "light"
                               ? "text-textColor-300"
@@ -1013,7 +1013,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                               {item.toUpperCase()}
                             </span>
                           ))}
-                        </div>
+                        </div> */}
                       </>
                     )}
                   </div>
