@@ -1,22 +1,24 @@
 import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
-import Slider from '../Slider';
+// import Slider from '../Slider';
 import MetadataVerbosity from '../MetadataVerbosity';
-import { useResizableSidebar } from '../../hooks/useResizableSidebar';
+// import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 
-export default function MetadataAdvancedParams({ temperatureValue,
-    setTemperatureValue,
-    handleTemperatureChange,
+export default function MetadataAdvancedParams({
+    // temperatureValue,
+    // setTemperatureValue,
+    // handleTemperatureChange,
     verbosityValue,
     handleChange, }) {
 
-    const { sidebarWidth, maxWidth } = useResizableSidebar(200, false);
+    // const { sidebarWidth, maxWidth } = useResizableSidebar(200, false);
 
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
     const { theme } = useContext(MainContext);
-
+    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
 
     return (
@@ -65,11 +67,18 @@ export default function MetadataAdvancedParams({ temperatureValue,
 
                 {/* verbosity */}
                 <div className={`flex flex-col gap-0`}>
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                         <p className={`select-none ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Verbosity</p>
-                        {/* <InfoTooltip tooltipText="Verbosity controls response length: higher gives more detail, lower gives less." /> */}
+                        <InfoTooltip tooltipText="Verbosity controls response length: higher gives more detail, lower gives less." />
+                    </div> */}
+                    <div>
+                        <label className={` w-fit !relative ${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium flex items-center gap-1`}>
+                            Verbosity
+                            <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className='!relative !w-5' style={{ color: `${theme === 'light' ? '#777' : '#ABAEB4'}` }} />
+                            {isInfoTooltipOpen && <div className="absolute right-0 p-2 bg-background_workspace shadow-[0px_0px_30px_-2px_rgba(82,79,79,0.6)] rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full">Choose the desired <span className="text-primary">quality</span> and <span className="text-primary">complexity</span> for your generated metadata. Higher quality may increase generation time.</div>}
+                        </label>
+                        <MetadataVerbosity verbosityValue={verbosityValue} setVerbosityValue={handleChange} />
                     </div>
-                    <MetadataVerbosity verbosityValue={verbosityValue} setVerbosityValue={handleChange} />
                 </div>
             </div>
         </div>
