@@ -73,7 +73,7 @@ function MediaEntertainment() {
             <div className="relative w-full mt-6">
                 <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel topic</label>
                 <textarea
-                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     rows="3"
                     placeholder='What do you want your reel to be about?'
                     onFocus={() => setContextFocused(true)}
@@ -88,7 +88,7 @@ function MediaEntertainment() {
                 <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel title</label>
                 <input
                     className={`${theme === 'dark' && 'text-textColor-100'
-                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !outline-none w-full`}
+                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} !outline-none w-full`}
                     placeholder="Write a title for the reel"
                     value={reelTitle}
                     onChange={(e) => setReelTitle(e.target.value)}
