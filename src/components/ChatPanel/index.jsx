@@ -1069,7 +1069,7 @@ const ChatPanel = () => {
           </div>
         </div>
       ) : (
-        <div className='flex flex-col h-full gap-2 overflow-y-hidden'>
+        <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
           <div>
