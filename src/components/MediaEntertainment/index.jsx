@@ -19,6 +19,8 @@ function MediaEntertainment() {
 
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState([]);
 
+    const [videoUrl, setVideoUrl] = useState("http://localhost:5000/api/video/all/videoplayback.mp4");
+    const [reelTitle, setReelTitle] = useState('the height should be taller than 384px at a certain width, the video will be cut off,');
     const [isReelOpen, setIsReelOpen] = useState(true);
 
     const [verbosityValue, setVerbosityValue] = useState('low');
@@ -46,12 +48,16 @@ function MediaEntertainment() {
             setIsLoading(true);
             const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
                 sources: displayedSources.filter(item => item.is_selected).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
-                context
+                context,
+                verbosityValue
             }));
 
             console.log(res);
 
             //TODO show video here or in another tab or something
+            setVideoUrl(res.videoUrl);
+            setReelTitle(res.title);
+            setIsReelOpen(true);
         } catch (error) {
             console.log(error);
             toast(error?.response?.data?.error || "Something went wrong", { className: 'p-2 rounded-md z-20', theme });
@@ -100,7 +106,7 @@ function MediaEntertainment() {
                 )}
             </div>
 
-            {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} videoUrl="http://localhost:5000/api/video/all/videoplayback.mp4" />}
+            {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} videoUrl={videoUrl} videoTitle={reelTitle} />}
         </div>
     );
 }

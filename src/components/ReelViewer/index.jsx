@@ -5,7 +5,7 @@ import toast from 'react-simple-toasts';
 import { useContext } from 'react';
 import { ThemeContext } from '@emotion/react';
 
-function ReelViewer({ closeReel, videoUrl }) {
+function ReelViewer({ closeReel, videoUrl, videoTitle = "" }) {
 
     const { theme } = useContext(ThemeContext);
 
@@ -39,9 +39,12 @@ function ReelViewer({ closeReel, videoUrl }) {
         <div className="fixed top-0 left-0 z-50 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-75">
             {/* Reel viewer container */}
             <div className="relative w-full h-full max-w-sm overflow-hidden rounded-2xl max-h-screen-md aspect-w-10 aspect-h-15"> {/* Adjusted dimensions */}
-                <div className="absolute left-0 flex items-center justify-end w-full gap-2 p-1 top-8">
-                    <FileDownloadIcon className="p-2 z-50 !text-[30px] text-white rounded-full cursor-pointer bg-slate-500 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
-                    <CloseIcon className="p-2 z-50 !text-[30px] text-white rounded-full cursor-pointer bg-slate-500 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
+                <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
+                    <p className="!ml-3 truncate  text-white break-all text-md">{videoTitle}</p>
+                    <div className="flex items-center gap-2 !mr-2">
+                        <FileDownloadIcon className="p-2 z-50 !text-[30px] text-white rounded-full cursor-pointer bg-slate-500 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
+                        <CloseIcon className="p-2 z-50 !text-[30px] text-white rounded-full cursor-pointer bg-slate-500 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
+                    </div>
                 </div>
                 <ReactPlayer
                     id="react-player"
