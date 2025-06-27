@@ -759,7 +759,7 @@ const ChatPanel = () => {
       {showStoriesEditor && <StoriesEditor setShowStoriesEditor={setShowStoriesEditor} generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />}
 
       {/* Toggle button */}
-      <div className="absolute left-0 z-40 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md top-1.5 w-fit">
+      <div className="absolute left-0 z-10 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md top-1.5 w-fit">
         <button
           className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'} rotate-180`}
           onClick={handleSidebarToggle}

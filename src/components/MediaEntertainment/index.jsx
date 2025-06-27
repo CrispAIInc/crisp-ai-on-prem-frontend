@@ -20,7 +20,7 @@ function MediaEntertainment() {
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState([]);
 
     const [videoUrl, setVideoUrl] = useState("http://localhost:5000/api/video/all/videoplayback.mp4");
-    const [reelTitle, setReelTitle] = useState('the height should be taller than 384px at a certain width, the video will be cut off,');
+    const [reelTitle, setReelTitle] = useState('');
     const [isReelOpen, setIsReelOpen] = useState(true);
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
@@ -88,7 +88,7 @@ function MediaEntertainment() {
                 <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel title</label>
                 <input
                     className={`${theme === 'dark' && 'text-textColor-100'
-                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} !outline-none w-full`}
+                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
                     placeholder="Write a title for the reel"
                     value={reelTitle}
                     onChange={(e) => setReelTitle(e.target.value)}
