@@ -7,6 +7,7 @@ import SelectedSourcesDropdown from "../SelectedSourcesDropdown";
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 import MetadataVerbosity from '../MetadataVerbosity';
+import ReelViewer from '../ReelViewer';
 
 
 function MediaEntertainment() {
@@ -17,6 +18,8 @@ function MediaEntertainment() {
     const [context, setContext] = useState('');
 
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState([]);
+
+    const [isReelOpen, setIsReelOpen] = useState(true);
 
     const [verbosityValue, setVerbosityValue] = useState('low');
     function handleChange(event) {
@@ -96,6 +99,8 @@ function MediaEntertainment() {
                     </p>
                 )}
             </div>
+
+            {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} videoUrl="http://localhost:5000/api/video/all/videoplayback.mp4" />}
         </div>
     );
 }
