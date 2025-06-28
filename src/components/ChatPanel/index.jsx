@@ -1096,7 +1096,7 @@ const ChatPanel = () => {
               {/* <MetadataGen key={0} name="genMetadata" /> */}
               <div className="relative z-10 flex items-center gap-3">
                 {
-                  ["insights", "stories"].map((item, index) => <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''} font-extrabold italic !text-lg mb-3`} onClick={() => setCurrentTab(item)} />)
+                  ["insights", "stories", "reels"].map((item, index) => <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''} font-extrabold italic !text-lg mb-3`} onClick={() => setCurrentTab(item)} />)
                 }
               </div>
             </div>
@@ -1142,9 +1142,9 @@ const ChatPanel = () => {
                     }
                   </div>
                 </>
-                :
-                <>
-                  {/* <div
+                : currentTab === "stories" ?
+                  <>
+                    {/* <div
                     className={`mb-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
                       ? 'hover:bg-light-hover-100/30'
                       : 'hover:bg-light-hover-200/20'
@@ -1157,31 +1157,37 @@ const ChatPanel = () => {
                       New Story
                     </span>
                   </div> */}
-                  <div className="flex flex-col overflow-y-auto">
-                    {/* single note */}
-                    {
-                      stories?.map((story, index) => (
-                        <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
-                          ? 'hover:bg-light-hover-100/30'
-                          : 'hover:bg-light-hover-200/20'
-                          } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
-                          {
-                            hoveredStory === story?.story_id && (
-                              isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
-                                style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                className="cursor-pointermr-1"
-                              />
-                            )
-                          }
-                          <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                          <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                            }`}>{story.story_name}</p>
-                        </div>
-                      ))
-                    }
-                  </div>
-                </>
+                    <div className="flex flex-col overflow-y-auto">
+                      {/* single note */}
+                      {
+                        stories?.map((story, index) => (
+                          <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
+                            ? 'hover:bg-light-hover-100/30'
+                            : 'hover:bg-light-hover-200/20'
+                            } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
+                            {
+                              hoveredStory === story?.story_id && (
+                                isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                  onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
+                                  style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                  className="cursor-pointermr-1"
+                                />
+                              )
+                            }
+                            <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                            <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                              }`}>{story.story_name}</p>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </>
+                  :
+                  <>
+                    <div className="flex flex-col overflow-y-auto">
+                      hello reels
+                    </div>
+                  </>
             }
           </div>}
         </div>
