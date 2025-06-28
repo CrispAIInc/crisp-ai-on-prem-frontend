@@ -50,7 +50,6 @@ function MediaEntertainment() {
             const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
                 sources: displayedSources.filter(item => item.is_selected).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
                 context,
-                title: reelTitle,
                 verbosityValue
             }));
 
@@ -128,7 +127,7 @@ function MediaEntertainment() {
                 )}
             </div>
 
-            {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} videoUrl={videoUrl} videoTitle={reelTitle} />}
+            {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} videoUrl={videoUrl} reelTitle={reelTitle} setVideoUrl={setVideoUrl} setReelTitle={setReelTitle} />}
         </div>
     );
 }
