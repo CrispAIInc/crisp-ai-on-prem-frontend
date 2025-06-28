@@ -8,7 +8,7 @@ import { ThemeContext } from '@emotion/react';
 import makeApiRequest from '../../api';
 import LoadingSpinner from "../LoadingSpinner";
 
-function ReelViewer({ closeReel, videoUrl, setVideoUrl, reelTitle = "", setReelTitle }) {
+function ReelViewer({ closeReel, reel, setReel }) {
 
     const { theme } = useContext(ThemeContext);
 
@@ -23,7 +23,7 @@ function ReelViewer({ closeReel, videoUrl, setVideoUrl, reelTitle = "", setReelT
         e.stopPropagation();
         e.preventDefault();
         try {
-            const response = await fetch(videoUrl, { mode: 'cors' });
+            const response = await fetch(reel.reel_video_url, { mode: 'cors' });
             const blob = await response.blob();
             const blobUrl = window.URL.createObjectURL(blob);
 
@@ -40,20 +40,20 @@ function ReelViewer({ closeReel, videoUrl, setVideoUrl, reelTitle = "", setReelT
         }
     };
 
-    const handleSaveReel = async (e) => {
-        e.stopPropagation();
-        e.preventDefault();
+    // const handleSaveReel = async (e) => {
+    //     e.stopPropagation();
+    //     e.preventDefault();
 
-        try {
-            console.log('saving reel...');
-            setIsReelSaved(true);
-        } catch (e) {
-            toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-            setIsReelSaved(false);
-        }
+    //     try {
+    //         console.log('saving reel...');
+    //         setIsReelSaved(true);
+    //     } catch (e) {
+    //         toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
+    //         setIsReelSaved(false);
+    //     }
 
-        toast('Reel Saved!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-    };
+    //     toast('Reel Saved!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
+    // };
 
     const handleRemoveReel = async (e) => {
         e.stopPropagation();
@@ -61,10 +61,9 @@ function ReelViewer({ closeReel, videoUrl, setVideoUrl, reelTitle = "", setReelT
         setIsPending(true);
 
         try {
-            await makeApiRequest('/remove-reel', 'POST', JSON.stringify({ videoUrl }));
+            await makeApiRequest('/remove-reel/' + reel.id, 'DELETE');
             closeReel();
-            setVideoUrl('');
-            setReelTitle('');
+            setReel(null);
             toast('Reel deleted!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
         } catch (e) {
             toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
@@ -78,7 +77,7 @@ function ReelViewer({ closeReel, videoUrl, setVideoUrl, reelTitle = "", setReelT
             {/* Reel viewer container */}
             <div className="relative w-full h-full max-w-sm overflow-hidden rounded-2xl max-h-screen-md aspect-w-10 aspect-h-15"> {/* Adjusted dimensions */}
                 <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
-                    <p className="!ml-3 truncate  text-white break-all text-md !bg-[rgba(54, 54, 54, 0.35)]">{reelTitle}</p>
+                    <p className="!ml-3 truncate  text-white break-all text-md !bg-[rgba(54, 54, 54, 0.35)]">{reel.title}</p>
                     <div className="flex items-center gap-2 !mr-2">
                         <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500 right-5 top-10">
                             {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
@@ -94,7 +93,7 @@ function ReelViewer({ closeReel, videoUrl, setVideoUrl, reelTitle = "", setReelT
                     width="100%"
                     height="100%"
                     playing={true}
-                    url={videoUrl}
+                    url={reel.reel_video_url}
                     loop={true}
                     // onReady={() => setIsPlayerReady(true)}
                     // ref={player}

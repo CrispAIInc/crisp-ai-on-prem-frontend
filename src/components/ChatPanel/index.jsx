@@ -101,6 +101,7 @@ const ChatPanel = () => {
     setShowNoteDetails,
     activeTab,
     setActiveTab,
+    reels,
     notes,
     isNewNote,
     setNotes,
@@ -444,6 +445,14 @@ const ChatPanel = () => {
     // setShowEditor(true);
     setShowStoriesEditor(true);
   };
+  // const showSelectedReel = (e, reel, index) => {
+  //   // setNoteTitle(story?.story_name);
+  //   setSelectedStory(story);
+  //   setGeneratedStory(story);
+  //   setIsNewStory(false);
+  //   // setShowEditor(true);
+  //   setShowStoriesEditor(true);
+  // };
 
   const [actualTab, setActualTab] = useState(null); //genMetadata | genStories
 
@@ -502,6 +511,33 @@ const ChatPanel = () => {
       toast('An error occurred while deleting story', { className: 'p-2 rounded-md', theme });
     } finally {
       setIsStoryDeleting(false);
+    }
+  }
+
+  const [hoveredReel, setHoveredReel] = useState(null);
+  const handleMouseEnterReel = (id) => {
+    setHoveredReel(id);
+  };
+  const handleMouseLeaveReel = () => {
+    setHoveredReel(null);
+  };
+
+  const [isReelDeleting, setIsReelDeleting] = useState(false);
+  async function deleteReel(event, id) {
+    event.preventDefault();
+    setIsReelDeleting(true);
+    try {
+      await makeApiRequest(`/reels/${id}`, 'delete');
+
+      toast('Reel deleted successfully', { className: 'p-2 rounded-md', theme });
+      // fetch stories
+      const data = await makeApiRequest("/reels", "get");
+      setStories(data);
+    } catch (error) {
+      console.log(error);
+      toast('An error occurred while deleting reel', { className: 'p-2 rounded-md', theme });
+    } finally {
+      setIsReelDeleting(false);
     }
   }
 
@@ -1185,7 +1221,27 @@ const ChatPanel = () => {
                   :
                   <>
                     <div className="flex flex-col overflow-y-auto">
-                      hello reels
+                      {
+                        reels?.map((reel, index) => (
+                          <div key={reel.id} className={`flex gap-2 ${theme === 'light'
+                            ? 'hover:bg-light-hover-100/30'
+                            : 'hover:bg-light-hover-200/20'
+                            } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
+                            {
+                              hoveredReel === reel?.id && (
+                                isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                  onClick={(event) => { event.stopPropagation(); deleteReel(event, reel?.id); }}
+                                  style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                  className="cursor-pointermr-1"
+                                />
+                              )
+                            }
+                            <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                            <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                              }`}>{reel.title}</p>
+                          </div>
+                        ))
+                      }
                     </div>
                   </>
             }

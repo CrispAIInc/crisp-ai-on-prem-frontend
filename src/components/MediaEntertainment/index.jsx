@@ -3,7 +3,6 @@ import { MainContext } from '../../contexts/mainContext';
 
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import SelectedSourcesDropdown from "../SelectedSourcesDropdown";
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 import MetadataVerbosity from '../MetadataVerbosity';
@@ -12,15 +11,14 @@ import ReelViewer from '../ReelViewer';
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function MediaEntertainment() {
 
-    const { theme, knowledgeBase, displayedSources } = useContext(MainContext);
+    const { theme, displayedSources, setReels } = useContext(MainContext);
 
     const [, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
 
-    const [selectedSourcesToGen, setSelectedSourcesToGen] = useState([]);
-
-    const [videoUrl, setVideoUrl] = useState("http://localhost:5000/api/video/all/videoplayback.mp4");
-    const [reelTitle, setReelTitle] = useState('');
+    const [reel, setReel] = useState(null);
+    // const [videoUrl, setVideoUrl] = useState("http://localhost:5000/api/video/all/videoplayback.mp4");
+    // const [reelTitle, setReelTitle] = useState('');
     const [isReelOpen, setIsReelOpen] = useState(false);
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
@@ -50,15 +48,21 @@ function MediaEntertainment() {
             const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
                 sources: displayedSources.filter(item => item.is_selected).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
                 context,
+                title: reel.title,
                 verbosityValue
             }));
 
             console.log(res);
 
+            setReel({ ...res, reel_video_url: `${API_ENDPOINT}/${res.reel_video_url}` });
+
             //TODO show video here or in another tab or something
-            setVideoUrl(`${API_ENDPOINT}/${res.reel_video_url}`);
-            setReelTitle(res.title);
+            // setVideoUrl(`${API_ENDPOINT}/${res.reel_video_url}`);
+            // setReelTitle(res.title);
             setIsReelOpen(true);
+
+            const data = await makeApiRequest("/reels", "get");
+            setReels(data);
         } catch (error) {
             console.log(error);
             toast(error?.response?.data?.error || "Something went wrong", { className: 'p-2 rounded-md z-20', theme });
@@ -90,8 +94,8 @@ function MediaEntertainment() {
                     className={`${theme === 'dark' && 'text-textColor-100'
                         } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
                     placeholder="Write a title for the reel"
-                    value={reelTitle}
-                    onChange={(e) => setReelTitle(e.target.value)}
+                    value={reel.title}
+                    onChange={(e) => setReel(prev => ({ ...prev, title: e.target.value }))}
                 />
             </div>
 
@@ -127,7 +131,7 @@ function MediaEntertainment() {
                 )}
             </div>
 
-            {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} videoUrl={videoUrl} reelTitle={reelTitle} setVideoUrl={setVideoUrl} setReelTitle={setReelTitle} />}
+            {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} reel={reel} setReel={setReel} />}
         </div>
     );
 }
