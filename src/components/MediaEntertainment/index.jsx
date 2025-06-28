@@ -50,6 +50,7 @@ function MediaEntertainment() {
             const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
                 sources: displayedSources.filter(item => item.is_selected).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
                 context,
+                title: reelTitle,
                 verbosityValue
             }));
 
