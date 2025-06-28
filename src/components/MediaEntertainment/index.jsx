@@ -9,7 +9,7 @@ import toast from 'react-simple-toasts';
 import MetadataVerbosity from '../MetadataVerbosity';
 import ReelViewer from '../ReelViewer';
 
-
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function MediaEntertainment() {
 
     const { theme, knowledgeBase, displayedSources } = useContext(MainContext);
@@ -21,7 +21,7 @@ function MediaEntertainment() {
 
     const [videoUrl, setVideoUrl] = useState("http://localhost:5000/api/video/all/videoplayback.mp4");
     const [reelTitle, setReelTitle] = useState('');
-    const [isReelOpen, setIsReelOpen] = useState(true);
+    const [isReelOpen, setIsReelOpen] = useState(false);
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
     const [verbosityValue, setVerbosityValue] = useState('low');
@@ -56,7 +56,7 @@ function MediaEntertainment() {
             console.log(res);
 
             //TODO show video here or in another tab or something
-            setVideoUrl(res.videoUrl);
+            setVideoUrl(`${API_ENDPOINT}/${res.reel_video_url}`);
             setReelTitle(res.title);
             setIsReelOpen(true);
         } catch (error) {
