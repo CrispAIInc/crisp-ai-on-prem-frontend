@@ -40,7 +40,7 @@ function ReelViewer({ closeReel, videoUrl, videoTitle = "" }) {
             {/* Reel viewer container */}
             <div className="relative w-full h-full max-w-sm overflow-hidden rounded-2xl max-h-screen-md aspect-w-10 aspect-h-15"> {/* Adjusted dimensions */}
                 <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
-                    <p className="!ml-3 truncate  text-white break-all text-md">{videoTitle}</p>
+                    <p className="!ml-3 truncate  text-white break-all text-md bg-[rgba(54, 54, 54, 0.35)]">{videoTitle}</p>
                     <div className="flex items-center gap-2 !mr-2">
                         <FileDownloadIcon className="p-2 z-50 !text-[30px] text-white rounded-full cursor-pointer bg-slate-500 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
                         <CloseIcon className="p-2 z-50 !text-[30px] text-white rounded-full cursor-pointer bg-slate-500 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
