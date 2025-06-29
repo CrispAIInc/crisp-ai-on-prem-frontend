@@ -86,11 +86,11 @@ function ReelViewer({ closeReel, reel, setReels }) {
                 <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
                     <p className="!ml-3 truncate  text-white break-all text-md !bg-slate-500/40 px-2 py-1 rounded-md">{reel.title}</p>
                     <div className="flex items-center gap-2 !mr-2">
-                        <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
+                        {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
                             {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
                                 onClick={(event) => handleRemoveReel(event)}
                                 className="!text-[15px] w-full h-full text-white rounded-full" />}
-                        </div>
+                        </div> */}
                         <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
                         <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                     </div>
