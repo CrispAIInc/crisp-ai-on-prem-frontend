@@ -66,7 +66,7 @@ function MediaEntertainment({ reel,
 
             console.log(res);
 
-            setReel({ ...res, reel_video_url: `${API_ENDPOINT}/${res.reel_video_url}` });
+            setReel(res);
 
             //TODO show video here or in another tab or something
             // setVideoUrl(`${API_ENDPOINT}/${res.reel_video_url}`);
