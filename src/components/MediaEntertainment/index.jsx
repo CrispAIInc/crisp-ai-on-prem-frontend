@@ -9,22 +9,25 @@ import MetadataVerbosity from '../MetadataVerbosity';
 import ReelViewer from '../ReelViewer';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-function MediaEntertainment() {
+function MediaEntertainment({ reel,
+    setReel,
+    isReelOpen,
+    setIsReelOpen, }) {
 
     const { theme, displayedSources, setReels } = useContext(MainContext);
 
     const [, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
 
-    const [reel, setReel] = useState({
-        id: "",
-        title: "",
-        reel_video_url: "",
-        thumbnail: ""
-    });
+    // const [reel, setReel] = useState({
+    //     id: "",
+    //     title: "",
+    //     reel_video_url: "",
+    //     thumbnail: ""
+    // });
     // const [videoUrl, setVideoUrl] = useState("http://localhost:5000/api/video/all/videoplayback.mp4");
     // const [reelTitle, setReelTitle] = useState('');
-    const [isReelOpen, setIsReelOpen] = useState(false);
+    // const [isReelOpen, setIsReelOpen] = useState(false);
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
     const [verbosityValue, setVerbosityValue] = useState('low');
@@ -48,6 +51,10 @@ function MediaEntertainment() {
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMedia() {
+        if (reel.title === "") {
+            toast('Reel title is required!', { className: 'p-2 rounded-md !bg-red-600' });
+            return;
+        }
         try {
             setIsLoading(true);
             const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({

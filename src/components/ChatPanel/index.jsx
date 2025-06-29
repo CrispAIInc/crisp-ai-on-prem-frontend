@@ -22,6 +22,7 @@ import { generateRandomHash, htmlToPlainText } from '../../utils';
 import StoriesEditor from '../StoriesEditor';
 import LoadingSpinner from '../LoadingSpinner';
 import MediaEntertainment from '../MediaEntertainment';
+import ReelViewer from '../ReelViewer';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -87,6 +88,7 @@ ReferenceLink.tagName = "li"; // or 'div', depending on your use
 Quill.register(ReferenceLink, true);
 Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
@@ -102,6 +104,7 @@ const ChatPanel = () => {
     activeTab,
     setActiveTab,
     reels,
+    setReels,
     notes,
     isNewNote,
     setNotes,
@@ -446,6 +449,8 @@ const ChatPanel = () => {
     setShowStoriesEditor(true);
   };
   const showSelectedReel = (e, reel, index) => {
+    setReel(reel);
+    setIsReelOpen(true);
     // setNoteTitle(story?.story_name);
     // setSelectedStory(story);
     // setGeneratedStory(story);
@@ -523,16 +528,18 @@ const ChatPanel = () => {
   };
 
   const [isReelDeleting, setIsReelDeleting] = useState(false);
-  async function deleteReel(event, id) {
+  async function deleteReel(event, reel) {
     event.preventDefault();
     setIsReelDeleting(true);
     try {
-      await makeApiRequest(`/reels/${id}`, 'delete');
+      await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
+        videoUrl: reel.reel_video_url
+      }));
 
       toast('Reel deleted successfully', { className: 'p-2 rounded-md', theme });
       // fetch stories
       const data = await makeApiRequest("/reels", "get");
-      setStories(data);
+      setReels(data);
     } catch (error) {
       console.log(error);
       toast('An error occurred while deleting reel', { className: 'p-2 rounded-md', theme });
@@ -754,6 +761,14 @@ const ChatPanel = () => {
     fileDownload.click();
     document.body.removeChild(fileDownload);
   }
+
+  const [reel, setReel] = useState({
+    id: "",
+    title: "",
+    reel_video_url: "",
+    thumbnail: ""
+  });
+  const [isReelOpen, setIsReelOpen] = useState(false);
 
   return (
     <aside
@@ -1121,7 +1136,8 @@ const ChatPanel = () => {
               ) : actualTab === "genStories" ? (
                 <StoriesEditor generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
               ) : actualTab === "genMedia" ? (
-                <MediaEntertainment />
+                <MediaEntertainment reel={reel} setReel={setReel}
+                  isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : null
             }
           </div>}
@@ -1230,19 +1246,21 @@ const ChatPanel = () => {
                             {
                               hoveredReel === reel?.id && (
                                 isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                  onClick={(event) => { event.stopPropagation(); deleteReel(event, reel?.id); }}
+                                  onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
                                   style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
                                   className="cursor-pointermr-1"
                                 />
                               )
                             }
-                            <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                            {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
+                            <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} />
                             <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                               }`}>{reel.title}</p>
                           </div>
                         ))
                       }
                     </div>
+                    {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} reel={reel} setReel={setReel} />}
                   </>
             }
           </div>}

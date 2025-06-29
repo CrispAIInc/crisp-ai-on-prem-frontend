@@ -8,9 +8,10 @@ import { ThemeContext } from '@emotion/react';
 import makeApiRequest from '../../api';
 import LoadingSpinner from "../LoadingSpinner";
 
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function ReelViewer({ closeReel, reel, setReel }) {
 
-    const { theme } = useContext(ThemeContext);
+    const { theme, setReels } = useContext(ThemeContext);
 
     const [isPending, setIsPending] = useState(false);
 
@@ -61,10 +62,15 @@ function ReelViewer({ closeReel, reel, setReel }) {
         setIsPending(true);
 
         try {
-            await makeApiRequest('/remove-reel/' + reel.id, 'DELETE');
+            await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
+                videoUrl: reel.reel_video_url
+            }));
             closeReel();
             setReel(null);
             toast('Reel deleted!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
+
+            const data = await makeApiRequest("/reels", "get");
+            setReels(data);
         } catch (e) {
             toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
         } finally {
@@ -77,15 +83,15 @@ function ReelViewer({ closeReel, reel, setReel }) {
             {/* Reel viewer container */}
             <div className="relative w-full h-full max-w-sm overflow-hidden rounded-2xl max-h-screen-md aspect-w-10 aspect-h-15"> {/* Adjusted dimensions */}
                 <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
-                    <p className="!ml-3 truncate  text-white break-all text-md !bg-[rgba(54, 54, 54, 0.35)]">{reel.title}</p>
+                    <p className="!ml-3 truncate  text-white break-all text-md !bg-slate-500/40 px-2 py-1 rounded-md">{reel.title}</p>
                     <div className="flex items-center gap-2 !mr-2">
-                        <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500 right-5 top-10">
+                        <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
                             {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
                                 onClick={(event) => handleRemoveReel(event)}
-                                className="!text-[20px] w-full h-full text-white rounded-full" />}
+                                className="!text-[15px] w-full h-full text-white rounded-full" />}
                         </div>
-                        <FileDownloadIcon className="p-2 z-50 !text-[30px] text-white rounded-full cursor-pointer bg-slate-500 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
-                        <CloseIcon className="p-2 z-50 !text-[30px] text-white rounded-full cursor-pointer bg-slate-500 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
+                        <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
+                        <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                     </div>
                 </div>
                 <ReactPlayer
@@ -93,7 +99,7 @@ function ReelViewer({ closeReel, reel, setReel }) {
                     width="100%"
                     height="100%"
                     playing={true}
-                    url={reel.reel_video_url}
+                    url={API_ENDPOINT + reel.reel_video_url}
                     loop={true}
                     // onReady={() => setIsPlayerReady(true)}
                     // ref={player}
