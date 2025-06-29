@@ -8,13 +8,15 @@ import toast from 'react-simple-toasts';
 import MetadataVerbosity from '../MetadataVerbosity';
 import ReelViewer from '../ReelViewer';
 
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+// const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function MediaEntertainment({ reel,
     setReel,
     isReelOpen,
-    setIsReelOpen, }) {
+    setIsReelOpen,
+    reels,
+    setReels }) {
 
-    const { theme, displayedSources, setReels } = useContext(MainContext);
+    const { theme, displayedSources } = useContext(MainContext);
 
     const [, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
@@ -83,6 +85,16 @@ function MediaEntertainment({ reel,
         }
     }
 
+    function closeReel() {
+        setIsReelOpen(false);
+        setReel({
+            id: "",
+            title: "",
+            reel_video_url: "",
+            thumbnail: ""
+        });
+    }
+
     return (
         <div className='z-20 flex flex-col gap-3'>
             {/* context */}
@@ -143,7 +155,7 @@ function MediaEntertainment({ reel,
                 )}
             </div>
 
-            {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} reel={reel} setReel={setReel} />}
+            {isReelOpen && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
         </div>
     );
 }

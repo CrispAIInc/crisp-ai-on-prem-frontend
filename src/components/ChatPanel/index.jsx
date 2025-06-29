@@ -536,13 +536,13 @@ const ChatPanel = () => {
         videoUrl: reel.reel_video_url
       }));
 
-      toast('Reel deleted successfully', { className: 'p-2 rounded-md', theme });
+      toast('Reel deleted successfully', { className: 'p-2 rounded-md bg-background_workspace' });
       // fetch stories
       const data = await makeApiRequest("/reels", "get");
       setReels(data);
     } catch (error) {
       console.log(error);
-      toast('An error occurred while deleting reel', { className: 'p-2 rounded-md', theme });
+      toast('An error occurred while deleting reel', { className: 'p-2 rounded-md  bg-background_workspace' });
     } finally {
       setIsReelDeleting(false);
     }
@@ -1136,7 +1136,7 @@ const ChatPanel = () => {
               ) : actualTab === "genStories" ? (
                 <StoriesEditor generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
               ) : actualTab === "genMedia" ? (
-                <MediaEntertainment reel={reel} setReel={setReel}
+                <MediaEntertainment reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : null
             }
@@ -1172,6 +1172,8 @@ const ChatPanel = () => {
                   <div className="flex flex-col overflow-y-auto">
                     {/* single note */}
                     {
+                      notes?.length === 0 ? <BaseHeading text="No notes found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                        :
                       notes?.map((note, index) => (
                         <div key={note.note_id} className={`flex items-start gap-2 ${theme === 'light'
                           ? 'hover:bg-light-hover-100/30'
@@ -1212,6 +1214,8 @@ const ChatPanel = () => {
                     <div className="flex flex-col overflow-y-auto">
                       {/* single note */}
                       {
+                        stories?.length === 0 ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                          :
                         stories?.map((story, index) => (
                           <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
                             ? 'hover:bg-light-hover-100/30'
@@ -1238,6 +1242,8 @@ const ChatPanel = () => {
                   <>
                     <div className="flex flex-col overflow-y-auto">
                       {
+                        reels?.length === 0 ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                          :
                         reels?.map((reel, index) => (
                           <div key={reel.id} className={`flex gap-2 ${theme === 'light'
                             ? 'hover:bg-light-hover-100/30'

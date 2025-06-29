@@ -9,9 +9,9 @@ import makeApiRequest from '../../api';
 import LoadingSpinner from "../LoadingSpinner";
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-function ReelViewer({ closeReel, reel, setReel }) {
+function ReelViewer({ closeReel, reel, setReels }) {
 
-    const { theme, setReels } = useContext(ThemeContext);
+    const { theme } = useContext(ThemeContext);
 
     const [isPending, setIsPending] = useState(false);
 
@@ -65,12 +65,13 @@ function ReelViewer({ closeReel, reel, setReel }) {
             await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
                 videoUrl: reel.reel_video_url
             }));
-            closeReel();
-            setReel(null);
             toast('Reel deleted!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
 
+            console.log("before");
             const data = await makeApiRequest("/reels", "get");
             setReels(data);
+            console.log("after");
+            closeReel();
         } catch (e) {
             toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
         } finally {
