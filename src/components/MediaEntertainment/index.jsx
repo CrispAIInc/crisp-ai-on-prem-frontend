@@ -16,7 +16,12 @@ function MediaEntertainment() {
     const [, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
 
-    const [reel, setReel] = useState(null);
+    const [reel, setReel] = useState({
+        id: "",
+        title: "",
+        reel_video_url: "",
+        thumbnail: ""
+    });
     // const [videoUrl, setVideoUrl] = useState("http://localhost:5000/api/video/all/videoplayback.mp4");
     // const [reelTitle, setReelTitle] = useState('');
     const [isReelOpen, setIsReelOpen] = useState(false);

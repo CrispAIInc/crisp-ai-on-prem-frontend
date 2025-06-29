@@ -445,14 +445,14 @@ const ChatPanel = () => {
     // setShowEditor(true);
     setShowStoriesEditor(true);
   };
-  // const showSelectedReel = (e, reel, index) => {
-  //   // setNoteTitle(story?.story_name);
-  //   setSelectedStory(story);
-  //   setGeneratedStory(story);
-  //   setIsNewStory(false);
-  //   // setShowEditor(true);
-  //   setShowStoriesEditor(true);
-  // };
+  const showSelectedReel = (e, reel, index) => {
+    // setNoteTitle(story?.story_name);
+    // setSelectedStory(story);
+    // setGeneratedStory(story);
+    // setIsNewStory(false);
+    // setShowEditor(true);
+    // setShowStoriesEditor(true);
+  };
 
   const [actualTab, setActualTab] = useState(null); //genMetadata | genStories
 
