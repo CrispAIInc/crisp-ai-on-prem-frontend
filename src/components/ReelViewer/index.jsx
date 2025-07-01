@@ -82,9 +82,9 @@ function ReelViewer({ closeReel, reel, setReels }) {
     return (
         <div className="fixed top-0 left-0 z-50 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-75">
             {/* Reel viewer container */}
-            <div className="relative w-full h-full max-w-sm overflow-hidden rounded-2xl max-h-screen-md aspect-w-10 aspect-h-15"> {/* Adjusted dimensions */}
+            <div className="relative w-full h-full max-w-sm overflow-hidden rounded-2xl max-h-screen-md aspect-w-10 aspect-h-15 bg-slate-200"> {/* Adjusted dimensions */}
                 <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
-                    <p className="!ml-3 truncate  text-white break-all text-md !bg-slate-500/40 px-2 py-1 rounded-md">{reel.title}</p>
+                    <p className="!ml-3 truncate  text-white break-all text-md !bg-slate-500/60 px-2 py-1 rounded-md">{reel.title}</p>
                     <div className="flex items-center gap-2 !mr-2">
                         {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
                             {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon

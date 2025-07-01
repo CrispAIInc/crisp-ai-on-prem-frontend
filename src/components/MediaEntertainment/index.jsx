@@ -32,7 +32,7 @@ function MediaEntertainment({ reel,
     // const [isReelOpen, setIsReelOpen] = useState(false);
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-    const [verbosityValue, setVerbosityValue] = useState('low');
+    const [verbosityValue, setVerbosityValue] = useState('Short (1min)');
     function handleChange(event) {
         setVerbosityValue(event.target.value);
     }
@@ -63,7 +63,7 @@ function MediaEntertainment({ reel,
                 sources: displayedSources.filter(item => item.is_selected).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
                 context,
                 title: reel.title,
-                verbosityValue
+                verbosityValue: verbosityValue.split(" ")[0]?.toLowerCase() || "short"
             }));
 
             console.log(res);
@@ -129,11 +129,11 @@ function MediaEntertainment({ reel,
             {/* verbosity */}
             <div>
                 <label className={` w-fit !relative ${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium flex items-center gap-1`}>
-                    Verbosity
-                    <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className='!relative !w-5' style={{ color: `${theme === 'light' ? '#777' : '#ABAEB4'}` }} />
-                    {isInfoTooltipOpen && <div className="absolute right-0 p-2 bg-background_workspace shadow-[0px_0px_30px_-2px_rgba(82,79,79,0.6)] rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full">Choose the desired <span className="text-primary">quality</span> and <span className="text-primary">complexity</span> for your generated video reel. Higher quality may increase generation time.</div>}
+                    Reel duration
+                    {/* <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className='!relative !w-5' style={{ color: `${theme === 'light' ? '#777' : '#ABAEB4'}` }} /> */}
+                    {/* {isInfoTooltipOpen && <div className="absolute right-0 p-2 bg-background_workspace shadow-[0px_0px_30px_-2px_rgba(82,79,79,0.6)] rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full">Choose the desired <span className="text-primary">quality</span> and <span className="text-primary">complexity</span> for your generated video reel. Higher quality may increase generation time.</div>} */}
                 </label>
-                <MetadataVerbosity verbosityValue={verbosityValue} setVerbosityValue={handleChange} disabilityLevel={2} />
+                <MetadataVerbosity isFromReel={true} verbosityValue={verbosityValue} setVerbosityValue={handleChange} disabilityLevel={2} />
             </div>
 
             {/* generate button */}

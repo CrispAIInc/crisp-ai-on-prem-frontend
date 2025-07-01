@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-
+import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
@@ -539,6 +539,7 @@ const ChatPanel = () => {
       toast('Reel deleted successfully', { className: 'p-2 rounded-md bg-background_workspace' });
       // fetch stories
       const data = await makeApiRequest("/reels", "get");
+      console.log(data);
       setReels(data);
     } catch (error) {
       console.log(error);
@@ -1126,7 +1127,7 @@ const ChatPanel = () => {
           <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-4 flex-items">
-              {[{ id: "genMetadata", title: "Metadata" }, { id: "genStories", title: "Stories" }, { id: "genMedia", title: "Sizzle & reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
+              {[{ id: "genMetadata", title: "Metadata" }, { id: "genStories", title: "Stories" }, { id: "genMedia", title: "Sizzle reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
@@ -1148,7 +1149,10 @@ const ChatPanel = () => {
               {/* <MetadataGen key={0} name="genMetadata" /> */}
               <div className="relative z-10 flex items-center gap-3">
                 {
-                  ["insights", "stories", "reels"].map((item, index) => <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''} font-extrabold italic !text-lg mb-3`} onClick={() => setCurrentTab(item)} />)
+                  ["insights", "stories", "reels"].map((item, index) => <>
+                    {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
+                    <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''} font-extrabold italic !text-lg mb-3`} onClick={() => setCurrentTab(item)} />
+                  </>)
                 }
               </div>
             </div>
@@ -1174,25 +1178,25 @@ const ChatPanel = () => {
                     {
                       notes?.length === 0 ? <BaseHeading text="No notes found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                         :
-                      notes?.map((note, index) => (
-                        <div key={note.note_id} className={`flex items-start gap-2 ${theme === 'light'
-                          ? 'hover:bg-light-hover-100/30'
-                          : 'hover:bg-light-hover-200/20'
-                          } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
-                          {
-                            hoveredInsight === note?.note_id && (
-                              isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
-                                style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                className="cursor-pointermr-1"
-                              />
-                            )
-                          }
-                          <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                          <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                            }`}>{note.note_name}</p>
-                        </div>
-                      ))
+                        notes?.map((note, index) => (
+                          <div key={note.note_id} className={`flex items-start gap-2 ${theme === 'light'
+                            ? 'hover:bg-light-hover-100/30'
+                            : 'hover:bg-light-hover-200/20'
+                            } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
+                            {
+                              hoveredInsight === note?.note_id && (
+                                isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                  onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
+                                  style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                  className="cursor-pointermr-1"
+                                />
+                              )
+                            }
+                            <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                            <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                              }`}>{note.note_name}</p>
+                          </div>
+                        ))
                     }
                   </div>
                 </>
@@ -1216,25 +1220,25 @@ const ChatPanel = () => {
                       {
                         stories?.length === 0 ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                           :
-                        stories?.map((story, index) => (
-                          <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
-                            ? 'hover:bg-light-hover-100/30'
-                            : 'hover:bg-light-hover-200/20'
-                            } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
-                            {
-                              hoveredStory === story?.story_id && (
-                                isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                  onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
-                                  style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                  className="cursor-pointermr-1"
-                                />
-                              )
-                            }
-                            <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                            <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                              }`}>{story.story_name}</p>
-                          </div>
-                        ))
+                          stories?.map((story, index) => (
+                            <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
+                              ? 'hover:bg-light-hover-100/30'
+                              : 'hover:bg-light-hover-200/20'
+                              } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
+                              {
+                                hoveredStory === story?.story_id && (
+                                  isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                    onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
+                                    style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                    className="cursor-pointermr-1"
+                                  />
+                                )
+                              }
+                              <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                              <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                }`}>{story.story_name}</p>
+                            </div>
+                          ))
                       }
                     </div>
                   </>
@@ -1244,26 +1248,26 @@ const ChatPanel = () => {
                       {
                         reels?.length === 0 ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                           :
-                        reels?.map((reel, index) => (
-                          <div key={reel.id} className={`flex gap-2 ${theme === 'light'
-                            ? 'hover:bg-light-hover-100/30'
-                            : 'hover:bg-light-hover-200/20'
-                            } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
-                            {
-                              hoveredReel === reel?.id && (
-                                isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                  onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
-                                  style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                  className="cursor-pointermr-1"
-                                />
-                              )
-                            }
-                            {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
-                            <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} />
-                            <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                              }`}>{reel.title}</p>
-                          </div>
-                        ))
+                          reels?.map((reel, index) => (
+                            <div key={reel.id} className={`flex gap-2 ${theme === 'light'
+                              ? 'hover:bg-light-hover-100/30'
+                              : 'hover:bg-light-hover-200/20'
+                              } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
+                              {
+                                hoveredReel === reel?.id && (
+                                  isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                    onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
+                                    style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                    className="cursor-pointermr-1"
+                                  />
+                                )
+                              }
+                              {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
+                              <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} />
+                              <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                }`}>{reel.title}</p>
+                            </div>
+                          ))
                       }
                     </div>
                     {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} reel={reel} setReel={setReel} />}

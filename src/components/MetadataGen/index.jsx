@@ -28,7 +28,7 @@ function MetadataGen() {
     //     setTemperatureValue(e.target.value);
     // }
 
-    const [verbosityValue, setVerbosityValue] = useState('medium');
+    const [verbosityValue, setVerbosityValue] = useState('Medium');
 
     function handleChange(event) {
         setVerbosityValue(event.target.value);
