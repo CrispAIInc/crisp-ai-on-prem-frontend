@@ -78,7 +78,7 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                                 </h5>
                                 {/* <OverlayTrigger className='tooltip' placement="bottom" overlay={(props) => renderTooltip(props, chapter.content)}> */}
                                 <p className="text-xs truncate line-clamp-2 text-wrap">
-                                    {chapter.description}
+                                    {chapter.content}
                                 </p>
                                 {/* </OverlayTrigger> */}
                                 <p onClick={() => {
