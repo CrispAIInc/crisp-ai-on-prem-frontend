@@ -62,7 +62,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                             </div>
                         }
                         <h3 className="text-xl font-semibold">{chapter.title}</h3>
-                        <p className="mt-2 text-md">{chapter.description}</p>
+                        <p className="mt-2 text-md">{chapter.content}</p>
                     </div>
                 </div>
             </Modal.Body>

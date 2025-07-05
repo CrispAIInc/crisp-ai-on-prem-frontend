@@ -49,8 +49,8 @@ function HorizontalCard({ item, workspaceContainer }) {
                     </div>
                 }
                 <h5 className={`text-[13px] mb-1 font-semibold line-clamp-2 w-fit ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>{item.title}</h5>
-                {/* <OverlayTrigger className='tooltip' placement="right" overlay={(props) => renderTooltip(props, item.description)}> */}
-                <p className="text-[14px] text-gray-600">{item.description}</p>
+                {/* <OverlayTrigger className='tooltip' placement="right" overlay={(props) => renderTooltip(props, item.content)}> */}
+                <p className="text-[14px] text-gray-600">{item.content}</p>
                 {/* </OverlayTrigger> */}
             </div >
         </div >

@@ -1102,8 +1102,11 @@ const MainWorkspace = ({ theme }) => {
 
   const [uploadedSources, setUploadedSources] = useState([]);
   const [isFileUploading, setIsFileUploading] = useState(false);
+
+  const [reels, setReels] = useState([]);
   // create value object with all the states
   const value = {
+    reels, setReels,
     isFileUploading, setIsFileUploading,
     uploadedSources, setUploadedSources,
     showMetadata, setShowMetadata,
@@ -1236,6 +1239,19 @@ const MainWorkspace = ({ theme }) => {
     };
 
     getStories();
+  }, []);
+
+  useEffect(() => {
+    const getReels = async () => {
+      try {
+        const data = await makeApiRequest("/reels", "get");
+        setReels(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getReels();
   }, []);
 
   return (

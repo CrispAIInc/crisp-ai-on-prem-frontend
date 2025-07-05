@@ -148,7 +148,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                     Write your story outline
                 </label> */}
                 <textarea
-                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     rows="1"
                     placeholder="Provide story context"
                     value={context}
@@ -165,7 +165,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                     Write your story outline
                 </label> */}
                 <textarea
-                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     rows="1"
                     placeholder="Storyline"
                     value={storyline}
@@ -280,7 +280,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                 {/* story title */}
                 <input
                     className={`${theme === 'dark' && 'text-textColor-100'
-                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !outline-none w-full`}
+                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} !outline-none w-full`}
                     placeholder="New title..."
                     value={storyTitle}
                     onChange={(e) => setStoryTitle(e.target.value)}
