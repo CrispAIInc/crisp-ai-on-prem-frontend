@@ -779,9 +779,14 @@ const ChatPanel = () => {
     >
       <div className={`flex items-center justify-between gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
         }`}>
-        <h5 className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
-          }  text-center w-full`}>
-          Studio</h5>
+        <div className='flex flex-col w-full'>
+          <h5 className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
+            }  text-center w-full`}>
+            Studio</h5>
+          <h6 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+            }  text-center`}>
+            Generator Services</h6>
+        </div>
         {(showEditor || actualTab !== null || showStoriesEditor) && (
           <h5
             onClick={closeEditor}
@@ -1127,7 +1132,7 @@ const ChatPanel = () => {
           <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-4 flex-items">
-              {[{ id: "genMetadata", title: "Metadata" }, { id: "genStories", title: "Stories" }, { id: "genMedia", title: "Sizzle reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
+              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }, { id: "genMedia", title: "Sizzle Reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
