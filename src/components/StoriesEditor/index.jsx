@@ -6,6 +6,7 @@ import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import AddIcon from '@mui/icons-material/Add';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import toast from 'react-simple-toasts';
 
 function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, setShowStoriesEditor }) {
@@ -137,6 +138,211 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
         }
     }
 
+    function exportHTML() {
+        var header =
+            "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+            "xmlns='http://www.w3.org/TR/REC-html40'>" +
+            `<head><meta charset='utf-8'><title>Story:${story.story_name}</title></head><body>`;
+        var footer = "</body></html>";
+        const htmlString = `
+    <div>
+        <h1 style='text-align: center; margin-bottom: 30px;'>${story.story_name
+            }</h1>
+    </div>
+    
+    <div>
+        ${story?.content ? `<div>${story?.content}</div>` : story.text
+                ?.map(
+                    (item) => `
+            <div>
+                ${item.outline.name
+                            ? `
+                    <div>
+                        <div>
+                            <div>
+                                ${item.sectionImages?.length > 0
+                                ? `
+                                    <div>
+                                        ${item.sectionImages
+                                    .map(
+                                        (imgBlob) => `
+                                            <img width="300" height="300" src="${imgBlob}" alt="img" />
+                                        `
+                                    )
+                                    .join("")}
+                                    </div>
+                                `
+                                : ""
+                            }
+                                <h3>${item.outline.name.replace(
+                                /\n/g,
+                                "<br>"
+                            )}</h3>
+                            </div>
+                        </div>
+                    </div>
+                `
+                            : ""
+                        }
+                <div>
+                    <div>
+                        ${item.content
+                            ? `
+                            <div>
+                                <div>
+                                    ${typeof item.content === "string"
+                                ? `
+                                        ${item.contentImages?.length > 0
+                                    ? `
+                                            <div>
+                                                ${item.contentImages
+                                        .map(
+                                            (imgBlob) => `
+                                                    <img width="300" height="300" src="${imgBlob}" alt="img" />
+                                                `
+                                        )
+                                        .join("")}
+                                            </div>
+                                        `
+                                    : ""
+                                }
+                                        <h5>${item.content.replace(
+                                    /\n/g,
+                                    "<br>"
+                                )}</h5>
+                                    `
+                                : `
+                                        ${item.content?.map(
+                                    (i) => `
+                                            <div>
+                                                <div>
+                                                    ${!i.answer.includes(
+                                        "https://oaidalleapiprodscus.blob"
+                                    )
+                                            ? `
+                                                        <p>${i.answer.replace(
+                                                /\n/g,
+                                                "<br>"
+                                            )}</p>
+                                                    `
+                                            : `
+                                                        <img width="300" height="300" src="${i.answer}" alt="image" />
+                                                    `
+                                        }
+                                                </div>
+                                                ${(i?.videosArr?.length > 0 ||
+                                            i?.keyframesArr?.length > 0 ||
+                                            i?.pdfsArr?.length > 0 ||
+                                            i?.imgsArr?.length > 0)
+                                            ? `
+                                                    <div>
+                                                        <p>References:</p>
+                                                        ${i?.videosArr?.length >
+                                                0
+                                                ? `
+                                                            <ul>
+                                                                ${i?.videosArr
+                                                    ?.map(
+                                                        (video) => `
+                                                                    <li>${video.source_path +
+                                                            " | Timestamp: " +
+                                                            video.timestamp
+                                                            }</li>
+                                                                `
+                                                    )
+                                                    .join("")}
+                                                            </ul>
+                                                        `
+                                                : ""
+                                            }
+                                                        ${i?.keyframeArr
+                                                ?.length > 0
+                                                ? `
+                                                            <ul>
+                                                                ${i?.keyframeArr
+                                                    ?.map(
+                                                        (video) => `
+                                                                    <li>${video.source_path +
+                                                            " | Keyframe: " +
+                                                            video.timestamp
+                                                            }</li>
+                                                                `
+                                                    )
+                                                    .join("")}
+                                                            </ul>
+                                                        `
+                                                : ""
+                                            }
+                                                        ${i?.pdfsArr?.length > 0
+                                                ? `
+                                                            <ul>
+                                                                ${i?.pdfsArr
+                                                    ?.map(
+                                                        (pdf) => `
+                                                                    <li>${pdf.source_path +
+                                                            " | Page: " +
+                                                            (parseInt(
+                                                                pdf.page
+                                                            ) +
+                                                                1)
+                                                            }</li>
+                                                                `
+                                                    )
+                                                    .join("")}
+                                                            </ul>
+                                                        `
+                                                : ""
+                                            }
+                                                        ${i?.imgsArr?.length > 0
+                                                ? `
+                                                            <ul>
+                                                                ${i?.imgsArr?.map(
+                                                    (img) => `
+                                                                    <li>${img.source_path}</li>
+                                                                `
+                                                )
+                                                    .join("")}
+                                                            </ul>
+                                                        `
+                                                : ""
+                                            }
+                                                    </div>
+                                                `
+                                            : ""
+                                        }
+                                            </div>
+                                        `
+                                )
+                                    .join("")}
+                                    `
+                            }
+                                </div>
+                            </div>
+                        `
+                            : `<p></p>`
+                        }
+                    </div>
+                </div>
+            </div>
+        `
+                )
+                .join("")}
+    </div>
+    `;
+        var sourceHTML = header + htmlString + footer;
+
+        var source =
+            "data:application/vnd.ms-word;charset=utf-8," +
+            encodeURIComponent(sourceHTML);
+        var fileDownload = document.createElement("a");
+        document.body.appendChild(fileDownload);
+        fileDownload.href = source;
+        fileDownload.download = story.story_name + ".doc";
+        fileDownload.click();
+        document.body.removeChild(fileDownload);
+    }
+
     return (
         <div className="relative z-10 flex flex-col h-full gap-1">
             {/* context */}
@@ -198,7 +404,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
             </div>
 
             {/* save button */}
-            {story !== null && <div className="flex items-center justify-between">
+            {story !== null && <div className="flex items-center gap-1">
                 <div
                     className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
                         ? 'hover:bg-light-hover-100/30'
@@ -210,6 +416,19 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
                         }`}>
                         Save story
+                    </span>
+                </div>
+                <div
+                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
+                        ? 'hover:bg-light-hover-100/30'
+                        : 'hover:bg-light-hover-200/20'
+                        } z-10`}
+                    onClick={exportHTML}
+                >
+                    <FileDownloadIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                        }`}>
+                        Export
                     </span>
                 </div>
                 <div
