@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-
+import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
@@ -21,6 +21,8 @@ import BaseHeading from '../BaseHeading';
 import { generateRandomHash, htmlToPlainText } from '../../utils';
 import StoriesEditor from '../StoriesEditor';
 import LoadingSpinner from '../LoadingSpinner';
+import MediaEntertainment from '../MediaEntertainment';
+import ReelViewer from '../ReelViewer';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -86,6 +88,7 @@ ReferenceLink.tagName = "li"; // or 'div', depending on your use
 Quill.register(ReferenceLink, true);
 Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
@@ -100,6 +103,8 @@ const ChatPanel = () => {
     setShowNoteDetails,
     activeTab,
     setActiveTab,
+    reels,
+    setReels,
     notes,
     isNewNote,
     setNotes,
@@ -440,9 +445,18 @@ const ChatPanel = () => {
     setSelectedStory(story);
     setGeneratedStory(story);
     setIsNewStory(false);
-    setActualTab("lkjljkl");
     // setShowEditor(true);
     setShowStoriesEditor(true);
+  };
+  const showSelectedReel = (e, reel, index) => {
+    setReel(reel);
+    setIsReelOpen(true);
+    // setNoteTitle(story?.story_name);
+    // setSelectedStory(story);
+    // setGeneratedStory(story);
+    // setIsNewStory(false);
+    // setShowEditor(true);
+    // setShowStoriesEditor(true);
   };
 
   const [actualTab, setActualTab] = useState(null); //genMetadata | genStories
@@ -505,12 +519,38 @@ const ChatPanel = () => {
     }
   }
 
-  function handleTabClick(item) {
-    if (item === 'AI Readiness') {
-      setActualTab("genMetadata");
-    } else if (item === "Narratives & Posts") {
-      setActualTab("genStories");
+  const [hoveredReel, setHoveredReel] = useState(null);
+  const handleMouseEnterReel = (id) => {
+    setHoveredReel(id);
+  };
+  const handleMouseLeaveReel = () => {
+    setHoveredReel(null);
+  };
+
+  const [isReelDeleting, setIsReelDeleting] = useState(false);
+  async function deleteReel(event, reel) {
+    event.preventDefault();
+    setIsReelDeleting(true);
+    try {
+      await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
+        videoUrl: reel.reel_video_url
+      }));
+
+      toast('Reel deleted successfully', { className: 'p-2 rounded-md bg-background_workspace' });
+      // fetch stories
+      const data = await makeApiRequest("/reels", "get");
+      console.log(data);
+      setReels(data);
+    } catch (error) {
+      console.log(error);
+      toast('An error occurred while deleting reel', { className: 'p-2 rounded-md  bg-background_workspace' });
+    } finally {
+      setIsReelDeleting(false);
     }
+  }
+
+  function handleTabClick(item) {
+    setActualTab(item);
   }
 
   function closeTopTabs() {
@@ -723,6 +763,14 @@ const ChatPanel = () => {
     document.body.removeChild(fileDownload);
   }
 
+  const [reel, setReel] = useState({
+    id: "",
+    title: "",
+    reel_video_url: "",
+    thumbnail: ""
+  });
+  const [isReelOpen, setIsReelOpen] = useState(false);
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
@@ -731,13 +779,12 @@ const ChatPanel = () => {
     >
       <div className={`flex items-center justify-between gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
         }`}>
-        <div className="flex flex-col items-center w-full">
+        <div className='flex flex-col w-full'>
           <h5 className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
             }  text-center w-full`}>
             Studio</h5>
-
-          <h6 className={`select-none ${theme === "light" ? "text-textColor-200" : "text-textColor-100"
-            } text-center `}>
+          <h6 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+            }  text-center`}>
             Generator Services</h6>
         </div>
         {(showEditor || actualTab !== null || showStoriesEditor) && (
@@ -769,7 +816,7 @@ const ChatPanel = () => {
       {showStoriesEditor && <StoriesEditor setShowStoriesEditor={setShowStoriesEditor} generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />}
 
       {/* Toggle button */}
-      <div className="absolute left-0 z-40 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md top-1.5 w-fit">
+      <div className="absolute left-0 z-10 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md top-1.5 w-fit">
         <button
           className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'} rotate-180`}
           onClick={handleSidebarToggle}
@@ -1079,21 +1126,24 @@ const ChatPanel = () => {
           </div>
         </div>
       ) : (
-        <div className='flex flex-col h-full gap-2 overflow-y-hidden'>
+        <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-          {actualTab === null && <div>
+          <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-4 flex-items">
-              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }].map(item => <h6 onClick={() => handleTabClick(item.title)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
+              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }, { id: "genMedia", title: "Sizzle Reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
-          </div>}
+          </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
             {
               actualTab === "genMetadata" ? (
                 <MetadataGen />
               ) : actualTab === "genStories" ? (
                 <StoriesEditor generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
+              ) : actualTab === "genMedia" ? (
+                <MediaEntertainment reel={reel} setReel={setReel} reels={reels} setReels={setReels}
+                  isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : null
             }
           </div>}
@@ -1104,7 +1154,10 @@ const ChatPanel = () => {
               {/* <MetadataGen key={0} name="genMetadata" /> */}
               <div className="relative z-10 flex items-center gap-3">
                 {
-                  ["insights", "stories"].map((item, index) => <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''} font-extrabold italic !text-lg mb-3`} onClick={() => setCurrentTab(item)} />)
+                  ["insights", "stories", "reels"].map((item, index) => <>
+                    {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
+                    <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''} font-extrabold italic !text-lg mb-3`} onClick={() => setCurrentTab(item)} />
+                  </>)
                 }
               </div>
             </div>
@@ -1128,31 +1181,33 @@ const ChatPanel = () => {
                   <div className="flex flex-col overflow-y-auto">
                     {/* single note */}
                     {
-                      notes?.map((note, index) => (
-                        <div key={note.note_id} className={`flex items-start gap-2 ${theme === 'light'
-                          ? 'hover:bg-light-hover-100/30'
-                          : 'hover:bg-light-hover-200/20'
-                          } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
-                          {
-                            hoveredInsight === note?.note_id && (
-                              isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
-                                style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                className="cursor-pointermr-1"
-                              />
-                            )
-                          }
-                          <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                          <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                            }`}>{note.note_name}</p>
-                        </div>
-                      ))
+                      notes?.length === 0 ? <BaseHeading text="No notes found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                        :
+                        notes?.map((note, index) => (
+                          <div key={note.note_id} className={`flex items-start gap-2 ${theme === 'light'
+                            ? 'hover:bg-light-hover-100/30'
+                            : 'hover:bg-light-hover-200/20'
+                            } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
+                            {
+                              hoveredInsight === note?.note_id && (
+                                isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                  onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
+                                  style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                  className="cursor-pointermr-1"
+                                />
+                              )
+                            }
+                            <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                            <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                              }`}>{note.note_name}</p>
+                          </div>
+                        ))
                     }
                   </div>
                 </>
-                :
-                <>
-                  {/* <div
+                : currentTab === "stories" ?
+                  <>
+                    {/* <div
                     className={`mb-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
                       ? 'hover:bg-light-hover-100/30'
                       : 'hover:bg-light-hover-200/20'
@@ -1165,31 +1220,63 @@ const ChatPanel = () => {
                       New Story
                     </span>
                   </div> */}
-                  <div className="flex flex-col overflow-y-auto">
-                    {/* single note */}
-                    {
-                      stories?.map((story, index) => (
-                        <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
-                          ? 'hover:bg-light-hover-100/30'
-                          : 'hover:bg-light-hover-200/20'
-                          } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
-                          {
-                            hoveredStory === story?.story_id && (
-                              isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
-                                style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                className="cursor-pointermr-1"
-                              />
-                            )
-                          }
-                          <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                          <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                            }`}>{story.story_name}</p>
-                        </div>
-                      ))
-                    }
-                  </div>
-                </>
+                    <div className="flex flex-col overflow-y-auto">
+                      {/* single note */}
+                      {
+                        stories?.length === 0 ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                          :
+                          stories?.map((story, index) => (
+                            <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
+                              ? 'hover:bg-light-hover-100/30'
+                              : 'hover:bg-light-hover-200/20'
+                              } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
+                              {
+                                hoveredStory === story?.story_id && (
+                                  isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                    onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
+                                    style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                    className="cursor-pointermr-1"
+                                  />
+                                )
+                              }
+                              <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                              <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                }`}>{story.story_name}</p>
+                            </div>
+                          ))
+                      }
+                    </div>
+                  </>
+                  :
+                  <>
+                    <div className="flex flex-col overflow-y-auto">
+                      {
+                        reels?.length === 0 ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                          :
+                          reels?.map((reel, index) => (
+                            <div key={reel.id} className={`flex gap-2 ${theme === 'light'
+                              ? 'hover:bg-light-hover-100/30'
+                              : 'hover:bg-light-hover-200/20'
+                              } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
+                              {
+                                hoveredReel === reel?.id && (
+                                  isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                    onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
+                                    style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                    className="cursor-pointermr-1"
+                                  />
+                                )
+                              }
+                              {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
+                              <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} />
+                              <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                }`}>{reel.title}</p>
+                            </div>
+                          ))
+                      }
+                    </div>
+                    {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} reel={reel} setReel={setReel} />}
+                  </>
             }
           </div>}
         </div>
