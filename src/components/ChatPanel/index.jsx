@@ -777,26 +777,27 @@ const ChatPanel = () => {
         }  ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col max-h-full`}
       style={{ width: rightWidth }}
     >
-      <div className={`flex items-center justify-between gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+      <div className={`flex relative items-center justify-between gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
         }`}>
         <div className='flex flex-col w-full'>
           <h5 className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
             }  text-center w-full`}>
             Studio</h5>
-          <h6 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
-            }  text-center`}>
-            Generator Services</h6>
         </div>
         {(showEditor || actualTab !== null || showStoriesEditor) && (
           <h5
             onClick={closeEditor}
-            className={`rotate-180 cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+            className={`absolute right-0 top-2 rotate-180 cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
               } text-[22px]`}
           >
             <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
           </h5>
         )}
       </div>
+
+      <h6 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+        }  text-center`}>
+        Generator Services</h6>
 
       {/* Background blur elements */}
       <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-0 blur-[160px]"></div>
