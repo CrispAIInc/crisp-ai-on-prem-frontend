@@ -24,13 +24,14 @@ function ReelViewer({ closeReel, reel, setReels }) {
         e.stopPropagation();
         e.preventDefault();
         try {
-            const response = await fetch(reel.reel_video_url, { mode: 'cors' });
+            const encodedUrl = encodeURI(reel.reel_video_url);
+            const response = await fetch(encodedUrl, { mode: 'cors' });
             const blob = await response.blob();
             const blobUrl = window.URL.createObjectURL(blob);
 
             const a = document.createElement('a');
             a.href = blobUrl;
-            a.download = 'reel.mp4'; // You can customize this filename
+            a.download = reel?.title + '.mp4'; // You can customize this filename
             a.click();
 
             window.URL.revokeObjectURL(blobUrl);
