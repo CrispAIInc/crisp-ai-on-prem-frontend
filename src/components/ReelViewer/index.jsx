@@ -85,36 +85,55 @@ function ReelViewer({ closeReel, reel, setReels }) {
         return parts[0] * 3600 + parts[1] * 60 + parts[2];
     }
 
-    const segmentsWithSeconds = reel?.segments.map(seg => ({
-        ...seg,
-        startInSeconds: timeToSeconds(seg.start_time),
-    }));
+    // const segmentsWithSeconds = reel?.segments.map(seg => ({
+    //     ...seg,
+    //     startInSeconds: timeToSeconds(seg.start_time),
+    // }));
     const [currentTitle, setCurrentTitle] = useState('');
 
+    // const handleProgress = (progress) => {
+    //     const currentTime = progress.playedSeconds;
+
+    //     let titleToShow = 'Introduction'; // Default title
+
+    //     for (let i = 0; i < segmentsWithSeconds.length; i++) {
+    //         const currentSegment = segmentsWithSeconds[i];
+    //         const nextSegment = segmentsWithSeconds[i + 1];
+
+    //         if (currentTime >= currentSegment.startInSeconds &&
+    //             (!nextSegment || currentTime < nextSegment.startInSeconds)) {
+    //             titleToShow = currentSegment.title;
+    //             break;
+    //         }
+    //     }
+
+    //     // If it's after the last segment
+    //     const lastSegment = segmentsWithSeconds[segmentsWithSeconds.length - 1];
+    //     if (currentTime >= lastSegment.startInSeconds + 10) { // optional buffer
+    //         titleToShow = 'Conclusion';
+    //     }
+
+    //     if (titleToShow !== currentTitle) {
+    //         setCurrentTitle(titleToShow);
+    //     }
+    // };
+
+    const [duration, setDuration] = useState(0);
+
+    const handleDuration = (dur) => {
+        console.log('Full duration:', dur);
+        setDuration(dur);
+    };
     const handleProgress = (progress) => {
         const currentTime = progress.playedSeconds;
 
-        let titleToShow = 'Introduction'; // Default title
+        // Find the latest segment whose start_time is <= currentTime
+        const currentSegment = [{ start_time: "00:00:00", title: "Introduction" }, ...reel.segments, { start_time: `00:00:${duration - timeToSeconds(reel.segments[0].start_time)}`, title: "Conclusion" }]
+            .reverse()
+            .find(segment => currentTime >= timeToSeconds(segment.start_time));
 
-        for (let i = 0; i < segmentsWithSeconds.length; i++) {
-            const currentSegment = segmentsWithSeconds[i];
-            const nextSegment = segmentsWithSeconds[i + 1];
-
-            if (currentTime >= currentSegment.startInSeconds &&
-                (!nextSegment || currentTime < nextSegment.startInSeconds)) {
-                titleToShow = currentSegment.title;
-                break;
-            }
-        }
-
-        // If it's after the last segment
-        const lastSegment = segmentsWithSeconds[segmentsWithSeconds.length - 1];
-        if (currentTime >= lastSegment.startInSeconds + 10) { // optional buffer
-            titleToShow = 'Conclusion';
-        }
-
-        if (titleToShow !== currentTitle) {
-            setCurrentTitle(titleToShow);
+        if (currentSegment && currentSegment.title !== currentTitle) {
+            setCurrentTitle(currentSegment.title);
         }
     };
 
@@ -142,6 +161,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
                     url={API_ENDPOINT + reel.reel_video_url}
                     loop={true}
                     onProgress={handleProgress}
+                    onDuration={handleDuration}
                     // onReady={() => setIsPlayerReady(true)}
                     // ref={player}
                     controls
