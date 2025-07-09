@@ -89,7 +89,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
     //     ...seg,
     //     startInSeconds: timeToSeconds(seg.start_time),
     // }));
-    const [currentTitle, setCurrentTitle] = useState('');
+    const [currentTitle, setCurrentTitle] = useState('Introduction');
 
     // const handleProgress = (progress) => {
     //     const currentTime = progress.playedSeconds;
@@ -118,6 +118,12 @@ function ReelViewer({ closeReel, reel, setReels }) {
     //     }
     // };
 
+    const handleOutsideClick = (e) => {
+        if (e.target === e.currentTarget) {
+            closeReel();
+        }
+    };
+
     const [duration, setDuration] = useState(0);
 
     const handleDuration = (dur) => {
@@ -127,7 +133,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
         const currentTime = progress.playedSeconds;
 
         // Find the latest segment whose start_time is <= currentTime
-        const currentSegment = [{ start_time: "00:00:00", title: "Introduction is something out of this world and i can't explain what was it" }, ...reel.segments, { start_time: `00:00:${duration - timeToSeconds(reel.segments[0].start_time)}`, title: "Conclusion" }]
+        const currentSegment = [{ start_time: "00:00:00", title: "Introduction" }, ...reel.segments, { start_time: `00:00:${duration - timeToSeconds(reel.segments[0].start_time)}`, title: "Conclusion" }]
             .reverse()
             .find(segment => currentTime >= timeToSeconds(segment.start_time));
 
@@ -137,7 +143,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
     };
 
     return (
-        <div className="fixed top-0 left-0 z-[9999] flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-80">
+        <div className="fixed top-0 left-0 z-[9999] flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-75" onClick={(e) => handleOutsideClick(e)}>
             {/* Reel viewer container */}
             <div className="relative w-full max-w-sm aspect-[9/16] bg-slate-200 rounded-2xl overflow-hidden sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:w-[30vw] 2xl:h-[80%]">
 
