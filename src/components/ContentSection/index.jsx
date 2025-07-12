@@ -1,15 +1,17 @@
 
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AddIcon from '@mui/icons-material/Add';
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import makeApiRequest from "../../api";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SourceExplorer from "../SourceExplorer";
-
+import Modal from 'react-bootstrap/Modal';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import { Checkbox } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { MainContext } from "../../contexts/mainContext";
 import LoadingSpinner from "../LoadingSpinner";
 import BaseHeading from '../BaseHeading';
@@ -20,6 +22,76 @@ import { timeToSeconds } from '../../utils';
 import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
+
+const UpdateFilenameModal = ({ show, onHide, filename, setFilename }) => {
+    const { theme } = useContext(MainContext);
+    const [isLoading, setIsLoading] = useState(false);
+
+    function updateFilename() {
+        try {
+            if (filename === "") {
+                toast('filename cannot be empty', { className: `p-2 rounded-md !bg-background_workspace`, theme });
+                return;
+            }
+            console.log("updatingg???");
+        } catch (error) {
+            console.log("something bad happened");
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return (
+        <Modal
+            show={show}
+            onHide={onHide}
+            size="sm"
+            aria-labelledby="contained-modal-title-vcenter"
+            scrollable={true}
+            centered
+            dialogClassName='text-left'
+        >
+
+            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
+                <div className="flex flex-col">
+                    <label htmlFor="indexName" className={`block text-sm font-medium ${theme === 'dark' && 'text-gray-300'}`}>
+                        Rename source
+                    </label>
+                    <input
+                        type="text"
+                        name="indexName"
+                        placeholder='Type index name here'
+                        id='indexName'
+                        value={filename}
+                        onChange={(e) => setFilename(e.target.value)}
+                        className={`block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${theme === 'dark' && 'bg-textColor-300'}`}
+                        required
+                        onKeyDown={(e) => e.key === 'Enter' && updateFilename()}
+                    />
+                </div>
+            </Modal.Body>
+            <Modal.Footer className={`flex items-center gap-3 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+                <div
+                    className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                    onClick={onHide}
+                >
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                        Cancel
+                    </span>}
+                </div>
+
+                <div
+                    className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                    onClick={updateFilename}
+                >
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                        Save
+                    </span>
+                </div>
+            </Modal.Footer>
+        </Modal>
+    );
+};
 
 const ContentSection = ({
     onThumbnailClick,
@@ -420,13 +492,54 @@ const ContentSection = ({
         setHoveredSource(sourcePath);
     };
     const handleMouseLeave = () => {
-        setHoveredSource(null);
+        if (!showSourceContextMenu) {
+            setHoveredSource(null);
+        }
     };
 
     const [showAddModal, setShowAddModal] = useState(false);
     function handleAddModal(state) {
         setShowAddModal(state);
     }
+
+    const [showSourceContextMenu, setShowSourceContextMenu] = useState(false);
+    function handleOpenSourceContextMenu(e) {
+        e.stopPropagation();
+        setShowSourceContextMenu(prev => {
+            if (prev) {
+                // setIsUpdateFilenameModalOpen(false);
+            }
+            return !prev;
+        });
+    }
+
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                // setIsUpdateFilenameModalOpen(false);
+                setShowSourceContextMenu(false);
+                setHoveredSource(null);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const [filename, setFilename] = useState('');
+    const [isUpdateFilenameModalOpen, setIsUpdateFilenameModalOpen] = useState(false);
+
+    function handleOpenFilenameUpdateModal(event, source) {
+        event.stopPropagation();
+        setFilename(source?.source_path || "");
+        setIsUpdateFilenameModalOpen(true);
+    }
+
+
 
     return (
         <>
@@ -583,16 +696,34 @@ const ContentSection = ({
                                     // }
                                 })} */}
                                 {
-                                    displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
+                                    displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${!showSourceContextMenu && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
-                                        <div className="flex items-center flex-1 w-full max-w-full gap-2">
+                                        <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
+                                            {showSourceContextMenu && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col items-center gap-2 p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                                <div className={`flex items-center gap-2 p-2 ${theme === "light" ? 'hover:bg-textColor-100/40' : 'text-textColor-100 hover:bg-slate-800/40'}`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
+                                                    <DeleteOutlineOutlinedIcon
+                                                        className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                                    />
+                                                    <span>Remove source</span>
+                                                </div>
+                                                <div className={`flex items-center gap-2 p-2 ${theme === "light" ? 'hover:bg-textColor-100/40' : 'text-textColor-100 hover:bg-slate-800/50'}`}
+                                                    onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
+                                                    <EditOutlinedIcon
+                                                        className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                                    />
+                                                    <span>Rename source</span>
+                                                </div>
+
+                                            </div>}
                                             {
                                                 hoveredSource === option?.source_path && (
-                                                    <DeleteIcon
-                                                        onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}
-                                                        style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                                        className="cursor-pointermr-1"
-                                                    />
+                                                    // <DeleteOutlineOutlinedIcon
+                                                    //     onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}
+                                                    //     style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                                    //     className="cursor-pointermr-1"
+                                                    // />
+                                                    <MoreHorizIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e)} />
+
                                                 )
                                             }
                                             {
@@ -649,7 +780,8 @@ const ContentSection = ({
                         }
                     </div>
                 </div>
-
+                {/* update file name modal */}
+                {isUpdateFilenameModalOpen && <UpdateFilenameModal show={isUpdateFilenameModalOpen} onHide={() => setIsUpdateFilenameModalOpen(false)} filename={filename} setFilename={setFilename} />}
             </section>}
             {/* metadata and source section */}
             {showMetadata && (
