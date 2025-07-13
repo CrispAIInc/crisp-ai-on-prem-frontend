@@ -320,10 +320,13 @@ export function SourceExplorer(props) {
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
+            className="relative"
         >
+            <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-10 z-10 blur-[180px]"></div>
+            <div className="w-56 h-56 bg-purple-400 rounded-full absolute left-0 top-80 z-10 blur-[180px]"></div>
             <Modal.Header
                 closeButton
-                className={`${theme === "dark" && "bg-textColor-300 text-textColor-100 !border-b-textColor-200"}`}
+                className={`${theme === "dark" && "bg-textColor-300 text-textColor-100 !border-b-textColor-200"} z-20`}
             >
                 <Modal.Title id="contained-modal-title-vcenter" className="flex flex-col gap-0">
                     <h3 className="mb-0 text-xl">Source Explorer</h3>
@@ -331,7 +334,7 @@ export function SourceExplorer(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body
-                className={`${theme === "light" ? "" : "bg-textColor-300 text-white"}`}
+                className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} z-20`}
             >
                 <div
                     className={`current-path-wrapper ${theme === "dark" && "text-textColor-100"
@@ -347,7 +350,7 @@ export function SourceExplorer(props) {
                     {/* <RemoveIndexModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} /> */}
                 </div>
             </Modal.Body>
-            <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+            <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"} z-20`}>
                 {itemsFoundInsideCategoryOrFormat && <div className="flex">
                     <Checkbox
                         className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
