@@ -24,7 +24,7 @@ import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
-    const { theme, setDisplayedSources, categoryValues, setKnowledgeBase } = useContext(MainContext);
+    const { theme, setDisplayedSources, categoryOptions, setKnowledgeBase } = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
     async function updateFilename() {
@@ -44,9 +44,14 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify(categoryValues)
+                JSON.stringify(categoryOptions.map((option) => option.value))
             );
-            setKnowledgeBase(data);
+            setKnowledgeBase(data.map(item => {
+                if (item?.source_path === filename + "." + extension) {
+                    return { ...item, is_selected: true };
+                }
+                return item;
+            }));
             setDisplayedSources(prev => {
                 return prev?.map(item => {
                     if (item.source_path === oldFilename) {
@@ -57,8 +62,10 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
                 });
             });
             onHide();
+            toast('Source renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
         } catch (error) {
-            console.log("something bad happened");
+            console.log(error);
+            toast('Something bad happened', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
         } finally {
             setIsLoading(false);
         }
@@ -766,7 +773,7 @@ const ContentSection = ({
                                                 <img className="object-cover w-full h-full rounded-md" src={`${API_ENDPOINT}/${option?.file_type === 'video' ? 'thumbnails' : option?.file_type === 'pdf' ? 'pdf-thumbnails' : 'img-thumbnails'}/${encodeURIComponent(option?.category[0])}/${encodeURIComponent(option?.thumbnail)}`}
                                                     alt="Video Thumbnail" />
                                             </div>
-                                            <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
+                                            <span className={`text-md font-medium break-words ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                         </div>
                                         <div className="flex items-center ">
                                             <Checkbox
