@@ -23,17 +23,40 @@ import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
 
-const UpdateFilenameModal = ({ show, onHide, filename, setFilename }) => {
-    const { theme } = useContext(MainContext);
+const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
+    const { theme, setDisplayedSources, categoryValues, setKnowledgeBase } = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
-    function updateFilename() {
+    async function updateFilename() {
         try {
             if (filename === "") {
-                toast('filename cannot be empty', { className: `p-2 rounded-md !bg-background_workspace`, theme });
+                toast('filename cannot be empty', { className: `p-2 rounded-md !bg-red-600 text-white`, theme });
                 return;
             }
-            console.log("updatingg???");
+
+            const payload = {
+                category: sourceCategory,
+                oldFilename,
+                newFilename: filename + "." + extension,
+                filetype
+            };
+            await makeApiRequest('/update-filename', 'PATCH', JSON.stringify(payload));
+            const data = await makeApiRequest(
+                "/content",
+                "post",
+                JSON.stringify(categoryValues)
+            );
+            setKnowledgeBase(data);
+            setDisplayedSources(prev => {
+                return prev?.map(item => {
+                    if (item.source_path === oldFilename) {
+                        console.log(true);
+                        return { ...item, source_path: filename + "." + extension };
+                    }
+                    return item;
+                });
+            });
+            onHide();
         } catch (error) {
             console.log("something bad happened");
         } finally {
@@ -57,17 +80,20 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename }) => {
                     <label htmlFor="indexName" className={`block text-sm font-medium ${theme === 'dark' && 'text-gray-300'}`}>
                         Rename source
                     </label>
-                    <input
-                        type="text"
-                        name="indexName"
-                        placeholder='Type index name here'
-                        id='indexName'
-                        value={filename}
-                        onChange={(e) => setFilename(e.target.value)}
-                        className={`block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${theme === 'dark' && 'bg-textColor-300'}`}
-                        required
-                        onKeyDown={(e) => e.key === 'Enter' && updateFilename()}
-                    />
+                    <div className="flex items-center gap-1">
+                        <input
+                            type="text"
+                            name="indexName"
+                            placeholder='Type index name here'
+                            id='indexName'
+                            value={filename}
+                            onChange={(e) => setFilename(e.target.value)}
+                            className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${theme === 'dark' && 'bg-textColor-300'}`}
+                            required
+                            onKeyDown={(e) => e.key === 'Enter' && updateFilename()}
+                        />
+                        <span className={`${theme === 'light' ? 'text-textColor-100' : 'text-textColor-200'}`}>.{extension}</span>
+                    </div>
                 </div>
             </Modal.Body>
             <Modal.Footer className={`flex items-center gap-3 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
@@ -75,7 +101,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename }) => {
                     className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={onHide}
                 >
-                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                         Cancel
                     </span>}
                 </div>
@@ -84,7 +110,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename }) => {
                     className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={updateFilename}
                 >
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                         Save
                     </span>
                 </div>
@@ -492,7 +518,7 @@ const ContentSection = ({
         setHoveredSource(sourcePath);
     };
     const handleMouseLeave = () => {
-        if (!showSourceContextMenu) {
+        if (showSourceContextMenu === null) {
             setHoveredSource(null);
         }
     };
@@ -502,15 +528,10 @@ const ContentSection = ({
         setShowAddModal(state);
     }
 
-    const [showSourceContextMenu, setShowSourceContextMenu] = useState(false);
-    function handleOpenSourceContextMenu(e) {
+    const [showSourceContextMenu, setShowSourceContextMenu] = useState(null);
+    function handleOpenSourceContextMenu(e, sourcePath) {
         e.stopPropagation();
-        setShowSourceContextMenu(prev => {
-            if (prev) {
-                // setIsUpdateFilenameModalOpen(false);
-            }
-            return !prev;
-        });
+        setShowSourceContextMenu(sourcePath);
     }
 
     const dropdownRef = useRef(null);
@@ -519,7 +540,7 @@ const ContentSection = ({
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 // setIsUpdateFilenameModalOpen(false);
-                setShowSourceContextMenu(false);
+                setShowSourceContextMenu(null);
                 setHoveredSource(null);
             }
         }
@@ -532,10 +553,11 @@ const ContentSection = ({
 
     const [filename, setFilename] = useState('');
     const [isUpdateFilenameModalOpen, setIsUpdateFilenameModalOpen] = useState(false);
-
+    const [updatingSource, setUpdatingSource] = useState(null);
     function handleOpenFilenameUpdateModal(event, source) {
         event.stopPropagation();
-        setFilename(source?.source_path || "");
+        setFilename(source?.source_path.split('.')?.slice(0, -1).join('.') || '');
+        setUpdatingSource(source);
         setIsUpdateFilenameModalOpen(true);
     }
 
@@ -696,10 +718,10 @@ const ContentSection = ({
                                     // }
                                 })} */}
                                 {
-                                    displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${!showSourceContextMenu && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
+                                    displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
                                         <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
-                                            {showSourceContextMenu && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col items-center gap-2 p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                            {showSourceContextMenu === option?.source_path && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col items-center gap-2 p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
                                                 <div className={`flex items-center gap-2 p-2 ${theme === "light" ? 'hover:bg-textColor-100/40' : 'text-textColor-100 hover:bg-slate-800/40'}`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
                                                     <DeleteOutlineOutlinedIcon
                                                         className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
@@ -722,7 +744,7 @@ const ContentSection = ({
                                                     //     style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
                                                     //     className="cursor-pointermr-1"
                                                     // />
-                                                    <MoreHorizIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e)} />
+                                                    <MoreHorizIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
 
                                                 )
                                             }
@@ -781,7 +803,7 @@ const ContentSection = ({
                     </div>
                 </div>
                 {/* update file name modal */}
-                {isUpdateFilenameModalOpen && <UpdateFilenameModal show={isUpdateFilenameModalOpen} onHide={() => setIsUpdateFilenameModalOpen(false)} filename={filename} setFilename={setFilename} />}
+                {isUpdateFilenameModalOpen && <UpdateFilenameModal show={isUpdateFilenameModalOpen} onHide={() => setIsUpdateFilenameModalOpen(false)} filename={filename} extension={updatingSource?.source_path?.split('.')?.at(-1)} setFilename={setFilename} oldFilename={updatingSource?.source_path} sourceCategory={updatingSource?.category} filetype={updatingSource?.file_type} />}
             </section>}
             {/* metadata and source section */}
             {showMetadata && (
