@@ -40,7 +40,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
                 newFilename: filename + "." + extension,
                 filetype
             };
-            await makeApiRequest('/update-filename', 'PATCH', JSON.stringify(payload));
+            await makeApiRequest('/rename', 'PATCH', JSON.stringify(payload));
             const data = await makeApiRequest(
                 "/content",
                 "post",
