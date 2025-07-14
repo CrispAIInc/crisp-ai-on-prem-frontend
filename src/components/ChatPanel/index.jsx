@@ -425,7 +425,7 @@ const ChatPanel = () => {
     setShowEditor(true);
   };
 
-  const [currentTab, setCurrentTab] = useState("insights");  // insights | stories
+  const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
 
   const showSelectedStory = (e, story, index) => {
     setSelectedNote({
@@ -898,7 +898,7 @@ const ChatPanel = () => {
                 <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
                   }`}>
-                  Save {currentTab === "insights" ? "insight" : "story"}
+                  Save {currentTab === "Insights" ? "insight" : "story"}
                 </span>
               </div>
               {/* export */}
@@ -1155,16 +1155,16 @@ const ChatPanel = () => {
               {/* <MetadataGen key={0} name="genMetadata" /> */}
               <div className="relative z-10 flex items-center gap-3">
                 {
-                  ["insights", "stories", "reels"].map((item, index) => <>
+                  ["Insights", "Stories", "Sizzle Reels"].map((item, index) => <>
                     {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
-                    <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer ${item === currentTab ? '!text-primary-300' : ''} font-extrabold italic !text-lg mb-3`} onClick={() => setCurrentTab(item)} />
+                    <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer p-1 rounded-md ${item === currentTab ? '!border !border-primary-300 !text-primary-300' : '!border !border-textColor-200'} font-extrabold italic !text-[15px] mb-3`} onClick={() => setCurrentTab(item)} />
                   </>)
                 }
               </div>
             </div>
             {/* notes */}
             {
-              currentTab === "insights" ?
+              currentTab === "Insights" ?
                 <>
                   <div
                     className={` flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
@@ -1206,7 +1206,7 @@ const ChatPanel = () => {
                     }
                   </div>
                 </>
-                : currentTab === "stories" ?
+                : currentTab === "Stories" ?
                   <>
                     {/* <div
                     className={`mb-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
