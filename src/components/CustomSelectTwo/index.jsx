@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
-const CustomSelectTwo = ({ options, onChange, placeholder }) => {
+const CustomSelectTwo = ({ options, onChange, placeholder, withIcon = false }) => {
 
     const { theme } = useContext(MainContext);
 
@@ -18,7 +18,7 @@ const CustomSelectTwo = ({ options, onChange, placeholder }) => {
     return (
         <div className="custom-select-container user-select-none">
             <select
-                className={`px-1 cursor-pointer py-1 rounded-md outline-none ${theme === 'light' ? 'bg-light-hover-100/30 border border-textColor-100' : 'bg-light-hover-200/20 text-textColor-100  !border !border-textColor-300'}`}
+                className={`px-1 cursor-pointer py-1 rounded-md outline-none ${!withIcon && (theme === 'light' ? ' border border-textColor-100' : ' !border !border-textColor-300')} !border-none ${withIcon && 'bg-transparent'} ${theme === 'light' ? "bg-light-hover-100/30" : "bg-light-hover-200/20 text-textColor-100"}`}
                 onChange={handleChange}
                 value={selectedValue}>
                 <option value="" disabled className={`${theme === 'dark' && 'bg-background text-textColor-100'}`}>{placeholder}</option>

@@ -15,6 +15,7 @@ import Faqs from '../Faqs';
 import Accordion from '../Accordion/index.jsx';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
+import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import HorizontalCard from '../HorizontalCard/index.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
@@ -442,13 +443,16 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
                 <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {/* generate visual/combined summary */}
-                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className="flex flex-wrap items-center justify-between gap-1 mb-10">
+                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-10 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
+                  <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
                   <CustomSelectTwo
+                    withIcon
                     options={languageOptions}
                     onChange={(lang) =>
                       translateMetadata(lang.value, translatedResource)
                     }
                     placeholder="Select a language"
+                    className="!border-none"
                   />
                 </div>}
                 <>

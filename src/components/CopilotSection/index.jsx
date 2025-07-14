@@ -1,4 +1,5 @@
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
+import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import SendIcon from "@mui/icons-material/Send";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import axios from "axios";
@@ -766,11 +767,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             <p key={i}>{note.note_name}</p>;
           })
         }
-        <div className="language-dropdown">
+        <div className={`flex flex-wrap rounded-md items-center mb-10 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"}`}>
+          <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
           <CustomSelectTwo
             options={languageOptions}
             onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage.value)}
             placeholder='Select a language'
+            withIcon
           />
         </div>
 
