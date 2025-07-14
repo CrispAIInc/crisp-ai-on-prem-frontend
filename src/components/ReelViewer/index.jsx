@@ -7,6 +7,8 @@ import { useContext, useState } from 'react';
 import { ThemeContext } from '@emotion/react';
 import makeApiRequest from '../../api';
 import LoadingSpinner from "../LoadingSpinner";
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
+import './fade.css';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function ReelViewer({ closeReel, reel, setReels }) {
@@ -154,7 +156,15 @@ function ReelViewer({ closeReel, reel, setReels }) {
             <div className="relative w-full max-w-sm aspect-[9/16] bg-slate-200 rounded-2xl overflow-hidden sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:w-[30vw] 2xl:h-[80%]">
 
                 <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
-                    <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
+                    <SwitchTransition mode="out-in">
+                        <CSSTransition
+                            key={currentTitle + '-key'}
+                            classNames="fade"
+                            timeout={300}
+                        >
+                            <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
+                        </CSSTransition>
+                    </SwitchTransition>
                     <div className="flex items-center gap-2 !mr-2">
                         {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
                             {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
