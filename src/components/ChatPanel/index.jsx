@@ -1153,7 +1153,7 @@ const ChatPanel = () => {
           {actualTab === null && <div className='relative z-10 flex flex-col flex-1 h-full overflow-y-hidden'>
             <div>
               {/* <MetadataGen key={0} name="genMetadata" /> */}
-              <div className="relative z-10 flex items-center gap-3">
+              <div className="relative z-10 flex items-center gap-3 mt-4">
                 {
                   ["Insights", "Stories", "Sizzle Reels"].map((item, index) => <>
                     {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
