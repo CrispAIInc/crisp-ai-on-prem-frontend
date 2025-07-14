@@ -209,8 +209,8 @@ const ContentPanel = () => {
             </div>
             {
                 isLeftSidebarOpen && <div
-                    className="absolute top-0 bottom-0 left-[99%]  z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
-                    // style={{ left: leftWidth }}
+                    className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
+                    style={{ left: leftWidth - (leftWidth * 0.01) }}
                     onMouseDown={handleLeftMouseDown}
                     onDoubleClick={handleDoubleClick}
                 ></div>

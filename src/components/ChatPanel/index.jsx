@@ -807,8 +807,8 @@ const ChatPanel = () => {
       {/* Resizer */}
       {isRightSidebarOpen && (
         <div
-          className="absolute top-0 bottom-0 z-50 w-1 h-full hover:bg-primary-100 hover:cursor-col-resize"
-          style={{ right: rightWidth }}
+          className="absolute top-0 bottom-0 z-50 w-1 h-full bg-primary-200/10 hover:bg-primary-100 hover:cursor-col-resize"
+          style={{ right: rightWidth - (rightWidth * 0.01) }}
           onMouseDown={handleRightMouseDown}
           onDoubleClick={handleDoubleClick}
         />
