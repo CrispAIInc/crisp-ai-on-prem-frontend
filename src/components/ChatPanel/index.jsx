@@ -7,6 +7,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import MetadataGen from '../MetadataGen';
@@ -1153,12 +1154,16 @@ const ChatPanel = () => {
           {actualTab === null && <div className='relative z-10 flex flex-col flex-1 h-full overflow-y-hidden'>
             <div>
               {/* <MetadataGen key={0} name="genMetadata" /> */}
-              <div className="relative z-10 flex items-center gap-3 mt-4">
+              <div className="relative z-10 flex items-center gap-3 mt-4 mb-3">
                 {
-                  ["Insights", "Stories", "Sizzle Reels"].map((item, index) => <>
-                    {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
-                    <BaseHeading key={index} text={item} className={`mt-3 cursor-pointer p-1 rounded-md ${item === currentTab ? '!border !border-primary-300 !text-primary-300' : '!border !border-textColor-200'} font-extrabold italic !text-[15px] mb-3`} onClick={() => setCurrentTab(item)} />
-                  </>)
+                  [{ icon: ArticleOutlinedIcon, title: "Insights" }, { icon: AutoStoriesOutlinedIcon, title: "Stories" }, { icon: PlayCircleOutlineOutlinedIcon, title: "Sizzle Reels" }].map(({ icon: Icon, title }, index) => {
+                    return (
+                      <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title}>
+                        <Icon className={`${theme === 'light' ? '#F00' : '#f0f'}`} />
+                        <BaseHeading key={index} text={title} className={` font-extrabold italic !text-[15px] ${title === currentTab ? ' !text-primary-300' : ''}`} onClick={() => setCurrentTab(title)} />
+                      </div>
+                    );
+                  })
                 }
               </div>
             </div>
@@ -1240,7 +1245,7 @@ const ChatPanel = () => {
                                   />
                                 )
                               }
-                              <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                              <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
                               <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                 }`}>{story.story_name}</p>
                             </div>
