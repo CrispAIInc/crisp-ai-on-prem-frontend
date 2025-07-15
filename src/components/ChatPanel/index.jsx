@@ -1158,9 +1158,9 @@ const ChatPanel = () => {
                 {
                   [{ icon: ArticleOutlinedIcon, title: "Insights" }, { icon: AutoStoriesOutlinedIcon, title: "Stories" }, { icon: PlayCircleOutlineOutlinedIcon, title: "Sizzle Reels" }].map(({ icon: Icon, title }, index) => {
                     return (
-                      <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title}>
-                        <Icon className={`${theme === 'light' ? '#F00' : '#f0f'}`} />
-                        <BaseHeading key={index} text={title} className={` font-extrabold italic !text-[15px] ${title === currentTab ? ' !text-primary-300' : ''}`} onClick={() => setCurrentTab(title)} />
+                      <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
+                        <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]')}`} />
+                        <BaseHeading key={index} text={title} className={` font-extrabold italic !text-[15px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
                       </div>
                     );
                   })
