@@ -49,7 +49,7 @@ function MediaEntertainment({ reel,
         });
     };
 
-    const handleMouseEnter = () => displayedSources.filter(i => i.is_selected).length === 0 && setTooltipVisible(true);
+    const handleMouseEnter = () => (displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > 3) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMedia() {
@@ -144,7 +144,7 @@ function MediaEntertainment({ reel,
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-70 bg-primary-300 hover:bg-primary-300'
-                    disabled={isLoading || displayedSources.filter(i => i.is_selected).length === 0} onClick={generateMedia}>
+                    disabled={isLoading || displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > 3} onClick={generateMedia}>
                     {isLoading ? <><AutoAwesomeIcon color="primary" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </button>
                 {tooltipVisible && (
@@ -153,7 +153,7 @@ function MediaEntertainment({ reel,
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        No source is selected
+                        Select up to 3 sources
                     </p>
                 )}
             </div>
