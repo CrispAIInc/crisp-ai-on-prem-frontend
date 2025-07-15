@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import MainWorkspace from '../components/MainWorkspace';
 import WorkspaceAuth from '../components/WorkspaceAuth';
 
-export default function MainWorkspacePage({ theme }) {
+export default function MainWorkspacePage({ theme, setTheme }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [inputPassword, setInputPassword] = useState("");
 
@@ -28,7 +28,7 @@ export default function MainWorkspacePage({ theme }) {
                 <meta name="description" content="Crisp AI Workspace to manage and create interactive reports." />
             </Helmet>
             <div className="!h-full">
-                <MainWorkspace theme={theme} />
+                <MainWorkspace theme={theme} setTheme={setTheme} />
             </div>
         </>
     );

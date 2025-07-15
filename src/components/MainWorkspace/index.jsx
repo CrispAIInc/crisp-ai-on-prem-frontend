@@ -14,7 +14,7 @@ import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const MainWorkspace = ({ theme }) => {
+const MainWorkspace = ({ theme, setTheme }) => {
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
   const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace
   const [resourceURL, setResourceURL] = useState(null); // The Selected Resource Direct URL
@@ -1143,6 +1143,7 @@ const MainWorkspace = ({ theme }) => {
     resourceURL,
     setResourceURL,
     jumpToPage, setJumpToPage,
+    setTheme,
     isNewStory, setIsNewStory,
     selectedGenStoriesModels, setSelectedGenStoriesModels,
     summaries, setSummaries,

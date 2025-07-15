@@ -44,7 +44,7 @@ function App() {
       <Router>
         <Routes>
           {/* <Route path="/" element={<HomePage theme={theme} />} /> */}
-          <Route path="/" element={<MainWorkspacePage theme={theme} />} />
+          <Route path="/" element={<MainWorkspacePage setTheme={setTheme} theme={theme} />} />
           <Route path="*" element={<NotFound theme={theme} />} />
         </Routes>
       </Router>
