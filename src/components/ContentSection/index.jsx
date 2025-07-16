@@ -307,9 +307,7 @@ const ContentSection = ({
         try {
             setIsFileUploading(true);
             const files = _files || Array.from(event.target.files);
-            const processedFiles = files.map(file =>
-                file.name.replace(/\s/g, "_").replace(/[()]/g, "")
-            );
+            const processedFiles = files.map(file => file.name);
 
             setUploadedSources(processedFiles); // Updates state but is asynchronous
 
