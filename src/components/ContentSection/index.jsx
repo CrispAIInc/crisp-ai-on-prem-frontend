@@ -34,6 +34,8 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
                 return;
             }
 
+            setIsLoading(true);
+
             const payload = {
                 category: sourceCategory,
                 oldFilename,
@@ -108,18 +110,18 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
                     className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={onHide}
                 >
-                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                         Cancel
-                    </span>}
+                    </span>
                 </div>
 
                 <div
                     className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={updateFilename}
                 >
-                    <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                         Save
-                    </span>
+                    </span>}
                 </div>
             </Modal.Footer>
         </Modal>
