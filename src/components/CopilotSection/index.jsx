@@ -1049,7 +1049,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             <div className="flex w-full p-1 !border !border-textColor-300 rounded-md max-w-[650px] mx-auto">
               <div className="flex-1">
                 <CustomTextArea
-                  placeholder="Ask Crisp Wiz..."
+                  placeholder="Interact"
                   value={input}
                   rows="1"
                   disabled={showCursor}
