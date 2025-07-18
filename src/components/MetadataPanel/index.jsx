@@ -417,11 +417,10 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 className="absolute z-50 shadow-lg cursor-pointer right-4 top-2"
               />
               <ReactPlayer
-
                 id="react-player"
                 width={"100%"}
                 height='500px'
-                playing={true}
+                playing={false}
                 url={resourceURL}
                 onReady={() => setIsPlayerReady(true)}
                 ref={player}
