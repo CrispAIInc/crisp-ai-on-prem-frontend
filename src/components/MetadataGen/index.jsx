@@ -150,9 +150,9 @@ function MetadataGen() {
             <div className='relative inline-block' onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
-                <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
+                <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:cursor-not-allowed bg-primary-300'
                     disabled={isLoading || displayedSources.filter(item => item.is_selected).length === 0} onClick={generateMetadata}>
-                    {isLoading ? <><AutoAwesomeIcon color="primary" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
+                    {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </button>
                 {tooltipVisible && (
                     <p

@@ -54,7 +54,7 @@ function MediaEntertainment({ reel,
 
     async function generateMedia() {
         if (reel.title === "") {
-            toast('Reel title is required!', { className: 'p-2 rounded-md !bg-red-600' });
+            toast('Reel title is required!', { className: 'p-2 text-white rounded-md !bg-red-600' });
             return;
         }
         try {
@@ -143,9 +143,9 @@ function MediaEntertainment({ reel,
             <div className='relative inline-block' onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
-                <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-70 bg-primary-300 hover:bg-primary-300'
+                <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md disabled:cursor-not-allowed bg-primary-300'
                     disabled={isLoading || displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > 3} onClick={generateMedia}>
-                    {isLoading ? <><AutoAwesomeIcon color="primary" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
+                    {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </button>
                 {tooltipVisible && (
                     <p
