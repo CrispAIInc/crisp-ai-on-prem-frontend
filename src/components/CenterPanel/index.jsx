@@ -96,25 +96,26 @@ const CenterPanel = ({ workspaceContainer }) => {
 
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
-            {/* refresh summary */}
-            <div
-                className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                onClick={() => refreshSummary()}
-            >
-                <RefreshOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Refresh summary</span>
-            </div>
+
 
             {(activeView === 'resource') && <div className="flex-1">
                 <div className={`mb-4 ${theme === "light"
                     ? "text-textColor-300"
                     : "text-textColor-100"
                     }`}>
-                    <h2 className="text-3xl font-semibold break-words">
+                    <h2 className="mb-0 text-3xl font-semibold break-words">
                         {/* {currentResource?.source_path.replace(/\.[^/.]+$/, '')} */}
                         Sources Summary
                     </h2>
-                    {selectedSources > 0 && <span>{selectedSources} Source{selectedSources > 1 ? "s" : ""}</span>}
+                    {selectedSources > 0 && <span className="font-medium select-none">{selectedSources} Source{selectedSources > 1 ? "s" : ""}</span>}
+                </div>
+                {/* refresh summary */}
+                <div
+                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                    onClick={() => refreshSummary()}
+                >
+                    <RefreshOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Refresh summary</span>
                 </div>
                 {!isCombinedSummaryPending ? <div>
                     <p
@@ -123,10 +124,10 @@ const CenterPanel = ({ workspaceContainer }) => {
                             : "text-textColor-100"
                             }`}
                         dir={isRtlLanguage(selectedLanguage) ? "rtl" : "ltr"}
-                        dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content}</p>` }}
+                        dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content !== undefined ? currentResource?.metadata?.summary?.content : "No Summary available"}</p>` }}
                     ></p>
-                    {combinedSummary != "" && <div
-                        className={`mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                    {combinedSummary !== undefined && <div
+                        className={`select-none mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                         onClick={() => addToInsight(combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content)}
                     >
                         <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
