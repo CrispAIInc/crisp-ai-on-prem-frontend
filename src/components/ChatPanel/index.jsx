@@ -992,7 +992,7 @@ const ChatPanel = () => {
 
 
 
-            {selectedNote?.note_name !== "" ? <div className={`overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'}`}>
+            {selectedNote?.note_name !== "" ? <div className={`overflow-y-auto h-full max-h-full space-y-6  !z-10 relative !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'}`}>
               {selectedNote?.text.map((item, index) => (
                 <div
                   key={index}
@@ -1058,8 +1058,9 @@ const ChatPanel = () => {
               ))}
             </div>
               :
-              <div className={`overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border !border-textColor-300`}>
-                {/* {
+              <>
+                {selectedStory.story_name !== "" && <div className={`overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border bg-red-600 !border-textColor-100`}>
+                  {/* {
                   selectedStory?.text?.map((heading) => {
                     return (
                       <div key={heading?.id} className="pl-2 mb-4">
@@ -1071,47 +1072,49 @@ const ChatPanel = () => {
                     );
                   })
                 } */}
-                {selectedStory !== null && <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                  }`}>
-                  {/* <h3 className="mb-2 italic text-center">{selectedStory.story_name}</h3> */}
-                  {
-                    selectedStory?.text?.map(section => (
-                      <div key={section.id}>
-                        <h4>{section.outline.name}</h4>
-                        {
-                          section.content?.map((content, index) => (
-                            <div key={index}>
-                              <p>{content.answer}</p>
-                              {/* refs */}
-                              <div className="mt-2 mb-4">
-                                {
-                                  content?.videosArr?.map((ref, index) => (
-                                    <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                  ))
-                                }
+                  <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                    }`}>
+                    {/* <h3 className="mb-2 italic text-center">{selectedStory.story_name}</h3> */}
+                    {
+                      selectedStory?.text?.map(section => (
+                        <div key={section.id}>
+                          <h4>{section.outline.name}</h4>
+                          {
+                            section.content?.map((content, index) => (
+                              <div key={index}>
+                                <p>{content.answer}</p>
+                                {/* refs */}
+                                <div className="mt-2 mb-4">
+                                  {
+                                    content?.videosArr?.map((ref, index) => (
+                                      <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                                    ))
+                                  }
 
-                                {
-                                  content?.pdfsArr?.map((ref, index) => (
-                                    <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                  ))
-                                }
-                                {
-                                  content?.imgsArr?.map((ref, index) => (
-                                    <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                  ))
-                                }
+                                  {
+                                    content?.pdfsArr?.map((ref, index) => (
+                                      <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                                    ))
+                                  }
+                                  {
+                                    content?.imgsArr?.map((ref, index) => (
+                                      <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                                    ))
+                                  }
 
+                                </div>
+                                {/* ... */}
                               </div>
-                              {/* ... */}
-                            </div>
-                          ))
-                        }
-                      </div>
-                    ))
-                  }
-                </div>}
-              </div>
+                            ))
+                          }
+                        </div>
+                      ))
+                    }
+                  </div>
+                </div>
+                }</>
             }
+
 
 
 
