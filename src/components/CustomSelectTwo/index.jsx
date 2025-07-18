@@ -18,7 +18,7 @@ const CustomSelectTwo = ({ options, onChange, placeholder, withIcon = false }) =
     return (
         <div className="custom-select-container user-select-none">
             <select
-                className={`px-1 cursor-pointer py-1 rounded-md outline-none ${!withIcon && (theme === 'light' ? ' border border-textColor-100' : ' !border !border-textColor-300')} !border-none ${withIcon && 'bg-transparent'} ${theme === 'light' ? "bg-light-hover-100/30" : "bg-light-hover-200/20 text-textColor-100"}`}
+                className={`select-none px-1 cursor-pointer py-1 rounded-md outline-none ${!withIcon && (theme === 'light' ? ' border border-textColor-100' : ' !border !border-textColor-300')} !border-none ${withIcon && 'bg-transparent'} ${theme === 'light' ? "bg-light-hover-100/30" : "bg-light-hover-200/20 text-textColor-100"}`}
                 onChange={handleChange}
                 value={selectedValue}>
                 <option value="" disabled className={`${theme === 'dark' && 'bg-background text-textColor-100'}`}>{placeholder}</option>
