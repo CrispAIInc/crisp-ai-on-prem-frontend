@@ -141,7 +141,9 @@ function ReelViewer({ closeReel, reel, setReels }) {
         const currentTime = progress.playedSeconds;
 
         // Find the latest segment whose start_time is <= currentTime
-        const currentSegment = [{ start_time: "00:00:00", title: "Introduction" }, ...reel.segments, { start_time: `00:00:${duration - timeToSeconds(reel.segments[0].start_time)}`, title: "Conclusion" }]
+        // { start_time: "00:00:00", title: "Introduction"; }
+        // { start_time: `00:00:${duration - timeToSeconds(reel.segments[0].start_time)}`, title: "Conclusion" }
+        const currentSegment = [...reel.segments]
             .reverse()
             .find(segment => currentTime >= timeToSeconds(segment.start_time));
 
