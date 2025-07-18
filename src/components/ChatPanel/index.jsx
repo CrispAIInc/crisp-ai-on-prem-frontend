@@ -796,9 +796,9 @@ const ChatPanel = () => {
         )}
       </div>
 
-      <h6 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+      <h5 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
         }  text-center`}>
-        Generator Services</h6>
+        Generator Services</h5>
 
       {/* Background blur elements */}
       <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-0 blur-[160px]"></div>
@@ -1133,8 +1133,8 @@ const ChatPanel = () => {
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
           <div>
             {/* buttons */}
-            <div className="flex justify-center gap-5 mt-4 flex-items">
-              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }, { id: "genMedia", title: "Sizzle Reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`select-none cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
+            <div className="flex justify-center gap-5 mt-2 flex-items">
+              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }, { id: "genMedia", title: "Sizzle Reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`text-[15px] select-none text-md cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
@@ -1159,8 +1159,8 @@ const ChatPanel = () => {
                   [{ icon: ArticleOutlinedIcon, title: "Insights" }, { icon: AutoStoriesOutlinedIcon, title: "Stories" }, { icon: PlayCircleOutlineOutlinedIcon, title: "Sizzle Reels" }].map(({ icon: Icon, title }, index) => {
                     return (
                       <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
-                        <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]')}`} />
-                        <BaseHeading key={index} text={title} className={` font-extrabold italic !text-[15px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
+                        <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
+                        <BaseHeading key={index} text={title} className={` font-extrabold italic !text-[13px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
                       </div>
                     );
                   })
@@ -1172,9 +1172,9 @@ const ChatPanel = () => {
               currentTab === "Insights" ?
                 <>
                   <div
-                    className={` flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                      ? 'hover:bg-light-hover-100/30'
-                      : 'hover:bg-light-hover-200/20'
+                    className={`mb-2 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit shadow-md ${theme === 'light'
+                      ? 'bg-textColor-100/40'
+                      : 'bg-light-hover-200/20 !border !border-textColor-200'
                       } z-10`}
                     onClick={createNewInsight}
                   >
