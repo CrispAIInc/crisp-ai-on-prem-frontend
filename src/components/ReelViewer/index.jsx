@@ -97,7 +97,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
     //     ...seg,
     //     startInSeconds: timeToSeconds(seg.start_time),
     // }));
-    const [currentTitle, setCurrentTitle] = useState('Introduction');
+    const [currentTitle, setCurrentTitle] = useState('');
 
     // const handleProgress = (progress) => {
     //     const currentTime = progress.playedSeconds;
