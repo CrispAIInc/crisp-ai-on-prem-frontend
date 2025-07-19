@@ -88,14 +88,14 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             {
                 chatLoaded ?
                     (
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                             <CustomInput className="z-[51]" placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     handleSubmitQuestion(e);
                                 }
                             }} />
-                            <RippleButton onClick={handleSubmitQuestion} className='w-full p-2 text-white bg-primary-300'>
-                                {isSearching ? <LoadingSpinner videoSpinner={true} /> : isGlobalSearch ? 'Discover' : 'Search'}
+                            <RippleButton onClick={handleSubmitQuestion} cssClasses='!px-3'>
+                                {isSearching ? <span className='tracking-wide loader-ghost'>Searching...</span> : isGlobalSearch ? 'Discover' : 'Search'}
                             </RippleButton>
                         </div>
                     ) : <div className='text-center'>

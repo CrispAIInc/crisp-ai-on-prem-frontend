@@ -242,3 +242,129 @@ h1 {
     opacity: 0;
   }
 }
+
+.loader-atom {
+  transform: rotateZ(45deg);
+  perspective: 1000px;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  color: #fff;
+}
+.loader-atom:before,
+.loader-atom:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: inherit;
+  height: inherit;
+  border-radius: 50%;
+  transform: rotateX(70deg);
+  animation: 1s spin linear infinite;
+}
+.loader-atom:after {
+  color: #fff;
+  transform: rotateY(70deg);
+  animation-delay: 0.4s;
+}
+
+@keyframes rotate {
+  0% {
+    transform: translate(-50%, -50%) rotateZ(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateZ(360deg);
+  }
+}
+
+@keyframes rotateccw {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes spin {
+  0%,
+  100% {
+    box-shadow: 0.2em 0px 0 0px currentcolor;
+  }
+  12% {
+    box-shadow: 0.2em 0.2em 0 0 currentcolor;
+  }
+  25% {
+    box-shadow: 0 0.2em 0 0px currentcolor;
+  }
+  37% {
+    box-shadow: -0.2em 0.2em 0 0 currentcolor;
+  }
+  50% {
+    box-shadow: -0.2em 0 0 0 currentcolor;
+  }
+  62% {
+    box-shadow: -0.2em -0.2em 0 0 currentcolor;
+  }
+  75% {
+    box-shadow: 0px -0.2em 0 0 currentcolor;
+  }
+  87% {
+    box-shadow: 0.2em -0.2em 0 0 currentcolor;
+  }
+}
+
+.loader-search {
+  width: 15px;
+  height: 15px;
+  display: block;
+  /* margin: 20px auto; */
+  position: relative;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: animloader 2s linear infinite;
+}
+.loader-search::after {
+  content: "";
+  box-sizing: border-box;
+  width: 3px;
+  height: 12px;
+  background: #fff;
+  transform: rotate(-45deg);
+  position: absolute;
+  bottom: -10px;
+  left: 12.5px;
+}
+
+@keyframes animloader {
+  0% {
+    transform: translate(-3px, -3px);
+  }
+  25% {
+    transform: translate(-3px, 3px);
+  }
+  50% {
+    transform: translate(3px, 3px);
+  }
+  75% {
+    transform: translate(3px, -3px);
+  }
+  100% {
+    transform: translate(-3px, -3px);
+  }
+}
+
+.loader-ghost {
+  animation: smokeOut 1.5s ease-in infinite alternate;
+  text-shadow: 0 0 1px white;
+}
+
+@keyframes smokeOut {
+  100% {
+    opacity: 0.08;
+    filter: blur(5px);
+  }
+}
