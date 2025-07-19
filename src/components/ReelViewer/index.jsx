@@ -157,6 +157,10 @@ function ReelViewer({ closeReel, reel, setReels }) {
             {/* Reel viewer container */}
             <div className="relative w-full max-w-sm aspect-[9/16] bg-slate-200 rounded-2xl overflow-hidden sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:w-[30vw] 2xl:h-[80%]">
 
+                <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/2 top-10 z-10 blur-[160px]"></div>
+                <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-[50%] z-10 blur-[160px]"></div>
+                <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-[90%] z-10 blur-[160px]"></div>
+
                 <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
                     <SwitchTransition mode="out-in">
                         <CSSTransition
