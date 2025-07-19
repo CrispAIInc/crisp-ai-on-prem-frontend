@@ -9,6 +9,7 @@ import TextSkeleton from '../Skeletons/Base/TextSkeleton.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import { generateRandomHash, isRtlLanguage } from '../../utils.js';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import RippleButton from '../RippleButton/index.jsx';
 
 const CenterPanel = ({ workspaceContainer }) => {
     const {
@@ -114,8 +115,10 @@ const CenterPanel = ({ workspaceContainer }) => {
                     className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                     onClick={() => refreshSummary()}
                 >
-                    <RefreshOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Refresh summary</span>
+                    <RippleButton>
+                        <RefreshOutlinedIcon />
+                        <span>Refresh summary</span>
+                    </RippleButton>
                 </div>
                 {!isCombinedSummaryPending ? <div>
                     <p
@@ -134,7 +137,7 @@ const CenterPanel = ({ workspaceContainer }) => {
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to insight</span>
                     </div>}
                 </div> : (
-                    <div className="animate-pulse">
+                    <div className="mt-3 animate-pulse">
                         {new Array(10).fill(null).map((_, index) => (
                             <TextSkeleton key={index} className='h-3 mb-2' />
                         ))}

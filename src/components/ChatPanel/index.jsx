@@ -24,6 +24,7 @@ import StoriesEditor from '../StoriesEditor';
 import LoadingSpinner from '../LoadingSpinner';
 import MediaEntertainment from '../MediaEntertainment';
 import ReelViewer from '../ReelViewer';
+import RippleButton from '../RippleButton';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -785,6 +786,7 @@ const ChatPanel = () => {
             }  text-center w-full`}>
             Studio</h5>
         </div>
+        {/* <RippleButton>Hello</RippleButton> */}
         {(showEditor || actualTab !== null || showStoriesEditor) && (
           <h5
             onClick={closeEditor}
@@ -1174,19 +1176,20 @@ const ChatPanel = () => {
             {
               currentTab === "Insights" ?
                 <>
-                  <div
+                  {/* <div
                     className={`mb-2 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit shadow-md ${theme === 'light'
                       ? 'bg-textColor-100/40'
                       : 'bg-light-hover-200/20 !border !border-textColor-200'
                       } z-10`}
                     onClick={createNewInsight}
-                  >
-                    <CreateOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                      }`}>
+                  > */}
+                  <RippleButton cssClasses="flex items-center gap-1">
+                    <CreateOutlinedIcon />
+                    <span>
                       New insight
                     </span>
-                  </div>
+                  </RippleButton>
+                  {/* </div> */}
                   <div className="flex flex-col overflow-y-auto">
                     {/* single note */}
                     {

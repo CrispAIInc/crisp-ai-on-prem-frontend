@@ -225,3 +225,20 @@ h1 {
   color: #dc3545;
   cursor: pointer;
 }
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple-animation 600ms linear;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}

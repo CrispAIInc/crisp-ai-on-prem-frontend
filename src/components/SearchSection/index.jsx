@@ -7,6 +7,7 @@ import CustomButton from '../CustomButton';
 import BaseHeading from '../BaseHeading';
 import toast from 'react-simple-toasts';
 import { timeToSeconds } from '../../utils';
+import RippleButton from '../RippleButton';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -93,9 +94,9 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
                                     handleSubmitQuestion(e);
                                 }
                             }} />
-                            <CustomButton onClick={handleSubmitQuestion} className='w-full p-2 text-white bg-primary-300'>
+                            <RippleButton onClick={handleSubmitQuestion} className='w-full p-2 text-white bg-primary-300'>
                                 {isSearching ? <LoadingSpinner videoSpinner={true} /> : isGlobalSearch ? 'Discover' : 'Search'}
-                            </CustomButton>
+                            </RippleButton>
                         </div>
                     ) : <div className='text-center'>
                         <BaseHeading text='Please wait for data to load...' />

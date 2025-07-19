@@ -7,6 +7,7 @@ import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 import MetadataVerbosity from '../MetadataVerbosity';
 import ReelViewer from '../ReelViewer';
+import RippleButton from '../RippleButton';
 
 // const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function MediaEntertainment({ reel,
@@ -143,10 +144,10 @@ function MediaEntertainment({ reel,
             <div className='relative inline-block' onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
-                <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md disabled:cursor-not-allowed bg-primary-300'
+                <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed'
                     disabled={isLoading || displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > 3} onClick={generateMedia}>
                     {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
-                </button>
+                </RippleButton>
                 {tooltipVisible && (
                     <p
                         // onMouseEnter={() => setTooltipVisible(false)}

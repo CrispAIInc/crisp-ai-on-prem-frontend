@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import toast from 'react-simple-toasts';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import RippleButton from '../RippleButton';
 
 function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, setShowStoriesEditor }) {
     const { displayedSources, theme, setStories } = useContext(MainContext);
@@ -389,10 +390,10 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
             <div className='relative inline-block' onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
-                <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md disabled:cursor-not-allowed bg-primary-300'
+                <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed'
                     disabled={context === "" || isLoading} onClick={autoGenerateStory}>
                     {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
-                </button>
+                </RippleButton>
                 {tooltipVisible && (
                     <p
                         // onMouseEnter={() => setTooltipVisible(false)}

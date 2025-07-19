@@ -7,6 +7,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 import makeApiRequest from '../../api';
+import RippleButton from '../RippleButton';
 
 
 
@@ -150,10 +151,10 @@ function MetadataGen() {
             <div className='relative inline-block' onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
-                <button className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:cursor-not-allowed bg-primary-300'
+                <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed'
                     disabled={isLoading || displayedSources.filter(item => item.is_selected).length === 0} onClick={generateMetadata}>
                     {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
-                </button>
+                </RippleButton>
                 {tooltipVisible && (
                     <p
                         // onMouseEnter={() => setTooltipVisible(false)}
