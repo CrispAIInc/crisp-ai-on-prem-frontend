@@ -728,21 +728,20 @@ const ContentSection = ({
                                     displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
                                         <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
-                                            {showSourceContextMenu === option?.source_path && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col items-center gap-2 p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
-                                                <div className={`flex items-center gap-2 p-2 ${theme === "light" ? 'hover:bg-textColor-100/40' : 'text-textColor-100 hover:bg-slate-800/40'}`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
-                                                    <DeleteOutlineOutlinedIcon
-                                                        className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
-                                                    />
-                                                    <span>Remove source</span>
-                                                </div>
-                                                <div className={`flex items-center gap-2 p-2 ${theme === "light" ? 'hover:bg-textColor-100/40' : 'text-textColor-100 hover:bg-slate-800/50'}`}
+                                            {showSourceContextMenu === option?.source_path && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col items-center  p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                                <div className={`flex  gap-2  py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/40' : 'text-textColor-100 hover:bg-slate-800/50'}`}
                                                     onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
                                                     <EditOutlinedIcon
                                                         className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
                                                     />
-                                                    <span>Rename source</span>
+                                                    <span>Rename</span>
                                                 </div>
-
+                                                <div className={`flex  gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/40' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
+                                                    <DeleteOutlineOutlinedIcon
+                                                        className={`cursor-pointer`}
+                                                    />
+                                                    <span>Remove</span>
+                                                </div>
                                             </div>}
                                             {
                                                 hoveredSource === option?.source_path && (
