@@ -1183,7 +1183,7 @@ const ChatPanel = () => {
                       } z-10`}
                     onClick={createNewInsight}
                   > */}
-                  <RippleButton cssClasses="flex items-center gap-1">
+                  <RippleButton onClick={createNewInsight} cssClasses="flex items-center gap-1">
                     <CreateOutlinedIcon />
                     <span>
                       New insight
