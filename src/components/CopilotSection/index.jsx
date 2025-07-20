@@ -17,6 +17,7 @@ import PreviewModal from '../PreviewModal';
 import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
 import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
 import AnimatedText from '../AnimatedText/index.jsx';
+import AnimatedInput from '../AnimatedInput/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
@@ -141,6 +142,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     if (message === "" && input === "") {
       return;
     }
+
+    if (input === '') return;
 
     // const validatedInput = input.replace('\n', ' ');
     setShowCursor(true);
@@ -452,22 +455,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                 <div className="coorg-response">
                   {data.translated_responses[botIndex]}
                 </div>
-                <AddOptionsModal
-                  text={data.translated_responses[botIndex]}
-                  addToNewNote={addToNewNote}
-                  refs={message?.refs}
-                  addToExistingNote={addToExistingNote}
-                  setExistingNote={setExistingNote}
-                  question={data.translated_queries[userIndex - 1]}
-                  existingNote={existingNote}
-                  onHide={onHide}
-                  isNewNote={isNewNote}
-                  setShowNoteModal={setShowNoteModal}
-                  updateSelectedNote={setSelectedNote}
-                  showNoteModal={showNoteModal}
-                  selectedNote={selectedNote}
-                  notes={notes}
-                />
                 {(message?.refs?.videoLinks.length > 0 ||
                   message?.refs?.keyframeObjects.length > 0 ||
                   message?.refs?.pdfObjects.length > 0 ||
@@ -518,13 +505,30 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                         })}
                     </div>
                   )}
+
+                <AddOptionsModal
+                  text={data.translated_responses[botIndex]}
+                  addToNewNote={addToNewNote}
+                  refs={message?.refs}
+                  addToExistingNote={addToExistingNote}
+                  setExistingNote={setExistingNote}
+                  question={data.translated_queries[userIndex - 1]}
+                  existingNote={existingNote}
+                  onHide={onHide}
+                  isNewNote={isNewNote}
+                  setShowNoteModal={setShowNoteModal}
+                  updateSelectedNote={setSelectedNote}
+                  showNoteModal={showNoteModal}
+                  selectedNote={selectedNote}
+                  notes={notes}
+                />
               </div>
             );
 
             const updatedMessage = {
               ...message,
-              text: botMessage,
               references: message.references,
+              text: botMessage,
             };
             botIndex++;
             return updatedMessage;
@@ -1039,30 +1043,29 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
       </section>}
 
       {/* </div> */}
-      <section className="flex items-center gap-2 copilot-chat-container input-area">
+      <section className="flex items-center gap-2 copilot-chat-container input-area max-w-[850px] ">
 
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div className="flex w-full p-1 !border !border-textColor-300 rounded-md max-w-[650px] mx-auto">
-              <div className="flex-1">
-                <CustomTextArea
-                  placeholder="Interact"
-                  value={input}
-                  rows="1"
-                  disabled={showCursor}
-                  onChange={(e) => setInput(e.target.value)}
-                  className="bg-transparent !border-none"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      sendMessage(input);
-                    }
-                  }} />
-              </div>
+            <div className="flex items-end w-full p-1  flex-1 mx-auto">
+              <AnimatedInput
+                label="Interact"
+                value={input}
+                rows="1"
+                type="textarea"
+                disabled={showCursor}
+                setValue={setInput}
+                cssClasses="!max-w-xl flex-1"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    sendMessage(input);
+                  }
+                }} />
               <div
-                className={`p-2 rounded-md cursor-pointer z-[41]`}
+                className={`p-2 rounded-md cursor-pointer `}
                 onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
               >
                 <SendIcon color="primary" />

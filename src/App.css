@@ -21,6 +21,7 @@ body,
 .App {
   /* font-family: "Roboto", sans-serif; */
   height: 100%;
+  letter-spacing: 0.5px;
 }
 
 ::-webkit-scrollbar {

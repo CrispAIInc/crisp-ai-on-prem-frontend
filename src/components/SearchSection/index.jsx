@@ -8,6 +8,7 @@ import BaseHeading from '../BaseHeading';
 import toast from 'react-simple-toasts';
 import { timeToSeconds } from '../../utils';
 import RippleButton from '../RippleButton';
+import AnimatedInput from '../AnimatedInput';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -88,8 +89,13 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             {
                 chatLoaded ?
                     (
-                        <div className="flex items-center gap-2">
-                            <CustomInput className="z-[51]" placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
+                        <div className="flex items-end gap-2">
+                            {/* <CustomInput className="z-[51]" placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSubmitQuestion(e);
+                                }
+                            }} /> */}
+                            <AnimatedInput disabled={false} label={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} setValue={setSearchQuestion} onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     handleSubmitQuestion(e);
                                 }

@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddIcon from '@mui/icons-material/Add';
 import { MainContext } from '../../contexts/mainContext';
 
 const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, refs, question, models }) => {
@@ -33,7 +34,14 @@ const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, refs, qu
   return (
     <div>
 
-      <Button onClick={handleOpen}><AddCircleIcon /></Button>
+      {/* <Button onClick={handleOpen}><AddCircleIcon /></Button> */}
+      <div
+        className={`select-none mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'bg-light-hover-100/30' : 'bg-light-hover-200/20'}`}
+        onClick={handleOpen}
+      >
+        <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to insight</span>
+      </div>
       <Modal
         open={open}
         onClose={handleClose}
