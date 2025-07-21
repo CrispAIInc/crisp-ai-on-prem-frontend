@@ -84,10 +84,13 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
         }
     };
 
+    const [progress, setProgress] = useState(0);
+    const [isProgressStarted, setIsProgressStarted] = useState(false);
+
     return (
         <div className="relative flex flex-col items-center p-4 border-2 border-dashed rounded-md border-primary-200">
-            {isFileUploading && <div className="absolute z-40 w-[90%] h-12 mx-auto">
-                <FakeProgress isLoading={isFileUploading} closeModals={closeModals} />
+            {(isFileUploading || isProgressStarted) && <div className="absolute z-40 w-[90%] h-12 mx-auto">
+                <FakeProgress setIsProgressStarted={setIsProgressStarted} isLoading={isFileUploading} closeModals={closeModals} progress={progress} setProgress={setProgress} />
             </div>}
             <input
                 type="file"

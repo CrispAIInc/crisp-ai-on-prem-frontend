@@ -284,6 +284,7 @@ const ContentSection = ({
             setKnowledgeBase(updatedKnowledgeBase);
 
             setCurrentResource(null);
+            setActiveView(null);
             // prev.pop();
             // setActiveView(prev => prev?.length > 1 ? prev?.filter(item => item !== "resource") : []);
             // setActiveView(() => {
@@ -304,9 +305,22 @@ const ContentSection = ({
         }
     };
 
+    const simulateApiCall = (data, success = true, delay = 4000) => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (success) {
+                    resolve({ status: 200, data: data });
+                } else {
+                    reject({ status: 500, message: 'Internal Server Error' });
+                }
+            }, delay);
+        });
+    };
+
     // const [isUploading, setIsUploading] = useState(false);
     const handleUpload = async (event, fileFormat, _files) => {
         try {
+
             setIsFileUploading(true);
             const files = _files || Array.from(event.target.files);
             const processedFiles = files.map(file => file.name);
@@ -351,14 +365,19 @@ const ContentSection = ({
                 setActiveView('resource');
             }
 
+
+
         } catch (error) {
             console.error(error);
             toast(error?.response?.data?.error, { className: 'p-2 rounded-md z-20', theme });
             setIsFileUploading(false);
         } finally {
             setIsFileUploading(false);
-            setShowAddModal(false);
+            setTimeout(() => {
+                setShowAddModal(false);
+            }, 650);
         }
+
     };
 
     const handleExploreSources = () => {

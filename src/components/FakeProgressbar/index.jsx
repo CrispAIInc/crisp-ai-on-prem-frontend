@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 
-export default function FakeProgress({ isLoading, closeModals }) {
-    const [progress, setProgress] = useState(0);
+export default function FakeProgress({ isLoading, closeModals, progress, setProgress, setIsProgressStarted }) {
     const [intervalId, setIntervalId] = useState(null);
 
     useEffect(() => {
         let resetTimeout;
 
+        setIsProgressStarted(true);
         if (isLoading) {
             setProgress(0);
 
@@ -31,15 +31,22 @@ export default function FakeProgress({ isLoading, closeModals }) {
             setIntervalId(id);
         } else {
             // API done — complete instantly
+            // setTimeout(() => {
             setProgress(100);
+            // }, 1200);
 
             if (intervalId) clearInterval(intervalId);
 
-            closeModals();
+            // closeModals();
 
-            resetTimeout = setTimeout(() => {
-                setProgress(0);
-            }, 500);
+            // resetTimeout = setTimeout(() => {
+            //     setProgress(0);
+            // }, 500);
+
+            setTimeout(() => {
+                setIsProgressStarted(false);
+                closeModals();
+            }, 600);
         }
 
         return () => {
