@@ -892,7 +892,7 @@ const ChatPanel = () => {
           <div className="h-full max-h-full ml-auto overflow-y-auto !overflow-y-hidden flex flex-col">
             <div className="flex items-center justify-between">
               <div
-                className={`select-none mt-3 flex items-center justify-center px-2 py-2 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/30 !border !border-textColor-100' : '!border !border-textColor-300 hover:bg-light-hover-200/20'} mb-3`}
+                className={`select-none mt-3 flex items-center justify-center px-2 py-2 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-300 hover:bg-light-hover-200/20'} mb-3`}
                 onClick={handleSave}
               >
                 <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
@@ -1181,7 +1181,7 @@ const ChatPanel = () => {
                     onClick={createNewInsight}
                   > */}
                   <div
-                    className={`select-none mt-3 flex items-center justify-center px-2 py-2 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/30 !border !border-textColor-100' : '!border !border-textColor-200 hover:bg-light-hover-200/20'} mb-3`}
+                    className={`select-none mt-3 flex items-center justify-center px-2 py-2 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-200 hover:bg-light-hover-200/20'} mb-3`}
                     onClick={createNewInsight}
                   >
                     <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
@@ -1195,7 +1195,7 @@ const ChatPanel = () => {
                         :
                         notes?.map((note, index) => (
                           <div key={note.note_id} className={`flex items-start gap-2 ${theme === 'light'
-                            ? 'hover:bg-textColor-100/30'
+                            ? 'hover:bg-textColor-100/10'
                             : 'hover:bg-light-hover-200/20'
                             } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
                             {
@@ -1219,7 +1219,7 @@ const ChatPanel = () => {
                   <>
                     {/* <div
                     className={`mb-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                      ? 'hover:bg-textColor-100/30'
+                      ? 'hover:bg-textColor-100/10'
                       : 'hover:bg-light-hover-200/20'
                       } z-10`}
                     onClick={createNewInsight}
@@ -1237,7 +1237,7 @@ const ChatPanel = () => {
                           :
                           stories?.map((story, index) => (
                             <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
-                              ? 'hover:bg-textColor-100/30'
+                              ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
                               {
@@ -1265,7 +1265,7 @@ const ChatPanel = () => {
                           :
                           reels?.map((reel, index) => (
                             <div key={reel.id} className={`flex gap-2 ${theme === 'light'
-                              ? 'hover:bg-textColor-100/30'
+                              ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
                               {
