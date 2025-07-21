@@ -128,11 +128,11 @@ const CenterPanel = ({ workspaceContainer }) => {
                             : "text-textColor-100"
                             }`}
                         dir={isRtlLanguage(selectedLanguage) ? "rtl" : "ltr"}
-                        dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content !== undefined ? currentResource?.metadata?.summary?.content : "No Summary available"}</p>` }}
+                        dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== "" ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content !== undefined ? currentResource?.metadata?.summary?.content : "No Summary available"}</p>` }}
                     ></p>
-                    {combinedSummary !== undefined && <div
+                    {combinedSummary !== "" && <div
                         className={`select-none mt-3 flex items-center justify-center  p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/30 !border !border-textColor-100' : '!border !border-textColor-300 hover:bg-light-hover-200/20'}`}
-                        onClick={() => addToInsight(combinedSummary !== undefined ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content)}
+                        onClick={() => addToInsight(combinedSummary !== "" ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content)}
                     >
                         <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         <span className={`font-medium  !text-[12px] ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to insight</span>
