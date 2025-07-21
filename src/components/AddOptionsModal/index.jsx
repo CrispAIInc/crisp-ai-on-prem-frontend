@@ -36,11 +36,11 @@ const AddOptionsModal = ({ text, file, addToNewNote, addToExistingNote, refs, qu
 
       {/* <Button onClick={handleOpen}><AddCircleIcon /></Button> */}
       <div
-        className={`select-none mt-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'bg-light-hover-100/30' : 'bg-light-hover-200/20'}`}
+        className={`select-none mt-3 flex items-center justify-center  p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'bg-textColor-100/20' : 'bg-light-hover-200/20'} `}
         onClick={handleOpen}
       >
         <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to insight</span>
+        <span className={`font-medium !text-[12px] ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to insight</span>
       </div>
       <Modal
         open={open}

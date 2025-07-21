@@ -136,14 +136,14 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
   const categoryValues = categoryOptions.map((option) => option.value);
 
   let noteQuestion = useRef('');
-  const sendMessage = async (message, models = selectedLLMs) => {
+  const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
     if (!chatLoaded) return;
 
     if (message === "" && input === "") {
       return;
     }
 
-    if (input === '') return;
+    if (input === '' && !isRepeated) return;
 
     // const validatedInput = input.replace('\n', ' ');
     setShowCursor(true);
@@ -359,27 +359,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
         <div className="coorg-response">
           {selectedLanguage == "en" ? data.bot_message : newData.translatedText}
         </div>
-        <AddOptionsModal
-          text={
-            selectedLanguage == "en" ? data.bot_message : newData.translatedText
-          }
-          addToNewNote={addToNewNote}
-          refs={refs}
-          addToExistingNote={addToExistingNote}
-          setExistingNote={setExistingNote}
-          question={noteQuestion.current}
-          existingNote={existingNote}
-          onHide={onHide}
-          isNewNote={isNewNote}
-          setShowNoteModal={setShowNoteModal}
-          updateSelectedNote={setSelectedNote}
-          showNoteModal={showNoteModal}
-          selectedNote={selectedNote}
-          notes={notes}
-        />
+
         {!isFoundationLlm && videoLinks && keyframeLinks && pdfLinks && (
           <div>
-            <p className="m-0">References:</p>
+            <p className="mt-2 font-medium">References:</p>
             {videoLinks?.length > 0 && (
               <ul className="pl-1 text-sm break-all truncate whitespace-normal">
                 {videoLinks}
@@ -402,6 +385,24 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             )}
           </div>
         )}
+        <AddOptionsModal
+          text={
+            selectedLanguage == "en" ? data.bot_message : newData.translatedText
+          }
+          addToNewNote={addToNewNote}
+          refs={refs}
+          addToExistingNote={addToExistingNote}
+          setExistingNote={setExistingNote}
+          question={noteQuestion.current}
+          existingNote={existingNote}
+          onHide={onHide}
+          isNewNote={isNewNote}
+          setShowNoteModal={setShowNoteModal}
+          updateSelectedNote={setSelectedNote}
+          showNoteModal={showNoteModal}
+          selectedNote={selectedNote}
+          notes={notes}
+        />
       </div>
     );
 
@@ -412,8 +413,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
         const lastMessageIndex = newMessages.length - 1;
         newMessages[lastMessageIndex] = {
           ...newMessages[lastMessageIndex],
-          text: botMessage,
           refs,
+          text: botMessage,
         };
       }
       return newMessages;
@@ -729,7 +730,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     setShowLLMModal(false);
   };
 
-  const handleRepeatQuestion = (message, models) => {
+  const handleRepeatQuestion = (message, models, isRepeated = true) => {
     // setInput(message);
     if (models[0] === 'gpt-4-vision') {
       handleVisionUpload(null, message);
@@ -742,7 +743,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     }
 
     if (models[0] !== 'dall-e-3' && models[0] !== 'gpt-4-vision') {
-      sendMessage(message);
+      sendMessage(message, models, isRepeated);
       return;
     }
   };
@@ -771,7 +772,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             <p key={i}>{note.note_name}</p>;
           })
         }
-        <div className={`flex flex-wrap rounded-md items-center !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"}`}>
+        <div className={`flex flex-wrap rounded-full items-center !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"}`}>
           <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
           <CustomSelectTwo
             options={languageOptions}
@@ -803,7 +804,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
         /> */}
       </section>
 
-      <section className="flex items-center gap-1 mx-2 my-3 user-select-none">
+      <section className="flex items-center gap-1 mx-2 my-3 user-select-none rounded-md">
         {/* <span
           className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
             }`}
@@ -852,7 +853,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                   className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
                 >
                   {
-                    message.models.includes('gpt-4-vision')
+                    message?.models?.includes('gpt-4-vision')
                       ? (
                         <>
                           <div className="flex items-center justify-between">
@@ -888,7 +889,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                             <div
                               className="cursor-pointer"
                               onClick={() => {
-                                handleRepeatQuestion(message.text, message.models);
+                                handleRepeatQuestion(message.text, message?.models, true);
                               }}
                             >
                               <ReplayOutlinedIcon />
@@ -909,7 +910,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                       : "bg-background_workspace"
                       } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
                   >
-                    {message.models.includes("dall-e-3") && message.img ? (
+                    {message?.models?.includes("dall-e-3") && message.img ? (
                       <>
                         <b
                           className={`user-select-none ${theme === "light"
@@ -957,7 +958,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                                 : "text-textColor-200"
                                 }`}
                             >
-                              {message.models.map((item, index) => (
+                              {message?.models?.map((item, index) => (
                                 <span
                                   key={index}
                                   className={`text-xs divide-x ${theme === "light"
@@ -1009,7 +1010,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                           >
                             Models:{" "}
                           </span>
-                          {message.models.map((item, index) => (
+                          {message?.models?.map((item, index) => (
                             <span
                               key={index}
                               className={`text-xs divide-x ${theme === "light"
@@ -1043,32 +1044,31 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
       </section>}
 
       {/* </div> */}
-      <section className="flex items-center gap-2 copilot-chat-container input-area max-w-[850px] ">
+      <section className="flex items-center gap-2 copilot-chat-container input-area max-w-[1000px] ">
 
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div className="flex items-end w-full p-1  flex-1 mx-auto">
-              <AnimatedInput
-                label="Interact"
+            <div className={`flex items-center w-full mt-3 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
+              <input
+                placeholder="Interact"
                 value={input}
                 rows="1"
-                type="textarea"
                 disabled={showCursor}
-                setValue={setInput}
-                cssClasses="!max-w-xl flex-1"
+                onChange={e => setInput(e.target.value)}
+                className={`!flex-1 px-2 py-3 rounded-full bg-transparent outline-none`}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     sendMessage(input);
                   }
                 }} />
               <div
-                className={`p-2 rounded-md cursor-pointer `}
+                className={`p-2 mr-3 text-sm cursor-pointer ${theme === 'light' ? 'bg-textColor-300' : 'bg-textColor-200'} text-white/80 rounded-full`}
                 onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
               >
-                <SendIcon color="primary" />
+                <SendIcon className={``} />
               </div>
             </div>}
 
