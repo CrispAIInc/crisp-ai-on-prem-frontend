@@ -892,11 +892,11 @@ const ChatPanel = () => {
           <div className="h-full max-h-full ml-auto overflow-y-auto !overflow-y-hidden flex flex-col">
             <div className="flex items-center justify-between">
               <div
-                className={`select-none mt-3 flex items-center justify-center px-2 py-2 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-300 hover:bg-light-hover-200/20'} mb-3`}
+                className={`select-none mt-3 flex items-center justify-center p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-300 hover:bg-light-hover-200/20'} mb-3`}
                 onClick={handleSave}
               >
                 <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
+                <span className={` !text-[12px] font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
                   }`}>
                   Save {currentTab === "Insights" ? "insight" : "story"}
                 </span>
@@ -1181,11 +1181,11 @@ const ChatPanel = () => {
                     onClick={createNewInsight}
                   > */}
                   <div
-                    className={`select-none mt-3 flex items-center justify-center px-2 py-2 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-200 hover:bg-light-hover-200/20'} mb-3`}
+                    className={`select-none mt-3 flex items-center justify-center p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-200 hover:bg-light-hover-200/20'} mb-3`}
                     onClick={createNewInsight}
                   >
                     <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Insight</span>
+                    <span className={`font-medium !text-[12px] ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Insight</span>
                   </div>
                   {/* </div> */}
                   <div className="flex flex-col overflow-y-auto">
