@@ -13,7 +13,7 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, ch
 
     return (
         <div
-            className={`${isBoxed && 'border border-gray-200'} rounded-lg  bg-transparent backdrop-blur-xs p-2 `}
+            className={`${isBoxed && '!border !border-gray-200'}  rounded-lg  bg-transparent backdrop-blur-xs p-2 `}
         >
             <button
                 onClick={toggleFAQ}

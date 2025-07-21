@@ -18,7 +18,7 @@ function FaqItem({ item, isBoxed = false, isFirstOpen = false, chosenLanguage })
         <div
             className={`
                 rounded-lg bg-transparent backdrop-blur-xs p-2 
-                ${isBoxed ? (theme === 'dark' ? 'border border-gray-700' : 'border border-red-600') : ''}
+                ${isBoxed ? (theme === 'dark' ? '!border !border-textColor-300' : '!border !border-textColor-100') : ''}
             `}
         >
             <button
