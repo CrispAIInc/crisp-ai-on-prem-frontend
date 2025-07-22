@@ -1206,8 +1206,7 @@ const ChatPanel = () => {
                               hoveredInsight === note?.note_id && (
                                 isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
                                   onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
-                                  style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                  className="cursor-pointermr-1"
+                                  className="text-red-400 cursor-pointer"
                                 />
                               )
                             }
@@ -1248,8 +1247,7 @@ const ChatPanel = () => {
                                 hoveredStory === story?.story_id && (
                                   isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
                                     onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
-                                    style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                    className="cursor-pointermr-1"
+                                    className="text-red-400 cursor-pointer"
                                   />
                                 )
                               }
@@ -1277,8 +1275,7 @@ const ChatPanel = () => {
                                 hoveredReel === reel?.id && (
                                   isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
                                     onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
-                                    style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                    className="cursor-pointermr-1"
+                                    className="text-red-400 cursor-pointer"
                                   />
                                 )
                               }
