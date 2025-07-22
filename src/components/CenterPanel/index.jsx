@@ -10,6 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { generateRandomHash, isRtlLanguage } from '../../utils.js';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import RippleButton from '../RippleButton/index.jsx';
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 
 const CenterPanel = ({ workspaceContainer }) => {
     const {
@@ -60,7 +61,7 @@ const CenterPanel = ({ workspaceContainer }) => {
         if (displayedSources?.length > 1 || (displayedSources?.length > 1 && activeView === "resource")) {
             getCombinedSum();
         } else {
-            setCombinedSummary(currentResource?.metadata?.summary?.content);
+            setCombinedSummary(currentResource?.metadata?.summary?.content || "");
         }
     }
 
@@ -128,8 +129,15 @@ const CenterPanel = ({ workspaceContainer }) => {
                             : "text-textColor-100"
                             }`}
                         dir={isRtlLanguage(selectedLanguage) ? "rtl" : "ltr"}
-                        dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== "" ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content !== undefined ? currentResource?.metadata?.summary?.content : "No Summary available"}</p>` }}
+                        dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== "" ? combinedSummary?.replace(/\n/gi, '<br />') : (currentResource?.metadata?.summary?.content !== undefined) ? currentResource?.metadata?.summary?.content : ""}</p>` }}
                     ></p>
+                    {
+                        combinedSummary === "" && currentResource?.metadata?.summary?.content === undefined &&
+                        <div className="flex items-center gap-2 mt-3">
+                            <WarningAmberOutlinedIcon style={{ color: theme === 'light' ? '#FBBF24' : '#F59E0B' }} />
+                            <span className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>No summary available for this resource.</span>
+                        </div>
+                    }
                     {combinedSummary !== "" && <div
                         className={`select-none mt-3 flex items-center justify-center  p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/30 !border !border-textColor-100' : '!border !border-textColor-300 hover:bg-light-hover-200/20'}`}
                         onClick={() => addToInsight(combinedSummary !== "" ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content)}
