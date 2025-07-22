@@ -1199,6 +1199,9 @@ const ChatPanel = () => {
                             ? 'hover:bg-textColor-100/10'
                             : 'hover:bg-light-hover-200/20'
                             } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
+                            <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                            <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                              }`}>{note.note_name}</p>
                             {
                               hoveredInsight === note?.note_id && (
                                 isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
@@ -1208,9 +1211,6 @@ const ChatPanel = () => {
                                 />
                               )
                             }
-                            <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                            <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                              }`}>{note.note_name}</p>
                           </div>
                         ))
                     }
@@ -1241,6 +1241,9 @@ const ChatPanel = () => {
                               ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
+                              <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                              <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                }`}>{story.story_name}</p>
                               {
                                 hoveredStory === story?.story_id && (
                                   isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
@@ -1250,9 +1253,6 @@ const ChatPanel = () => {
                                   />
                                 )
                               }
-                              <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                              <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`}>{story.story_name}</p>
                             </div>
                           ))
                       }
@@ -1269,6 +1269,10 @@ const ChatPanel = () => {
                               ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
+                              {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
+                              <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} />
+                              <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                }`}>{reel.title}</p>
                               {
                                 hoveredReel === reel?.id && (
                                   isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
@@ -1278,10 +1282,6 @@ const ChatPanel = () => {
                                   />
                                 )
                               }
-                              {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
-                              <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} />
-                              <p className={`font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`}>{reel.title}</p>
                             </div>
                           ))
                       }
