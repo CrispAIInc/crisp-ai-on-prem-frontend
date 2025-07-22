@@ -763,15 +763,15 @@ const ContentSection = ({
                                                 </div>
                                             </div>}
                                             {
-                                                hoveredSource === option?.source_path && (
-                                                    // <DeleteOutlineOutlinedIcon
-                                                    //     onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}
-                                                    //     style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                                    //     className="cursor-pointermr-1"
-                                                    // />
-                                                    <MoreHorizIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                // hoveredSource === option?.source_path && (
+                                                // <DeleteOutlineOutlinedIcon
+                                                //     onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}
+                                                //     style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                                //     className="cursor-pointermr-1"
+                                                // />
+                                                <MoreHorizIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
 
-                                                )
+                                                // )
                                             }
                                             {
                                                 option.file_type === "video" ? (
