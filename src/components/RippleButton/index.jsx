@@ -34,7 +34,7 @@ const RippleButton = ({ children, fullWidth = false, cssClasses = "", disabled =
                 createRipple(e);
                 onClick(e);
             }}
-            className={`relative overflow-hidden p-2 !pr-[9px] text-white text-sm  rounded-full ${theme === "light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} hover:opacity-90 transition duration-300  flex items-center justify-center ${fullWidth ? 'w-full' : "w-fit"} ${cssClasses}`}
+            className={`relative overflow-hidden pr-[9px] text-white text-sm  rounded-full ${theme === "light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} hover:opacity-90 transition duration-300  flex items-center justify-center ${fullWidth ? 'w-full' : "w-fit"} ${cssClasses}`}
         >
             {children}
         </button>

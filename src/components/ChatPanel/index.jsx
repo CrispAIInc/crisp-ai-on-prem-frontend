@@ -1180,13 +1180,14 @@ const ChatPanel = () => {
                       } z-10`}
                     onClick={createNewInsight}
                   > */}
-                  <div
-                    className={`select-none mt-3 flex items-center justify-center p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-200 hover:bg-light-hover-200/20'} mb-3`}
+                  <RippleButton
+                    // className={`select-none mt-3 flex items-center justify-center p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-200 hover:bg-light-hover-200/20'} mb-3`}
                     onClick={createNewInsight}
+                    cssClasses='!py-1 !px-2 !pr-4'
                   >
-                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                    <span className={`font-medium !text-[12px] ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Insight</span>
-                  </div>
+                    <AddIcon className="!w-fit !p-0" />
+                    <span className={` !text-[12px]`}>New Insight</span>
+                  </RippleButton>
                   {/* </div> */}
                   <div className="flex flex-col overflow-y-auto">
                     {/* single note */}

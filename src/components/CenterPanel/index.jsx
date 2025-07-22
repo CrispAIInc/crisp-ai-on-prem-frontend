@@ -116,7 +116,7 @@ const CenterPanel = ({ workspaceContainer }) => {
                     className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                     onClick={() => refreshSummary()}
                 > */}
-                <RippleButton cssClasses="flex items-center mb-3" onClick={() => refreshSummary()}>
+                <RippleButton cssClasses="flex items-center mb-3 py-2 pl-2 !pr-3" onClick={() => refreshSummary()}>
                     {isCombinedSummaryPending ? <span className="loader-atom"></span> :
                         <RefreshOutlinedIcon />}
                     <span>Refresh summary</span>
