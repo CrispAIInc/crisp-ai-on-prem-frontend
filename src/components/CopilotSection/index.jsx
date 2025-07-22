@@ -235,6 +235,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
         if (data.type === "SESSION_ID") {
           sessionID = data.session_id;
         } else if (data.type === "MESSAGE") {
+          setShowCursor(false);
           const newToken = data.text;
           botMessage += " " + newToken;
           setMessages((prevMessages) => {
@@ -772,7 +773,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             <p key={i}>{note.note_name}</p>;
           })
         }
-        <div className={`flex flex-wrap rounded-full items-center !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"}`}>
+        {(combinedSummary !== "" || messages.length > 0) && <div className={`flex flex-wrap rounded-full items-center !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"}`}>
           <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
           <CustomSelectTwo
             options={languageOptions}
@@ -780,7 +781,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             placeholder='Select a language'
             withIcon
           />
-        </div>
+        </div>}
 
         {/* <div className="models-list-button">
           <CustomButton
@@ -998,7 +999,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                           (isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                         }
                         {showCursor && index == responseIndex ? (
-                          <AutoAwesomeIcon color="primary" className="animate-customPulse" />
+                          <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
+                            <AutoAwesomeIcon className="animate-fade-in" />
+                            <AnimatedText text='Thinking...' />
+                          </div>
                         ) : null}
 
                         {/* <div className="flex flex-wrap items-center gap-1">

@@ -91,7 +91,7 @@ export default {
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
         fadeIn: {
-          '0%': { opacity: 0.5 },
+          '0%': { opacity: 0.2 },
           '100%': { opacity: 1 },
         },
         customPulse: {
@@ -103,7 +103,7 @@ export default {
         blink: 'blink 1s step-start infinite',
         ripple: 'ripple 0.6s linear',
         smoothPing: 'smoothPing 1.8s linear infinite',
-        'fade-in': 'fadeIn 1s forwards infinite',
+        'fade-in': 'fadeIn 1.5s forwards infinite',
         customPulse: 'customPulse 1.5s ease-in-out infinite',
       },
       colors: {
