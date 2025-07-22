@@ -804,8 +804,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
         /> */}
       </section>
 
-      <section className="flex items-center gap-1 mx-2 my-3 user-select-none rounded-md">
-        {/* <span
+      {/* <section className="flex items-center gap-1 mx-2 my-3 rounded-md user-select-none"> */}
+      {/* <span
           className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
             }`}
         >
@@ -836,8 +836,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             ))
           )}
         </div> */}
-        {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
-      </section>
+      {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
+      {/* </section> */}
 
       {/* <div className="flex items-center flex-1 gap-3"> */}
       {messages?.length > 0 && <section
