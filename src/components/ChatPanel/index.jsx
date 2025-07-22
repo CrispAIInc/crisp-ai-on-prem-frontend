@@ -1162,7 +1162,7 @@ const ChatPanel = () => {
                     return (
                       <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
                         <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
-                        <BaseHeading key={index} text={title} className={` font-extrabold italic !text-[13px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
+                        <BaseHeading key={index} text={title} className={` font-extrabold !text-[13px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
                       </div>
                     );
                   })
