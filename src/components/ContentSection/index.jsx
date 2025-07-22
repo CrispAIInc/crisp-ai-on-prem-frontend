@@ -1,6 +1,6 @@
 
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import { useContext, useEffect, useRef, useState } from "react";
 import makeApiRequest from "../../api";
@@ -769,7 +769,7 @@ const ContentSection = ({
                                                 //     style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
                                                 //     className="cursor-pointermr-1"
                                                 // />
-                                                <MoreHorizIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
 
                                                 // )
                                             }
