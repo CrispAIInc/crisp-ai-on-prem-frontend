@@ -8,7 +8,7 @@ import BaseHeading from '../BaseHeading';
 import toast from 'react-simple-toasts';
 import { timeToSeconds } from '../../utils';
 import RippleButton from '../RippleButton';
-import AnimatedInput from '../AnimatedInput';
+import AnimatedText from '../AnimatedText';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -19,8 +19,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
         setAdditionalSources,
         setShowSearchModal,
         setSummary,
-        setActiveView,
-        activeView,
+        theme,
         setJumpToPage
     } = useContext(MainContext);
 
@@ -80,29 +79,23 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
         }
     };
 
-    const handleSearchQuestionChange = (event) => {
-        setSearchQuestion(event.target.value);
-    };
-
     return (
         <div className={`search-wrapper ${className}`}>
             {
                 chatLoaded ?
                     (
-                        <div className="flex items-end gap-2">
-                            {/* <CustomInput className="z-[51]" placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={handleSearchQuestionChange} onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    handleSubmitQuestion(e);
-                                }
-                            }} /> */}
-                            <AnimatedInput disabled={false} label={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} setValue={setSearchQuestion} onKeyDown={(e) => {
+                        <div className={`flex items-center pr-[1px] bg-background_workspace ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-300'} rounded-full bg-transparent`}>
+
+                            <input className='flex-1 p-2 bg-transparent border-none rounded-full outline-none' placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={(event) => setSearchQuestion(event.target.value)} onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     handleSubmitQuestion(e);
                                 }
                             }} />
-                            <RippleButton onClick={handleSubmitQuestion} cssClasses='!px-3'>
-                                {isSearching ? <span className='tracking-wide loader-ghost'>Searching...</span> : isGlobalSearch ? 'Discover' : 'Search'}
+
+                            <RippleButton onClick={handleSubmitQuestion}>
+                                {isSearching ? <AnimatedText text='Searching...' /> : isGlobalSearch ? 'Discover' : 'Search'}
                             </RippleButton>
+
                         </div>
                     ) : <div className='text-center'>
                         <BaseHeading text='Please wait for data to load...' />
