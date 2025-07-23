@@ -759,7 +759,7 @@ const ContentSection = ({
                                                     <DeleteOutlineOutlinedIcon
                                                         className={`cursor-pointer`}
                                                     />
-                                                    <span>Remove</span>
+                                                    <span>Delete</span>
                                                 </div>
                                             </div>}
                                             {
