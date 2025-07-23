@@ -138,13 +138,13 @@ const CenterPanel = ({ workspaceContainer }) => {
                             <span className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>No summary available for this resource.</span>
                         </div>
                     }
-                    {combinedSummary !== "" && <div
-                        className={`select-none mt-3 flex items-center justify-center  p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/30 !border !border-textColor-100' : '!border !border-textColor-300 hover:bg-light-hover-200/20'}`}
+                    {combinedSummary !== "" && <RippleButton
+                        cssClasses={`mt-3 flex items-center justify-center py-1 pl-1 !pr-4`}
                         onClick={() => addToInsight(combinedSummary !== "" ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content)}
                     >
-                        <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                        <span className={`font-medium  !text-[12px] ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add to insight</span>
-                    </div>}
+                        <AddIcon />
+                        <span className={`!text-[12px]`}>Add to insight</span>
+                    </RippleButton>}
                 </div> : (
                     <div className="animate-pulse">
                         {new Array(10).fill(null).map((_, index) => (
