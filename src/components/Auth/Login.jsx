@@ -53,7 +53,7 @@ export default function Register() {
             }
             <div className="flex flex-col gap-4">
                 <AnimatedInput
-                    inputClasses="!pl-[10px]"
+                    inputClasses="!pl-[20px]"
                     label="Email Address"
                     value={userInfo.email}
                     setValue={(value) => setUserInfo({ ...userInfo, email: value })}
@@ -62,7 +62,7 @@ export default function Register() {
                 <AnimatedInput
                     isPassword
                     name="password"
-                    inputClasses="!pl-[10px]"
+                    inputClasses="!pl-[20px]"
                     label="Password"
                     value={userInfo.password}
                     setValue={(value) => setUserInfo({ ...userInfo, password: value })}
