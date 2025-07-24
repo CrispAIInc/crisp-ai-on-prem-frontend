@@ -2,7 +2,7 @@ import React from 'react';
 import Register from "../../components/Auth/Register";
 
 
-function RegisterPage({ theme, setTheme }) {
+function RegisterPage({ theme }) {
     return (
         <div className="flex min-h-screen ">
             {/* left showcase => gradient wave design*/}
