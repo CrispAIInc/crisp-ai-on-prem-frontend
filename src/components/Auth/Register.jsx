@@ -1,0 +1,67 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import AnimatedInput from '../AnimatedInput';
+import RippleButton from "../RippleButton";
+
+export default function Register({ theme }) {
+    const [userInfo, setUserInfo] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
+
+    return (
+        <div className="flex flex-col w-full">
+            <img src="./imgs/app-logo-full.png" alt="CrispAI logo" className='w-[50%] h-auto mx-auto mb-10' />
+            <h1 className="mb-10 text-4xl font-bold text-center">Create an account</h1>
+            <div className="flex flex-col gap-4">
+                <AnimatedInput
+                    inputClasses="!pl-[10px]"
+                    label="Firstname"
+                    value={userInfo.firstName}
+                    setValue={(value) => setUserInfo({ ...userInfo, firstName: value })}
+                    type="text"
+                />
+                <AnimatedInput
+                    inputClasses="!pl-[10px]"
+                    label="Lastname"
+                    value={userInfo.lastName}
+                    setValue={(value) => setUserInfo({ ...userInfo, lastName: value })}
+                    type="text"
+                />
+                <AnimatedInput
+                    inputClasses="!pl-[10px]"
+                    label="Email Address"
+                    value={userInfo.email}
+                    setValue={(value) => setUserInfo({ ...userInfo, email: value })}
+                    type="email"
+                />
+                <AnimatedInput
+                    isPassword
+                    name="password"
+                    inputClasses="!pl-[10px]"
+                    label="Password"
+                    value={userInfo.password}
+                    setValue={(value) => setUserInfo({ ...userInfo, password: value })}
+                    type="password"
+                />
+                <AnimatedInput
+                    isPassword
+                    name="confirmPassword"
+                    inputClasses="!pl-[10px]"
+                    label="Confirm password"
+                    value={userInfo.confirmPassword}
+                    setValue={(value) => setUserInfo({ ...userInfo, confirmPassword: value })}
+                    type="password"
+                />
+                <RippleButton fullWidth cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2" >
+                    {!userInfo && <span className="loader-atom"></span>}
+                    <span>Create</span>
+                </RippleButton>
+            </div>
+            <p className='mt-2 font-medium text-center text-textColor-200'>Already have an account? <Link className="text-primary-300" to="/login">Sign-in</Link></p>
+        </div>
+    );
+}

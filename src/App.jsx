@@ -9,6 +9,7 @@ import { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import MainWorkspacePage from './pages/MainWorkspacePage';
 import NotFound from './pages/NotFound';
+import RegisterPage from './pages/Auth/RegisterPage';
 
 
 function App() {
@@ -45,7 +46,8 @@ function App() {
         <Routes>
           {/* <Route path="/" element={<HomePage theme={theme} />} /> */}
           <Route path="/" element={<MainWorkspacePage setTheme={setTheme} theme={theme} />} />
-          <Route path="*" element={<NotFound theme={theme} />} />
+          <Route path="/sign-up" element={<RegisterPage theme={theme} setTheme={setTheme} />} />
+          <Route path="*" element={<NotFound theme={theme} setTheme={setTheme} />} />
         </Routes>
       </Router>
     </div>
