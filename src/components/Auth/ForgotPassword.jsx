@@ -32,7 +32,7 @@ export default function ForgotPassword() {
     return (
         <div className="flex flex-col w-full">
             <img src="./imgs/app-logo-full.png" alt="CrispAI logo" className='w-[50%] h-auto mx-auto mb-10' />
-            <h1 className="mb-10 text-4xl font-bold text-center">Sign-in</h1>
+            <h1 className="mb-10 text-4xl font-bold text-center">Forgot Password</h1>
             {
                 error && <p className="mb-4 text-center text-red-500">{error}</p>
             }
@@ -46,10 +46,10 @@ export default function ForgotPassword() {
                 />
                 <RippleButton fullWidth cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2" onClick={handleForgotPassword}>
                     {isPending && <span className="loader-atom"></span>}
-                    <span>Sign in</span>
+                    <span>Submit</span>
                 </RippleButton>
             </div>
-            <p className='mt-2 font-medium text-center text-textColor-200'>Don&apos;t  have an account? <Link className="text-primary-300" to="/sign-up">Sign up</Link></p>
+            <p className='mt-2 font-medium text-center text-textColor-200'>Remembered your password? <Link className="text-primary-300" to="/login">Sign in</Link></p>
         </div>
     );
 }
