@@ -37,7 +37,7 @@ const AnimatedInput = ({ label, type = "text", name = "", value = "", setValue =
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             className={`w-full h-12 pl-2 text-gray-900 placeholder-transparent bg-transparent  focus:outline-none focus:border-blue-500 ${(theme === 'light' || _theme === 'light') ? ' !text-textColor-300 border border-textColor-100' : ' border border-textColor-200/45 !bg-background_workspace text-textColor-100'} rounded-full ${inputClasses}`}
-                            placeholder={label}
+                            // placeholder={label}
                             disabled={disabled}
                         />
                         <label
@@ -74,7 +74,7 @@ const AnimatedInput = ({ label, type = "text", name = "", value = "", setValue =
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             className={`w-full h-12 text-gray-900 placeholder-transparent bg-transparent  peer focus:outline-none focus:border-blue-500 ${(theme === 'light' || _theme === 'light') ? ' !text-textColor-300 border-b-4 border-gray-300' : ' border-b-4 border-textColor-200/45 !bg-background_workspace  text-white'} ${inputClasses}`}
-                            placeholder={label}
+                            // placeholder={label}
                             disabled={disabled}
                         />
                         <label
