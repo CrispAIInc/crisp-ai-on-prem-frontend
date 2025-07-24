@@ -37,7 +37,7 @@ export default function ResetPassword() {
     return (
         <div className="flex flex-col w-full">
             {/* <img src="./imgs/app-logo-full.png" alt="CrispAI logo" className='w-[50%] h-auto mx-auto mb-10' /> */}
-            <h1 className="mb-10 text-4xl font-bold text-center">Sign-in</h1>
+            <h1 className="mb-10 text-4xl font-bold text-center">Reset Password</h1>
             {
                 error && <p className="mb-4 text-center text-red-500">{error}</p>
             }
