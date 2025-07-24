@@ -43,7 +43,7 @@ const AnimatedInput = ({ label, type = "text", name = "", value = "", setValue =
                         <label
                             htmlFor={name}
                             style={{ transform: 'translateY(-50%)' }}
-                            className={`absolute left-2 text-gray-500 transition-all duration-200 ease-in-out 
+                            className={`absolute left-4 text-gray-500 transition-all duration-200 ease-in-out 
           ${isFocused || value ? "-top-1 bg-background_workspace px-2 rounded-full left-5 text-sm text-blue-500" : "top-1/2  text-sm pointer-events-none"}
         `}
                         >
