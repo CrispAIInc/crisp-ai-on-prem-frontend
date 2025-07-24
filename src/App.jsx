@@ -12,6 +12,7 @@ import NotFound from './pages/NotFound';
 import RegisterPage from './pages/Auth/RegisterPage';
 import LoginPage from './pages/Auth/LoginPage';
 import ForgotPasswordPage from './pages/Auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
           <Route path="/sign-up" element={<RegisterPage theme={theme} setTheme={setTheme} />} />
           <Route path="/login" element={<LoginPage theme={theme} setTheme={setTheme} />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage theme={theme} setTheme={setTheme} />} />
+          <Route path="/reset-password" element={<ResetPasswordPage theme={theme} setTheme={setTheme} />} />
           <Route path="*" element={<NotFound theme={theme} setTheme={setTheme} />} />
         </Routes>
       </Router>
