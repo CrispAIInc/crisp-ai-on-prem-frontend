@@ -3,7 +3,7 @@ import { MainContext } from '../../contexts/mainContext';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
-const AnimatedInput = ({ label, type = "text", name = "", value = "", setValue = () => null, disabled = false, onKeyDown, cssClasses = "", rows = 3, _theme = "light", inputClasses = "", isPassword = false }) => {
+const AnimatedInput = ({ label, type = "text", name = "", value = "", setValue = () => null, disabled = false, onKeyDown, cssClasses = "", rows = 3, _theme = "light", inputClasses = "", isPassword = false, required = true }) => {
     const { theme } = useContext(MainContext);
     const [isFocused, setIsFocused] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -28,7 +28,7 @@ const AnimatedInput = ({ label, type = "text", name = "", value = "", setValue =
                 type !== "textarea" ? (
                     <>
                         <input
-
+                            required={required}
                             type={type}
                             name={name}
                             value={value}
@@ -64,9 +64,9 @@ const AnimatedInput = ({ label, type = "text", name = "", value = "", setValue =
                 ) : (
                     <>
                         <textarea
-
+                            required={required}
                             // type={type}
-                            // name={name}
+                            name={name}
                             rows={rows}
                             value={value}
                             onChange={e => setValue(e.target.value)}
