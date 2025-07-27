@@ -1,5 +1,6 @@
 
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import { useContext, useEffect, useRef, useState } from "react";
@@ -591,125 +592,126 @@ const ContentSection = ({
 
     return (
         <>
-            {!showMetadata && <section className={`relative flex flex-col items-start h-full`}>
+            {!showMetadata && (
+                <section className={`relative flex flex-col items-start h-full`}>
 
 
 
-                <div className="w-full">
-                    <div className="w-full max-w-4xl pr-3">
-                        {/* home */}
-                        {/* <div
+                    <div className="w-full">
+                        <div className="w-full max-w-4xl pr-3">
+                            {/* home */}
+                            {/* <div
                             className={`source-explorer flex mb-1 items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                         >
                             <HomeIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Home</span>
                         </div> */}
-                        {/* Ingestion */}
-                        <div className="flex flex-col justify-start gap-2 mb-1">
-                            {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span> */}
-                            <div className="flex flex-wrap items-center gap-0">
-                                <div
-                                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={() => handleAddModal(true)}
-                                >
-                                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
+                            {/* Ingestion */}
+                            <div className="flex flex-col justify-start gap-2 mb-1">
+                                {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span> */}
+                                <div className="flex flex-wrap items-center gap-0">
+                                    <div
+                                        className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                        onClick={() => handleAddModal(true)}
+                                    >
+                                        <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
+
+                                    </div>
 
                                 </div>
-
                             </div>
-                        </div>
-                        {/* mrag */}
-                        {/* <div className="flex flex-col justify-start gap-2 mb-2"> */}
-                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
-                        {/* <div className="flex flex-wrap items-center"> */}
-                        <div
-                            className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                            onClick={handleExploreSources}
-                        >
-                            <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
-                        </div>
-                        <div className="global-search">
+                            {/* mrag */}
+                            {/* <div className="flex flex-col justify-start gap-2 mb-2"> */}
+                            {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
+                            {/* <div className="flex flex-wrap items-center"> */}
                             <div
-                                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={() => setIsSearching(!isSearching)}
+                                className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={handleExploreSources}
                             >
-                                <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
+                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
                             </div>
-                        </div>
-                        {
-                            isSearching && (
-                                <div className="flex items-center gap-2">
-                                    <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                            <div className="global-search">
+                                <div
+                                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                    onClick={() => setIsSearching(!isSearching)}
+                                >
+                                    <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
                                 </div>
-                            )
-                        }
-                    </div>
-                    {/* </div> */}
-                    {/* Settings */}
-                    {/* <div
+                            </div>
+                            {
+                                isSearching && (
+                                    <div className="flex items-center gap-2">
+                                        <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                                    </div>
+                                )
+                            }
+                        </div>
+                        {/* </div> */}
+                        {/* Settings */}
+                        {/* <div
                             className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                         >
                             <SettingsIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
                         </div> */}
-                    {/* </div> */}
-                    {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} /> */}
-                    <AddSourceModal show={showAddModal} setShowAddModal={setShowAddModal} isUploading={isFileUploading} setIsUploading={setIsFileUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
-                    {showSourceExplorer && (
-                        <SourceExplorer
-                            show={showSourceExplorer}
-                            onHide={onHideSourceExplorer}
-                            knowledgeBase={knowledgeBase}
-                            setKnowledgeBase={setKnowledgeBase}
-                            categories={categoryOptions}
-                            formats={formatOptions}
-                            isDeleting={isDeleting}
-                            clickedIndex={clickedIndex}
-                            onThumbnailClick={onThumbnailClick}
-                            deleteResource={deleteResource}
-                            handleCheckboxChange={handleCheckboxChange}
-                            handleSelectAllCheckboxChange={handleSelectAllCheckboxChange}
-                            isOpenedFromSourceExplorerBtn={isOpenedFromSourceExplorerBtn}
-                            className="modal"
-                        />
-                    )}
+                        {/* </div> */}
+                        {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} /> */}
+                        <AddSourceModal show={showAddModal} setShowAddModal={setShowAddModal} isUploading={isFileUploading} setIsUploading={setIsFileUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
+                        {showSourceExplorer && (
+                            <SourceExplorer
+                                show={showSourceExplorer}
+                                onHide={onHideSourceExplorer}
+                                knowledgeBase={knowledgeBase}
+                                setKnowledgeBase={setKnowledgeBase}
+                                categories={categoryOptions}
+                                formats={formatOptions}
+                                isDeleting={isDeleting}
+                                clickedIndex={clickedIndex}
+                                onThumbnailClick={onThumbnailClick}
+                                deleteResource={deleteResource}
+                                handleCheckboxChange={handleCheckboxChange}
+                                handleSelectAllCheckboxChange={handleSelectAllCheckboxChange}
+                                isOpenedFromSourceExplorerBtn={isOpenedFromSourceExplorerBtn}
+                                className="modal"
+                            />
+                        )}
 
-                    {/* <CategoriesModal
+                        {/* <CategoriesModal
                         show={showCategoriesModal}
                         onHide={() => setShowCategoriesModal(false)}
                         categoryOptions={categoryOptions}
                         setShowFileFormatsModal={setShowFileFormatsModal}
                         handleUpload={handleUpload}
                     /> */}
-                </div>
+                    </div>
 
-                <div className="flex flex-col flex-1 w-full h-full max-h-full overflow-y-auto">
-                    <BaseHeading text={`Sources (${displayedSources?.length} selected & ${displayedSources?.filter(i => i?.is_selected)?.length} checked.)`} className="mt-4" />
+                    <div className="flex flex-col flex-1 w-full h-full max-h-full overflow-y-auto">
+                        <BaseHeading text={`Sources (${displayedSources?.length} selected & ${displayedSources?.filter(i => i?.is_selected)?.length} checked.)`} className="mt-4" />
 
-                    {/* <div className="w-fit">
+                        {/* <div className="w-fit">
                         <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
                     </div> */}
-                    {displayedSources?.length > 0 && <div className="flex items-center mt-4 ">
-                        <span
-                            className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                        {displayedSources?.length > 0 && <div className="flex items-center mt-4 ">
+                            <span
+                                className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                                    }`}
+                            >
+                                check all sources
+                            </span>
+                            <Checkbox
+                                className={`select-all-checkbox p-0 "
                                 }`}
-                        >
-                            check all sources
-                        </span>
-                        <Checkbox
-                            className={`select-all-checkbox p-0 "
-                                }`}
-                            checked={displayedSources?.every(item => item?.is_selected)}
-                            onChange={(e) => handleToggleCheckSources(e.target.checked)}
-                            inputProps={{ "aria-label": "Select All Sources" }}
-                            label="Check All Sources"
-                        />
-                    </div>}
+                                checked={displayedSources?.every(item => item?.is_selected)}
+                                onChange={(e) => handleToggleCheckSources(e.target.checked)}
+                                inputProps={{ "aria-label": "Select All Sources" }}
+                                label="Check All Sources"
+                            />
+                        </div>}
 
-                    {/* <div className="flex items-center mt-4 ">
+                        {/* <div className="flex items-center mt-4 ">
                         <span
                             className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                                 }`}
@@ -726,10 +728,10 @@ const ContentSection = ({
                         />
                     </div> */}
 
-                    <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
-                        {
-                            displayedSources?.length > 0 && <div className={` h-full gap-2  w-full max-w-full mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
-                                {/* {displayedSources?.slice(0).reverse().map((item, index) => {
+                        <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
+                            {
+                                displayedSources?.length > 0 && <div className={` h-full gap-2  w-full max-w-full mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
+                                    {/* {displayedSources?.slice(0).reverse().map((item, index) => {
                                     // if (canRenderSourceThumbnail(item)) {
                                     return (<ContentPanelThumbnail
                                         key={index}
@@ -743,93 +745,104 @@ const ContentSection = ({
                                     />);
                                     // }
                                 })} */}
-                                {
-                                    displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
+                                    {
+                                        displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
-                                        <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
-                                            {showSourceContextMenu === option?.source_path && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col items-center  p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
-                                                <div className={`flex  gap-2  py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/40' : 'text-textColor-100 hover:bg-slate-800/50'}`}
-                                                    onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
-                                                    <EditOutlinedIcon
-                                                        className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
-                                                    />
-                                                    <span>Rename</span>
-                                                </div>
-                                                <div className={`flex  gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/40' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
-                                                    <DeleteOutlineOutlinedIcon
-                                                        className={`cursor-pointer`}
-                                                    />
-                                                    <span>Delete</span>
-                                                </div>
-                                            </div>}
-                                            {
-                                                // hoveredSource === option?.source_path && (
-                                                // <DeleteOutlineOutlinedIcon
-                                                //     onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}
-                                                //     style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                                //     className="cursor-pointermr-1"
-                                                // />
-                                                <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
-
-                                                // )
-                                            }
-                                            {
-                                                option.file_type === "video" ? (
-                                                    <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                                ) : option.file_type === "pdf" ? (
-                                                    <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                                ) : option.file_type === "img" ? (
-                                                    <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                                ) : null
-                                            }
-                                            <div className="relative flex-shrink-0 w-10 h-10">
-                                                {(isDeleting && clickedIndex?.source_path === option?.source_path) && (
-                                                    <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[5] translate-x-[-50%] translate-y-[-50%] transform">
-                                                        <LoadingSpinner isSmall />
+                                            <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
+                                                {showSourceContextMenu === option?.source_path && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col items-center  p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                                    <div className={`flex  gap-2  py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/40' : 'text-textColor-100 hover:bg-slate-800/50'}`}
+                                                        onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
+                                                        <EditOutlinedIcon
+                                                            className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                                        />
+                                                        <span>Rename</span>
                                                     </div>
-                                                )}
-                                                <img className="object-cover w-full h-full rounded-md" src={`${API_ENDPOINT}/${option?.file_type === 'video' ? 'thumbnails' : option?.file_type === 'pdf' ? 'pdf-thumbnails' : 'img-thumbnails'}/${encodeURIComponent(option?.category[0])}/${encodeURIComponent(option?.thumbnail)}`}
-                                                    alt="Video Thumbnail" />
+                                                    <div className={`flex  gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/40' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
+                                                        <DeleteOutlineOutlinedIcon
+                                                            className={`cursor-pointer`}
+                                                        />
+                                                        <span>Delete</span>
+                                                    </div>
+                                                </div>}
+                                                {
+                                                    // hoveredSource === option?.source_path && (
+                                                    // <DeleteOutlineOutlinedIcon
+                                                    //     onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}
+                                                    //     style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                                    //     className="cursor-pointermr-1"
+                                                    // />
+                                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+
+                                                    // )
+                                                }
+                                                {
+                                                    option.file_type === "video" ? (
+                                                        <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                    ) : option.file_type === "pdf" ? (
+                                                        <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                    ) : option.file_type === "img" ? (
+                                                        <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                    ) : null
+                                                }
+                                                <div className="relative flex-shrink-0 w-10 h-10">
+                                                    {(isDeleting && clickedIndex?.source_path === option?.source_path) && (
+                                                        <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[5] translate-x-[-50%] translate-y-[-50%] transform">
+                                                            <LoadingSpinner isSmall />
+                                                        </div>
+                                                    )}
+                                                    <img className="object-cover w-full h-full rounded-md" src={`${API_ENDPOINT}/${option?.file_type === 'video' ? 'thumbnails' : option?.file_type === 'pdf' ? 'pdf-thumbnails' : 'img-thumbnails'}/${encodeURIComponent(option?.category[0])}/${encodeURIComponent(option?.thumbnail)}`}
+                                                        alt="Video Thumbnail" />
+                                                </div>
+                                                <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
-                                            <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
-                                        </div>
-                                        <div className="flex items-center ">
-                                            <Checkbox
-                                                className="p-0 !ml-1"
-                                                checked={option.is_selected}
-                                                onChange={(e) => handleCheckboxChange(e?.target?.checked, option)}
-                                                onClick={(event) => event.stopPropagation()}
-                                                inputProps={{ "aria-label": "Select source" }}
-                                            />
+                                            <div className="flex items-center ">
+                                                <Checkbox
+                                                    className="p-0 !ml-1"
+                                                    checked={option.is_selected}
+                                                    onChange={(e) => handleCheckboxChange(e?.target?.checked, option)}
+                                                    onClick={(event) => event.stopPropagation()}
+                                                    inputProps={{ "aria-label": "Select source" }}
+                                                />
 
-                                        </div>
-                                    </div>)
-                                }
-                            </div>
-                        }
-                        {
+                                            </div>
+                                        </div>)
+                                    }
+                                </div>
+                            }
+                            {
 
-                            displayedSources.length > 0
-                                ?
-                                <>
-                                    {/* {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
+                                displayedSources.length > 0
+                                    ?
+                                    <>
+                                        {/* {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
                                         <CustomButton onClick={() => commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
                                     </div>} */}
-                                    {/* <div className="mx-auto w-fit">
+                                        {/* <div className="mx-auto w-fit">
                                         <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
                                     </div>
                                     <div className="mx-auto w-fit">
                                         <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Uncheck all sources</CustomButton>
                                     </div> */}
-                                </>
-                                :
-                                <NoData message="No sources selected" />
-                        }
+                                    </>
+                                    :
+                                    <NoData message="No sources selected" />
+                            }
+                        </div>
                     </div>
-                </div>
-                {/* update file name modal */}
-                {isUpdateFilenameModalOpen && <UpdateFilenameModal show={isUpdateFilenameModalOpen} onHide={() => setIsUpdateFilenameModalOpen(false)} filename={filename} extension={updatingSource?.source_path?.split('.')?.at(-1)} setFilename={setFilename} oldFilename={updatingSource?.source_path} sourceCategory={updatingSource?.category} filetype={updatingSource?.file_type} />}
-            </section>}
+                    {/* update file name modal */}
+                    {isUpdateFilenameModalOpen && <UpdateFilenameModal show={isUpdateFilenameModalOpen} onHide={() => setIsUpdateFilenameModalOpen(false)} filename={filename} extension={updatingSource?.source_path?.split('.')?.at(-1)} setFilename={setFilename} oldFilename={updatingSource?.source_path} sourceCategory={updatingSource?.category} filetype={updatingSource?.file_type} />}
+
+
+                    {/* settings & profile button */}
+                    <div className={`source-explorer flex items-center  gap-2 px-2 py-2 rounded-md cursor-pointer w-full ${theme === 'light' ? 'hover:bg-textColor-100/30 !border-t !border-t-textColor-100' : 'hover:bg-light-hover-200/20 !border-t !border-t-textColor-200'}`}>
+                        <SettingsOutlinedIcon className={`text-purple-400`} />
+                        <p className={`text-gradient-x`}>Settings</p>
+                    </div>
+
+                </section>
+            )
+
+            }
             {/* metadata and source section */}
             {showMetadata && (
                 <MetadataPanel leftWidth={leftWidth}
