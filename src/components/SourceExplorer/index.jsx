@@ -137,7 +137,7 @@ export function SourceExplorer(props) {
         return <>
             {props[viewModes[viewModes.length - 1]].map((item, index) => (
                 <div
-                    className="relative transition-transform folder group hover:scale-110 hover:font-medium hover:bg-gradient-to-r hover:from-[#755bea] hover:to-[#b76894] hover:bg-clip-text hover:text-transparent"
+                    className="relative select-none transition-transform folder group hover:scale-110 hover:font-medium hover:bg-gradient-to-r hover:from-[#755bea] hover:to-[#b76894] hover:bg-clip-text hover:text-transparent"
                     onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
                     key={index}
                     onMouseOver={() => setItemToRemove(item.value)}
