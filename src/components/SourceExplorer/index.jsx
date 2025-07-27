@@ -131,6 +131,7 @@ export function SourceExplorer(props) {
         setShowRemoveIndexModal(true);
     }
     // const [showRemoveXItem, setShowRemoveXItem] = useState(null);
+    const [hoveredItemToRemove, setHoveredItemToRemove] = useState('');
     const [itemToRemove, setItemToRemove] = useState("");
     const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
     const renderFolders = () => {
@@ -140,10 +141,10 @@ export function SourceExplorer(props) {
                     className="relative select-none transition-transform folder group hover:scale-110 hover:font-medium hover:bg-gradient-to-r hover:from-[#755bea] hover:to-[#b76894] hover:bg-clip-text hover:text-transparent"
                     onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
                     key={index}
-                    onMouseOver={() => setItemToRemove(item.value)}
-                // onMouseLeave={() => setItemToRemove("")}
+                    onMouseOver={() => { setHoveredItemToRemove(item.value); setItemToRemove(item.value); }}
+                    onMouseLeave={() => { setHoveredItemToRemove(""); }}
                 >
-                    {(itemToRemove === item.value && viewModes[viewModes.length - 1] === "categories") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
+                    {(hoveredItemToRemove === item.value && viewModes[viewModes.length - 1] === "categories") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
                     {/* <FolderIcon sx={{ fontSize: 60 }} /> */}
                     <FolderOpenIcon sx={{ fontSize: 50 }} className={`${theme === 'light' ? 'text-textColor-300' : "text-[#ABAEB4]"} `} />
                     <p>{item.label}</p>
