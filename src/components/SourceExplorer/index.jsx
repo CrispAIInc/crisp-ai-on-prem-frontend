@@ -137,7 +137,7 @@ export function SourceExplorer(props) {
         return <>
             {props[viewModes[viewModes.length - 1]].map((item, index) => (
                 <div
-                    className="relative folder"
+                    className="relative transition-transform folder hover:scale-110 hover:font-medium"
                     onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
                     key={index}
                     onMouseOver={() => setItemToRemove(item.value)}
@@ -146,7 +146,7 @@ export function SourceExplorer(props) {
                     {(itemToRemove === item.value && viewModes[viewModes.length - 1] === "categories") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
                     {/* <FolderIcon sx={{ fontSize: 60 }} /> */}
                     <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} sx={{ fontSize: 50 }} />
-                    <p>{item.label}</p>
+                    <p className="">{item.label}</p>
                 </div>
             ))}
             <RemoveIndexModal deleteResource={props.deleteResource} index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
