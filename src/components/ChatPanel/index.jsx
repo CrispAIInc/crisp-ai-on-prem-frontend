@@ -803,9 +803,9 @@ const ChatPanel = () => {
         Generator Services</h5>
 
       {/* Background blur elements */}
-      <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-0 blur-[160px]"></div>
-      <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-0 blur-[160px]"></div>
-      <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-0 blur-[160px]"></div>
+      <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-1 blur-[160px]"></div>
+      <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-1 blur-[160px]"></div>
+      <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
 
       {/* Resizer */}
       {isRightSidebarOpen && (
@@ -891,16 +891,15 @@ const ChatPanel = () => {
         <div className="flex-1 h-full overflow-y-auto">
           <div className="h-full max-h-full ml-auto overflow-y-auto !overflow-y-hidden flex flex-col">
             <div className="flex items-center justify-between">
-              <div
-                className={`select-none mt-3 flex items-center justify-center p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-300 hover:bg-light-hover-200/20'} mb-3`}
+              <RippleButton
+                cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
                 onClick={handleSave}
               >
-                <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-                <span className={` !text-[12px] font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                  }`}>
+                <AddIcon />
+                <span className={` !text-[12px] font-medium`}>
                   Save {currentTab === "Insights" ? "insight" : "story"}
                 </span>
-              </div>
+              </RippleButton>
               {/* export */}
               {/* {selectedStory?.story_id !== "" && <div
                 className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
@@ -919,7 +918,7 @@ const ChatPanel = () => {
             <div>
               <input
                 className={`${theme === 'dark' && 'text-textColor-100'
-                  } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !outline-none w-full`}
+                  } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !outline-none w-full !z-[999999]`}
                 placeholder="New title..."
                 value={noteTitle}
                 onChange={(e) => setNoteTitle(e.target.value)}
