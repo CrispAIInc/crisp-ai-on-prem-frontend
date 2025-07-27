@@ -1136,7 +1136,7 @@ const ChatPanel = () => {
           <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-2 flex-items">
-              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }, { id: "genMedia", title: "Sizzle Reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`text-[15px] select-none text-md cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
+              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }, { id: "genMedia", title: "Sizzle Reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`text-[14px] select-none text-md cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
@@ -1162,7 +1162,7 @@ const ChatPanel = () => {
                     return (
                       <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
                         <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
-                        <BaseHeading key={index} text={title} className={` font-extrabold !text-[13px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
+                        <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
                       </div>
                     );
                   })
