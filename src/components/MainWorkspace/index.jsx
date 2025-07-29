@@ -248,6 +248,18 @@ const MainWorkspace = ({ theme, setTheme }) => {
     });
   }, [knowledgeBase]);
 
+  function sortBySourcePath(data) {
+    return data.sort((a, b) => {
+      const pathA = a?.source_path || '';
+      const pathB = b?.source_path || '';
+      return pathA.localeCompare(pathB, undefined, { numeric: true, sensitivity: 'base' });
+    });
+  }
+
+  useEffect(() => {
+    sortBySourcePath(knowledgeBase);
+  }, [knowledgeBase]);
+
   const [, setTranscription] = useState("");
 
   const onThumbnailClick = (event, file, isFromCheckbox = false) => {
@@ -262,6 +274,8 @@ const MainWorkspace = ({ theme, setTheme }) => {
       setSummary(fileToCommit.summary);
       setSummaries(fileToCommit.topic_summaries);
     }
+
+
 
     // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page life the case when clicking on a reference
     if (fileToCommit.file_type === "pdf") {
