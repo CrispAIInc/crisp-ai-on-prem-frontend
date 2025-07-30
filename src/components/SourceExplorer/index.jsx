@@ -27,6 +27,7 @@ export function SourceExplorer(props) {
         sourcesTobeCommited,
         selectedFormat,
         knowledgeBase,
+        setKnowledgeBase,
     } = useContext(MainContext);
 
     // const [currentPath, setCurrentPath] = useState('/');
@@ -312,6 +313,34 @@ export function SourceExplorer(props) {
         }
     };
 
+    // Sort by source_path
+    function sortBySourcePath(data) {
+        return [...data].sort((a, b) => {
+            const pathA = a.metadata?.source_path || "";
+            const pathB = b.metadata?.source_path || "";
+            return pathA.localeCompare(pathB, undefined, {
+                numeric: true,
+                sensitivity: "base",
+            });
+        });
+    }
+
+    // Search by source_path
+    function searchBySourcePath(data, query) {
+        return data.filter((item) => {
+            const path = item.metadata?.source_path || "";
+            return path.toLowerCase().includes(query.toLowerCase());
+        });
+    }
+
+    const [searchValue, setSearchValue] = useState("");
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearchValue(value);
+
+        const filtered = searchBySourcePath(knowledgeBase, value);
+        setKnowledgeBase(sortBySourcePath(filtered));
+    };
     return (
         <Modal
             show={props.show}
@@ -336,12 +365,18 @@ export function SourceExplorer(props) {
             <Modal.Body
                 className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} z-20`}
             >
-                <div
-                    className={`current-path-wrapper ${theme === "dark" && "text-textColor-100"
-                        }`}
-                >
-                    <BackButton className={`back-btn`} />
-                    <h3 className="current-path">{currentPath}</h3>
+                <div className="flex justify-between mb-4 itms-center">
+                    <div
+                        className={`current-path-wrapper select-none ${theme === "dark" && "text-textColor-100"
+                            }`}
+                    >
+                        <BackButton className={`back-btn`} />
+                        <h3 className="current-path">{currentPath}</h3>
+                    </div>
+
+                    <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />
+
+
                 </div>
                 <div className="flex flex-wrap items-start gap-10 folders-wrapper">
                     {viewModes[viewModes.length - 1] !== "files"
