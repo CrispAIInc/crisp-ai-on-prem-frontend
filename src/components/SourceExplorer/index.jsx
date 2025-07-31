@@ -190,7 +190,7 @@ export function SourceExplorer(props) {
 
 
             if (category === "all") {
-                return props.knowledgeBase
+                return results
                     .filter((file) => file.file_type === format || format === "all")
                     .map((file, index) => (
                         <div
@@ -243,7 +243,7 @@ export function SourceExplorer(props) {
                         </div>
                     ));
             } else {
-                const items = props.knowledgeBase
+                const items = results
                     .filter(
                         (file) =>
                             (file.file_type === format || format === "all") &&
@@ -328,19 +328,31 @@ export function SourceExplorer(props) {
     // Search by source_path
     function searchBySourcePath(data, query) {
         return data.filter((item) => {
-            const path = item.metadata?.source_path || "";
+            const path = item.source_path || "";
             return path.toLowerCase().includes(query.toLowerCase());
         });
     }
 
     const [searchValue, setSearchValue] = useState("");
+    const [results, setResults] = useState(knowledgeBase);
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchValue(value);
 
-        const filtered = searchBySourcePath(knowledgeBase, value);
-        setKnowledgeBase(sortBySourcePath(filtered));
+        if (value.trim() === "") {
+            setResults(sortBySourcePath(knowledgeBase));
+        } else {
+            const filtered = searchBySourcePath(knowledgeBase, value);
+            setResults(sortBySourcePath(filtered));
+        }
     };
+    // const handleSearch = (e) => {
+    //     const value = e.target.value;
+    //     setSearchValue(value);
+
+    //     const filtered = searchBySourcePath(knowledgeBase, value);
+    //     setKnowledgeBase(sortBySourcePath(filtered));
+    // };
     return (
         <Modal
             show={props.show}
