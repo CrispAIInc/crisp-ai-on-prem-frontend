@@ -190,9 +190,11 @@ export function SourceExplorer(props) {
 
 
             if (category === "all") {
-                return results
-                    .filter((file) => file.file_type === format || format === "all")
-                    .map((file, index) => (
+                const items = results
+                    .filter((file) => file.file_type === format || format === "all");
+
+                if (items.length > 0 && results.length > 0) {
+                    return items.map((file, index) => (
                         <div
                             className={`!border rounded-md thumbnail-container file ${theme === "dark" && "!border-textColor-200 "
                                 } !w-28`}
@@ -242,6 +244,17 @@ export function SourceExplorer(props) {
                             </div>
                         </div>
                     ));
+                }
+                else {
+                    // setItemsFoundInsideCategoryOrFormat(false);
+                    return (
+                        <p className={`no-files-found ${theme === "dark" ? "text-textColor-100" : "text-textColor-200"}`}>
+                            No files found in this category.
+                        </p>
+                    );
+                }
+
+
             } else {
                 const items = results
                     .filter(
@@ -250,7 +263,7 @@ export function SourceExplorer(props) {
                             file.category[1] === category
                     );
 
-                if (items.length > 0) {
+                if ((items.length > 0 && results.length > 0)) {
                     return items.map((file, index) => (
                         <div
                             className={`border rounded-md thumbnail-container file ${theme === "dark" && "!border-textColor-300"
