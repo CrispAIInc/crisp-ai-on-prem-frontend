@@ -482,7 +482,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                                     <h6 className='mb-0 text-xs font-semibold text-primary-200 '>{topic.start_time} - {topic.end_time}</h6>
                                   </div>
                                 </div>
-                                <p className="select-text">{topic.content}</p>
+                                <p className="select-text" dangerouslySetInnerHTML={{ __html: topic.content.replace(/\n/g, "<br>") }}></p>
                               </div>
                             ))
                           }
