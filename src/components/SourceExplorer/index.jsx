@@ -32,7 +32,7 @@ export function SourceExplorer(props) {
 
     // const [currentPath, setCurrentPath] = useState('/');
     const [viewModes, setViewModes] = useState(["categories"]); // 'categories' or 'formats'
-
+    const [results, setResults] = useState(knowledgeBase);
     const [history, setHistory] = useState(["/"]);
     const [currentPath, setCurrentPath] = useState(history[history.length - 1] || "/");
 
@@ -121,6 +121,12 @@ export function SourceExplorer(props) {
         );
 
     useEffect(() => {
+        const knowledgePaths = new Set(knowledgeBase.map(item => item.source_path));
+
+        setResults(prevResults =>
+            prevResults.filter(item => knowledgePaths.has(item.source_path))
+        );
+
         viewModes[viewModes.length - 1] !== "files"
             ? renderFolders()
             : renderFiles();
@@ -347,7 +353,7 @@ export function SourceExplorer(props) {
     }
 
     const [searchValue, setSearchValue] = useState("");
-    const [results, setResults] = useState(knowledgeBase);
+
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchValue(value);
