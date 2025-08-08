@@ -73,8 +73,8 @@ export default function Register() {
                     <span>Sign in</span>
                 </RippleButton>
             </div>
-            <p className='mt-2 font-medium text-center text-textColor-200'>Forgot password? <Link className="text-primary-300" to="/forgot-password">click here!</Link></p>
-            <p className='mt-2 font-medium text-center text-textColor-200'>Don&apos;t  have an account? <Link className="text-primary-300" to="/sign-up">Sign up</Link></p>
+            <p className='mt-2 text-sm font-bold text-center text-textColor-200'>Forgot password? <Link className="text-primary-300" to="/forgot-password">click here!</Link></p>
+            <p className='text-sm font-bold text-center text-textColor-200'>Don&apos;t  have an account? <Link className="text-primary-300" to="/sign-up">Sign up</Link></p>
         </div>
     );
 }
