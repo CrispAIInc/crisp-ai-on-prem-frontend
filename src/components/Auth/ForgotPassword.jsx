@@ -49,7 +49,7 @@ export default function ForgotPassword() {
                     <span>Submit</span>
                 </RippleButton>
             </div>
-            <p className='mt-2 font-medium text-center text-textColor-200'>Remembered your password? <Link className="text-primary-300" to="/login">Sign in</Link></p>
+            <p className='mt-2 text-sm font-bold text-center text-textColor-200'>Remembered your password? <Link className="text-primary-300" to="/login">Sign in</Link></p>
         </div>
     );
 }
