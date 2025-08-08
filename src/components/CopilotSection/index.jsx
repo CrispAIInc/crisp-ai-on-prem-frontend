@@ -842,7 +842,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
 
       {/* <div className="flex items-center flex-1 gap-3"> */}
       {messages?.length > 0 && <section
-        className={`copilot-chat-container flex flex-col flex-1 flex-grow h-full gap-3 overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
+        className={`copilot-chat-container flex flex-col h-[700px] gap-3 overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
           }`}
         ref={chatAppRef}
       >
@@ -1062,7 +1062,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                 rows="1"
                 disabled={showCursor}
                 onChange={e => setInput(e.target.value)}
-                className={`!flex-1 px-2 py-3 rounded-full bg-transparent outline-none`}
+                className={`!flex-1 pr-2 py-3 !pl-4 rounded-full bg-transparent outline-none`}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     sendMessage(input);
