@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
+import makeApiRequest from '../../api';
+
 
 export default function Register() {
+    const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState({
         firstName: "",
         lastName: "",
@@ -14,7 +17,7 @@ export default function Register() {
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
 
-    function register() {
+    async function register() {
         try {
             setIsPending(true);
             setError(null);
@@ -28,6 +31,14 @@ export default function Register() {
             }
 
             // Here you would typically make an API call to register the user
+            const { success, message } = await makeApiRequest('/sign-up', 'POST', JSON.stringify(userInfo));
+
+            if (success) {
+                // redirect to login page
+                navigate('/login');
+            } else {
+                throw new Error(message || "Registration failed. Please try again.");
+            }
 
             // Reset userInfo after registration attempt
             setUserInfo({
