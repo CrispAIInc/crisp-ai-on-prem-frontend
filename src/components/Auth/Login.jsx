@@ -1,41 +1,42 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
+import makeApiRequest from '../../api';
 
-export default function Register() {
+export default function Login() {
+    const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState({
-        firstName: "",
-        lastName: "",
         email: "",
         password: "",
-        confirmPassword: "",
     });
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
 
-    function register() {
+    async function login() {
         try {
             setIsPending(true);
             setError(null);
 
             // Validate user input
-            if (!userInfo.firstName || !userInfo.lastName || !userInfo.email || !userInfo.password || !userInfo.confirmPassword) {
+            if (!userInfo.email || !userInfo.password) {
                 throw new Error("All fields are required.");
-            }
-            if (userInfo.password !== userInfo.confirmPassword) {
-                throw new Error("Passwords do not match.");
             }
 
             // Here you would typically make an API call to register the user
+            const { success, accessToken, message } = await makeApiRequest('/login', 'POST', JSON.stringify(userInfo));
+
+            if (success) {
+                localStorage.setItem('accessToken', accessToken);
+                navigate('/');
+            } else {
+                throw new Error(message || "Login failed. Please try again.");
+            }
 
             // Reset userInfo after registration attempt
             setUserInfo({
-                firstName: "",
-                lastName: "",
                 email: "",
                 password: "",
-                confirmPassword: "",
             });
         } catch (e) {
             setError(e.message || "Please verify your data and try again.");
@@ -68,7 +69,7 @@ export default function Register() {
                     setValue={(value) => setUserInfo({ ...userInfo, password: value })}
                     type="password"
                 />
-                <RippleButton fullWidth cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2" onClick={register}>
+                <RippleButton fullWidth cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2" onClick={login}>
                     {isPending && <span className="loader-atom"></span>}
                     <span>Sign in</span>
                 </RippleButton>
