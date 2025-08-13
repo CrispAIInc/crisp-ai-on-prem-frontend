@@ -1,15 +1,32 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 
+import makeApiRequest from '../../api';
+
 export default function ResetPassword() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const email = location.state?.email;
+
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
 
-    function register() {
+    useEffect(() => {
+        if (!email) {
+            navigate('/forgot-password');
+        }
+
+        return () => {
+            setPassword("");
+            setConfirmPassword("");
+        };
+    }, [email]);
+
+    async function resetPassword() {
         try {
             setIsPending(true);
             setError(null);
@@ -23,6 +40,19 @@ export default function ResetPassword() {
             }
 
             // Here you would typically make an API call to register the user
+            const { success, message } = await makeApiRequest('/reset-password', 'POST', JSON.stringify({
+                email,
+                password,
+                confirmPassword
+            }));
+
+            if (success) {
+                // Redirect to login page after successful password reset
+                navigate('/login');
+            }
+            else {
+                throw new Error(message || "Failed to reset password. Please try again.");
+            }
 
             // Reset userInfo after registration attempt
             setPassword("");
@@ -60,7 +90,7 @@ export default function ResetPassword() {
                     setValue={(value) => setConfirmPassword(value)}
                     type="password"
                 />
-                <RippleButton fullWidth cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2" onClick={register}>
+                <RippleButton fullWidth cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2" onClick={resetPassword}>
                     {isPending && <span className="loader-atom"></span>}
                     <span>Submit</span>
                 </RippleButton>
