@@ -1,24 +1,37 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 
+import makeApiRequest from "../../api";
+
 export default function ForgotPassword() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
 
-    function handleForgotPassword() {
+    async function handleForgotPassword() {
         try {
             setIsPending(true);
             setError(null);
 
             // Validate user input
             if (!email) {
-                throw new Error("Email is required to reset your password..");
+                throw new Error("Email is required to reset your password.");
             }
 
             // Here you would typically make an API call to register the user
+            const { success, message } = await makeApiRequest('/forgot-password', 'POST', JSON.stringify({ email }));
+
+            if (success) {
+                navigate('/reset-password', {
+                    state: { email }
+                });
+            } else {
+                throw new Error(message || "An error occurred while processing your request.");
+            }
+
 
             // Reset userInfo after registration attempt
             setEmail("");
