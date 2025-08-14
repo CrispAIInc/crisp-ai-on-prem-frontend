@@ -23,6 +23,7 @@ import { timeToSeconds } from '../../utils';
 import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
+import { SettingsModal } from '../SettingsModal';
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
     const { theme, setDisplayedSources, categoryOptions, setKnowledgeBase } = useContext(MainContext);
@@ -845,6 +846,8 @@ const ContentSection = ({
                         <SettingsOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Settings</span>
                     </div>
+
+                    {isSettingsModalOpen && <SettingsModal show={isSettingsModalOpen} onHide={() => setIsSettingsModalOpen(false)} />}
                 </section>
             )
 
