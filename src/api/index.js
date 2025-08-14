@@ -32,6 +32,8 @@ axiosInstance.interceptors.request.use(
 const makeApiRequest = async (endpoint, method = 'get', data = null, headers = { 'Content-Type': 'application/json' }, config = {}) => {
 
     try {
+        // add withCredentials
+        config.withCredentials = true;
         const response = await axiosInstance({
             url: endpoint,
             method,
