@@ -23,7 +23,7 @@ import { timeToSeconds } from '../../utils';
 import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
-import { SettingsModal } from '../SettingsModal';
+import { SettingsModal } from '../Settings/SettingsModal';
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
     const { theme, setDisplayedSources, categoryOptions, setKnowledgeBase } = useContext(MainContext);
