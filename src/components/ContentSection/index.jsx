@@ -588,6 +588,10 @@ const ContentSection = ({
         setIsUpdateFilenameModalOpen(true);
     }
 
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+    function handleOpenSettingsModal() {
+        setIsSettingsModalOpen(true);
+    }
 
 
     return (
@@ -834,11 +838,13 @@ const ContentSection = ({
 
 
                     {/* settings & profile button */}
-                    <div className={`source-explorer flex items-center  gap-2 px-2 py-2 rounded-md cursor-pointer w-full ${theme === 'light' ? 'hover:bg-textColor-100/30 !border-t !border-t-textColor-100' : 'hover:bg-light-hover-200/20 !border-t !border-t-textColor-200'}`}>
-                        <SettingsOutlinedIcon className={`text-purple-400`} />
-                        <p className={`text-gradient-x`}>Settings</p>
+                    <div
+                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/50' : 'hover:bg-light-hover-200/20'}`}
+                        onClick={handleOpenSettingsModal}
+                    >
+                        <SettingsOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Settings</span>
                     </div>
-
                 </section>
             )
 
