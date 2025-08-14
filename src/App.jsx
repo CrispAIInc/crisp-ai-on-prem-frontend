@@ -13,6 +13,7 @@ import RegisterPage from './pages/Auth/RegisterPage';
 import LoginPage from './pages/Auth/LoginPage';
 import ForgotPasswordPage from './pages/Auth/ForgotPasswordPage';
 import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
+import PrivateRoute from './components/Auth/PrivateRoute';
 
 
 function App() {
@@ -48,7 +49,9 @@ function App() {
       <Router>
         <Routes>
           {/* <Route path="/" element={<HomePage theme={theme} />} /> */}
-          <Route path="/" element={<MainWorkspacePage setTheme={setTheme} theme={theme} />} />
+
+          <Route path="/" element={<PrivateRoute><MainWorkspacePage setTheme={setTheme} theme={theme} /></PrivateRoute>} />
+
           <Route path="/sign-up" element={<RegisterPage theme={theme} setTheme={setTheme} />} />
           <Route path="/login" element={<LoginPage theme={theme} setTheme={setTheme} />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage theme={theme} setTheme={setTheme} />} />
