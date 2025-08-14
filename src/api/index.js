@@ -7,6 +7,24 @@ const axiosInstance = axios.create({
     baseURL: BACKEND_URL,
 });
 
+axiosInstance.interceptors.request.use(
+    (config) => {
+        // add Authorization header if token is available
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            delete config.headers['Authorization'];
+        }
+
+        return config;
+    },
+    (error) => {
+        console.error('Request error: ', error.message);
+        return Promise.reject(error);
+    }
+);
+
 /**
  * Generic function for calling the backend API
  */
