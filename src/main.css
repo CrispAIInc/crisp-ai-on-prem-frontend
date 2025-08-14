@@ -135,3 +135,7 @@ input {
 .tab-content {
   z-index: 2;
 }
+
+.custom-rounded .modal-content {
+  border-radius: 2rem; /* Or whatever you like */
+}
