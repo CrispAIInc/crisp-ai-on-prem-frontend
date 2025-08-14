@@ -33,7 +33,7 @@ const makeApiRequest = async (endpoint, method = 'get', data = null, headers = {
 
     try {
         // add withCredentials
-        config.withCredentials = true;
+        // config.withCredentials = true;
         const response = await axiosInstance({
             url: endpoint,
             method,
