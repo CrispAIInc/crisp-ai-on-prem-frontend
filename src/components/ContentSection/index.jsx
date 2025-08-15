@@ -1,6 +1,8 @@
 import PlayCircleOutlineOutlinedIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
+import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import AddIcon from "@mui/icons-material/Add";
 import { useContext, useEffect, useRef, useState } from "react";
 import makeApiRequest from "../../api";
@@ -1117,7 +1119,7 @@ const ContentSection = ({
                                 }`}
                             onClick={handleToggleSettingsMenu}
                         >
-                            <SettingsOutlinedIcon
+                            <Person2OutlinedIcon
                                 style={{ color: theme === "light" ? "#333" : "#ABAEB4" }}
                             />
                             <span
@@ -1165,7 +1167,7 @@ const ContentSection = ({
                                             }`}
                                         onClick={logout}
                                     >
-                                        <SettingsOutlinedIcon
+                                        <LogoutOutlinedIcon
                                             className={`cursor-pointer`}
                                         />
                                         <span>Log out</span>
