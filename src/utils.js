@@ -196,3 +196,14 @@ export function sortStrings(arr, ascending = true) {
 export function pluck(arr, key) {
     return arr.map(obj => obj?.[key]);
 }
+
+export function sortArrayOfObjects(data, key) {
+    return [...data].sort((a, b) => {
+        const pathA = a[key] || "";
+        const pathB = b[key] || "";
+        return pathA.localeCompare(pathB, undefined, {
+            numeric: true,
+            sensitivity: "base",
+        });
+    });
+}
