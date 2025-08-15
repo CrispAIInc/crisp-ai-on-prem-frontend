@@ -13,9 +13,11 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import { pluck } from '../../utils.js';
+import { pluck, sortArrayOfObjects } from '../../utils.js';
+import useResources from '../../hooks/useResources.js';
 
 const MainWorkspace = ({ theme, setTheme }) => {
+
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
   const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace
   const [resourceURL, setResourceURL] = useState(null); // The Selected Resource Direct URL
@@ -1201,6 +1203,8 @@ const MainWorkspace = ({ theme, setTheme }) => {
     showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
   };
 
+  const { getReels } = useResources({ setReels });
+
   // update sourcesTobeCommited depending on knowledgeBase change
   useEffect(() => {
     setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
@@ -1258,27 +1262,6 @@ const MainWorkspace = ({ theme, setTheme }) => {
   }, []);
 
   useEffect(() => {
-    function sortByReeltitle(data) {
-      return [...data].sort((a, b) => {
-        const pathA = a.title || "";
-        const pathB = b.title || "";
-        return pathA.localeCompare(pathB, undefined, {
-          numeric: true,
-          sensitivity: "base",
-        });
-      });
-    }
-
-    const getReels = async () => {
-      try {
-        const data = await makeApiRequest("/reels", "get");
-        const sortedData = sortByReeltitle(data);
-        setReels(sortedData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     getReels();
   }, []);
 

@@ -3,7 +3,10 @@ import { MainContext } from '../contexts/mainContext';
 import makeApiRequest from '../api';
 import { sortArrayOfObjects } from '../utils';
 
-export default function useResources() {
+/**
+ * @param {Object} config - Optional config values like setters or extra data.
+ */
+export default function useResources(config = {}) {
     const { setReels } = useContext(MainContext);
 
     return {
@@ -11,7 +14,9 @@ export default function useResources() {
             try {
                 const data = await makeApiRequest("/reels", "get");
                 const sortedData = sortArrayOfObjects(data, 'title');
-                setReels(sortedData);
+                if (config.setReels) {
+                    config.setReels(sortedData);
+                }
             } catch (error) {
                 console.error(error);
             }
