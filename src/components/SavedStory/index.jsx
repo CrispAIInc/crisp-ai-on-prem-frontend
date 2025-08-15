@@ -7,10 +7,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
+import useResources from '../../hooks/useResources';
 
 function SavedStory({ story }) {
 
     const { theme, setSelectedStory, setActiveView, setStories, setIsNewStory } = useContext(MainContext);
+    const { getStories } = useResources({ setStories });
 
     const showStory = () => {
         setSelectedStory(story);
@@ -30,8 +32,7 @@ function SavedStory({ story }) {
             });
 
             // fetch stories
-            const data = await makeApiRequest("/stories", "get");
-            setStories(data);
+            getStories();
         } catch (error) {
             console.log(error);
             toast('An error occurred while deleting story', { className: 'p-2 rounded-md', theme });

@@ -19,6 +19,7 @@ import {
     transformArrayOfObjectsToArray,
 } from "../../utils";
 import LoadingSpinner from "../LoadingSpinner";
+import useResources from '../../hooks/useResources';
 
 function StoryDetails() {
     const {
@@ -46,6 +47,8 @@ function StoryDetails() {
         setJumpToPage,
     } = useContext(MainContext);
 
+    const { getStories } = useResources({ setStories });
+
     const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] =
         useState(false);
 
@@ -71,8 +74,7 @@ function StoryDetails() {
                     selectedStory
                 );
             }
-            const data = await makeApiRequest("/stories", "get");
-            setStories(data);
+            getStories();
             toast("Story saved successfully", { className: "p-2 rounded-md", theme });
         } catch (error) {
             console.log(error);
@@ -139,8 +141,7 @@ function StoryDetails() {
             });
             setActiveView(null);
 
-            const data = await makeApiRequest("/stories", "get");
-            setStories(data);
+            getStories();
             toast("Story deleted successfully", {
                 className: "p-2 rounded-md",
                 theme,

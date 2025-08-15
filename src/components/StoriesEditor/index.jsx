@@ -10,9 +10,11 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import toast from 'react-simple-toasts';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import RippleButton from '../RippleButton';
+import useResources from '../../hooks/useResources';
 
 function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, setShowStoriesEditor }) {
     const { displayedSources, theme, setStories } = useContext(MainContext);
+    const { getStories } = useResources({ setStories });
     const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
     const [contextFocused, setContextFocused] = useState(false);
@@ -129,8 +131,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
             toast('Story saved successfully', { className: 'p-2 rounded-md', theme });
 
             // update stories
-            const data = await makeApiRequest("/stories", "get");
-            setStories(data);
+            getStories();
         }
         catch (e) {
             console.log(e);
