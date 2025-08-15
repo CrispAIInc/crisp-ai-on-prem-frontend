@@ -15,6 +15,18 @@ export default function useResources(config = {}) {
                     config.setReels(sortedData);
                 }
             } catch (error) {
+                console.log(error);
+            }
+        },
+
+        getStories: async () => {
+            try {
+                const data = await makeApiRequest("/stories", "get");
+                const sortedData = sortArrayOfObjects(data, 'story_name');
+                if (config.setStories) {
+                    config.setStories(sortedData);
+                }
+            } catch (error) {
                 console.error(error);
             }
         }
