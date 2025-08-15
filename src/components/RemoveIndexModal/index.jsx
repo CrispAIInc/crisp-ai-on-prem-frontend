@@ -4,9 +4,12 @@ import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
+import useResources from '../../hooks/useResources';
 
 function RemoveIndexModal({ show, onHide, index, deleteResource }) {
     const { theme, knowledgeBase, setCategoryOptions } = useContext(MainContext);
+
+    const { getIndexes } = useResources({ setCategoryOptions });
 
     async function deleteIndex() {
         try {
@@ -14,16 +17,7 @@ function RemoveIndexModal({ show, onHide, index, deleteResource }) {
             const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(index));
             if (itemsToBeDeleted.length > 0) await deleteResource(null, itemsToBeDeleted);
             await makeApiRequest(`/remove-index`, 'post', { index: index });
-            let { indexes } = await makeApiRequest("/get-indexes");
-            // transform the indexes to the format value/label
-            indexes = indexes.map((index) => {
-                return {
-                    value: index,
-                    label: index.charAt(0).toUpperCase() + index.slice(1),
-                };
-            });
-            console.log(indexes);
-            setCategoryOptions(indexes);
+            getIndexes();
             toast('Index deleted', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
         } catch (error) {
             console.log(error.response.data.error);

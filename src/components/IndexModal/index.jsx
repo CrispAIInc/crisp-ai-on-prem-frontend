@@ -5,6 +5,7 @@ import FileUploaderModal from "../FileUploaderModal";
 import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
 import LoadingSpinner from "../LoadingSpinner";
+import useResources from '../../hooks/useResources';
 
 export function IndexModal({ show, onHide, handleUpload }) {
 
@@ -13,6 +14,8 @@ export function IndexModal({ show, onHide, handleUpload }) {
     const [indexName, setIndexName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
+    const { getIndexes } = useResources({ setCategoryOptions });
 
     async function createIndex() {
         setIsLoading(true);
@@ -25,15 +28,7 @@ export function IndexModal({ show, onHide, handleUpload }) {
         try {
             const newIndex = await makeApiRequest('/create-new-index', 'post', { category: indexName });
             setIndexName(newIndex?.category);
-            let { indexes } = await makeApiRequest("/get-indexes");
-            // transform the indexes to the format value/label
-            indexes = indexes.map((index) => {
-                return {
-                    value: index,
-                    label: index.charAt(0).toUpperCase() + index.slice(1),
-                };
-            });
-            setCategoryOptions(indexes);
+            getIndexes();
         } catch (error) {
             console.log(error.response.data.error);
             toast(error.response.data.error || 'Error creating index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
