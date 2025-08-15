@@ -192,3 +192,7 @@ export function sortStrings(arr, ascending = true) {
             : b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' })
     );
 }
+
+export function pluck(arr, key) {
+    return arr.map(obj => obj?.[key]);
+}
