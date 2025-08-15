@@ -1,5 +1,5 @@
 import makeApiRequest from '../api';
-import { sortArrayOfObjects } from '../utils';
+import { pluck, sortArrayOfObjects, sortStrings } from '../utils';
 
 /**
  * @param {Object} config - Optional config values like setters or extra data.
@@ -39,6 +39,23 @@ export default function useResources(config = {}) {
                 }
             } catch (error) {
                 console.error(error);
+            }
+        },
+        getIndexes: async () => {
+            let { indexes } = await makeApiRequest("/get-indexes");
+            // transform the indexes to the format value/label
+            indexes = indexes.map((index) => {
+                return {
+                    value: index,
+                    label: index.charAt(0).toUpperCase() + index.slice(1),
+                };
+            });
+
+            if (config.setCategoryOptions) {
+                config.setCategoryOptions(sortStrings(pluck(indexes, "label")).map(item => ({
+                    label: item,
+                    value: item.charAt(0).toLowerCase() + item.slice(1),
+                })));
             }
         }
     };
