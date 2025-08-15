@@ -8,6 +8,7 @@ import toast from 'react-simple-toasts';
 import MetadataVerbosity from '../MetadataVerbosity';
 import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
+import useResources from '../../hooks/useResources';
 
 // const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function MediaEntertainment({ reel,
@@ -16,6 +17,8 @@ function MediaEntertainment({ reel,
     setIsReelOpen,
     reels,
     setReels }) {
+
+    const { getReels } = useResources({ setReels });
 
     const { theme, displayedSources } = useContext(MainContext);
 
@@ -76,8 +79,7 @@ function MediaEntertainment({ reel,
             // setReelTitle(res.title);
             setIsReelOpen(true);
 
-            const data = await makeApiRequest("/reels", "get");
-            setReels(data);
+            getReels();
         } catch (error) {
             console.log(error);
             toast(error?.response?.data?.error || "Something went wrong", { className: 'p-2 rounded-md z-20', theme });

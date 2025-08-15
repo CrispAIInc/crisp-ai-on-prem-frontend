@@ -25,6 +25,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import MediaEntertainment from '../MediaEntertainment';
 import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
+import useResources from '../../hooks/useResources';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -125,6 +126,8 @@ const ChatPanel = () => {
     setIsNewStory,
     setStories
   } = useContext(MainContext);
+
+  const { getReels } = useResources({ setReels });
 
   const notesSectionSteps = [
     {
@@ -539,10 +542,7 @@ const ChatPanel = () => {
       }));
 
       toast('Reel deleted successfully', { className: 'p-2 rounded-md bg-background_workspace' });
-      // fetch stories
-      const data = await makeApiRequest("/reels", "get");
-      console.log(data);
-      setReels(data);
+      getReels();
     } catch (error) {
       console.log(error);
       toast('An error occurred while deleting reel', { className: 'p-2 rounded-md  bg-background_workspace' });

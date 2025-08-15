@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import { MainContext } from '../contexts/mainContext';
 import makeApiRequest from '../api';
 import { sortArrayOfObjects } from '../utils';
 
@@ -7,7 +5,6 @@ import { sortArrayOfObjects } from '../utils';
  * @param {Object} config - Optional config values like setters or extra data.
  */
 export default function useResources(config = {}) {
-    const { setReels } = useContext(MainContext);
 
     return {
         getReels: async () => {

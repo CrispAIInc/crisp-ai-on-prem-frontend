@@ -9,11 +9,14 @@ import makeApiRequest from '../../api';
 import LoadingSpinner from "../LoadingSpinner";
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
+import useResources from '../../hooks/useResources';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function ReelViewer({ closeReel, reel, setReels }) {
 
     const { theme } = useContext(ThemeContext);
+
+    const { getReels } = useResources({ setReels });
 
     const [isPending, setIsPending] = useState(false);
 
@@ -77,8 +80,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
             toast('Reel deleted!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
 
             console.log("before");
-            const data = await makeApiRequest("/reels", "get");
-            setReels(data);
+            getReels();
             console.log("after");
             closeReel();
         } catch (e) {
