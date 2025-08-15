@@ -77,25 +77,7 @@ const MainWorkspace = ({ theme, setTheme }) => {
   ];
 
   const [categoryOptions, setCategoryOptions] = useState([]);
-  useEffect(() => {
-    async function getIndexes() {
-      let { indexes } = await makeApiRequest("/get-indexes");
-      // transform the indexes to the format value/label
-      indexes = indexes.map((index) => {
-        return {
-          value: index,
-          label: index.charAt(0).toUpperCase() + index.slice(1),
-        };
-      });
 
-      setCategoryOptions(sortStrings(pluck(indexes, "label")).map(item => ({
-        label: item,
-        value: item.charAt(0).toLowerCase() + item.slice(1),
-      })));
-    }
-
-    getIndexes();
-  }, []);
 
   const contentPanelContainerRef = useRef(null);
 
@@ -1207,7 +1189,10 @@ const MainWorkspace = ({ theme, setTheme }) => {
     showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
   };
 
-  const { getReels, getStories, getNotes } = useResources({ setReels, setStories, setNotes });
+  const { getReels, getStories, getNotes, getIndexes } = useResources({ setReels, setStories, setNotes, setCategoryOptions });
+  useEffect(() => {
+    getIndexes();
+  }, []);
 
   // update sourcesTobeCommited depending on knowledgeBase change
   useEffect(() => {
