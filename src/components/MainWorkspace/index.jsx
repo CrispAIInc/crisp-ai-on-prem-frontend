@@ -1203,7 +1203,7 @@ const MainWorkspace = ({ theme, setTheme }) => {
     showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
   };
 
-  const { getReels } = useResources({ setReels });
+  const { getReels, getStories } = useResources({ setReels, setStories });
 
   // update sourcesTobeCommited depending on knowledgeBase change
   useEffect(() => {
@@ -1240,11 +1240,10 @@ const MainWorkspace = ({ theme, setTheme }) => {
   }, []);
 
   useEffect(() => {
-    const getStories = async () => {
+    const getAllStories = async () => {
       try {
         setIsStoriesLoading(true);
-        const data = await makeApiRequest("/stories", "get");
-        setStories(data);
+        getStories();
         setSelectedStory({
           story_id: "",
           text: [],
@@ -1258,7 +1257,7 @@ const MainWorkspace = ({ theme, setTheme }) => {
       }
     };
 
-    getStories();
+    getAllStories();
   }, []);
 
   useEffect(() => {
