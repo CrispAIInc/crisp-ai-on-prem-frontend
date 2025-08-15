@@ -23,6 +23,7 @@ import MetadataPanel from "../MetadataPanel";
 import toast from "react-simple-toasts";
 import AddSourceModal from "../AddSourceModal";
 import { SettingsModal } from "../Settings/SettingsModal";
+import useAuth from '../../hooks/useAuth';
 
 const UpdateFilenameModal = ({
     show,
@@ -216,6 +217,8 @@ const ContentSection = ({
         theme,
         chatLoaded,
     } = useContext(MainContext);
+
+    const { logout } = useAuth();
 
     const categoryValues = categoryOptions.map((option) => option.value);
 
@@ -1136,13 +1139,14 @@ const ContentSection = ({
                                         }`}
                                 >
                                     <div
-                                        className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-1 font-medium 
+                                        className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-1 
             ${theme === "light"
                                                 ? "hover:bg-textColor-100/40"
                                                 : "text-textColor-100 hover:bg-slate-800/50"
                                             }`}
                                         onClick={() => {
                                             setIsSettingsModalOpen(true);
+                                            setIsSettingsMenuOpen(false);
                                             setIsSearching(false);
                                         }}
                                     >
@@ -1154,15 +1158,15 @@ const ContentSection = ({
                                     </div>
 
                                     <div
-                                        className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-1 font-medium 
+                                        className={`flex text-red-600 items-center cursor-pointer gap-2 py-2 pr-10 pl-1  
             ${theme === "light"
                                                 ? "hover:bg-textColor-100/40"
                                                 : "text-textColor-100 hover:bg-slate-800/50"
                                             }`}
+                                        onClick={logout}
                                     >
                                         <SettingsOutlinedIcon
-                                            className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
-                                                }`}
+                                            className={`cursor-pointer`}
                                         />
                                         <span>Log out</span>
                                     </div>
