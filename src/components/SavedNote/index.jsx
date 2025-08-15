@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import makeApiRequest from '../../api';
 import SideCard from '../../layouts/SideCard';
 import ModelChip from '../ModelChip';
+import useResources from '../../hooks/useResources';
 
 const SavedNote = ({ index, setNoteIndex, note }) => {
 
@@ -12,6 +13,8 @@ const SavedNote = ({ index, setNoteIndex, note }) => {
 
     const { setSelectedNote,
         setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setNotes, setActiveView } = useContext(MainContext);
+
+    const { getNotes } = useResources({ setNotes });
 
     const showSelectedNote = (event, note, index) => {
         event.preventDefault();
@@ -27,8 +30,7 @@ const SavedNote = ({ index, setNoteIndex, note }) => {
         try {
             await makeApiRequest(`/delete-note`, 'post', { noteID: note.note_id, noteName: note.note_name });
             // send request to update notes
-            const data = await makeApiRequest("/notes", "post");
-            setNotes(data);
+            getNotes();
         } catch (error) {
             console.log(error);
         } finally {

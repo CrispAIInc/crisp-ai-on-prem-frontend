@@ -14,6 +14,7 @@ import AggregationLlmModal from '../AggregationLlmModal';
 import BaseHeading from '../BaseHeading';
 import CustomButton from '../CustomButton';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
+import useResources from '../../hooks/useResources';
 
 function NoteDetails() {
     const {
@@ -26,6 +27,8 @@ function NoteDetails() {
         setActiveView,
         currentResource,
         isNewNote, theme, setShowNoteDetails } = useContext(MainContext);
+
+    const { getNotes } = useResources({ setNotes });
 
     const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
@@ -53,8 +56,7 @@ function NoteDetails() {
         try {
             await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex), isNewNote: isNewNote });
 
-            const data = await makeApiRequest("/notes", "post");
-            setNotes(() => data);
+            getNotes();
             toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });
         } catch (error) {
             console.log(error);
@@ -65,8 +67,7 @@ function NoteDetails() {
         try {
             await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
             // send request to update notes
-            const data = await makeApiRequest("/notes", "post");
-            setNotes(data);
+            getNotes();
             toast('Insight deleted successfully', { className: 'p-2 rounded-md', theme });
         } catch (error) {
             console.log(error);

@@ -127,7 +127,7 @@ const ChatPanel = () => {
     setStories
   } = useContext(MainContext);
 
-  const { getReels } = useResources({ setReels });
+  const { getReels, getStories, getNotes } = useResources({ setReels, setStories, setNotes });
 
   const notesSectionSteps = [
     {
@@ -353,8 +353,7 @@ const ChatPanel = () => {
         isNewNote: (isNewNote || isNewInsight)
       });
 
-      const data = await makeApiRequest("/notes", "post");
-      setNotes(() => data);
+      getNotes();
       toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });
     } catch (error) {
       console.error('Error saving note:', error);
@@ -481,8 +480,7 @@ const ChatPanel = () => {
       await makeApiRequest(`/delete-note`, 'post', { noteID: id, noteName: name });
       // send request to update notes
       toast('Insight deleted successfully', { className: 'p-2 rounded-md', theme });
-      const data = await makeApiRequest("/notes", "post");
-      setNotes(data);
+      getNotes();
     } catch (e) {
       console.log(e);
     } finally {
@@ -499,6 +497,7 @@ const ChatPanel = () => {
   };
 
   const [isStoryDeleting, setIsStoryDeleting] = useState(false);
+
   async function deleteStory(event, id) {
     event.preventDefault();
     console.log("hehe");
@@ -514,8 +513,7 @@ const ChatPanel = () => {
 
       toast('Story deleted successfully', { className: 'p-2 rounded-md', theme });
       // fetch stories
-      const data = await makeApiRequest("/stories", "get");
-      setStories(data);
+      getStories();
     } catch (error) {
       console.log(error);
       toast('An error occurred while deleting story', { className: 'p-2 rounded-md', theme });

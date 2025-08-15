@@ -12,6 +12,7 @@ import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import useResources from '../../hooks/useResources';
 
 const ContentPanel = () => {
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
@@ -27,7 +28,7 @@ const ContentPanel = () => {
         setIsLeftSidebarOpen, setTheme, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, contentPanelContainerRef } = useContext(MainContext);
 
 
-
+    const { getNotes } = useResources({ setNotes });
 
 
     const noteIndexRef = useRef(noteIndex);
@@ -39,8 +40,7 @@ const ContentPanel = () => {
     useEffect(() => {
         const makeRequest = async () => {
             try {
-                const data = await makeApiRequest("/notes", "post");
-                setNotes(data);
+                getNotes();
             } catch (error) {
                 console.warn(error);
             } finally {

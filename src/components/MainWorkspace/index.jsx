@@ -1203,7 +1203,7 @@ const MainWorkspace = ({ theme, setTheme }) => {
     showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
   };
 
-  const { getReels, getStories } = useResources({ setReels, setStories });
+  const { getReels, getStories, getNotes } = useResources({ setReels, setStories, setNotes });
 
   // update sourcesTobeCommited depending on knowledgeBase change
   useEffect(() => {
@@ -1211,11 +1211,10 @@ const MainWorkspace = ({ theme, setTheme }) => {
   }, [knowledgeBase]);
 
   useEffect(() => {
-    const getNotes = async () => {
+    const getAllNotes = async () => {
       try {
         setIsNotesLoading(true);
-        const data = await makeApiRequest("/notes", "post");
-        setNotes(data);
+        getNotes();
         setSelectedNote({
           note_id: "",
           text: [{
@@ -1236,7 +1235,7 @@ const MainWorkspace = ({ theme, setTheme }) => {
       }
     };
 
-    getNotes();
+    getAllNotes();
   }, []);
 
   useEffect(() => {
