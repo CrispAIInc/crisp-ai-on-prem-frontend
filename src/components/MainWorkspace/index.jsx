@@ -13,7 +13,7 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import { pluck, sortArrayOfObjects } from '../../utils.js';
+import { pluck, sortArrayOfObjects, sortStrings } from '../../utils.js';
 import useResources from '../../hooks/useResources.js';
 
 const MainWorkspace = ({ theme, setTheme }) => {
@@ -87,7 +87,11 @@ const MainWorkspace = ({ theme, setTheme }) => {
           label: index.charAt(0).toUpperCase() + index.slice(1),
         };
       });
-      setCategoryOptions(indexes);
+
+      setCategoryOptions(sortStrings(pluck(indexes, "label")).map(item => ({
+        label: item,
+        value: item.charAt(0).toLowerCase() + item.slice(1),
+      })));
     }
 
     getIndexes();
