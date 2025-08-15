@@ -13,6 +13,7 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import { pluck } from '../../utils.js';
 
 const MainWorkspace = ({ theme, setTheme }) => {
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -1257,10 +1258,22 @@ const MainWorkspace = ({ theme, setTheme }) => {
   }, []);
 
   useEffect(() => {
+    function sortByReeltitle(data) {
+      return [...data].sort((a, b) => {
+        const pathA = a.title || "";
+        const pathB = b.title || "";
+        return pathA.localeCompare(pathB, undefined, {
+          numeric: true,
+          sensitivity: "base",
+        });
+      });
+    }
+
     const getReels = async () => {
       try {
         const data = await makeApiRequest("/reels", "get");
-        setReels(data);
+        const sortedData = sortByReeltitle(data);
+        setReels(sortedData);
       } catch (error) {
         console.error(error);
       }
