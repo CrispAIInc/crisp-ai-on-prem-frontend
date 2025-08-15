@@ -1163,12 +1163,12 @@ const ContentSection = ({
                                         className={`flex text-red-600 items-center cursor-pointer gap-2 py-2 pr-10 pl-1  
             ${theme === "light"
                                                 ? "hover:bg-textColor-100/40"
-                                                : "text-textColor-100 hover:bg-slate-800/50"
+                                                : "hover:bg-slate-800/50"
                                             }`}
                                         onClick={logout}
                                     >
                                         <LogoutOutlinedIcon
-                                            className={`cursor-pointer`}
+                                            className="cursor-pointer"
                                         />
                                         <span>Log out</span>
                                     </div>
