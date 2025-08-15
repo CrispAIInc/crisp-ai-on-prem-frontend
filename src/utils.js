@@ -184,3 +184,11 @@ export function htmlToPlainText(input) {
 }
 
 export const isRtlLanguage = (langCode) => ["ar", "iw", "fa", "ur", "ps", "sd"].includes(langCode);
+
+export function sortStrings(arr, ascending = true) {
+    return [...arr].sort((a, b) =>
+        ascending
+            ? a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+            : b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' })
+    );
+}
