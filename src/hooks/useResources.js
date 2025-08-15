@@ -29,6 +29,17 @@ export default function useResources(config = {}) {
             } catch (error) {
                 console.error(error);
             }
+        },
+        getNotes: async () => {
+            try {
+                const data = await makeApiRequest("/notes", "get");
+                const sortedData = sortArrayOfObjects(data, 'note_name');
+                if (config.setNotes) {
+                    config.setNotes(sortedData);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 }
