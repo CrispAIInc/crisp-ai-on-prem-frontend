@@ -18,7 +18,7 @@ import BaseHeading from '../BaseHeading';
 import NoData from '../NoData';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import SearchSection from '../SearchSection';
-import { timeToSeconds } from '../../utils';
+import { searchBySourcePath, sortBySourcePath, timeToSeconds } from '../../utils';
 import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
@@ -512,7 +512,7 @@ const ContentSection = ({
             setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: true })));
             // update knowledgebase depending on the items selected in displayedSources
             const updatedKnowledgeBase = knowledgeBase.map((prev) => {
-                let itemExist = displayedSources?.find(i => i?.source_path === prev?.source_path);
+                let itemExist = results?.find(i => i?.source_path === prev?.source_path);
                 if (itemExist) {
                     return { ...prev, is_selected: true };
                 }
@@ -587,7 +587,32 @@ const ContentSection = ({
         setIsUpdateFilenameModalOpen(true);
     }
 
+    const [results, setResults] = useState(displayedSources);
+    const [searchValue, setSearchValue] = useState("");
 
+    // Update displayedSources when knowledgeBase changes
+    useEffect(() => {
+        const knowledgePaths = new Set(knowledgeBase.map(item => item.source_path));
+        setDisplayedSources(prev =>
+            prev.filter(item => knowledgePaths.has(item.source_path))
+        );
+    }, [knowledgeBase]);
+
+    // Update results whenever displayedSources or searchValue changes
+    useEffect(() => {
+        let filtered = displayedSources;
+
+        if (searchValue.trim() !== "") {
+            filtered = searchBySourcePath(displayedSources, searchValue);
+        }
+
+        setResults(sortBySourcePath(filtered));
+    }, [displayedSources, searchValue]);
+
+    // search input handler
+    const handleSearch = (e) => {
+        setSearchValue(e.target.value);
+    };
 
     return (
         <>
@@ -687,12 +712,15 @@ const ContentSection = ({
                 </div>
 
                 <div className="flex flex-col flex-1 w-full h-full max-h-full overflow-y-auto">
-                    <BaseHeading text={`Sources (${displayedSources?.length} selected & ${displayedSources?.filter(i => i?.is_selected)?.length} checked.)`} className="mt-4" />
+
+                    {displayedSources.length > 0 && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
+
+                    <BaseHeading text={`Sources (${results?.length} selected & ${results?.filter(i => i?.is_selected)?.length} checked.)`} className={`${displayedSources.length === 0 && 'mt-4'}`} />
 
                     {/* <div className="w-fit">
                         <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
                     </div> */}
-                    {displayedSources?.length > 0 && <div className="flex items-center mt-4 ">
+                    {results?.length > 0 && <div className="flex items-center mt-4 ">
                         <span
                             className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                                 }`}
@@ -702,7 +730,7 @@ const ContentSection = ({
                         <Checkbox
                             className={`select-all-checkbox p-0 "
                                 }`}
-                            checked={displayedSources?.every(item => item?.is_selected)}
+                            checked={results?.every(item => item?.is_selected)}
                             onChange={(e) => handleToggleCheckSources(e.target.checked)}
                             inputProps={{ "aria-label": "Select All Sources" }}
                             label="Check All Sources"
@@ -719,7 +747,7 @@ const ContentSection = ({
                         <Checkbox
                             className={`select-all-checkbox p-0 "
                                 }`}
-                            checked={displayedSources?.every(item => item?.is_selected)}
+                            checked={results?.every(item => item?.is_selected)}
                             onChange={(e) => handleToggleSelectedSources(e.target.checked)}
                             inputProps={{ "aria-label": "Select All Sources" }}
                             label="Select All Sources"
@@ -728,7 +756,7 @@ const ContentSection = ({
 
                     <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                         {
-                            displayedSources?.length > 0 && <div className={` h-full gap-2  w-full max-w-full mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
+                            results?.length > 0 && <div className={` h-full gap-2  w-full max-w-full mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
                                 {/* {displayedSources?.slice(0).reverse().map((item, index) => {
                                     // if (canRenderSourceThumbnail(item)) {
                                     return (<ContentPanelThumbnail
@@ -744,7 +772,7 @@ const ContentSection = ({
                                     // }
                                 })} */}
                                 {
-                                    displayedSources?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
+                                    results?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
                                         <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
                                             {showSourceContextMenu === option?.source_path && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col items-center  p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
@@ -823,7 +851,12 @@ const ContentSection = ({
                                     </div> */}
                                 </>
                                 :
-                                <NoData message="No sources selected" />
+                                <NoData message="No sources selected" classes="mt-4" />
+                        }
+                        {
+                            (results.length === 0 && displayedSources.length > 0) && (
+                                <BaseHeading text='No sources found' className='mt-4 text-center' />
+                            )
                         }
                     </div>
                 </div>

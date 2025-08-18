@@ -207,3 +207,23 @@ export function sortArrayOfObjects(data, key) {
         });
     });
 }
+
+// Sort by source_path
+export function sortBySourcePath(data) {
+    return [...data].sort((a, b) => {
+        const pathA = a.metadata?.source_path || "";
+        const pathB = b.metadata?.source_path || "";
+        return pathA.localeCompare(pathB, undefined, {
+            numeric: true,
+            sensitivity: "base",
+        });
+    });
+}
+
+// Search by source_path
+export function searchBySourcePath(data, query) {
+    return data.filter((item) => {
+        const path = item.source_path || "";
+        return path.toLowerCase().includes(query.toLowerCase());
+    });
+}

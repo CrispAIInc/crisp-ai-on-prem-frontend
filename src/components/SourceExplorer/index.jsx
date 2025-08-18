@@ -16,6 +16,7 @@ import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import RemoveIndexModal from '../RemoveIndexModal';
+import { searchBySourcePath, sortBySourcePath } from '../../utils';
 
 export function SourceExplorer(props) {
     const {
@@ -120,17 +121,21 @@ export function SourceExplorer(props) {
             </button>
         );
 
+    const [searchValue, setSearchValue] = useState("");
     useEffect(() => {
-        const knowledgePaths = new Set(knowledgeBase.map(item => item.source_path));
+        let base = [...knowledgeBase];
 
-        setResults(prevResults =>
-            prevResults.filter(item => knowledgePaths.has(item.source_path))
-        );
+        if (searchValue.trim() !== "") {
+            base = searchBySourcePath(base, searchValue);
+        }
 
+        setResults(sortBySourcePath(base));
+
+        // view modes handling
         viewModes[viewModes.length - 1] !== "files"
             ? renderFolders()
             : renderFiles();
-    }, [knowledgeBase]);
+    }, [knowledgeBase, searchValue]);
 
     const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
     function removeIndex(e) {
@@ -332,27 +337,7 @@ export function SourceExplorer(props) {
         }
     };
 
-    // Sort by source_path
-    function sortBySourcePath(data) {
-        return [...data].sort((a, b) => {
-            const pathA = a.metadata?.source_path || "";
-            const pathB = b.metadata?.source_path || "";
-            return pathA.localeCompare(pathB, undefined, {
-                numeric: true,
-                sensitivity: "base",
-            });
-        });
-    }
 
-    // Search by source_path
-    function searchBySourcePath(data, query) {
-        return data.filter((item) => {
-            const path = item.source_path || "";
-            return path.toLowerCase().includes(query.toLowerCase());
-        });
-    }
-
-    const [searchValue, setSearchValue] = useState("");
 
     const handleSearch = (e) => {
         const value = e.target.value;
