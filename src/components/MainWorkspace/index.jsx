@@ -1104,9 +1104,11 @@ const MainWorkspace = ({ theme, setTheme }) => {
   const [isFileUploading, setIsFileUploading] = useState(false);
 
   const [reels, setReels] = useState([]);
+  const [user, setUser] = useState(null);
   // create value object with all the states
   const value = {
     reels, setReels,
+    user, setUser,
     isFileUploading, setIsFileUploading,
     uploadedSources, setUploadedSources,
     showMetadata, setShowMetadata,
@@ -1253,6 +1255,21 @@ const MainWorkspace = ({ theme, setTheme }) => {
     };
 
     getReels();
+  }, []);
+
+  // get user info
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const data = await makeApiRequest("/me", "get");
+        console.log(data);
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    getUserInfo();
   }, []);
 
   return (
