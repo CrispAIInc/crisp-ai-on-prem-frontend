@@ -194,6 +194,7 @@ const ContentSection = ({
     maxWidth,
 }) => {
     const {
+        user,
         isPlayerReady,
         resourceURL,
         isFileUploading,
@@ -1129,7 +1130,7 @@ const ContentSection = ({
                                     }`}
                                 onClick={() => setIsSearching(false)}
                             >
-                                John Doe
+                                {user?.firstName + " " + user?.lastName}
                             </span>
                         </div>
 
