@@ -787,6 +787,22 @@ const ChatPanel = () => {
       setNotesResults(sortArrayOfObjects(filtered, "note_name"));
     }
   };
+  const [storiesSearchValue, setStoriesSearchValue] = useState("");
+  const [storiesResults, setStoriesResults] = useState(stories);
+  useEffect(() => {
+    setStoriesResults(sortBySourcePath(stories));
+  }, [stories]);
+  const handleStoriesSearch = (e) => {
+    const value = e.target.value;
+    setStoriesSearchValue(value);
+
+    if (value.trim() === "") {
+      setStoriesResults(sortArrayOfObjects(stories, "story_name"));
+    } else {
+      const filtered = searchByKey(stories, "story_name", value);
+      setStoriesResults(sortArrayOfObjects(filtered, "story_name"));
+    }
+  };
 
   return (
     <aside
@@ -1252,11 +1268,11 @@ const ChatPanel = () => {
                     </span>
                   </div> */}
                     <div className="flex flex-col overflow-y-auto">
-                      {/* single note */}
+                      {(stories?.length > 0 || storiesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={storiesSearchValue} onChange={handleStoriesSearch} />}
                       {
-                        stories?.length === 0 ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                        (storiesResults?.length === 0 || stories?.length === 0) ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                           :
-                          stories?.map((story, index) => (
+                          storiesResults?.map((story, index) => (
                             <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
                               ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
