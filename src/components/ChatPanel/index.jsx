@@ -19,7 +19,7 @@ import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import BaseHeading from '../BaseHeading';
-import { generateRandomHash, htmlToPlainText } from '../../utils';
+import { generateRandomHash, htmlToPlainText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
 import StoriesEditor from '../StoriesEditor';
 import LoadingSpinner from '../LoadingSpinner';
 import MediaEntertainment from '../MediaEntertainment';
@@ -771,6 +771,23 @@ const ChatPanel = () => {
   });
   const [isReelOpen, setIsReelOpen] = useState(false);
 
+  const [insightSearchValue, setInsightSearchValue] = useState("");
+  const [notesResults, setNotesResults] = useState(notes);
+  useEffect(() => {
+    setNotesResults(sortBySourcePath(notes));
+  }, [notes]);
+  const handleInsightSearch = (e) => {
+    const value = e.target.value;
+    setInsightSearchValue(value);
+
+    if (value.trim() === "") {
+      setNotesResults(sortArrayOfObjects(notes, "note_name"));
+    } else {
+      const filtered = searchByKey(notes, "note_name", value);
+      setNotesResults(sortArrayOfObjects(filtered, "note_name"));
+    }
+  };
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
@@ -1188,28 +1205,34 @@ const ChatPanel = () => {
                   </RippleButton>
                   {/* </div> */}
                   <div className="flex flex-col overflow-y-auto">
-                    {/* single note */}
+                    {/* search input */}
+                    {(notes?.length > 0 || notesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={insightSearchValue} onChange={handleInsightSearch} />}
                     {
-                      notes?.length === 0 ? <BaseHeading text="No notes found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                      (notesResults?.length === 0 || notes?.length === 0) ? <BaseHeading text="No notes found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                         :
-                        notes?.map((note, index) => (
-                          <div key={note.note_id} className={`flex items-start gap-2 ${theme === 'light'
-                            ? 'hover:bg-textColor-100/10'
-                            : 'hover:bg-light-hover-200/20'
-                            } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
-                            <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                            <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                              }`}>{note.note_name}</p>
-                            {
-                              hoveredInsight === note?.note_id && (
-                                isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                  onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
-                                  className="text-red-400 cursor-pointer"
-                                />
-                              )
-                            }
+                        (
+                          <div className="flex flex-col gap-2">
+                            {/* list of notes */}
+                            {notesResults?.map((note, index) => (
+                              <div key={note.note_id} className={`flex items-start gap-2 ${theme === 'light'
+                                ? 'hover:bg-textColor-100/10'
+                                : 'hover:bg-light-hover-200/20'
+                                } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
+                                <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                                <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                  }`}>{note.note_name}</p>
+                                {
+                                  hoveredInsight === note?.note_id && (
+                                    isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                      onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
+                                      className="text-red-400 cursor-pointer"
+                                    />
+                                  )
+                                }
+                              </div>
+                            ))}
                           </div>
-                        ))
+                        )
                     }
                   </div>
                 </>

@@ -16,7 +16,7 @@ import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import RemoveIndexModal from '../RemoveIndexModal';
-import { searchBySourcePath, sortBySourcePath } from '../../utils';
+import { searchByKey, sortBySourcePath } from '../../utils';
 
 export function SourceExplorer(props) {
     const {
@@ -126,7 +126,7 @@ export function SourceExplorer(props) {
         let base = [...knowledgeBase];
 
         if (searchValue.trim() !== "") {
-            base = searchBySourcePath(base, searchValue);
+            base = searchByKey(base, "source_path", searchValue);
         }
 
         setResults(sortBySourcePath(base));
@@ -346,7 +346,7 @@ export function SourceExplorer(props) {
         if (value.trim() === "") {
             setResults(sortBySourcePath(knowledgeBase));
         } else {
-            const filtered = searchBySourcePath(knowledgeBase, value);
+            const filtered = searchByKey(knowledgeBase, "source_path", value);
             setResults(sortBySourcePath(filtered));
         }
     };
@@ -354,7 +354,7 @@ export function SourceExplorer(props) {
     //     const value = e.target.value;
     //     setSearchValue(value);
 
-    //     const filtered = searchBySourcePath(knowledgeBase, value);
+    //     const filtered = searchByKey(knowledgeBase, "source_path", value);
     //     setKnowledgeBase(sortBySourcePath(filtered));
     // };
     return (

@@ -221,9 +221,9 @@ export function sortBySourcePath(data) {
 }
 
 // Search by source_path
-export function searchBySourcePath(data, query) {
+export function searchByKey(data, key, query) {
     return data.filter((item) => {
-        const path = item.source_path || "";
+        const path = item[key] || "";
         return path.toLowerCase().includes(query.toLowerCase());
     });
 }
