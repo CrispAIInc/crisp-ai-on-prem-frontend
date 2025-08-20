@@ -5,7 +5,7 @@ export default function useAuth() {
     // For example, it can return user information, login/logout functions, etc.
 
     const navigate = useNavigate();
-    const isAuthenticated = localStorage.getItem('accessToken'); // Replace with actual authentication logic
+    const isAuthenticated = localStorage.getItem('idToken'); // Replace with actual authentication logic
 
     return {
         isAuthenticated,
@@ -14,7 +14,7 @@ export default function useAuth() {
         },
         logout: () => {
             // Implement logout logic here
-            localStorage.removeItem('accessToken');
+            localStorage.removeItem('idToken');
             navigate('/login');
         }
     };

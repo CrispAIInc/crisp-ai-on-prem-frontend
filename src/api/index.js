@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 const BACKEND_URL = import.meta.env.VITE_API_ENDPOINT;
 
 const axiosInstance = axios.create({
@@ -8,9 +7,9 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-    (config) => {
+    async (config) => {
         // add Authorization header if token is available
-        const token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem('idToken');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         } else {
