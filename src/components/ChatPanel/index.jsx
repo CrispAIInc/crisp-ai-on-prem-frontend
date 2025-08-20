@@ -1238,7 +1238,7 @@ const ChatPanel = () => {
                   {/* </div> */}
                   <div className="flex flex-col overflow-y-auto">
                     {/* search input */}
-                    {(notes?.length > 0 || notesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={insightSearchValue} onChange={handleInsightSearch} />}
+                    {(notes?.length > 0 || notesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={insightSearchValue} onChange={handleInsightSearch} />}
                     {
                       (notesResults?.length === 0 || notes?.length === 0) ? <BaseHeading text="No notes found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                         :
@@ -1284,7 +1284,7 @@ const ChatPanel = () => {
                     </span>
                   </div> */}
                     <div className="flex flex-col overflow-y-auto">
-                      {(stories?.length > 0 || storiesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={storiesSearchValue} onChange={handleStoriesSearch} />}
+                      {(stories?.length > 0 || storiesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={storiesSearchValue} onChange={handleStoriesSearch} />}
                       {
                         (storiesResults?.length === 0 || stories?.length === 0) ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                           :
@@ -1312,7 +1312,7 @@ const ChatPanel = () => {
                   :
                   <>
                     <div className="flex flex-col overflow-y-auto">
-                      {(reels?.length > 0 || reelsResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={reelsSearchValue} onChange={handleReelsSearch} />}
+                      {(reels?.length > 0 || reelsResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={reelsSearchValue} onChange={handleReelsSearch} />}
                       {
                         (reels?.length === 0 || reelsResults?.length === 0) ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                           :

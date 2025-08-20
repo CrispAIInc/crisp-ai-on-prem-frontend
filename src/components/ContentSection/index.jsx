@@ -713,7 +713,7 @@ const ContentSection = ({
 
                 <div className="flex flex-col flex-1 w-full h-full max-h-full overflow-y-auto">
 
-                    {displayedSources.length > 0 && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
+                    {displayedSources.length > 0 && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-ful lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
 
                     <BaseHeading text={`Sources (${results?.length} selected & ${results?.filter(i => i?.is_selected)?.length} checked.)`} className={`${displayedSources.length === 0 && 'mt-4'}`} />
 
