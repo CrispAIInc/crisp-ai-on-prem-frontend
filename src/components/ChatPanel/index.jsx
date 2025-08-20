@@ -803,6 +803,22 @@ const ChatPanel = () => {
       setStoriesResults(sortArrayOfObjects(filtered, "story_name"));
     }
   };
+  const [reelsSearchValue, setReelsSearchValue] = useState("");
+  const [reelsResults, setReelsResults] = useState(reels);
+  useEffect(() => {
+    setReelsResults(sortBySourcePath(reels));
+  }, [reels]);
+  const handleReelsSearch = (e) => {
+    const value = e.target.value;
+    setReelsSearchValue(value);
+
+    if (value.trim() === "") {
+      setReelsResults(sortArrayOfObjects(reels, "title"));
+    } else {
+      const filtered = searchByKey(reels, "title", value);
+      setReelsResults(sortArrayOfObjects(filtered, "title"));
+    }
+  };
 
   return (
     <aside
@@ -1296,10 +1312,11 @@ const ChatPanel = () => {
                   :
                   <>
                     <div className="flex flex-col overflow-y-auto">
+                      {(reels?.length > 0 || reelsResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={reelsSearchValue} onChange={handleReelsSearch} />}
                       {
-                        reels?.length === 0 ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                        (reels?.length === 0 || reelsResults?.length === 0) ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                           :
-                          reels?.map((reel, index) => (
+                          reelsResults?.map((reel, index) => (
                             <div key={reel.id} className={`flex gap-2 ${theme === 'light'
                               ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
