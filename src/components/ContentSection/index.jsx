@@ -598,6 +598,10 @@ const ContentSection = ({
         );
     }, [knowledgeBase]);
 
+    // useEffect(() => {
+    //     setDisplayedSources
+    // }, [displayedSources])
+
     // Update results whenever displayedSources or searchValue changes
     useEffect(() => {
         let filtered = displayedSources;
@@ -772,7 +776,7 @@ const ContentSection = ({
                                     // }
                                 })} */}
                                 {
-                                    results?.slice(0).reverse().map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
+                                    results?.map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
                                         <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
                                             {showSourceContextMenu === option?.source_path && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col items-center  p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
