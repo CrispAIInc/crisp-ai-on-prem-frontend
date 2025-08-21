@@ -213,7 +213,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
       //   const data = await makeApiRequest(
       //     "/content",
       //     "post",
-      //     JSON.stringify({categories: categoryOptions.map((option) => option.value)})
+      // JSON.stringify(categoryOptions.map((option) => option.value))
       //   );
       //   setKnowledgeBase(data);
       // } catch (error) {
@@ -263,7 +263,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           //   const data = await makeApiRequest(
           //     "/content",
           //     "post",
-          //     JSON.stringify({categories: categoryOptions.map((option) => option.value)})
+          //     JSON.stringify(categoryOptions.map((option) => option.value))
           //   );
           //   setKnowledgeBase(data);
           // } catch (error) {

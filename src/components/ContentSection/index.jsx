@@ -63,7 +63,7 @@ const UpdateFilenameModal = ({
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify({ categories: categoryOptions.map((option) => option.value) })
+                JSON.stringify(categoryOptions.map((option) => option.value))
             );
             setKnowledgeBase(
                 data.map((item) => {
@@ -251,7 +251,7 @@ const ContentSection = ({
                 const data = await makeApiRequest(
                     "/content",
                     "post",
-                    JSON.stringify({ categories: categoryOptions.map((option) => option.value) })
+                    JSON.stringify(categoryOptions.map((option) => option.value))
                 );
                 setKnowledgeBase(data);
             } catch (error) {
@@ -426,7 +426,7 @@ const ContentSection = ({
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify({ categories: categoryOptions.map((option) => option.value) })
+                JSON.stringify(categoryOptions.map((option) => option.value))
             );
 
             // Filter sources that match the uploaded files
