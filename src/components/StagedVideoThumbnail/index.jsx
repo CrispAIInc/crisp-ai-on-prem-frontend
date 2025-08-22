@@ -19,7 +19,7 @@ function StagedVideoThumbnail({ item }) {
     return (
         <OverlayTrigger className='tooltip' placement="right" overlay={renderTooltip}>
             <div className="relative  h-24 !w-full">
-                <img className="w-full h-24" src={`${API_ENDPOINT}/thumbnails/${encodeURIComponent(item.category[0])}/${encodeURIComponent(item.thumbnail)}`}
+                <img className="w-full h-24" src={item.thumbnail}
                     alt="Video Thumbnail" />
 
                 {/* thumbnail bottom title */}

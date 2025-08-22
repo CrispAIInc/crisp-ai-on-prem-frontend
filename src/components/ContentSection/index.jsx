@@ -1045,14 +1045,7 @@ const ContentSection = ({
                                                             )}
                                                         <img
                                                             className="object-cover w-full h-full rounded-md"
-                                                            src={`${API_ENDPOINT}/${option?.file_type === "video"
-                                                                ? "thumbnails"
-                                                                : option?.file_type === "pdf"
-                                                                    ? "pdf-thumbnails"
-                                                                    : "img-thumbnails"
-                                                                }/${encodeURIComponent(
-                                                                    option?.category[0]
-                                                                )}/${encodeURIComponent(option?.thumbnail)}`}
+                                                            src={option.thumbnail}
                                                             alt="Video Thumbnail"
                                                         />
                                                     </div>

@@ -21,7 +21,7 @@ function PDFThumbnail({ item }) {
   return (
     <OverlayTrigger className='tooltip' placement="right" overlay={renderTooltip}>
       <div className="relative  h-24 !w-full">
-        <img className="w-full h-full" src={`${API_ENDPOINT}/pdf-thumbnails/${encodeURIComponent(item.category[0])}/${encodeURIComponent(item.thumbnail)}`}
+        <img className="w-full h-full" src={item.thumbnail}
           alt="PDF Thumbnail" />
 
         {/* thumbnail bottom title */}
