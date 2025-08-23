@@ -421,7 +421,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 width={"100%"}
                 height='500px'
                 playing={false}
-                url={resourceURL}
+                url={currentResource?.thumbnail || resourceURL}
                 onReady={() => setIsPlayerReady(true)}
                 ref={player}
                 controls
@@ -585,7 +585,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
             >
               <Document
                 className="!w-full mx-auto relative"
-                file={resourceURL}
+                file={currentResource?.thumbnail || resourceURL}
 
                 onLoadSuccess={onDocumentLoadSuccess}
               >
@@ -747,7 +747,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
               />
               <img
                 className="absolute top-0 left-0 object-contain w-full h-full"
-                src={resourceURL}
+                src={currentResource?.thumbnail || resourceURL}
               />
             </div>
             {/* Image Caption */}
