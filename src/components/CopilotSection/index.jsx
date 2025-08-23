@@ -249,6 +249,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             }
             return newMessages;
           });
+        } else if (data.type === "REFERENCES") {
+          // extract the last part of the streaming and call fetchReferences
+          fetchReferences(botMessage, data.data);
         }
       };
 
@@ -258,7 +261,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
 
         if (eventSource.readyState === EventSource.CLOSED) {
           // Extract session ID from the eventSource's URL
-          fetchReferences(botMessage); // Function to fetch references
+          // fetchReferences(botMessage); // Function to fetch references
           // try {
           //   const data = await makeApiRequest(
           //     "/content",
@@ -280,10 +283,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
   };
 
   const [isFetchingRefs, setIsFetchingRefs] = useState(false);
-  const fetchReferences = async (botMessage) => {
+  const fetchReferences = async (botMessage, data) => {
     setIsFetchingRefs(true);
-    const response = await axios.get(`${API_ENDPOINT}/references`);
-    const data = response.data;
+    // const response = await axios.get(`${API_ENDPOINT}/references`);
+    // const data = response.data;
     noteReferences.videoLinks = [];
     noteReferences.pdfLinks = [];
     noteReferences.imageLinks = [];
