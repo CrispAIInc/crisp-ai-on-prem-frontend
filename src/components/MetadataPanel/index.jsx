@@ -421,7 +421,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 width={"100%"}
                 height='500px'
                 playing={false}
-                url={currentResource?.thumbnail || resourceURL}
+                url={currentResource?.video_url || resourceURL}
                 onReady={() => setIsPlayerReady(true)}
                 ref={player}
                 controls
@@ -585,7 +585,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
             >
               <Document
                 className="!w-full mx-auto relative"
-                file={currentResource?.thumbnail || resourceURL}
+                file={currentResource?.pdf_url || resourceURL}
 
                 onLoadSuccess={onDocumentLoadSuccess}
               >
