@@ -356,7 +356,9 @@ const ContentSection = ({
             // add new uploaded sources to displayedSources
             setDisplayedSources(prev => {
                 const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
-                return [...prev, ...newSources.map(item => ({ ...item, is_selected: true }))];
+                // sort the sources
+                const finalSources = sortArrayOfObjects([...prev, ...newSources.map(item => ({ ...item, is_selected: true }))], "source_path");
+                return finalSources;
             });
 
             setCurrentResource(sourcesToAdd[0]);
