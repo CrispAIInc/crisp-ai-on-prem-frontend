@@ -719,7 +719,7 @@ const ContentSection = ({
 
                     {displayedSources.length > 0 && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-ful lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
 
-                    <BaseHeading text={`Sources (${results?.length} selected & ${results?.filter(i => i?.is_selected)?.length} checked.)`} className={`${displayedSources.length === 0 && 'mt-4'}`} />
+                    <BaseHeading text={`Workspace sources (${results?.length} selected & ${results?.filter(i => i?.is_selected)?.length} checked.)`} className={`${displayedSources.length === 0 && 'mt-4'}`} />
 
                     {/* <div className="w-fit">
                         <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
