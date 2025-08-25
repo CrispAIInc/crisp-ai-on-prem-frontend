@@ -719,12 +719,12 @@ const ContentSection = ({
 
                     <BaseHeading text={`Workspace sources (${results?.length} selected & ${results?.filter(i => i?.is_selected)?.length} checked.)`} className={` mt-4`} />
 
-                    {displayedSources.length > 0 && <input className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} !w-full lg:w-[50%] rounded-full !pl-[10px]`} placeholder={"Search in workspace sources..."} value={searchValue} onChange={handleSearch} />}
+                    {displayedSources.length > 0 && <input className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[75%] rounded-full !pl-[10px]`} placeholder={"Search in workspace sources..."} value={searchValue} onChange={handleSearch} />}
 
                     {/* <div className="w-fit">
                         <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
                     </div> */}
-                    {results?.length > 0 && <div className="flex items-center mt-4 ">
+                    {results?.length > 0 && <div className="flex items-center mt-2">
                         <span
                             className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                                 }`}
@@ -760,7 +760,7 @@ const ContentSection = ({
 
                     <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                         {
-                            results?.length > 0 && <div className={` h-full gap-2  w-full max-w-full mt-4 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
+                            results?.length > 0 && <div className={` h-full gap-2  w-full max-w-full mt-2 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
                                 {/* {displayedSources?.slice(0).reverse().map((item, index) => {
                                     // if (canRenderSourceThumbnail(item)) {
                                     return (<ContentPanelThumbnail
