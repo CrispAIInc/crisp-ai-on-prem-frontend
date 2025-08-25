@@ -18,7 +18,7 @@ import BaseHeading from '../BaseHeading';
 import NoData from '../NoData';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import SearchSection from '../SearchSection';
-import { searchByKey, sortBySourcePath, timeToSeconds } from '../../utils';
+import { searchByKey, sortArrayOfObjects, sortBySourcePath, timeToSeconds } from '../../utils';
 import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
@@ -610,7 +610,7 @@ const ContentSection = ({
             filtered = searchByKey(displayedSources, "source_path", searchValue);
         }
 
-        setResults(sortBySourcePath(filtered));
+        setResults(sortArrayOfObjects(filtered, "source_path"));
     }, [displayedSources, searchValue]);
 
     // search input handler
