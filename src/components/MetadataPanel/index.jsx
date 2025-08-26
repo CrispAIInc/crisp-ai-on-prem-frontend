@@ -577,6 +577,12 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
               className="sticky top-0 z-50 shadow-lg cursor-pointer left-full"
               color='error'
             />
+            {/* <iframe
+              src="https://storage.googleapis.com/crispai-app-462614.firebasestorage.app/pdf_uploads/pdfs/media/Deep%20Seek.pdf"
+              width="100%"
+              height="600px"
+              className="w-[90%] mx-auto"
+            /> */}
             <div
               className="relative w-[90%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
               ref={contentPanelContainerRef}
