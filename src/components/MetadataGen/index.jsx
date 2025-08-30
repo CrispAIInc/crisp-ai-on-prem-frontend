@@ -93,7 +93,7 @@ function MetadataGen() {
             //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             // };
             const payload = {
-                category: getCategories(displayedSources.filter(item => item.is_selected)), sources: displayedSources.filter(item => item.is_selected).map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context, verbosityValue: verbosityValue
+                sources: displayedSources.filter(item => item.is_selected).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: source.category.filter(cat => cat !== "all") })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context, verbosityValue: verbosityValue
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
