@@ -74,12 +74,26 @@ function MetadataGen() {
 
         const categoryValues = categoryOptions.map((option) => option.value);
 
+        function getCategories(items) {
+            const categories = new Set();
+
+            items.forEach(item => {
+                item.category.forEach(cat => {
+                    if (cat.toLowerCase() !== "all") {
+                        categories.add(cat);
+                    }
+                });
+            });
+
+            return Array.from(categories);
+        }
+
         try {
             // const payload = {
             //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             // };
             const payload = {
-                category: selectedCategory, sources: displayedSources.filter(item => item.is_selected).map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context, verbosityValue: verbosityValue
+                category: getCategories(displayedSources.filter(item => item.is_selected)), sources: displayedSources.filter(item => item.is_selected).map(source => ({ file_type: source.file_type, source_path: source.source_path })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context, verbosityValue: verbosityValue
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
