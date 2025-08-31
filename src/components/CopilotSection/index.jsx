@@ -998,15 +998,15 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
                         >
                           {message.text}
                         </div>
-                        {
-                          (isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
-                        }
                         {showCursor && index == responseIndex ? (
                           <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
                             <AutoAwesomeIcon className="animate-fade-in" />
                             <AnimatedText text='Thinking...' />
                           </div>
                         ) : null}
+                        {
+                          (isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
+                        }
 
                         {/* <div className="flex flex-wrap items-center gap-1">
                           <span
