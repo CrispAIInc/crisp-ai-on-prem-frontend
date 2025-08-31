@@ -84,7 +84,7 @@ const MainWorkspace = ({ theme, setTheme }) => {
           label: index.charAt(0).toUpperCase() + index.slice(1),
         };
       });
-      setCategoryOptions(indexes);
+      setCategoryOptions([{ value: "all", label: "All" }, ...indexes]);
     }
 
     getIndexes();
