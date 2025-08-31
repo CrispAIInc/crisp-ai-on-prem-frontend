@@ -247,7 +247,7 @@ export function SourceExplorer(props) {
                     .filter(
                         (file) =>
                             (file.file_type === format || format === "all") &&
-                            file.category[1] === category
+                            file.category[0] === category
                     );
 
                 if (items.length > 0) {
