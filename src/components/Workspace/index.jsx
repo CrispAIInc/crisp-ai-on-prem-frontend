@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { MainContext } from "../../contexts/mainContext";
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
@@ -7,6 +7,8 @@ import NoData from "../NoData";
 import './workspace.css';
 
 import CenterPanel from "../CenterPanel";
+import CopilotSection from '../CopilotSection';
+import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 const Workspace = () => {
 
@@ -19,8 +21,16 @@ const Workspace = () => {
         setIsRightSidebarOpen,
         isRightSidebarOpen,
         isLeftSidebarOpen,
+        chatLoaded,
+        setChatLoaded
 
     } = useContext(MainContext);
+
+    const { sidebarWidth } = useResizableSidebar(200, false);
+
+    const [combinedSummary, setCombinedSummary] = useState("");
+    const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
     return (
         <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
@@ -41,12 +51,16 @@ const Workspace = () => {
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
             </div>
             {(activeView === 'resource' || displayedSources?.length > 0) ? (
-                <CenterPanel />
+                <CenterPanel combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} />
             ) : !activeView ? (
                 <div className="mt-10">
                     <NoData />
                 </div>
             ) : null}
+
+            <div className={`mt-10 overflow-y-hidden h-[700px]`}>
+                <CopilotSection selectedLanguage={selectedLanguage} setSelectedLanguage={setSelectedLanguage} setIsCombinedSummaryPending={setIsCombinedSummaryPending} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
+            </div>
 
             {/* right sidebar collapser */}
             <div

@@ -12,10 +12,10 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import RippleButton from '../RippleButton/index.jsx';
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 
-const CenterPanel = ({ workspaceContainer }) => {
+const CenterPanel = ({ workspaceContainer, combinedSummary, setCombinedSummary, isCombinedSummaryPending, setIsCombinedSummaryPending, selectedLanguage, setSelectedLanguage }) => {
     const {
         currentResource,
-        chatLoaded, setChatLoaded,
+        // chatLoaded, setChatLoaded,
         displayedSources,
         activeView,
         selectedNote,
@@ -30,14 +30,14 @@ const CenterPanel = ({ workspaceContainer }) => {
         setActiveView,
     } = useContext(MainContext);
 
-    const { sidebarWidth } = useResizableSidebar(200, false);
+    // const { sidebarWidth } = useResizableSidebar(200, false);
     const metadataPanelContainer = useRef(null);
 
     const [selectedSources, setSelectedSources] = useState(0);
-    const [combinedSummary, setCombinedSummary] = useState("");
-    const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
+    // const [combinedSummary, setCombinedSummary] = useState("");
+    // const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
 
-    const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
+    // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
     async function getCombinedSum() {
         try {
@@ -154,9 +154,7 @@ const CenterPanel = ({ workspaceContainer }) => {
                 )}
             </div>}
 
-            <div className={`mt-10 overflow-y-hidden h-[700px]`}>
-                <CopilotSection selectedLanguage={selectedLanguage} setSelectedLanguage={setSelectedLanguage} setIsCombinedSummaryPending={setIsCombinedSummaryPending} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
-            </div>
+
         </div >
     );
 };

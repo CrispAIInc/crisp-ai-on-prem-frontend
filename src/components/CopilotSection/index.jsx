@@ -1060,7 +1060,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             :
             <div className={`flex items-center w-full mt-3 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
               <input
-                placeholder="Interact"
+                placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
                 value={input}
                 rows="1"
                 disabled={showCursor}
