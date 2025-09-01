@@ -26,6 +26,7 @@ import toast from "react-simple-toasts";
 import AddSourceModal from "../AddSourceModal";
 import { SettingsModal } from "../Settings/SettingsModal";
 import useAuth from '../../hooks/useAuth';
+import GsFile from '../GsFile';
 
 const UpdateFilenameModal = ({
     show,
@@ -1043,9 +1044,9 @@ const ContentSection = ({
                                                                     <LoadingSpinner isSmall />
                                                                 </div>
                                                             )}
-                                                        <img
+                                                        <GsFile
                                                             className="object-cover w-full h-full rounded-md"
-                                                            src={option.thumbnail}
+                                                            gsUrl={option.thumbnail}
                                                             alt="Video Thumbnail"
                                                         />
                                                     </div>
