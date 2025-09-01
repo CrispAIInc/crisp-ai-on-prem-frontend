@@ -4,6 +4,7 @@ import Tooltip from "react-bootstrap/Tooltip";
 // import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import GsFile from '../GsFile';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -21,8 +22,7 @@ function PDFThumbnail({ item }) {
   return (
     <OverlayTrigger className='tooltip' placement="right" overlay={renderTooltip}>
       <div className="relative  h-24 !w-full">
-        <img className="w-full h-full" src={item.thumbnail}
-          alt="PDF Thumbnail" />
+        <GsFile className="w-full h-full" gsUrl={item.thumbnail} alt="PDF Thumbnail" />
 
         {/* thumbnail bottom title */}
         <div className={`absolute bottom-0 left-0 flex items-center w-full h-8 gap-1 truncate ${theme === 'light' ? 'bg-white' : 'bg-[#333333]'}`}>
