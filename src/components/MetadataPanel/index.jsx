@@ -17,6 +17,8 @@ import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import HorizontalCard from '../HorizontalCard/index.jsx';
+import GsFile from "../GsFile";
+import useFirebase from '../../hooks/useFirebase.js';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
@@ -51,6 +53,8 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     setActiveTab,
     generatedResources,
   } = useContext(MainContext);
+
+  const { getPublicUrl } = useFirebase();
 
   const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item.source_path === currentResource.source_path));
   // const [generatedResource, setGeneratedResource] = useState(null);
@@ -394,6 +398,36 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     }
   }, []);
 
+  const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
+
+  // useEffect(() => {
+  //   if (currentResource?.file_type === "pdf" && currentResource?.pdf_url) {
+  //     getPublicUrl(currentResource?.pdf_url).then(setSourcePublicUrl).catch(console.error);
+  //   } else if (currentResource?.file_type === "video" && currentResource?.video_url) {
+  //     getPublicUrl(currentResource?.video_url).then(setSourcePublicUrl).catch(console.error);
+  //   } else if (currentResource?.file_type === "img" && currentResource?.thumbnail) {
+  //     getPublicUrl(currentResource?.thumbnail).then(setSourcePublicUrl).catch(console.error);
+  //   }
+  // }, [currentResource])
+
+  useEffect(() => {
+    if (!currentResource) return;
+
+    const urlMap = {
+      pdf: currentResource.pdf_url,
+      video: currentResource.video_url,
+      img: currentResource.thumbnail,
+    };
+
+    const fileUrl = urlMap[currentResource.file_type] || null;
+
+    if (fileUrl) {
+      getPublicUrl(fileUrl)
+        .then(setSourcePublicUrl)
+        .catch(console.error);
+    }
+  }, [currentResource]);
+
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
 
@@ -421,7 +455,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 width={"100%"}
                 height='500px'
                 playing={false}
-                url={currentResource?.video_url || resourceURL}
+                url={sourcePublicUrl || resourceURL}
                 onReady={() => setIsPlayerReady(true)}
                 ref={player}
                 controls
@@ -591,7 +625,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
             >
               <Document
                 className="!w-full mx-auto relative"
-                file={currentResource?.pdf_url || resourceURL}
+                file={sourcePublicUrl || resourceURL}
 
                 onLoadSuccess={onDocumentLoadSuccess}
               >
@@ -751,9 +785,9 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 onClick={closeImage}
                 className="absolute right-[1%] top-[15px] z-10 cursor-pointer shadow-lg "
               />
-              <img
+              <GsFile
                 className="absolute top-0 left-0 object-contain w-full h-full"
-                src={currentResource?.thumbnail || resourceURL}
+                gsUrl={currentResource?.thumbnail || resourceURL}
               />
             </div>
             {/* Image Caption */}
