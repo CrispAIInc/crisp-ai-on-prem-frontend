@@ -73,13 +73,13 @@ function MediaEntertainment({ reel,
             console.log(res);
 
             setReel(res);
+            getReels();
 
             //TODO show video here or in another tab or something
             // setVideoUrl(`${API_ENDPOINT}/${res.reel_video_url}`);
             // setReelTitle(res.title);
             setIsReelOpen(true);
 
-            getReels();
         } catch (error) {
             console.log(error);
             toast(error?.response?.data?.error || "Something went wrong", { className: 'p-2 rounded-md z-20', theme });
