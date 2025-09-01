@@ -1,5 +1,5 @@
 import { ref, getDownloadURL } from "firebase/storage";
-import { storage } from "./firebase";
+import { storage } from "../config/firebase";
 
 export default function useFirebase() {
 
