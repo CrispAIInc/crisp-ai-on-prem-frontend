@@ -14,6 +14,7 @@ import LoginPage from './pages/Auth/LoginPage';
 import ForgotPasswordPage from './pages/Auth/ForgotPasswordPage';
 import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 import PrivateRoute from './components/Auth/PrivateRoute';
+import { AuthProvider } from './contexts/authContext';
 
 
 function App() {
@@ -46,19 +47,21 @@ function App() {
 
   return (
     <div className={`App ${theme}`}>
-      <Router>
-        <Routes>
-          {/* <Route path="/" element={<HomePage theme={theme} />} /> */}
+      <AuthProvider>
+        <Router>
+          <Routes>
+            {/* <Route path="/" element={<HomePage theme={theme} />} /> */}
 
-          <Route path="/" element={<PrivateRoute><MainWorkspacePage setTheme={setTheme} theme={theme} /></PrivateRoute>} />
+            <Route path="/" element={<PrivateRoute><MainWorkspacePage setTheme={setTheme} theme={theme} /></PrivateRoute>} />
 
-          <Route path="/sign-up" element={<RegisterPage theme={theme} setTheme={setTheme} />} />
-          <Route path="/login" element={<LoginPage theme={theme} setTheme={setTheme} />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage theme={theme} setTheme={setTheme} />} />
-          <Route path="/reset-password" element={<ResetPasswordPage theme={theme} setTheme={setTheme} />} />
-          <Route path="*" element={<NotFound theme={theme} setTheme={setTheme} />} />
-        </Routes>
-      </Router>
+            <Route path="/sign-up" element={<RegisterPage theme={theme} setTheme={setTheme} />} />
+            <Route path="/login" element={<LoginPage theme={theme} setTheme={setTheme} />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage theme={theme} setTheme={setTheme} />} />
+            <Route path="/reset-password" element={<ResetPasswordPage theme={theme} setTheme={setTheme} />} />
+            <Route path="*" element={<NotFound theme={theme} setTheme={setTheme} />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </div>
   );
 }
