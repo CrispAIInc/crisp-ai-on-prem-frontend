@@ -227,3 +227,7 @@ export function searchByKey(data, key, query) {
         return path.toLowerCase().includes(query.toLowerCase());
     });
 }
+
+export function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
