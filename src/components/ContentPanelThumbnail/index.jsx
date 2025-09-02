@@ -8,7 +8,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 const ContentPanelThumbnail = ({
   isDeleting,

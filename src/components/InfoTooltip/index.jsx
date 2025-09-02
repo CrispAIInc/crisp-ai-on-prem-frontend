@@ -1,6 +1,6 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useContext, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 function InfoTooltip({ tooltipText }) {
     const { theme } = useContext(MainContext);

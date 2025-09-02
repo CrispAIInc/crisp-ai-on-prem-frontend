@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { MainContext } from '../../../contexts/mainContext';
+import { MainContext } from '../../../contexts/mainContext.jsx';
 import GeneralSettings from '../GeneralSettings';
 import AccountSettings from "../AccountSettings";
 

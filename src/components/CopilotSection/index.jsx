@@ -6,7 +6,7 @@ import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
-import { MainContext } from "../../contexts/mainContext";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import { decimalSecondsToHHMMSS, generateRandomHash, timeToSeconds, toBase64 } from '../../utils';
 import AddOptionsModal from "../AddOptionsModal";
 import CustomSelectTwo from '../CustomSelectTwo';

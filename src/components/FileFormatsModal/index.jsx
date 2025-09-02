@@ -2,7 +2,7 @@ import { useContext, useRef } from "react";
 
 import LibraryAddOutlinedIcon from '@mui/icons-material/LibraryAddOutlined';
 import Modal from 'react-bootstrap/Modal';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 
 

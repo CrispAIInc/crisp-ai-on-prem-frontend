@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 const CustomSelectTwo = ({ options, onChange, placeholder, withIcon = false }) => {
 

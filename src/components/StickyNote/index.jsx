@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, memo } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import ModelChip from '../ModelChip';
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";

@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 // import Slider from '../Slider';

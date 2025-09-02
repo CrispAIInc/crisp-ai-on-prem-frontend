@@ -12,7 +12,7 @@ import GenStoriesLLMModal from "../GenStoriesLLMModal";
 
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import makeApiRequest from "../../api";
-import { MainContext } from "../../contexts/mainContext";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import { extractSections, extractTitle, generateRandomHash, getLevelOfSectionInGenStories } from '../../utils';
 
 const GenStories = ({ sidebarWidth }) => {

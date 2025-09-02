@@ -1,6 +1,6 @@
 
 import { useContext, useEffect, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import { timeToSeconds } from '../../utils';
 import { ChapterDetailsModal } from '../ChapterDetailsModal';
 import TimelineItem from '../TimelineItem';

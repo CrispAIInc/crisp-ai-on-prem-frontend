@@ -1,7 +1,7 @@
 import HeadingSkeleton from '../Base/HeadingSkeleton.jsx';
 import TextSkeleton from '../Base/TextSkeleton.jsx';
 import { useContext } from 'react';
-import { MainContext } from '../../../contexts/mainContext.js';
+import { MainContext } from '../../../contexts/mainContext.jsx';
 
 function SavedInsightSkeleton({ className }) {
     const { theme } = useContext(MainContext);

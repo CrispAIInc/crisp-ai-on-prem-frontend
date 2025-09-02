@@ -1,8 +1,14 @@
 import { createContext, useEffect, useRef, useState } from "react";
 
+import makeApiRequest from "../api";
+
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
+import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
+
 export const MainContext = createContext({});
 
-export function MainProvider({ children, theme, setTheme }) {
+export default function MainProvider({ children, theme, setTheme }) {
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
     const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace
     const [resourceURL, setResourceURL] = useState(null); // The Selected Resource Direct URL
@@ -1177,5 +1183,7 @@ export function MainProvider({ children, theme, setTheme }) {
         showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
     };
 
-    return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
+    return (
+        <MainContext.Provider value={value}>{children}</MainContext.Provider>
+    );
 }

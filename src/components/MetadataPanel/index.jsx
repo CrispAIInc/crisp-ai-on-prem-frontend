@@ -1,5 +1,5 @@
 import { useContext, useRef, useState, useEffect } from "react";
-import { MainContext } from "../../contexts/mainContext.js";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import makeApiRequest from "../../api";
 import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";

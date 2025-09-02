@@ -3,7 +3,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 // import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import GsFile from '../GsFile';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;

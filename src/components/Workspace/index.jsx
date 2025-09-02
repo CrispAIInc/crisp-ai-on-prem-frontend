@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { MainContext } from "../../contexts/mainContext";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
 import NoData from "../NoData";
