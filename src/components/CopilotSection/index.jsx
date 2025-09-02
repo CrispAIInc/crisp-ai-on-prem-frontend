@@ -7,7 +7,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
-import { decimalSecondsToHHMMSS, generateRandomHash, timeToSeconds, toBase64 } from '../../utils';
+import { decimalSecondsToHHMMSS, delay, generateRandomHash, timeToSeconds, toBase64 } from '../../utils';
 import AddOptionsModal from "../AddOptionsModal";
 import CustomSelectTwo from '../CustomSelectTwo';
 import CustomTextArea from '../CustomTextArea';
@@ -136,6 +136,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
   const categoryValues = categoryOptions.map((option) => option.value);
 
   let noteQuestion = useRef('');
+  const [isFetchingRefs, setIsFetchingRefs] = useState(false);
   const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
     if (!chatLoaded) return;
 
@@ -229,7 +230,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
         )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       );
 
-      eventSource.onmessage = function (event) {
+      eventSource.onmessage = async function (event) {
         const data = JSON.parse(event.data);
 
         if (data.type === "SESSION_ID") {
@@ -251,7 +252,10 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           });
         } else if (data.type === "REFERENCES") {
           // extract the last part of the streaming and call fetchReferences
+          setIsFetchingRefs(true);
+          await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
           fetchReferences(botMessage, data.data);
+          setIsFetchingRefs(false);
         }
       };
 
@@ -281,10 +285,8 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
 
 
   };
-
-  const [isFetchingRefs, setIsFetchingRefs] = useState(false);
   const fetchReferences = async (botMessage, data) => {
-    setIsFetchingRefs(true);
+
     // const response = await axios.get(`${API_ENDPOINT}/references`);
     // const data = response.data;
     noteReferences.videoLinks = [];
@@ -424,7 +426,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
       return newMessages;
     });
 
-    setIsFetchingRefs(false);
+
   };
 
   const handleLanguageChange = async (chosenLanguage) => {
