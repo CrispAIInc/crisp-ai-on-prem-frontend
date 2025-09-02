@@ -250,10 +250,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             }
             return newMessages;
           });
-        } else if (data.type === "REFERENCES") {
-          // extract the last part of the streaming and call fetchReferences
+        } else if (data.text === "") {
           setIsFetchingRefs(true);
-          await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
+        }
+
+        else if (data.type === "REFERENCES") {
+          // extract the last part of the streaming and call fetchReferences
+          // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
           fetchReferences(botMessage, data.data);
           setIsFetchingRefs(false);
         }
