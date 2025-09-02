@@ -232,9 +232,12 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
 
       eventSource.onmessage = async function (event) {
         const data = JSON.parse(event.data);
+        console.log(data);
 
         if (data.type === "SESSION_ID") {
           sessionID = data.session_id;
+        } else if (data.text === "") {
+          setIsFetchingRefs(true);
         } else if (data.type === "MESSAGE") {
           setShowCursor(false);
           const newToken = data.text;
@@ -250,11 +253,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
             }
             return newMessages;
           });
-        } else if (data.text === "") {
-          setIsFetchingRefs(true);
-        }
-
-        else if (data.type === "REFERENCES") {
+        } else if (data.type === "REFERENCES") {
           // extract the last part of the streaming and call fetchReferences
           // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
           fetchReferences(botMessage, data.data);
