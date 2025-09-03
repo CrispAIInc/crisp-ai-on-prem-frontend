@@ -232,7 +232,6 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
 
       eventSource.onmessage = async function (event) {
         const data = JSON.parse(event.data);
-        console.log(data);
 
         if (data.type === "SESSION_ID") {
           sessionID = data.session_id;
