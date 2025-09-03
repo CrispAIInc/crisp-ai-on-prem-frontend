@@ -64,7 +64,9 @@ const UpdateFilenameModal = ({
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify(categoryOptions.map((option) => option.value))
+                JSON.stringify(categoryOptions.filter((option) => {
+                    if (option.value !== 'all') return option.value;
+                }))
             );
             setKnowledgeBase(
                 data.map((item) => {
@@ -252,7 +254,9 @@ const ContentSection = ({
                 const data = await makeApiRequest(
                     "/content",
                     "post",
-                    JSON.stringify(categoryOptions.map((option) => option.value))
+                    JSON.stringify(categoryOptions.filter((option) => {
+                        if (option.value !== 'all') return option.value;
+                    }))
                 );
                 setKnowledgeBase(data);
             } catch (error) {
@@ -343,7 +347,9 @@ const ContentSection = ({
             const data = await makeApiRequest(
                 `/content`,
                 "post",
-                JSON.stringify(categoryValues)
+                JSON.stringify(categoryValues.filter((option) => {
+                    if (option !== 'all') return option;
+                }))
             );
             // setKnowledgeBase(data);
             // update knowledgebase so that it gets populated with the data value and also update the is_selected value to either true or false depending if an item in data exists in the sourcesTobeCommitted array
