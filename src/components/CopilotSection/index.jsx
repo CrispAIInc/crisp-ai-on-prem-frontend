@@ -214,7 +214,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
       //   const data = await makeApiRequest(
       //     "/content",
       //     "post",
-      //     JSON.stringify(categoryValues)
+      //     JSON.stringify(categoryValues.filter((option) => {
+      //     if (option !== 'all') return option;
+      // }))
       //   );
       //   setKnowledgeBase(data);
       // } catch (error) {
@@ -271,7 +273,9 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
           //   const data = await makeApiRequest(
           //     "/content",
           //     "post",
-          //     JSON.stringify(categoryValues)
+          //     JSON.stringify(categoryValues.filter((option) => {
+          //     if (option !== 'all') return option;
+          // }))
           //   );
           //   setKnowledgeBase(data);
           // } catch (error) {

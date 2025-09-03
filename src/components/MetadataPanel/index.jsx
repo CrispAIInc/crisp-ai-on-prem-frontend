@@ -92,7 +92,9 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     const data = await makeApiRequest(
       "/content",
       "post",
-      JSON.stringify(categoryValues)
+      JSON.stringify(categoryValues.filter((option) => {
+        if (option !== 'all') return option;
+      }))
     );
     //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
     let updatedKnowledgeBase = data.map(item => {

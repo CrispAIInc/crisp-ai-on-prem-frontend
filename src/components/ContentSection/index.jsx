@@ -46,7 +46,9 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify(categoryOptions.map((option) => option.value))
+                JSON.stringify(categoryOptions.filter((option) => {
+                    if (option.value !== 'all') return option.value;
+                }))
             );
             setKnowledgeBase(data.map(item => {
                 if (item?.source_path === filename + "." + extension) {
@@ -189,7 +191,9 @@ const ContentSection = ({
                 const data = await makeApiRequest(
                     "/content",
                     "post",
-                    JSON.stringify(categoryValues)
+                    JSON.stringify(categoryValues.filter((option) => {
+                        if (option !== 'all') return option;
+                    }))
                 );
                 setKnowledgeBase(data);
             } catch (error) {
@@ -267,7 +271,9 @@ const ContentSection = ({
             const data = await makeApiRequest(
                 `/content`,
                 "post",
-                JSON.stringify(categoryValues)
+                JSON.stringify(categoryValues.filter((option) => {
+                    if (option !== 'all') return option;
+                }))
             );
             // setKnowledgeBase(data);
             // update knowledgebase so that it gets populated with the data value and also update the is_selected value to either true or false depending if an item in data exists in the sourcesTobeCommitted array
@@ -340,7 +346,9 @@ const ContentSection = ({
             // setActiveTab('genMetadata');
 
             // Fetch updated content
-            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValues));
+            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValues.map((option) => {
+                if (option !== 'all') return option;
+            })));
 
             // Filter sources that match the uploaded files
             const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
