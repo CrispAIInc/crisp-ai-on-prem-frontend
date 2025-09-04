@@ -103,9 +103,7 @@ function MetadataGen() {
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify(categoryOptions.filter((option) => {
-                    if (option.value !== 'all') return option.value;
-                }))
+                JSON.stringify(categoryValues.filter((option) => option !== 'all'))
             );
             //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
             let updatedKnowledgeBase = data.map(item => {

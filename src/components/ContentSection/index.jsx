@@ -42,6 +42,8 @@ const UpdateFilenameModal = ({
         useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
+    const categoryValues = categoryOptions.map((option) => option.value);
+
     async function updateFilename() {
         try {
             if (filename === "") {
@@ -64,9 +66,7 @@ const UpdateFilenameModal = ({
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify(categoryOptions.filter((option) => {
-                    if (option.value !== 'all') return option.value;
-                }))
+                JSON.stringify(categoryValues.filter((option) => option !== 'all'))
             );
             setKnowledgeBase(
                 data.map((item) => {
@@ -254,9 +254,7 @@ const ContentSection = ({
                 const data = await makeApiRequest(
                     "/content",
                     "post",
-                    JSON.stringify(categoryOptions.filter((option) => {
-                        if (option.value !== 'all') return option.value;
-                    }))
+                    JSON.stringify(categoryValues.filter((option) => option !== 'all'))
                 );
                 setKnowledgeBase(data);
             } catch (error) {
@@ -433,7 +431,7 @@ const ContentSection = ({
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify(categoryOptions.map((option) => option.value))
+                JSON.stringify(categoryValues.filter((option) => option !== 'all'))
             );
 
             // Filter sources that match the uploaded files
