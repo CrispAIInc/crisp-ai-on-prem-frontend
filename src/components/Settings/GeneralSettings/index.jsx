@@ -29,11 +29,11 @@ function GeneralSettings() {
     };
 
     return (
-        <div>
-            <div className="flex flex-col gap-5">
+        <div className="w-[90%] mx-auto">
+            <div className="flex flex-col gap-3">
                 {/* app theme switcher */}
-                <div className="flex items-center justify-between">
-                    <h3 className={`text-[15px] ${theme === "light"
+                <div className="flex items-center justify-between flex-wrap">
+                    <h3 className={`text-[13px] ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}>Theme</h3>
@@ -41,12 +41,12 @@ function GeneralSettings() {
                 </div>
 
                 {/* user info */}
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-3">
                     {/* single user info */}
                     {
                         Object.entries(user).map(([key, value]) => (
-                            <div key={key} className="flex items-center justify-between">
-                                <h3 className={`text-[15px] ${theme === "light"
+                            <div key={key} className="flex items-center justify-between flex-wrap">
+                                <h3 className={`text-[13px] ${theme === "light"
                                     ? "text-textColor-300"
                                     : "text-textColor-100"
                                     }`}>{key.charAt(0).toUpperCase() + key.slice(1)}</h3>
