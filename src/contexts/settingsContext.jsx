@@ -4,7 +4,7 @@ export const SettingsContext = createContext();
 
 export default function SettingsProvider({ children }) {
     const [generalSettings, setGeneralSettings] = useState({
-        video_autoplay: false,
+        video_autoplay: true,
         video_loop: false,
     });
 
