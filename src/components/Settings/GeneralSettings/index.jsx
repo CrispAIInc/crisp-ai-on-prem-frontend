@@ -68,6 +68,8 @@ function GeneralSettings() {
                     <span>Save changes</span>
                 </RippleButton>
             </div>
+
+            <hr className={`mx-auto w-1/2 ${theme === "dark" && 'border-textColor-100'}`} />
         </div>
     );
 }
