@@ -16,6 +16,7 @@ import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 import PrivateRoute from './components/Auth/PrivateRoute';
 import AuthProvider from './contexts/authContext.jsx';
 import MainProvider from './contexts/mainContext.jsx';
+import SettingsProvider from './contexts/SettingsContext.jsx';
 
 
 function App() {
@@ -51,7 +52,7 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<PrivateRoute><MainProvider theme={theme} setTheme={setTheme}><MainWorkspacePage /></MainProvider></PrivateRoute>} />
+            <Route path="/" element={<PrivateRoute><MainProvider theme={theme} setTheme={setTheme}><SettingsProvider><MainWorkspacePage /></SettingsProvider></MainProvider></PrivateRoute>} />
 
             <Route path="/sign-up" element={<RegisterPage theme={theme} setTheme={setTheme} />} />
             <Route path="/login" element={<LoginPage theme={theme} setTheme={setTheme} />} />
