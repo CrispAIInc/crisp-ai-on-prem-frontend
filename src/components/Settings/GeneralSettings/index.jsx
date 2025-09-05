@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import ThemeToggle from '../../ThemeToggle';
 import { MainContext } from '../../../contexts/mainContext';
 import { AuthContext } from '../../../contexts/authContext';
@@ -8,10 +8,10 @@ function GeneralSettings() {
     const { theme } = useContext(MainContext);
     const { user, setUser } = useContext(AuthContext);
 
-    let isUserInfoChanged = false;
+    let [isUserInfoChanged, setIsUserInfoChanged] = useState(false);
 
     const handleChange = (key, value) => {
-        isUserInfoChanged = true;
+        setIsUserInfoChanged(true);
         setUser((prev) => ({
             ...prev,
             [key]: value,
@@ -63,10 +63,10 @@ function GeneralSettings() {
                         </div>
                     ))
                 }
-                <RippleButton cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2 self-end mt-3">
+                {isUserInfoChanged && <RippleButton cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2 self-end mt-3">
                     {/* {isPending && <span className="loader-atom"></span>} */}
                     <span>Save changes</span>
-                </RippleButton>
+                </RippleButton>}
             </div>
 
             <hr className={`mx-auto w-1/2 ${theme === "dark" && 'border-textColor-100'}`} />

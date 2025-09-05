@@ -16,7 +16,7 @@ import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 import PrivateRoute from './components/Auth/PrivateRoute';
 import AuthProvider from './contexts/authContext.jsx';
 import MainProvider from './contexts/mainContext.jsx';
-import SettingsProvider from './contexts/SettingsContext.jsx';
+import SettingsProvider from './contexts/settingsContext.jsx';
 
 
 function App() {
