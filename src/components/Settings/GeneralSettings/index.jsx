@@ -26,13 +26,17 @@ function GeneralSettings() {
             ...prev,
             [key]: value,
         }));
+        localStorage.setItem('generalSettings', JSON.stringify({
+            ...generalSettings,
+            [key]: value,
+        }));
     };
 
     return (
         <div className="w-[90%] mx-auto">
             <div className="flex flex-col gap-3">
                 {/* app theme switcher */}
-                <div className="flex items-center justify-between flex-wrap">
+                <div className="flex flex-wrap items-center justify-between">
                     <h3 className={`text-[13px] ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
@@ -45,7 +49,7 @@ function GeneralSettings() {
                     {/* single user info */}
                     {
                         Object.entries(user).map(([key, value]) => (
-                            <div key={key} className="flex items-center justify-between flex-wrap">
+                            <div key={key} className="flex flex-wrap items-center justify-between">
                                 <h3 className={`text-[13px] ${theme === "light"
                                     ? "text-textColor-300"
                                     : "text-textColor-100"
