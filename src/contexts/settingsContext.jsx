@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const SettingsContext = createContext();
 
 export default function SettingsProvider({ children }) {
-    const [generalSettings, setGeneralSettings] = useState({
+    const [generalSettings, setGeneralSettings] = useState(localStorage.getItem('generalSettings') ? JSON.parse(localStorage.getItem('generalSettings')) : {
         video_autoplay: true,
         video_loop: false,
     });
