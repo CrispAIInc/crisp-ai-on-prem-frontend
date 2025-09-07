@@ -6,6 +6,8 @@ import { SettingsContext } from "../../../contexts/settingsContext";
 import RippleButton from '../../RippleButton';
 import ToggleSwitch from '../../ToggleSwitch';
 
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+
 function GeneralSettings() {
     const { theme } = useContext(MainContext);
     const { user, setUser } = useContext(AuthContext);
@@ -48,14 +50,15 @@ function GeneralSettings() {
                 <div className="flex flex-col gap-3">
                     {/* single user info */}
                     {
-                        Object.entries(user).map(([key, value]) => (
-                            <div key={key} className="flex flex-wrap items-center justify-between">
-                                <h3 className={`text-[13px] ${theme === "light"
-                                    ? "text-textColor-300"
-                                    : "text-textColor-100"
-                                    }`}>{key.charAt(0).toUpperCase() + key.slice(1)}</h3>
-                                {
-                                    typeof value !== "boolean" ? (
+                        Object.entries(user).map(([key, value]) => {
+                            if (key !== "emailVerified") return (
+                                <>
+                                    <div key={key} className="flex flex-wrap items-center justify-between">
+                                        <h3 className={`text-[13px] ${theme === "light"
+                                            ? "text-textColor-300"
+                                            : "text-textColor-100"
+                                            }`}>{key.charAt(0).toUpperCase() + key.slice(1)}
+                                        </h3>
                                         <input
                                             type="text"
                                             value={value}
@@ -64,19 +67,24 @@ function GeneralSettings() {
                                                 ? "text-textColor-300"
                                                 : "text-textColor-100"
                                                 }`}
-                                        // style={{
-                                        //     padding: "6px",
-                                        //     border: "1px solid #ccc",
-                                        //     borderRadius: "5px",
-                                        //     width: "250px",
-                                        // }}
                                         />
-                                    ) : (
-                                        <p className={`text-[15px] ${value ? "text-green-600" : "text-red-600"}`}>{value ? "Verified" : 'Not verified'}</p>
-                                    )
+                                    </div>
+                                </>
+                            );
+                            else {
+                                if (!value) {
+                                    return (
+                                        <p key={key} className={`text-[10px] text-orange-400 cursor-pointer border-b border-b-transparent hover:border-b hover:border-b-orange-400 w-fit font-medium flex gap-1 items-center`}>
+                                            <WarningAmberOutlinedIcon className='' />
+                                            {/* <span className="text-red-600">Email not verified.</span> */}
+                                            <span>Verify your account!</span>
+                                        </p>
+                                    );
                                 }
-                            </div>
-                        ))
+                            }
+                        }
+                        )
+
                     }
                     {isUserInfoChanged && <RippleButton cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2 self-end mt-3">
                         {/* {isPending && <span className="loader-atom"></span>} */}
