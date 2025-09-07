@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 const Toggler = ({ components }) => {
     const [activeIndex, setActiveIndex] = useState(0);

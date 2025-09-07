@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { MainContext } from "../../contexts/mainContext.js";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import FakeProgress from '../FakeProgressbar';
 
 const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, closeModals }) => {

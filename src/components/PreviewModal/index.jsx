@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 function PreviewModal({ closeLightbox, content, classNames = '', }) {
 

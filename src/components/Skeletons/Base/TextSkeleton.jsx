@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { MainContext } from '../../../contexts/mainContext.js';
+import { MainContext } from '../../../contexts/mainContext.jsx';
 
 function TextSkeleton({ className }) {
     const { theme } = useContext(MainContext);

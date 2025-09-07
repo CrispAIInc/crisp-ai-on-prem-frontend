@@ -13,7 +13,7 @@ export default function GsFile({ gsUrl, type = "img", alt = "", ...props }) {
 
     if (!url) return null;
 
-    if (type === "video") return <video src={url} controls {...props} />;
-    if (type === "pdf") return <iframe src={url} {...props} />;
-    return <img src={url} alt={alt} {...props} />;
+    // if (type === "video") return <video src={url} controls {...props} />;
+    // if (type === "pdf") return <iframe src={url} {...props} />;
+    return (<img src={url} alt={alt} {...props} />);
 }

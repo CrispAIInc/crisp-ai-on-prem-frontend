@@ -1,7 +1,7 @@
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import GsFile from '../GsFile';
 // import ImageIcon from '@mui/icons-material/Image';
 

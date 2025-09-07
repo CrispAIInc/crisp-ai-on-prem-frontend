@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import Select from 'react-select';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';

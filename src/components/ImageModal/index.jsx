@@ -1,6 +1,6 @@
 import Modal from 'react-bootstrap/Modal';
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 export function ImageModal(props) {
 

@@ -7,7 +7,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import { decimalSecondsToHHMMSS, generateRandomHash } from '../../utils';
 import AddToStoryModal from '../AddToStoryModal';
 import AggregationLlmModal from '../AggregationLlmModal';

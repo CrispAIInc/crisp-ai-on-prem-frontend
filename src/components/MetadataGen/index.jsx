@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import MetadataAdvancedParams from '../MetadataAdvancedParams';
 import MetadataOptions from "../MetadataOptions";
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';

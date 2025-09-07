@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 function AddToNewStoryModal({ open, handleClose }) {
     const { theme } = useContext(MainContext);

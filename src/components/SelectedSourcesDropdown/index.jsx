@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 
 

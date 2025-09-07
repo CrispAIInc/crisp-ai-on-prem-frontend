@@ -14,7 +14,7 @@ import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import { Checkbox } from "@mui/material";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { MainContext } from "../../contexts/mainContext";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import LoadingSpinner from "../LoadingSpinner";
 import BaseHeading from "../BaseHeading";
 import NoData from "../NoData";

@@ -1,5 +1,5 @@
 import { useContext, useRef, useState, useEffect } from "react";
-import { MainContext } from "../../contexts/mainContext.js";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import makeApiRequest from "../../api";
 import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -19,6 +19,7 @@ import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import HorizontalCard from '../HorizontalCard/index.jsx';
 import GsFile from "../GsFile";
 import useFirebase from '../../hooks/useFirebase.js';
+import { SettingsContext } from '../../contexts/settingsContext.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
@@ -53,6 +54,8 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     setActiveTab,
     generatedResources,
   } = useContext(MainContext);
+
+  const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
   const { getPublicUrl } = useFirebase();
 
@@ -454,7 +457,8 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 id="react-player"
                 width={"100%"}
                 height='500px'
-                playing={false}
+                playing={video_autoplay}
+                loop={video_loop}
                 url={sourcePublicUrl || resourceURL}
                 onReady={() => setIsPlayerReady(true)}
                 ref={player}

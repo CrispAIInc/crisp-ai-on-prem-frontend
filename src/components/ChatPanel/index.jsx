@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';

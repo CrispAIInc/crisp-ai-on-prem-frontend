@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { MainContext } from '../contexts/mainContext';
+import { MainContext } from "../../contexts/mainContext.jsx";
 
 function SideCard({ children, onClick }) {
     const { theme } = useContext(MainContext);

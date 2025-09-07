@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useContext, useState } from 'react';
 import AddToExistingStoryModal from "../AddToExistingStoryModal";
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import AddToNewStoryModal from '../AddToNewStoryModal';
 import { generateRandomHash } from '../../utils';
 

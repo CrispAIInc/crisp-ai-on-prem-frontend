@@ -10,7 +10,7 @@ import PDFThumbnail from "../PDFThumbnail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
-import { MainContext } from "../../contexts/mainContext";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import "./source_explorer.css";
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';

@@ -3,7 +3,7 @@ import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from "@mui/icons-material/Send";
 import './image-upload.css';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import CustomInput from '../CustomInput';
 import PreviewModal from '../PreviewModal';
 import toast from 'react-simple-toasts';
