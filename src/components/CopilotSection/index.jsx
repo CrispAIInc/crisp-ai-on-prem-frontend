@@ -25,7 +25,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     theme,
     currentResource,
     llmModels,
-    selectedCategoryChat,
+    selectedCategory,
     fromChat, setFromChat,
     isFoundationLlm,
     resourceURL,
@@ -101,13 +101,13 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     }
     // setCommittedSources(selectedSources);
     async function fetchChat() {
-      console.log('here: copilot', selectedCategoryChat);
+      console.log('here: copilot', selectedCategory);
       const data = await makeApiRequest(
-        `/chat/${selectedCategoryChat}`,
+        `/chat/${selectedCategory}`,
         "post",
         JSON.stringify({
           sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
-          category: selectedCategoryChat,
+          category: selectedCategory,
           selectedAll,
           is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
         })
@@ -116,7 +116,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     }
 
     fetchChat();
-  }, [selectedCategoryChat, selectedSources, displayedSources]);
+  }, [selectedCategory, selectedSources, displayedSources]);
 
   useEffect(() => {
     if (
@@ -177,7 +177,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     if (selectedLLMs[0] === "dall-e-3") {
       const data = await makeApiRequest(
         `/image-generation/${encodeURIComponent(
-          selectedCategoryChat
+          selectedCategory
         )}/${encodeURIComponent(userMessage)}/${encodeURIComponent(
           selectedLLMs[0]
         )}`,
@@ -223,7 +223,7 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
       let sessionID = null; // Variable to store the session ID
       const eventSource = new EventSource(
         `${API_ENDPOINT}/message/${encodeURIComponent(
-          selectedCategoryChat
+          selectedCategory
         )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
           selectedLLMs[0]
         )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`

@@ -329,7 +329,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
     };
 
-    const [selectedCategoryChat] = useState("all");
+    // const [selectedCategory] = useState("all");
 
     useEffect(() => {
         setChatLoaded(false);
@@ -340,13 +340,13 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
         // setCommittedSources(selectedSources);
         async function fetchChat() {
-            console.log('here: ', selectedCategoryChat);
+            console.log('here: ', selectedCategory);
             const data = await makeApiRequest(
-                `/chat/${selectedCategoryChat}`,
+                `/chat/${selectedCategory}`,
                 "post",
                 JSON.stringify({
                     sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
-                    category: selectedCategoryChat,
+                    category: selectedCategory,
                     selectedAll,
                     is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
                 })
@@ -355,7 +355,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         fetchChat();
-    }, [selectedCategoryChat, selectedSources]);
+    }, [selectedCategory, selectedSources]);
 
     const [fromChat, setFromChat] = useState(false);
     const [isManualNote, setIsManualNote] = useState(false);
@@ -1111,7 +1111,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         onThumbnailClick,
         sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
         sourcesWithExclusive, setSourcesWithExclusive,
-        metadataOptions, selectedCategoryChat,
+        metadataOptions, selectedCategory,
         committedSources, setCommittedSources,
         selectedOptions, setSelectedOptions,
         workspaceContainer,
@@ -1162,7 +1162,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         setSelectedSources,
         selectedAll,
         setSelectedAll,
-        selectedCategory,
         setSelectedCategory,
         selectedFormat,
         setSelectedFormat,
