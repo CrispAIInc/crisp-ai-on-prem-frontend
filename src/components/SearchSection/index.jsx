@@ -24,7 +24,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
     } = useContext(MainContext);
 
     const [, setFromChat] = useState(false);
-    const [selectedCategoryChat] = useState('all');
+    // const [selectedCategory] = useState('all');
     const [searchQuestion, setSearchQuestion] = useState('');
     const [isSearching, setIsSearching] = useState(false);
 
@@ -50,10 +50,10 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
                     timestamp = response.data.timestamp;
                 }
                 else if (response.data.file_type == 'pdf') {
-                    resourceURL = `${API_ENDPOINT}/pdf/${selectedCategoryChat}/${encodeURIComponent(response.data.source_path)}`;
+                    resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(response.data.source_path)}`;
                 }
                 else if (response.data.file_type == 'img') {
-                    resourceURL = `${API_ENDPOINT}/img/${selectedCategoryChat}/${encodeURIComponent(response.data.source_path)}`;
+                    resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(response.data.source_path)}`;
                 }
                 setCurrentResource(response.data);
                 setResourceURL(resourceURL);

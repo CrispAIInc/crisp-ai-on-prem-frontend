@@ -338,7 +338,7 @@ const MainWorkspace = ({ theme, setTheme }) => {
     }
   };
 
-  const [selectedCategoryChat] = useState("all");
+  // const [selectedCategory] = useState("all");
 
   useEffect(() => {
     setChatLoaded(false);
@@ -349,22 +349,22 @@ const MainWorkspace = ({ theme, setTheme }) => {
     }
     // setCommittedSources(selectedSources);
     async function fetchChat() {
-      console.log('here: ', selectedCategoryChat);
       const data = await makeApiRequest(
-        `/chat/${selectedCategoryChat}`,
+        `/chat/${selectedCategory}`,
         "post",
         JSON.stringify({
           sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
-          category: selectedCategoryChat,
+          category: selectedCategory,
           selectedAll,
           is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
         })
       );
+      console.log("from mainworkspace");
       setChatLoaded(data?.chat_is_initialized);
     }
 
     fetchChat();
-  }, [selectedCategoryChat, selectedSources]);
+  }, [selectedCategory, selectedSources]);
 
   const [fromChat, setFromChat] = useState(false);
   const [isManualNote, setIsManualNote] = useState(false);
@@ -1118,7 +1118,7 @@ const MainWorkspace = ({ theme, setTheme }) => {
     onThumbnailClick,
     sourcesAfterUncheckCrispWiz, setSourcesAfterUncheckCrispWiz,
     sourcesWithExclusive, setSourcesWithExclusive,
-    metadataOptions, selectedCategoryChat,
+    metadataOptions, selectedCategory,
     committedSources, setCommittedSources,
     selectedOptions, setSelectedOptions,
     workspaceContainer,

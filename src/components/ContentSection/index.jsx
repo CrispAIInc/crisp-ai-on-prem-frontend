@@ -255,7 +255,6 @@ const ContentSection = ({
             setKnowledgeBase((prev) => prev.filter(item => {
                 return !items.some(i => i.source_path === item.source_path);
             }));
-
             setChatLoaded(false);
             const { chat_is_initialized } = await makeApiRequest(
                 `/chat/${selectedCategory}`,
@@ -267,6 +266,7 @@ const ContentSection = ({
                     reinitialize: true,
                 })
             );
+            console.log("from content section");
             setChatLoaded(chat_is_initialized);
             const data = await makeApiRequest(
                 `/content`,
