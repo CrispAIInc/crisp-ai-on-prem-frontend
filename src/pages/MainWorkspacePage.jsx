@@ -16,7 +16,7 @@ export default function MainWorkspacePage({ theme, setTheme }) {
         }
     };
 
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
         return <WorkspaceAuth inputPassword={inputPassword} setInputPassword={setInputPassword} handleLogin={handleLogin} />;
     }
 
