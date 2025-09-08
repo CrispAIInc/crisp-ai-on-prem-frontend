@@ -20,11 +20,12 @@ import AnimatedText from '../AnimatedText/index.jsx';
 import AnimatedInput from '../AnimatedInput/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
+const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
   const {
     theme,
     currentResource,
     llmModels,
+    chatLoaded, setChatLoaded,
     selectedCategory,
     fromChat, setFromChat,
     isFoundationLlm,
@@ -92,31 +93,24 @@ const CopilotSection = ({ chatLoaded, setChatLoaded, selectedLanguage, setSelect
     }
   }, [messages]);
 
-  useEffect(() => {
-    console.log("Effect ran", { selectedCategory, selectedSources, displayedSources });
-    setChatLoaded(false);
-    if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length > 0) {
-      // checked
-    } else {
-      // unchecked
-    }
-    // setCommittedSources(selectedSources);
-    async function fetchChat() {
-      const data = await makeApiRequest(
-        `/chat/${selectedCategory}`,
-        "post",
-        JSON.stringify({
-          sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
-          category: selectedCategory,
-          selectedAll,
-          is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
-        })
-      );
-      setChatLoaded(data?.chat_is_initialized);
-    }
+  // useEffect(() => {
+  //   setChatLoaded(false);
+  //   async function fetchChat() {
+  //     const data = await makeApiRequest(
+  //       `/chat/${selectedCategory}`,
+  //       "post",
+  //       JSON.stringify({
+  //         sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
+  //         category: selectedCategory,
+  //         selectedAll,
+  //         is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
+  //       })
+  //     );
+  //     setChatLoaded(data?.chat_is_initialized);
+  //   }
 
-    fetchChat();
-  }, [selectedCategory, selectedSources, displayedSources]);
+  //   fetchChat();
+  // }, [selectedCategory, selectedSources, displayedSources]);
 
   useEffect(() => {
     if (

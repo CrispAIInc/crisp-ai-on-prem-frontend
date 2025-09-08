@@ -341,13 +341,8 @@ const MainWorkspace = ({ theme, setTheme }) => {
   // const [selectedCategory] = useState("all");
 
   useEffect(() => {
+    console.log("useEffect run from mainworkspace");
     setChatLoaded(false);
-    if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length > 0) {
-      // checked
-    } else {
-      // unchecked
-    }
-    // setCommittedSources(selectedSources);
     async function fetchChat() {
       const data = await makeApiRequest(
         `/chat/${selectedCategory}`,
@@ -359,12 +354,11 @@ const MainWorkspace = ({ theme, setTheme }) => {
           is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
         })
       );
-      console.log("from mainworkspace");
       setChatLoaded(data?.chat_is_initialized);
     }
 
     fetchChat();
-  }, [selectedCategory, selectedSources]);
+  }, [selectedCategory, JSON.stringify(selectedSources), JSON.stringify(displayedSources)]);
 
   const [fromChat, setFromChat] = useState(false);
   const [isManualNote, setIsManualNote] = useState(false);
