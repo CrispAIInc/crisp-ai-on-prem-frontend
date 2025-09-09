@@ -27,6 +27,8 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
     const { theme, setDisplayedSources, categoryOptions, setKnowledgeBase } = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
+    const categoryValues = categoryOptions.map((option) => option.value);
+
     async function updateFilename() {
         try {
             if (filename === "") {
@@ -46,9 +48,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify(categoryOptions.filter((option) => {
-                    if (option.value !== 'all') return option.value;
-                }))
+                JSON.stringify(categoryValues)
             );
             setKnowledgeBase(data.map(item => {
                 if (item?.source_path === filename + "." + extension) {
@@ -191,9 +191,7 @@ const ContentSection = ({
                 const data = await makeApiRequest(
                     "/content",
                     "post",
-                    JSON.stringify(categoryValues.filter((option) => {
-                        if (option !== 'all') return option;
-                    }))
+                    JSON.stringify(categoryValues)
                 );
                 setKnowledgeBase(data);
             } catch (error) {
@@ -346,9 +344,7 @@ const ContentSection = ({
             // setActiveTab('genMetadata');
 
             // Fetch updated content
-            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValues.map((option) => {
-                if (option !== 'all') return option;
-            })));
+            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValues));
 
             // Filter sources that match the uploaded files
             const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
