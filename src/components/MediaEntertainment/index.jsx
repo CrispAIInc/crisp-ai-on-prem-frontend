@@ -53,7 +53,8 @@ function MediaEntertainment({ reel,
         });
     };
 
-    const handleMouseEnter = () => (displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > 3) && setTooltipVisible(true);
+    const MAX_SOURCES_COUNT = 15;
+    const handleMouseEnter = () => (displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > MAX_SOURCES_COUNT) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMedia() {
