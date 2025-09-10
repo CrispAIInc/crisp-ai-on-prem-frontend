@@ -18,6 +18,7 @@ import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
 import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
 import AnimatedText from '../AnimatedText/index.jsx';
 import AnimatedInput from '../AnimatedInput/index.jsx';
+import Chip from '../Chip/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
@@ -304,11 +305,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
       refs["videoLinks"].push(video);
       return (
-        <li key={video.source_path} className="ml-0" data-object={video}>
-          <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-            {video.source_path + " | Timestamp: " + video.timestamp}
-          </Link>
-        </li>
+        <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
+        // <li key={video.source_path} className="ml-0" data-object={video}>
+        //   <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+        //     {video.source_path + " | Timestamp: " + video.timestamp}
+        //   </Link>
+        // </li>
       );
     });
 
@@ -316,11 +318,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
       refs["keyframeLinks"].push(video);
       return (
-        <li key={video.source_path} className="ml-0" data-object={video}>
-          <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-            {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
-          </Link>
-        </li>
+        <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
+        // <li key={video.source_path} className="ml-0" data-object={video}>
+        //   <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+        //     {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
+        //   </Link>
+        // </li>
       );
     });
 
@@ -328,11 +331,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
       refs["pdfLinks"].push(pdf);
       return (
-        <li key={pdf.source_path} className="ml-0" data-object={pdf}>
-          <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
-            {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
-          </Link>
-        </li>
+        <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handlePDFLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer" />
+        // <li key={pdf.source_path} className="ml-0" data-object={pdf}>
+        //   <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
+        //     {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
+        //   </Link>
+        // </li>
       );
     });
 
@@ -340,11 +344,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.imageLinks.push(img.source_path);
       refs["imageLinks"].push(img);
       return (
-        <li key={img.source_path} className="ml-0" data-object={img}>
-          <Link onClick={(event) => handlePDFLinkClick(event, img)}>
-            {img.source_path}
-          </Link>
-        </li>
+        <Chip key={img.source_path} content={img.source_path} data-object={img} onClick={(event) => handlePDFLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
+        // <li key={img.source_path} className="ml-0" data-object={img}>
+        //   <Link onClick={(event) => handlePDFLinkClick(event, img)}>
+        //     {img.source_path}
+        //   </Link>
+        // </li>
       );
     });
 
@@ -369,22 +374,22 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           <div>
             <p className="mt-2 font-medium">References:</p>
             {videoLinks?.length > 0 && (
-              <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+              <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
                 {videoLinks}
               </ul>
             )}
             {keyframeLinks?.length > 0 && (
-              <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+              <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
                 {keyframeLinks}
               </ul>
             )}
             {pdfLinks?.length > 0 && (
-              <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+              <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
                 {pdfLinks}
               </ul>
             )}
             {imageLinks?.length > 0 && (
-              <ul className="pl-1 text-sm break-all truncate whitespace-normal">
+              <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
                 {imageLinks}
               </ul>
             )}
