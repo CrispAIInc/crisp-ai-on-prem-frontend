@@ -25,6 +25,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import MediaEntertainment from '../MediaEntertainment';
 import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
+import GsFile from '../GsFile/index.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -1267,7 +1268,8 @@ const ChatPanel = () => {
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
                               {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
-                              <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} />
+                              {/* <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} /> */}
+                              <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
                               <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                 }`}>{reel.title}</p>
                               {
