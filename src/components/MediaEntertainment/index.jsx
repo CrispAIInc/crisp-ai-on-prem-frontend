@@ -148,7 +148,7 @@ function MediaEntertainment({ reel,
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    disabled={isLoading || displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > 3} onClick={generateMedia}>
+                    disabled={isLoading || displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > MAX_SOURCES_COUNT} onClick={generateMedia}>
                     {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </RippleButton>
                 {tooltipVisible && (
@@ -157,7 +157,7 @@ function MediaEntertainment({ reel,
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        Select up to 3 sources
+                        {`Select up to ${MAX_SOURCES_COUNT} sources`}
                     </p>
                 )}
             </div>
