@@ -1,12 +1,19 @@
+import { useContext } from 'react';
 import makeApiRequest from '../api';
 import { pluck, sortArrayOfObjects, sortStrings } from '../utils';
+import { MainContext } from '../contexts/mainContext';
 
 /**
  * @param {Object} config - Optional config values like setters or extra data.
  */
 export default function useResources(config = {}) {
 
+    const { categoryOptions } = useContext(MainContext);
+
+    const categoryValuesWithoutAll = categoryOptions.filter(item => item.value !== "all").map((option) => option.value);
+
     return {
+        categoryValuesWithoutAll,
         getReels: async () => {
             try {
                 const data = await makeApiRequest("/reels", "get");
