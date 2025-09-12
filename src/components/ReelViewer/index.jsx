@@ -1,24 +1,36 @@
 import ReactPlayer from "react-player";
 import CloseIcon from '@mui/icons-material/Close';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import DeleteIcon from "@mui/icons-material/Delete";
+import useFirebase from '../../hooks/useFirebase.js';
 import toast from 'react-simple-toasts';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { ThemeContext } from '@emotion/react';
-import makeApiRequest from '../../api';
-import LoadingSpinner from "../LoadingSpinner";
+import { timeToSeconds } from "../../utils.js";
+
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
 import useResources from '../../hooks/useResources';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+
 function ReelViewer({ closeReel, reel, setReels }) {
 
     const { theme } = useContext(ThemeContext);
+    const { getPublicUrl } = useFirebase();
 
     const { getReels } = useResources({ setReels });
 
     const [isPending, setIsPending] = useState(false);
+    const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
+    // const [isPending, setIsPending] = useState(false);
+
+    useEffect(() => {
+        if (reel?.reel_video_url) {
+            getPublicUrl(reel?.reel_video_url)
+                .then(setSourcePublicUrl)
+                .catch(console.error);
+        }
+    }, [reel?.reel_video_url]);
 
     const handleCloseReel = (e) => {
         e.stopPropagation();
@@ -68,32 +80,33 @@ function ReelViewer({ closeReel, reel, setReels }) {
     //     toast('Reel Saved!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
     // };
 
-    const handleRemoveReel = async (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        setIsPending(true);
+    // const handleRemoveReel = async (e) => {
+    //     e.stopPropagation();
+    //     e.preventDefault();
+    //     setIsPending(true);
 
-        try {
-            await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
-                videoUrl: reel.reel_video_url
-            }));
-            toast('Reel deleted!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
+    //     try {
+    //         await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
+    //             videoUrl: reel.reel_video_url
+    //         }));
+    //         toast('Reel deleted!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
 
-            console.log("before");
-            getReels();
-            console.log("after");
-            closeReel();
-        } catch (e) {
-            toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-        } finally {
-            setIsPending(false);
-        }
-    };
+    //         console.log("before");
+    //         const data = await makeApiRequest("/reels", "get");
+    //         setReels(data);
+    //         console.log("after");
+    //         closeReel();
+    //     } catch (e) {
+    //         toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
+    //     } finally {
+    //         setIsPending(false);
+    //     }
+    // };
 
-    function timeToSeconds(timeStr) {
-        const parts = timeStr.split(':').map(Number);
-        return parts[0] * 3600 + parts[1] * 60 + parts[2];
-    }
+    // function timeToSeconds(timeStr) {
+    //     const parts = timeStr.split(':').map(Number);
+    //     return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    // }
 
     // const segmentsWithSeconds = reel?.segments.map(seg => ({
     //     ...seg,
@@ -188,7 +201,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
                     width="100%"
                     height="100%"
                     playing={true}
-                    url={API_ENDPOINT + reel.reel_video_url}
+                    url={sourcePublicUrl}
                     loop={true}
                     onProgress={handleProgress}
                     onDuration={handleDuration}

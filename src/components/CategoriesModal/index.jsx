@@ -1,7 +1,7 @@
 import Modal from 'react-bootstrap/Modal';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import { useContext, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import FileUploaderModal from '../FileUploaderModal';
 
 const CategoriesModal = (props) => {

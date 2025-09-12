@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { MainContext } from '../contexts/mainContext';
+import { MainContext } from "../contexts/mainContext.jsx";
 import { useResizableSidebar } from './useResizableSidebar';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;

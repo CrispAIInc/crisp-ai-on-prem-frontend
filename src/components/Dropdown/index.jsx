@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 const Dropdown = ({ options, indexName = '', label = '', onChange }) => {
 

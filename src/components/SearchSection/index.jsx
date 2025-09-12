@@ -1,9 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
-import LoadingSpinner from '../LoadingSpinner';
 import axios from 'axios';
-import { MainContext } from '../../contexts/mainContext';
-import CustomInput from '../CustomInput';
-import CustomButton from '../CustomButton';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import BaseHeading from '../BaseHeading';
 import toast from 'react-simple-toasts';
 import { timeToSeconds } from '../../utils';

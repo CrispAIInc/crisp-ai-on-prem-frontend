@@ -1,7 +1,7 @@
 import Modal from 'react-bootstrap/Modal';
 import QuestionMarkOutlinedIcon from '@mui/icons-material/QuestionMarkOutlined';
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 function AddToKnowledgeBaseModal({ show, onHide, sources }) {
     const { theme, commitSelectedSources, setActiveTab } = useContext(MainContext);

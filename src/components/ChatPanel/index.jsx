@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
@@ -25,7 +25,11 @@ import LoadingSpinner from '../LoadingSpinner';
 import MediaEntertainment from '../MediaEntertainment';
 import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
+<<<<<<< HEAD
 import useResources from '../../hooks/useResources';
+=======
+import GsFile from '../GsFile/index.jsx';
+>>>>>>> auth
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -850,9 +854,9 @@ const ChatPanel = () => {
         Generator Services</h5>
 
       {/* Background blur elements */}
-      <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-0 blur-[160px]"></div>
-      <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-0 blur-[160px]"></div>
-      <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-0 blur-[160px]"></div>
+      <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-1 blur-[160px]"></div>
+      <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-1 blur-[160px]"></div>
+      <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
 
       {/* Resizer */}
       {isRightSidebarOpen && (
@@ -938,16 +942,15 @@ const ChatPanel = () => {
         <div className="flex-1 h-full overflow-y-auto">
           <div className="h-full max-h-full ml-auto overflow-y-auto !overflow-y-hidden flex flex-col">
             <div className="flex items-center justify-between">
-              <div
-                className={`select-none mt-3 flex items-center justify-center p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-300 hover:bg-light-hover-200/20'} mb-3`}
+              <RippleButton
+                cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
                 onClick={handleSave}
               >
-                <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-                <span className={` !text-[12px] font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                  }`}>
+                <AddIcon />
+                <span className={` !text-[12px] font-medium`}>
                   Save {currentTab === "Insights" ? "insight" : "story"}
                 </span>
-              </div>
+              </RippleButton>
               {/* export */}
               {/* {selectedStory?.story_id !== "" && <div
                 className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
@@ -966,7 +969,7 @@ const ChatPanel = () => {
             <div>
               <input
                 className={`${theme === 'dark' && 'text-textColor-100'
-                  } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !outline-none w-full`}
+                  } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !outline-none w-full !z-[999999]`}
                 placeholder="New title..."
                 value={noteTitle}
                 onChange={(e) => setNoteTitle(e.target.value)}
@@ -1183,7 +1186,7 @@ const ChatPanel = () => {
           <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-2 flex-items">
-              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }, { id: "genMedia", title: "Sizzle Reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`text-[15px] select-none text-md cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
+              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }, { id: "genMedia", title: "Sizzle Reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`text-[14px] select-none text-md cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
@@ -1209,7 +1212,7 @@ const ChatPanel = () => {
                     return (
                       <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
                         <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
-                        <BaseHeading key={index} text={title} className={` font-extrabold !text-[13px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
+                        <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
                       </div>
                     );
                   })
@@ -1322,7 +1325,8 @@ const ChatPanel = () => {
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
                               {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
-                              <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} />
+                              {/* <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} /> */}
+                              <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
                               <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                 }`}>{reel.title}</p>
                               {

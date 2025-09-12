@@ -1,6 +1,6 @@
 import { useContext, useRef, useState, useEffect } from "react";
 import CopilotSection from "../CopilotSection";
-import { MainContext } from "../../contexts/mainContext.js";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import makeApiRequest from "../../api/index.js";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";

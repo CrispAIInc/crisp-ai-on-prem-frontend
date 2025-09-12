@@ -1,5 +1,5 @@
 import { memo, useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import BaseHeading from '../BaseHeading';

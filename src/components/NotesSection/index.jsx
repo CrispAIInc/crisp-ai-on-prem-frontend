@@ -1,7 +1,7 @@
 
 import makeApiRequest from "../../api";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import { memo, useContext } from 'react';
 import BaseHeading from '../BaseHeading';
 import NoData from "../NoData";

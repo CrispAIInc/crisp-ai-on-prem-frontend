@@ -1,7 +1,7 @@
 import Modal from 'react-bootstrap/Modal';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 import useResources from '../../hooks/useResources';

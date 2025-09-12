@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useContext } from "react";
 
-import { MainContext } from "../../contexts/mainContext.js";
+// import { MainContext } from "../../contexts/mainContext.jsx";
 
 import makeApiRequest from "../../api";
 
@@ -8,11 +8,8 @@ import ContentPanel from "../ContentPanel";
 import Workspace from "../Workspace";
 import ChatPanel from "../ChatPanel";
 
-import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
-import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
-import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
-
 import "bootstrap/dist/css/bootstrap.min.css";
+<<<<<<< HEAD
 import { pluck, sortArrayOfObjects, sortStrings } from '../../utils.js';
 import useResources from '../../hooks/useResources.js';
 
@@ -1155,33 +1152,24 @@ const MainWorkspace = ({ theme, setTheme }) => {
     notes,
     isManualNote, setIsManualNote,
     fromChat, setFromChat,
+=======
+import { MainContext } from '../../contexts/mainContext.jsx';
+
+const MainWorkspace = () => {
+  const {
+    theme,
+    setSourcesTobeCommited,
+    knowledgeBase,
+    setIsNotesLoading,
+>>>>>>> auth
     setNotes,
-    showNoteModal,
-    setShowNoteModal,
-    selectedSources,
-    setSelectedSources,
-    selectedAll,
-    setSelectedAll,
-    selectedCategory,
-    setSelectedCategory,
-    selectedFormat,
-    setSelectedFormat,
-    additionalSources,
-    setAdditionalSources,
-    showSearchModal,
-    setShowSearchModal,
-    selectedNote,
     setSelectedNote,
-    isNewNote,
-    setIsNewNote,
-    isStoriesLoading, setIsStoriesLoading,
-    summary,
-    setSummary,
-    noteIndex, setNoteIndex,
-    stories, setStories,
-    selectedStory, setSelectedStory,
-    showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
-  };
+    setIsStoriesLoading,
+    setStories,
+    setSelectedStory,
+    setReels,
+    setUser,
+  } = useContext(MainContext);
 
   const { getReels, getStories, getNotes, getIndexes } = useResources({ setReels, setStories, setNotes, setCategoryOptions });
   useEffect(() => {
@@ -1246,17 +1234,32 @@ const MainWorkspace = ({ theme, setTheme }) => {
     getReels();
   }, []);
 
+  // get user info
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const data = await makeApiRequest("/me", "get");
+        console.log(data);
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    getUserInfo();
+  }, []);
+
   return (
-    <MainContext.Provider value={value}>
-      <div className="flex relative !h-full divide-x divide-separator main-workspace-container">
-        {/* <div className="absolute z-40 w-full h-12">
+    // <MainContext.Provider value={value}>
+    <div className="flex relative !h-full divide-x divide-separator main-workspace-container">
+      {/* <div className="absolute z-40 w-full h-12">
           <ProgressBar />
         </div> */}
-        <ContentPanel />
-        <Workspace />
-        <ChatPanel />
-      </div>
-    </MainContext.Provider>
+      <ContentPanel />
+      <Workspace />
+      <ChatPanel />
+    </div>
+    // </MainContext.Provider>
   );
 };
 

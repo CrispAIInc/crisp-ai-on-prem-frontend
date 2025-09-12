@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import { useContext } from 'react';
 import { ChapterDetailsModal } from '../ChapterDetailsModal';
 import MenuBookIcon from '@mui/icons-material/MenuBook';

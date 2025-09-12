@@ -5,7 +5,7 @@ import makeApiRequest from "../../api";
 import SearchModal from "../SearchModal";
 
 import ContentSection from "../ContentSection";
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 import './content-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';

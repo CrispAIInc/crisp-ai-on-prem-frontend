@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import FaqItem from '../FaqItem';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 const Faqs = ({ heading, faqs, chosenLanguage }) => {
 

@@ -9,6 +9,14 @@ import { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import MainWorkspacePage from './pages/MainWorkspacePage';
 import NotFound from './pages/NotFound';
+import RegisterPage from './pages/Auth/RegisterPage';
+import LoginPage from './pages/Auth/LoginPage';
+import ForgotPasswordPage from './pages/Auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
+import PrivateRoute from './components/Auth/PrivateRoute';
+import AuthProvider from './contexts/authContext.jsx';
+import MainProvider from './contexts/mainContext.jsx';
+import SettingsProvider from './contexts/settingsContext.jsx';
 
 
 function App() {
@@ -41,13 +49,19 @@ function App() {
 
   return (
     <div className={`App ${theme}`}>
-      <Router>
-        <Routes>
-          {/* <Route path="/" element={<HomePage theme={theme} />} /> */}
-          <Route path="/" element={<MainWorkspacePage setTheme={setTheme} theme={theme} />} />
-          <Route path="*" element={<NotFound theme={theme} />} />
-        </Routes>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<PrivateRoute><MainProvider theme={theme} setTheme={setTheme}><SettingsProvider><MainWorkspacePage /></SettingsProvider></MainProvider></PrivateRoute>} />
+
+            <Route path="/sign-up" element={<RegisterPage theme={theme} setTheme={setTheme} />} />
+            <Route path="/login" element={<LoginPage theme={theme} setTheme={setTheme} />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage theme={theme} setTheme={setTheme} />} />
+            <Route path="/reset-password" element={<ResetPasswordPage theme={theme} setTheme={setTheme} />} />
+            <Route path="*" element={<NotFound theme={theme} setTheme={setTheme} />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </div>
   );
 }

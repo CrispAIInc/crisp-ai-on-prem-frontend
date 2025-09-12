@@ -1,11 +1,28 @@
 import axios from 'axios';
 
-
 const BACKEND_URL = import.meta.env.VITE_API_ENDPOINT;
 
 const axiosInstance = axios.create({
     baseURL: BACKEND_URL,
 });
+
+axiosInstance.interceptors.request.use(
+    async (config) => {
+        // add Authorization header if token is available
+        const token = localStorage.getItem('idToken');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            delete config.headers['Authorization'];
+        }
+
+        return config;
+    },
+    (error) => {
+        console.error('Request error: ', error.message);
+        return Promise.reject(error);
+    }
+);
 
 /**
  * Generic function for calling the backend API
@@ -14,6 +31,8 @@ const axiosInstance = axios.create({
 const makeApiRequest = async (endpoint, method = 'get', data = null, headers = { 'Content-Type': 'application/json' }, config = {}) => {
 
     try {
+        // add withCredentials
+        // config.withCredentials = true;
         const response = await axiosInstance({
             url: endpoint,
             method,

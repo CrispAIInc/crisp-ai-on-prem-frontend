@@ -21,6 +21,7 @@
     "bootstrap": "^5.2.3",
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
+    "firebase": "^12.1.0",
     "jspdf": "^2.5.1",
     "pdfjs-dist": "^3.11.174",
     "quill-image-resize-module-react": "^3.0.0",

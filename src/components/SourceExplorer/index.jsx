@@ -10,7 +10,7 @@ import PDFThumbnail from "../PDFThumbnail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
-import { MainContext } from "../../contexts/mainContext";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import "./source_explorer.css";
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
@@ -143,21 +143,22 @@ export function SourceExplorer(props) {
         setShowRemoveIndexModal(true);
     }
     // const [showRemoveXItem, setShowRemoveXItem] = useState(null);
+    const [hoveredItemToRemove, setHoveredItemToRemove] = useState('');
     const [itemToRemove, setItemToRemove] = useState("");
     const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
     const renderFolders = () => {
         return <>
             {props[viewModes[viewModes.length - 1]].map((item, index) => (
                 <div
-                    className="relative folder"
+                    className="relative select-none transition-transform folder group hover:scale-110 hover:font-medium hover:bg-gradient-to-r hover:from-[#755bea] hover:to-[#b76894] hover:bg-clip-text hover:text-transparent"
                     onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
                     key={index}
-                    onMouseOver={() => setItemToRemove(item.value)}
-                // onMouseLeave={() => setItemToRemove("")}
+                    onMouseOver={() => { setHoveredItemToRemove(item.value); setItemToRemove(item.value); }}
+                    onMouseLeave={() => { setHoveredItemToRemove(""); }}
                 >
-                    {(itemToRemove === item.value && viewModes[viewModes.length - 1] === "categories") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
+                    {(hoveredItemToRemove === item.value && viewModes[viewModes.length - 1] === "categories") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
                     {/* <FolderIcon sx={{ fontSize: 60 }} /> */}
-                    <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} sx={{ fontSize: 50 }} />
+                    <FolderOpenIcon sx={{ fontSize: 50 }} className={`${theme === 'light' ? 'text-textColor-300' : "text-[#ABAEB4]"} `} />
                     <p>{item.label}</p>
                 </div>
             ))}
@@ -271,7 +272,7 @@ export function SourceExplorer(props) {
                     .filter(
                         (file) =>
                             (file.file_type === format || format === "all") &&
-                            file.category[1] === category
+                            file.category[0] === category
                     );
 
                 if ((items.length > 0 && results.length > 0)) {

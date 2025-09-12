@@ -1,5 +1,5 @@
 import { useContext, useRef, useState, useEffect } from "react";
-import { MainContext } from "../../contexts/mainContext.js";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import makeApiRequest from "../../api";
 import ReactPlayer from "react-player";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -17,6 +17,9 @@ import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import HorizontalCard from '../HorizontalCard/index.jsx';
+import GsFile from "../GsFile";
+import useFirebase from '../../hooks/useFirebase.js';
+import { SettingsContext } from '../../contexts/settingsContext.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
@@ -51,6 +54,10 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     setActiveTab,
     generatedResources,
   } = useContext(MainContext);
+
+  const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
+
+  const { getPublicUrl } = useFirebase();
 
   const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item.source_path === currentResource.source_path));
   // const [generatedResource, setGeneratedResource] = useState(null);
@@ -92,7 +99,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     const data = await makeApiRequest(
       "/content",
       "post",
-      JSON.stringify(categoryValues)
+      JSON.stringify(categoryValues.filter((option) => option !== 'all'))
     );
     //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
     let updatedKnowledgeBase = data.map(item => {
@@ -394,6 +401,36 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     }
   }, []);
 
+  const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
+
+  // useEffect(() => {
+  //   if (currentResource?.file_type === "pdf" && currentResource?.pdf_url) {
+  //     getPublicUrl(currentResource?.pdf_url).then(setSourcePublicUrl).catch(console.error);
+  //   } else if (currentResource?.file_type === "video" && currentResource?.video_url) {
+  //     getPublicUrl(currentResource?.video_url).then(setSourcePublicUrl).catch(console.error);
+  //   } else if (currentResource?.file_type === "img" && currentResource?.thumbnail) {
+  //     getPublicUrl(currentResource?.thumbnail).then(setSourcePublicUrl).catch(console.error);
+  //   }
+  // }, [currentResource])
+
+  useEffect(() => {
+    if (!currentResource) return;
+
+    const urlMap = {
+      pdf: currentResource.pdf_url,
+      video: currentResource.video_url,
+      img: currentResource.thumbnail,
+    };
+
+    const fileUrl = urlMap[currentResource.file_type] || null;
+
+    if (fileUrl) {
+      getPublicUrl(fileUrl)
+        .then(setSourcePublicUrl)
+        .catch(console.error);
+    }
+  }, [currentResource]);
+
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
 
@@ -420,8 +457,9 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 id="react-player"
                 width={"100%"}
                 height='500px'
-                playing={false}
-                url={resourceURL}
+                playing={video_autoplay}
+                loop={video_loop}
+                url={sourcePublicUrl || resourceURL}
                 onReady={() => setIsPlayerReady(true)}
                 ref={player}
                 controls
@@ -577,6 +615,12 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
               className="sticky top-0 z-50 shadow-lg cursor-pointer left-full"
               color='error'
             />
+            {/* <iframe
+              src="https://storage.googleapis.com/crispai-app-462614.firebasestorage.app/pdf_uploads/pdfs/media/Deep%20Seek.pdf"
+              width="100%"
+              height="600px"
+              className="w-[90%] mx-auto"
+            /> */}
             <div
               className="relative w-[90%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
               ref={contentPanelContainerRef}
@@ -585,7 +629,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
             >
               <Document
                 className="!w-full mx-auto relative"
-                file={resourceURL}
+                file={sourcePublicUrl || resourceURL}
 
                 onLoadSuccess={onDocumentLoadSuccess}
               >
@@ -745,9 +789,9 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 onClick={closeImage}
                 className="absolute right-[1%] top-[15px] z-10 cursor-pointer shadow-lg "
               />
-              <img
+              <GsFile
                 className="absolute top-0 left-0 object-contain w-full h-full"
-                src={resourceURL}
+                gsUrl={currentResource?.thumbnail || resourceURL}
               />
             </div>
             {/* Image Caption */}

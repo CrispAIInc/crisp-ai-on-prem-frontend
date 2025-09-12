@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';

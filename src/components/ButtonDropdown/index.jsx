@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { IndexModal } from '../IndexModal';
 

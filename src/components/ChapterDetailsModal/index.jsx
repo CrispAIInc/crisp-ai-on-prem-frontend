@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { MainContext } from '../../contexts/mainContext';
+import { MainContext } from '../../contexts/mainContext.jsx';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 

@@ -5,7 +5,7 @@ import PDFThumbnail from "../PDFThumbnail";
 import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
 
-import { MainContext } from "../../contexts/mainContext";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
 
