@@ -10,7 +10,7 @@ export default function useResources(config = {}) {
 
     const { categoryOptions } = useContext(MainContext);
 
-    const categoryValuesWithoutAll = categoryOptions.filter(item => item.value !== "all").map((option) => option.value);
+    const categoryValuesWithoutAll = categoryOptions?.filter(item => item.value !== "all").map((option) => option.value);
 
     return {
         categoryValuesWithoutAll,

@@ -29,9 +29,12 @@ import { SettingsModal } from "../Settings/SettingsModal";
 import useAuth from '../../hooks/useAuth';
 import GsFile from '../GsFile';
 import { AuthContext } from '../../contexts/authContext';
+import useResources from '../../hooks/useResources';
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
     const { theme, setDisplayedSources, categoryOptions, setKnowledgeBase } = useContext(MainContext);
+
+    const { categoryValuesWithoutAll } = useResources();
     const [isLoading, setIsLoading] = useState(false);
 
     async function updateFilename() {
@@ -53,7 +56,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify(categoryOptions.map((option) => option.value))
+                JSON.stringify(categoryValuesWithoutAll)
             );
             setKnowledgeBase(data.map(item => {
                 if (item?.source_path === filename + "." + extension) {
@@ -168,6 +171,8 @@ const ContentSection = ({
         chatLoaded
     } = useContext(MainContext);
 
+    const { categoryValuesWithoutAll } = useResources();
+
     const { user } = useContext(AuthContext);
 
     const { logout } = useAuth();
@@ -200,7 +205,7 @@ const ContentSection = ({
                 const data = await makeApiRequest(
                     "/content",
                     "post",
-                    JSON.stringify(categoryValues)
+                    JSON.stringify(categoryValuesWithoutAll)
                 );
                 setKnowledgeBase(data);
             } catch (error) {
@@ -351,7 +356,7 @@ const ContentSection = ({
             // setActiveTab('genMetadata');
 
             // Fetch updated content
-            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValues));
+            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValuesWithoutAll));
 
             // Filter sources that match the uploaded files
             const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));

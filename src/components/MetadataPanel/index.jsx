@@ -20,6 +20,7 @@ import HorizontalCard from '../HorizontalCard/index.jsx';
 import GsFile from "../GsFile";
 import useFirebase from '../../hooks/useFirebase.js';
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
+import useResources from '../../hooks/useResources.js';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
@@ -56,6 +57,8 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   } = useContext(MainContext);
 
   const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
+
+  const { categoryValuesWithoutAll } = useResources();
 
   const { getPublicUrl } = useFirebase();
 
@@ -99,7 +102,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     const data = await makeApiRequest(
       "/content",
       "post",
-      JSON.stringify(categoryValues.filter((option) => option !== 'all'))
+      JSON.stringify(categoryValuesWithoutAll)
     );
     //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
     let updatedKnowledgeBase = data.map(item => {

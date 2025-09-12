@@ -212,7 +212,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       //     JSON.stringify(categoryValues.filter((option) => {
       //     if (option !== 'all') return option;
       // }))
-      // JSON.stringify(categoryOptions.map((option) => option.value))
+      // JSON.stringify(categoryValuesWithoutAll)
       //   );
       //   setKnowledgeBase(data);
       // } catch (error) {
@@ -272,7 +272,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           //     JSON.stringify(categoryValues.filter((option) => {
           //     if (option !== 'all') return option;
           // }))
-          //     JSON.stringify(categoryOptions.map((option) => option.value))
+          //     JSON.stringify(categoryValuesWithoutAll)
           //   );
           //   setKnowledgeBase(data);
           // } catch (error) {

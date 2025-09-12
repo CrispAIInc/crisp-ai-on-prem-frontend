@@ -8,12 +8,15 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 import makeApiRequest from '../../api';
 import RippleButton from '../RippleButton';
+import useResources from '../../hooks/useResources.js';
 
 
 
 
 function MetadataGen() {
     const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
+
+    const { categoryValuesWithoutAll } = useResources();
 
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
 
@@ -103,7 +106,7 @@ function MetadataGen() {
             const data = await makeApiRequest(
                 "/content",
                 "post",
-                JSON.stringify(categoryValues.filter((option) => option !== 'all'))
+                JSON.stringify(categoryValuesWithoutAll)
             );
             //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
             let updatedKnowledgeBase = data.map(item => {
