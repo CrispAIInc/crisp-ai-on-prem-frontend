@@ -1080,7 +1080,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                   }
                 }} />
               <div
-                className={`p-2 mr-3 text-sm cursor-pointer ${theme === 'light' ? 'bg-textColor-300' : 'bg-textColor-200'} text-white/80 rounded-full`}
+                className={`p-2 mr-3 text-sm cursor-pointer bg-textColor-300 text-white/80 rounded-full`}
                 onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
               >
                 <SendIcon className={``} />
