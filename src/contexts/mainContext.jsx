@@ -5,10 +5,15 @@ import makeApiRequest from "../api";
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
+import useResources from '../hooks/useResources';
 
 export const MainContext = createContext({});
 
 export default function MainProvider({ children, theme, setTheme }) {
+
+    const [categoryOptions, setCategoryOptions] = useState([]);
+    const { getIndexes } = useResources({ setCategoryOptions });
+
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
     const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace
     const [resourceURL, setResourceURL] = useState(null); // The Selected Resource Direct URL
@@ -67,20 +72,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
     ];
 
-    const [categoryOptions, setCategoryOptions] = useState([]);
-    useEffect(() => {
-        async function getIndexes() {
-            let { indexes } = await makeApiRequest("/get-indexes");
-            // transform the indexes to the format value/label
-            indexes = indexes.map((index) => {
-                return {
-                    value: index,
-                    label: index.charAt(0).toUpperCase() + index.slice(1),
-                };
-            });
-            setCategoryOptions([{ value: "all", label: "All" }, ...indexes]);
-        }
 
+    useEffect(() => {
         getIndexes();
     }, []);
 

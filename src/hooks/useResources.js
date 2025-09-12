@@ -51,6 +51,11 @@ export default function useResources(config = {}) {
                 };
             });
 
+            indexes = [{
+                value: "all",
+                label: "All"
+            }, ...indexes];
+
             if (config.setCategoryOptions) {
                 config.setCategoryOptions(sortStrings(pluck(indexes, "label")).map(item => ({
                     label: item,
