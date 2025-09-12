@@ -25,11 +25,8 @@ import LoadingSpinner from '../LoadingSpinner';
 import MediaEntertainment from '../MediaEntertainment';
 import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
-<<<<<<< HEAD
 import useResources from '../../hooks/useResources';
-=======
 import GsFile from '../GsFile/index.jsx';
->>>>>>> auth
 
 Quill.register("modules/imageResize", ImageResize);
 
