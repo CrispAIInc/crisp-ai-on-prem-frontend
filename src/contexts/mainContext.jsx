@@ -1098,11 +1098,11 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [isFileUploading, setIsFileUploading] = useState(false);
 
     const [reels, setReels] = useState([]);
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
     // create value object with all the states
     const value = {
         reels, setReels,
-        user, setUser,
+        // user, setUser,
         isFileUploading, setIsFileUploading,
         uploadedSources, setUploadedSources,
         showMetadata, setShowMetadata,
