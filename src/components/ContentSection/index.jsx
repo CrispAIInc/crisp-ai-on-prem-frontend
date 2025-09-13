@@ -862,8 +862,11 @@ const ContentSection = ({
                                                         <LoadingSpinner isSmall />
                                                     </div>
                                                 )}
-                                                <img className="object-cover w-full h-full rounded-md" src={`${API_ENDPOINT}/${option?.file_type === 'video' ? 'thumbnails' : option?.file_type === 'pdf' ? 'pdf-thumbnails' : 'img-thumbnails'}/${encodeURIComponent(option?.category[0])}/${encodeURIComponent(option?.thumbnail)}`}
-                                                    alt="Video Thumbnail" />
+                                                <GsFile
+                                                    className="object-cover w-full h-full rounded-md"
+                                                    gsUrl={option.thumbnail}
+                                                    alt="Video Thumbnail"
+                                                />
                                             </div>
                                             <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                         </div>
