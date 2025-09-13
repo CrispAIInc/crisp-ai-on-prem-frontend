@@ -47,12 +47,12 @@ export function SourceExplorer(props) {
             filteredItems = knowledgeBase; // Root `/` case: Select all items
         } else if (category && !format) {
             filteredItems = knowledgeBase.filter((item) => {
-                return item.category.includes(category);
+                return item.category.includes(category) || category === 'all';
             }
             ); // Category only
         } else {
             filteredItems = knowledgeBase.filter(item =>
-                item.category.includes(category) && item.file_type === format
+                (item.category.includes(category) || category === 'all') && (item.file_type === format || format === 'all')
             ); // Category + Format
         }
 

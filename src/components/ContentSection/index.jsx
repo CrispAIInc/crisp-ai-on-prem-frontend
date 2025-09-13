@@ -434,7 +434,7 @@ const ContentSection = ({
         else if (category !== undefined && format === undefined) {
             const updatedKnowledgeBase = knowledgeBase.map((item) => {
                 //! what about if all the sources in KB have "all" by default?
-                if (item.category.includes(category)) {
+                if (item.category.includes(category) || category === 'all') {
                     item.is_selected = isChecked;
                 }
                 return item;
