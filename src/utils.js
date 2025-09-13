@@ -105,7 +105,7 @@ export function flattenMetadata(obj) {
         if (metadata.chapters) {
             flattenedMetadata.chapters = {
                 title: metadata.chapters.title,
-                content: metadata.chapters.content.map(chapter => ({ ...chapter })),
+                content: metadata?.chapters?.content?.map(chapter => ({ ...chapter })),
             };
         }
 
@@ -113,7 +113,7 @@ export function flattenMetadata(obj) {
         if (metadata.faqs) {
             flattenedMetadata.faqs = {
                 title: metadata.faqs.title,
-                content: metadata.faqs.content.map(faq => ({ ...faq }))
+                content: metadata?.faqs?.content?.map(faq => ({ ...faq }))
             };
         }
 
@@ -121,7 +121,7 @@ export function flattenMetadata(obj) {
         if (metadata.highlights) {
             flattenedMetadata.highlights = {
                 title: metadata.highlights.title,
-                content: metadata.highlights.content.map(highlight => ({ ...highlight })),
+                content: metadata?.highlights?.content?.map(highlight => ({ ...highlight })),
             };
         }
 
@@ -138,7 +138,7 @@ export function flattenMetadata(obj) {
             flattenedMetadata.summary = {
                 id: metadata.summary.id,
                 title: metadata.summary.title,
-                content: metadata.summary.content,
+                content: metadata?.summary?.content,
             };
         }
 
