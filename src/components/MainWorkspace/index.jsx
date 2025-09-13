@@ -11,6 +11,7 @@ import ChatPanel from "../ChatPanel";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { MainContext } from '../../contexts/mainContext.jsx';
 import useResources from '../../hooks/useResources.js';
+import { AuthContext } from '../../contexts/authContext.jsx';
 
 const MainWorkspace = () => {
   const {
@@ -25,8 +26,9 @@ const MainWorkspace = () => {
     setSelectedStory,
     setCategoryOptions,
     setReels,
-    setUser,
   } = useContext(MainContext);
+
+  const { setUser } = useContext(AuthContext);
 
   const { getReels, getStories, getNotes, getIndexes } = useResources({ setReels, setStories, setNotes, setCategoryOptions });
   useEffect(() => {
