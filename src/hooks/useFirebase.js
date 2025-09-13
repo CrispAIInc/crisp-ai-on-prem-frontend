@@ -6,7 +6,7 @@ export default function useFirebase() {
     async function getPublicUrl(gsUrl) {
 
         // Extract everything after the bucket name
-        const bucket = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET; // "gs://genbook-ai.appspot.com/"
+        const bucket = "crispai-app-462614.firebasestorage.app"; // "gs://genbook-ai.appspot.com/"
         const path = gsUrl.replace(bucket, ""); // "img_uploads/imgs/finance/59343.jpg"
 
         try {
