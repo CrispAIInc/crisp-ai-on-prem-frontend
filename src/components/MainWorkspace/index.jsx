@@ -30,10 +30,10 @@ const MainWorkspace = () => {
 
   const { setUser } = useContext(AuthContext);
 
-  const { getReels, getStories, getNotes } = useResources({ setReels, setStories, setNotes, setCategoryOptions });
-  // useEffect(() => {
-  //   getIndexes();
-  // }, []);
+  const { getReels, getStories, getNotes, getIndexes } = useResources({ setReels, setStories, setNotes, setCategoryOptions });
+  useEffect(() => {
+    getIndexes();
+  }, []);
 
   // update sourcesTobeCommited depending on knowledgeBase change
   useEffect(() => {
