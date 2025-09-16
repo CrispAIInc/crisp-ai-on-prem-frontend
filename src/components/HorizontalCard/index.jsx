@@ -14,13 +14,11 @@ function HorizontalCard({ item, workspaceContainer }) {
         setLightboxOpen(false);
     }
 
-    const thumbnail = import.meta.env.VITE_API_ENDPOINT + (item.keyframe_url ?? item.thumbnail_url);
-
     return (
         <div key={item.id} className={`relative grid grid-cols-[64px_1fr] gap-3 p-3 bg-background rounded-md shadow-sm mb-4`}>
             {/* item thumbnail */}
             <div className="relative w-20 h-20 rounded-md cursor-pointer " onClick={() => setLightboxOpen(true)}>
-                <GsFile src={item.keyframe_url ?? item.thumbnail_url} alt="chapter" className="object-cover w-full h-full rounded-md lg:max-w-full" />
+                <GsFile gsUrl={item.keyframe_url ?? item.thumbnail_url} alt="chapter" className="object-cover w-full h-full rounded-md lg:max-w-full" />
             </div>
             {isLightboxOpen && (
                 <PreviewModal closeLightbox={closeLightbox} content={item.keyframe_url ?? item.thumbnail_url} classNames={`h-full ${item.keyframe_url ? '!w-[55vw] !h-[65vh]' : '!w-1/3 !h-full'}`} />
