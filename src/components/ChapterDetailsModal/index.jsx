@@ -1,12 +1,22 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import useFirebase from '../../hooks/useFirebase.js';
 
 export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer }) {
 
     const { theme, setCurrentResource, setJumpToPage, contentPanelContainerRef } = useContext(MainContext);
+
+    const { getPublicUrl } = useFirebase();
+
+    const [url, setUrl] = useState("");
+
+    useEffect(() => {
+        if (!chapter?.keyframe_url) return;
+        getPublicUrl(chapter?.keyframe_url).then(setUrl).catch(console.error);
+    }, [chapter?.keyframe_url]);
 
     return (
         <Modal
@@ -31,7 +41,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                     {/* left part => thumbnail */}
                     <div className="flex items-center justify-center w-2/3 mx-auto mb-4 sm:w-full sm:h-fit sm:mb-0 ">
                         <img
-                            src={import.meta.env.VITE_API_ENDPOINT + (chapter.keyframe_url ?? chapter.thumbnail_url)}
+                            src={url}
                             alt="chapter thumbnail"
                             className="object-cover w-full h-full border rounded-lg shadow-2xl border-primary-300"
                         />

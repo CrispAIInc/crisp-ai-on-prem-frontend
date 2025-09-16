@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
+import GsFile from '../GsFile/index.jsx';
 
 function PreviewModal({ closeLightbox, content, classNames = '', }) {
 
@@ -28,8 +29,8 @@ function PreviewModal({ closeLightbox, content, classNames = '', }) {
                 >
                     &times;
                 </button>
-                <img
-                    src={content}
+                <GsFile
+                    gsUrl={content}
                     alt="Image is Loading ..."
                     className="object-fill w-full h-full"
                 />

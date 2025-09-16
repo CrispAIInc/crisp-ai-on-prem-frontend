@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { ChapterDetailsModal } from '../ChapterDetailsModal';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PreviewModal from '../PreviewModal';
+import GsFile from '../GsFile/index.jsx';
 
 function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
 
@@ -37,8 +38,8 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                         <div className="relative flex flex-col gap-2 p-2 rounded-md shadow-md bg-background">
                             {/* Image */}
                             <div className="w-full rounded-md cursor-pointer" onClick={() => { setSelectedChapter(chapter); setLightboxOpen(true); }}>
-                                <img
-                                    src={import.meta.env.VITE_API_ENDPOINT + (chapter.keyframe_url ?? chapter.thumbnail_url)}
+                                <GsFile
+                                    gsUrl={chapter.keyframe_url ?? chapter.thumbnail_url}
                                     alt="chapter"
                                     className="object-cover w-full h-20 rounded-md"
                                 />
