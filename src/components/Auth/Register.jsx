@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 import makeApiRequest from '../../api';
+import GoogleAuthButton from "../Auth/GoogleAuthButton";
+import HorizontalOrText from '../HorizontalOrText';
 
 
 export default function Register() {
@@ -108,6 +110,9 @@ export default function Register() {
                 </RippleButton>
             </div>
             <p className='mt-2 text-sm font-bold text-center text-textColor-200'>Already have an account? <Link className="text-primary-300" to="/login">Sign in</Link></p>
+
+            <HorizontalOrText />
+            <GoogleAuthButton />
         </div>
     );
 }
