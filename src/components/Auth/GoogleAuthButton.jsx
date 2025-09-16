@@ -1,6 +1,8 @@
 import { auth, provider } from "../../config/firebase.js";
 import { signInWithPopup } from "firebase/auth";
 
+import makeApiRequest from "../../api";
+
 function Login() {
     const handleLogin = async () => {
         try {
@@ -9,11 +11,7 @@ function Login() {
             const token = await user.getIdToken(); // Firebase ID token
 
             // Send to Flask backend
-            await fetch("http://localhost:5000/api/auth/google", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token }),
-            });
+            await makeApiRequest("/auth/google", "POST", JSON.stringify({ token }));
         } catch (err) {
             console.error(err);
         }
