@@ -4,7 +4,8 @@ import { signInWithPopup } from "firebase/auth";
 import makeApiRequest from "../../api";
 
 function Login() {
-    const handleLogin = async () => {
+    const handleGoogleSignIn = async () => {
+        console.log("Google sign-in initiated");
         try {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
@@ -17,7 +18,13 @@ function Login() {
         }
     };
 
-    return <button onClick={handleLogin}>Sign in with Google</button>;
+    return <button
+        onClick={handleGoogleSignIn}
+        className="flex items-center gap-2 px-4 py-2 border rounded-lg shadow-md hover:bg-gray-100"
+    >
+        <img src="/google-logo.webp" alt="Google" className="w-5 h-5" />
+        <span>Sign in with Google</span>
+    </button>;
 }
 
 export default Login;

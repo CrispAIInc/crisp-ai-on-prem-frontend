@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { signInWithCustomToken } from 'firebase/auth';
+import { auth } from '../../config/firebase';
+import makeApiRequest from '../../api';
 import { Link, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
-import makeApiRequest from '../../api';
-import { signInWithCustomToken } from 'firebase/auth';
-import { auth } from '../../config/firebase';
+import GoogleAuthButton from "../Auth/GoogleAuthButton";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -89,6 +90,9 @@ export default function Login() {
             </div>
             <p className='mt-2 text-sm font-bold text-center text-textColor-200'>Forgot password? <Link className="text-primary-300" to="/forgot-password">click here!</Link></p>
             <p className='text-sm font-bold text-center text-textColor-200'>Don&apos;t  have an account? <Link className="text-primary-300" to="/sign-up">Sign up</Link></p>
+
+            <hr />
+            <GoogleAuthButton />
         </div>
     );
 }
