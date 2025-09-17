@@ -231,3 +231,12 @@ export function searchByKey(data, key, query) {
 export function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+// pick specific keys from an object
+export const pick = (obj, keys) =>
+    keys.reduce((acc, key) => {
+        if (obj[key] !== undefined) {
+            acc[key] = obj[key];
+        }
+        return acc;
+    }, {});
