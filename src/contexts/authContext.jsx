@@ -4,9 +4,9 @@ export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
     const [user, setUser] = useState({
-        firstName: "John",
-        lastName: "Doe",
-        email: "johndoe@gmail.com",
+        firstName: "",
+        lastName: "",
+        email: "",
         emailVerified: false,
     });
 

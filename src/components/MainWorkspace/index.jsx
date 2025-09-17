@@ -99,7 +99,11 @@ const MainWorkspace = () => {
       try {
         const data = await makeApiRequest("/me", "get");
         console.log(data);
-        setUser(data);
+        setUser({
+          ...data,
+          firstName: data?.display_name.split(" ")[0] ?? data.firstName,
+          lastName: data?.display_name.split(" ").slice(1).join(" ") ?? data.lastName,
+        });
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
