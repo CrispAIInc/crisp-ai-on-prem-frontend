@@ -154,9 +154,6 @@ const ContentPanel = () => {
             width: leftWidth
         }}>
             <div className="flex items-center justify-between">
-                {
-                    theme === "light" ? <WbSunnyOutlinedIcon className="cursor-pointer" onClick={() => switchTheme('dark')} /> : <DarkModeOutlinedIcon className='cursor-pointer text-[#ABAEB4]' onClick={() => switchTheme('light')} />
-                }
                 <h5 className={`flex-1 mb-0 select-none p-[10px] text-center  ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
                     }`}>Sources</h5>
                 <div
