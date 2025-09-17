@@ -12,6 +12,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { MainContext } from '../../contexts/mainContext.jsx';
 import useResources from '../../hooks/useResources.js';
 import { AuthContext } from '../../contexts/authContext.jsx';
+import { pick } from '../../utils.js';
 
 const MainWorkspace = () => {
   const {
@@ -98,11 +99,12 @@ const MainWorkspace = () => {
     const getUserInfo = async () => {
       try {
         const data = await makeApiRequest("/me", "get");
-        console.log(data);
+        const userWithSpecificProperties = pick(data, ["firstName", "lastName", "email"]);
         setUser({
-          ...data,
           firstName: data?.display_name.split(" ")[0] ?? data.firstName,
           lastName: data?.display_name.split(" ").slice(1).join(" ") ?? data.lastName,
+          ...userWithSpecificProperties,
+          emailVerified: data.email_verified,
         });
       } catch (error) {
         console.error("Error fetching user info:", error);
