@@ -10,14 +10,14 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
 
     const { theme, setCurrentResource, setJumpToPage, contentPanelContainerRef } = useContext(MainContext);
 
-    const { getPublicUrl } = useFirebase();
+    // const { getPublicUrl } = useFirebase();
 
-    const [url, setUrl] = useState("");
+    // const [url, setUrl] = useState("");
 
-    useEffect(() => {
-        if (!chapter?.keyframe_url) return;
-        getPublicUrl(chapter?.keyframe_url).then(setUrl).catch(console.error);
-    }, [chapter?.keyframe_url]);
+    // useEffect(() => {
+    //     if (!chapter?.keyframe_url) return;
+    //     getPublicUrl(chapter?.keyframe_url).then(setUrl).catch(console.error);
+    // }, [chapter?.keyframe_url]);
 
     return (
         <Modal
@@ -42,7 +42,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                     {/* left part => thumbnail */}
                     <div className="flex items-center justify-center w-2/3 mx-auto mb-4 sm:w-full sm:h-fit sm:mb-0 ">
                         <GsFile
-                            gsUrl={url}
+                            gsUrl={chapter?.keyframe_url ?? chapter?.thumbnail_url}
                             alt="chapter thumbnail"
                             className="object-cover w-full h-full border rounded-lg shadow-2xl border-primary-300"
                         />
