@@ -1,25 +1,14 @@
-import { auth, provider } from "../../config/firebase.js";
-import { signInWithPopup } from "firebase/auth";
-
-import { TOKEN_NAME } from "../../globals.js";
 import { useNavigate } from 'react-router';
+import { signInWithGoogle } from '../../services/auth.js';
 
-function Login() {
+function GoogleAuthButton() {
 
     const navigate = useNavigate();
 
     const handleGoogleSignIn = async () => {
-        console.log("Google sign-in initiated");
         try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            const token = await user.getIdToken(); // Firebase ID token
-            localStorage.setItem(TOKEN_NAME, token);
-
+            await signInWithGoogle();
             navigate('/');
-
-            // Send to Flask backend
-            // await makeApiRequest("/auth/google", "POST", JSON.stringify({ token }));
         } catch (err) {
             console.error(err);
         }
@@ -34,4 +23,4 @@ function Login() {
     </button>;
 }
 
-export default Login;
+export default GoogleAuthButton;
