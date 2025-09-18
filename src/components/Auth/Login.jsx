@@ -7,6 +7,7 @@ import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
+import { TOKEN_NAME } from "../../globals.js";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ export default function Login() {
                 console.log("Firebase ID Token:", idToken);
 
                 // Optionally store idToken if you want
-                localStorage.setItem("idToken", idToken);
+                localStorage.setItem(TOKEN_NAME, idToken);
                 // localStorage.setItem('accessToken', accessToken);
                 navigate('/');
             } else {
