@@ -1,13 +1,10 @@
 import { useState } from 'react';
-import { signInWithCustomToken } from 'firebase/auth';
-import { auth } from '../../config/firebase';
-import makeApiRequest from '../../api';
 import { Link, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
-import { TOKEN_NAME } from "../../globals.js";
+import { loginWithEmailAndPassword } from '../../services/auth.js';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -28,26 +25,8 @@ export default function Login() {
                 throw new Error("All fields are required.");
             }
 
-            // Here you would typically make an API call to register the user
-            const { success, accessToken, message } = await makeApiRequest('/login', 'POST', JSON.stringify(userInfo));
-
-            if (success) {
-                // Step 3: Exchange custom token for Firebase ID token
-                const userCredential = await signInWithCustomToken(auth, accessToken);
-
-                console.log("User signed in:", userCredential.user);
-
-                // Now you can use getIdToken() anytime
-                const idToken = await userCredential.user.getIdToken();
-                console.log("Firebase ID Token:", idToken);
-
-                // Optionally store idToken if you want
-                localStorage.setItem(TOKEN_NAME, idToken);
-                // localStorage.setItem('accessToken', accessToken);
-                navigate('/');
-            } else {
-                throw new Error(message || "Login failed. Please try again.");
-            }
+            await loginWithEmailAndPassword(userInfo);
+            navigate('/');
 
             // Reset userInfo after registration attempt
             setUserInfo({
