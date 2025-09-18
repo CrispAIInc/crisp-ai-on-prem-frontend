@@ -2,16 +2,21 @@ import { auth, provider } from "../../config/firebase.js";
 import { signInWithPopup } from "firebase/auth";
 
 import { TOKEN_NAME } from "../../globals.js";
+import { useNavigate } from 'react-router';
 
 function Login() {
+
+    const navigate = useNavigate();
+
     const handleGoogleSignIn = async () => {
         console.log("Google sign-in initiated");
         try {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
             const token = await user.getIdToken(); // Firebase ID token
-
             localStorage.setItem(TOKEN_NAME, token);
+
+            navigate('/');
 
             // Send to Flask backend
             // await makeApiRequest("/auth/google", "POST", JSON.stringify({ token }));
