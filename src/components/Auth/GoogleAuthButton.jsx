@@ -8,8 +8,9 @@ function GoogleAuthButton() {
 
     const handleGoogleSignIn = async () => {
         try {
-            const { token } = await signInWithGoogle(navigate);
+            const { token } = await signInWithGoogle();
             localStorage.setItem(TOKEN_NAME, token);
+
             navigate('/');
         } catch (err) {
             console.error(err);

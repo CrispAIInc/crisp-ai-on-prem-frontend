@@ -1,7 +1,7 @@
-import { onAuthStateChanged, signInWithCustomToken, signInWithPopup } from 'firebase/auth';
+import { onAuthStateChanged, onIdTokenChanged, signInWithCustomToken, signInWithPopup } from 'firebase/auth';
 import { TOKEN_NAME } from '../globals';
 import { auth, provider } from '../config/firebase';
-import makeApiRequest from '../api';
+import makeApiRequest, { axiosInstance } from '../api';
 
 // onAuthStateChanged(auth, async (user) => {
 //     if (user) {
@@ -12,12 +12,22 @@ import makeApiRequest from '../api';
 //     }
 // });
 
+onIdTokenChanged(auth, async (user) => {
+    if (user) {
+        const token = await user.getIdToken(); // Firebase will refresh when ready
+        localStorage.setItem(TOKEN_NAME, token);
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+});
+
 
 export const signInWithGoogle = async () => {
     try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
         const token = await user.getIdToken(true); // Firebase ID token
+        // simulate a sleep for 1 second
+        await new Promise(resolve => setTimeout(resolve, 3000));
         return { token };
     } catch (err) {
         console.error(err);

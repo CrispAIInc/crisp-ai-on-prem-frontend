@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { TOKEN_NAME } from '../utils/constants.js';
+import { TOKEN_NAME } from '../globals.js';
 
 const BACKEND_URL = import.meta.env.VITE_API_ENDPOINT;
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
     baseURL: BACKEND_URL,
 });
 
