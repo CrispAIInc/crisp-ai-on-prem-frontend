@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { TOKEN_NAME } from '../utils/constants.js';
 
 const BACKEND_URL = import.meta.env.VITE_API_ENDPOINT;
 
@@ -9,7 +10,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     async (config) => {
         // add Authorization header if token is available
-        const token = localStorage.getItem('idToken');
+        const token = localStorage.getItem(TOKEN_NAME);
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         } else {
