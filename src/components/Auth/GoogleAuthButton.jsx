@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 import { signInWithGoogle } from '../../services/auth.js';
+import { TOKEN_NAME } from '../../globals.js';
 
 function GoogleAuthButton() {
 
@@ -7,7 +8,8 @@ function GoogleAuthButton() {
 
     const handleGoogleSignIn = async () => {
         try {
-            await signInWithGoogle();
+            const { token } = await signInWithGoogle(navigate);
+            localStorage.setItem(TOKEN_NAME, token);
             navigate('/');
         } catch (err) {
             console.error(err);
