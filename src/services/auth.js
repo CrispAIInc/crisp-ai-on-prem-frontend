@@ -27,7 +27,7 @@ export const signInWithGoogle = async () => {
         const user = result.user;
         const token = await user.getIdToken(true); // Firebase ID token
         // simulate a sleep for 1 second
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 5000));
         return { token };
     } catch (err) {
         console.error(err);
