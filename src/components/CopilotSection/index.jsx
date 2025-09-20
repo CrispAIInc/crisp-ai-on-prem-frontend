@@ -10,7 +10,7 @@ import { MainContext } from "../../contexts/mainContext";
 import { decimalSecondsToHHMMSS, delay, generateRandomHash, timeToSeconds, toBase64 } from '../../utils';
 import AddOptionsModal from "../AddOptionsModal";
 import CustomSelectTwo from '../CustomSelectTwo';
-import CustomTextArea from '../CustomTextArea';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 import ImageUpload from '../ImageUpload';
 import PreviewModal from '../PreviewModal';
 
@@ -19,6 +19,7 @@ import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
 import AnimatedText from '../AnimatedText/index.jsx';
 import AnimatedInput from '../AnimatedInput/index.jsx';
 import Chip from '../Chip/index.jsx';
+import { TOKEN_NAME } from '../../globals.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
@@ -219,14 +220,25 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       //   console.warn(error);
       // }
 
+
+
       let sessionID = null; // Variable to store the session ID
-      const eventSource = new EventSource(
-        `${API_ENDPOINT}/message/${encodeURIComponent(
-          selectedCategory
-        )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
-          selectedLLMs[0]
-        )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
-      );
+      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(
+        selectedCategory
+      )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
+        selectedLLMs[0]
+      )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(TOKEN_NAME)}`,
+        },
+      });
+      // const eventSource = new EventSource(
+      //   `${API_ENDPOINT}/message/${encodeURIComponent(
+      //     selectedCategory
+      //   )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
+      //     selectedLLMs[0]
+      //   )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
+      // );
 
       eventSource.onmessage = async function (event) {
         const data = JSON.parse(event.data);
