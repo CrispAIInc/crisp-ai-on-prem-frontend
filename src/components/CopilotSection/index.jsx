@@ -1025,7 +1025,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                           </div>
                         ) : null}
                         {
-                          (isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
+                          (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                         }
 
                         {/* <div className="flex flex-wrap items-center gap-1">
