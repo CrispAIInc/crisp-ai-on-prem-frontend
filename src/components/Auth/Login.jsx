@@ -54,6 +54,11 @@ export default function Login() {
                     value={userInfo.email}
                     setValue={(value) => setUserInfo({ ...userInfo, email: value })}
                     type="email"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            login();
+                        }
+                    }}
                 />
                 <AnimatedInput
                     isPassword
@@ -63,6 +68,11 @@ export default function Login() {
                     value={userInfo.password}
                     setValue={(value) => setUserInfo({ ...userInfo, password: value })}
                     type="password"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            login();
+                        }
+                    }}
                 />
                 <RippleButton fullWidth cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2" onClick={login}>
                     {isPending && <span className="loader-atom"></span>}
