@@ -5,6 +5,7 @@ import RippleButton from "../RippleButton";
 import makeApiRequest from '../../api';
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
+import { isValidEmail } from "../../utils.js";
 
 
 export default function Register() {
@@ -27,6 +28,9 @@ export default function Register() {
             // Validate user input
             if (!userInfo.firstName || !userInfo.lastName || !userInfo.email || !userInfo.password || !userInfo.confirmPassword) {
                 throw new Error("All fields are required.");
+            }
+            if (!isValidEmail(userInfo.email)) {
+                throw new Error("Please enter a valid email address.");
             }
             if (userInfo.password !== userInfo.confirmPassword) {
                 throw new Error("Passwords do not match.");
@@ -51,7 +55,7 @@ export default function Register() {
                 confirmPassword: "",
             });
         } catch (e) {
-            setError(e.message || "Please verify your data and try again.");
+            setError(e?.response?.data?.message || "Please verify your data and try again.");
         } finally {
             setIsPending(false);
         }
