@@ -71,6 +71,11 @@ export default function Register() {
                     value={userInfo.firstName}
                     setValue={(value) => setUserInfo({ ...userInfo, firstName: value })}
                     type="text"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            register();
+                        }
+                    }}
                 />
                 <AnimatedInput
                     inputClasses="!pl-[20px]"
@@ -78,6 +83,12 @@ export default function Register() {
                     value={userInfo.lastName}
                     setValue={(value) => setUserInfo({ ...userInfo, lastName: value })}
                     type="text"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            register();
+                        }
+                    }}
+
                 />
                 <AnimatedInput
                     inputClasses="!pl-[20px]"
@@ -85,6 +96,12 @@ export default function Register() {
                     value={userInfo.email}
                     setValue={(value) => setUserInfo({ ...userInfo, email: value })}
                     type="email"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            register();
+                        }
+                    }}
+
                 />
                 <AnimatedInput
                     isPassword
@@ -94,6 +111,12 @@ export default function Register() {
                     value={userInfo.password}
                     setValue={(value) => setUserInfo({ ...userInfo, password: value })}
                     type="password"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            register();
+                        }
+                    }}
+
                 />
                 <AnimatedInput
                     isPassword
@@ -103,6 +126,12 @@ export default function Register() {
                     value={userInfo.confirmPassword}
                     setValue={(value) => setUserInfo({ ...userInfo, confirmPassword: value })}
                     type="password"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            register();
+                        }
+                    }}
+
                 />
                 <RippleButton fullWidth cssClasses="flex items-center py-2 pl-2 !pr-3 gap-2" onClick={register}>
                     {isPending && <span className="loader-atom"></span>}
