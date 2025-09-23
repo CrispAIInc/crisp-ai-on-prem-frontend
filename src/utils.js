@@ -240,3 +240,9 @@ export const pick = (obj, keys) =>
         }
         return acc;
     }, {});
+
+export function isValidEmail(email) {
+    // Regular expression for a basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
