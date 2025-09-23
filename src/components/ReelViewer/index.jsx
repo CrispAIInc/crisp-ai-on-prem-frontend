@@ -10,6 +10,7 @@ import { timeToSeconds } from "../../utils.js";
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
 import useResources from '../../hooks/useResources';
+import { SettingsContext } from '../../contexts/settingsContext.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -17,6 +18,8 @@ function ReelViewer({ closeReel, reel, setReels }) {
 
     const { theme } = useContext(ThemeContext);
     const { getPublicUrl } = useFirebase();
+
+    const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
     const { getReels } = useResources({ setReels });
 
@@ -200,9 +203,9 @@ function ReelViewer({ closeReel, reel, setReels }) {
                     id="react-player"
                     width="100%"
                     height="100%"
-                    playing={true}
+                    playing={video_autoplay}
                     url={sourcePublicUrl}
-                    loop={true}
+                    loop={video_loop}
                     onProgress={handleProgress}
                     onDuration={handleDuration}
                     // onReady={() => setIsPlayerReady(true)}
