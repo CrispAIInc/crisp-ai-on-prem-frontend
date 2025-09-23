@@ -4,6 +4,7 @@ import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 
 import makeApiRequest from '../../api';
+import { isValidEmail } from '../../utils';
 
 export default function ResetPassword() {
     const navigate = useNavigate();
@@ -17,6 +18,10 @@ export default function ResetPassword() {
 
     useEffect(() => {
         if (!email) {
+            navigate('/forgot-password');
+        }
+
+        if (!isValidEmail(email)) {
             navigate('/forgot-password');
         }
 
