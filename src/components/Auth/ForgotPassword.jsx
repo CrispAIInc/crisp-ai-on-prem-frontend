@@ -4,6 +4,7 @@ import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 
 import makeApiRequest from "../../api";
+import { isValidEmail } from '../../utils';
 
 export default function ForgotPassword() {
     const navigate = useNavigate();
@@ -19,6 +20,10 @@ export default function ForgotPassword() {
             // Validate user input
             if (!email) {
                 throw new Error("Email is required to reset your password.");
+            }
+
+            if (!isValidEmail(email)) {
+                throw new Error("Please enter a valid email address.");
             }
 
             // Here you would typically make an API call to register the user
