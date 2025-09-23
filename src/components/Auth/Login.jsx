@@ -5,6 +5,7 @@ import RippleButton from "../RippleButton";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
 import { loginWithEmailAndPassword } from '../../services/auth.js';
+import { isValidEmail } from '../../utils.js';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -23,6 +24,10 @@ export default function Login() {
             // Validate user input
             if (!userInfo.email || !userInfo.password) {
                 throw new Error("All fields are required.");
+            }
+
+            if (!isValidEmail(userInfo.email)) {
+                throw new Error("Please enter a valid email address.");
             }
 
             await loginWithEmailAndPassword(userInfo);
