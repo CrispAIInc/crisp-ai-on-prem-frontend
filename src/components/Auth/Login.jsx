@@ -34,7 +34,7 @@ export default function Login() {
                 password: "",
             });
         } catch (e) {
-            setError(e.message || "Please verify your data and try again.");
+            setError(e?.response?.data?.message || "Please verify your data and try again.");
         } finally {
             setIsPending(false);
         }
