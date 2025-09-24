@@ -66,7 +66,8 @@ function GeneralSettings() {
                                             className={`w-60 h-8 px-3 placeholder-transparent bg-transparent  focus:outline-none focus:border-blue-500 rounded-full border border-textColor-100 ${theme === "light"
                                                 ? "text-textColor-300"
                                                 : "text-textColor-100"
-                                                }`}
+                                                } disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed`}
+                                            disabled={key === "email"}
                                         />
                                     </div>
                                 </>
