@@ -1,4 +1,4 @@
-import { onAuthStateChanged, onIdTokenChanged, signInWithCustomToken, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, onIdTokenChanged, signInWithCustomToken, signInWithPopup } from 'firebase/auth';
 import { TOKEN_NAME } from '../globals';
 import { auth, provider } from '../config/firebase';
 import makeApiRequest, { axiosInstance } from '../api';
@@ -19,6 +19,11 @@ onIdTokenChanged(auth, async (user) => {
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
 });
+
+export const createUserWithFirestore = async (email, password) => {
+    const user = await createUserWithEmailAndPassword(auth, email, password);
+    return user;
+};
 
 
 export const signInWithGoogle = async () => {
