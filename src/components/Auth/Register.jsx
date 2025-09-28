@@ -7,6 +7,8 @@ import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
 import { isValidEmail } from "../../utils.js";
 import { sendEmail } from '../../services/messaging.js';
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
 import { createUserWithFirestore, loginWithAccessAndRefreshToken } from '../../services/auth.js';
 
 
@@ -53,6 +55,8 @@ export default function Register() {
                 const user = await loginWithAccessAndRefreshToken(userInfo.email, userInfo.password);
                 console.log("user from firebase sign in login", user);
                 await sendEmail(user);
+                //TODO: show user a info card letting them know that a verification email has been send to their email
+                setError(false);
                 // redirect to login page
                 // navigate('/login');
             } else {
@@ -86,7 +90,10 @@ export default function Register() {
             {/* <img src="./imgs/app-logo-full.png" alt="CrispAI logo" className='w-[50%] h-auto mx-auto mb-10' /> */}
             <h1 className="mb-10 text-4xl font-bold text-center">Create an account</h1>
             {
-                error && <p className="mb-4 text-center text-red-500">{error}</p>
+                error === false ? <Alert icon={<CheckIcon fontSize="inherit" />} severity="success" className='mb-4'>
+                    Verification email sent! Please check your inbox.
+                </Alert> : error !== null ? <p className="mb-4 text-center text-red-500">{error}</p> : null
+
             }
             <div className="flex flex-col gap-4">
                 <AnimatedInput
