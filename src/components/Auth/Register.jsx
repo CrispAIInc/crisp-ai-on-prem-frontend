@@ -6,6 +6,9 @@ import makeApiRequest from '../../api';
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
 import { isValidEmail } from "../../utils.js";
+import { sendEmail } from '../../services/messaging.js';
+import { createUserWithFirestore, loginWithAccessAndRefreshToken } from '../../services/auth.js';
+
 
 
 export default function Register() {
@@ -36,13 +39,24 @@ export default function Register() {
                 throw new Error("Passwords do not match.");
             }
 
+            // create user in firebase first
+            // const userCredential = await createUserWithFirestore(userInfo.email, userInfo.password);
+            // send email verification to the user
+
+
             // Here you would typically make an API call to register the user
-            const { success, message } = await makeApiRequest('/sign-up', 'POST', JSON.stringify(userInfo));
+            const { success, user, message } = await makeApiRequest('/sign-up', 'POST', JSON.stringify(userInfo));
+            console.log("user from backend: ", user);
 
             if (success) {
+                console.log("Registration successful! but need to verify email");
+                const user = await loginWithAccessAndRefreshToken(userInfo.email, userInfo.password);
+                console.log("user from firebase sign in login", user);
+                await sendEmail(user);
                 // redirect to login page
-                navigate('/login');
+                // navigate('/login');
             } else {
+                console.log(message);
                 throw new Error(message || "Registration failed. Please try again.");
             }
 
@@ -55,7 +69,13 @@ export default function Register() {
                 confirmPassword: "",
             });
         } catch (e) {
-            setError(e?.response?.data?.message || "Please verify your data and try again.");
+            if (e.code === "auth/email-already-in-use") {
+                setError("Email already registered. Please sign in or use another email.");
+            }
+            else if (e.code === "auth/weak-password") {
+                setError("Password should be at least 6 characters.");
+            }
+            else setError(e?.response?.data?.message || e?.message || "Please verify your data and try again.");
         } finally {
             setIsPending(false);
         }

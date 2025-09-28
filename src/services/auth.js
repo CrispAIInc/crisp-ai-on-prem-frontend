@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, onAuthStateChanged, onIdTokenChanged, signInWithCustomToken, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, onIdTokenChanged, signInWithCustomToken, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { TOKEN_NAME } from '../globals';
 import { auth, provider } from '../config/firebase';
 import makeApiRequest, { axiosInstance } from '../api';
@@ -58,3 +58,9 @@ export const loginWithEmailAndPassword = async (userInfo) => {
         throw new Error(message || "Login failed. Please try again.");
     }
 };
+
+export async function loginWithAccessAndRefreshToken(email, password) {
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    return user;
+
+}
