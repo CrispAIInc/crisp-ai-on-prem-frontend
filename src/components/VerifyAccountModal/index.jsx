@@ -9,6 +9,8 @@ export default function VerifyAccountModal({ show, onHide }) {
     const location = useLocation();
     const { email } = location.state || {};
 
+    const OTP_LENGTH = 6;
+
     return (
         <Modal
             show={show}
@@ -22,11 +24,11 @@ export default function VerifyAccountModal({ show, onHide }) {
             <Modal.Body>
                 <div className="my-6">
                     <h1 className="text-2xl font-bold text-center">Verify your <span className="text-4xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
-                    <h3 className="mb-10 text-sm text-center text-medium">insert the 6-digit code you received in your email.</h3>
+                    <h3 className="mb-10 text-sm text-center text-medium">insert the {OTP_LENGTH}-digit code you received in your email.</h3>
                     <OtpInput
                         value={otp}
                         onChange={setOtp}
-                        numInputs={4}
+                        numInputs={OTP_LENGTH}
                         inputStyle={{
                             width: '3rem',
                             height: '3rem',
