@@ -13,16 +13,16 @@ export default function VerifyAccountModal({ show, onHide }) {
         <Modal
             show={show}
             onHide={onHide}
-            size="sm"
+            size="md"
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
             dialogClassName='text-left'
         >
             <Modal.Body>
-                <div className="mt-5 w-[1700px] max-w-[90vw] mx-auto">
-                    <h1 className="text-4xl font-bold text-center">Verify your <span className="text-4xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
-                    <h3 className="mb-10 text-center text-medium">insert the 6-digit code you received in your email.</h3>
+                <div className="my-6">
+                    <h1 className="text-2xl font-bold text-center">Verify your <span className="text-4xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
+                    <h3 className="mb-10 text-sm text-center text-medium">insert the 6-digit code you received in your email.</h3>
                     <OtpInput
                         value={otp}
                         onChange={setOtp}
