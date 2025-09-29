@@ -1,39 +1,52 @@
 import React, { useState } from 'react';
 import OtpInput from 'react-otp-input';
 import { useLocation } from 'react-router';
+import Modal from 'react-bootstrap/Modal';
 
-export default function App() {
+export default function VerifyAccountModal({ show, onHide }) {
     const [otp, setOtp] = useState('');
     // get the email from the location state
     const location = useLocation();
     const { email } = location.state || {};
 
     return (
-        <div className="mt-5 w-[1700px] max-w-[90vw] mx-auto">
-            <h1 className="text-4xl font-bold text-center">Verify your <span className="text-4xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
-            <h3 className="mb-10 text-center text-medium">insert the 6-digit code you received in your email.</h3>
-            <OtpInput
-                value={otp}
-                onChange={setOtp}
-                numInputs={4}
-                inputStyle={{
-                    width: '3rem',
-                    height: '3rem',
-                    margin: '0 1rem',
-                    fontSize: '2rem',
-                    borderRadius: 4,
-                    border: '1px solid rgba(0,0,0,0.3)',
-                }}
-                containerStyle={{
-                    justifyContent: 'center',
-                    marginBottom: '2rem',
-                }}
-                isInputNum
-                shouldAutoFocus
+        <Modal
+            show={show}
+            onHide={onHide}
+            size="sm"
+            aria-labelledby="contained-modal-title-vcenter"
+            scrollable={true}
+            centered
+            dialogClassName='text-left'
+        >
+            <Modal.Body>
+                <div className="mt-5 w-[1700px] max-w-[90vw] mx-auto">
+                    <h1 className="text-4xl font-bold text-center">Verify your <span className="text-4xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
+                    <h3 className="mb-10 text-center text-medium">insert the 6-digit code you received in your email.</h3>
+                    <OtpInput
+                        value={otp}
+                        onChange={setOtp}
+                        numInputs={4}
+                        inputStyle={{
+                            width: '3rem',
+                            height: '3rem',
+                            margin: '0 1rem',
+                            fontSize: '2rem',
+                            borderRadius: 4,
+                            border: '1px solid rgba(0,0,0,0.3)',
+                        }}
+                        containerStyle={{
+                            justifyContent: 'center',
+                            marginBottom: '2rem',
+                        }}
+                        isInputNum
+                        shouldAutoFocus
 
-                renderSeparator={<span>-</span>}
-                renderInput={(props) => <input {...props} />}
-            />
-        </div>
+                        renderSeparator={<span>-</span>}
+                        renderInput={(props) => <input {...props} />}
+                    />
+                </div>
+            </Modal.Body>
+        </Modal>
     );
 }
