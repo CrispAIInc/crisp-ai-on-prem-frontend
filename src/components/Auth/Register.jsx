@@ -63,13 +63,7 @@ export default function Register() {
             }
 
             // Reset userInfo after registration attempt
-            setUserInfo({
-                firstName: "",
-                lastName: "",
-                email: "",
-                password: "",
-                confirmPassword: "",
-            });
+            setUserInfo(prev => ({ email: prev.email, firstName: "", lastName: "", password: "", confirmPassword: "" }));
         } catch (e) {
             if (e.code === "auth/email-already-in-use") {
                 setError("Email already registered. Please sign in or use another email.");
@@ -88,7 +82,7 @@ export default function Register() {
             {/* <img src="./imgs/app-logo-full.png" alt="CrispAI logo" className='w-[50%] h-auto mx-auto mb-10' /> */}
             <h1 className="mb-10 text-4xl font-bold text-center">Create an account</h1>
             {
-                error === false ? <VerifyAccountModal show={true} onHide={() => { }} /> : error !== null ? <p className="mb-4 text-center text-red-500">{error}</p> : null
+                error === false ? <VerifyAccountModal show={true} onHide={() => { }} email={userInfo.email} /> : error !== null ? <p className="mb-4 text-center text-red-500">{error}</p> : null
 
             }
 

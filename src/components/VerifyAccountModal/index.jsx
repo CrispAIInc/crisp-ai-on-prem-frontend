@@ -1,15 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import OtpInput from 'react-otp-input';
-import { useLocation } from 'react-router';
 import Modal from 'react-bootstrap/Modal';
 
-export default function VerifyAccountModal({ show, onHide }) {
+export default function VerifyAccountModal({ show, onHide, email }) {
     const [otp, setOtp] = useState('');
-    // get the email from the location state
-    const location = useLocation();
-    const { email } = location.state || {};
+    const [isPending, setIsPending] = useState(false);
+    const [error, setError] = useState(null);
 
     const OTP_LENGTH = 6;
+
+    useEffect(() => {
+        if (otp.length === OTP_LENGTH) {
+            setIsPending(true);
+            setError(null);
+            // Call your API to verify the OTP
+            fetch('http://localhost:5000/api/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, otp }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Account verified successfully!');
+                        //TODO: redirect user to login page
+                        //...
+                        onHide(); // Close the modal
+                    } else {
+                        setError('Invalid OTP. Please try again.');
+                        setOtp(''); // Clear the OTP input
+                    }
+                })
+                .catch(error => {
+                    console.error('Error verifying OTP:', error);
+                    alert('An error occurred while verifying the OTP. Please try again later.');
+                    setError('Invalid OTP. Please try again.');
+                    setOtp(''); // Clear the OTP input
+                });
+        }
+    }, [otp]);
 
     return (
         <Modal
@@ -29,6 +60,8 @@ export default function VerifyAccountModal({ show, onHide }) {
                         value={otp}
                         onChange={setOtp}
                         numInputs={OTP_LENGTH}
+                        isDisabled={isPending}
+                        hasErrored={!!error}
                         inputStyle={{
                             width: '3rem',
                             height: '3rem',
