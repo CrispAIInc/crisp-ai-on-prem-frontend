@@ -1,17 +1,36 @@
 import React, { useState } from 'react';
 import OtpInput from 'react-otp-input';
+import { useLocation } from 'react-router';
 
 export default function App() {
     const [otp, setOtp] = useState('');
+    // get the email from the location state
+    const location = useLocation();
+    const { email } = location.state || {};
 
     return (
-        <div>
-            <h1 className="text-4xl font-bold text-center">Verify your Crisp AI account!</h1>
+        <div className="mt-5 w-[1700px] max-w-[90vw] mx-auto">
+            <h1 className="text-4xl font-bold text-center">Verify your <span className="text-4xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
             <h3 className="mb-10 text-center text-medium">insert the 6-digit code you received in your email.</h3>
             <OtpInput
                 value={otp}
                 onChange={setOtp}
                 numInputs={4}
+                inputStyle={{
+                    width: '3rem',
+                    height: '3rem',
+                    margin: '0 1rem',
+                    fontSize: '2rem',
+                    borderRadius: 4,
+                    border: '1px solid rgba(0,0,0,0.3)',
+                }}
+                containerStyle={{
+                    justifyContent: 'center',
+                    marginBottom: '2rem',
+                }}
+                isInputNum
+                shouldAutoFocus
+
                 renderSeparator={<span>-</span>}
                 renderInput={(props) => <input {...props} />}
             />
