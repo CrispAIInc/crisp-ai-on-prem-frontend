@@ -17,6 +17,7 @@ import PrivateRoute from './components/Auth/PrivateRoute';
 import AuthProvider from './contexts/authContext.jsx';
 import MainProvider from './contexts/mainContext.jsx';
 import SettingsProvider from './contexts/settingsContext.jsx';
+import VerifyAccount from './components/VerifyAccount';
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
 
 
             <Route path="/sign-up" element={<RegisterPage theme={theme} setTheme={setTheme} />} />
+            <Route path="/verify" element={<VerifyAccount theme={theme} setTheme={setTheme} />} />
             <Route path="/login" element={<LoginPage theme={theme} setTheme={setTheme} />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage theme={theme} setTheme={setTheme} />} />
             <Route path="/reset-password" element={<ResetPasswordPage theme={theme} setTheme={setTheme} />} />
