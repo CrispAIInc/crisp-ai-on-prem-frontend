@@ -47,14 +47,13 @@ export default function Register() {
 
 
             // Here you would typically make an API call to register the user
-            const { success, user, message } = await makeApiRequest('/sign-up', 'POST', JSON.stringify(userInfo));
-            console.log("user from backend: ", user);
+            const { success, message } = await makeApiRequest('/sign-up', 'POST', JSON.stringify(userInfo));
 
             if (success) {
                 console.log("Registration successful! but need to verify email");
-                const user = await loginWithAccessAndRefreshToken(userInfo.email, userInfo.password);
-                console.log("user from firebase sign in login", user);
-                await sendEmail(user);
+                // const user = await loginWithAccessAndRefreshToken(userInfo.email, userInfo.password);
+                // console.log("user from firebase sign in login", user);
+                // await sendEmail(user);
                 //TODO: show user a info card letting them know that a verification email has been send to their email
                 setError(false);
                 // redirect to login page
