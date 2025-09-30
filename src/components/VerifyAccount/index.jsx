@@ -1,49 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import OtpInput from 'react-otp-input';
 import AuthLayout from '../Auth/Layout';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import makeApiRequest from '../../api';
 
 export default function VerifyAccount() {
+    const navigate = useNavigate();
     const location = useLocation();
     const [otp, setOtp] = useState('');
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
 
     //TODO: get the email from the query params state
-    const { state: { email } } = location;
+    // const { state: { email = "johndoe@mail.com" } = {} } = location;
 
     const OTP_LENGTH = 6;
 
     useEffect(() => {
-        if (otp.length === OTP_LENGTH) {
-            setIsPending(true);
-            setError(null);
-            // Call your API to verify the OTP
-            fetch('http://localhost:5000/api/verify-otp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, otp }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // alert('Account verified successfully!');
-                        //TODO: redirect user to login page
-                        //...
+        async function verifyOtp() {
+            if (otp.length === OTP_LENGTH) {
+                setIsPending(true);
+                setError(null);
+                try {
+                    const { success, message } = await makeApiRequest('/verify-otp', 'POST', JSON.stringify({ otp }));
+                    if (!success) {
+                        throw new Error(message);
                     } else {
-                        setError('Invalid OTP. Please try again.');
-                        // setOtp(''); // Clear the OTP input
+                        navigate('/login', {
+                            state: {
+                                redirectedFromAccountVerification: true
+                            }
+                        });
                     }
-                })
-                .catch(error => {
+                } catch (error) {
                     console.error('Error verifying OTP:', error);
-                    // alert('An error occurred while verifying the OTP. Please try again later.');
-                    setError('Invalid OTP. Please try again.');
-                    // setOtp(''); // Clear the OTP input
-                });
+                    setError(error.message);
+                }
+            }
         }
+
+        verifyOtp();
     }, [otp]);
 
     return (
@@ -55,8 +51,8 @@ export default function VerifyAccount() {
                     value={otp}
                     onChange={setOtp}
                     numInputs={OTP_LENGTH}
-                    isDisabled={true}
-                    hasErrored={true}
+                    isDisabled={isPending}
+                    hasErrored={error !== null}
                     inputStyle={{
                         width: '3rem',
                         height: '3rem',
