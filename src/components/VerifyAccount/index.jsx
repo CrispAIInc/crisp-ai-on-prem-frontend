@@ -45,8 +45,8 @@ export default function VerifyAccount() {
 
     return (
         <AuthLayout>
-            <div className="my-6">
-                <h1 className="text-2xl font-bold text-center">Verify your <span className="text-4xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
+            <div className="">
+                <h1 className="text-2xl font-bold text-center">Verify your <span className="text-xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
                 <h3 className="mb-10 text-sm text-center text-medium">insert the {OTP_LENGTH}-digit code you received in your email.</h3>
                 <OtpInput
                     value={otp}
