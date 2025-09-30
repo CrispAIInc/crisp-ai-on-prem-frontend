@@ -55,7 +55,7 @@ export default function Login() {
             {
                 error && <p className="mb-4 text-center text-red-500">{error}</p>
             }
-            <Alert>You have successfully verified your account!</Alert>
+
             {
                 redirectedFromAccountVerification && <Alert>You have successfully verified your account!</Alert>
             }
