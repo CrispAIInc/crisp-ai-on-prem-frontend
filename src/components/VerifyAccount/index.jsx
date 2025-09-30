@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import OtpInput from 'react-otp-input';
-import Modal from 'react-bootstrap/Modal';
+import AuthLayout from '../Auth/Layout';
 
-export default function VerifyAccount({ show, onHide, email }) {
+export default function VerifyAccount() {
     const [otp, setOtp] = useState('');
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
+
+    //TODO: get the email from the query params state
 
     const OTP_LENGTH = 6;
 
@@ -27,7 +29,6 @@ export default function VerifyAccount({ show, onHide, email }) {
                         // alert('Account verified successfully!');
                         //TODO: redirect user to login page
                         //...
-                        onHide(); // Close the modal
                     } else {
                         setError('Invalid OTP. Please try again.');
                         // setOtp(''); // Clear the OTP input
@@ -43,45 +44,35 @@ export default function VerifyAccount({ show, onHide, email }) {
     }, [otp]);
 
     return (
-        <Modal
-            show={show}
-            onHide={onHide}
-            size="md"
-            aria-labelledby="contained-modal-title-vcenter"
-            scrollable={true}
-            centered
-            dialogClassName='text-left'
-        >
-            <Modal.Body>
-                <div className="my-6">
-                    <h1 className="text-2xl font-bold text-center">Verify your <span className="text-4xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
-                    <h3 className="mb-10 text-sm text-center text-medium">insert the {OTP_LENGTH}-digit code you received in your email.</h3>
-                    <OtpInput
-                        value={otp}
-                        onChange={setOtp}
-                        numInputs={OTP_LENGTH}
-                        isDisabled={true}
-                        hasErrored={true}
-                        inputStyle={{
-                            width: '3rem',
-                            height: '3rem',
-                            margin: '0 1rem',
-                            fontSize: '2rem',
-                            borderRadius: 4,
-                            border: '1px solid ' + (error ? 'red' : 'rgba(0,0,0,0.3)'),
-                        }}
-                        containerStyle={{
-                            justifyContent: 'center',
-                            marginBottom: '2rem',
-                        }}
-                        isInputNum
-                        shouldAutoFocus
+        <AuthLayout>
+            <div className="my-6">
+                <h1 className="text-2xl font-bold text-center">Verify your <span className="text-4xl font-bold text-gradient-x">Crisp AI</span> account!</h1>
+                <h3 className="mb-10 text-sm text-center text-medium">insert the {OTP_LENGTH}-digit code you received in your email.</h3>
+                <OtpInput
+                    value={otp}
+                    onChange={setOtp}
+                    numInputs={OTP_LENGTH}
+                    isDisabled={true}
+                    hasErrored={true}
+                    inputStyle={{
+                        width: '3rem',
+                        height: '3rem',
+                        margin: '0 1rem',
+                        fontSize: '2rem',
+                        borderRadius: 4,
+                        border: '1px solid ' + (error ? 'red' : 'rgba(0,0,0,0.3)'),
+                    }}
+                    containerStyle={{
+                        justifyContent: 'center',
+                        marginBottom: '2rem',
+                    }}
+                    isInputNum
+                    shouldAutoFocus
 
-                        renderSeparator={<span>-</span>}
-                        renderInput={(props) => <input {...props} />}
-                    />
-                </div>
-            </Modal.Body>
-        </Modal>
+                    renderSeparator={<span>-</span>}
+                    renderInput={(props) => <input {...props} />}
+                />
+            </div>
+        </AuthLayout>
     );
 }
