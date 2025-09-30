@@ -10,7 +10,6 @@ import { sendEmail } from '../../services/messaging.js';
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
 import { createUserWithFirestore, loginWithAccessAndRefreshToken } from '../../services/auth.js';
-import VerifyAccountModal from '../VerifyAccountModal/index.jsx';
 
 
 
@@ -82,7 +81,7 @@ export default function Register() {
             {/* <img src="./imgs/app-logo-full.png" alt="CrispAI logo" className='w-[50%] h-auto mx-auto mb-10' /> */}
             <h1 className="mb-10 text-4xl font-bold text-center">Create an account</h1>
             {
-                error === false ? <VerifyAccountModal show={true} onHide={() => { }} email={userInfo.email} /> : error !== null ? <p className="mb-4 text-center text-red-500">{error}</p> : null
+                error === false ? <Alert className="mb-3">Verification email sent! Check out your inbox.</Alert> : error !== null ? <p className="mb-4 text-center text-red-500">{error}</p> : null
 
             }
 
