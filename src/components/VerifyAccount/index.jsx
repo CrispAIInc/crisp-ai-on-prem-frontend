@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import OtpInput from 'react-otp-input';
 import AuthLayout from '../Auth/Layout';
+import { useLocation } from 'react-router';
 
 export default function VerifyAccount() {
+    const location = useLocation();
     const [otp, setOtp] = useState('');
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
 
     //TODO: get the email from the query params state
+    const { state: { email } } = location;
 
     const OTP_LENGTH = 6;
 
