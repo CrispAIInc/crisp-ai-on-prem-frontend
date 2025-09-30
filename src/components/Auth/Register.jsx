@@ -56,6 +56,13 @@ export default function Register() {
                 // await sendEmail(user);
                 //show user a info card letting them know that a verification email has been send to their email
                 setError(false);
+                setTimeout(() => {
+                    navigate('/verify', {
+                        state: {
+                            email: userInfo.email
+                        }
+                    });
+                }, 5000);
             } else {
                 console.log(message);
                 throw new Error(message || "Registration failed. Please try again.");
