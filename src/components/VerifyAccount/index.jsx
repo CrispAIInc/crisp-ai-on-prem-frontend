@@ -12,7 +12,7 @@ export default function VerifyAccount() {
     const [error, setError] = useState(null);
 
     //TODO: get the email from the query params state
-    // const { state: { email = "johndoe@mail.com" } = {} } = location;
+    const { state: { email = "" } = {} } = location;
 
     const OTP_LENGTH = 6;
 
@@ -22,7 +22,7 @@ export default function VerifyAccount() {
                 setIsPending(true);
                 setError(null);
                 try {
-                    const { success, message } = await makeApiRequest('/verify-otp', 'POST', JSON.stringify({ otp }));
+                    const { success, message } = await makeApiRequest('/verify-otp', 'POST', JSON.stringify({ email, otp }));
                     if (!success) {
                         throw new Error(message);
                     } else {
@@ -35,6 +35,8 @@ export default function VerifyAccount() {
                 } catch (error) {
                     console.error('Error verifying OTP:', error);
                     setError(error.message);
+                } finally {
+                    isPending(false);
                 }
             }
         }
