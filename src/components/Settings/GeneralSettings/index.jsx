@@ -50,6 +50,7 @@ function GeneralSettings() {
             setError(false);
 
             setInterval(() => {
+                localStorage.removeItem('idToken');
                 navigate('/verify', {
                     state: {
                         email: user.email
