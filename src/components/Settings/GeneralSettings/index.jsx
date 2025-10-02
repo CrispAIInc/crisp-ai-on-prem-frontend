@@ -10,12 +10,14 @@ import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import { useNavigate } from 'react-router';
 import makeApiRequest from '../../../api';
 import { Alert } from '@mui/material';
+import LoadingSpinner from '../../LoadingSpinner';
 
 function GeneralSettings() {
     const navigate = useNavigate();
     const { theme } = useContext(MainContext);
     const { user, setUser } = useContext(AuthContext);
     const { generalSettings, setGeneralSettings } = useContext(SettingsContext);
+    const [isSendingEmailPending, setIsSendingEmailPending] = useState(false);
     const [error, setError] = useState(null);
 
     let [isUserInfoChanged, setIsUserInfoChanged] = useState(false);
@@ -41,6 +43,7 @@ function GeneralSettings() {
 
     async function sendVerificationEmail() {
         try {
+            setIsSendingEmailPending(true);
             const { success, message } = await makeApiRequest('/email-otp', 'POST', JSON.stringify({ email: user.email }));
 
             if (!success) {
@@ -56,10 +59,12 @@ function GeneralSettings() {
                         email: user.email
                     }
                 });
-            }, [4000]);
+            }, [3000]);
         } catch (error) {
             console.log('Error sending verification email:', error);
             setError(error.message || 'Failed to send verification email. Please try again later.');
+        } finally {
+            setIsSendingEmailPending(false);
         }
     }
 
@@ -112,7 +117,7 @@ function GeneralSettings() {
                                 if (!value) {
                                     return (
                                         <p key={key} className={`text-[10px] text-orange-400 cursor-pointer border-b border-b-transparent hover:border-b hover:border-b-orange-400 w-fit font-medium flex gap-1 items-center`} onClick={sendVerificationEmail}>
-                                            <WarningAmberOutlinedIcon className='' />
+                                            {isSendingEmailPending ? <LoadingSpinner isSmall /> : <WarningAmberOutlinedIcon className='' />}
                                             {/* <span className="text-red-600">Email not verified.</span> */}
                                             <span>Verify your account!</span>
                                         </p>
