@@ -46,13 +46,8 @@ export const loginWithEmailAndPassword = async (userInfo) => {
         // Step 3: Exchange custom token for Firebase ID token
         const userCredential = await signInWithCustomToken(auth, accessToken);
 
-        console.log("User signed in:", userCredential.user);
-
         // Now you can use getIdToken() anytime
-        const idToken = await userCredential.user.getIdToken();
-        console.log("Firebase ID Token:", idToken);
-
-        // Optionally store idToken if you want
+        const idToken = await userCredential.user.getIdToken(true);
         localStorage.setItem(TOKEN_NAME, idToken);
     } else {
         throw new Error(message || "Login failed. Please try again.");
