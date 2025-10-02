@@ -62,7 +62,7 @@ export default function Register() {
                             email: userInfo.email
                         }
                     });
-                }, 5000);
+                }, 3000);
             } else {
                 console.log(message);
                 throw new Error(message || "Registration failed. Please try again.");
