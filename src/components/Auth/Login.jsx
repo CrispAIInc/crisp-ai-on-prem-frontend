@@ -57,7 +57,7 @@ export default function Login() {
             }
 
             {
-                redirectedFromAccountVerification && <Alert>You have successfully verified your account!</Alert>
+                redirectedFromAccountVerification && <Alert className="mb-3">You have successfully verified your account!</Alert>
             }
             <div className="flex flex-col gap-4">
                 <AnimatedInput
