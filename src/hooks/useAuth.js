@@ -7,10 +7,11 @@ export default function useAuth() {
 
     const navigate = useNavigate();
 
-    const isUserAuthenticated = getJwt();
+    const token = getJwt();
 
     return {
-        isUserAuthenticated,
+        token,
+        isAuthenticated: token !== null,
         login: () => {
             // Implement login logic here
         },

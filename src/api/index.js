@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { TOKEN_NAME } from '../globals.js';
+import { getJwt } from '../services/auth.js';
+
 
 const BACKEND_URL = import.meta.env.VITE_API_ENDPOINT;
 
@@ -7,10 +8,12 @@ export const axiosInstance = axios.create({
     baseURL: BACKEND_URL,
 });
 
+const token = await getJwt();
+
 axiosInstance.interceptors.request.use(
     async (config) => {
         // add Authorization header if token is available
-        const token = localStorage.getItem(TOKEN_NAME);
+        // const token = localStorage.getItem(TOKEN_NAME);
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         } else {
