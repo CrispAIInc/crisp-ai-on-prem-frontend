@@ -27,8 +27,17 @@ onIdTokenChanged(auth, async (user) => {
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
 });
-
-export const isUserAuthenticated = await auth.currentUser.getIdToken();
+export async function getJwt() {
+    if (!auth.currentUser) {
+        return null; // no user, no token
+    }
+    const token = await auth.currentUser.getIdToken();
+    return {
+        token,
+        isUserAuthenticated: true
+    };
+}
+// export const isUserAuthenticated = await auth.currentUser.getIdToken();
 
 export const createUserWithFirestore = async (email, password) => {
     const user = await createUserWithEmailAndPassword(auth, email, password);
