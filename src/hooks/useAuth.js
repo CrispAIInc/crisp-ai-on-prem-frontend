@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { getJwt } from '../services/auth';
+import { getJwt, logOut } from '../services/auth';
 
 export default function useAuth() {
     // This hook can be used to manage authentication state
@@ -15,10 +15,6 @@ export default function useAuth() {
         login: () => {
             // Implement login logic here
         },
-        logout: () => {
-            // Implement logout logic here
-            localStorage.removeItem('idToken');
-            navigate('/login');
-        }
+        logout: () => logOut(navigate)
     };
 }
