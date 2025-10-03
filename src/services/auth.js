@@ -12,6 +12,14 @@ import makeApiRequest, { axiosInstance } from '../api';
 //     }
 // });
 
+onIdTokenChanged(auth, (user) => {
+    if (user) {
+        user.getIdToken().then((idToken) => {
+            localStorage.setItem(TOKEN_NAME, idToken);
+        });
+    }
+});
+
 onIdTokenChanged(auth, async (user) => {
     if (user) {
         const token = await user.getIdToken(); // Firebase will refresh when ready
