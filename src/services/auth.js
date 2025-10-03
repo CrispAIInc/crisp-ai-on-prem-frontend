@@ -28,6 +28,8 @@ onIdTokenChanged(auth, async (user) => {
     }
 });
 
+export const isUserAuthenticated = await auth.currentUser.getIdToken();
+
 export const createUserWithFirestore = async (email, password) => {
     const user = await createUserWithEmailAndPassword(auth, email, password);
     return user;
