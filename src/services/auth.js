@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, onAuthStateChanged, onIdTokenChanged, signInWithCustomToken, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signOut, onIdTokenChanged, signInWithCustomToken, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { TOKEN_NAME } from '../globals';
 import { auth, provider } from '../config/firebase';
 import makeApiRequest, { axiosInstance } from '../api';
@@ -31,11 +31,7 @@ export async function getJwt() {
     if (!auth.currentUser) {
         return null; // no user, no token
     }
-    const token = await auth.currentUser.getIdToken();
-    return {
-        token,
-        isUserAuthenticated: true
-    };
+    return await auth.currentUser.getIdToken();
 }
 // export const isUserAuthenticated = await auth.currentUser.getIdToken();
 
@@ -77,4 +73,13 @@ export async function loginWithAccessAndRefreshToken(email, password) {
     const { user } = await signInWithEmailAndPassword(auth, email, password);
     return user;
 
+}
+
+export async function logOut(navigate) {
+    try {
+        await signOut(auth);
+        navigate("/login");
+    } catch (error) {
+        console.log(error);
+    }
 }
