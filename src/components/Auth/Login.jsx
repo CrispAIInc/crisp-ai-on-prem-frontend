@@ -5,7 +5,7 @@ import RippleButton from "../RippleButton";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
 import { loginWithEmailAndPassword } from '../../services/auth.js';
-import { isValidEmail } from '../../utils.js';
+import { delay, isValidEmail } from '../../utils.js';
 import { Alert } from '@mui/material';
 
 export default function Login() {
@@ -34,6 +34,7 @@ export default function Login() {
             }
 
             await loginWithEmailAndPassword(userInfo);
+            await delay(8000);
             navigate('/');
 
             // Reset userInfo after registration attempt
