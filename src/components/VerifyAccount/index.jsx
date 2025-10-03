@@ -3,8 +3,10 @@ import OtpInput from 'react-otp-input';
 import AuthLayout from '../Auth/Layout';
 import { useLocation, useNavigate } from 'react-router';
 import makeApiRequest from '../../api';
+import useAuth from '../../hooks/useAuth';
 
 export default function VerifyAccount() {
+    const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const [otp, setOtp] = useState('');
@@ -12,7 +14,14 @@ export default function VerifyAccount() {
     const [error, setError] = useState(null);
 
     //TODO: get the email from the query params state
-    const { state: { email = "" } = {} } = location;
+    const email = location.state?.email || "";
+
+    useEffect(() => {
+        if (!email) {
+            if (isAuthenticated) navigate("/");
+            else navigate('/login');
+        }
+    }, [email, navigate]);
 
     const OTP_LENGTH = 6;
 
