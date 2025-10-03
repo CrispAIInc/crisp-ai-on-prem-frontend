@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { isUserAuthenticated } from '../services/auth';
+import { getJwt } from '../services/auth';
 
 export default function useAuth() {
     // This hook can be used to manage authentication state
     // For example, it can return user information, login/logout functions, etc.
 
     const navigate = useNavigate();
+
+    const isUserAuthenticated = getJwt();
 
     return {
         isUserAuthenticated,
