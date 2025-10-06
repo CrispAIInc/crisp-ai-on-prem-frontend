@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router';
 import makeApiRequest from '../../../api';
 import { Alert } from '@mui/material';
 import LoadingSpinner from '../../LoadingSpinner';
+import { logOut } from '../../../services/auth';
 
 function GeneralSettings() {
     const navigate = useNavigate();
@@ -53,7 +54,7 @@ function GeneralSettings() {
             setError(false);
 
             setInterval(() => {
-                localStorage.removeItem('idToken');
+                logOut();
                 navigate('/verify', {
                     state: {
                         email: user.email

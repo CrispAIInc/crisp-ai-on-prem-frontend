@@ -1,20 +1,37 @@
-import { useNavigate } from 'react-router-dom';
-import { getJwt, logOut } from '../services/auth';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAuth, onIdTokenChanged, signOut } from "firebase/auth";
 
 export default function useAuth() {
-    // This hook can be used to manage authentication state
-    // For example, it can return user information, login/logout functions, etc.
-
     const navigate = useNavigate();
+    const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const auth = getAuth();
 
-    const token = getJwt();
+    useEffect(() => {
+        // Subscribe to token changes
+        const unsubscribe = onIdTokenChanged(auth, async (user) => {
+            if (user) {
+                const idToken = await user.getIdToken();
+                setToken(idToken);
+            } else {
+                setToken(null);
+            }
+            setLoading(false); // ✅ done checking
+        });
+
+        return () => unsubscribe();
+    }, [auth]);
 
     return {
         token,
         isAuthenticated: token !== null,
-        login: () => {
-            // Implement login logic here
+        loading,
+        login: () => { },
+        logout: async () => {
+            await signOut(auth);
+            setToken(null);
+            navigate("/login");
         },
-        logout: () => logOut(navigate)
     };
 }

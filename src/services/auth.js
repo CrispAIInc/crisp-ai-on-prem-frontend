@@ -12,18 +12,18 @@ import makeApiRequest, { axiosInstance } from '../api';
 //     }
 // });
 
-onIdTokenChanged(auth, (user) => {
-    if (user) {
-        user.getIdToken().then((idToken) => {
-            localStorage.setItem(TOKEN_NAME, idToken);
-        });
-    }
-});
+// onIdTokenChanged(auth, (user) => {
+//     if (user) {
+//         user.getIdToken().then((idToken) => {
+//             localStorage.setItem(TOKEN_NAME, idToken);
+//         });
+//     }
+// });
 
 onIdTokenChanged(auth, async (user) => {
     if (user) {
         const token = await user.getIdToken(); // Firebase will refresh when ready
-        localStorage.setItem(TOKEN_NAME, token);
+        // localStorage.setItem(TOKEN_NAME, token);
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
 });
@@ -59,11 +59,11 @@ export const loginWithEmailAndPassword = async (userInfo) => {
 
     if (success) {
         // Step 3: Exchange custom token for Firebase ID token
-        const userCredential = await signInWithCustomToken(auth, accessToken);
+        await signInWithCustomToken(auth, accessToken);
 
         // Now you can use getIdToken() anytime
-        const idToken = await userCredential.user.getIdToken(true);
-        localStorage.setItem(TOKEN_NAME, idToken);
+        // const idToken = await userCredential.user.getIdToken(true);
+        // localStorage.setItem(TOKEN_NAME, idToken);
     } else {
         throw new Error(message || "Login failed. Please try again.");
     }
@@ -77,7 +77,8 @@ export async function loginWithAccessAndRefreshToken(email, password) {
 
 export async function logOut(navigate) {
     try {
-        await signOut(auth);
+        const res = await signOut(auth);
+        console.log("logged out with: ", res);
         navigate("/login");
     } catch (error) {
         console.log(error);

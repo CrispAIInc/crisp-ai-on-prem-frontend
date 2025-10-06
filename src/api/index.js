@@ -8,10 +8,11 @@ export const axiosInstance = axios.create({
     baseURL: BACKEND_URL,
 });
 
-const token = await getJwt();
+
 
 axiosInstance.interceptors.request.use(
     async (config) => {
+        const token = await getJwt();
         // add Authorization header if token is available
         // const token = localStorage.getItem(TOKEN_NAME);
         if (token) {

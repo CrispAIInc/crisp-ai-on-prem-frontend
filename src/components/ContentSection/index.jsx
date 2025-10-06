@@ -177,6 +177,11 @@ const ContentSection = ({
 
     const { logout } = useAuth();
 
+    async function log() {
+        console.log("jhfjkshdfhjksdf ikhan");
+        await logout();
+    }
+
     const categoryValues = categoryOptions.map((option) => option.value);
 
     const formatOptions = [
@@ -969,7 +974,7 @@ const ContentSection = ({
                                             ? "hover:bg-textColor-100/40"
                                             : "hover:bg-slate-800/50"
                                         }`}
-                                    onClick={logout}
+                                    onClick={log}
                                 >
                                     <LogoutOutlinedIcon
                                         className="cursor-pointer"

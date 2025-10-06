@@ -7,6 +7,8 @@ import HorizontalOrText from '../HorizontalOrText';
 import { loginWithEmailAndPassword } from '../../services/auth.js';
 import { delay, isValidEmail } from '../../utils.js';
 import { Alert } from '@mui/material';
+import { onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
+import { auth } from "../../config/firebase.js"; // adjust path
 
 export default function Login() {
     const navigate = useNavigate();
@@ -24,7 +26,6 @@ export default function Login() {
             setIsPending(true);
             setError(null);
 
-            // Validate user input
             if (!userInfo.email || !userInfo.password) {
                 throw new Error("All fields are required.");
             }
@@ -34,20 +35,41 @@ export default function Login() {
             }
 
             await loginWithEmailAndPassword(userInfo);
-            await delay(8000);
-            navigate('/');
 
-            // Reset userInfo after registration attempt
-            setUserInfo({
-                email: "",
-                password: "",
+            const idToken = await new Promise((resolve, reject) => {
+                const unsubscribe = onIdTokenChanged(auth, async (user) => {
+                    if (user) {
+                        try {
+                            const token = await user.getIdToken();
+                            unsubscribe();
+                            resolve(token);
+                        } catch (err) {
+                            unsubscribe();
+                            reject(err);
+                        }
+                    }
+                });
+
+                // safety timeout: reject after 10s
+                const timeout = setTimeout(() => {
+                    try { unsubscribe(); } catch (e) { console.log(""); }
+                    reject(new Error("Timed out waiting for Firebase token"));
+                }, 10000);
             });
+
+            console.log("received id token at", new Date().toISOString(), idToken ? "OK" : "NO_TOKEN");
+
+            // 4) now safe to navigate and make authenticated requests
+            // reset local form state
+            setUserInfo({ email: "", password: "" });
+            navigate("/");
         } catch (e) {
             setError(e?.response?.data?.message || "Please verify your data and try again.");
         } finally {
             setIsPending(false);
         }
     }
+
 
     return (
         <div className="flex flex-col w-full">
