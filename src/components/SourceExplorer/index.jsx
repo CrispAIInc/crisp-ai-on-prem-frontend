@@ -169,7 +169,7 @@ export function SourceExplorer(props) {
                     onMouseOver={() => { setHoveredItemToRemove(item.value); setItemToRemove(item.value); }}
                     onMouseLeave={() => { setHoveredItemToRemove(""); }}
                 >
-                    {(hoveredItemToRemove === item.value && viewModes[viewModes.length - 1] === "categories") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
+                    {(hoveredItemToRemove === item.value && viewModes[viewModes.length - 1] === "categories" && item.value !== "all") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
                     {/* <FolderIcon sx={{ fontSize: 60 }} /> */}
                     <FolderOpenIcon sx={{ fontSize: 50 }} className={`${theme === 'light' ? 'text-textColor-300' : "text-[#ABAEB4]"} `} />
                     <p>{item.label}</p>
