@@ -3,6 +3,7 @@ import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import FileUploaderModal from '../FileUploaderModal';
+import { IndexModal } from '../IndexModal/index.jsx';
 
 const CategoriesModal = (props) => {
 
@@ -16,6 +17,16 @@ const CategoriesModal = (props) => {
         setIsUploadModalOpen(true);
         // props.onHide();
     };
+
+    const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
+    function openIndexModal() {
+        setIsIndexModalOpen(true);
+        props.onHide();
+    }
+
+    function hideIndexModal() {
+        setIsIndexModalOpen(false);
+    }
 
     return (
         <>
@@ -49,11 +60,12 @@ const CategoriesModal = (props) => {
                     </div> : (
                         <div>
                             <p>No index found!</p>
-                            <p className="mb-1 text-primary-300 hover:border-b hover:border-b-primary-300 w-fit hover:cursor-pointer">Create new index</p>
+                            <p onClick={openIndexModal} className="mb-1 text-primary-300 hover:border-b hover:border-b-primary-300 w-fit hover:cursor-pointer">Create new index</p>
                         </div>
                     )}
                 </Modal.Body>
             </Modal>
+            <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={props?.handleUpload} />
             {isUploadModalOpen && <FileUploaderModal handleUpload={props.handleUpload} indexName={null} show={isUploadModalOpen} hideIndexModal={props.onHide} onHide={() => setIsUploadModalOpen(false)} />}</>
     );
 };
