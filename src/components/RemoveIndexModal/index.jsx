@@ -6,14 +6,17 @@ import makeApiRequest from '../../api';
 import toast from 'react-simple-toasts';
 import useResources from '../../hooks/useResources';
 
-function RemoveIndexModal({ show, onHide, index, deleteResource }) {
+function RemoveIndexModal({ show, onHide, index, deleteResource, setIsIndexDeleting }) {
     const { theme, knowledgeBase, setCategoryOptions } = useContext(MainContext);
 
     const { getIndexes } = useResources({ setCategoryOptions });
 
+
+
     async function deleteIndex() {
         try {
             // remove sources before index
+            setIsIndexDeleting(true);
             const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(index));
             if (itemsToBeDeleted.length > 0) await deleteResource(null, itemsToBeDeleted);
             await makeApiRequest(`/remove-index`, 'post', { index: index });
@@ -22,6 +25,8 @@ function RemoveIndexModal({ show, onHide, index, deleteResource }) {
         } catch (error) {
             console.log(error.response.data.error);
             toast(error.response.data.error || 'Error deleting index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+        } finally {
+            setIsIndexDeleting(false);
         }
     }
 

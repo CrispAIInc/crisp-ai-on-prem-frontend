@@ -148,6 +148,9 @@ export function SourceExplorer(props) {
     const [hoveredItemToRemove, setHoveredItemToRemove] = useState('');
     const [itemToRemove, setItemToRemove] = useState("");
     const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
+
+    const [isIndexDeleting, setIsIndexDeleting] = useState(false);
+
     const renderFolders = () => {
         if (viewModes[viewModes.length - 1] === "categories" && categoryOptions?.filter(cat => cat.value !== "all").length === 0) {
             return (
@@ -170,12 +173,15 @@ export function SourceExplorer(props) {
                     onMouseLeave={() => { setHoveredItemToRemove(""); }}
                 >
                     {(hoveredItemToRemove === item.value && viewModes[viewModes.length - 1] === "categories" && item.value !== "all") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
+                    {
+                        (itemToRemove === item.value && viewModes[viewModes.length - 1] === "categories" && isIndexDeleting) && <LoadingSpinner isSmall />
+                    }
                     {/* <FolderIcon sx={{ fontSize: 60 }} /> */}
                     <FolderOpenIcon sx={{ fontSize: 50 }} className={`${theme === 'light' ? 'text-textColor-300' : "text-[#ABAEB4]"} `} />
                     <p>{item.label}</p>
                 </div>
             ))}
-            <RemoveIndexModal deleteResource={props.deleteResource} index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
+            <RemoveIndexModal setIsIndexDeleting={setIsIndexDeleting} deleteResource={props.deleteResource} index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
         </>;
     };
 
