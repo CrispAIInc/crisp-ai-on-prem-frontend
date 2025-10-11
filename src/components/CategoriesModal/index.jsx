@@ -36,7 +36,7 @@ const CategoriesModal = (props) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
-                    <div className='flex flex-col items-start justify-start gap-3'>
+                    {props.categoryOptions.filter(cat => cat.value !== "all").length > 0 ? <div className='flex flex-col items-start justify-start gap-3'>
                         {
                             props.categoryOptions.map(({ value, label }, index) => (
                                 value !== 'all' &&
@@ -46,7 +46,12 @@ const CategoriesModal = (props) => {
                                 </div>
                             ))
                         }
-                    </div>
+                    </div> : (
+                        <div>
+                            <p>No index found!</p>
+                            <p className="mb-1 text-primary-300 hover:border-b hover:border-b-primary-300 w-fit hover:cursor-pointer">Create new index</p>
+                        </div>
+                    )}
                 </Modal.Body>
             </Modal>
             {isUploadModalOpen && <FileUploaderModal handleUpload={props.handleUpload} indexName={null} show={isUploadModalOpen} hideIndexModal={props.onHide} onHide={() => setIsUploadModalOpen(false)} />}</>
