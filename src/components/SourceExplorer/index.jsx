@@ -17,6 +17,7 @@ import StagedImageThumbnail from '../StagedImageThumbnail';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import RemoveIndexModal from '../RemoveIndexModal';
 import { searchByKey, sortBySourcePath } from '../../utils';
+import { IndexModal } from '../IndexModal/index.jsx';
 
 export function SourceExplorer(props) {
     const {
@@ -29,6 +30,7 @@ export function SourceExplorer(props) {
         selectedFormat,
         knowledgeBase,
         setKnowledgeBase,
+        categoryOptions
     } = useContext(MainContext);
 
     // const [currentPath, setCurrentPath] = useState('/');
@@ -147,6 +149,17 @@ export function SourceExplorer(props) {
     const [itemToRemove, setItemToRemove] = useState("");
     const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
     const renderFolders = () => {
+        if (viewModes[viewModes.length - 1] === "categories" && categoryOptions?.filter(cat => cat.value !== "all").length === 0) {
+            return (
+                <>
+                    <div>
+                        <p>No index found!</p>
+                        <p onClick={() => props.showIndexModal()} className="mb-1 text-primary-300 hover:border-b hover:border-b-primary-300 w-fit hover:cursor-pointer">Create new index</p>
+                    </div>
+                    {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={props?.handleUpload} /> */}
+                </>
+            );
+        }
         return <>
             {props[viewModes[viewModes.length - 1]].map((item, index) => (
                 <div
@@ -382,14 +395,14 @@ export function SourceExplorer(props) {
             <Modal.Body
                 className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} z-20`}
             >
-                <div className="flex justify-between mb-4 itms-center">
-                    <div
+                <div className="flex justify-between itms-center">
+                    {categoryOptions?.filter(cat => cat?.value !== "all").length > 0 && <div
                         className={`current-path-wrapper select-none ${theme === "dark" && "text-textColor-100"
                             }`}
                     >
                         <BackButton className={`back-btn`} />
                         <h3 className="current-path">{currentPath}</h3>
-                    </div>
+                    </div>}
 
                     {viewModes[viewModes.length - 1] === "files" && <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
 

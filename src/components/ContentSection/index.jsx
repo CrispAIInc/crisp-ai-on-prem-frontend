@@ -30,6 +30,7 @@ import useAuth from '../../hooks/useAuth';
 import GsFile from '../GsFile';
 import { AuthContext } from '../../contexts/authContext';
 import useResources from '../../hooks/useResources';
+import { IndexModal } from '../IndexModal';
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
     const { theme, setDisplayedSources, categoryOptions, setKnowledgeBase } = useContext(MainContext);
@@ -518,7 +519,9 @@ const ContentSection = ({
 
     const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
     function openIndexModal() {
+        console.log("sdfjkkl");
         setIsIndexModalOpen(true);
+        setShowSourceExplorer(false);
     }
 
     function hideIndexModal() {
@@ -727,12 +730,14 @@ const ContentSection = ({
                             <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Settings</span>
                         </div> */}
                     {/* </div> */}
-                    {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} /> */}
+                    <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} />
                     <AddSourceModal show={showAddModal} setShowAddModal={setShowAddModal} isUploading={isFileUploading} setIsUploading={setIsFileUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
                     {showSourceExplorer && (
                         <SourceExplorer
                             show={showSourceExplorer}
+                            setShowSourceExplorer={setShowSourceExplorer}
                             onHide={onHideSourceExplorer}
+                            showIndexModal={openIndexModal}
                             knowledgeBase={knowledgeBase}
                             setKnowledgeBase={setKnowledgeBase}
                             categories={categoryOptions}
