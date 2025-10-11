@@ -31,17 +31,19 @@ export default function Login() {
             }
 
             await loginWithEmailAndPassword(userInfo);
-            navigate('/');
+            setTimeout(() => {
+                // Reset userInfo after registration attempt
+                setUserInfo({
+                    email: "",
+                    password: "",
+                });
+                setIsPending(false);
+                navigate('/');
+            }, 3000);
 
-            // Reset userInfo after registration attempt
-            setUserInfo({
-                email: "",
-                password: "",
-            });
+
         } catch (e) {
             setError(e?.response?.data?.message || "Please verify your data and try again.");
-        } finally {
-            setIsPending(false);
         }
     }
 
