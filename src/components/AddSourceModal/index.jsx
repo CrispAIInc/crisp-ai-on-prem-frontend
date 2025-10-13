@@ -8,7 +8,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import LoadingSpinner from '../LoadingSpinner';
 import CategoriesModal from '../CategoriesModal';
 
-export default function LLMModal(props) {
+export default function AddSourceModal(props) {
 
     const { theme, categoryOptions } = useContext(MainContext);
 

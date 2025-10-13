@@ -519,7 +519,6 @@ const ContentSection = ({
 
     const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
     function openIndexModal() {
-        console.log("sdfjkkl");
         setIsIndexModalOpen(true);
         setShowSourceExplorer(false);
     }

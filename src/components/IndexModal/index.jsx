@@ -78,18 +78,18 @@ export function IndexModal({ show, onHide, handleUpload }) {
                     className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={onHide}
                 >
-                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                         Cancel
-                    </span>}
+                    </span>
                 </div>
 
                 <div
                     className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={createIndex}
                 >
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                         Create
-                    </span>
+                    </span>}
                 </div>
             </Modal.Footer>
         </Modal>
