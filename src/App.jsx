@@ -17,6 +17,8 @@ import PrivateRoute from './components/Auth/PrivateRoute';
 import AuthProvider from './contexts/authContext.jsx';
 import MainProvider from './contexts/mainContext.jsx';
 import SettingsProvider from './contexts/settingsContext.jsx';
+import VerifyAccount from './components/VerifyAccount';
+import AuthRoute from './components/Auth/AuthRoute.jsx';
 
 
 function App() {
@@ -54,10 +56,11 @@ function App() {
           <Routes>
             <Route path="/" element={<PrivateRoute><MainProvider theme={theme} setTheme={setTheme}><SettingsProvider><MainWorkspacePage /></SettingsProvider></MainProvider></PrivateRoute>} />
 
-            <Route path="/sign-up" element={<RegisterPage theme={theme} setTheme={setTheme} />} />
-            <Route path="/login" element={<LoginPage theme={theme} setTheme={setTheme} />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage theme={theme} setTheme={setTheme} />} />
-            <Route path="/reset-password" element={<ResetPasswordPage theme={theme} setTheme={setTheme} />} />
+            <Route path="/sign-up" element={<AuthRoute><RegisterPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
+            <Route path="/verify" element={<AuthRoute><VerifyAccount theme={theme} setTheme={setTheme} /></AuthRoute>} />
+            <Route path="/login" element={<AuthRoute><LoginPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
+            <Route path="/forgot-password" element={<AuthRoute><ForgotPasswordPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
+            <Route path="/reset-password" element={<AuthRoute><ResetPasswordPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
             <Route path="*" element={<NotFound theme={theme} setTheme={setTheme} />} />
           </Routes>
         </Router>

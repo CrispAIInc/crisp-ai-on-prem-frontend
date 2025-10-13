@@ -1,14 +1,19 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
 import { loginWithEmailAndPassword } from '../../services/auth.js';
-import { isValidEmail } from '../../utils.js';
+import { delay, isValidEmail } from '../../utils.js';
+import { Alert } from '@mui/material';
+import { onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
+import { auth } from "../../config/firebase.js"; // adjust path
 
 export default function Login() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { redirectedFromAccountVerification = false } = location.state || {};
     const [userInfo, setUserInfo] = useState({
         email: "",
         password: "",
@@ -21,7 +26,6 @@ export default function Login() {
             setIsPending(true);
             setError(null);
 
-            // Validate user input
             if (!userInfo.email || !userInfo.password) {
                 throw new Error("All fields are required.");
             }
@@ -31,6 +35,28 @@ export default function Login() {
             }
 
             await loginWithEmailAndPassword(userInfo);
+
+            const idToken = await new Promise((resolve, reject) => {
+                const unsubscribe = onIdTokenChanged(auth, async (user) => {
+                    if (user) {
+                        try {
+                            const token = await user.getIdToken();
+                            unsubscribe();
+                            resolve(token);
+                        } catch (err) {
+                            unsubscribe();
+                            reject(err);
+                        }
+                    }
+                });
+
+                // safety timeout: reject after 10s
+                const timeout = setTimeout(() => {
+                    try { unsubscribe(); } catch (e) { console.log(""); }
+                    reject(new Error("Timed out waiting for Firebase token"));
+                }, 10000);
+            });
+
             setTimeout(() => {
                 // Reset userInfo after registration attempt
                 setUserInfo({
@@ -40,12 +66,11 @@ export default function Login() {
                 setIsPending(false);
                 navigate('/');
             }, 3000);
-
-
         } catch (e) {
             setError(e?.response?.data?.message || "Please verify your data and try again.");
         }
     }
+
 
     return (
         <div className="flex flex-col w-full">
@@ -53,6 +78,10 @@ export default function Login() {
             <h1 className="mb-10 text-4xl font-bold text-center">Sign-in</h1>
             {
                 error && <p className="mb-4 text-center text-red-500">{error}</p>
+            }
+
+            {
+                redirectedFromAccountVerification && <Alert className="mb-3">You have successfully verified your account!</Alert>
             }
             <div className="flex flex-col gap-4">
                 <AnimatedInput

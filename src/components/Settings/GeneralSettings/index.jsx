@@ -7,11 +7,19 @@ import RippleButton from '../../RippleButton';
 import ToggleSwitch from '../../ToggleSwitch';
 
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+import { useNavigate } from 'react-router';
+import makeApiRequest from '../../../api';
+import { Alert } from '@mui/material';
+import LoadingSpinner from '../../LoadingSpinner';
+import { logOut } from '../../../services/auth';
 
 function GeneralSettings() {
+    const navigate = useNavigate();
     const { theme } = useContext(MainContext);
     const { user, setUser } = useContext(AuthContext);
     const { generalSettings, setGeneralSettings } = useContext(SettingsContext);
+    const [isSendingEmailPending, setIsSendingEmailPending] = useState(false);
+    const [error, setError] = useState(null);
 
     let [isUserInfoChanged, setIsUserInfoChanged] = useState(false);
 
@@ -34,9 +42,43 @@ function GeneralSettings() {
         }));
     };
 
+    async function sendVerificationEmail() {
+        try {
+            setIsSendingEmailPending(true);
+            const { success, message } = await makeApiRequest('/email-otp', 'POST', JSON.stringify({ email: user.email }));
+
+            if (!success) {
+                throw new Error(message);
+            }
+
+            setError(false);
+
+            setInterval(() => {
+                logOut();
+                navigate('/verify', {
+                    state: {
+                        email: user.email
+                    }
+                });
+            }, [3000]);
+        } catch (error) {
+            console.log('Error sending verification email:', error);
+            setError(error.message || 'Failed to send verification email. Please try again later.');
+        } finally {
+            setIsSendingEmailPending(false);
+        }
+    }
+
     return (
         <div className="w-[90%] mx-auto">
             <div className="flex flex-col gap-3">
+                {
+                    error === false ? (
+                        <Alert className="w-full mx-auto lg:w-1/2" severity='info'>Verification email sent! Check out your inbox.</Alert>
+                    ) : typeof error === 'string' ? (
+                        <Alert className="w-full mx-auto lg:w-1/2" severity="error" onClose={() => setError(null)}>{error}</Alert>
+                    ) : null
+                }
                 {/* app theme switcher */}
                 <div className="flex flex-wrap items-center justify-between">
                     <h3 className={`text-[13px] ${theme === "light"
@@ -75,8 +117,8 @@ function GeneralSettings() {
                             else {
                                 if (!value) {
                                     return (
-                                        <p key={key} className={`text-[10px] text-orange-400 cursor-pointer border-b border-b-transparent hover:border-b hover:border-b-orange-400 w-fit font-medium flex gap-1 items-center`}>
-                                            <WarningAmberOutlinedIcon className='' />
+                                        <p key={key} className={`text-[10px] text-orange-400 cursor-pointer border-b border-b-transparent hover:border-b hover:border-b-orange-400 w-fit font-medium flex gap-1 items-center`} onClick={sendVerificationEmail}>
+                                            {isSendingEmailPending ? <LoadingSpinner isSmall /> : <WarningAmberOutlinedIcon className='' />}
                                             {/* <span className="text-red-600">Email not verified.</span> */}
                                             <span>Verify your account!</span>
                                         </p>

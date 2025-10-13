@@ -1,4 +1,4 @@
-import { onAuthStateChanged, onIdTokenChanged, signInWithCustomToken, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signOut, onIdTokenChanged, signInWithCustomToken, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { TOKEN_NAME } from '../globals';
 import { auth, provider } from '../config/firebase';
 import makeApiRequest, { axiosInstance } from '../api';
@@ -12,13 +12,33 @@ import makeApiRequest, { axiosInstance } from '../api';
 //     }
 // });
 
+// onIdTokenChanged(auth, (user) => {
+//     if (user) {
+//         user.getIdToken().then((idToken) => {
+//             localStorage.setItem(TOKEN_NAME, idToken);
+//         });
+//     }
+// });
+
 onIdTokenChanged(auth, async (user) => {
     if (user) {
         const token = await user.getIdToken(); // Firebase will refresh when ready
-        localStorage.setItem(TOKEN_NAME, token);
+        // localStorage.setItem(TOKEN_NAME, token);
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
 });
+export async function getJwt() {
+    if (!auth.currentUser) {
+        return null; // no user, no token
+    }
+    return await auth.currentUser.getIdToken();
+}
+// export const isUserAuthenticated = await auth.currentUser.getIdToken();
+
+export const createUserWithFirestore = async (email, password) => {
+    const user = await createUserWithEmailAndPassword(auth, email, password);
+    return user;
+};
 
 
 export const signInWithGoogle = async () => {
@@ -39,17 +59,28 @@ export const loginWithEmailAndPassword = async (userInfo) => {
 
     if (success) {
         // Step 3: Exchange custom token for Firebase ID token
-        const userCredential = await signInWithCustomToken(auth, accessToken);
-
-        console.log("User signed in:", userCredential.user);
+        await signInWithCustomToken(auth, accessToken);
 
         // Now you can use getIdToken() anytime
-        const idToken = await userCredential.user.getIdToken();
-        console.log("Firebase ID Token:", idToken);
-
-        // Optionally store idToken if you want
-        localStorage.setItem(TOKEN_NAME, idToken);
+        // const idToken = await userCredential.user.getIdToken(true);
+        // localStorage.setItem(TOKEN_NAME, idToken);
     } else {
         throw new Error(message || "Login failed. Please try again.");
     }
 };
+
+export async function loginWithAccessAndRefreshToken(email, password) {
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    return user;
+
+}
+
+export async function logOut(navigate) {
+    try {
+        const res = await signOut(auth);
+        console.log("logged out with: ", res);
+        navigate("/login");
+    } catch (error) {
+        console.log(error);
+    }
+}

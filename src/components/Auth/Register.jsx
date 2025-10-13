@@ -6,6 +6,11 @@ import makeApiRequest from '../../api';
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
 import { isValidEmail } from "../../utils.js";
+import { sendEmail } from '../../services/messaging.js';
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
+import { createUserWithFirestore, loginWithAccessAndRefreshToken } from '../../services/auth.js';
+
 
 
 export default function Register() {
@@ -36,26 +41,43 @@ export default function Register() {
                 throw new Error("Passwords do not match.");
             }
 
+            // create user in firebase first
+            // const userCredential = await createUserWithFirestore(userInfo.email, userInfo.password);
+            // send email verification to the user
+
+
             // Here you would typically make an API call to register the user
             const { success, message } = await makeApiRequest('/sign-up', 'POST', JSON.stringify(userInfo));
 
             if (success) {
-                // redirect to login page
-                navigate('/login');
+                console.log("Registration successful! but need to verify email");
+                // const user = await loginWithAccessAndRefreshToken(userInfo.email, userInfo.password);
+                // console.log("user from firebase sign in login", user);
+                // await sendEmail(user);
+                //show user a info card letting them know that a verification email has been send to their email
+                setError(false);
+                setTimeout(() => {
+                    navigate('/verify', {
+                        state: {
+                            email: userInfo.email
+                        }
+                    });
+                }, 3000);
             } else {
+                console.log(message);
                 throw new Error(message || "Registration failed. Please try again.");
             }
 
             // Reset userInfo after registration attempt
-            setUserInfo({
-                firstName: "",
-                lastName: "",
-                email: "",
-                password: "",
-                confirmPassword: "",
-            });
+            setUserInfo(prev => ({ email: prev.email, firstName: "", lastName: "", password: "", confirmPassword: "" }));
         } catch (e) {
-            setError(e?.response?.data?.message || "Please verify your data and try again.");
+            if (e.code === "auth/email-already-in-use") {
+                setError("Email already registered. Please sign in or use another email.");
+            }
+            else if (e.code === "auth/weak-password") {
+                setError("Password should be at least 6 characters.");
+            }
+            else setError(e?.response?.data?.message || e?.message || "Please verify your data and try again.");
         } finally {
             setIsPending(false);
         }
@@ -66,8 +88,10 @@ export default function Register() {
             {/* <img src="./imgs/app-logo-full.png" alt="CrispAI logo" className='w-[50%] h-auto mx-auto mb-10' /> */}
             <h1 className="mb-10 text-4xl font-bold text-center">Create an account</h1>
             {
-                error && <p className="mb-4 text-center text-red-500">{error}</p>
+                error === false ? <Alert className="mb-3">Verification email sent! Check out your inbox.</Alert> : error !== null ? <p className="mb-4 text-center text-red-500">{error}</p> : null
+
             }
+
             <div className="flex flex-col gap-4">
                 <AnimatedInput
                     inputClasses="!pl-[20px]"

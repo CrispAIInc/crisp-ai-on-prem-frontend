@@ -20,6 +20,7 @@ import AnimatedText from '../AnimatedText/index.jsx';
 import AnimatedInput from '../AnimatedInput/index.jsx';
 import Chip from '../Chip/index.jsx';
 import { TOKEN_NAME } from '../../globals.js';
+import useAuth from '../../hooks/useAuth.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
@@ -54,6 +55,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setShowNoteDetails,
     setActiveView,
   } = useContext(MainContext);
+
+  const { token } = useAuth();
 
   const { maxWidth } = useResizableSidebar(200, false);
 
@@ -229,7 +232,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         selectedLLMs[0]
       )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem(TOKEN_NAME)}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       // const eventSource = new EventSource(
