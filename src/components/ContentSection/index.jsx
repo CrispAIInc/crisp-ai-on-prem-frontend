@@ -30,6 +30,9 @@ import useAuth from '../../hooks/useAuth';
 import GsFile from '../GsFile';
 import { AuthContext } from '../../contexts/authContext';
 import useResources from '../../hooks/useResources';
+import UploadToast from '../UploadToast';
+import ErrorToast from '../ErrorToast';
+import SuccessToast from '../SuccessToast';
 import { IndexModal } from '../IndexModal';
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
@@ -334,70 +337,6 @@ const ContentSection = ({
         });
     };
 
-    // const [isUploading, setIsUploading] = useState(false);
-    const handleUpload = async (event, fileFormat, _files) => {
-        try {
-
-            setIsFileUploading(true);
-            const files = _files || Array.from(event.target.files);
-            const processedFiles = files.map(file => file.name);
-
-            setUploadedSources(processedFiles); // Updates state but is asynchronous
-
-            const formData = new FormData();
-            files.forEach(file => {
-                formData.append("file", file);
-                formData.append("category", selectedCategory);
-                formData.append("fileType", file.type);
-            });
-
-            await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
-
-            toast('Upload complete. Generate metadata from the right panel', { className: "p-2 rounded-md", theme });
-            // setActiveTab('genMetadata');
-
-            // Fetch updated content
-            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValuesWithoutAll));
-
-            // Filter sources that match the uploaded files
-            const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
-
-            // setSourcesTobeCommited(prev => [...new Set([...prev, ...sourcesToAdd.map(item => ({ ...item, is_selected: true }))])]); // Ensure uniqueness
-
-            // Update knowledge base
-            setKnowledgeBase(data.map(item => ({
-                ...item,
-                is_selected: sourcesToAdd.some(s => s.source_path === item.source_path) || sourcesTobeCommited.find(i => i.source_path === item.source_path)?.is_selected,
-            })));
-
-            // add new uploaded sources to displayedSources
-            setDisplayedSources(prev => {
-                const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
-                // sort the sources
-                const finalSources = sortArrayOfObjects([...prev, ...newSources.map(item => ({ ...item, is_selected: true }))], "source_path");
-                return finalSources;
-            });
-
-            setCurrentResource(sourcesToAdd[0]);
-
-            if (sourcesToAdd.length > 0) {
-                setActiveView('resource');
-            }
-
-
-
-        } catch (error) {
-            console.error(error);
-            toast(error?.response?.data?.error, { className: 'p-2 rounded-md z-20', theme });
-            setIsFileUploading(false);
-        } finally {
-            setIsFileUploading(false);
-            setTimeout(() => {
-                setShowAddModal(false);
-            }, 650);
-        }
-
-    };
 
     const handleExploreSources = () => {
         setShowSourceExplorer(true);
@@ -662,10 +601,116 @@ const ContentSection = ({
         setSearchValue(e.target.value);
     };
 
+    // const [isUploading, setIsUploading] = useState(false);
+    const [isUploadFailed, setIsUploadFailed] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("idle"); // 'idle' | 'uploading' | 'success' | 'error'
+    const [uploadErrorMessage, setuploadErrorMessage] = useState("");
+    const handleUpload = async (event, fileFormat, _files) => {
+        try {
+            setUploadStatus("uploading");
+            setIsUploadFailed(false);
+            setIsFileUploading(true);
+            setIsProgressStarted(true);
+            setShowAddModal(false);
+
+            // await fakeApiCall(4000);
+
+            const files = _files || Array.from(event.target.files);
+            const processedFiles = files.map(file => file.name);
+
+            setUploadedSources(processedFiles); // Updates state but is asynchronous
+
+            const formData = new FormData();
+            files.forEach(file => {
+                formData.append("file", file);
+                formData.append("category", selectedCategory);
+                formData.append("fileType", file.type);
+            });
+
+            await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
+            setUploadStatus("success");
+
+            // toast('Upload complete. Generate metadata from the right panel', { className: "p-2 rounded-md", theme });
+            // setActiveTab('genMetadata');
+
+            // Fetch updated content
+            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValuesWithoutAll));
+
+            // Filter sources that match the uploaded files
+            const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
+
+            setSourcesTobeCommited(prev => [...new Set([...prev, ...sourcesToAdd.map(item => ({ ...item, is_selected: true }))])]); // Ensure uniqueness
+
+            // Update knowledge base
+            setKnowledgeBase(data.map(item => ({
+                ...item,
+                is_selected: sourcesToAdd.some(s => s.source_path === item.source_path) || sourcesTobeCommited.find(i => i.source_path === item.source_path)?.is_selected,
+            })));
+
+            // add new uploaded sources to displayedSources
+            setDisplayedSources(prev => {
+                const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
+                // sort the sources
+                const finalSources = sortArrayOfObjects([...prev, ...newSources.map(item => ({ ...item, is_selected: true }))], "source_path");
+                return finalSources;
+            });
+
+            setCurrentResource(sourcesToAdd[0]);
+
+            if (sourcesToAdd.length > 0) {
+                setActiveView('resource');
+            }
+
+
+
+        } catch (error) {
+            setIsUploadFailed(true);
+            setUploadStatus("error");
+            console.error(error);
+            setuploadErrorMessage(error?.response?.data?.error || 'Upload failed. Please try again.');
+            // toast(error?.response?.data?.error, { className: `p-2 rounded-md z-20 ${theme === 'light' ? 'text-textColor-100 bg-textColor-300' : 'bg-textColor-200'}`, });
+        } finally {
+            // await delay(2500);
+            // setTimeout(() => {
+            // setTimeout(() => {
+            setIsFileUploading(false);
+            setIsProgressStarted(false);
+            // }, 4000);
+
+            // }, 3000);
+            // setTimeout(() => {
+            //     setShowAddModal(false);
+            // }, 650);
+        }
+
+    };
+
+    useEffect(() => {
+        if (uploadStatus === "success" || uploadStatus === "error") {
+            const timer = setTimeout(() => {
+                setUploadStatus("idle"); // unmount toast
+            }, 4000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [uploadStatus]);
+
+    const [isProgressStarted, setIsProgressStarted] = useState(false);
     return (
         <>
             {!showMetadata && <section className={`relative flex flex-col items-start h-full`}>
 
+                {
+                    uploadStatus === "uploading" ? (
+                        <UploadToast isUploadFailed={isUploadFailed}
+                            setIsProgressStarted={setIsProgressStarted}
+                            isLoading={isFileUploading} />
+                    ) : uploadStatus === "error" ? (
+                        <ErrorToast reason={uploadErrorMessage} />
+                    ) : uploadStatus === "success" ? (
+                        <SuccessToast message="Upload complete. Generate metadata from the right panel" />
+                    ) : null
+                }
 
 
                 <div className="w-full">

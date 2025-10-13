@@ -625,7 +625,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
               className="w-[90%] mx-auto"
             /> */}
             <div
-              className="relative w-[90%] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
+              className="relative w-[90%] h-[430px] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
               ref={contentPanelContainerRef}
               style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             // style={{ height: '370px', overflow: 'auto' }}
@@ -633,7 +633,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
               <Document
                 className="!w-full mx-auto relative"
                 file={sourcePublicUrl || resourceURL}
-
                 onLoadSuccess={onDocumentLoadSuccess}
               >
 
