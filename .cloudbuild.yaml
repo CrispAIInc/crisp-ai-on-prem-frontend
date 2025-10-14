@@ -12,6 +12,7 @@ steps:
         "--platform",
         "managed",
         "--allow-unauthenticated",
+        "--project",
       ]
 options:
   logging: CLOUD_LOGGING_ONLY
