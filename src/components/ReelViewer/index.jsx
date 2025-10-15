@@ -28,12 +28,12 @@ function ReelViewer({ closeReel, reel, setReels }) {
     // const [isPending, setIsPending] = useState(false);
 
     useEffect(() => {
-        if (reel?.reel_video_url || reel?.reel_video_path) {
-            getPublicUrl(reel?.reel_video_url || reel?.reel_video_path)
+        if (reel?.reel_video_url) {
+            getPublicUrl(reel?.reel_video_url)
                 .then(setSourcePublicUrl)
                 .catch(console.error);
         }
-    }, [reel?.reel_video_url || reel?.reel_video_path]);
+    }, [reel?.reel_video_url]);
 
     const handleCloseReel = (e) => {
         e.stopPropagation();
