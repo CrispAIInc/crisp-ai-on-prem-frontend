@@ -610,6 +610,20 @@ const ContentSection = ({
     const [isUploadFailed, setIsUploadFailed] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("idle"); // 'idle' | 'uploading' | 'success' | 'error'
     const [uploadErrorMessage, setuploadErrorMessage] = useState("");
+    /**
+     * video compression
+        video upload to GCP (cloud storage)
+        keyframe extraction
+        crating matrices
+        thumbnail extraction
+        audio extraction
+        transcription (cleaning, etc.)
+        matrices description
+        summary gen
+        embeddings gen
+        vs initialization
+        upload to DB and GCP
+     */
     const handleUpload = async (event, fileFormat, _files) => {
         try {
             setUploadStatus("uploading");
