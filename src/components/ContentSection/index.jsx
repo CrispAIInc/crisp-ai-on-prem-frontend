@@ -889,7 +889,7 @@ const ContentSection = ({
                                     results?.map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
                                         <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
-                                            {showSourceContextMenu === option?.source_path && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col  p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                            {(showSourceContextMenu === option?.source_path && !('progress' in option)) && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col  p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
                                                 <div className={`flex  gap-2  py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
                                                     onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
                                                     <EditOutlinedIcon
@@ -911,7 +911,8 @@ const ContentSection = ({
                                                 //     style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
                                                 //     className="cursor-pointermr-1"
                                                 // />
-                                                <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                !('progress' in option) ?
+                                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} /> : <CircularProgressWithLabel progress={option.progress} variant="determinate" isUploadFiled={false} />
 
                                                 // )
                                             }
@@ -930,11 +931,19 @@ const ContentSection = ({
                                                         <LoadingSpinner isSmall />
                                                     </div>
                                                 )}
-                                                <GsFile
+                                                {(option.thumbnail.startsWith('blob') && option.file_type === "video") ? (
+                                                    <video
+                                                        src={option.thumbnail}
+                                                        className="object-cover w-full h-full rounded-md"
+                                                        alt="video thumbnail"
+                                                        controls={false}
+                                                    />
+                                                )
+                                                    : <GsFile
                                                     className="object-cover w-full h-full rounded-md"
                                                     gsUrl={option.thumbnail}
                                                     alt="Video Thumbnail"
-                                                />
+                                                    />}
                                             </div>
                                             <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                         </div>
