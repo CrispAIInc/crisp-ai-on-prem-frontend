@@ -1,5 +1,6 @@
 
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -21,7 +22,7 @@ import BaseHeading from '../BaseHeading';
 import NoData from '../NoData';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import SearchSection from '../SearchSection';
-import { searchByKey, sortArrayOfObjects, sortBySourcePath, timeToSeconds } from '../../utils';
+import { getFileType, searchByKey, sortArrayOfObjects, sortBySourcePath, timeToSeconds } from '../../utils';
 import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
@@ -34,6 +35,10 @@ import UploadToast from '../UploadToast';
 import ErrorToast from '../ErrorToast';
 import SuccessToast from '../SuccessToast';
 import { IndexModal } from '../IndexModal';
+import io from "socket.io-client";
+import AnimatedText from '../AnimatedText';
+
+const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
     const { theme, setDisplayedSources, categoryOptions, setKnowledgeBase } = useContext(MainContext);
@@ -181,8 +186,23 @@ const ContentSection = ({
 
     const { logout } = useAuth();
 
+
+    useEffect(() => {
+        socket.on("request_progress", (data) => {
+            console.log(data);
+        });
+
+        socket.on("join_upload_session", (data) => {
+            console.log(data);
+        });
+
+        return () => {
+            socket.off("request_progress");
+            socket.off("join_upload_session");
+        };
+    }, []);
+
     async function log() {
-        console.log("jhfjkshdfhjksdf ikhan");
         await logout();
     }
 
@@ -611,10 +631,10 @@ const ContentSection = ({
     const [uploadStatus, setUploadStatus] = useState("idle"); // 'idle' | 'uploading' | 'success' | 'error'
     const [uploadErrorMessage, setuploadErrorMessage] = useState("");
     /**
-     * video compression
+     *  video compression
         video upload to GCP (cloud storage)
         keyframe extraction
-        crating matrices
+        creating matrices
         thumbnail extraction
         audio extraction
         transcription (cleaning, etc.)
@@ -624,6 +644,20 @@ const ContentSection = ({
         vs initialization
         upload to DB and GCP
      */
+    const [fileThumbnails, setFileThumbnails] = useState([]);
+    const [currentPointerIndex, setCurrentPointerIndex] = useState(0);
+
+    const extractThumbnail = (file) => {
+        // const thumbnails = files.map((file) => {
+        const type = file.type;
+        const preview =
+            type.startsWith('image/') || type.startsWith('video/')
+                ? URL.createObjectURL(file)
+                : null;
+        return preview;
+        // });
+        // setFileThumbnails((prev) => [...prev, ...thumbnails]);
+    };
     const handleUpload = async (event, fileFormat, _files) => {
         try {
             setUploadStatus("uploading");
@@ -631,6 +665,45 @@ const ContentSection = ({
             setIsFileUploading(true);
             setIsProgressStarted(true);
             setShowAddModal(false);
+            setFileThumbnails([]);
+
+            const files = _files || Array.from(event.target.files);
+
+            const formData = new FormData();
+            files.forEach(file => {
+                formData.append("file", file);
+                formData.append("category", selectedCategory);
+                formData.append("fileType", file.type);
+            });
+
+            //TODO: loop throught files and populate the "initialSources" with the initial properties
+            files.forEach((file, index) => {
+                setDisplayedSources((prev) => {
+                    return [...prev, {
+                        category: [selectedCategory], file_type: getFileType(file.type), source_path: file.name, thumbnail: extractThumbnail(files[index]) || null, is_selected: false, progress: 0, step: currentPointerIndex === index ? "Video compression" : ""
+                    }];
+                });
+            });
+
+
+        } catch (error) {
+            setIsUploadFailed(true);
+            setUploadStatus("error");
+            console.error(error);
+            setuploadErrorMessage(error?.response?.data?.error || 'Upload failed. Please try again.');
+        } finally {
+            setIsFileUploading(false);
+            setIsProgressStarted(false);
+        }
+    };
+    const handleUploadOne = async (event, fileFormat, _files) => {
+        try {
+            setUploadStatus("uploading");
+            setIsUploadFailed(false);
+            setIsFileUploading(true);
+            setIsProgressStarted(true);
+            setShowAddModal(false);
+
 
             // await fakeApiCall(4000);
 
@@ -646,7 +719,7 @@ const ContentSection = ({
                 formData.append("fileType", file.type);
             });
 
-            await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
+            // await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
             setUploadStatus("success");
 
             // toast('Upload complete. Generate metadata from the right panel', { className: "p-2 rounded-md", theme });
@@ -659,7 +732,6 @@ const ContentSection = ({
             const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
 
             setSourcesTobeCommited(prev => [...new Set([...prev, ...sourcesToAdd.map(item => ({ ...item, is_selected: true }))])]); // Ensure uniqueness
-
             // Update knowledge base
             setKnowledgeBase(data.map(item => ({
                 ...item,
@@ -679,8 +751,6 @@ const ContentSection = ({
             if (sourcesToAdd.length > 0) {
                 setActiveView('resource');
             }
-
-
 
         } catch (error) {
             setIsUploadFailed(true);
@@ -931,7 +1001,7 @@ const ContentSection = ({
                                                         <LoadingSpinner isSmall />
                                                     </div>
                                                 )}
-                                                {(option.thumbnail.startsWith('blob') && option.file_type === "video") ? (
+                                                {(option?.thumbnail?.startsWith('blob') && option.file_type === "video") ? (
                                                     <video
                                                         src={option.thumbnail}
                                                         className="object-cover w-full h-full rounded-md"
@@ -940,12 +1010,15 @@ const ContentSection = ({
                                                     />
                                                 )
                                                     : <GsFile
-                                                    className="object-cover w-full h-full rounded-md"
-                                                    gsUrl={option.thumbnail}
-                                                    alt="Video Thumbnail"
+                                                        className="object-cover w-full h-full rounded-md"
+                                                        gsUrl={option.thumbnail}
+                                                        alt="Video Thumbnail"
                                                     />}
                                             </div>
-                                            <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
+                                            <div className="flex flex-col gap-1">
+                                                <AnimatedText cssClasses='text-xs' text={option?.step} />
+                                                <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
+                                            </div>
                                         </div>
                                         <div className="flex items-center ">
                                             <Checkbox
