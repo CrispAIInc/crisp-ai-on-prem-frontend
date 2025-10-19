@@ -1,10 +1,10 @@
-export default function AnimatedText({ text = 'Searching' }) {
+export default function AnimatedText({ text = 'Processing', cssClasses = "" }) {
     return (
-        <span className="inline-block ">
+        <span className={`inline-block`}>
             {text.split('').map((char, index) => (
                 <span
                     key={index}
-                    className="inline-block animate-fade-in"
+                    className={`inline-block text-xs animate-fade-in ${cssClasses}`}
                     style={{ animationDelay: `${index * 0.01}s` }}
                 >
                     {char === ' ' ? '\u00A0' : char}
