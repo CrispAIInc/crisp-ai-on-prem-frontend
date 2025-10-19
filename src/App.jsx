@@ -52,7 +52,7 @@ function App() {
 
   return (
     <div className={`App ${theme}`}>
-      <UploadSimulator />
+
       <AuthProvider>
         <Router>
           <Routes>
