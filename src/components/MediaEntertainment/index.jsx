@@ -157,7 +157,7 @@ function MediaEntertainment({ reel,
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        {`Select up to ${MAX_SOURCES_COUNT} sources`}
+                        {`Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
                     </p>
                 )}
             </div>
