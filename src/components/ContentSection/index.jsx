@@ -187,18 +187,68 @@ const ContentSection = ({
     const { logout } = useAuth();
 
 
+    // Initialize socket with proper configuration
+    const socket = io('http://localhost:5000', {
+        transports: ['websocket', 'polling'], // Allow both transports
+        autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 20000,
+    });
+
     useEffect(() => {
-        socket.on("request_progress", (data) => {
-            console.log(data);
+        // Connection events
+        socket.on('connect', () => {
+            console.log('Connected to server:', socket.id);
         });
 
-        socket.on("join_upload_session", (data) => {
-            console.log(data);
+        socket.on('disconnect', (reason) => {
+            console.log('Disconnected from server:', reason);
+        });
+
+        socket.on('connect_error', (error) => {
+            console.error('Connection error:', error);
+        });
+
+        // Backend events (as discussed earlier)
+        socket.on('connected', (data) => {
+            console.log('Server confirmation:', data);
+        });
+
+        socket.on('upload_progress', (data) => {
+            console.log('Progress update:', data);
+            // Handle progress updates here
+        });
+
+        socket.on('upload_error', (data) => {
+            console.log('Upload error:', data);
+            // Handle errors here
+        });
+
+        socket.on('upload_complete', (data) => {
+            console.log('Upload complete:', data);
+            // Handle completion here
+        });
+
+        socket.on('session_joined', (data) => {
+            console.log('Session joined:', data);
+        });
+
+        socket.on('error', (data) => {
+            console.log('General error:', data);
         });
 
         return () => {
-            socket.off("request_progress");
-            socket.off("join_upload_session");
+            socket.off('connect');
+            socket.off('disconnect');
+            socket.off('connect_error');
+            socket.off('connected');
+            socket.off('upload_progress');
+            socket.off('upload_error');
+            socket.off('upload_complete');
+            socket.off('session_joined');
+            socket.off('error');
         };
     }, []);
 
