@@ -986,7 +986,7 @@ const ContentSection = ({
                                                 //     className="cursor-pointermr-1"
                                                 // />
                                                 !('progress' in option) ?
-                                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} /> : <CircularProgressWithLabel progress={option.progress} variant="determinate" isUploadFiled={false} />
+                                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} /> : <CircularProgressWithLabel value={option.progress} variant="determinate" isUploadFiled={false} />
 
                                                 // )
                                             }
