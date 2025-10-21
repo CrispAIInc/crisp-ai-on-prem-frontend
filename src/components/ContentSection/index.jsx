@@ -35,7 +35,7 @@ import UploadToast from '../UploadToast';
 import ErrorToast from '../ErrorToast';
 import SuccessToast from '../SuccessToast';
 import { IndexModal } from '../IndexModal';
-import { io } from "socket.io-client";
+import socket from "../../config/socket";
 import AnimatedText from '../AnimatedText';
 
 // const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
@@ -186,10 +186,6 @@ const ContentSection = ({
 
     const { logout } = useAuth();
 
-
-    // Initialize socket with proper configuration
-    const socket = io.connect('http://localhost:5000');
-
     useEffect(() => {
         // Connection events
         socket.on('connect', () => {
@@ -218,9 +214,7 @@ const ContentSection = ({
             console.log("reconnect...");
         });
 
-
-
-        socket.on('upload_progress', (data) => {
+        socket.on('progress_update', (data) => {
             console.log('Progress update:', data);
             // Handle progress updates here
         });
@@ -248,13 +242,13 @@ const ContentSection = ({
             socket.off('disconnect');
             socket.off('connect_error');
             socket.off('connected');
-            socket.off('upload_progress');
+            socket.off('progress_update');
             socket.off('upload_error');
             socket.off('upload_complete');
             socket.off('session_joined');
             socket.off('error');
         };
-    }, []);
+    }, [socket]);
 
     async function log() {
         await logout();
