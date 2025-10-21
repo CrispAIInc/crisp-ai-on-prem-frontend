@@ -188,9 +188,16 @@ const ContentSection = ({
 
     useEffect(() => {
         // Connection events
-        socket.on('connect', () => {
-            console.log("is connected: ", socket.connected);
-            console.log('Connected to server:', socket.id);
+
+        socket.on("connect", () => {
+            console.log("Connected:", socket.id);
+
+            // Generate or reuse a session ID
+            const sessionId = localStorage.getItem("sessionId") || crypto.randomUUID();
+            localStorage.setItem("sessionId", sessionId);
+
+            // Tell the backend to join this session
+            socket.emit("join_session", { session_id: sessionId });
         });
 
         socket.on('disconnect', (reason) => {
