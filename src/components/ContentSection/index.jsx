@@ -218,6 +218,16 @@ const ContentSection = ({
             console.log('Server confirmation:', data);
         });
 
+        socket.io.on("reconnect_attempt", () => {
+            console.log("reconnect_attempt...");
+        });
+
+        socket.io.on("reconnect", () => {
+            console.log("reconnect...");
+        });
+
+
+
         socket.on('upload_progress', (data) => {
             console.log('Progress update:', data);
             // Handle progress updates here
