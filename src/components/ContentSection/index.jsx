@@ -35,10 +35,10 @@ import UploadToast from '../UploadToast';
 import ErrorToast from '../ErrorToast';
 import SuccessToast from '../SuccessToast';
 import { IndexModal } from '../IndexModal';
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 import AnimatedText from '../AnimatedText';
 
-const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
+// const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
     const { theme, setDisplayedSources, categoryOptions, setKnowledgeBase } = useContext(MainContext);
@@ -193,7 +193,7 @@ const ContentSection = ({
         autoConnect: true,
         reconnection: true,
         reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
+        reconnectionDelay: 5000,
         timeout: 20000,
         // withCredentials: true,
     });
@@ -201,6 +201,7 @@ const ContentSection = ({
     useEffect(() => {
         // Connection events
         socket.on('connect', () => {
+            console.log("is connected: ", socket.connected);
             console.log('Connected to server:', socket.id);
         });
 
