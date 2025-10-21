@@ -195,7 +195,7 @@ const ContentSection = ({
         reconnectionAttempts: 5,
         reconnectionDelay: 1000,
         timeout: 20000,
-        withCredentials: true,
+        // withCredentials: true,
     });
 
     useEffect(() => {
@@ -725,6 +725,7 @@ const ContentSection = ({
                 formData.append("file", file);
                 formData.append("category", selectedCategory);
                 formData.append("fileType", file.type);
+                formData.append("socketId", crypto.randomUUID());
             });
 
             //TODO: loop throught files and populate the "initialSources" with the initial properties
