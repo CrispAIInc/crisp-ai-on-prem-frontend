@@ -8,7 +8,7 @@ export default function UploadSimulator() {
     const intervalRef = useRef(null);
 
     const steps = [
-        { label: "Video compression", duration: 1000 },
+        { label: "Video pre-processing", duration: 1000 },
         { label: "Upload to cloud storage", duration: 1500 },
         { label: "Keyframe extraction", duration: 1200 },
         { label: "Thumbnail extraction", duration: 1000 },
