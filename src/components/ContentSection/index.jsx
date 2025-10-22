@@ -736,7 +736,7 @@ const ContentSection = ({
             files.forEach((file, index) => {
                 setDisplayedSources((prev) => {
                     return [...prev, {
-                        category: [selectedCategory], file_type: getFileType(file.type), source_path: file.name, thumbnail: extractThumbnail(files[index]) || null, is_selected: false, progress: 0, step: currentPointerIndex === index ? "Video compression" : ""
+                        category: [selectedCategory], file_type: getFileType(file.type), source_path: file.name, thumbnail: extractThumbnail(files[index]) || null, is_selected: false, progress: 0, step: currentPointerIndex === index ? "Video pre-processing" : ""
                     }];
                 });
             });
