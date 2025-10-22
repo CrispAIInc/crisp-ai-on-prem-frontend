@@ -1,4 +1,3 @@
-
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
@@ -195,14 +194,15 @@ const ContentSection = ({
             // Generate or reuse a session ID
             const sessionId = localStorage.getItem("sessionId") || crypto.randomUUID();
             localStorage.setItem("sessionId", sessionId);
+            console.log("Joining session:", sessionId);
 
-            // Tell the backend to join this session
-            socket.emit("join_session", { session_id: sessionId });
+            // Tell the backend to join this upload session
+            socket.emit("join_upload_session", { session_id: sessionId });
         });
 
-        socket.on('disconnect', (reason) => {
-            console.log('Disconnected from server:', reason);
-        });
+        // socket.on('disconnect', (reason) => {
+        //     console.log('Disconnected from server:', reason);
+        // });
 
         socket.on('connect_error', (error) => {
             console.error('Connection error:', error);
@@ -222,27 +222,66 @@ const ContentSection = ({
         });
 
         socket.on('progress_update', (data) => {
-            console.log('Progress update:', data);
-            // Handle progress updates here
+            console.log('Progress update received:', data);
+            console.log('Step:', data.current_step, 'of', data.total_steps, '-', data.step_name);
+            console.log('Progress percentage:', data.progress_percentage);
+
+            // Update the displayed sources with real progress
+            setDisplayedSources((prev) => {
+                return prev.map((source) => {
+                    // Update progress for sources that are currently being uploaded
+                    // Check if this source is being uploaded (has progress property)
+                    if (source.progress !== undefined) {
+                        return {
+                            ...source,
+                            progress: data.progress_percentage || 0,
+                            step: data.step_name || source.step
+                        };
+                    }
+                    return source;
+                });
+            });
         });
 
         socket.on('upload_error', (data) => {
             console.log('Upload error:', data);
-            // Handle errors here
+            setIsUploadFailed(true);
+            setUploadStatus("error");
+            setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
         });
 
         socket.on('upload_complete', (data) => {
             console.log('Upload complete:', data);
-            // Handle completion here
+            if (data.success) {
+                setUploadStatus("success");
+                setIsFileUploading(false);
+                setIsProgressStarted(false);
+                // Clear the displayed sources progress
+                setDisplayedSources((prev) => {
+                    return prev.map((source) => ({
+                        ...source,
+                        progress: undefined,
+                        step: ""
+                    }));
+                });
+            } else {
+                setIsUploadFailed(true);
+                setUploadStatus("error");
+            }
         });
 
         socket.on('session_joined', (data) => {
             console.log('Session joined:', data);
+            // Store the session ID for use in uploads
+            if (data.session_id) {
+                localStorage.setItem("sessionId", data.session_id);
+            }
         });
 
         socket.on('error', (data) => {
             console.log('General error:', data);
         });
+
 
         return () => {
             socket.off('connect');
@@ -260,6 +299,26 @@ const ContentSection = ({
     async function log() {
         await logout();
     }
+
+    useEffect(() => {
+        testWebSocketConnection();
+    }, []);
+
+    // Test function to verify WebSocket communication
+    const testWebSocketConnection = () => {
+        const sessionId = localStorage.getItem("sessionId");
+        console.log("Testing WebSocket connection...");
+        console.log("Current session ID:", sessionId);
+        console.log("Socket connected:", socket.connected);
+        console.log("Socket ID:", socket.id);
+
+        if (sessionId) {
+            console.log("Emitting test_progress with session:", sessionId);
+            socket.emit("test_progress", { session_id: sessionId });
+        } else {
+            console.log("No session ID found");
+        }
+    };
 
     const categoryValues = categoryOptions.map((option) => option.value);
 
@@ -725,11 +784,21 @@ const ContentSection = ({
             const files = _files || Array.from(event.target.files);
 
             const formData = new FormData();
+            const sessionId = localStorage.getItem("sessionId") || crypto.randomUUID();
+            console.log("Uploading with session_id:", sessionId);
+
+            // Ensure we're joined to the session room before starting upload
+            console.log("Joining session room before upload:", sessionId);
+            socket.emit("join_upload_session", { session_id: sessionId });
+
+            // Wait a moment for the join to complete
+            await new Promise(resolve => setTimeout(resolve, 500));
+
             files.forEach(file => {
                 formData.append("file", file);
                 formData.append("category", selectedCategory);
                 formData.append("fileType", file.type);
-                formData.append("socketId", crypto.randomUUID());
+                formData.append("session_id", sessionId);
             });
 
             //TODO: loop throught files and populate the "initialSources" with the initial properties
@@ -773,10 +842,20 @@ const ContentSection = ({
             setUploadedSources(processedFiles); // Updates state but is asynchronous
 
             const formData = new FormData();
+            const sessionId = localStorage.getItem("sessionId") || crypto.randomUUID();
+
+            // Ensure we're joined to the session room before starting upload
+            console.log("Joining session room before upload:", sessionId);
+            socket.emit("join_upload_session", { session_id: sessionId });
+
+            // Wait a moment for the join to complete
+            await new Promise(resolve => setTimeout(resolve, 500));
+
             files.forEach(file => {
                 formData.append("file", file);
                 formData.append("category", selectedCategory);
                 formData.append("fileType", file.type);
+                formData.append("session_id", sessionId);
             });
 
             // await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
@@ -882,6 +961,14 @@ const ContentSection = ({
                                     <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
 
+                                </div>
+
+                                {/* Test WebSocket Button - Remove this in production */}
+                                <div
+                                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'} !bg-red-600`}
+                                    onClick={testWebSocketConnection}
+                                >
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Test WS</span>
                                 </div>
 
                             </div>
@@ -1126,7 +1213,7 @@ const ContentSection = ({
                 <div className="relative" ref={settingsMenuRef}>
                     {/* Main button */}
                     <div
-                        className={`flex items-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit 
+                        className={`flex items-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit
       ${theme === "light"
                                 ? "hover:bg-textColor-100/50"
                                 : "hover:bg-light-hover-200/20"
@@ -1155,7 +1242,7 @@ const ContentSection = ({
                                     }`}
                             >
                                 <div
-                                    className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-1 
+                                    className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-1
             ${theme === "light"
                                             ? "hover:bg-textColor-100/40"
                                             : "text-textColor-100 hover:bg-slate-800/50"
@@ -1174,7 +1261,7 @@ const ContentSection = ({
                                 </div>
 
                                 <div
-                                    className={`flex text-red-600 items-center cursor-pointer gap-2 py-2 pr-10 pl-1  
+                                    className={`flex text-red-600 items-center cursor-pointer gap-2 py-2 pr-10 pl-1
             ${theme === "light"
                                             ? "hover:bg-textColor-100/40"
                                             : "hover:bg-slate-800/50"
