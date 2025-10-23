@@ -1,6 +1,7 @@
 import ReactPlayer from "react-player";
 import CloseIcon from '@mui/icons-material/Close';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import InfoIcon from '@mui/icons-material/Info';
 import useFirebase from '../../hooks/useFirebase.js';
 import toast from 'react-simple-toasts';
 import { useContext, useState, useEffect } from 'react';
@@ -11,6 +12,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
 import useResources from '../../hooks/useResources';
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
+import { Drawer } from '@mui/material';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -170,6 +172,12 @@ function ReelViewer({ closeReel, reel, setReels }) {
         }
     };
 
+    const [isReelPropsOpen, setIsReelPropsOpen] = useState(false);
+    const handleDisplayReelProps = (e) => {
+        e.stopPropagation();
+        setIsReelPropsOpen(true);
+    };
+
     return (
         <div className="fixed top-0 left-0 !z-50 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-75" onClick={(e) => handleOutsideClick(e)}>
             {/* Reel viewer container */}
@@ -195,6 +203,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
                                 onClick={(event) => handleRemoveReel(event)}
                                 className="!text-[15px] w-full h-full text-white rounded-full" />}
                         </div> */}
+                        <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleDisplayReelProps(e)} />
                         <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
                         <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                     </div>
@@ -213,6 +222,11 @@ function ReelViewer({ closeReel, reel, setReels }) {
                     controls
                 />
             </div>
+
+            {/* reel properties side drawer */}
+            <Drawer anchor="right" open={isReelPropsOpen} onClose={() => setIsReelPropsOpen(false)}>
+                <p>reel props</p>
+            </Drawer>
         </div >
     );
 }
