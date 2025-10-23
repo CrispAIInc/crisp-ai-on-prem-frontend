@@ -2167,9 +2167,9 @@ const ContentSection = ({
                 });
             });
 
-            // const data = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
+            const data = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
-            // console.log(data);
+            console.log(data);
 
 
         } catch (error) {
