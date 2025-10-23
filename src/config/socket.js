@@ -11,12 +11,12 @@ console.log('=== END WEBSOCKET DEBUG ===');
 
 const socket = io(WS_ENDPOINT, {
     transports: ['websocket', 'polling'],
-    timeout: 180000,  // Increased timeout
-    reconnectionDelay: 12000,  // Increased delay
-    reconnectionAttempts: 0,  // More attempts
-    maxReconnectionAttempts: 10,
-    pingTimeout: 180000,  // Increased ping timeout
-    pingInterval: 180000   // Increased ping interval
+    timeout: 20000,  // 20 seconds
+    reconnectionDelay: 1000,  // 1 second
+    reconnectionAttempts: 5,  // 5 attempts
+    maxReconnectionAttempts: 5,
+    pingTimeout: 60000,  // 60 seconds (should be longer than backend ping_interval)
+    pingInterval: 25000   // 25 seconds (should be shorter than backend ping_timeout)
 });
 
 // Immediate connection test
@@ -27,17 +27,6 @@ console.log('Socket ID:', socket.id);
 // Add connection event listeners for debugging
 socket.on('connect', () => {
     console.log('Socket connected successfully:', socket.id);
-
-    // Generate or reuse a session ID
-    const sessionId = localStorage.getItem("sessionId") || crypto.randomUUID();
-    localStorage.setItem("sessionId", sessionId);
-
-    // Tell the backend to join this session
-    socket.emit("join_session", { session_id: sessionId });
-});
-
-socket.on('disconnect', (reason) => {
-    console.log('Disconnected from server:', reason);
 });
 
 socket.on('connect_error', (error) => {
