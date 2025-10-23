@@ -13,6 +13,7 @@ import './fade.css';
 import useResources from '../../hooks/useResources';
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
 import { Drawer } from '@mui/material';
+import ReelProps from '../ReelProps/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -225,7 +226,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
 
             {/* reel properties side drawer */}
             <Drawer anchor="right" open={isReelPropsOpen} onClose={() => setIsReelPropsOpen(false)}>
-                <p>reel props</p>
+                <ReelProps reel={reel} />
             </Drawer>
         </div >
     );
