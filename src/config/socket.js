@@ -16,7 +16,7 @@ const socket = io(WS_ENDPOINT, {
     reconnectionAttempts: 5,  // 5 attempts
     maxReconnectionAttempts: 5,
     pingTimeout: 60000,  // 60 seconds (should be longer than backend ping_interval)
-    pingInterval: 25000   // 25 seconds (should be shorter than backend ping_timeout)
+    pingInterval: 10000   // 25 seconds (should be shorter than backend ping_timeout)
 });
 
 // Immediate connection test

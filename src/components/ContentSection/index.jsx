@@ -1540,6 +1540,18 @@ const ContentSection = ({
         //?what is the user uploads multiple sources? how to manage the right source
         //?how to know the upload of a source is finished so i can hide the progress bar
 
+        /**
+         * Define progress percentages for different file types
+            video_process_percentage = {
+                "Video pre-processing...": 3,
+                "Captioning...": 38,
+                "Transcribing...": 58,
+                "Summarizing...": 89,
+                "Generating embeddings...": 97,
+                "Upload completed...": 100,
+            }
+         */
+
         socket.on('progress_update', (data) => {
             setProgressUpdateCount(prev => prev + 1);
 
@@ -1550,7 +1562,28 @@ const ContentSection = ({
                     // Check if this source is being uploaded (has progress property)
 
                     //TODO: source.source_path === data.source_path ?
-                    if (source.progress !== undefined && data.progress_percentage < 100) {
+                    if (source.progress !== undefined && data.progress_percentage < 100 && data.currentIndex === source?.index) {
+                        if (data?.step_name === "Summarizing...") {
+                            return {
+                                ...source,
+                                metadata: {
+                                    ...source.metadata,
+                                    transcription: {
+                                        content: data.content,
+                                        title: "Transcription"
+                                    }
+                                }
+                            };
+                        }
+                        if (data?.step_name === "Generating embeddings...") {
+                            return {
+                                ...source,
+                                metadata: {
+                                    ...source.metadata,
+                                    summary: data.content
+                                }
+                            };
+                        }
                         return {
                             ...source,
                             ...data,
@@ -1571,18 +1604,21 @@ const ContentSection = ({
         });
 
         socket.on('upload_complete', (data) => {
-            console.log('Upload complete:', data);
+            console.log('*****************************Upload complete:*********************', data);
             if (data.success) {
                 setUploadStatus("success");
                 setIsFileUploading(false);
                 setIsProgressStarted(false);
                 // Clear the displayed sources progress
-                setDisplayedSources((prev) => {
-                    return prev.map((source) => ({
-                        ...source,
-                        progress: undefined,
-                        step: ""
-                    }));
+                setDisplayedSources((prev, index) => {
+                    if (data.currentIndex === index) {
+                        // remove progress and step properties from this object
+                        // delete prev.progress;
+                        // delete prev.step;
+                        const { progress, step, ...rest } = prev;
+                        return rest;
+                    }
+                    return prev;
                 });
             } else {
                 setIsUploadFailed(true);
@@ -2110,6 +2146,8 @@ const ContentSection = ({
         return localStorage.getItem("sessionId");
     };
 
+
+
     const handleUpload = async (event, fileFormat, _files) => {
         let rejoinInterval;
         try {
@@ -2148,7 +2186,7 @@ const ContentSection = ({
                     console.log("🔄 Periodic rejoin to session:", sessionId);
                     socket.emit("join_upload_session", { session_id: sessionId });
                 }
-            }, 30000); // Rejoin every 30 seconds
+            }, 5000); // Rejoin every 30 seconds
 
             files.forEach(file => {
                 formData.append("file", file);
@@ -2158,13 +2196,31 @@ const ContentSection = ({
             });
 
             //TODO: loop throught files and populate the "initialSources" with the initial properties
-            files.forEach((file, index) => {
-                console.log({ index, currentPointerIndex });
-                setDisplayedSources((prev) => {
-                    return [...prev, {
-                        category: [selectedCategory], file_type: getFileType(file.type), source_path: file.name, thumbnail: extractThumbnail(files[index]) || null, is_selected: false, progress: 0, step: "Initialize upload"
-                    }];
-                });
+
+            const fileSources = files.map((file, index) => {
+                return {
+                    category: [selectedCategory],
+                    file_type: getFileType(file.type),
+                    source_path: file.name,
+                    thumbnail: extractThumbnail(file) || null,
+                    is_selected: false,
+                    progress: 0,
+                    step: "Initialize upload",
+                    metadata: {
+                        chapters: {},
+                        embeddings_generated: false,
+                        faqs: [],
+                        highlights: {},
+                        keywords: [],
+                        summary: {},
+                        transcription: {}
+                    },
+                    index
+                };
+            });
+            setDisplayedSources((prev) => {
+                console.log([...fileSources, ...prev]);
+                return [...fileSources, ...prev];
             });
 
             const data = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
@@ -2224,7 +2280,7 @@ const ContentSection = ({
                     console.log("🔄 Periodic rejoin to session:", sessionId);
                     socket.emit("join_upload_session", { session_id: sessionId });
                 }
-            }, 30000); // Rejoin every 30 seconds
+            }, 5000); // Rejoin every 30 seconds
 
             files.forEach(file => {
                 formData.append("file", file);
@@ -2304,7 +2360,7 @@ const ContentSection = ({
         <>
             {!showMetadata && <section className={`relative flex flex-col items-start h-full`}>
 
-                {
+                {/* {
                     uploadStatus === "uploading" ? (
                         <UploadToast isUploadFailed={isUploadFailed}
                             setIsProgressStarted={setIsProgressStarted}
@@ -2314,7 +2370,7 @@ const ContentSection = ({
                     ) : uploadStatus === "success" ? (
                         <SuccessToast message="Upload complete. Generate metadata from the right panel" />
                     ) : null
-                }
+                } */}
 
 
                 <div className="w-full">
@@ -2538,8 +2594,8 @@ const ContentSection = ({
                                                         alt="Video Thumbnail"
                                                     />}
                                             </div>
-                                            <div className="flex flex-col gap-1">
-                                                <AnimatedText cssClasses='text-xs' text={option?.step} />
+                                            <div className="flex flex-col ">
+                                                {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs' text={option?.step} />}
                                                 <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>
