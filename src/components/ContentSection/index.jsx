@@ -1611,7 +1611,7 @@ const ContentSection = ({
                 setIsProgressStarted(false);
                 // Clear the displayed sources progress
                 setDisplayedSources((prev, index) => {
-                    if (data.currentIndex === index) {
+                    if (data.currentIndex === prev?.index) {
                         // remove progress and step properties from this object
                         // delete prev.progress;
                         // delete prev.step;
