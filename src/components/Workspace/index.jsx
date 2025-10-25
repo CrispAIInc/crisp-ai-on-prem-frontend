@@ -71,7 +71,7 @@ const Workspace = () => {
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => { setIsRightSidebarOpen(!isRightSidebarOpen); }} />
             </div>
 
-            <Drawer anchor="right" open={true} className="flex flex-col !overflow-y-hidden">
+            <Drawer anchor="right" open={true}>
                 <ReelProps />
             </Drawer>
         </main>
