@@ -225,7 +225,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
             </div>
 
             {/* reel properties side drawer */}
-            <Drawer anchor="right" open={isReelPropsOpen} onClose={() => setIsReelPropsOpen(false)}>
+            <Drawer slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={() => setIsReelPropsOpen(false)}>
                 <ReelProps />
             </Drawer>
         </div >
