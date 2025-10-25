@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import { formatDuration, formatReadableDate } from '../../utils';
+import AccessTimeFilledOutlinedIcon from '@mui/icons-material/AccessTimeFilledOutlined';
 
 function ReelProps({ reel = {
     createdAt: new Date('2024-01-01T12:00:00Z'),
@@ -14,24 +15,31 @@ function ReelProps({ reel = {
     ],
     context: "Sample context for the reel.",
     reelDuration: 143,
-    test: 908390,
-    tesdfsdfst: 908390,
-    sfgfdg: 908390,
-    tesdfsdfsdfst: 908390,
-    tesdfsdfddfst: 908390,
-    tesdfsdsdfsdffst: 908390,
-    tsdfsdfesdfsdfst: 908390,
-    tesdfsdsdfsdfst: 908390,
-    tesdfsdfddst: 908390,
-    tesdfsdfssdfsdffft: 908390,
+    // reel history
+    editingHistory: [
+        { action: "Started a new reel titled “My Coorg travel Adventure”", date: new Date('2024-01-01T12:00:00Z') },
+        { action: "Changed title to “Coorg nature trip Highlights”", date: new Date('2024-01-02T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
+    ]
 } }) {
     const { theme } = useContext(MainContext);
     return (
-        <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"}`}>
+        <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 max-h-full overflow-y-hidden`}>
             <h5 className='text-gradient-x'>Reel Properties</h5>
-            <div className='flex flex-col mt-4'>
+            <div className='flex flex-col flex-1 overflow-y-hidden'>
                 {
-                    Object.entries(reel).map(([key, value]) => {
+                    Object.entries(reel).filter(([key, value]) => key !== "editingHistory").map(([key, value]) => {
                         if (key === 'videosUsed') {
                             return (
                                 <div key={key} className='mb-4'>
@@ -61,21 +69,26 @@ function ReelProps({ reel = {
                         }
                     })
                 }
-                <div className="flex-1">
+                {/* editing history */}
+                <div className="flex flex-col flex-1 h-full overflow-y-hidden">
                     <strong>Editing history</strong>
                     {/* make this section scrollable vertically */}
-                    <div className="p-2 mt-2 overflow-y-auto border rounded max-h-32 bg-background_workspace">
+                    <div className={`p-2 mt-2 flex-1 overflow-y-auto  ${theme === 'light' ? '!border !border-light-hover-200' : '!border !border-textColor-200'} rounded bg-background_workspace`}>
                         {
-                            [{ action: "Created", date: new Date('2024-01-01T12:00:00Z') }, { action: "Updated", date: new Date('2024-01-02T12:00:00Z') }, { action: "Created", date: new Date('2024-01-01T12:00:00Z') }, { action: "Updated", date: new Date('2024-01-02T12:00:00Z') }, { action: "Created", date: new Date('2024-01-01T12:00:00Z') }, { action: "Updated", date: new Date('2024-01-02T12:00:00Z') }, { action: "Created", date: new Date('2024-01-01T12:00:00Z') }, { action: "Updated", date: new Date('2024-01-02T12:00:00Z') },].map((edit, index) => (
-                                <div key={index} className='mb-1'>
-                                    {edit.action} on {formatReadableDate(edit.date)}
+                            reel.editingHistory.map((edit, index) => (
+                                <div key={index} className='flex flex-col mb-1'>
+                                    <div>
+                                        <AccessTimeFilledOutlinedIcon fontSize="small" className="inline-block mb-1 mr-1 text-purple-400" />
+                                        <span className="font-semibold text-gradient-x">{formatReadableDate(edit.date)}</span>
+                                    </div>
+                                    <p className='text-sm'>{edit.action}</p>
                                 </div>
                             ))
                         }
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
