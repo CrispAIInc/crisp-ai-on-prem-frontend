@@ -49,7 +49,7 @@ function ReelProps({ reel = {
                         } else if (key === "reelDuration") {
                             return (
                                 <div key={key} className='mb-2'>
-                                    <strong key={key}>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {formatDuration(value)}
+                                    <strong key={key}>Reel duration:</strong> {formatDuration(value)}
                                 </div>
                             );
                         } else {
