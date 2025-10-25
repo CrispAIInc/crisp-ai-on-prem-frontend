@@ -1610,7 +1610,7 @@ const ContentSection = ({
                 setIsFileUploading(false);
                 setIsProgressStarted(false);
                 // Clear the displayed sources progress
-                setDisplayedSources((prev, index) => {
+                setDisplayedSources((prev) => {
                     if (data.currentIndex === prev?.index) {
                         // remove progress and step properties from this object
                         // delete prev.progress;
