@@ -3,7 +3,7 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 import { isRtlLanguage } from '../../utils';
 // import useCheckMobileScreen from '../../hooks/useCheckMobileScreen';
 
-function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, chosenLanguage }) {
+function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, chosenLanguage = "en", fromReelProps = false }) {
     const [isOpen, setIsOpen] = useState(isFirstOpen);
     const { theme } = useContext(MainContext);
     // const isMobile = useCheckMobileScreen();
@@ -13,7 +13,7 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, ch
 
     return (
         <div
-            className={`${isBoxed && '!border !border-gray-200'}  rounded-lg  bg-transparent backdrop-blur-xs p-2 `}
+            className={`${isBoxed && '!border !border-gray-200'}  rounded-lg  bg-transparent backdrop-blur-xs p-2 ${fromReelProps && 'overflow-y-hidden flex flex-col'}`}
         >
             <button
                 onClick={toggleFAQ}
@@ -38,7 +38,7 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, ch
             </button>
             <div
                 className={`overflow-hidden select-text transition-all ease-linear duration-500 ${isOpen ? "max-h-[10000000px] p-2 mb-3 opacity-100" : "max-h-0 opacity-0"
-                    } `}
+                    } ${fromReelProps && "overflow-y-auto h-full max-h-full flex-1"}`}
             >
                 {children}
             </div>
