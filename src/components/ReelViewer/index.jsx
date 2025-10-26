@@ -174,9 +174,13 @@ function ReelViewer({ closeReel, reel, setReels }) {
     };
 
     const [isReelPropsOpen, setIsReelPropsOpen] = useState(false);
-    const handleDisplayReelProps = (e) => {
+    const handleToggleReelProps = (e) => {
         e.stopPropagation();
-        setIsReelPropsOpen(true);
+        setIsReelPropsOpen(prev => !prev);
+    };
+
+    const handleCloseReelProps = () => {
+        setIsReelPropsOpen(false);
     };
 
     return (
@@ -204,7 +208,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
                                 onClick={(event) => handleRemoveReel(event)}
                                 className="!text-[15px] w-full h-full text-white rounded-full" />}
                         </div> */}
-                        <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleDisplayReelProps(e)} />
+                        <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
                         <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
                         <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                     </div>
@@ -225,8 +229,8 @@ function ReelViewer({ closeReel, reel, setReels }) {
             </div>
 
             {/* reel properties side drawer */}
-            <Drawer slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={() => setIsReelPropsOpen(false)}>
-                <ReelProps />
+            <Drawer slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={handleCloseReelProps}>
+                <ReelProps closeReelProps={handleCloseReelProps} />
             </Drawer>
         </div >
     );
