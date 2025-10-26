@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import { formatDuration, formatReadableDate } from '../../utils';
 import AccessTimeFilledOutlinedIcon from '@mui/icons-material/AccessTimeFilledOutlined';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 
 function ReelProps({ reel = {
     createdAt: new Date('2024-01-01T12:00:00Z'),
@@ -32,11 +33,14 @@ function ReelProps({ reel = {
         { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
         { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
     ]
-} }) {
+}, closeReelProps = () => { } }) {
     const { theme } = useContext(MainContext);
     return (
         <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 max-h-full overflow-y-hidden`}>
-            <h5 className='text-gradient-x'>Reel Properties</h5>
+            <div className="flex items-center justify-between">
+                <h5 className='text-gradient-x'>Reel Properties</h5>
+                <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="rotate-180 cursor-pointer" onClick={closeReelProps} />
+            </div>
             <div className='flex flex-col flex-1 overflow-y-hidden'>
                 {
                     Object.entries(reel).filter(([key, value]) => key !== "editingHistory").map(([key, value]) => {
