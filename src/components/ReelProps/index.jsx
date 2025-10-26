@@ -4,6 +4,13 @@ import { formatDuration, formatReadableDate } from '../../utils';
 import AccessTimeFilledOutlinedIcon from '@mui/icons-material/AccessTimeFilledOutlined';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import Accordion from "../Accordion";
+import Timeline from '@mui/lab/Timeline';
+import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 function ReelProps({ reel = {
     createdAt: new Date('2024-01-01T12:00:00Z'),
@@ -82,17 +89,22 @@ function ReelProps({ reel = {
                         {/* <strong>Editing history</strong> */}
                         {/* make this section scrollable vertically */}
                         <div className={`p-2 mt-2 flex-1 overflow-y-auto  ${theme === 'light' ? '!border !border-light-hover-200' : '!border !border-textColor-200'} rounded bg-background_workspace`}>
-                            {
-                                reel.editingHistory.map((edit, index) => (
-                                    <div key={index} className='flex flex-col mb-1'>
-                                        <div>
-                                            <AccessTimeFilledOutlinedIcon fontSize="small" className="inline-block mb-1 mr-1 text-purple-400" />
-                                            <span className="font-semibold text-gradient-x">{formatReadableDate(edit.date)}</span>
-                                        </div>
-                                        <p className='text-sm'>{edit.action}</p>
-                                    </div>
-                                ))
-                            }
+                            <Timeline position="alternate">
+                                {
+                                    reel.editingHistory.map(({ date, action }) => (
+                                        <TimelineItem key={date.toISOString() + action}>
+                                            <TimelineOppositeContent className="text-sm !font-bold text-gradient-x">
+                                                {formatReadableDate(new Date(date))}
+                                            </TimelineOppositeContent>
+                                            <TimelineSeparator>
+                                                <TimelineDot variant="outlined" color="secondary" />
+                                                <TimelineConnector />
+                                            </TimelineSeparator>
+                                            <TimelineContent>{action}</TimelineContent>
+                                        </TimelineItem>
+                                    ))
+                                }
+                            </Timeline>
                         </div>
                     </div>
                 </Accordion>
