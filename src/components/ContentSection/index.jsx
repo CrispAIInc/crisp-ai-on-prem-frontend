@@ -1594,7 +1594,12 @@ const ContentSection = ({
                                 step: data.step_name,
                                 metadata: {
                                     ...source.metadata,
-                                    summary: data.content
+                                    summary: {
+                                        content: data.content,
+                                        title: data.title,
+                                        verbosity: data.verbosity,
+                                        temperature: data.temperature
+                                    }
                                 }
                             };
                         }
