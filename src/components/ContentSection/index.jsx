@@ -2419,12 +2419,12 @@ const ContentSection = ({
                                 </div>
 
                                 {/* Test WebSocket Button - Remove this in production */}
-                                <div
+                                {/* <div
                                     className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                     onClick={testWebSocketConnection}
                                 >
                                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Test WS</span>
-                                </div>
+                                </div> */}
 
                             </div>
                         </div>
