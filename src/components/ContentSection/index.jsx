@@ -1569,6 +1569,7 @@ const ContentSection = ({
                             return {
                                 ...rest,
                                 ...data,
+                                is_selected: true
                             };
                         }
                         if (data?.step_name === "Summarizing...") {
@@ -1635,7 +1636,10 @@ const ContentSection = ({
                         // delete prev.progress;
                         // delete prev.step;
                         const { progress, step, ...rest } = prev;
-                        return rest;
+                        return {
+                            ...rest,
+                            is_selected: true
+                        };
                     }
                     return prev;
                 });
