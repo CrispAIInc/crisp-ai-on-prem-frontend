@@ -1562,10 +1562,21 @@ const ContentSection = ({
                     // Check if this source is being uploaded (has progress property)
 
                     //TODO: source.source_path === data.source_path ?
-                    if (source.progress !== undefined && data.progress_percentage < 100 && data.currentIndex === source?.index) {
+                    if (source.progress !== undefined && data.progress_percentage <= 100 && data.currentIndex === source?.index) {
+                        // if current progress is 100 => current source finished uploading => remove progress and step from current source
+                        if (data.progress_percentage === 100) {
+                            const { progress, step, ...rest } = source;
+                            return {
+                                ...rest,
+                                ...data,
+                            };
+                        }
                         if (data?.step_name === "Summarizing...") {
                             return {
                                 ...source,
+                                ...data,
+                                progress: data.progress_percentage,
+                                step: data.step_name,
                                 metadata: {
                                     ...source.metadata,
                                     transcription: {
@@ -1578,6 +1589,9 @@ const ContentSection = ({
                         if (data?.step_name === "Generating embeddings...") {
                             return {
                                 ...source,
+                                ...data,
+                                progress: data.progress_percentage,
+                                step: data.step_name,
                                 metadata: {
                                     ...source.metadata,
                                     summary: data.content
