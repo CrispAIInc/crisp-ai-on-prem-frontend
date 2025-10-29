@@ -72,6 +72,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
     ];
 
+    const [persistedUploadedFiles, setPersistedUploadedFiles] = useState([]);
+
 
     useEffect(() => {
         getIndexes();
@@ -229,6 +231,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     useEffect(() => {
         // add all selected sources from knowledgebase to displayedsources
+        console.log("knowledgebase effect from main provider: ", displayedSources);
         setDisplayedSources(prev => {
             const newSources = knowledgeBase.filter(item => item.is_selected && !prev.some(i => i.source_path === item.source_path));
             return [...prev, ...newSources];
@@ -270,6 +273,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         setKnowledgeBase(updatedKnowledgeBase);
 
         // update displayedsources such that if file.is_source is true, add it to displayedsources otherwise if it is already in displayedsources, just make its property "is_selected" to false without removing it from displayedsources
+        console.log("handleToggleCheckSources from main context");
         setDisplayedSources((prev) => {
             const exists = prev.find((item) => item.source_path === file.source_path);
             // const fileFromKb = knowledgeBase.find((item) => item.source_path === file.source_path);
@@ -1095,6 +1099,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     // create value object with all the states
     const value = {
         reels, setReels,
+        persistedUploadedFiles, setPersistedUploadedFiles,
         // user, setUser,
         isFileUploading, setIsFileUploading,
         uploadedSources, setUploadedSources,

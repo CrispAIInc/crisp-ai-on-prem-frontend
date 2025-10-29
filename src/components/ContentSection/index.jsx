@@ -1474,7 +1474,8 @@ const ContentSection = ({
         selectedAll,
         setSelectedAll,
         theme,
-        chatLoaded
+        chatLoaded,
+        persistedUploadedFiles, setPersistedUploadedFiles
     } = useContext(MainContext);
 
     const { categoryValuesWithoutAll } = useResources();
@@ -1482,6 +1483,7 @@ const ContentSection = ({
     const { user } = useContext(AuthContext);
 
     const { logout } = useAuth();
+
 
     useEffect(() => {
         // Connection events
@@ -1557,7 +1559,7 @@ const ContentSection = ({
 
             // Update the displayed sources with real progress
             setDisplayedSources((prev) => {
-                return prev.map((source) => {
+                const displayedSourcesFromProgressEvent = prev.map((source) => {
                     // Update progress for sources that are currently being uploaded
                     // Check if this source is being uploaded (has progress property)
 
@@ -1568,6 +1570,7 @@ const ContentSection = ({
                             const { progress, step, ...rest } = source;
                             return {
                                 ...rest,
+                                ...persistedUploadedFiles,
                                 ...data,
                                 is_selected: true
                             };
@@ -1575,6 +1578,7 @@ const ContentSection = ({
                         if (data?.step_name === "Summarizing...") {
                             return {
                                 ...source,
+                                ...persistedUploadedFiles,
                                 ...data,
                                 progress: data.progress_percentage,
                                 step: data.step_name,
@@ -1590,6 +1594,7 @@ const ContentSection = ({
                         if (data?.step_name === "Generating embeddings...") {
                             return {
                                 ...source,
+                                ...persistedUploadedFiles,
                                 ...data,
                                 progress: data.progress_percentage,
                                 step: data.step_name,
@@ -1606,13 +1611,15 @@ const ContentSection = ({
                         }
                         return {
                             ...source,
+                            ...persistedUploadedFiles,
                             ...data,
                             progress: data.progress_percentage || 0,
                             step: data.step_name || source.step
                         };
                     }
-                    return source;
+                    return { ...source, ...persistedUploadedFiles };
                 });
+                return displayedSourcesFromProgressEvent;
             });
         });
 
@@ -1650,17 +1657,11 @@ const ContentSection = ({
         });
 
         socket.on('session_joined', (data) => {
-            console.log('Session joined:', data);
             // Store the session ID for use in uploads
             if (data.session_id) {
                 localStorage.setItem("sessionId", data.session_id);
                 console.log('💾 Session ID saved to localStorage:', data.session_id);
             }
-        });
-
-        socket.on('test_message', (data) => {
-            console.log('🧪 Test message received:', data);
-            console.log('🧪 Current socket ID when receiving test message:', socket.id);
         });
 
         socket.on('error', (data) => {
@@ -1684,27 +1685,11 @@ const ContentSection = ({
             socket.off('session_joined');
             socket.off('error');
         };
-    }, [socket]);
+    }, []);
 
     async function log() {
         await logout();
     }
-
-    // Test function to verify WebSocket communication
-    const testWebSocketConnection = () => {
-        const sessionId = localStorage.getItem("sessionId");
-        console.log("Testing WebSocket connection...");
-        console.log("Current session ID:", sessionId);
-        console.log("Socket connected:", socket.connected);
-        console.log("Socket ID:", socket.id);
-
-        if (sessionId) {
-            console.log("Emitting test_progress with session:", sessionId);
-            socket.emit("test_progress", { session_id: sessionId });
-        } else {
-            console.log("No session ID found");
-        }
-    };
 
     const categoryValues = categoryOptions.map((option) => option.value);
 
@@ -1850,18 +1835,6 @@ const ContentSection = ({
         }
     };
 
-    const simulateApiCall = (data, success = true, delay = 4000) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (success) {
-                    resolve({ status: 200, data: data });
-                } else {
-                    reject({ status: 500, message: 'Internal Server Error' });
-                }
-            }, delay);
-        });
-    };
-
 
     const handleExploreSources = () => {
         setShowSourceExplorer(true);
@@ -1993,6 +1966,7 @@ const ContentSection = ({
 
     function handleToggleCheckSources(isChecked) {
         if (isChecked) {
+            console.log("handleToggleCheckSources");
             setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: true })));
             // update knowledgebase depending on the items selected in displayedSources
             const updatedKnowledgeBase = knowledgeBase.map((prev) => {
@@ -2010,6 +1984,7 @@ const ContentSection = ({
             setKnowledgeBase(updatedKnowledgeBase);
             // setSelectedSources([]);
             setSourcesTobeCommited([]);
+            console.log("handleToggleCheckSources");
             setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: false })));
         }
     }
@@ -2099,12 +2074,14 @@ const ContentSection = ({
     const [searchValue, setSearchValue] = useState("");
 
     // Update displayedSources when knowledgeBase changes
-    useEffect(() => {
-        const knowledgePaths = new Set(knowledgeBase.map(item => item.source_path));
-        setDisplayedSources(prev =>
-            prev.filter(item => knowledgePaths.has(item.source_path))
-        );
-    }, [knowledgeBase]);
+    // useEffect(() => {
+    //     const knowledgePaths = new Set(knowledgeBase.map(item => item.source_path));
+    //     setDisplayedSources(prev =>
+    //         return {
+    //             ...prev.filter(item => knowledgePaths.has(item.source_path)),
+    //         }
+    //     );
+    // }, [knowledgeBase]);
 
     // useEffect(() => {
     // setDisplayedSources
@@ -2112,6 +2089,7 @@ const ContentSection = ({
 
     // Update results whenever displayedSources or searchValue changes
     useEffect(() => {
+        console.log("useeffect that updates results state ran!!!!!!", displayedSources);
         let filtered = displayedSources;
 
         if (searchValue.trim() !== "") {
@@ -2196,9 +2174,9 @@ const ContentSection = ({
             }
 
             // Ensure we're joined to the session room before starting upload
-            console.log("Joining session room before upload:", sessionId);
-            console.log("Current socket ID:", socket.id);
-            socket.emit("join_upload_session", { session_id: sessionId });
+            // console.log("Joining session room before upload:", sessionId);
+            // console.log("Current socket ID:", socket.id);
+            // socket.emit("join_upload_session", { session_id: sessionId });
 
             // Wait a moment for the join to complete
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -2241,8 +2219,16 @@ const ContentSection = ({
                     index
                 };
             });
+
+            setPersistedUploadedFiles(fileSources);
+            setKnowledgeBase((prev) => {
+                // Merge existing knowledgeBase with new fileSources, avoiding duplicates
+                const existingPaths = new Set(prev.map(item => item.source_path));
+                const newSources = fileSources.filter(item => !existingPaths.has(item.source_path));
+                return [...newSources, ...prev];
+            });
+            console.log("handle upload");
             setDisplayedSources((prev) => {
-                console.log([...fileSources, ...prev]);
                 return [...fileSources, ...prev];
             });
 
@@ -2332,6 +2318,7 @@ const ContentSection = ({
             })));
 
             // add new uploaded sources to displayedSources
+            console.log("hanldeuploadone");
             setDisplayedSources(prev => {
                 const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
                 // sort the sources
@@ -2379,8 +2366,12 @@ const ContentSection = ({
 
     const [isProgressStarted, setIsProgressStarted] = useState(false);
     const [progressUpdateCount, setProgressUpdateCount] = useState(0);
+
+    console.log("displayedSources on render:", displayedSources);
+
     return (
         <>
+            {/* this is where i show the list of displayedSources */}
             {!showMetadata && <section className={`relative flex flex-col items-start h-full`}>
 
                 {/* {
@@ -2740,6 +2731,7 @@ const ContentSection = ({
                     />
                 )}
             </section>}
+
             {/* metadata and source section */}
             {showMetadata && (
                 <MetadataPanel leftWidth={leftWidth}
