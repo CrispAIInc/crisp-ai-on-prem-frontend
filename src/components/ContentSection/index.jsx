@@ -2620,6 +2620,7 @@ const ContentSection = ({
                                                 onChange={(e) => handleCheckboxChange(e?.target?.checked, option)}
                                                 onClick={(event) => event.stopPropagation()}
                                                 inputProps={{ "aria-label": "Select source" }}
+                                                disabled={'progress' in option}
                                             />
 
                                         </div>
