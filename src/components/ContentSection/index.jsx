@@ -1484,6 +1484,7 @@ const ContentSection = ({
 
     const { logout } = useAuth();
 
+    const [prevCurrentIndex, setPrevCurrentIndex] = useState();
 
     useEffect(() => {
         // Connection events
@@ -1554,19 +1555,83 @@ const ContentSection = ({
             }
          */
 
+        /**
+         * 
+            if ('index' in source && data.currentIndex > source.index) {
+                const { progress, step, ...rest } = source;
+                return {
+                    ...rest,
+                    ...persistedUploadedFiles,
+                    ...data,
+                    is_selected: true
+                };
+            }
+         */
+
         socket.on('progress_update', (data) => {
             setProgressUpdateCount(prev => prev + 1);
 
             // Update the displayed sources with real progress
             setDisplayedSources((prev) => {
-                const displayedSourcesFromProgressEvent = prev.map((source) => {
+                return prev.map((source) => {
                     // Update progress for sources that are currently being uploaded
                     // Check if this source is being uploaded (has progress property)
 
                     //TODO: source.source_path === data.source_path ?
-                    if (source.progress !== undefined && data.progress_percentage <= 100 && data.currentIndex === source?.index) {
-                        // if current progress is 100 => current source finished uploading => remove progress and step from current source
-                        if (data.progress_percentage === 100) {
+                    if (source.progress !== undefined && data.progress_percentage <= 100) {
+                        if (data.currentIndex === source?.index) {
+                            // if current progress is 100 => current source finished uploading => remove progress and step from current source
+                            if (data.progress_percentage === 100) {
+                                const { progress, step, ...rest } = source;
+                                return {
+                                    ...rest,
+                                    ...persistedUploadedFiles,
+                                    ...data,
+                                    is_selected: true
+                                };
+                            }
+                            if (data?.step_name === "Summarizing...") {
+                                return {
+                                    ...source,
+                                    ...persistedUploadedFiles,
+                                    ...data,
+                                    progress: data.progress_percentage,
+                                    step: data.step_name,
+                                    metadata: {
+                                        ...source.metadata,
+                                        transcription: {
+                                            content: data.content,
+                                            title: "Transcription"
+                                        }
+                                    }
+                                };
+                            }
+                            if (data?.step_name === "Generating embeddings...") {
+                                return {
+                                    ...source,
+                                    ...persistedUploadedFiles,
+                                    ...data,
+                                    progress: data.progress_percentage,
+                                    step: data.step_name,
+                                    metadata: {
+                                        ...source.metadata,
+                                        summary: {
+                                            content: data.content,
+                                            title: data.title,
+                                            verbosity: data.verbosity,
+                                            temperature: data.temperature
+                                        }
+                                    }
+                                };
+                            }
+                            return {
+                                ...source,
+                                ...persistedUploadedFiles,
+                                ...data,
+                                progress: data.progress_percentage || 0,
+                                step: data.step_name || source.step
+                            };
+                        } else if (data.currentIndex > source?.index) {
                             const { progress, step, ...rest } = source;
                             return {
                                 ...rest,
@@ -1575,51 +1640,10 @@ const ContentSection = ({
                                 is_selected: true
                             };
                         }
-                        if (data?.step_name === "Summarizing...") {
-                            return {
-                                ...source,
-                                ...persistedUploadedFiles,
-                                ...data,
-                                progress: data.progress_percentage,
-                                step: data.step_name,
-                                metadata: {
-                                    ...source.metadata,
-                                    transcription: {
-                                        content: data.content,
-                                        title: "Transcription"
-                                    }
-                                }
-                            };
-                        }
-                        if (data?.step_name === "Generating embeddings...") {
-                            return {
-                                ...source,
-                                ...persistedUploadedFiles,
-                                ...data,
-                                progress: data.progress_percentage,
-                                step: data.step_name,
-                                metadata: {
-                                    ...source.metadata,
-                                    summary: {
-                                        content: data.content,
-                                        title: data.title,
-                                        verbosity: data.verbosity,
-                                        temperature: data.temperature
-                                    }
-                                }
-                            };
-                        }
-                        return {
-                            ...source,
-                            ...persistedUploadedFiles,
-                            ...data,
-                            progress: data.progress_percentage || 0,
-                            step: data.step_name || source.step
-                        };
                     }
                     return { ...source, ...persistedUploadedFiles };
                 });
-                return displayedSourcesFromProgressEvent;
+                // return displayedSourcesFromProgressEvent;
             });
         });
 
