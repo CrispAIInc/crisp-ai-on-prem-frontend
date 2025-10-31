@@ -2185,6 +2185,9 @@ const ContentSection = ({
             setProgressUpdateCount(0); // Reset progress update counter
 
             const files = _files || Array.from(event.target.files);
+            const processedFiles = files.map(file => file.name);
+
+            setUploadedSources(processedFiles);
 
             const formData = new FormData();
             // Always try to reuse existing session ID, only create new one if none exists
@@ -2256,9 +2259,44 @@ const ContentSection = ({
                 return [...fileSources, ...prev];
             });
 
-            const data = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
+            const finalData = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
-            console.log(data);
+            setDisplayedSources(prev => prev.map(source => {
+                if (source.source_path === finalData?.uploaded_data[0].source_path) {
+                    return {
+                        ...source,
+                        ...finalData?.uploaded_data[0],
+                    };
+                }
+
+                return source;
+            }));
+
+            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValuesWithoutAll));
+
+            // Filter sources that match the uploaded files
+            const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
+
+            setSourcesTobeCommited(prev => [...new Set([...prev, ...sourcesToAdd.map(item => ({ ...item, is_selected: true }))])]); // Ensure uniqueness
+            // Update knowledge base
+            setKnowledgeBase(data.map(item => ({
+                ...item,
+                is_selected: sourcesToAdd.some(s => s.source_path === item.source_path) || sourcesTobeCommited.find(i => i.source_path === item.source_path)?.is_selected,
+            })));
+
+            // add new uploaded sources to displayedSources
+            setDisplayedSources(prev => {
+                const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
+                // sort the sources
+                const finalSources = sortArrayOfObjects([...prev, ...newSources.map(item => ({ ...item, is_selected: true }))], "source_path");
+                return finalSources;
+            });
+
+            setCurrentResource(sourcesToAdd[0]);
+
+            if (sourcesToAdd.length > 0) {
+                setActiveView('resource');
+            }
 
 
         } catch (error) {
@@ -2342,7 +2380,6 @@ const ContentSection = ({
             })));
 
             // add new uploaded sources to displayedSources
-            console.log("hanldeuploadone");
             setDisplayedSources(prev => {
                 const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
                 // sort the sources
