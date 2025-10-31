@@ -2150,6 +2150,7 @@ const ContentSection = ({
     const [currentPointerIndex, setCurrentPointerIndex] = useState(0);
 
     const extractThumbnail = (file) => {
+        console.log(import.meta.env.VITE_FRONTEND_URL);
         console.log(file);
         // const thumbnails = files.map((file) => {
         const type = file.type;
@@ -2157,7 +2158,7 @@ const ContentSection = ({
             type.startsWith('image/') || type.startsWith('video/')
                 ? URL.createObjectURL(file)
                 : type.startsWith('application/pdf')
-                    ? import.meta.env.VITE_FRONTEND_URL + '/PDF-file-thumbnail.png'
+                    ? "http://localhost:3000" + '/PDF-file-thumbnail.png'
                     : null;
         return preview;
         // });
@@ -2267,6 +2268,7 @@ const ContentSection = ({
             setDisplayedSources(prev => prev.map(source => {
                 // loop through finalData.uploaded_data and see if there same source_path
                 const uploadedSource = finalData.uploaded_data.find(item => item.source_path === source.source_path);
+                console.log("uploadedSource:", uploadedSource);
                 if (uploadedSource) {
                     const { progess, step, ...rest } = source;
                     return {

@@ -8,7 +8,7 @@ export default function GsFile({ gsUrl, type = "img", alt = "", ...props }) {
 
     useEffect(() => {
         if (!gsUrl) return;
-        if (gsUrl.startsWith('blob')) {
+        if (gsUrl.startsWith('blob') || gsUrl.startsWith('http')) {
             setUrl(gsUrl);
             return;
         }
