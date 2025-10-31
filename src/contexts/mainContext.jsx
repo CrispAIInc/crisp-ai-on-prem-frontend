@@ -231,7 +231,6 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     useEffect(() => {
         // add all selected sources from knowledgebase to displayedsources
-        console.log("knowledgebase effect from main provider: ", displayedSources);
         setDisplayedSources(prev => {
             const newSources = knowledgeBase.filter(item => item.is_selected && !prev.some(i => i.source_path === item.source_path));
             return [...prev, ...newSources];

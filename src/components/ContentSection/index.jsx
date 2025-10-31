@@ -1487,8 +1487,6 @@ const ContentSection = ({
     const [prevCurrentIndex, setPrevCurrentIndex] = useState();
 
     useEffect(() => {
-        // Connection events
-
         socket.on("connect", () => {
             console.log("Connected:", socket.id);
 
@@ -1500,10 +1498,6 @@ const ContentSection = ({
             // Tell the backend to join this upload session
             socket.emit("join_upload_session", { session_id: sessionId });
         });
-
-        // socket.on('disconnect', (reason) => {
-        // console.log('Disconnected from server:', reason);
-        // });
 
         socket.on('connect', () => {
             console.log('🔌 Socket connected with ID:', socket.id);
@@ -1539,34 +1533,6 @@ const ContentSection = ({
         socket.io.on("reconnect", () => {
             console.log("reconnect...");
         });
-
-        //?what is the user uploads multiple sources? how to manage the right source
-        //?how to know the upload of a source is finished so i can hide the progress bar
-
-        /**
-         * Define progress percentages for different file types
-            video_process_percentage = {
-                "Video pre-processing...": 3,
-                "Captioning...": 38,
-                "Transcribing...": 58,
-                "Summarizing...": 89,
-                "Generating embeddings...": 97,
-                "Upload completed...": 100,
-            }
-         */
-
-        /**
-         * 
-            if ('index' in source && data.currentIndex > source.index) {
-                const { progress, step, ...rest } = source;
-                return {
-                    ...rest,
-                    ...persistedUploadedFiles,
-                    ...data,
-                    is_selected: true
-                };
-            }
-         */
 
         socket.on('progress_update', (data) => {
             setProgressUpdateCount(prev => prev + 1);
@@ -2113,7 +2079,6 @@ const ContentSection = ({
 
     // Update results whenever displayedSources or searchValue changes
     useEffect(() => {
-        console.log("useeffect that updates results state ran!!!!!!", displayedSources);
         let filtered = displayedSources;
 
         if (searchValue.trim() !== "") {
@@ -2295,6 +2260,14 @@ const ContentSection = ({
                 const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
                 // sort the sources
                 const finalSources = sortArrayOfObjects([...prev, ...newSources.map(item => ({ ...item, is_selected: true }))], "source_path");
+
+                // remove progress and step from all objects in finalSources
+                return finalSources.map((source) => {
+                    const {progress, step, ...rest} = source;
+                    return {
+                        ...rest
+                    }
+                })
                 // const { progress, step, ...rest } = finalSources;
                 return finalSources;
             });
@@ -2434,8 +2407,6 @@ const ContentSection = ({
 
     const [isProgressStarted, setIsProgressStarted] = useState(false);
     const [progressUpdateCount, setProgressUpdateCount] = useState(0);
-
-    console.log("displayedSources on render:", displayedSources);
 
     return (
         <>
