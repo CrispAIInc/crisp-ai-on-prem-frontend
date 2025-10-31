@@ -2155,7 +2155,9 @@ const ContentSection = ({
         const preview =
             type.startsWith('image/') || type.startsWith('video/')
                 ? URL.createObjectURL(file)
-                : null;
+                : type.startsWith('application/pdf')
+                    ? '/PDF-file-thumbnail.png'
+                    : null;
         return preview;
         // });
         // setFileThumbnails((prev) => [...prev, ...thumbnails]);
