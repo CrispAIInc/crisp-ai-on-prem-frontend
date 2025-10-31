@@ -2150,13 +2150,14 @@ const ContentSection = ({
     const [currentPointerIndex, setCurrentPointerIndex] = useState(0);
 
     const extractThumbnail = (file) => {
+        console.log(file);
         // const thumbnails = files.map((file) => {
         const type = file.type;
         const preview =
             type.startsWith('image/') || type.startsWith('video/')
                 ? URL.createObjectURL(file)
                 : type.startsWith('application/pdf')
-                    ? '/PDF-file-thumbnail.png'
+                    ? import.meta.env.VITE_FRONTEND_URL + '/PDF-file-thumbnail.png'
                     : null;
         return preview;
         // });
