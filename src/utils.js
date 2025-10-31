@@ -246,3 +246,16 @@ export function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
+
+// return file type (video, img, pdf, msword, ppt, excel, audio, txt, other) based on mime type
+export function getFileType(mimeType) {
+    if (mimeType.startsWith('video/')) return 'video';
+    if (mimeType.startsWith('image/')) return 'img';
+    if (mimeType === 'application/pdf') return 'pdf';
+    if (mimeType === 'application/msword' || mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') return 'msword';
+    if (mimeType === 'application/vnd.ms-powerpoint' || mimeType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') return 'ppt';
+    if (mimeType === 'application/vnd.ms-excel' || mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') return 'excel';
+    if (mimeType.startsWith('audio/')) return 'audio';
+    if (mimeType === 'text/plain') return 'txt';
+    return 'other';
+}
