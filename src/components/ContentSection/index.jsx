@@ -2150,8 +2150,6 @@ const ContentSection = ({
     const [currentPointerIndex, setCurrentPointerIndex] = useState(0);
 
     const extractThumbnail = (file) => {
-        console.log(import.meta.env.VITE_FRONTEND_URL);
-        console.log(file);
         // const thumbnails = files.map((file) => {
         const type = file.type;
         const preview =

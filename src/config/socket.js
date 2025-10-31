@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 // Force hardcode to localhost:5000 for testing
-const WS_ENDPOINT = import.meta.end.VITE_STAGING_URL || 'http://localhost:5000';
+const WS_ENDPOINT = import.meta.env.VITE_STAGING_URL || 'http://localhost:5000';
 
 console.log('=== WEBSOCKET DEBUG ===');
 console.log('WebSocket connecting to:', WS_ENDPOINT);
