@@ -2262,13 +2262,14 @@ const ContentSection = ({
             const finalData = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
             setDisplayedSources(prev => prev.map(source => {
-                if (source.source_path === finalData?.uploaded_data[0].source_path) {
+                // loop through finalData.uploaded_data and see if there same source_path
+                const uploadedSource = finalData.uploaded_data.find(item => item.source_path === source.source_path);
+                if (uploadedSource) {
                     return {
                         ...source,
-                        ...finalData?.uploaded_data[0],
+                        ...uploadedSource,
                     };
                 }
-
                 return source;
             }));
 
