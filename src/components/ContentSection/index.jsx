@@ -1493,7 +1493,7 @@ const ContentSection = ({
             console.log("Connected:", socket.id);
 
             // Generate or reuse a session ID
-            const sessionId = localStorage.getItem("sessionId") || crypto?.randomUUID() || Math.random();
+            const sessionId = localStorage.getItem("sessionId") || Math.random();
             localStorage.setItem("sessionId", sessionId);
             console.log("Joining session:", sessionId);
 
@@ -2345,7 +2345,7 @@ const ContentSection = ({
             // Always try to reuse existing session ID, only create new one if none exists
             let sessionId = localStorage.getItem("sessionId");
             if (!sessionId) {
-                sessionId = crypto?.randomUUID() || Math.random();
+                sessionId = Math.random();
                 localStorage.setItem("sessionId", sessionId);
                 console.log("🆕 Created new session_id:", sessionId);
             } else {
