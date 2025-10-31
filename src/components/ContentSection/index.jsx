@@ -2158,7 +2158,7 @@ const ContentSection = ({
             type.startsWith('image/') || type.startsWith('video/')
                 ? URL.createObjectURL(file)
                 : type.startsWith('application/pdf')
-                    ? "http://localhost:3000" + '/PDF-file-thumbnail.png'
+                    ? import.meta.env.VITE_FRONTEND_URL + '/PDF-file-thumbnail.png'
                     : null;
         return preview;
         // });
