@@ -1584,8 +1584,8 @@ const ContentSection = ({
                             if (data.progress_percentage === 100) {
                                 const { progress, step, ...rest } = source;
                                 return {
+                                    // ...persistedUploadedFiles,
                                     ...rest,
-                                    ...persistedUploadedFiles,
                                     ...data,
                                     is_selected: true
                                 };
@@ -1593,7 +1593,7 @@ const ContentSection = ({
                             if (data?.step_name === "Summarizing...") {
                                 return {
                                     ...source,
-                                    ...persistedUploadedFiles,
+                                    // ...persistedUploadedFiles,
                                     ...data,
                                     progress: data.progress_percentage,
                                     step: data.step_name,
@@ -1609,7 +1609,7 @@ const ContentSection = ({
                             if (data?.step_name === "Generating embeddings...") {
                                 return {
                                     ...source,
-                                    ...persistedUploadedFiles,
+                                    // ...persistedUploadedFiles,
                                     ...data,
                                     progress: data.progress_percentage,
                                     step: data.step_name,
@@ -1626,7 +1626,7 @@ const ContentSection = ({
                             }
                             return {
                                 ...source,
-                                ...persistedUploadedFiles,
+                                // ...persistedUploadedFiles,
                                 ...data,
                                 progress: data.progress_percentage || 0,
                                 step: data.step_name || source.step
@@ -1635,13 +1635,13 @@ const ContentSection = ({
                             const { progress, step, ...rest } = source;
                             return {
                                 ...rest,
-                                ...persistedUploadedFiles,
+                                // ...persistedUploadedFiles,
                                 ...data,
                                 is_selected: true
                             };
                         }
                     }
-                    return { ...source, ...persistedUploadedFiles };
+                    return { ...source };
                 });
                 // return displayedSourcesFromProgressEvent;
             });
@@ -2158,7 +2158,7 @@ const ContentSection = ({
             type.startsWith('image/') || type.startsWith('video/')
                 ? URL.createObjectURL(file)
                 : type.startsWith('application/pdf')
-                    ? import.meta.env.VITE_FRONTEND_URL + '/PDF-file-thumbnail.png'
+                    ? (import.meta.env.VITE_APP_ENV === "production" ? import.meta.env.VITE_STAGING_URL + '/PDF-file-thumbnail.png' : import.meta.env.VITE_FRONTEND_URL + '/PDF-file-thumbnail.png')
                     : null;
         return preview;
         // });
