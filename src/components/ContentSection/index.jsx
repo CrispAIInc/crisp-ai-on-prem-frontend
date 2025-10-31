@@ -2280,6 +2280,14 @@ const ContentSection = ({
                 };
             }));
 
+            setDisplayedSources(prev => {
+                if ('progress' in prev) {
+                    const { progress, step, ...rest } = prev;
+                    return { ...rest };
+                }
+                return prev;
+            });
+
             const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValuesWithoutAll));
 
             // Filter sources that match the uploaded files
@@ -2297,7 +2305,8 @@ const ContentSection = ({
                 const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
                 // sort the sources
                 const finalSources = sortArrayOfObjects([...prev, ...newSources.map(item => ({ ...item, is_selected: true }))], "source_path");
-                return finalSources;
+                const { progress, step, ...rest } = finalSources;
+                return rest;
             });
 
             setCurrentResource(sourcesToAdd[0]);
