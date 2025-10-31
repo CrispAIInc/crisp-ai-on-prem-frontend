@@ -1463,7 +1463,8 @@ function normalizeUnicode(str) {
 }
 function getUuid() {
   if (typeof crypto !== "undefined" && typeof crypto?.randomUUID === "function") {
-    return crypto.randomUUID();
+    return Math.random()
+    // crypto.randomUUID();
   }
   const buf = new Uint8Array(32);
   if (typeof crypto !== "undefined" && typeof crypto?.getRandomValues === "function") {
