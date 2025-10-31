@@ -2268,15 +2268,16 @@ const ContentSection = ({
             setDisplayedSources(prev => prev.map(source => {
                 // loop through finalData.uploaded_data and see if there same source_path
                 const uploadedSource = finalData.uploaded_data.find(item => item.source_path === source.source_path);
-                console.log("uploadedSource:", uploadedSource);
+                const { progess, step, ...rest } = source;
                 if (uploadedSource) {
-                    const { progess, step, ...rest } = source;
                     return {
                         ...rest,
                         ...uploadedSource,
                     };
                 }
-                return source;
+                return {
+                    ...rest
+                };
             }));
 
             const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValuesWithoutAll));
