@@ -2268,8 +2268,9 @@ const ContentSection = ({
                 // loop through finalData.uploaded_data and see if there same source_path
                 const uploadedSource = finalData.uploaded_data.find(item => item.source_path === source.source_path);
                 if (uploadedSource) {
+                    const { progess, step, ...rest } = source;
                     return {
-                        ...source,
+                        ...rest,
                         ...uploadedSource,
                     };
                 }
