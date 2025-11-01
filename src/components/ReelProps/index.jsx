@@ -4,13 +4,15 @@ import { formatDuration, formatReadableDate } from '../../utils';
 import AccessTimeFilledOutlinedIcon from '@mui/icons-material/AccessTimeFilledOutlined';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import Accordion from "../Accordion";
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
+import {
+    Timeline,
+    TimelineItem,
+    TimelineOppositeContent,
+    TimelineSeparator,
+    TimelineDot,
+    TimelineConnector,
+    TimelineContent
+} from '../CustomTimeline';
 
 function ReelProps({ reel = {
     created_at: new Date('2024-01-01T12:00:00Z'),

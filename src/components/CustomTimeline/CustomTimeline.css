@@ -1,0 +1,157 @@
+.timeline {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 1rem 0;
+}
+
+/* Main timeline line */
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background-color: #e0e0e0;
+  transform: translateX(-50%);
+}
+
+.timeline-alternate .timeline-item {
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+
+.timeline-alternate .timeline-item:nth-child(odd) {
+  flex-direction: row;
+}
+
+.timeline-alternate .timeline-item:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.timeline-opposite-content {
+  flex: 1;
+  padding: 0 1rem;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.timeline-alternate .timeline-item:nth-child(even) .timeline-opposite-content {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.timeline-separator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  /* border: 2px solid; */
+  z-index: 2;
+  position: relative;
+}
+
+.timeline-dot-filled {
+  border: none;
+  background: #755bea;
+  background: linear-gradient(
+    90deg,
+    rgba(117, 91, 234, 1) 0%,
+    rgba(183, 104, 148, 1) 100%
+  );
+}
+
+.timeline-dot-outlined {
+  background-color: transparent;
+}
+
+.timeline-dot-primary {
+  background: #755bea;
+  background: linear-gradient(
+    90deg,
+    rgba(117, 91, 234, 1) 0%,
+    rgba(183, 104, 148, 1) 100%
+  );
+}
+
+.timeline-dot-secondary {
+  background: #755bea;
+  background: linear-gradient(
+    90deg,
+    rgba(117, 91, 234, 1) 0%,
+    rgba(183, 104, 148, 1) 100%
+  );
+}
+
+.timeline-connector {
+  flex-grow: 1;
+  width: 2px;
+  background: #755bea;
+  background: linear-gradient(
+    90deg,
+    rgba(117, 91, 234, 1) 0%,
+    rgba(183, 104, 148, 1) 100%
+  );
+  margin: 0.25rem 0;
+}
+
+.timeline-content {
+  flex: 1;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.timeline-alternate .timeline-item:nth-child(odd) .timeline-content {
+  text-align: left;
+}
+
+.timeline-alternate .timeline-item:nth-child(even) .timeline-content {
+  text-align: right;
+}
+
+/* Text gradient utility */
+.text-gradient-x {
+  background: #755bea;
+  background: linear-gradient(
+    90deg,
+    rgba(117, 91, 234, 1) 0%,
+    rgba(183, 104, 148, 1) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Font styling */
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+/* For the last item, don't show the connector */
+.timeline-item:last-child .timeline-connector {
+  display: none;
+}

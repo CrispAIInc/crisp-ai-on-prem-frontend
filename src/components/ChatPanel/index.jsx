@@ -770,7 +770,7 @@ const ChatPanel = () => {
     reel_video_url: "",
     thumbnail: ""
   });
-  const [isReelOpen, setIsReelOpen] = useState(false);
+  const [isReelOpen, setIsReelOpen] = useState(true);
 
   const [insightSearchValue, setInsightSearchValue] = useState("");
   const [notesResults, setNotesResults] = useState(notes);
@@ -1338,7 +1338,7 @@ const ChatPanel = () => {
                           ))
                       }
                     </div>
-                    {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} reel={reel} setReel={setReel} />}
+                    {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} setReel={setReel} />}
                   </>
             }
           </div>}

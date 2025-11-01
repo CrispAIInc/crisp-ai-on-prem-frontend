@@ -17,7 +17,56 @@ import ReelProps from '../ReelProps/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-function ReelViewer({ closeReel, reel, setReels }) {
+function ReelViewer({
+    closeReel,
+    reel = {
+        "category": "generic",
+        "created_at": "2025-10-26T20:21:23.192997",
+        "reel_video_url": "https://firebasestorage.googleapis.com/v0/b/crispai-app-462614.firebasestorage.app/o/video_uploads%2Freels%2Fgeneric%2Fsearch%20gpt.mp4",
+        "segments": [
+            {
+                "description": "This opening highlight captures the main announcement: OpenAI is directly challenging Google with a new search engine, setting the stage for a major shift in the AI and search market.",
+                "duration": 12,
+                "keyframe": "",
+                "original_end_time": "00:00:12",
+                "original_video_end_time": "00:00:12",
+                "original_video_start_time": "00:00:00",
+                "source_category": "generic",
+                "source_filename": "SGpt.mp4",
+                "start_time": "00:00:00",
+                "title": "OpenAI Announces New AI-Powered Search Engine"
+            },
+            {
+                "description": "This clip details the core functionality of the new product, explaining that key search features, including providing links to source material, will be incorporated into the main ChatGPT chatbot.",
+                "duration": 12,
+                "keyframe": "",
+                "original_end_time": "00:00:24",
+                "original_video_end_time": "00:00:24",
+                "original_video_start_time": "00:00:12",
+                "source_category": "generic",
+                "source_filename": "SGpt.mp4",
+                "start_time": "00:00:12",
+                "title": "Integrating Search Features into ChatGPT"
+            },
+            {
+                "description": "This concluding segment provides crucial market context by highlighting Microsoft's existing partnership with OpenAI and its integration of the technology into the Bing search engine.",
+                "duration": 10,
+                "keyframe": "",
+                "original_end_time": "00:00:34",
+                "original_video_end_time": "00:00:41",
+                "original_video_start_time": "00:00:31",
+                "source_category": "generic",
+                "source_filename": "SGpt.mp4",
+                "start_time": "00:00:24",
+                "title": "Microsoft's Role in the AI Search Race"
+            }
+        ],
+        "title": "search gpt",
+        "user_id": "iLe2orSVmAOcrKnottkqFVYckGf1",
+        "video_filename": "SGpt.mp4"
+    }
+    ,
+    setReels }) {
 
     const { theme } = useContext(ThemeContext);
     const { getPublicUrl } = useFirebase();
@@ -70,82 +119,7 @@ function ReelViewer({ closeReel, reel, setReels }) {
             toast('Download failed. Please try again.', { className: 'p-2 rounded-md', theme });
         }
     };
-
-    // const handleSaveReel = async (e) => {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-
-    //     try {
-    //         console.log('saving reel...');
-    //         setIsReelSaved(true);
-    //     } catch (e) {
-    //         toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-    //         setIsReelSaved(false);
-    //     }
-
-    //     toast('Reel Saved!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-    // };
-
-    // const handleRemoveReel = async (e) => {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //     setIsPending(true);
-
-    //     try {
-    //         await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
-    //             videoUrl: reel.reel_video_url
-    //         }));
-    //         toast('Reel deleted!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-
-    //         console.log("before");
-    //         const data = await makeApiRequest("/reels", "get");
-    //         setReels(data);
-    //         console.log("after");
-    //         closeReel();
-    //     } catch (e) {
-    //         toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-    //     } finally {
-    //         setIsPending(false);
-    //     }
-    // };
-
-    // function timeToSeconds(timeStr) {
-    //     const parts = timeStr.split(':').map(Number);
-    //     return parts[0] * 3600 + parts[1] * 60 + parts[2];
-    // }
-
-    // const segmentsWithSeconds = reel?.segments.map(seg => ({
-    //     ...seg,
-    //     startInSeconds: timeToSeconds(seg.start_time),
-    // }));
     const [currentTitle, setCurrentTitle] = useState('');
-
-    // const handleProgress = (progress) => {
-    //     const currentTime = progress.playedSeconds;
-
-    //     let titleToShow = 'Introduction'; // Default title
-
-    //     for (let i = 0; i < segmentsWithSeconds.length; i++) {
-    //         const currentSegment = segmentsWithSeconds[i];
-    //         const nextSegment = segmentsWithSeconds[i + 1];
-
-    //         if (currentTime >= currentSegment.startInSeconds &&
-    //             (!nextSegment || currentTime < nextSegment.startInSeconds)) {
-    //             titleToShow = currentSegment.title;
-    //             break;
-    //         }
-    //     }
-
-    //     // If it's after the last segment
-    //     const lastSegment = segmentsWithSeconds[segmentsWithSeconds.length - 1];
-    //     if (currentTime >= lastSegment.startInSeconds + 10) { // optional buffer
-    //         titleToShow = 'Conclusion';
-    //     }
-
-    //     if (titleToShow !== currentTitle) {
-    //         setCurrentTitle(titleToShow);
-    //     }
-    // };
 
     const handleOutsideClick = (e) => {
         if (e.target === e.currentTarget) {

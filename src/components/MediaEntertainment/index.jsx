@@ -162,7 +162,7 @@ function MediaEntertainment({ reel,
                 )}
             </div>
 
-            {isReelOpen && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
+            {isReelOpen && <ReelViewer closeReel={closeReel} setReel={setReel} reels={reels} setReels={setReels} />}
         </div>
     );
 }
