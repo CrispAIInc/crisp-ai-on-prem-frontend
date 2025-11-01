@@ -2648,7 +2648,7 @@ const ContentSection = ({
                                                     />}
                                             </div>
                                             <div className="flex flex-col ">
-                                                {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs' text={option?.step} />}
+                                                {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-all' text={option?.step} />}
                                                 <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>
