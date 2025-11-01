@@ -2158,19 +2158,15 @@ const ContentSection = ({
 
             const formData = new FormData();
             // Always try to reuse existing session ID, only create new one if none exists
-            let sessionId = localStorage.getItem("sessionId");
-            if (!sessionId) {
-                sessionId = Math.random();
-                localStorage.setItem("sessionId", sessionId);
-                console.log("🆕 Created new session_id:", sessionId);
-            } else {
-                console.log("♻️ Reusing existing session_id:", sessionId);
-            }
+            // Generate a unique session ID for each upload batch to avoid conflicts
+            // This ensures proper isolation between concurrent or sequential uploads
+            const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            console.log("🆕 Created new session_id for this upload batch:", sessionId);
 
             // Ensure we're joined to the session room before starting upload
-            // console.log("Joining session room before upload:", sessionId);
-            // console.log("Current socket ID:", socket.id);
-            // socket.emit("join_upload_session", { session_id: sessionId });
+            console.log("Joining session room before upload:", sessionId);
+            console.log("Current socket ID:", socket.id);
+            socket.emit("join_upload_session", { session_id: sessionId });
 
             // Wait a moment for the join to complete
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -2183,11 +2179,12 @@ const ContentSection = ({
                 }
             }, 5000); // Rejoin every 30 seconds
 
-            files.forEach(file => {
+            files.forEach((file, index) => {
                 formData.append("file", file);
                 formData.append("category", selectedCategory);
                 formData.append("fileType", file.type);
                 formData.append("session_id", sessionId);
+                formData.append("fileIndex", index);
             });
 
             //TODO: loop throught files and populate the "initialSources" with the initial properties
