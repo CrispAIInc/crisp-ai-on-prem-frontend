@@ -2121,7 +2121,7 @@ const ContentSection = ({
             type.startsWith('image/') || type.startsWith('video/')
                 ? URL.createObjectURL(file)
                 : type.startsWith('application/pdf')
-                    ? (import.meta.env.VITE_APP_ENV === "production" ? import.meta.env.VITE_STAGING_URL + '/PDF-file-thumbnail.png' : import.meta.env.VITE_FRONTEND_URL + '/PDF-file-thumbnail.png')
+                    ? (import.meta.env.VITE_APP_ENV === "production" ? import.meta.env.VITE_STAGING_FRONTEND_URL + '/PDF-file-thumbnail.png' : "http://localhost:3000" + '/PDF-file-thumbnail.png')
                     : null;
         return preview;
         // });
@@ -2263,11 +2263,11 @@ const ContentSection = ({
 
                 // remove progress and step from all objects in finalSources
                 return finalSources.map((source) => {
-                    const {progress, step, ...rest} = source;
+                    const { progress, step, ...rest } = source;
                     return {
                         ...rest
-                    }
-                })
+                    };
+                });
                 // const { progress, step, ...rest } = finalSources;
                 return finalSources;
             });
