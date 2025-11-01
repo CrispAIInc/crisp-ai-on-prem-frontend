@@ -2160,7 +2160,7 @@ const ContentSection = ({
             // Always try to reuse existing session ID, only create new one if none exists
             let sessionId = localStorage.getItem("sessionId");
             if (!sessionId) {
-                sessionId = crypto?.randomUUID();
+                sessionId = Math.random();
                 localStorage.setItem("sessionId", sessionId);
                 console.log("🆕 Created new session_id:", sessionId);
             } else {
