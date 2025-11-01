@@ -1602,7 +1602,7 @@ const ContentSection = ({
                             return {
                                 ...rest,
                                 // ...persistedUploadedFiles,
-                                ...data,
+                                // ...data,
                                 is_selected: true
                             };
                         }
