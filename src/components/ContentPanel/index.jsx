@@ -12,6 +12,8 @@ import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+
 import useResources from '../../hooks/useResources';
 
 const ContentPanel = () => {
@@ -25,6 +27,8 @@ const ContentPanel = () => {
         knowledgeBase, setKnowledgeBase,
         onThumbnailClick,
         isLeftSidebarOpen,
+        setShowMetadata,
+        showMetadata,
         setIsLeftSidebarOpen, setTheme, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, contentPanelContainerRef } = useContext(MainContext);
 
 
@@ -148,12 +152,28 @@ const ContentPanel = () => {
         setTheme(newTheme);
     };
 
+    const closeEditor = () => {
+        setShowMetadata(false);
+    };
+
 
     return (
         <aside className={`relative z-10 select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col relative`} ref={contentPanelContainerRef} style={{
             width: leftWidth
         }}>
             <div className="flex items-center justify-between">
+                {/* return button */}
+                {
+                    showMetadata && (
+                        <h5
+                            onClick={closeEditor}
+                            className={`return-icon absolute left-1 top-2 cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                } text-[22px]`}
+                        >
+                            <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                        </h5>
+                    )
+                }
                 <h5 className={`flex-1 mb-0 select-none p-[10px] text-center  ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
                     }`}>Sources</h5>
                 <div

@@ -3,6 +3,10 @@
   overflow-y: auto;
 }
 
+.return-icon {
+  transform: rotateX(-180deg) !important;
+}
+
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-item .nav-link.active {
   color: var(--color-primary-200) !important;

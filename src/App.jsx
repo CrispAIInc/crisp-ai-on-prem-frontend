@@ -19,7 +19,6 @@ import MainProvider from './contexts/mainContext.jsx';
 import SettingsProvider from './contexts/settingsContext.jsx';
 import VerifyAccount from './components/VerifyAccount';
 import AuthRoute from './components/Auth/AuthRoute.jsx';
-import UploadSimulator from './components/UploadSimulator/index.jsx';
 
 
 function App() {
