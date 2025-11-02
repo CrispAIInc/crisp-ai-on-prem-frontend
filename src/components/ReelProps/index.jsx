@@ -50,7 +50,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                 </Accordion>
                 {/* videos used */}
                 <Accordion fromReelProps chosenLanguage={"en"} heading="Sources used in this reel">
-                    <div className='mb-4'>
+                    <div>
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
                             {reel?.sources?.map((video, index) => (
