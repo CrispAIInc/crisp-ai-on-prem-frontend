@@ -6,22 +6,22 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import Accordion from "../Accordion";
-import {
-    Timeline,
-    TimelineItem,
-    TimelineOppositeContent,
-    TimelineSeparator,
-    TimelineDot,
-    TimelineConnector,
-    TimelineContent
-} from '../CustomTimeline';
+// import {
+//     Timeline,
+//     TimelineItem,
+//     TimelineOppositeContent,
+//     TimelineSeparator,
+//     TimelineDot,
+//     TimelineConnector,
+//     TimelineContent
+// } from '../CustomTimeline';
 import GsFile from '../GsFile';
 
 function ReelProps({ reel, closeReelProps = () => { } }) {
     const { filename, id, reel_video_url, thumbnail, user_id, ...rest } = reel;
     const { theme } = useContext(MainContext);
     return (
-        <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 max-h-full`}>
+        <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3`}>
             <div className="flex items-center justify-between">
                 <h5 className='mb-0 text-gradient-x'>Reel Properties</h5>
                 <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="rotate-180 cursor-pointer" onClick={closeReelProps} />
