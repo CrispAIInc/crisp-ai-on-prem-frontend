@@ -3,8 +3,8 @@ import { MainContext } from '../../contexts/mainContext';
 import { formatDuration, formatReadableDate } from '../../utils';
 import TitleIcon from '@mui/icons-material/Title';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import Accordion from "../Accordion";
 import {
     Timeline,
@@ -21,12 +21,12 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
     const { filename, id, reel_video_url, thumbnail, user_id, ...rest } = reel;
     const { theme } = useContext(MainContext);
     return (
-        <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 max-h-full overflow-y-hidden`}>
+        <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 max-h-full`}>
             <div className="flex items-center justify-between">
                 <h5 className='mb-0 text-gradient-x'>Reel Properties</h5>
                 <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="rotate-180 cursor-pointer" onClick={closeReelProps} />
             </div>
-            <div className='flex flex-col flex-1 overflow-y-hidden'>
+            <div className='flex flex-col flex-1'>
                 <Accordion fromReelProps chosenLanguage={"en"} heading="Reel metadata" isFirstOpen>
                     <div className="pl-3">
                         {
@@ -73,22 +73,25 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
                             {reel?.segments?.map((segment, index) => (
-                                <div key={index} className='flex flex-col gap-2 p-1 rounded'>
-                                    <div className="flex items-center gap-1">
+                                <>
+                                    <div key={index} className='flex flex-col gap-2 p-1 rounded'>
                                         <div className="flex items-center gap-1">
-                                            <TitleIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                            <h6 className="text-sm">{segment?.title}</h6>
+                                            <div className="flex items-center gap-1">
+                                                <TitleIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                <h6 className="mb-0 text-sm">{segment?.title}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <AccessTimeIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <h6 className="mb-0 text-sm">{formatDuration(segment?.duration)}</h6>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <PlayCircleOutlineIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <h6 className="mb-0 text-sm truncate">{segment?.source_filename}</h6>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                        <AccessTimeFilledIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                        <h6 className="text-sm">{formatDuration(segment?.duration)}</h6>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <PlayCircleIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                        <h6 className="text-sm">{formatDuration(segment?.source_filename)}</h6>
-                                    </div>
-                                </div>
+                                    <hr className="my-0 border-gray-300"></hr>
+                                </>
                             ))}
                         </div>
                     </div>
