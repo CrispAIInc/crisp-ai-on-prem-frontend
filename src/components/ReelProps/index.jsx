@@ -27,7 +27,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                 <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="rotate-180 cursor-pointer" onClick={closeReelProps} />
             </div>
             <div className='flex flex-col flex-1 overflow-y-hidden'>
-                <Accordion chosenLanguage={"en"} heading="Reel metadata" isFirstOpen>
+                <Accordion fromReelProps chosenLanguage={"en"} heading="Reel metadata" isFirstOpen>
                     <div className="pl-3">
                         {
                             Object.entries(rest).filter(([key]) => (key !== "editing_history" && key !== "sources" && key !== "segments")).map(([key, value]) => {
@@ -49,17 +49,17 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                     </div>
                 </Accordion>
                 {/* videos used */}
-                <Accordion chosenLanguage={"en"} heading="Videos Used">
+                <Accordion fromReelProps chosenLanguage={"en"} heading="Sources used in this reel">
                     <div className='mb-4'>
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
                             {reel?.sources?.map((video, index) => (
                                 <div key={index} className='flex items-start gap-2 p-1 rounded'>
                                     {/* <img src={video.thumbnail} alt={video.source_path} className='w-12 h-12 rounded' /> */}
-                                    <GsFile gsUrl={video.thumbnail} alt={reel.title} />
-                                    <div className="flex flex-col gap-1">
-                                        <p className='text-sm font-semibold truncate'>{video.source_path}</p>
-                                        <span>{video.category}</span>
+                                    <GsFile gsUrl={video.thumbnail} alt={reel.title} className="w-12 h-12 rounded" />
+                                    <div className="flex flex-col">
+                                        <p className='text-sm font-semibold truncate'>{video.filename}</p>
+                                        <span className="text-xs">{video.category}</span>
                                     </div>
                                 </div>
                             ))}
@@ -68,7 +68,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                 </Accordion>
 
                 {/* Reel segments */}
-                <Accordion chosenLanguage={"en"} heading="Reel segments">
+                <Accordion fromReelProps chosenLanguage={"en"} heading="Reel segments">
                     <div className='mb-4'>
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
@@ -95,7 +95,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                 </Accordion>
 
                 {/* editing history */}
-                <Accordion chosenLanguage={"en"} heading="Editing history" fromReelProps={true}>
+                <Accordion fromReelProps chosenLanguage={"en"} heading="Editing history" hideOverflow>
                     <div className="flex flex-col flex-1 h-full">
                         {/* <strong>Editing history</strong> */}
                         {/* make this section scrollable vertically */}
