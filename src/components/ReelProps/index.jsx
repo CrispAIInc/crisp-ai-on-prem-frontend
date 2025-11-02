@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import { formatDuration, formatReadableDate } from '../../utils';
-import AccessTimeFilledOutlinedIcon from '@mui/icons-material/AccessTimeFilledOutlined';
+import TitleIcon from '@mui/icons-material/Title';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import Accordion from "../Accordion";
 import {
     Timeline,
@@ -72,8 +73,8 @@ function ReelProps({ reel = {
                     <div className='mb-4'>
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
-                            {reel.sources.map((video, index) => (
-                                <div key={index} className='flex items-start gap-2 p-1 rounded shadow-lg'>
+                            {reel?.sources?.map((video, index) => (
+                                <div key={index} className='flex items-start gap-2 p-1 rounded'>
                                     {/* <img src={video.thumbnail} alt={video.source_path} className='w-12 h-12 rounded' /> */}
                                     <GsFile gsUrl={video.thumbnail} alt={reel.title} />
                                     <div className="flex flex-col gap-1">
@@ -85,6 +86,34 @@ function ReelProps({ reel = {
                         </div>
                     </div>
                 </Accordion>
+
+                {/* Reel segments */}
+                <Accordion chosenLanguage={"en"} heading="Reel segments">
+                    <div className='mb-4'>
+                        {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
+                        <div className='flex flex-col flex-wrap gap-2'>
+                            {reel?.segments?.map((segment, index) => (
+                                <div key={index} className='flex flex-col gap-2 p-1 rounded'>
+                                    <div className="flex items-center gap-1">
+                                        <div className="flex items-center gap-1">
+                                            <TitleIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <h5>{segment.title}</h5>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <AccessTimeFilledIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                        <h5>{formatDuration(segment.duration)}</h5>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <AccessTimeFilledIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                        <h5>{formatDuration(segment.duration)}</h5>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </Accordion>
+
                 {/* editing history */}
                 <Accordion chosenLanguage={"en"} heading="Editing history" fromReelProps={true}>
                     <div className="flex flex-col flex-1 h-full">
