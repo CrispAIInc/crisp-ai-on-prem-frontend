@@ -19,53 +19,7 @@ const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
 function ReelViewer({
     closeReel,
-    reel = {
-        "category": "generic",
-        "created_at": "2025-10-26T20:21:23.192997",
-        "reel_video_url": "https://firebasestorage.googleapis.com/v0/b/crispai-app-462614.firebasestorage.app/o/video_uploads%2Freels%2Fgeneric%2Fsearch%20gpt.mp4",
-        "segments": [
-            {
-                "description": "This opening highlight captures the main announcement: OpenAI is directly challenging Google with a new search engine, setting the stage for a major shift in the AI and search market.",
-                "duration": 12,
-                "keyframe": "",
-                "original_end_time": "00:00:12",
-                "original_video_end_time": "00:00:12",
-                "original_video_start_time": "00:00:00",
-                "source_category": "generic",
-                "source_filename": "SGpt.mp4",
-                "start_time": "00:00:00",
-                "title": "OpenAI Announces New AI-Powered Search Engine"
-            },
-            {
-                "description": "This clip details the core functionality of the new product, explaining that key search features, including providing links to source material, will be incorporated into the main ChatGPT chatbot.",
-                "duration": 12,
-                "keyframe": "",
-                "original_end_time": "00:00:24",
-                "original_video_end_time": "00:00:24",
-                "original_video_start_time": "00:00:12",
-                "source_category": "generic",
-                "source_filename": "SGpt.mp4",
-                "start_time": "00:00:12",
-                "title": "Integrating Search Features into ChatGPT"
-            },
-            {
-                "description": "This concluding segment provides crucial market context by highlighting Microsoft's existing partnership with OpenAI and its integration of the technology into the Bing search engine.",
-                "duration": 10,
-                "keyframe": "",
-                "original_end_time": "00:00:34",
-                "original_video_end_time": "00:00:41",
-                "original_video_start_time": "00:00:31",
-                "source_category": "generic",
-                "source_filename": "SGpt.mp4",
-                "start_time": "00:00:24",
-                "title": "Microsoft's Role in the AI Search Race"
-            }
-        ],
-        "title": "search gpt",
-        "user_id": "iLe2orSVmAOcrKnottkqFVYckGf1",
-        "video_filename": "SGpt.mp4"
-    }
-    ,
+    reel,
     setReels }) {
 
     const { theme } = useContext(ThemeContext);
@@ -204,7 +158,7 @@ function ReelViewer({
 
             {/* reel properties side drawer */}
             <Drawer slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={handleCloseReelProps}>
-                <ReelProps closeReelProps={handleCloseReelProps} />
+                <ReelProps reel={reel} closeReelProps={handleCloseReelProps} />
             </Drawer>
         </div >
     );

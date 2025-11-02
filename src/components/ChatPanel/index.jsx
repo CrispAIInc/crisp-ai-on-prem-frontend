@@ -770,7 +770,7 @@ const ChatPanel = () => {
     reel_video_url: "",
     thumbnail: ""
   });
-  const [isReelOpen, setIsReelOpen] = useState(true);
+  const [isReelOpen, setIsReelOpen] = useState(false);
 
   const [insightSearchValue, setInsightSearchValue] = useState("");
   const [notesResults, setNotesResults] = useState(notes);

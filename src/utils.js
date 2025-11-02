@@ -264,20 +264,29 @@ export function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
-export function formatReadableDate(dateInput) {
-    const date = new Date(dateInput);
+export function formatReadableDate(value) {
+    let date;
+
+    if (value instanceof Date) {
+        date = value;
+    } else if (typeof value === 'string') {
+        date = new Date(value);
+    } else {
+        throw new Error('Invalid date input type');
+    }
+
+    if (isNaN(date)) {
+        throw new Error(`Invalid date value: ${value}`);
+    }
 
     const options = {
-        month: 'short',  // e.g. "Oct"
-        day: 'numeric',  // e.g. "20"
-        year: 'numeric', // e.g. "2025"
-        hour: 'numeric', // e.g. "3"
-        minute: '2-digit', // e.g. "45"
-        hour12: true     // use 12-hour format
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
     };
 
-    const formattedDate = date.toLocaleString('en-US', options);
-
-    // Replace comma between date and time with an en dash
-    return formattedDate;
+    return date.toLocaleString('en-US', options).replace(',', ' –');
 }

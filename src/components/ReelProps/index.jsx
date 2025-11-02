@@ -4,6 +4,7 @@ import { formatDuration, formatReadableDate } from '../../utils';
 import TitleIcon from '@mui/icons-material/Title';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import Accordion from "../Accordion";
 import {
     Timeline,
@@ -16,39 +17,8 @@ import {
 } from '../CustomTimeline';
 import GsFile from '../GsFile';
 
-function ReelProps({ reel = {
-    created_at: new Date('2024-01-01T12:00:00Z'),
-    updated_at: new Date('2024-01-02T12:00:00Z'),
-    title: 'Sample Reel',
-    description: 'This is a sample reel description.',
-    context: "Sample context for the reel.",
-    reel_duration: 143,
-    videos_used: [
-        { source_path: "Usain Bold.mp4", thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Usain_Bolt%2C_Anniversary_Games%2C_London_2013.jpg/250px-Usain_Bolt%2C_Anniversary_Games%2C_London_2013.jpg" },
-        { source_path: "Sample Video 2.mp4", thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Usain_Bolt%2C_Anniversary_Games%2C_London_2013.jpg/250px-Usain_Bolt%2C_Anniversary_Games%2C_London_2013.jpg" },
-        { source_path: "Sample Video 3.mp4", thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Usain_Bolt%2C_Anniversary_Games%2C_London_2013.jpg/250px-Usain_Bolt%2C_Anniversary_Games%2C_London_2013.jpg" }
-    ],
-    // reel history
-    editing_history: [
-        { action: "Started a new reel titled “My Coorg travel Adventure”", date: new Date('2024-01-01T12:00:00Z') },
-        { action: "Changed title to “Coorg nature trip Highlights”", date: new Date('2024-01-02T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-        { action: "Adjusted highlight segment from 00:10–00:25 to 00:12–00:28", date: new Date('2024-01-03T12:00:00Z') },
-    ]
-}, closeReelProps = () => { } }) {
-
-    console.log(Object.entries(reel));
-    console.log(Object.entries(reel).filter(([key]) => (key !== "editingHistory" && key !== "videosUsed")));
+function ReelProps({ reel, closeReelProps = () => { } }) {
+    const { filename, id, reel_video_url, thumbnail, user_id, ...rest } = reel;
     const { theme } = useContext(MainContext);
     return (
         <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 max-h-full overflow-y-hidden`}>
@@ -60,12 +30,22 @@ function ReelProps({ reel = {
                 <Accordion chosenLanguage={"en"} heading="Reel metadata" isFirstOpen>
                     <div className="pl-3">
                         {
-                            Object.entries(reel).filter(([key]) => (key !== "editing_history" && key !== "videos_used")).map(([key, value]) => {
-                                return <div key={key + "" + crypto.randomUUID} className='mb-2'>
-                                    <strong>{key.includes("_") ? key.split('_')[0].charAt(0) + "" + key.split('_')[0].slice(1) + " " + key.split('_')[1] : key.charAt(0) + key.slice(1)}:</strong> {value instanceof Date ? formatReadableDate(new Date(value)) : key === "reel_duration" ? formatDuration(value) : value.toString()}
+                            Object.entries(rest).filter(([key]) => (key !== "editing_history" && key !== "sources" && key !== "segments")).map(([key, value]) => {
+                                return <div key={key + "" + Math.random()} className='mb-2'>
+
+                                    <strong>{key.includes("_") ? key.split('_')[0].charAt(0).toUpperCase() + "" + key.split('_')[0].slice(1) + " " + key.split('_')[1] : key.charAt(0).toUpperCase() + key.slice(1)}: </strong>
+
+                                    {/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value) ? formatReadableDate(new Date(value)) : value === "" ? "-" : value.toString()}
+
                                 </div>;
                             })
                         }
+                        <strong>Reel duration: </strong>
+                        <span>
+                            {
+                                formatDuration(reel?.segments?.reduce((sum, segment) => sum + (segment.duration || 0), 0))
+                            }
+                        </span>
                     </div>
                 </Accordion>
                 {/* videos used */}
@@ -97,16 +77,16 @@ function ReelProps({ reel = {
                                     <div className="flex items-center gap-1">
                                         <div className="flex items-center gap-1">
                                             <TitleIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                            <h5>{segment.title}</h5>
+                                            <h6 className="text-sm">{segment?.title}</h6>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-1">
                                         <AccessTimeFilledIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                        <h5>{formatDuration(segment.duration)}</h5>
+                                        <h6 className="text-sm">{formatDuration(segment?.duration)}</h6>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                        <AccessTimeFilledIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                        <h5>{formatDuration(segment.duration)}</h5>
+                                        <PlayCircleIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                        <h6 className="text-sm">{formatDuration(segment?.source_filename)}</h6>
                                     </div>
                                 </div>
                             ))}
@@ -122,7 +102,7 @@ function ReelProps({ reel = {
                         <div className={`p-2 mt-2 flex-1 overflow-y-auto  ${theme === 'light' ? '!border !border-light-hover-200' : '!border !border-textColor-200'} rounded bg-background_workspace`}>
                             <Timeline position="alternate">
                                 {
-                                    reel.editing_history.map(({ date, action }) => (
+                                    reel?.editing_history?.map(({ date, action }) => (
                                         <TimelineItem key={date.toISOString() + action}>
                                             <TimelineOppositeContent className="text-sm !font-bold text-gradient-x">
                                                 {formatReadableDate(new Date(date))}
