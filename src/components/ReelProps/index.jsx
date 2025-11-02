@@ -98,10 +98,8 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                 </Accordion>
 
                 {/* editing history */}
-                <Accordion fromReelProps chosenLanguage={"en"} heading="Editing history" hideOverflow>
+                {/* <Accordion fromReelProps chosenLanguage={"en"} heading="Editing history" hideOverflow>
                     <div className="flex flex-col flex-1 h-full">
-                        {/* <strong>Editing history</strong> */}
-                        {/* make this section scrollable vertically */}
                         <div className={`p-2 mt-2 flex-1 overflow-y-auto  ${theme === 'light' ? '!border !border-light-hover-200' : '!border !border-textColor-200'} rounded bg-background_workspace`}>
                             <Timeline position="alternate">
                                 {
@@ -121,7 +119,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                             </Timeline>
                         </div>
                     </div>
-                </Accordion>
+                </Accordion> */}
             </div>
         </div >
     );
