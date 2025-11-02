@@ -11,7 +11,8 @@ import RippleButton from '../RippleButton';
 import useResources from '../../hooks/useResources';
 
 // const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-function MediaEntertainment({ reel,
+function MediaEntertainment({
+    reel,
     setReel,
     isReelOpen,
     setIsReelOpen,
@@ -162,7 +163,7 @@ function MediaEntertainment({ reel,
                 )}
             </div>
 
-            {isReelOpen && <ReelViewer closeReel={closeReel} setReel={setReel} reels={reels} setReels={setReels} />}
+            {isReelOpen && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
         </div>
     );
 }
