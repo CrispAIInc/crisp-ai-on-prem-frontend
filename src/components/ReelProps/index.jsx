@@ -13,6 +13,7 @@ import {
     TimelineConnector,
     TimelineContent
 } from '../CustomTimeline';
+import GsFile from '../GsFile';
 
 function ReelProps({ reel = {
     created_at: new Date('2024-01-01T12:00:00Z'),
@@ -71,10 +72,14 @@ function ReelProps({ reel = {
                     <div className='mb-4'>
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
-                            {reel.videos_used.map((video, index) => (
-                                <div key={index} className='flex items-center gap-2 p-1 rounded shadow-lg'>
-                                    <img src={video.thumbnail} alt={video.source_path} className='w-12 h-12 rounded' />
-                                    <p className='text-sm font-semibold truncate'>{video.source_path}</p>
+                            {reel.sources.map((video, index) => (
+                                <div key={index} className='flex items-start gap-2 p-1 rounded shadow-lg'>
+                                    {/* <img src={video.thumbnail} alt={video.source_path} className='w-12 h-12 rounded' /> */}
+                                    <GsFile gsUrl={video.thumbnail} alt={reel.title} />
+                                    <div className="flex flex-col gap-1">
+                                        <p className='text-sm font-semibold truncate'>{video.source_path}</p>
+                                        <span>{video.category}</span>
+                                    </div>
                                 </div>
                             ))}
                         </div>
