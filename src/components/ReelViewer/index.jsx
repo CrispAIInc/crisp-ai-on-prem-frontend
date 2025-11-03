@@ -7,7 +7,7 @@ import toast from 'react-simple-toasts';
 import { useContext, useState, useEffect } from 'react';
 import { ThemeContext } from '@emotion/react';
 import { timeToSeconds } from "../../utils.js";
-
+import LoadingSpinner from "../LoadingSpinner";
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
 import useResources from '../../hooks/useResources';
@@ -29,7 +29,7 @@ function ReelViewer({
 
     const { getReels } = useResources({ setReels });
 
-    const [isPending, setIsPending] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
     const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
     // const [isPending, setIsPending] = useState(false);
 
@@ -51,6 +51,7 @@ function ReelViewer({
         e.preventDefault();
 
         try {
+            setIsDownloading(true);
             const downloadableUrl = await getDownloadableUrl(reel?.reel_video_url);
             console.log(downloadableUrl);
 
@@ -71,10 +72,12 @@ function ReelViewer({
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
 
-            toast('Reel downloaded successfully!', { className: 'p-2 rounded-md bg-primary-200 text-white', theme });
+            // toast('Reel downloaded successfully!', { className: 'p-2 rounded-md bg-primary-200 text-white', theme });
         } catch (err) {
             console.error("Download failed", err);
             toast('Download failed. Please try again.', { className: 'p-2 rounded-md', theme });
+        } finally {
+            setIsDownloading(false);
         }
     };
 
@@ -142,7 +145,9 @@ function ReelViewer({
                                 className="!text-[15px] w-full h-full text-white rounded-full" />}
                         </div> */}
                         <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
-                        <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
+                        <span className="p-2 z-50 !text-[7px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
+                            {isDownloading ? <LoadingSpinner isSmall /> : <FileDownloadIcon onClick={(e) => handleDownloadReel(e)} />}
+                        </span>
                         <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                     </div>
                 </div>
