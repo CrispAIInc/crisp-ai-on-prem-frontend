@@ -58,7 +58,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                                     {/* <img src={video.thumbnail} alt={video.source_path} className='w-12 h-12 rounded' /> */}
                                     <GsFile gsUrl={video.thumbnail} alt={reel.title} className="w-12 h-12 rounded" />
                                     <div className="flex flex-col">
-                                        <p className='text-sm font-semibold break-words'>{video.filename}</p>
+                                        <p className='text-sm font-semibold break-all'>{video.filename}</p>
                                         <span className="text-xs italic">{video.category}</span>
                                     </div>
                                 </div>
@@ -78,16 +78,16 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                                         <div className="flex items-center gap-1">
                                             <div className="flex items-center gap-1">
                                                 <TitleIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                                <h6 className="mb-0 text-sm wrap-break-word">{segment?.title}</h6>
+                                                <h6 className="mb-0 text-sm break-all">{segment?.title}</h6>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <AccessTimeIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                            <h6 className="mb-0 text-sm wrap-break-word">{formatDuration(segment?.duration)}</h6>
+                                            <h6 className="mb-0 text-sm break-all">{formatDuration(segment?.duration)}</h6>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <PlayCircleOutlineIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                            <h6 className="mb-0 text-sm wrap-break-word">{segment?.source_filename}</h6>
+                                            <h6 className="mb-0 text-sm break-all">{segment?.source_filename}</h6>
                                         </div>
                                     </div>
                                     <hr className="my-0 border-gray-300"></hr>
