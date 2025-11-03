@@ -84,6 +84,23 @@ export function timeToSeconds(time) {
     return hours * 3600 + minutes * 60 + seconds;
 }
 
+export function formatDuration(seconds) {
+    seconds = Math.floor(seconds);
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    const parts = [];
+
+    if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+    if (minutes > 0) parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+    if (remainingSeconds > 0 || parts.length === 0)
+        parts.push(`${remainingSeconds} second${remainingSeconds > 1 ? 's' : ''}`);
+
+    return parts.join(' ');
+}
+
 export function decimalSecondsToHHMMSS(decimalSeconds) {
     const hours = Math.floor(decimalSeconds / 3600);
     const minutes = Math.floor((decimalSeconds % 3600) / 60);
@@ -258,4 +275,31 @@ export function getFileType(mimeType) {
     if (mimeType.startsWith('audio/')) return 'audio';
     if (mimeType === 'text/plain') return 'txt';
     return 'other';
+}
+
+export function formatReadableDate(value) {
+    let date;
+
+    if (value instanceof Date) {
+        date = value;
+    } else if (typeof value === 'string') {
+        date = new Date(value);
+    } else {
+        throw new Error('Invalid date input type');
+    }
+
+    if (isNaN(date)) {
+        throw new Error(`Invalid date value: ${value}`);
+    }
+
+    const options = {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    };
+
+    return date.toLocaleString('en-US', options).replace(',', ' –');
 }

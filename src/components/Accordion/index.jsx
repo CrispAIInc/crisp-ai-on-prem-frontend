@@ -3,7 +3,7 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 import { isRtlLanguage } from '../../utils';
 // import useCheckMobileScreen from '../../hooks/useCheckMobileScreen';
 
-function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, chosenLanguage }) {
+function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, chosenLanguage = "en", fromReelProps = false, hideOverflow = false, IconComponent = null }) {
     const [isOpen, setIsOpen] = useState(isFirstOpen);
     const { theme } = useContext(MainContext);
     // const isMobile = useCheckMobileScreen();
@@ -13,18 +13,22 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, ch
 
     return (
         <div
-            className={`${isBoxed && '!border !border-gray-200'}  rounded-lg  bg-transparent backdrop-blur-xs p-2 `}
+            className={`${isBoxed && '!border !border-gray-200'}  rounded-lg  bg-transparent backdrop-blur-xs p-2 ${hideOverflow && 'overflow-y-hidden flex flex-col'}`}
         >
             <button
                 onClick={toggleFAQ}
                 className={`flex items-center justify-between  w-full p-2 text-lg font-medium text-left text-gray-700 focus:outline-none ${isRtlLanguage(chosenLanguage) && 'flex-row-reverse'}`}
             >
-                <span className={`${theme === 'dark' && 'text-textColor-100'} uppercase text-sm font-bold tracking-widest `}>{heading}</span>
+
+                <div>
+                    {IconComponent && <span className="mr-2">{IconComponent}</span>}
+                    <span className={`${theme === 'dark' && 'text-textColor-100'} uppercase text-sm font-bold tracking-widest ${fromReelProps && 'text-gradient-x'}`}>{heading}</span>
+                </div>
                 <svg
                     className={`w-6 h-6 transform transition-transform ${isOpen ? "rotate-180" : ""
                         } `}
                     fill="none"
-                    stroke="#5293FD"
+                    stroke={fromReelProps ? '#755bea' : `#5293FD`}
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                 >
@@ -37,8 +41,8 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, ch
                 </svg>
             </button>
             <div
-                className={`overflow-hidden select-text transition-all ease-linear duration-500 ${isOpen ? "max-h-[10000000px] p-2 mb-3 opacity-100" : "max-h-0 opacity-0"
-                    } `}
+                className={`overflow-hidden select-text transition-all ease-linear duration-500 ${isOpen ? "max-h-[10000000px] p-2 opacity-100" : "max-h-0 opacity-0"
+                    } ${hideOverflow && "overflow-y-auto h-full max-h-full flex-1"}`}
             >
                 {children}
             </div>

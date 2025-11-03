@@ -1,29 +1,35 @@
 import ReactPlayer from "react-player";
 import CloseIcon from '@mui/icons-material/Close';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import InfoIcon from '@mui/icons-material/Info';
 import useFirebase from '../../hooks/useFirebase.js';
 import toast from 'react-simple-toasts';
 import { useContext, useState, useEffect } from 'react';
 import { ThemeContext } from '@emotion/react';
 import { timeToSeconds } from "../../utils.js";
-
+import LoadingSpinner from "../LoadingSpinner";
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
 import useResources from '../../hooks/useResources';
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
+import { Drawer } from '@mui/material';
+import ReelProps from '../ReelProps/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-function ReelViewer({ closeReel, reel, setReels }) {
+function ReelViewer({
+    closeReel,
+    reel,
+    setReels }) {
 
     const { theme } = useContext(ThemeContext);
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl, getDownloadableUrl } = useFirebase();
 
     const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
     const { getReels } = useResources({ setReels });
 
-    const [isPending, setIsPending] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
     const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
     // const [isPending, setIsPending] = useState(false);
 
@@ -43,106 +49,39 @@ function ReelViewer({ closeReel, reel, setReels }) {
     const handleDownloadReel = async (e) => {
         e.stopPropagation();
         e.preventDefault();
+
         try {
-            const encodedUrl = encodeURI(`${API_ENDPOINT}${reel.reel_video_url}`);
-            const response = await fetch(encodedUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'video/mp4',
-                    'Accept': 'video/mp4',
-                }
-            });
+            setIsDownloading(true);
+            const downloadableUrl = await getDownloadableUrl(reel?.reel_video_url);
+            console.log(downloadableUrl);
+
+            const response = await fetch(downloadableUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
             const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
+            console.log(blob);
 
+            const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = (reel?.title || "reel") + '.mp4'; // You can customize this filename
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `${reel.title || 'reel'}.mp4`;
+            document.body.appendChild(a);
             a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
 
-            window.URL.revokeObjectURL(blobUrl);
-            toast('Reel downloaded successfully!', { className: 'p-2 rounded-md bg-primary-200 text-white', theme });
+            // toast('Reel downloaded successfully!', { className: 'p-2 rounded-md bg-primary-200 text-white', theme });
         } catch (err) {
             console.error("Download failed", err);
             toast('Download failed. Please try again.', { className: 'p-2 rounded-md', theme });
+        } finally {
+            setIsDownloading(false);
         }
     };
 
-    // const handleSaveReel = async (e) => {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-
-    //     try {
-    //         console.log('saving reel...');
-    //         setIsReelSaved(true);
-    //     } catch (e) {
-    //         toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-    //         setIsReelSaved(false);
-    //     }
-
-    //     toast('Reel Saved!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-    // };
-
-    // const handleRemoveReel = async (e) => {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //     setIsPending(true);
-
-    //     try {
-    //         await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
-    //             videoUrl: reel.reel_video_url
-    //         }));
-    //         toast('Reel deleted!', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-
-    //         console.log("before");
-    //         const data = await makeApiRequest("/reels", "get");
-    //         setReels(data);
-    //         console.log("after");
-    //         closeReel();
-    //     } catch (e) {
-    //         toast(e?.response?.data || 'Something bad happened', { className: "p-2 rounded-md bg-primary-200 text-white", theme });
-    //     } finally {
-    //         setIsPending(false);
-    //     }
-    // };
-
-    // function timeToSeconds(timeStr) {
-    //     const parts = timeStr.split(':').map(Number);
-    //     return parts[0] * 3600 + parts[1] * 60 + parts[2];
-    // }
-
-    // const segmentsWithSeconds = reel?.segments.map(seg => ({
-    //     ...seg,
-    //     startInSeconds: timeToSeconds(seg.start_time),
-    // }));
     const [currentTitle, setCurrentTitle] = useState('');
-
-    // const handleProgress = (progress) => {
-    //     const currentTime = progress.playedSeconds;
-
-    //     let titleToShow = 'Introduction'; // Default title
-
-    //     for (let i = 0; i < segmentsWithSeconds.length; i++) {
-    //         const currentSegment = segmentsWithSeconds[i];
-    //         const nextSegment = segmentsWithSeconds[i + 1];
-
-    //         if (currentTime >= currentSegment.startInSeconds &&
-    //             (!nextSegment || currentTime < nextSegment.startInSeconds)) {
-    //             titleToShow = currentSegment.title;
-    //             break;
-    //         }
-    //     }
-
-    //     // If it's after the last segment
-    //     const lastSegment = segmentsWithSeconds[segmentsWithSeconds.length - 1];
-    //     if (currentTime >= lastSegment.startInSeconds + 10) { // optional buffer
-    //         titleToShow = 'Conclusion';
-    //     }
-
-    //     if (titleToShow !== currentTitle) {
-    //         setCurrentTitle(titleToShow);
-    //     }
-    // };
 
     const handleOutsideClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -170,6 +109,16 @@ function ReelViewer({ closeReel, reel, setReels }) {
         }
     };
 
+    const [isReelPropsOpen, setIsReelPropsOpen] = useState(false);
+    const handleToggleReelProps = (e) => {
+        e.stopPropagation();
+        setIsReelPropsOpen(prev => !prev);
+    };
+
+    const handleCloseReelProps = () => {
+        setIsReelPropsOpen(false);
+    };
+
     return (
         <div className="fixed top-0 left-0 !z-50 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-75" onClick={(e) => handleOutsideClick(e)}>
             {/* Reel viewer container */}
@@ -195,7 +144,10 @@ function ReelViewer({ closeReel, reel, setReels }) {
                                 onClick={(event) => handleRemoveReel(event)}
                                 className="!text-[15px] w-full h-full text-white rounded-full" />}
                         </div> */}
-                        <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleDownloadReel(e)} />
+                        <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
+                        <span className="p-2 z-50 !text-[7px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
+                            {isDownloading ? <LoadingSpinner isSmall /> : <FileDownloadIcon onClick={(e) => handleDownloadReel(e)} />}
+                        </span>
                         <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                     </div>
                 </div>
@@ -213,6 +165,11 @@ function ReelViewer({ closeReel, reel, setReels }) {
                     controls
                 />
             </div>
+
+            {/* reel properties side drawer */}
+            <Drawer slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={handleCloseReelProps}>
+                <ReelProps reel={reel} closeReelProps={handleCloseReelProps} />
+            </Drawer>
         </div >
     );
 }

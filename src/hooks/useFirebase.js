@@ -17,7 +17,13 @@ export default function useFirebase() {
         }
     }
 
+    async function getDownloadableUrl(gsUrl) {
+        const gsReference = ref(storage, gsUrl);
+        return await getDownloadURL(gsReference);
+    }
+
     return {
-        getPublicUrl
+        getPublicUrl,
+        getDownloadableUrl
     };
 }

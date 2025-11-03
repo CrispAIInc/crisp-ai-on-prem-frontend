@@ -1338,7 +1338,7 @@ const ChatPanel = () => {
                           ))
                       }
                     </div>
-                    {isReelOpen && <ReelViewer closeReel={() => setIsReelOpen(false)} reel={reel} setReel={setReel} />}
+                    {isReelOpen && <ReelViewer reel={reel} closeReel={() => setIsReelOpen(false)} setReel={setReel} />}
                   </>
             }
           </div>}
