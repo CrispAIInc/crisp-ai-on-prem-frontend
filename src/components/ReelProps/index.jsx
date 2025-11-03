@@ -59,7 +59,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                                     <GsFile gsUrl={video.thumbnail} alt={reel.title} className="w-12 h-12 rounded" />
                                     <div className="flex flex-col">
                                         <p className='text-sm font-semibold break-all'>{video.filename}</p>
-                                        <span className="text-xs">{video.category}</span>
+                                        <span className="text-xs italic">{video.category}</span>
                                     </div>
                                 </div>
                             ))}
