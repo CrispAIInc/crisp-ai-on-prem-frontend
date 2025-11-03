@@ -23,7 +23,7 @@ function ReelViewer({
     setReels }) {
 
     const { theme } = useContext(ThemeContext);
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl, getDownloadableUrl } = useFirebase();
 
     const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
@@ -49,30 +49,35 @@ function ReelViewer({
     const handleDownloadReel = async (e) => {
         e.stopPropagation();
         e.preventDefault();
+
         try {
-            const encodedUrl = encodeURI(`${API_ENDPOINT}${reel.reel_video_url}`);
-            const response = await fetch(encodedUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'video/mp4',
-                    'Accept': 'video/mp4',
-                }
-            });
+            const downloadableUrl = await getDownloadableUrl(reel?.reel_video_url);
+            console.log(downloadableUrl);
+
+            const response = await fetch(downloadableUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
             const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
+            console.log(blob);
 
+            const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = (reel?.title || "reel") + '.mp4'; // You can customize this filename
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `${reel.title || 'reel'}.mp4`;
+            document.body.appendChild(a);
             a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
 
-            window.URL.revokeObjectURL(blobUrl);
             toast('Reel downloaded successfully!', { className: 'p-2 rounded-md bg-primary-200 text-white', theme });
         } catch (err) {
             console.error("Download failed", err);
             toast('Download failed. Please try again.', { className: 'p-2 rounded-md', theme });
         }
     };
+
     const [currentTitle, setCurrentTitle] = useState('');
 
     const handleOutsideClick = (e) => {
