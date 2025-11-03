@@ -451,11 +451,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
         <>
           <div className="relative ">
             <div className="h-full shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
-              <CancelIcon
-                onClick={closeVideo}
-                color="error"
-                className="absolute z-50 shadow-lg cursor-pointer right-4 top-2"
-              />
               <ReactPlayer
                 id="react-player"
                 width={"100%"}
@@ -613,11 +608,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       {
         currentResource?.file_type === "pdf" && (
           <>
-            <CancelIcon
-              onClick={closePDF}
-              className="sticky top-0 z-50 shadow-lg cursor-pointer left-full"
-              color='error'
-            />
             {/* <iframe
               src="https://storage.googleapis.com/crispai-app-462614.firebasestorage.app/pdf_uploads/pdfs/media/Deep%20Seek.pdf"
               width="100%"
@@ -786,11 +776,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
         currentResource?.file_type === "img" && (
           <div className="pb-10">
             <div className="relative pt-[56.25%] w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
-              <CancelIcon
-                color="error"
-                onClick={closeImage}
-                className="absolute right-[1%] top-[15px] z-10 cursor-pointer shadow-lg "
-              />
               <GsFile
                 className="absolute top-0 left-0 object-contain w-full h-full"
                 gsUrl={currentResource?.thumbnail || resourceURL}
