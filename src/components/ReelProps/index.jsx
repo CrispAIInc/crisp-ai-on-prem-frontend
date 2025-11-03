@@ -6,6 +6,9 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import Accordion from "../Accordion";
+import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
+import ViewWeekOutlinedIcon from '@mui/icons-material/ViewWeekOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 // import {
 //     Timeline,
 //     TimelineItem,
@@ -27,7 +30,8 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                 <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="rotate-180 cursor-pointer" onClick={closeReelProps} />
             </div>
             <div className='flex flex-col flex-1'>
-                <Accordion fromReelProps chosenLanguage={"en"} heading="Reel metadata" isFirstOpen>
+                {/* reel metadata */}
+                <Accordion IconComponent={<InfoOutlinedIcon fontSize='small' className="text-purple-700" />} fromReelProps chosenLanguage={"en"} heading="Reel metadata" isFirstOpen>
                     <div className="pl-3">
                         {
                             Object.entries(rest).filter(([key]) => (key !== "editing_history" && key !== "sources" && key !== "segments")).map(([key, value]) => {
@@ -49,7 +53,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                     </div>
                 </Accordion>
                 {/* videos used */}
-                <Accordion fromReelProps chosenLanguage={"en"} heading="Sources used in this reel">
+                <Accordion IconComponent={<PlayCircleOutlineIcon fontSize='small' className="text-purple-700" />} fromReelProps chosenLanguage={"en"} heading="Sources used in this reel">
                     <div>
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
@@ -68,7 +72,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                 </Accordion>
 
                 {/* Reel segments */}
-                <Accordion fromReelProps chosenLanguage={"en"} heading="Reel segments">
+                <Accordion IconComponent={<ViewWeekOutlinedIcon fontSize='small' className="text-purple-700" />} fromReelProps chosenLanguage={"en"} heading="Reel segments">
                     <div className='mb-4'>
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
