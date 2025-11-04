@@ -6,6 +6,7 @@ import toast from 'react-simple-toasts';
 import { timeToSeconds } from '../../utils';
 import RippleButton from '../RippleButton';
 import AnimatedText from '../AnimatedText';
+import makeApiRequest from '../../api/index.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -38,36 +39,43 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
         event.preventDefault();
         setIsSearching(true);
         try {
-            const response = await axios.post(`${API_ENDPOINT}/process-query`, { selectedCategory, searchQuestion, currentResource: isGlobalSearch ? null : currentResource, selectedFormat });
-            if (response.status === 200) {
-                let resourceURL = '';
-                let timestamp;
-                if (response.data.file_type == 'video') {
-                    resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(response.data.source_path)}`;
-                    timestamp = response.data.timestamp;
-                }
-                else if (response.data.file_type == 'pdf') {
-                    resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(response.data.source_path)}`;
-                }
-                else if (response.data.file_type == 'img') {
-                    resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(response.data.source_path)}`;
-                }
-                setCurrentResource(response.data);
-                setResourceURL(resourceURL);
-                // setActiveView('resource');
-                setIsSearching(false);
-                // response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
-                setSummary(response.data.summary);
-                if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-                setAdditionalSources(response.data.additional_sources);
-                // if (activeView !== 'resource') {
-                if (!fromMetadata) { setShowSearchModal(true); }
-                // }
-
-                if (response.data.file_type === "pdf") {
-                    setJumpToPage({ page: response.data.page });
-                }
+            const response = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+                selectedCategory,
+                searchQuestion,
+                currentResource: isGlobalSearch ? null : currentResource,
+                selectedFormat
+            })
+            );
+            // const response = await axios.post(`${API_ENDPOINT}/process-query`, { selectedCategory, searchQuestion, currentResource: isGlobalSearch ? null : currentResource, selectedFormat });
+            // if (response.status === 200) {
+            let resourceURL = '';
+            let timestamp;
+            if (response.data.file_type == 'video') {
+                resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(response.data.source_path)}`;
+                timestamp = response.data.timestamp;
             }
+            else if (response.data.file_type == 'pdf') {
+                resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(response.data.source_path)}`;
+            }
+            else if (response.data.file_type == 'img') {
+                resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(response.data.source_path)}`;
+            }
+            setCurrentResource(response.data);
+            setResourceURL(resourceURL);
+            // setActiveView('resource');
+            setIsSearching(false);
+            // response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
+            setSummary(response.data.summary);
+            if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+            setAdditionalSources(response.data.additional_sources);
+            // if (activeView !== 'resource') {
+            if (!fromMetadata) { setShowSearchModal(true); }
+            // }
+
+            if (response.data.file_type === "pdf") {
+                setJumpToPage({ page: response.data.page });
+            }
+            // }
         } catch (error) {
             console.log(error);
             toast('An error occurred while searching');
