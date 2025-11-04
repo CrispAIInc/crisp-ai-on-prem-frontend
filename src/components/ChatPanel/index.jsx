@@ -559,6 +559,10 @@ const ChatPanel = () => {
     setShowStoriesEditor(false);
   }
 
+  const [isGeneratingMetadata, setIsGeneratingMetadata] = useState(false);
+  const [verbosityValue, setVerbosityValue] = useState('Medium');
+  const [context, setContext] = useState('');
+
   //   function exportHTML() {
   //     var header =
   //       "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
@@ -1189,7 +1193,8 @@ const ChatPanel = () => {
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
             {
               actualTab === "genMetadata" ? (
-                <MetadataGen />
+                <MetadataGen verbosityValue={verbosityValue} setVerbosityValue={setVerbosityValue}
+                  context={context} setContext={setContext} isGeneratingMetadata={isGeneratingMetadata} setIsGeneratingMetadata={setIsGeneratingMetadata} />
               ) : actualTab === "genStories" ? (
                 <StoriesEditor generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
               ) : actualTab === "genMedia" ? (

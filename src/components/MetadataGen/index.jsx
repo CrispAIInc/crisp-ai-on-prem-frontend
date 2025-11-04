@@ -13,7 +13,8 @@ import useResources from '../../hooks/useResources.js';
 
 
 
-function MetadataGen() {
+function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityValue, setVerbosityValue, context, setContext }) {
+
     const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
 
     const { categoryValuesWithoutAll } = useResources();
@@ -32,13 +33,11 @@ function MetadataGen() {
     //     setTemperatureValue(e.target.value);
     // }
 
-    const [verbosityValue, setVerbosityValue] = useState('Medium');
+
 
     function handleChange(event) {
         setVerbosityValue(event.target.value);
     }
-
-    const [isLoading, setIsLoading] = useState(false);
 
     // const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_selected === false));
 
@@ -48,7 +47,7 @@ function MetadataGen() {
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
     const [contextFocused, setContextFocused] = useState(false);
-    const [context, setContext] = useState('');
+
     const isActive = contextFocused || context.length > 0;
 
     const handleMouseMove = (e) => {
@@ -63,7 +62,7 @@ function MetadataGen() {
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMetadata() {
-        setIsLoading(true);
+        setIsGeneratingMetadata(true);
         // if (isKnowledgeBaseEmpty) {
         //     toast('You must select some sources to generate metadata');
         // }
@@ -121,10 +120,12 @@ function MetadataGen() {
 
             setKnowledgeBase(updatedKnowledgeBase);
             setGeneratedResources(results);
+            setVerbosityValue('Medium');
+            setContext('');
         } catch (error) {
             console.error(error);
         } finally {
-            setIsLoading(false);
+            setIsGeneratingMetadata(false);
             if (selectedOptions.find(op => op.id === 'embeddings') && selectedSourcesToGen.length !== 0) {
                 setIsModalVisible(true);
             }
@@ -169,8 +170,8 @@ function MetadataGen() {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    disabled={isLoading || displayedSources.filter(item => item.is_selected).length === 0} onClick={generateMetadata}>
-                    {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
+                    disabled={isGeneratingMetadata || displayedSources.filter(item => item.is_selected).length === 0} onClick={generateMetadata}>
+                    {isGeneratingMetadata ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </RippleButton>
                 {tooltipVisible && (
                     <p
