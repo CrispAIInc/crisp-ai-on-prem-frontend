@@ -563,6 +563,7 @@ const ChatPanel = () => {
   const [verbosityValue, setVerbosityValue] = useState('Medium');
   const [context, setContext] = useState('');
 
+  const [isGeneratingReel, setIsGeneratingReel] = useState(false);
   const [reelContext, setReelContext] = useState('');
   const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1min)');
 
@@ -1201,7 +1202,7 @@ const ChatPanel = () => {
               ) : actualTab === "genStories" ? (
                 <StoriesEditor generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
               ) : actualTab === "genMedia" ? (
-                <MediaEntertainment context={reelContext} setContext={setReelContext}
+                <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : null

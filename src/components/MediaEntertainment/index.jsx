@@ -21,9 +21,9 @@ function MediaEntertainment({
     context,
     setContext,
     verbosityValue,
-    setVerbosityValue }) {
-
-    console.log(verbosityValue);
+    setVerbosityValue,
+    isGeneratingReel,
+    setIsGeneratingReel }) {
 
     const { getReels } = useResources({ setReels });
 
@@ -48,7 +48,7 @@ function MediaEntertainment({
         setVerbosityValue(event.target.value);
     }
 
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
 
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -70,7 +70,7 @@ function MediaEntertainment({
             return;
         }
         try {
-            setIsLoading(true);
+            setIsGeneratingReel(true);
             const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
                 sources: displayedSources.filter(item => item.is_selected).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
                 context,
@@ -92,7 +92,7 @@ function MediaEntertainment({
             console.log(error);
             toast(error?.response?.data?.error || "Something went wrong", { className: 'p-2 rounded-md z-20', theme });
         } finally {
-            setIsLoading(false);
+            setIsGeneratingReel(false);
         }
     }
 
@@ -155,8 +155,8 @@ function MediaEntertainment({
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    disabled={isLoading || displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > MAX_SOURCES_COUNT} onClick={generateMedia}>
-                    {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
+                    disabled={isGeneratingReel || displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > MAX_SOURCES_COUNT} onClick={generateMedia}>
+                    {isGeneratingReel ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </RippleButton>
                 {tooltipVisible && (
                     <p
