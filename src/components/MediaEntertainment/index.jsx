@@ -17,14 +17,20 @@ function MediaEntertainment({
     isReelOpen,
     setIsReelOpen,
     reels,
-    setReels }) {
+    setReels,
+    context,
+    setContext,
+    verbosityValue,
+    setVerbosityValue }) {
+
+    console.log(verbosityValue);
 
     const { getReels } = useResources({ setReels });
 
     const { theme, displayedSources } = useContext(MainContext);
 
     const [, setContextFocused] = useState(false);
-    const [context, setContext] = useState('');
+
 
     // const [reel, setReel] = useState({
     //     id: "",
@@ -37,7 +43,7 @@ function MediaEntertainment({
     // const [isReelOpen, setIsReelOpen] = useState(false);
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-    const [verbosityValue, setVerbosityValue] = useState('Short (1min)');
+
     function handleChange(event) {
         setVerbosityValue(event.target.value);
     }

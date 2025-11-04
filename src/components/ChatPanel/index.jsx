@@ -563,6 +563,9 @@ const ChatPanel = () => {
   const [verbosityValue, setVerbosityValue] = useState('Medium');
   const [context, setContext] = useState('');
 
+  const [reelContext, setReelContext] = useState('');
+  const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1min)');
+
   //   function exportHTML() {
   //     var header =
   //       "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
@@ -1198,7 +1201,8 @@ const ChatPanel = () => {
               ) : actualTab === "genStories" ? (
                 <StoriesEditor generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
               ) : actualTab === "genMedia" ? (
-                <MediaEntertainment reel={reel} setReel={setReel} reels={reels} setReels={setReels}
+                <MediaEntertainment context={reelContext} setContext={setReelContext}
+                  verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : null
             }
