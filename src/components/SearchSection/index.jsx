@@ -50,30 +50,32 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             // if (response.status === 200) {
             let resourceURL = '';
             let timestamp;
-            if (response.data.file_type == 'video') {
-                resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(response.data.source_path)}`;
-                timestamp = response.data.timestamp;
+            if (response.file_type == 'video') {
+                resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(response.source_path)}`;
+                timestamp = response.timestamp;
             }
-            else if (response.data.file_type == 'pdf') {
-                resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(response.data.source_path)}`;
+            else if (response.file_type == 'pdf') {
+                resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(response.source_path)}`;
             }
-            else if (response.data.file_type == 'img') {
-                resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(response.data.source_path)}`;
+            else if (response.file_type == 'img') {
+                resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(response.source_path)}`;
             }
-            setCurrentResource(response.data);
+            setCurrentResource(response);
             setResourceURL(resourceURL);
             // setActiveView('resource');
-            setIsSearching(false);
-            // response.data.file_type === 'img' ? setSummary(response.data.caption) : setSummary(response.data.summary);
-            setSummary(response.data.summary);
+
+            // response.file_type === 'img' ? setSummary(response.caption) : setSummary(response.summary);
+            setSummary(response.summary);
             if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-            setAdditionalSources(response.data.additional_sources);
+            setAdditionalSources(response.additional_sources);
             // if (activeView !== 'resource') {
-            if (!fromMetadata) { setShowSearchModal(true); }
+            // if (!fromMetadata) { 
+            setShowSearchModal(true);
+            // }
             // }
 
-            if (response.data.file_type === "pdf") {
-                setJumpToPage({ page: response.data.page });
+            if (response.file_type === "pdf") {
+                setJumpToPage({ page: response.page });
             }
             // }
         } catch (error) {
