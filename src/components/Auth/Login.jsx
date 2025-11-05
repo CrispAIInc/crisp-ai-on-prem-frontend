@@ -68,6 +68,7 @@ export default function Login() {
             }, 3000);
         } catch (e) {
             setError(e?.response?.data?.message || "Please verify your data and try again.");
+            setIsPending(false);
         }
     }
 
