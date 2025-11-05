@@ -46,7 +46,7 @@ export function SearchModal(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={`${theme === "light" ? "" : "bg-textColor-300 text-white"}`}>
-                    <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1">
                         {filteredKnowledgeBase.map((item, index) => (
                             // <div className={`!border ${theme === 'dark' && '!border-textColor-200'} !h-fit w-[130px] relative cursor-pointer`} key={index}>
                             // {props.isDeleting && props.clickedIndex === index ? (
