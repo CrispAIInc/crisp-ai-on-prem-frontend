@@ -104,7 +104,10 @@ export function SearchModal(props) {
 
                                     }
                                 </div>
-                                <p className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'} flex-1`}>{item.source_path.replace(/\.[^/.]+$/, '')}</p>
+                                <div className="flex flex-col self-start flex-1">
+                                    <p className={`text-md font-medium break-all m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item.source_path.replace(/\.[^/.]+$/, '')}</p>
+                                    <span className="italic">{item.category}</span>
+                                </div>
                                 <div className="flex items-center ">
                                     <Checkbox
                                         className="p-0 !ml-1"
