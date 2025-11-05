@@ -2269,6 +2269,18 @@ const ContentSection = ({
                 return finalSources;
             });
 
+            const { chat_is_initialized } = await makeApiRequest(
+                `/chat/all`,
+                "post",
+                JSON.stringify({
+                    sources: [],
+                    category: "all",
+                    selectedAll: false,
+                    is_exclusive: false
+                })
+            );
+            setChatLoaded(chat_is_initialized);
+
             setCurrentResource(sourcesToAdd[0]);
 
             if (sourcesToAdd.length > 0) {
