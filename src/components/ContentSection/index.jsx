@@ -2658,7 +2658,7 @@ const ContentSection = ({
                                             </div>
                                             <div className="flex flex-col ">
                                                 {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-all' text={option?.step} />}
-                                                <span className={`text-md font-medium break-all ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
+                                                <span className={`text-md font-medium  ${theme === 'dark' && 'text-textColor-100'}`} style={{overflowWrap: "anywhere"}}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>
                                         <div className="flex items-center ">
