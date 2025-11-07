@@ -21,7 +21,7 @@ function HorizontalCard({ item, workspaceContainer }) {
                 <GsFile gsUrl={item.keyframe_url ?? item.thumbnail_url} alt="chapter" className="object-cover w-full h-full rounded-md lg:max-w-full" />
             </div>
             {isLightboxOpen && (
-                <PreviewModal closeLightbox={closeLightbox} content={item.keyframe_url ?? item.thumbnail_url} classNames={`h-full ${item.keyframe_url ? '!w-[55vw] !h-[65vh]' : '!w-1/3 !h-full'}`} />
+                <PreviewModal closeLightbox={closeLightbox} content={item.keyframe_url ?? item.thumbnail_url} classNames={`h-full ${'page' in item ? '!w-1/3 !h-full' : '!w-[55vw] !h-[65vh]'}`} />
             )}
             {/* item content */}
             <div className="flex flex-col gap-1 select-text">
