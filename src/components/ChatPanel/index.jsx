@@ -832,7 +832,7 @@ const ChatPanel = () => {
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
-        }  ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col max-h-full `}
+        }  ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col max-h-full z-1`}
       style={{ width: rightWidth }}
     >
       <div className={`flex relative items-center justify-between gap-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"

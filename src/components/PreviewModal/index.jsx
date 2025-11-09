@@ -19,7 +19,7 @@ function PreviewModal({ closeLightbox, content, classNames = '', }) {
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-75"
+            className="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-75"
             onClick={(e) => handleOutsideClick(e)} // Close on click outside or click on lightbox
         >
             <div className={`relative ${currentResource.file_type === "video" ? "!w-[60vw] !h-[75vh]" : "w-full sm:w-2/3 md:w-1/2 lg:w-1/3 h-full"} ${classNames} max-w-[90vw] max-h-[90vh] `}> {/* Wrap lightbox content */}
