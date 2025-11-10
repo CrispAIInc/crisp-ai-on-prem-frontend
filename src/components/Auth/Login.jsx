@@ -15,7 +15,8 @@ export default function Login() {
     const location = useLocation();
     const { redirectedFromAccountVerification = false } = location.state || {};
     const [userInfo, setUserInfo] = useState({
-        email: "",
+        // email: "",
+        username: "",
         password: "",
     });
     const [isPending, setIsPending] = useState(false);
@@ -26,13 +27,13 @@ export default function Login() {
             setIsPending(true);
             setError(null);
 
-            if (!userInfo.email || !userInfo.password) {
+            if (!userInfo.username || !userInfo.password) {
                 throw new Error("All fields are required.");
             }
 
-            if (!isValidEmail(userInfo.email)) {
-                throw new Error("Please enter a valid email address.");
-            }
+            // if (!isValidEmail(userInfo.email)) {
+            //     throw new Error("Please enter a valid email address.");
+            // }
 
             await loginWithEmailAndPassword(userInfo);
 
@@ -60,7 +61,8 @@ export default function Login() {
             setTimeout(() => {
                 // Reset userInfo after registration attempt
                 setUserInfo({
-                    email: "",
+                    // email: "",
+                    username: "",
                     password: "",
                 });
                 setIsPending(false);
@@ -87,10 +89,10 @@ export default function Login() {
             <div className="flex flex-col gap-4">
                 <AnimatedInput
                     inputClasses="!pl-[20px]"
-                    label="Email Address"
-                    value={userInfo.email}
-                    setValue={(value) => setUserInfo({ ...userInfo, email: value })}
-                    type="email"
+                    label="Username"
+                    value={userInfo.username}
+                    setValue={(value) => setUserInfo({ ...userInfo, username: value })}
+                    type="text"
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
                             login();
