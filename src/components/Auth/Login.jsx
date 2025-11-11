@@ -4,10 +4,8 @@ import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
-import { loginWithEmailAndPassword } from '../../services/auth.js';
-import { delay, isValidEmail } from '../../utils.js';
+import { loginWithUsernameAndPassword } from '../../services/auth.js';
 import { Alert } from '@mui/material';
-import { onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
 import { auth } from "../../config/firebase.js"; // adjust path
 
 export default function Login() {
@@ -35,7 +33,7 @@ export default function Login() {
             //     throw new Error("Please enter a valid email address.");
             // }
 
-            await loginWithEmailAndPassword(userInfo);
+            await loginWithUsernameAndPassword(userInfo);
 
             const idToken = await new Promise((resolve, reject) => {
                 const unsubscribe = onIdTokenChanged(auth, async (user) => {

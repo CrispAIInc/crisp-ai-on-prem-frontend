@@ -54,7 +54,7 @@ export const signInWithGoogle = async () => {
     }
 };
 
-export const loginWithEmailAndPassword = async (userInfo) => {
+export const loginWithUsernameAndPassword = async (userInfo) => {
     const { success, accessToken, message } = await makeApiRequest('/login', 'POST', JSON.stringify(userInfo));
 
     if (success) {
