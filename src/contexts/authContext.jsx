@@ -6,6 +6,7 @@ export default function AuthProvider({ children }) {
     const [user, setUser] = useState({
         firstName: "",
         lastName: "",
+        username: "",
         email: "",
         emailVerified: false,
     });
