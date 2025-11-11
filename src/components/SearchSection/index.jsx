@@ -18,7 +18,8 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
         setShowSearchModal,
         setSummary,
         theme,
-        setJumpToPage
+        setJumpToPage,
+        knowledgeBase
     } = useContext(MainContext);
 
     const [, setFromChat] = useState(false);
@@ -39,7 +40,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
         event.preventDefault();
         setIsSearching(true);
         try {
-            const response = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+            const { additional_sources, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
                 selectedCategory,
                 searchQuestion,
                 currentResource: isGlobalSearch ? null : currentResource,
@@ -50,32 +51,34 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             // if (response.status === 200) {
             let resourceURL = '';
             let timestamp;
-            if (response.file_type == 'video') {
-                resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(response.source_path)}`;
-                timestamp = response.timestamp;
+            if (rest.file_type == 'video') {
+                resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(rest.source_path)}`;
+                timestamp = rest.timestamp;
             }
-            else if (response.file_type == 'pdf') {
-                resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(response.source_path)}`;
+            else if (rest.file_type == 'pdf') {
+                resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
             }
-            else if (response.file_type == 'img') {
-                resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(response.source_path)}`;
+            else if (rest.file_type == 'img') {
+                resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
             }
-            setCurrentResource(response);
+            const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
+            console.log({ knowledgeBase, source });
+            setCurrentResource({ ...source, ...rest });
             setResourceURL(resourceURL);
             // setActiveView('resource');
 
             // response.file_type === 'img' ? setSummary(response.caption) : setSummary(response.summary);
-            setSummary(response.summary);
+            setSummary(rest.summary);
             if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-            setAdditionalSources(response.additional_sources);
+            setAdditionalSources(additional_sources);
             // if (activeView !== 'resource') {
             if (!fromMetadata) {
                 setShowSearchModal(true);
             }
             // }
 
-            if (response.file_type === "pdf") {
-                setJumpToPage({ page: response.page });
+            if (rest.file_type === "pdf") {
+                setJumpToPage({ page: rest.page });
             }
             // }
         } catch (error) {
