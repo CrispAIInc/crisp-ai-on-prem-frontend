@@ -6,12 +6,7 @@ import makeApiRequest from '../../api';
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
 import { isValidEmail } from "../../utils.js";
-import { sendEmail } from '../../services/messaging.js';
 import Alert from '@mui/material/Alert';
-import CheckIcon from '@mui/icons-material/Check';
-import { createUserWithFirestore, loginWithAccessAndRefreshToken } from '../../services/auth.js';
-
-
 
 export default function Register() {
     const navigate = useNavigate();

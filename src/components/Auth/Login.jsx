@@ -6,6 +6,7 @@ import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
 import { loginWithUsernameAndPassword } from '../../services/auth.js';
 import { Alert } from '@mui/material';
+import { onIdTokenChanged } from "firebase/auth";
 import { auth } from "../../config/firebase.js"; // adjust path
 
 export default function Login() {
