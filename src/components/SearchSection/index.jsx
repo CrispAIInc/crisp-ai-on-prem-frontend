@@ -40,7 +40,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
         event.preventDefault();
         setIsSearching(true);
         try {
-            const { additional_sources, timestamp, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+            const { additional_sources, timestamp, page, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
                 selectedCategory,
                 searchQuestion,
                 currentResource: isGlobalSearch ? null : currentResource,
@@ -78,8 +78,8 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             }
             // }
 
-            if (rest.file_type === "pdf") {
-                setJumpToPage({ page: rest.page });
+            if (source.file_type === "pdf") {
+                setJumpToPage({ page });
             }
             // }
         } catch (error) {
