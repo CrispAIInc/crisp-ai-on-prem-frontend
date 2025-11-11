@@ -69,9 +69,9 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             setAdditionalSources(response.additional_sources);
             // if (activeView !== 'resource') {
-            // if (!fromMetadata) { 
-            setShowSearchModal(true);
-            // }
+            if (!fromMetadata) {
+                setShowSearchModal(true);
+            }
             // }
 
             if (response.file_type === "pdf") {
