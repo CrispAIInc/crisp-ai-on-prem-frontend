@@ -18,6 +18,7 @@ export default function Register() {
     const [userInfo, setUserInfo] = useState({
         firstName: "",
         lastName: "",
+        username: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -31,7 +32,7 @@ export default function Register() {
             setError(null);
 
             // Validate user input
-            if (!userInfo.firstName || !userInfo.lastName || !userInfo.email || !userInfo.password || !userInfo.confirmPassword) {
+            if (!userInfo.firstName || !userInfo.lastName || !userInfo.username || !userInfo.email || !userInfo.password || !userInfo.confirmPassword) {
                 throw new Error("All fields are required.");
             }
             if (!isValidEmail(userInfo.email)) {
@@ -110,6 +111,19 @@ export default function Register() {
                     label="Lastname"
                     value={userInfo.lastName}
                     setValue={(value) => setUserInfo({ ...userInfo, lastName: value })}
+                    type="text"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            register();
+                        }
+                    }}
+
+                />
+                <AnimatedInput
+                    inputClasses="!pl-[20px]"
+                    label="Username"
+                    value={userInfo.username}
+                    setValue={(value) => setUserInfo({ ...userInfo, username: value })}
                     type="text"
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
