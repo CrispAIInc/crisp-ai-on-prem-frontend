@@ -87,7 +87,7 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <AccessTimeIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                            <h6 className="mb-0 text-sm break-all">{formatDuration(segment?.duration)}</h6>
+                                            <h6 className="mb-0 text-sm break-all">{segment?.original_video_start_time} - {segment?.original_video_end_time}</h6>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <PlayCircleOutlineIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
