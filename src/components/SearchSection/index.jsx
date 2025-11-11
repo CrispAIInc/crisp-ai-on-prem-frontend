@@ -40,30 +40,31 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
         event.preventDefault();
         setIsSearching(true);
         try {
-            const { additional_sources, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+            const { additional_sources, timestamp, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
                 selectedCategory,
                 searchQuestion,
                 currentResource: isGlobalSearch ? null : currentResource,
                 selectedFormat
             })
             );
+            const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
             // const response = await axios.post(`${API_ENDPOINT}/process-query`, { selectedCategory, searchQuestion, currentResource: isGlobalSearch ? null : currentResource, selectedFormat });
             // if (response.status === 200) {
             let resourceURL = '';
-            let timestamp;
-            if (rest.file_type == 'video') {
+            // let timestamp;
+            if (source.file_type == 'video') {
                 resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(rest.source_path)}`;
-                timestamp = rest.timestamp;
+                // timestamp = rest.timestamp;
             }
-            else if (rest.file_type == 'pdf') {
+            else if (source.file_type == 'pdf') {
                 resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
             }
-            else if (rest.file_type == 'img') {
+            else if (source.file_type == 'img') {
                 resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
             }
-            const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
+
             console.log({ knowledgeBase, source });
-            setCurrentResource({ ...source, ...rest });
+            setCurrentResource({ ...source, timestamp });
             setResourceURL(resourceURL);
             // setActiveView('resource');
 
