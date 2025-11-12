@@ -99,7 +99,7 @@ const MainWorkspace = () => {
     const getUserInfo = async () => {
       try {
         const data = await makeApiRequest("/me", "get");
-        const userWithSpecificProperties = pick(data, ["firstName", "lastName", "email"]);
+        const userWithSpecificProperties = pick(data, ["firstName", "lastName", "email", "username"]);
         setUser({
           firstName: data?.display_name.split(" ")[0] ?? data.firstName,
           lastName: data?.display_name.split(" ").slice(1).join(" ") ?? data.lastName,

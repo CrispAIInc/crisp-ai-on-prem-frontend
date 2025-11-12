@@ -1,40 +1,50 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 import GoogleAuthButton from "../Auth/GoogleAuthButton";
 import HorizontalOrText from '../HorizontalOrText';
-import { loginWithEmailAndPassword } from '../../services/auth.js';
-import { delay, isValidEmail } from '../../utils.js';
+import { loginWithUsernameAndPassword } from '../../services/auth.js';
 import { Alert } from '@mui/material';
-import { onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
+import { onIdTokenChanged } from "firebase/auth";
 import { auth } from "../../config/firebase.js"; // adjust path
+
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import { MainContext } from '../../contexts/mainContext.jsx';
+import { isValidEmail } from '../../utils.js';
 
 export default function Login() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { theme } = useContext(MainContext);
     const { redirectedFromAccountVerification = false } = location.state || {};
     const [userInfo, setUserInfo] = useState({
-        email: "",
+        // email: "",
+        // username: "",
+        pseudo: "",
         password: "",
     });
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
+    const [isLoginWithUsername, setIsLoginWithUsername] = useState(true);
 
     async function login() {
         try {
             setIsPending(true);
             setError(null);
-
-            if (!userInfo.email || !userInfo.password) {
+            // (!userInfo.username && isLoginWithUsername) || (!userInfo.email && !isLoginWithUsername)
+            if (!userInfo.pseudo || !userInfo.password) {
                 throw new Error("All fields are required.");
             }
 
-            if (!isValidEmail(userInfo.email)) {
-                throw new Error("Please enter a valid email address.");
-            }
+            // if (!isLoginWithUsername && !isValidEmail(userInfo?.email)) {
+            //     throw new Error("Please enter a valid email address.");
+            // }
 
-            await loginWithEmailAndPassword(userInfo);
+            await loginWithUsernameAndPassword(userInfo);
 
             const idToken = await new Promise((resolve, reject) => {
                 const unsubscribe = onIdTokenChanged(auth, async (user) => {
@@ -60,14 +70,16 @@ export default function Login() {
             setTimeout(() => {
                 // Reset userInfo after registration attempt
                 setUserInfo({
-                    email: "",
+                    // email: "",
+                    // username: "",
+                    pseudo: "",
                     password: "",
                 });
                 setIsPending(false);
                 navigate('/');
             }, 3000);
         } catch (e) {
-            setError(e?.response?.data?.message || "Please verify your data and try again.");
+            setError(e?.message || e?.response?.data?.message || "Please verify your data and try again.");
             setIsPending(false);
         }
     }
@@ -84,13 +96,70 @@ export default function Login() {
             {
                 redirectedFromAccountVerification && <Alert className="mb-3">You have successfully verified your account!</Alert>
             }
+            {/* <style>
+                {
+                    `
+                                .MuiTypography-root {
+                                    font-size: 13px !important;
+                                }
+                                .MuiButtonBase-root {
+                                padding-right: 1px!important;   
+                            }}
+                                `
+                }
+            </style>
+            <div className="flex items-center gap-3">
+                <span className={`font-bold ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>With:</span>
+                <FormControl>
+                    <RadioGroup
+                        row
+                        aria-labelledby="login-type-radio-group"
+                        name="login-type-radio-group"
+                        value={isLoginWithUsername ? "Username" : "Email"}
+                        onChange={(e) => setIsLoginWithUsername(e.target.value === "Username")}
+                    >
+                        {["Username", "Email"].map((item, index) => (
+                            <FormControlLabel
+                                key={index}
+                                value={item}
+                                control={<Radio />}
+                                label={item}
+                                className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}
+                            />
+                        ))}
+                    </RadioGroup>
+                </FormControl>
+            </div> */}
             <div className="flex flex-col gap-4">
-                <AnimatedInput
+                {/* {isLoginWithUsername ? <AnimatedInput
                     inputClasses="!pl-[20px]"
-                    label="Email Address"
+                    label="Username"
+                    value={userInfo.username}
+                    setValue={(value) => setUserInfo({ ...userInfo, username: value })}
+                    type="text"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            login();
+                        }
+                    }}
+                /> : <AnimatedInput
+                    inputClasses="!pl-[20px]"
+                    label="Email"
                     value={userInfo.email}
                     setValue={(value) => setUserInfo({ ...userInfo, email: value })}
                     type="email"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            login();
+                        }
+                    }}
+                />} */}
+                <AnimatedInput
+                    inputClasses="!pl-[20px]"
+                    label="Username or Email"
+                    value={userInfo.pseudo}
+                    setValue={(value) => setUserInfo({ ...userInfo, pseudo: value })}
+                    type="text"
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
                             login();
