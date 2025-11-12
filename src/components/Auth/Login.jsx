@@ -106,25 +106,28 @@ export default function Login() {
                                 `
                 }
             </style>
-            <FormControl>
-                <RadioGroup
-                    row
-                    aria-labelledby="login-type-radio-group"
-                    name="login-type-radio-group"
-                    value={isLoginWithUsername ? "Username" : "Email"}
-                    onChange={(e) => setIsLoginWithUsername(e.target.value === "Username")}
-                >
-                    {["Username", "Email"].map((item, index) => (
-                        <FormControlLabel
-                            key={index}
-                            value={item}
-                            control={<Radio />}
-                            label={item}
-                            className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}
-                        />
-                    ))}
-                </RadioGroup>
-            </FormControl>
+            <div className="flex items-center gap-3">
+                <span className={`font-bold ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>With:</span>
+                <FormControl>
+                    <RadioGroup
+                        row
+                        aria-labelledby="login-type-radio-group"
+                        name="login-type-radio-group"
+                        value={isLoginWithUsername ? "Username" : "Email"}
+                        onChange={(e) => setIsLoginWithUsername(e.target.value === "Username")}
+                    >
+                        {["Username", "Email"].map((item, index) => (
+                            <FormControlLabel
+                                key={index}
+                                value={item}
+                                control={<Radio />}
+                                label={item}
+                                className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}
+                            />
+                        ))}
+                    </RadioGroup>
+                </FormControl>
+            </div>
             <div className="flex flex-col gap-4">
                 {isLoginWithUsername ? <AnimatedInput
                     inputClasses="!pl-[20px]"
