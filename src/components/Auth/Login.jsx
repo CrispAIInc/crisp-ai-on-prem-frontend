@@ -22,8 +22,9 @@ export default function Login() {
     const { theme } = useContext(MainContext);
     const { redirectedFromAccountVerification = false } = location.state || {};
     const [userInfo, setUserInfo] = useState({
-        email: "",
-        username: "",
+        // email: "",
+        // username: "",
+        pseudo: "",
         password: "",
     });
     const [isPending, setIsPending] = useState(false);
@@ -34,14 +35,14 @@ export default function Login() {
         try {
             setIsPending(true);
             setError(null);
-
-            if ((!userInfo.username && isLoginWithUsername) || (!userInfo.email && !isLoginWithUsername) || !userInfo.password) {
+            // (!userInfo.username && isLoginWithUsername) || (!userInfo.email && !isLoginWithUsername)
+            if (!userInfo.pseudo || !userInfo.password) {
                 throw new Error("All fields are required.");
             }
 
-            if (!isLoginWithUsername && !isValidEmail(userInfo?.email)) {
-                throw new Error("Please enter a valid email address.");
-            }
+            // if (!isLoginWithUsername && !isValidEmail(userInfo?.email)) {
+            //     throw new Error("Please enter a valid email address.");
+            // }
 
             await loginWithUsernameAndPassword(userInfo);
 
@@ -70,7 +71,8 @@ export default function Login() {
                 // Reset userInfo after registration attempt
                 setUserInfo({
                     // email: "",
-                    username: "",
+                    // username: "",
+                    pseudo: "",
                     password: "",
                 });
                 setIsPending(false);
@@ -94,7 +96,7 @@ export default function Login() {
             {
                 redirectedFromAccountVerification && <Alert className="mb-3">You have successfully verified your account!</Alert>
             }
-            <style>
+            {/* <style>
                 {
                     `
                                 .MuiTypography-root {
@@ -127,9 +129,9 @@ export default function Login() {
                         ))}
                     </RadioGroup>
                 </FormControl>
-            </div>
+            </div> */}
             <div className="flex flex-col gap-4">
-                {isLoginWithUsername ? <AnimatedInput
+                {/* {isLoginWithUsername ? <AnimatedInput
                     inputClasses="!pl-[20px]"
                     label="Username"
                     value={userInfo.username}
@@ -151,7 +153,19 @@ export default function Login() {
                             login();
                         }
                     }}
-                />}
+                />} */}
+                <AnimatedInput
+                    inputClasses="!pl-[20px]"
+                    label="Username or Email"
+                    value={userInfo.pseudo}
+                    setValue={(value) => setUserInfo({ ...userInfo, pseudo: value })}
+                    type="text"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            login();
+                        }
+                    }}
+                />
                 <AnimatedInput
                     isPassword
                     name="password"
