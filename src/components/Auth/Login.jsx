@@ -14,19 +14,20 @@ export default function Login() {
     const location = useLocation();
     const { redirectedFromAccountVerification = false } = location.state || {};
     const [userInfo, setUserInfo] = useState({
-        // email: "",
+        email: "",
         username: "",
         password: "",
     });
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
+    const [isLoginWithUsername, setIsLoginWithUsername] = useState(true);
 
     async function login() {
         try {
             setIsPending(true);
             setError(null);
 
-            if (!userInfo.username || !userInfo.password) {
+            if ((!userInfo.username && !userInfo.email) || !userInfo.password) {
                 throw new Error("All fields are required.");
             }
 
@@ -86,7 +87,7 @@ export default function Login() {
                 redirectedFromAccountVerification && <Alert className="mb-3">You have successfully verified your account!</Alert>
             }
             <div className="flex flex-col gap-4">
-                <AnimatedInput
+                {isLoginWithUsername ? <AnimatedInput
                     inputClasses="!pl-[20px]"
                     label="Username"
                     value={userInfo.username}
@@ -97,7 +98,18 @@ export default function Login() {
                             login();
                         }
                     }}
-                />
+                /> : <AnimatedInput
+                    inputClasses="!pl-[20px]"
+                    label="Email"
+                    value={userInfo.email}
+                    setValue={(value) => setUserInfo({ ...userInfo, email: value })}
+                    type="email"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            login();
+                        }
+                    }}
+                />}
                 <AnimatedInput
                     isPassword
                     name="password"
