@@ -27,6 +27,7 @@ import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
 import useResources from '../../hooks/useResources';
 import GsFile from '../GsFile/index.jsx';
+import useFirebase from '../../hooks/useFirebase.js';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -97,6 +98,8 @@ const ChatPanel = () => {
   const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
   const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+
+  const { getPublicUrl } = useFirebase();
 
   const [generatedStory, setGeneratedStory] = useState(null);
 
@@ -536,8 +539,9 @@ const ChatPanel = () => {
     event.preventDefault();
     setIsReelDeleting(true);
     try {
+      const publicReelUrl = await getPublicUrl(reel.reel_video_url);
       await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
-        videoUrl: reel.reel_video_url
+        videoUrl: publicReelUrl,
       }));
 
       toast('Reel deleted successfully', { className: 'p-2 rounded-md bg-background_workspace' });
