@@ -4,10 +4,12 @@ import Modal from 'react-bootstrap/Modal';
 import { MainContext } from "../../contexts/mainContext";
 import LoadingSpinner from "../LoadingSpinner";
 import toast from 'react-simple-toasts';
+import useResources from '../../hooks/useResources';
 
 export default function UpdateFilenameModal({ show, onHide, value, setValue, label, reel, onSave = () => { } }) {
     const { theme, setReels } = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
+    const { getReels } = useResources({ setReels });
 
     async function update() {
         // onSave && onSave(value);
@@ -28,6 +30,7 @@ export default function UpdateFilenameModal({ show, onHide, value, setValue, lab
 
             // update reel title in UI
             setReels(prevReels => prevReels.map(r => r.id === reel.id ? { ...r, title: value?.trim() } : r));
+            getReels();
             onHide();
             toast('Reel renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
         } catch (error) {
