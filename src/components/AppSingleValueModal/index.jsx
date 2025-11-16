@@ -24,7 +24,7 @@ export default function UpdateFilenameModal({ show, onHide, value, setValue, lab
                 videoUrl: reel.reel_video_url,
                 newTitle: value?.trim()
             };
-            await makeApiRequest('/rename-reel', 'PATCH', JSON.stringify(payload));
+            await makeApiRequest('/rename-reel', 'POST', JSON.stringify(payload));
 
             // update reel title in UI
             setReels(prevReels => prevReels.map(r => r.id === reel.id ? { ...r, title: value?.trim() } : r));
