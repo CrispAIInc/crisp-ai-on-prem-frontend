@@ -30,7 +30,7 @@ export default function UpdateFilenameModal({ show, onHide, value, setValue, lab
 
             // update reel title in UI
             setReels(prevReels => prevReels.map(r => r.id === reel.id ? { ...r, title: value?.trim() } : r));
-            getReels();
+            await getReels();
             onHide();
             toast('Reel renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
         } catch (error) {
