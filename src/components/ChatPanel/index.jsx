@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'r
 import { MainContext } from '../../contexts/mainContext.jsx';
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
@@ -11,7 +12,8 @@ import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutline
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import MetadataGen from '../MetadataGen';
-
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
@@ -833,6 +835,22 @@ const ChatPanel = () => {
     }
   };
 
+  const [showReelContextMenu, setShowReelContextMenu] = useState(null);
+  const dropdownRef = useRef(null);
+  function handleOpenFilenameUpdateModal(event, reel) {
+    event.stopPropagation();
+    console.log("rename handler!");
+    // setFilename(source?.source_path.split('.')?.slice(0, -1).join('.') || '');
+    // setUpdatingSource(source);
+    // setIsUpdateFilenameModalOpen(true);
+  }
+
+  function handleOpenReelContextMenu(e, reelId) {
+    e.stopPropagation();
+    setShowReelContextMenu(reelId);
+    console.log(reelId);
+  }
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
@@ -1335,19 +1353,39 @@ const ChatPanel = () => {
                               ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
-                              {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
-                              {/* <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} /> */}
-                              <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
-                              <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`}>{reel.title}</p>
-                              {
+
+                              {/* context menu */}
+                              <div className="relative">
+                                <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenReelContextMenu(e, reel?.id)} />
+                                {/* {
                                 hoveredReel === reel?.id && (
                                   isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
                                     onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
                                     className="text-red-400 cursor-pointer"
                                   />
                                 )
-                              }
+                              } */}
+                                {(showReelContextMenu === reel?.id) && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                  <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
+                                    onClick={(event) => handleOpenFilenameUpdateModal(event, reel)}>
+                                    <EditOutlinedIcon
+                                      className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                    />
+                                    <span>Rename</span>
+                                  </div>
+                                  <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}>
+                                    <DeleteOutlineOutlinedIcon
+                                      className={`cursor-pointer`}
+                                    />
+                                    <span>Delete</span>
+                                  </div>
+                                </div>}
+                              </div>
+                              {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
+                              {/* <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} /> */}
+                              <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
+                              <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                }`}>{reel.title}</p>
                             </div>
                           ))
                       }
