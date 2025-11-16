@@ -5,11 +5,12 @@ import { MainContext } from "../../contexts/mainContext";
 import LoadingSpinner from "../LoadingSpinner";
 import toast from 'react-simple-toasts';
 
-export default function UpdateFilenameModal({ show, onHide, value, setValue, label, reel }) {
+export default function UpdateFilenameModal({ show, onHide, value, setValue, label, reel, onSave = () => { } }) {
     const { theme, setReels } = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
     async function update() {
+        // onSave && onSave(value);
         try {
             if (value === "") {
                 toast('value cannot be empty', { className: `p-2 rounded-md !bg-red-600 text-white`, theme });

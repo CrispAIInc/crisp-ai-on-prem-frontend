@@ -30,6 +30,7 @@ import RippleButton from '../RippleButton';
 import useResources from '../../hooks/useResources';
 import GsFile from '../GsFile/index.jsx';
 import useFirebase from '../../hooks/useFirebase.js';
+import FilenameUpdateModal from "../AppSingleValueModal";
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -529,8 +530,10 @@ const ChatPanel = () => {
   }
 
   const [hoveredReel, setHoveredReel] = useState(null);
+  const hoveredReelRef = useRef(null);
   const handleMouseEnterReel = (id) => {
     setHoveredReel(id);
+    hoveredReelRef.current = id;
   };
   const handleMouseLeaveReel = () => {
     setHoveredReel(null);
@@ -837,9 +840,12 @@ const ChatPanel = () => {
 
   const [showReelContextMenu, setShowReelContextMenu] = useState(null);
   const dropdownRef = useRef(null);
+  const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
   function handleOpenFilenameUpdateModal(event, reel) {
     event.stopPropagation();
-    console.log("rename handler!");
+    setReelTitleUpdateValue(reel.title);
+    setShowUpdateReelTitleModal(true);
+
     // setFilename(source?.source_path.split('.')?.slice(0, -1).join('.') || '');
     // setUpdatingSource(source);
     // setIsUpdateFilenameModalOpen(true);
@@ -850,6 +856,35 @@ const ChatPanel = () => {
     setShowReelContextMenu(reelId);
     console.log(reelId);
   }
+
+  const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
+  // async function updateReelTitle(value) {
+  //       try {
+  //           if (value === "") {
+  //               toast('value cannot be empty', { className: `p-2 rounded-md !bg-red-600 text-white`, theme });
+  //               return;
+  //           }
+
+  //           setIsLoading(true);
+
+  //           const payload = {
+  //               reelId: reel.id,
+  //               videoUrl: reel.reel_video_url,
+  //               newTitle: value?.trim()
+  //           };
+  //           await makeApiRequest('/rename-reel', 'PATCH', JSON.stringify(payload));
+
+  //           // update reel title in UI
+  //           setReels(prevReels => prevReels.map(r => r.id === reel.id ? { ...r, title: value?.trim() } : r));
+  //           onHide();
+  //           toast('Reel renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
+  //       } catch (error) {
+  //           console.log(error);
+  //           toast('Something bad happened', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+  //       } finally {
+  //           setIsLoading(false);
+  //       }
+  // }
 
   return (
     <aside
@@ -1385,6 +1420,7 @@ const ChatPanel = () => {
                                   <>
                                     <EditOutlinedIcon
                                       className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                      onClick={(event) => { event.stopPropagation(); handleOpenFilenameUpdateModal(event, reel); }}
                                     />
                                     {isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
                                       onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
@@ -1398,6 +1434,19 @@ const ChatPanel = () => {
                       }
                     </div>
                     {isReelOpen && <ReelViewer reel={reel} closeReel={() => setIsReelOpen(false)} setReel={setReel} />}
+                    {
+                      showUpdateReelTitleModal && (
+                        <FilenameUpdateModal
+                          value={reelTitleUpdateValue}
+                          setValue={setReelTitleUpdateValue}
+                          label="Update reel title"
+                          show={showUpdateReelTitleModal}
+                          onHide={() => setShowUpdateReelTitleModal(false)}
+                          reel={reels.find(r => r.id === hoveredReelRef.current)}
+                        // onSave={(val) => updateReelTitle(val)}
+                        />
+                      )
+                    }
                   </>
             }
           </div>}
