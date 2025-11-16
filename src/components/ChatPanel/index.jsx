@@ -1356,16 +1356,9 @@ const ChatPanel = () => {
 
                               {/* context menu */}
                               <div className="relative">
-                                <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenReelContextMenu(e, reel?.id)} />
-                                {/* {
-                                hoveredReel === reel?.id && (
-                                  isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                    onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
-                                    className="text-red-400 cursor-pointer"
-                                  />
-                                )
-                              } */}
-                                {(showReelContextMenu === reel?.id) && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                {/* <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenReelContextMenu(e, reel?.id)} /> */}
+
+                                {/* {(showReelContextMenu === reel?.id) && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
                                   <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
                                     onClick={(event) => handleOpenFilenameUpdateModal(event, reel)}>
                                     <EditOutlinedIcon
@@ -1379,13 +1372,27 @@ const ChatPanel = () => {
                                     />
                                     <span>Delete</span>
                                   </div>
-                                </div>}
+                                </div>} */}
                               </div>
                               {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
                               {/* <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} /> */}
                               <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
                               <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                 }`}>{reel.title}</p>
+
+                              {
+                                hoveredReel === reel?.id && (
+                                  <>
+                                    <EditOutlinedIcon
+                                      className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                    />
+                                    {isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                      onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
+                                      className="text-red-400 cursor-pointer"
+                                    />}
+                                  </>
+                                )
+                              }
                             </div>
                           ))
                       }
