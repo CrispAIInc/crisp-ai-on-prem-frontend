@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'r
 import { MainContext } from '../../contexts/mainContext.jsx';
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
@@ -11,7 +12,8 @@ import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutline
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import MetadataGen from '../MetadataGen';
-
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
@@ -28,6 +30,7 @@ import RippleButton from '../RippleButton';
 import useResources from '../../hooks/useResources';
 import GsFile from '../GsFile/index.jsx';
 import useFirebase from '../../hooks/useFirebase.js';
+import FilenameUpdateModal from "../AppSingleValueModal";
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -527,8 +530,10 @@ const ChatPanel = () => {
   }
 
   const [hoveredReel, setHoveredReel] = useState(null);
+  const hoveredReelRef = useRef(null);
   const handleMouseEnterReel = (id) => {
     setHoveredReel(id);
+    hoveredReelRef.current = id;
   };
   const handleMouseLeaveReel = () => {
     setHoveredReel(null);
@@ -832,6 +837,54 @@ const ChatPanel = () => {
       setReelsResults(sortArrayOfObjects(filtered, "title"));
     }
   };
+
+  const [showReelContextMenu, setShowReelContextMenu] = useState(null);
+  const dropdownRef = useRef(null);
+  const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
+  function handleOpenFilenameUpdateModal(event, reel) {
+    event.stopPropagation();
+    setReelTitleUpdateValue(reel.title);
+    setShowUpdateReelTitleModal(true);
+
+    // setFilename(source?.source_path.split('.')?.slice(0, -1).join('.') || '');
+    // setUpdatingSource(source);
+    // setIsUpdateFilenameModalOpen(true);
+  }
+
+  function handleOpenReelContextMenu(e, reelId) {
+    e.stopPropagation();
+    setShowReelContextMenu(reelId);
+    console.log(reelId);
+  }
+
+  const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
+  // async function updateReelTitle(value) {
+  //       try {
+  //           if (value === "") {
+  //               toast('value cannot be empty', { className: `p-2 rounded-md !bg-red-600 text-white`, theme });
+  //               return;
+  //           }
+
+  //           setIsLoading(true);
+
+  //           const payload = {
+  //               reelId: reel.id,
+  //               videoUrl: reel.reel_video_url,
+  //               newTitle: value?.trim()
+  //           };
+  //           await makeApiRequest('/rename-reel', 'PATCH', JSON.stringify(payload));
+
+  //           // update reel title in UI
+  //           setReels(prevReels => prevReels.map(r => r.id === reel.id ? { ...r, title: value?.trim() } : r));
+  //           onHide();
+  //           toast('Reel renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
+  //       } catch (error) {
+  //           console.log(error);
+  //           toast('Something bad happened', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+  //       } finally {
+  //           setIsLoading(false);
+  //       }
+  // }
 
   return (
     <aside
@@ -1335,17 +1388,45 @@ const ChatPanel = () => {
                               ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
+
+                              {/* context menu */}
+                              <div className="relative">
+                                {/* <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenReelContextMenu(e, reel?.id)} /> */}
+
+                                {/* {(showReelContextMenu === reel?.id) && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                  <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
+                                    onClick={(event) => handleOpenFilenameUpdateModal(event, reel)}>
+                                    <EditOutlinedIcon
+                                      className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                    />
+                                    <span>Rename</span>
+                                  </div>
+                                  <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}>
+                                    <DeleteOutlineOutlinedIcon
+                                      className={`cursor-pointer`}
+                                    />
+                                    <span>Delete</span>
+                                  </div>
+                                </div>} */}
+                              </div>
                               {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
                               {/* <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} /> */}
                               <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
                               <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                 }`}>{reel.title}</p>
+
                               {
                                 hoveredReel === reel?.id && (
-                                  isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                    onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
-                                    className="text-red-400 cursor-pointer"
-                                  />
+                                  <>
+                                    <EditOutlinedIcon
+                                      className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                      onClick={(event) => { event.stopPropagation(); handleOpenFilenameUpdateModal(event, reel); }}
+                                    />
+                                    {isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                      onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
+                                      className="text-red-400 cursor-pointer"
+                                    />}
+                                  </>
                                 )
                               }
                             </div>
@@ -1353,6 +1434,19 @@ const ChatPanel = () => {
                       }
                     </div>
                     {isReelOpen && <ReelViewer reel={reel} closeReel={() => setIsReelOpen(false)} setReel={setReel} />}
+                    {
+                      showUpdateReelTitleModal && (
+                        <FilenameUpdateModal
+                          value={reelTitleUpdateValue}
+                          setValue={setReelTitleUpdateValue}
+                          label="Update reel title"
+                          show={showUpdateReelTitleModal}
+                          onHide={() => setShowUpdateReelTitleModal(false)}
+                          reel={reels.find(r => r.id === hoveredReelRef.current)}
+                        // onSave={(val) => updateReelTitle(val)}
+                        />
+                      )
+                    }
                   </>
             }
           </div>}
