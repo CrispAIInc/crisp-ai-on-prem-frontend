@@ -234,6 +234,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        heartbeatTimeout: 75000,
       });
       // const eventSource = new EventSource(
       //   `${API_ENDPOINT}/message/${encodeURIComponent(
