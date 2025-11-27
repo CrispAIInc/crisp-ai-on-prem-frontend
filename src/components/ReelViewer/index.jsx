@@ -155,6 +155,7 @@ function ReelViewer({
                     id="react-player"
                     width="100%"
                     height="100%"
+                    className="relative z-50"
                     playing={video_autoplay}
                     url={sourcePublicUrl}
                     loop={video_loop}
