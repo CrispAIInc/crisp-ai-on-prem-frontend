@@ -46,7 +46,7 @@ function ReelViewer({
         closeReel();
     };
 
-    const handleDownload = async (e, _url) => {
+    const handleDownload = async (e, _url, urlFileExtension) => {
         e.stopPropagation();
         e.preventDefault();
 
@@ -66,7 +66,7 @@ function ReelViewer({
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = `${reel.title || 'reel'}.mp4`;
+            a.download = `${reel.title || 'reel'}.${urlFileExtension || 'mp4'}`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
@@ -132,7 +132,7 @@ function ReelViewer({
                         : "text-textColor-100 hover:bg-slate-800/90"
                     }`}
                 onClick={(e) => {
-                    handleDownload(e, reel?.reel_video_url);
+                    handleDownload(e, reel?.reel_video_url, "mp4");
                     setShowDownloadOption(false);
                 }}
             >
@@ -149,7 +149,7 @@ function ReelViewer({
                         ? "text-textColor-300 hover:bg-textColor-100/20"
                         : "text-textColor-100 hover:bg-slate-800/90"
                     }`}
-                onClick={(e) => handleDownload(e, reel?.edl_url)}
+                onClick={(e) => handleDownload(e, reel?.edl_url, "edl")}
             >
                 <ListAltOutlinedIcon
                     className="cursor-pointer"
