@@ -2658,7 +2658,7 @@ const ContentSection = ({
                                             </div>
                                             <div className="flex flex-col ">
                                                 {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-all' text={option?.step} />}
-                                                <span className={`text-md font-medium  ${theme === 'dark' && 'text-textColor-100'}`} style={{overflowWrap: "anywhere"}}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
+                                                <span className={`text-md font-medium  ${theme === 'dark' && 'text-textColor-100'}`} style={{ overflowWrap: "anywhere" }}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>
                                         <div className="flex items-center ">
@@ -2739,7 +2739,7 @@ const ContentSection = ({
                                 <div
                                     className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-1
  ${theme === "light"
-                                            ? "hover:bg-textColor-100/40"
+                                            ? "hover:bg-textColor-100/20"
                                             : "text-textColor-100 hover:bg-slate-800/50"
                                         }`}
                                     onClick={() => {
@@ -2758,7 +2758,7 @@ const ContentSection = ({
                                 <div
                                     className={`flex text-red-600 items-center cursor-pointer gap-2 py-2 pr-10 pl-1
  ${theme === "light"
-                                            ? "hover:bg-textColor-100/40"
+                                            ? "hover:bg-textColor-100/20"
                                             : "hover:bg-slate-800/50"
                                         }`}
                                     onClick={log}

@@ -1,11 +1,12 @@
 import ReactPlayer from "react-player";
 import CloseIcon from '@mui/icons-material/Close';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
+import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
 import InfoIcon from '@mui/icons-material/Info';
 import useFirebase from '../../hooks/useFirebase.js';
 import toast from 'react-simple-toasts';
 import { useContext, useState, useEffect } from 'react';
-import { ThemeContext } from '@emotion/react';
 import { timeToSeconds } from "../../utils.js";
 import LoadingSpinner from "../LoadingSpinner";
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
@@ -14,15 +15,14 @@ import useResources from '../../hooks/useResources';
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
 import { Drawer } from '@mui/material';
 import ReelProps from '../ReelProps/index.jsx';
-
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 function ReelViewer({
     closeReel,
     reel,
     setReels }) {
 
-    const { theme } = useContext(ThemeContext);
+    const { theme } = useContext(MainContext);
     const { getPublicUrl, getDownloadableUrl } = useFirebase();
 
     const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
@@ -46,13 +46,13 @@ function ReelViewer({
         closeReel();
     };
 
-    const handleDownloadReel = async (e) => {
+    const handleDownload = async (e, _url, urlFileExtension) => {
         e.stopPropagation();
         e.preventDefault();
 
         try {
             setIsDownloading(true);
-            const downloadableUrl = await getDownloadableUrl(reel?.reel_video_url);
+            const downloadableUrl = await getDownloadableUrl(_url);
             console.log(downloadableUrl);
 
             const response = await fetch(downloadableUrl);
@@ -66,7 +66,7 @@ function ReelViewer({
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = `${reel.title || 'reel'}.mp4`;
+            a.download = `${reel.title || 'reel'}.${urlFileExtension || 'mp4'}`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
@@ -119,6 +119,46 @@ function ReelViewer({
         setIsReelPropsOpen(false);
     };
 
+    const [showDownloadOption, setShowDownloadOption] = useState(false);
+    const downloadOptions = () => (
+        <div
+            className={`absolute right-0 top-full mt-2 z-10 flex flex-col rounded-md shadow-lg ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"
+                }`}
+        >
+            <div
+                className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-2
+         ${theme === "light"
+                        ? "text-textColor-300 hover:bg-textColor-100/20"
+                        : "text-textColor-100 hover:bg-slate-800/90"
+                    }`}
+                onClick={(e) => {
+                    handleDownload(e, reel?.reel_video_url, "mp4");
+                    setShowDownloadOption(false);
+                }}
+            >
+                <PlayCircleOutlinedIcon
+                    className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
+                        }`}
+                />
+                <span>.mp4</span>
+            </div>
+
+            <div
+                className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-2
+         ${theme === "light"
+                        ? "text-textColor-300 hover:bg-textColor-100/20"
+                        : "text-textColor-100 hover:bg-slate-800/90"
+                    }`}
+                onClick={(e) => handleDownload(e, reel?.edl_url, "edl")}
+            >
+                <ListAltOutlinedIcon
+                    className="cursor-pointer"
+                />
+                <span>.edl</span>
+            </div>
+        </div>
+    );
+
     return (
         <div className="fixed top-0 left-0 !z-50 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-75" onClick={(e) => handleOutsideClick(e)}>
             {/* Reel viewer container */}
@@ -145,8 +185,21 @@ function ReelViewer({
                                 className="!text-[15px] w-full h-full text-white rounded-full" />}
                         </div> */}
                         <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
-                        <span className="p-2 z-50 !text-[7px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
-                            {isDownloading ? <LoadingSpinner isSmall /> : <FileDownloadIcon onClick={(e) => handleDownloadReel(e)} />}
+                        <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
+                            {isDownloading ? <LoadingSpinner isSmall /> : (
+                                <>
+                                    <FileDownloadIcon />
+                                    {
+                                        showDownloadOption && (
+                                            // <div onClick={(e) => e.stopPropagation()}>
+                                            <>
+                                                {downloadOptions()}
+                                            </>
+                                            // </div>
+                                        )
+                                    }
+                                </>
+                            )}
                         </span>
                         <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                     </div>
