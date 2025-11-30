@@ -16,6 +16,7 @@ import { SettingsContext } from '../../contexts/settingsContext.jsx';
 import { Drawer } from '@mui/material';
 import ReelProps from '../ReelProps/index.jsx';
 import { MainContext } from '../../contexts/mainContext.jsx';
+import Moveable from "react-moveable";
 
 function ReelViewer({
     closeReel,
@@ -160,71 +161,129 @@ function ReelViewer({
     );
 
     return (
-        <div className="fixed top-0 left-0 !z-50 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-75" onClick={(e) => handleOutsideClick(e)}>
-            {/* Reel viewer container */}
-            <div className="relative w-full max-w-sm aspect-[9/16] bg-slate-200 rounded-2xl overflow-hidden sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:w-[30vw] 2xl:h-[80%]">
+        <>
+            <div className="fixed top-0 left-0 !z-50 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-75" onClick={(e) => handleOutsideClick(e)}>
+                {/* Reel viewer container */}
+                <div className="reel-viewer relative w-full max-w-sm aspect-[9/16] bg-slate-200 rounded-2xl overflow-hidden sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:w-[30vw] 2xl:h-[80%]">
 
-                <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/2 top-10 z-10 blur-[160px]"></div>
-                <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-[50%] z-10 blur-[160px]"></div>
-                <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-[100%] z-10 blur-[160px]"></div>
+                    <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/2 top-10 z-10 blur-[160px]"></div>
+                    <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-[50%] z-10 blur-[160px]"></div>
+                    <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-[100%] z-10 blur-[160px]"></div>
 
-                <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
-                    <SwitchTransition mode="out-in">
-                        <CSSTransition
-                            key={currentTitle + '-key'}
-                            classNames="fade"
-                            timeout={300}
-                        >
-                            <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
-                        </CSSTransition>
-                    </SwitchTransition>
-                    <div className="flex items-center gap-2 !mr-2 z-[51]">
-                        {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
+                    <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
+                        <SwitchTransition mode="out-in">
+                            <CSSTransition
+                                key={currentTitle + '-key'}
+                                classNames="fade"
+                                timeout={300}
+                            >
+                                <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
+                            </CSSTransition>
+                        </SwitchTransition>
+                        <div className="flex items-center gap-2 !mr-2 z-[51]">
+                            {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
                             {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
                                 onClick={(event) => handleRemoveReel(event)}
                                 className="!text-[15px] w-full h-full text-white rounded-full" />}
                         </div> */}
-                        <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
-                        <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
-                            {isDownloading ? <LoadingSpinner isSmall /> : (
-                                <>
-                                    <FileDownloadIcon />
-                                    {
-                                        showDownloadOption && (
-                                            // <div onClick={(e) => e.stopPropagation()}>
-                                            <>
-                                                {downloadOptions()}
-                                            </>
-                                            // </div>
-                                        )
-                                    }
-                                </>
-                            )}
-                        </span>
-                        <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
+                            <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
+                            <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
+                                {isDownloading ? <LoadingSpinner isSmall /> : (
+                                    <>
+                                        <FileDownloadIcon />
+                                        {
+                                            showDownloadOption && (
+                                                // <div onClick={(e) => e.stopPropagation()}>
+                                                <>
+                                                    {downloadOptions()}
+                                                </>
+                                                // </div>
+                                            )
+                                        }
+                                    </>
+                                )}
+                            </span>
+                            <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
+                        </div>
                     </div>
+                    <ReactPlayer
+                        id="react-player"
+                        width="100%"
+                        height="100%"
+                        className="relative z-50"
+                        playing={video_autoplay}
+                        url={sourcePublicUrl}
+                        loop={video_loop}
+                        onProgress={handleProgress}
+                        onDuration={handleDuration}
+                        // onReady={() => setIsPlayerReady(true)}
+                        // ref={player}
+                        controls
+                    />
                 </div>
-                <ReactPlayer
-                    id="react-player"
-                    width="100%"
-                    height="100%"
-                    className="relative z-50"
-                    playing={video_autoplay}
-                    url={sourcePublicUrl}
-                    loop={video_loop}
-                    onProgress={handleProgress}
-                    onDuration={handleDuration}
-                    // onReady={() => setIsPlayerReady(true)}
-                    // ref={player}
-                    controls
-                />
-            </div>
 
-            {/* reel properties side drawer */}
-            <Drawer slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={handleCloseReelProps}>
-                <ReelProps reel={reel} closeReelProps={handleCloseReelProps} />
-            </Drawer>
-        </div >
+                {/* reel properties side drawer */}
+                <Drawer slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={handleCloseReelProps}>
+                    <ReelProps reel={reel} closeReelProps={handleCloseReelProps} />
+                </Drawer>
+            </div>
+            <Moveable
+                target={document.querySelector(".reel-viewer")}
+                container={null}
+                origin={true}
+
+                /* Resize event edges */
+                edge={false}
+
+                /* draggable */
+                draggable={true}
+                throttleDrag={0}
+                onDragStart={({ target, clientX, clientY }) => {
+                    console.log("onDragStart", target);
+                }}
+                onDrag={({
+                    target,
+                    beforeDelta, beforeDist,
+                    left, top,
+                    right, bottom,
+                    delta, dist,
+                    transform,
+                    clientX, clientY,
+                }) => {
+                    console.log("onDrag left, top", left, top);
+                    // target!.style.left = `${left}px`;
+                    // target!.style.top = `${top}px`;
+                    console.log("onDrag translate", dist);
+                    target.style.transform = transform;
+                }}
+                onDragEnd={({ target, isDrag, clientX, clientY }) => {
+                    console.log("onDragEnd", target, isDrag);
+                }}
+
+                /* When resize or scale, keeps a ratio of the width, height. */
+                keepRatio={true}
+
+                /* resizable*/
+                /* Only one of resizable, scalable, warpable can be used. */
+                resizable={true}
+                throttleResize={0}
+                onResizeStart={({ target, clientX, clientY }) => {
+                    console.log("onResizeStart", target);
+                }}
+                onResize={({
+                    target, width, height,
+                    dist, delta, direction,
+                    clientX, clientY,
+                }) => {
+                    console.log("onResize", target);
+                    delta[0] && (target.style.width = `${width}px`);
+                    delta[1] && (target.style.height = `${height}px`);
+                }}
+                onResizeEnd={({ target, isDrag, clientX, clientY }) => {
+                    console.log("onResizeEnd", target, isDrag);
+                }}
+            />
+        </>
     );
 }
 
