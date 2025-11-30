@@ -160,6 +160,14 @@ function ReelViewer({
         </div>
     );
 
+    // show or hide the reel title and actions if reel dimensions reach min size
+    const [areReelControlsVisible, setAreReelControlsVisible] = useState(true);
+
+    const MIN_W = 150;
+    const MIN_H = 150;
+    const MAX_W = 600;
+    const MAX_H = 600;
+
     return (
         <>
             <div className="fixed top-0 left-0 !z-50 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-75" onClick={(e) => handleOutsideClick(e)}>
@@ -170,42 +178,45 @@ function ReelViewer({
                     <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-[50%] z-10 blur-[160px]"></div>
                     <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-[100%] z-10 blur-[160px]"></div>
 
-                    <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
-                        <SwitchTransition mode="out-in">
-                            <CSSTransition
-                                key={currentTitle + '-key'}
-                                classNames="fade"
-                                timeout={300}
-                            >
-                                <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
-                            </CSSTransition>
-                        </SwitchTransition>
-                        <div className="flex items-center gap-2 !mr-2 z-[51]">
-                            {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
+                    {
+                        areReelControlsVisible &&
+                        <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
+                            <SwitchTransition mode="out-in">
+                                <CSSTransition
+                                    key={currentTitle + '-key'}
+                                    classNames="fade"
+                                    timeout={300}
+                                >
+                                    <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
+                                </CSSTransition>
+                            </SwitchTransition>
+                            <div className="flex items-center gap-2 !mr-2 z-[51]">
+                                {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
                             {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
                                 onClick={(event) => handleRemoveReel(event)}
                                 className="!text-[15px] w-full h-full text-white rounded-full" />}
                         </div> */}
-                            <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
-                            <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
-                                {isDownloading ? <LoadingSpinner isSmall /> : (
-                                    <>
-                                        <FileDownloadIcon />
-                                        {
-                                            showDownloadOption && (
-                                                // <div onClick={(e) => e.stopPropagation()}>
-                                                <>
-                                                    {downloadOptions()}
-                                                </>
-                                                // </div>
-                                            )
-                                        }
-                                    </>
-                                )}
-                            </span>
-                            <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
+                                <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
+                                <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
+                                    {isDownloading ? <LoadingSpinner isSmall /> : (
+                                        <>
+                                            <FileDownloadIcon />
+                                            {
+                                                showDownloadOption && (
+                                                    // <div onClick={(e) => e.stopPropagation()}>
+                                                    <>
+                                                        {downloadOptions()}
+                                                    </>
+                                                    // </div>
+                                                )
+                                            }
+                                        </>
+                                    )}
+                                </span>
+                                <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
+                            </div>
                         </div>
-                    </div>
+                    }
                     <ReactPlayer
                         id="react-player"
                         width="100%"
@@ -238,9 +249,6 @@ function ReelViewer({
                 /* draggable */
                 draggable={true}
                 throttleDrag={0}
-                onDragStart={({ target, clientX, clientY }) => {
-                    console.log("onDragStart", target);
-                }}
                 onDrag={({
                     target,
                     beforeDelta, beforeDist,
@@ -256,9 +264,6 @@ function ReelViewer({
                     console.log("onDrag translate", dist);
                     target.style.transform = transform;
                 }}
-                onDragEnd={({ target, isDrag, clientX, clientY }) => {
-                    console.log("onDragEnd", target, isDrag);
-                }}
 
                 /* When resize or scale, keeps a ratio of the width, height. */
                 keepRatio={true}
@@ -267,20 +272,24 @@ function ReelViewer({
                 /* Only one of resizable, scalable, warpable can be used. */
                 resizable={true}
                 throttleResize={0}
-                onResizeStart={({ target, clientX, clientY }) => {
-                    console.log("onResizeStart", target);
-                }}
-                onResize={({
-                    target, width, height,
-                    dist, delta, direction,
-                    clientX, clientY,
-                }) => {
-                    console.log("onResize", target);
-                    delta[0] && (target.style.width = `${width}px`);
-                    delta[1] && (target.style.height = `${height}px`);
-                }}
-                onResizeEnd={({ target, isDrag, clientX, clientY }) => {
-                    console.log("onResizeEnd", target, isDrag);
+                onResize={({ target, width, height, drag }) => {
+                    // Clamp width/height to min/max values
+                    const newWidth = Math.min(Math.max(width, MIN_W), MAX_W);
+                    const newHeight = Math.min(Math.max(height, MIN_H), MAX_H);
+
+                    // Show or hide reel controls based on size
+                    if (newWidth <= 350 || newHeight <= 350) {
+                        console.log("newWidth <= MIN_W", newWidth <= MIN_W);
+                        console.log("newHeight <= MIN_H", newHeight <= MIN_H);
+                        setAreReelControlsVisible(false);
+                    } else {
+                        setAreReelControlsVisible(true);
+                    }
+
+                    // Apply size to target
+                    // const el = target.current;
+                    target.style.width = `${newWidth}px`;
+                    target.style.height = `${newHeight}px`;
                 }}
             />
         </>
