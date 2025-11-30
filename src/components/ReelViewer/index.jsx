@@ -163,8 +163,8 @@ function ReelViewer({
     // show or hide the reel title and actions if reel dimensions reach min size
     const [areReelControlsVisible, setAreReelControlsVisible] = useState(true);
 
-    const MIN_W = 150;
-    const MIN_H = 150;
+    const MIN_W = 250;
+    const MIN_H = 250;
     const MAX_W = 600;
     const MAX_H = 600;
 
