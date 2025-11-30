@@ -178,7 +178,7 @@ function ReelViewer({
                             <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
                         </CSSTransition>
                     </SwitchTransition>
-                    <div className="flex items-center gap-2 !mr-2">
+                    <div className="flex items-center gap-2 !mr-2 z-[51]">
                         {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
                             {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
                                 onClick={(event) => handleRemoveReel(event)}
