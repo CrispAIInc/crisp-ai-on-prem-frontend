@@ -17,3 +17,35 @@
   transform: translateY(-10px);
   transition: opacity 300ms ease, transform 300ms ease;
 }
+
+.moveable-control {
+  display: none !important;
+}
+
+.moveable-line {
+  background-color: transparent !important;
+}
+
+/* Top-left and bottom-right corners */
+.moveable-control.moveable-nw,
+.moveable-control.moveable-se {
+  cursor: nwse-resize !important;
+}
+
+/* Top-right and bottom-left corners */
+.moveable-control.moveable-ne,
+.moveable-control.moveable-sw {
+  cursor: nesw-resize !important;
+}
+
+/* Left & right edges */
+.moveable-control.moveable-w,
+.moveable-control.moveable-e {
+  cursor: ew-resize !important;
+}
+
+/* Top & bottom edges */
+.moveable-control.moveable-n,
+.moveable-control.moveable-s {
+  cursor: ns-resize !important;
+}

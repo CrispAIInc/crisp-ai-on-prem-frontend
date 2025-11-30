@@ -233,7 +233,7 @@ function ReelViewer({
                 origin={true}
 
                 /* Resize event edges */
-                edge={false}
+                edge={true}
 
                 /* draggable */
                 draggable={true}
