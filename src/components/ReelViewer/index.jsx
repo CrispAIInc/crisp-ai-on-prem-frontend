@@ -17,6 +17,7 @@ import { Drawer } from '@mui/material';
 import ReelProps from '../ReelProps/index.jsx';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import Moveable from "react-moveable";
+import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 
 function ReelViewer({
     closeReel,
@@ -83,10 +84,11 @@ function ReelViewer({
     };
 
     const [currentTitle, setCurrentTitle] = useState('');
-
+    const [isOutsideClickEnabled, setIsOutsideClickEnabled] = useState(false);
     const handleOutsideClick = (e) => {
         if (e.target === e.currentTarget) {
-            closeReel();
+            // closeReel();
+            setIsOutsideClickEnabled(true);
         }
     };
 
@@ -165,12 +167,28 @@ function ReelViewer({
 
     const MIN_W = 250;
     const MIN_H = 250;
-    const MAX_W = 600;
-    const MAX_H = 600;
+    // const MAX_W = 600;
+    // const MAX_H = 600;
+
+    const handleCollapseReel = (e) => {
+        e.stopPropagation();
+        const reelElement = document.querySelector(".reel-viewer");
+        if (reelElement) {
+            reelElement.style.transition = 'translate 0.3s, width 0.3s, height 0.3s';
+            reelElement.style.width = `${MIN_W}px`;
+            reelElement.style.height = `${MIN_H}px`;
+            reelElement.style.position = 'absolute';
+            reelElement.style.top = `calc(100vh - ${MIN_H}px - 5%)`;
+            reelElement.style.left = `calc(100vw - ${MIN_W}px - 5%)`;
+            reelElement.style.border = "5px solid rgba(255, 255, 255, 0.8)";
+            setAreReelControlsVisible(false);
+            setIsOutsideClickEnabled(true);
+        }
+    };
 
     return (
         <>
-            <div className="fixed top-0 left-0 !z-[999999] flex flex-col items-center justify-center w-full h-full pointer-events-none" >
+            <div className={`fixed top-0 left-0 !z-[999999] flex flex-col items-center justify-center w-full h-full ${!isOutsideClickEnabled ? 'bg-black bg-opacity-75' : 'bg-transparent bg-opacity-0 pointer-events-none'}`} onClick={e => handleOutsideClick(e)}>
                 {/* Reel viewer container */}
                 <div className="reel-viewer relative w-full max-w-sm aspect-[9/16] bg-slate-200 rounded-2xl overflow-hidden sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:w-[30vw] 2xl:h-[80%] pointer-events-auto shadow-[0px_2px_15px_-5px_rgba(82,79,79,0.6)]">
 
@@ -178,45 +196,43 @@ function ReelViewer({
                     <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-[50%] z-10 blur-[160px]"></div>
                     <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-[100%] z-10 blur-[160px]"></div>
 
-                    {
-                        areReelControlsVisible &&
-                        <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
-                            <SwitchTransition mode="out-in">
-                                <CSSTransition
-                                    key={currentTitle + '-key'}
-                                    classNames="fade"
-                                    timeout={300}
-                                >
-                                    <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
-                                </CSSTransition>
-                            </SwitchTransition>
-                            <div className="flex items-center gap-2 !mr-2 z-[51]">
-                                {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
-                            {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                onClick={(event) => handleRemoveReel(event)}
-                                className="!text-[15px] w-full h-full text-white rounded-full" />}
-                        </div> */}
-                                <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
-                                <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
-                                    {isDownloading ? <LoadingSpinner isSmall /> : (
-                                        <>
-                                            <FileDownloadIcon />
-                                            {
-                                                showDownloadOption && (
-                                                    // <div onClick={(e) => e.stopPropagation()}>
-                                                    <>
-                                                        {downloadOptions()}
-                                                    </>
-                                                    // </div>
-                                                )
-                                            }
-                                        </>
-                                    )}
-                                </span>
-                                <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
-                            </div>
+                    <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-8">
+                        {areReelControlsVisible && <SwitchTransition mode="out-in">
+                            <CSSTransition
+                                key={currentTitle + '-key'}
+                                classNames="fade"
+                                timeout={300}
+                            >
+                                <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
+                            </CSSTransition>
+                        </SwitchTransition>}
+                        <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
+                            {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
+                        {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
+                            onClick={(event) => handleRemoveReel(event)}
+                            className="!text-[15px] w-full h-full text-white rounded-full" />}
+                    </div> */}
+                            <UnfoldLessIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} />
+                            <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
+                            <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
+                                {isDownloading ? <LoadingSpinner isSmall /> : (
+                                    <>
+                                        <FileDownloadIcon />
+                                        {
+                                            showDownloadOption && (
+                                                // <div onClick={(e) => e.stopPropagation()}>
+                                                <>
+                                                    {downloadOptions()}
+                                                </>
+                                                // </div>
+                                            )
+                                        }
+                                    </>
+                                )}
+                            </span>
+                            <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                         </div>
-                    }
+                    </div>
                     <ReactPlayer
                         id="react-player"
                         width="100%"
@@ -234,7 +250,7 @@ function ReelViewer({
                 </div>
 
                 {/* reel properties side drawer */}
-                <Drawer slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={handleCloseReelProps}>
+                <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={handleCloseReelProps}>
                     <ReelProps reel={reel} closeReelProps={handleCloseReelProps} />
                 </Drawer>
             </div>
@@ -274,22 +290,20 @@ function ReelViewer({
                 throttleResize={0}
                 onResize={({ target, width, height, drag }) => {
                     // Clamp width/height to min/max values
-                    const newWidth = Math.min(Math.max(width, MIN_W), MAX_W);
-                    const newHeight = Math.min(Math.max(height, MIN_H), MAX_H);
+                    // const newWidth = Math.min(Math.max(width, MIN_W), MAX_W);
+                    // const newHeight = Math.min(Math.max(height, MIN_H), MAX_H);
 
                     // Show or hide reel controls based on size
-                    if (newWidth <= 350 || newHeight <= 350) {
-                        console.log("newWidth <= MIN_W", newWidth <= MIN_W);
-                        console.log("newHeight <= MIN_H", newHeight <= MIN_H);
-                        setAreReelControlsVisible(false);
-                    } else {
-                        setAreReelControlsVisible(true);
-                    }
+                    // if (newWidth <= 350 || newHeight <= 350) {
+                    //     setAreReelControlsVisible(false);
+                    // } else {
+                    //     setAreReelControlsVisible(true);
+                    // }
 
                     // Apply size to target
                     // const el = target.current;
-                    target.style.width = `${newWidth}px`;
-                    target.style.height = `${newHeight}px`;
+                    target.style.width = `${width}px`;
+                    target.style.height = `${height}px`;
                 }}
             />
         </>
