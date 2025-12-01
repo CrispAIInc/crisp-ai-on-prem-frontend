@@ -244,6 +244,7 @@ function ReelViewer({
             reel.style.top = reelInitialStyles.top;
             reel.style.left = reelInitialStyles.left;
             reel.style.border = 'none';
+            reel.style.transform = 'none';
         });
 
         setAreReelControlsVisible(true);
