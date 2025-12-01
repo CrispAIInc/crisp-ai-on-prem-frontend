@@ -17,7 +17,8 @@ import { Drawer } from '@mui/material';
 import ReelProps from '../ReelProps/index.jsx';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import Moveable from "react-moveable";
-import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
+import PictureInPictureAltIcon from '@mui/icons-material/PictureInPictureAlt';
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 
 function ReelViewer({
     closeReel,
@@ -87,8 +88,8 @@ function ReelViewer({
     const [isOutsideClickEnabled, setIsOutsideClickEnabled] = useState(false);
     const handleOutsideClick = (e) => {
         if (e.target === e.currentTarget) {
-            // closeReel();
-            setIsOutsideClickEnabled(true);
+            closeReel();
+            // setIsOutsideClickEnabled(true);
         }
     };
 
@@ -170,21 +171,85 @@ function ReelViewer({
     // const MAX_W = 600;
     // const MAX_H = 600;
 
+    const [reelInitialStyles, setReelInitialStyles] = useState({});
+
     const handleCollapseReel = (e) => {
         e.stopPropagation();
-        const reelElement = document.querySelector(".reel-viewer");
-        if (reelElement) {
-            reelElement.style.transition = 'translate 0.3s, width 0.3s, height 0.3s';
-            reelElement.style.width = `${MIN_W}px`;
-            reelElement.style.height = `${MIN_H}px`;
-            reelElement.style.position = 'absolute';
-            reelElement.style.top = `calc(100vh - ${MIN_H}px - 5%)`;
-            reelElement.style.left = `calc(100vw - ${MIN_W}px - 5%)`;
-            reelElement.style.border = "5px solid rgba(255, 255, 255, 0.8)";
-            setAreReelControlsVisible(false);
-            setIsOutsideClickEnabled(true);
-        }
+        const reel = document.querySelector('.reel-viewer');
+        if (!reel) return;
+
+        // Ensure element has position and initial dimensions BEFORE transition starts
+        reel.style.position = 'absolute';
+
+        // If you don't know initial width/height, read them first so the browser knows start values
+        const rect = reel.getBoundingClientRect();
+        reel.style.width = `${rect.width}px`;
+        reel.style.height = `${rect.height}px`;
+        reel.style.top = `${rect.top}px`;
+        reel.style.left = `${rect.left}px`;
+
+        setReelInitialStyles({
+            width: '100%',
+            height: reel.style.height,
+            left: 0,
+            top: 0,
+            position: 'relative',
+            // top: reel.style.top,
+            // left: reel.style.left,
+        });
+
+
+        // set transition BEFORE changing the target values
+        reel.style.transition = 'width 0.3s ease, height 0.3s ease, top 0.3s ease, left 0.3s ease, border 0.3s ease';
+        reel.style.willChange = 'width, height, top, left, transform'; // hint to browser
+
+        // Force a layout so the browser registers the starting values
+        // reading .offsetHeight or getBoundingClientRect() forces layout
+        reel.getBoundingClientRect();
+
+        // Now set the target values — the transition should run
+        requestAnimationFrame(() => {
+            reel.style.width = `${MIN_W}px`;
+            reel.style.height = `${MIN_H}px`;
+            reel.style.top = `calc(100vh - ${MIN_H}px - 5%)`;
+            reel.style.left = `calc(100vw - ${MIN_W}px - 5%)`;
+            reel.style.border = '5px solid rgba(255,255,255,0.8)';
+        });
+
+        setAreReelControlsVisible(false);
+        setIsOutsideClickEnabled(true);
     };
+
+    const handleExpandReel = (e) => {
+        e.stopPropagation();
+        const reel = document.querySelector('.reel-viewer');
+        if (!reel) return;
+
+        // set transition BEFORE changing the target values
+        reel.style.transition = 'width 0.3s ease, height 0.3s ease, top 0.3s ease, left 0.3s ease, border 0.3s ease';
+        reel.style.willChange = 'width, height, top, left, transform'; // hint to browser
+
+        // Force a layout so the browser registers the starting values
+        // reading .offsetHeight or getBoundingClientRect() forces layout
+        reel.getBoundingClientRect();
+
+        // Now set the target values — the transition should run
+        /**
+         * relative w-full max-w-sm aspect-[9/16] bg-slate-200 rounded-2xl overflow-hidden sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:w-[30vw] 2xl:h-[80%] pointer-events-auto shadow-[0px_2px_15px_-5px_rgba(82,79,79,0.6)]
+         */
+        requestAnimationFrame(() => {
+            reel.style.width = reelInitialStyles.width;
+            reel.style.height = reelInitialStyles.height;
+            reel.style.position = reelInitialStyles.position;
+            reel.style.top = reelInitialStyles.top;
+            reel.style.left = reelInitialStyles.left;
+            reel.style.border = 'none';
+        });
+
+        setAreReelControlsVisible(true);
+        setIsOutsideClickEnabled(false);
+    };
+
 
     return (
         <>
@@ -212,7 +277,7 @@ function ReelViewer({
                             onClick={(event) => handleRemoveReel(event)}
                             className="!text-[15px] w-full h-full text-white rounded-full" />}
                     </div> */}
-                            <UnfoldLessIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} />
+                            {areReelControlsVisible ? <PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} /> : <AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} />}
                             <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
                             <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
                                 {isDownloading ? <LoadingSpinner isSmall /> : (
@@ -286,7 +351,7 @@ function ReelViewer({
 
                 /* resizable*/
                 /* Only one of resizable, scalable, warpable can be used. */
-                resizable={true}
+                resizable={false}
                 throttleResize={0}
                 onResize={({ target, width, height, drag }) => {
                     // Clamp width/height to min/max values
