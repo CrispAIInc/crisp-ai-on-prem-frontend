@@ -1433,7 +1433,7 @@ const ChatPanel = () => {
                           ))
                       }
                     </div>
-                    {isReelOpen && <ReelViewer reel={reel} closeReel={() => setIsReelOpen(false)} setReel={setReel} />}
+
                     {
                       showUpdateReelTitleModal && (
                         <FilenameUpdateModal
@@ -1452,6 +1452,7 @@ const ChatPanel = () => {
           </div>}
         </div>
       )}
+      {isReelOpen && <ReelViewer reel={reel} closeReel={() => setIsReelOpen(false)} setReel={setReel} />}
     </aside>
   );
 };
