@@ -44,6 +44,8 @@ function MediaEntertainment({
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
+    const [isReelGenerated, setIsReelGenerated] = useState(false);
+
     function handleChange(event) {
         setVerbosityValue(event.target.value);
     }
@@ -86,6 +88,7 @@ function MediaEntertainment({
             //TODO show video here or in another tab or something
             // setVideoUrl(`${API_ENDPOINT}/${res.reel_video_url}`);
             // setReelTitle(res.title);
+            setIsReelGenerated(true);
             setIsReelOpen(true);
 
         } catch (error) {
@@ -169,7 +172,7 @@ function MediaEntertainment({
                 )}
             </div>
 
-            {isReelOpen && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
+            {(isReelGenerated && isReelOpen) && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
         </div>
     );
 }
