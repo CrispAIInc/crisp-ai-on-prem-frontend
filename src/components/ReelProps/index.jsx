@@ -65,11 +65,13 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                                     <div className="flex flex-col">
                                         <p className='text-sm font-semibold break-all'>{video.filename}</p>
                                         {/* <span className="text-xs italic">{video.category}</span> */}
-                                        {
-                                            video.category?.map((cat, index) => (
-                                                <Chip key={`${cat}-${index}`} className="italic" content={cat} />
-                                            ))
-                                        }
+                                        <div className="flex flex-wrap items-center gap-1">
+                                            {
+                                                video.category?.map((cat, index) => (
+                                                    <Chip key={`${cat}-${index}`} cssClasses="italic !text-[10px] !px-1 !py-1" content={cat} />
+                                                ))
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             ))}
