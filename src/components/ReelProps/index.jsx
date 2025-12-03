@@ -19,6 +19,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 //     TimelineContent
 // } from '../CustomTimeline';
 import GsFile from '../GsFile';
+import Chip from '../Chip';
 
 function ReelProps({ reel, closeReelProps = () => { } }) {
     const { filename, id, reel_video_url, thumbnail, user_id, combined_video_info, original_sources, video_filename, edl_url, ...rest } = reel;
@@ -63,7 +64,12 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                                     <GsFile gsUrl={video.thumbnail} alt={reel.title} className="w-12 h-12 rounded" />
                                     <div className="flex flex-col">
                                         <p className='text-sm font-semibold break-all'>{video.filename}</p>
-                                        <span className="text-xs italic">{video.category}</span>
+                                        {/* <span className="text-xs italic">{video.category}</span> */}
+                                        {
+                                            video.category?.map((cat, index) => (
+                                                <Chip key={`${cat}-${index}`} className="italic" content={cat} />
+                                            ))
+                                        }
                                     </div>
                                 </div>
                             ))}
