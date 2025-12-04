@@ -89,7 +89,7 @@ function MediaEntertainment({
             // setVideoUrl(`${API_ENDPOINT}/${res.reel_video_url}`);
             // setReelTitle(res.title);
             setIsReelGenerated(true);
-            setIsReelOpen(true);
+            // setIsReelOpen(true);
 
         } catch (error) {
             console.log(error);
@@ -172,7 +172,7 @@ function MediaEntertainment({
                 )}
             </div>
 
-            {(isReelGenerated && isReelOpen) && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
+            {(isReelGenerated) && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
         </div>
     );
 }
