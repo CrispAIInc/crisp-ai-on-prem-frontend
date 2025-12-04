@@ -72,6 +72,7 @@ function MediaEntertainment({
             return;
         }
         try {
+            setIsReelOpen(false);
             setIsGeneratingReel(true);
             const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
                 sources: displayedSources.filter(item => item.is_selected).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
@@ -80,7 +81,6 @@ function MediaEntertainment({
                 verbosityValue: verbosityValue.split(" ")[0]?.toLowerCase() || "short"
             }));
 
-            console.log(res);
 
             setReel(res);
             getReels();
@@ -88,8 +88,13 @@ function MediaEntertainment({
             //TODO show video here or in another tab or something
             // setVideoUrl(`${API_ENDPOINT}/${res.reel_video_url}`);
             // setReelTitle(res.title);
+
+
             setIsReelGenerated(true);
-            setIsReelOpen(true);
+
+            // setTimeout(() => {
+            //     setIsReelOpen(true);
+            // }, 0);
 
         } catch (error) {
             console.log(error);
@@ -101,6 +106,7 @@ function MediaEntertainment({
 
     function closeReel() {
         setIsReelOpen(false);
+        setIsReelGenerated(false);
         setReel({
             id: "",
             title: "",
@@ -172,7 +178,7 @@ function MediaEntertainment({
                 )}
             </div>
 
-            {(isReelGenerated && isReelOpen) && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
+            {(isReelGenerated) && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
         </div>
     );
 }
