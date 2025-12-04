@@ -80,7 +80,7 @@ function MediaEntertainment({
                 verbosityValue: verbosityValue.split(" ")[0]?.toLowerCase() || "short"
             }));
 
-            console.log(res);
+            setIsReelOpen(false);
 
             setReel(res);
             getReels();
