@@ -1310,7 +1310,7 @@ import SourceExplorer from "../SourceExplorer";
 import Modal from 'react-bootstrap/Modal';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import { Checkbox } from "@mui/material";
+import { Checkbox, Drawer } from "@mui/material";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { MainContext } from "../../contexts/mainContext";
@@ -2415,6 +2415,14 @@ const ContentSection = ({
     const [isProgressStarted, setIsProgressStarted] = useState(false);
     const [progressUpdateCount, setProgressUpdateCount] = useState(0);
 
+    const [isChatHistoryOpen, setIsChatHistoryOpen] = useState(false);
+    const handleOpenChatHistory = () => {
+        setIsChatHistoryOpen(true);
+    };
+    const handleCloseChatHistory = () => {
+        setIsChatHistoryOpen(false);
+    };
+
     return (
         <>
             {/* this is where i show the list of displayedSources */}
@@ -2480,14 +2488,16 @@ const ContentSection = ({
                             }
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={handleExploreSources}
+                                onClick={handleOpenChatHistory}
                             >
                                 <QuestionAnswerOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Chat history</span>
                             </div>
                         </div>
                         {/* </div> */}
-
+                        <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="left" variant="persistent" open={isChatHistoryOpen} onClose={handleCloseChatHistory}>
+                            hello
+                        </Drawer>
                     </div>
                     {/* </div> */}
                     {/* Settings */}
