@@ -2497,7 +2497,7 @@ const ContentSection = ({
                         </div>
                         {/* </div> */}
                         <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="left" variant="persistent" open={isChatHistoryOpen} onClose={handleCloseChatHistory}>
-                            <ChatHistoryList />
+                            <ChatHistoryList closeChatHistory={handleCloseChatHistory} />
                         </Drawer>
                     </div>
                     {/* </div> */}
