@@ -60,7 +60,7 @@ const Workspace = () => {
                 </div>
             ) : null}
 
-            <div className={`mt-10 overflow-y-hidden h-[700px]`}>
+            <div className={`mt-3 overflow-y-hidden h-[700px]`}>
                 <CopilotSection selectedLanguage={selectedLanguage} setSelectedLanguage={setSelectedLanguage} setIsCombinedSummaryPending={setIsCombinedSummaryPending} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
             </div>
 
