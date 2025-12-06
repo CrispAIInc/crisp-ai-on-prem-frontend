@@ -1328,9 +1328,7 @@ import useAuth from '../../hooks/useAuth';
 import GsFile from '../GsFile';
 import { AuthContext } from '../../contexts/authContext';
 import useResources from '../../hooks/useResources';
-import UploadToast from '../UploadToast';
-import ErrorToast from '../ErrorToast';
-import SuccessToast from '../SuccessToast';
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
 import { IndexModal } from '../IndexModal';
 import socket from "../../config/socket";
 import AnimatedText from '../AnimatedText';
@@ -2473,15 +2471,23 @@ const ContentSection = ({
                                 <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
                             </div>
+                            {
+                                isSearching && (
+                                    <div className="flex items-center gap-2">
+                                        <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                                    </div>
+                                )
+                            }
+                            <div
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={handleExploreSources}
+                            >
+                                <QuestionAnswerOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Chat history</span>
+                            </div>
                         </div>
                         {/* </div> */}
-                        {
-                            isSearching && (
-                                <div className="flex items-center gap-2">
-                                    <SearchSection chatLoaded={chatLoaded} className='flex-1' />
-                                </div>
-                            )
-                        }
+
                     </div>
                     {/* </div> */}
                     {/* Settings */}
