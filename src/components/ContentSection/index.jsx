@@ -2445,48 +2445,36 @@ const ContentSection = ({
  <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Home</span>
  </div> */}
                         {/* Ingestion */}
-                        <div className="flex flex-col justify-start gap-2 mb-1">
-                            {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span> */}
-                            <div className="flex flex-wrap items-center gap-0">
-                                <div
-                                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={() => handleAddModal(true)}
-                                >
-                                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
-
-                                </div>
-
-                                {/* Test WebSocket Button - Remove this in production */}
-                                {/* <div
-                                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={testWebSocketConnection}
-                                >
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Test WS</span>
-                                </div> */}
+                        {/* <div className="flex flex-col justify-start gap-2 mb-1"> */}
+                        <div className="flex flex-col gap-0">
+                            {/* <div className="flex flex-wrap items-center gap-0"> */}
+                            <div
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={() => handleAddModal(true)}
+                            >
+                                <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
 
                             </div>
-                        </div>
-                        {/* mrag */}
-                        {/* <div className="flex flex-col justify-start gap-2 mb-2"> */}
-                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
-                        {/* <div className="flex flex-wrap items-center"> */}
-                        <div
-                            className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                            onClick={handleExploreSources}
-                        >
-                            <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
-                        </div>
-                        <div className="global-search">
+                            {/* </div> */}
+                            {/* </div> */}
                             <div
-                                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={handleExploreSources}
+                            >
+                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
+                            </div>
+                            {/* <div className="global-search"> */}
+                            <div
+                                className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={() => setIsSearching(!isSearching)}
                             >
                                 <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
                             </div>
                         </div>
+                        {/* </div> */}
                         {
                             isSearching && (
                                 <div className="flex items-center gap-2">
