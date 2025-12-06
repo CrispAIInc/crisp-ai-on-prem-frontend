@@ -1332,6 +1332,7 @@ import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlin
 import { IndexModal } from '../IndexModal';
 import socket from "../../config/socket";
 import AnimatedText from '../AnimatedText';
+import ChatHistoryList from '../ChatHistoryList';
 
 // const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
 
@@ -2496,7 +2497,7 @@ const ContentSection = ({
                         </div>
                         {/* </div> */}
                         <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="left" variant="persistent" open={isChatHistoryOpen} onClose={handleCloseChatHistory}>
-                            hello
+                            <ChatHistoryList />
                         </Drawer>
                     </div>
                     {/* </div> */}
