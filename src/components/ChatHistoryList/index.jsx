@@ -7,23 +7,10 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import makeApiRequest from '../../api';
 
 function ChatHistoryList({ closeChatHistory }) {
-    const { theme } = useContext(MainContext);
+    const { theme, chatHistory } = useContext(MainContext);
     const { sidebarWidth } = useResizableSidebar(200, true);
 
-    const [chatHistory, setChatHistory] = useState([]);
 
-    useEffect(() => {
-        async function getChatHistory() {
-            try {
-                const { chat_history } = await makeApiRequest("/chat-history", "GET");
-                setChatHistory(chat_history);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        getChatHistory();
-    }, []);
 
     const CHATHISTORY_MOCK = [
         {
