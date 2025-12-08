@@ -10,7 +10,7 @@ function ChatHistoryList({ closeChatHistory }) {
     const { theme, chatHistory } = useContext(MainContext);
     const { sidebarWidth } = useResizableSidebar(200, true);
 
-
+    console.log(chatHistory);
 
     const CHATHISTORY_MOCK = [
         {
@@ -127,10 +127,12 @@ function ChatHistoryList({ closeChatHistory }) {
     ];
 
     // Format and group the chats by date using the util
-    const grouped = formatChatHistoryByDate(CHATHISTORY_MOCK, { dateKey: 'timestamp', returnAsArray: true });
+    const grouped = formatChatHistoryByDate(chatHistory, { dateKey: 'timestamp', returnAsArray: true });
+    console.log(grouped);
+
 
     return (
-        <div style={{ width: sidebarWidth }} className={`p-4 ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
+        <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
 
