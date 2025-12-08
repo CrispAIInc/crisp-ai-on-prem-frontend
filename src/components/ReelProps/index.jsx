@@ -64,14 +64,15 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                                     <GsFile gsUrl={video.thumbnail} alt={reel.title} className="w-12 h-12 rounded" />
                                     <div className="flex flex-col">
                                         <p className='text-sm font-semibold break-all'>{video.filename}</p>
-                                        {/* <span className="text-xs italic">{video.category}</span> */}
-                                        <div className="flex flex-wrap items-center gap-1">
-                                            {
-                                                video.category?.map((cat, index) => (
-                                                    <Chip key={`${cat}-${index}`} cssClasses="italic !text-[10px] !px-1 !py-1" content={cat} />
-                                                ))
-                                            }
-                                        </div>
+                                        {!Array.isArray(video?.category) ? <Chip className="text-xs italic" cssClasses="italic !text-[10px] !px-1 !py-1" content={video.category} />
+                                            :
+                                            <div className="flex flex-wrap items-center gap-1">
+                                                {
+                                                    video.category?.map((cat, index) => (
+                                                        <Chip key={`${cat}-${index}`} cssClasses="italic !text-[10px] !px-1 !py-1" content={cat} />
+                                                    ))
+                                                }
+                                            </div>}
                                     </div>
                                 </div>
                             ))}
