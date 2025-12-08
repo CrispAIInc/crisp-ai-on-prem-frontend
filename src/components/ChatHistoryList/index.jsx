@@ -14,11 +14,11 @@ function ChatHistoryList({ closeChatHistory }) {
 
     async function createNewChat() {
         try {
-            const { success, sessionId, title, message } = await makeApiRequest('/new-chat');
+            const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
             if (success) {
                 // Handle new chat creation logic here
                 console.log('New chat created:', { sessionId, title, message });
-                setCurrentChat({ sessionId, title });
+                setCurrentChat({ sessionId, title, userId, messages });
             } else {
                 throw new Error('Failed to create new chat');
             }

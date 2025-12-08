@@ -28,7 +28,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     theme,
     currentResource,
     llmModels,
-    chatLoaded, setChatLoaded,
+    chatLoaded,
     selectedCategory,
     fromChat, setFromChat,
     isFoundationLlm,
@@ -42,18 +42,16 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     selectedNote,
     setSelectedNote,
     showNoteModal,
-    sourcesWithExclusive,
     categoryOptions,
     setNoteIndex,
     setShowNoteModal,
     displayedSources, setShowEditor,
-    selectedSources,
-    selectedAll,
     isNewNote,
     setIsNewNote,
     languageOptions, setIsManualNote,
     setShowNoteDetails,
     setActiveView,
+    currentChat
   } = useContext(MainContext);
 
   const { token } = useAuth();
@@ -64,7 +62,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   const chatAppRef = useRef();
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(currentChat?.messages || []);
   const [input, setInput] = useState("");
 
   // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
