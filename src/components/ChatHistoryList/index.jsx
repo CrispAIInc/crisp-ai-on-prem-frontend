@@ -141,6 +141,8 @@ function ChatHistoryList({ closeChatHistory }) {
                 <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={closeChatHistory} />
             </div>
 
+            <button className={`px-3 py-2 w-full rounded-md ${theme === 'light' ? "bg-white text-textColor-300 hover:bg-[#e6e6e6]" : "bg-textColor-200 text-textColor-100 hover:bg-textColor-400"} `}>New Chat</button>
+
             <div className="z-50 flex flex-col flex-1 mt-4 overflow-y-auto">
                 {grouped.map(group => (
                     <div key={group.key} className="mb-4">
