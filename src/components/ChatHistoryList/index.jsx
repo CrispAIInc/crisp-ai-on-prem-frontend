@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
@@ -10,10 +10,16 @@ function ChatHistoryList({ closeChatHistory }) {
     const { theme } = useContext(MainContext);
     const { sidebarWidth } = useResizableSidebar(200, true);
 
+    const [chatHistory, setChatHistory] = useState([]);
+
     useEffect(() => {
         async function getChatHistory() {
-            const res = await makeApiRequest("/chat-history", "GET");
-            console.log("Chat history:", res);
+            try {
+                const { chat_history } = await makeApiRequest("/chat-history", "GET");
+                setChatHistory(chat_history);
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         getChatHistory();
