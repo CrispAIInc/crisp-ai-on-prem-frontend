@@ -7,124 +7,25 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import makeApiRequest from '../../api';
 
 function ChatHistoryList({ closeChatHistory }) {
-    const { theme, chatHistory } = useContext(MainContext);
+    const { theme, chatHistory, setCurrentChat } = useContext(MainContext);
     const { sidebarWidth } = useResizableSidebar(200, true);
 
     console.log(chatHistory);
 
-    const CHATHISTORY_MOCK = [
-        {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2025-12-08",
-        },
-        {
-            id: 2,
-            title: "Discussion on Marketing Strategy",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2025-12-07"
-        }, {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2025-12-06",
-        },
-        {
-            id: 2,
-            title: "Discussion on Marketing Strategy",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2025-10-02"
-        }, {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2025-10-01",
-        },
-        {
-            id: 2,
-            title: "Discussion on Marketing Strategy",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2025-10-02"
-        }, {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2023-10-01",
-        },
-        {
-            id: 2,
-            title: "Discussion on Marketing Strategy",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2023-10-02"
-        }, {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2023-10-01",
-        },
-        {
-            id: 2,
-            title: "Discussion on Marketing Strategy",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2023-10-02"
-        }, {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2023-10-01",
-        },
-        {
-            id: 2,
-            title: "Discussion on Marketing Strategy",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2023-10-02"
-        }, {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2023-10-01",
-        },
-        {
-            id: 2,
-            title: "Discussion on Marketing Strategy",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2023-10-02"
-        }, {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2023-10-01",
-        },
-        {
-            id: 2,
-            title: "Discussion on Marketing Strategy",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2023-10-02"
-        }, {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2023-10-01",
-        },
-        {
-            id: 2,
-            title: "Discussion on Marketing Strategy",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2023-10-02"
-        }, {
-            id: 1,
-            title: "Chat about Project Alpha",
-            lastMessage: "Can you provide an update on the timeline?",
-            timestamp: "2023-10-01",
-        },
-        {
-            id: 2,
-            title: "last",
-            lastMessage: "Let's schedule a meeting for next week.",
-            timestamp: "2023-10-02"
-        },
-    ];
+    async function createNewChat() {
+        try {
+            const { success, sessionId, title, message } = await makeApiRequest('/new-chat');
+            if (success) {
+                // Handle new chat creation logic here
+                console.log('New chat created:', { sessionId, title, message });
+                setCurrentChat({ sessionId, title });
+            } else {
+                throw new Error('Failed to create new chat');
+            }
+        } catch (error) {
+            console.log(error?.message);
+        }
+    }
 
     // Format and group the chats by date using the util
     const grouped = formatChatHistoryByDate(chatHistory, { dateKey: 'timestamp', returnAsArray: true });
@@ -141,7 +42,7 @@ function ChatHistoryList({ closeChatHistory }) {
                 <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={closeChatHistory} />
             </div>
 
-            <button className={`px-3 py-2 w-full rounded-md ${theme === 'light' ? "bg-white text-textColor-300 hover:bg-[#e6e6e6]" : "bg-textColor-200 text-textColor-100 hover:bg-textColor-400"} `}>New Chat</button>
+            <button className={`px-3 py-2 w-full rounded-md ${theme === 'light' ? "bg-white text-textColor-300 hover:bg-[#e6e6e6]" : "bg-textColor-200 text-textColor-100 hover:bg-textColor-400"} `} onClick={createNewChat}>New Chat</button>
 
             <div className="z-50 flex flex-col flex-1 mt-4 overflow-y-auto">
                 {grouped.map(group => (
