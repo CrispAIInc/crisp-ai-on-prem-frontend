@@ -1095,8 +1095,27 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [reels, setReels] = useState([]);
     // const [user, setUser] = useState(null);
+
+    const [chatHistory, setChatHistory] = useState([]);
+    const [currentChat, setCurrentChat] = useState([]);
+    useEffect(() => {
+        async function getChatHistory() {
+            try {
+                const { chat_history } = await makeApiRequest("/chat-history", "GET");
+                setChatHistory(chat_history);
+                setCurrentChat(chat_history[0] || []);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getChatHistory();
+    }, []);
+
     // create value object with all the states
     const value = {
+        chatHistory, setChatHistory,
+        currentChat, setCurrentChat,
         reels, setReels,
         persistedUploadedFiles, setPersistedUploadedFiles,
         // user, setUser,
