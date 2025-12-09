@@ -1099,6 +1099,24 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [chatHistory, setChatHistory] = useState([]);
     const [currentChat, setCurrentChat] = useState([]);
     useEffect(() => {
+        async function initializeChatSession() {
+            try {
+                const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
+                if (success) {
+                    // Handle new chat creation logic here
+                    console.log('New chat created:', { sessionId, title, message });
+                    setCurrentChat({ sessionId, title, userId, messages });
+                } else {
+                    throw new Error('Failed to create new chat');
+                }
+            } catch (error) {
+                console.log(error?.message);
+            }
+        }
+
+        initializeChatSession();
+    }, []);
+    useEffect(() => {
         async function getChatHistory() {
             try {
                 const { chat_history } = await makeApiRequest("/chat-history", "GET");
