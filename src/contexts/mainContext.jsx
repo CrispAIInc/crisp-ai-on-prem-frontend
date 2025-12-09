@@ -1121,7 +1121,7 @@ export default function MainProvider({ children, theme, setTheme }) {
             try {
                 const { chat_history } = await makeApiRequest("/chat-history", "GET");
                 setChatHistory(chat_history);
-                setCurrentChat(chat_history[0] || []);
+                // setCurrentChat(chat_history[0] || []);
             } catch (error) {
                 console.log(error);
             }
