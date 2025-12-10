@@ -63,6 +63,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   const chatAppRef = useRef();
 
   const [messages, setMessages] = useState(currentChat?.messages || []);
+  useEffect(() => {
+    setMessages(currentChat?.messages || []);
+  }, [currentChat]);
   const [input, setInput] = useState("");
 
   // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
