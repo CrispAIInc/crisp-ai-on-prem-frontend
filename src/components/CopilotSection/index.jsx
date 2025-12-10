@@ -63,8 +63,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   const chatAppRef = useRef();
 
   const [messages, setMessages] = useState(currentChat?.messages || []);
+  const [responseIndex, setResponseIndex] = useState(currentChat?.messages?.length - 1 || -1);
   useEffect(() => {
     setMessages(currentChat?.messages || []);
+    setResponseIndex(currentChat?.messages?.length - 1 || -1);
   }, [currentChat]);
   const [input, setInput] = useState("");
 
@@ -72,7 +74,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   const [originalQueries, setOriginalQueries] = useState([]);
   const [originalResponses, setOriginalResponses] = useState([]);
-  const [responseIndex, setResponseIndex] = useState(-1);
+
 
 
   const [existingNote, setExistingNote] = useState(0);
