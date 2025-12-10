@@ -1105,7 +1105,7 @@ export default function MainProvider({ children, theme, setTheme }) {
                 if (success) {
                     // Handle new chat creation logic here
                     console.log('New chat created:', { sessionId, title, message });
-                    setCurrentChat({ sessionId, title, userId, messages });
+                    setCurrentChat({ sessionId, title, userId, messages: messages || [] });
                 } else {
                     throw new Error('Failed to create new chat');
                 }
