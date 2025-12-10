@@ -29,7 +29,11 @@ function ChatHistoryList({ closeChatHistory }) {
 
     // Format and group the chats by date using the util
     const grouped = formatChatHistoryByDate(chatHistory, { dateKey: 'timestamp', returnAsArray: true });
-    console.log(grouped);
+
+    function handleSingleChatSessionClick(chat) {
+        console.log(chat);
+        setCurrentChat(chat);
+    }
 
 
     return (
@@ -55,15 +59,8 @@ function ChatHistoryList({ closeChatHistory }) {
                             <div className="px-2 text-xs text-textColor-400">No chats</div>
                         ) : (
                             group.items.map((chat, idx) => (
-                                <div key={`${chat.id || 'chat'}-${idx}`} className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? "hover:bg-[#f7f7f7]/50" : "hover:bg-textColor-200/50"} `}>
+                                <div key={`${chat.id || 'chat'}-${idx}`} className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? "hover:bg-[#f7f7f7]/50" : "hover:bg-textColor-200/50"} `} onClick={() => handleSingleChatSessionClick(chat)}>
                                     <h6 className='font-semibold !mb-0 truncate '>{chat.title}</h6>
-                                    {/* <div className="flex items-center justify-between">
-                                        <div className="text-xs truncate text-textColor-400">{chat.lastMessage}</div>
-                                        <div className="flex items-center gap-1 ml-2 text-xs text-textColor-400">
-                                            <AccessTimeOutlinedIcon style={{ fontSize: 14, color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                            <span>{chat.timestamp ? formatReadableDate(chat.timestamp) : ''}</span>
-                                        </div>
-                                    </div> */}
                                 </div>
                             ))
                         )}
