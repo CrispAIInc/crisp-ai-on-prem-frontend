@@ -1026,65 +1026,76 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                               {message?.botText}
                             </div>
 
-                            {!isFoundationLlm && message?.refs?.videoLinks && message?.refs?.keyframeLinks && message?.refs?.pdfLinks && (
-                              <div>
-                                <p className="mt-2 font-medium">References:</p>
-                                {message?.refs?.videoLinks?.length > 0 && (
-                                  <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
-                                    {
-                                      message?.refs?.videoLinks?.map((video) => (
-                                        <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
-                                      ))
-                                    }
-                                  </ul>
+                            {/* {!isFoundationLlm && ( */}
+                            <div>
+                              {(message?.refs?.videoLinks?.length > 0 ||
+                                message?.refs?.keyframeLinks?.length > 0 ||
+                                message?.refs?.pdfLinks?.length > 0 ||
+                                message?.refs?.imageLinks?.length > 0) && (
+                                  <p className="mt-2 font-medium">References:</p>
                                 )}
-                                {message?.refs?.keyframeLinks?.length > 0 && (
-                                  <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
-                                    {message?.refs?.keyframeLinks?.map((video) => (
-                                      <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
-                                    ))}
-                                  </ul>
-                                )}
-                                {message?.refs?.pdfLinks?.length > 0 && (
-                                  <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
-                                    {message?.refs?.pdfLinks}
-                                    {
-                                      message?.refs?.keyframeLinks?.map((pdf) => (
-                                        <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handlePDFLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer" />
 
-                                      ))}
-                                  </ul>
-                                )}
-                                {message?.refs?.imageLinks?.length > 0 && (
-                                  <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
-                                    {message?.refs?.imageLinks}
-                                    {
-                                      message?.refs?.imageLinks?.map((img) => (
-                                        <Chip key={img.source_path} content={img.source_path} data-object={img} onClick={(event) => handlePDFLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
-                                      ))
-                                    }
-                                  </ul>
-                                )}
-                              </div>
-                            )}
-                            <AddOptionsModal
-                              text={
-                                message?.botText
-                              }
-                              addToNewNote={addToNewNote}
-                              refs={message?.refs}
-                              addToExistingNote={addToExistingNote}
-                              setExistingNote={setExistingNote}
-                              question={noteQuestion.current}
-                              existingNote={existingNote}
-                              onHide={onHide}
-                              isNewNote={isNewNote}
-                              setShowNoteModal={setShowNoteModal}
-                              updateSelectedNote={setSelectedNote}
-                              showNoteModal={showNoteModal}
-                              selectedNote={selectedNote}
-                              notes={notes}
-                            />
+                              {/* Video links */}
+                              {message?.refs?.videoLinks?.length > 0 && (
+                                <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+                                  {message.refs.videoLinks.map((video) => (
+                                    <Chip
+                                      key={video.source_path}
+                                      content={`${video.source_path} | Timestamp: ${video.timestamp}`}
+                                      data-object={video}
+                                      onClick={(e) => handleVideoLinkClick(e, video)}
+                                      cssClasses="ml-0 cursor-pointer"
+                                    />
+                                  ))}
+                                </ul>
+                              )}
+
+                              {/* Keyframe links */}
+                              {message?.refs?.keyframeLinks?.length > 0 && (
+                                <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+                                  {message.refs.keyframeLinks.map((video) => (
+                                    <Chip
+                                      key={video.source_path}
+                                      content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
+                                      data-object={video}
+                                      onClick={(e) => handleVideoLinkClick(e, video)}
+                                      cssClasses="ml-0 cursor-pointer"
+                                    />
+                                  ))}
+                                </ul>
+                              )}
+
+                              {/* PDF links */}
+                              {message?.refs?.pdfLinks?.length > 0 && (
+                                <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+                                  {message.refs.pdfLinks.map((pdf) => (
+                                    <Chip
+                                      key={pdf.source_path}
+                                      content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
+                                      data-object={pdf}
+                                      onClick={(e) => handlePDFLinkClick(e, pdf)}
+                                      cssClasses="ml-0 cursor-pointer"
+                                    />
+                                  ))}
+                                </ul>
+                              )}
+
+                              {/* Image links */}
+                              {message?.refs?.imageLinks?.length > 0 && (
+                                <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+                                  {message.refs.imageLinks.map((img) => (
+                                    <Chip
+                                      key={img.source_path}
+                                      content={img.source_path}
+                                      data-object={img}
+                                      onClick={(e) => handlePDFLinkClick(e, img)}
+                                      cssClasses="ml-0 cursor-pointer"
+                                    />
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                            {/* )} */}
                           </div>
                         </div>
                         {showCursor && index == responseIndex ? (
@@ -1096,6 +1107,25 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                         {
                           (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                         }
+
+                        <AddOptionsModal
+                          text={
+                            message?.botText
+                          }
+                          addToNewNote={addToNewNote}
+                          refs={message?.refs}
+                          addToExistingNote={addToExistingNote}
+                          setExistingNote={setExistingNote}
+                          question={noteQuestion.current}
+                          existingNote={existingNote}
+                          onHide={onHide}
+                          isNewNote={isNewNote}
+                          setShowNoteModal={setShowNoteModal}
+                          updateSelectedNote={setSelectedNote}
+                          showNoteModal={showNoteModal}
+                          selectedNote={selectedNote}
+                          notes={notes}
+                        />
 
                         {/* <div className="flex flex-wrap items-center gap-1">
                           <span
