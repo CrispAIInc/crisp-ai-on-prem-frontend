@@ -260,6 +260,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
               newMessages[lastMessageIndex] = {
                 ...newMessages[lastMessageIndex],
                 text: botMessage,
+                botText: botMessage,
               };
             }
             return newMessages;
@@ -440,7 +441,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         newMessages[lastMessageIndex] = {
           ...newMessages[lastMessageIndex],
           refs,
-          botText: selectedLanguage == "en" ? data.bot_message : newData.translatedText,
+          // botText: selectedLanguage == "en" ? data.bot_message : newData.translatedText,
           text: botMessage,
         };
       }
@@ -1019,7 +1020,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             : "text-textColor-100"
                             } break-words`}
                         >
-                          {message?.text}
+                          {/* {message?.text} */}
                           <div>
                             <div className="coorg-response">
                               {message?.botText}
