@@ -160,7 +160,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       userMessage = data.translatedText;
     } else userMessage = input || message;
 
-    userMessage = userMessage.trim();
+    userMessage = userMessage?.trim();
 
     noteQuestion.current = userMessage;
 
@@ -227,7 +227,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
 
       let sessionID = null; // Variable to store the session ID
-      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_selected) ? false : true}`, {
+      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_selected) ? false : true}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           SessionId: currentChat?.sessionId
@@ -237,7 +237,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       // const eventSource = new EventSource(
       // `${API_ENDPOINT}/message/${encodeURIComponent(
       //   selectedCategory
-      // )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
+      // )}/${encodeURIComponent(usermessage?.replace(/\n/g, ' '))}/${encodeURIComponent(
       //     selectedLLMs[0]
       //   )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       // );
@@ -440,6 +440,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         newMessages[lastMessageIndex] = {
           ...newMessages[lastMessageIndex],
           refs,
+          botText: selectedLanguage == "en" ? data.bot_message : newData.translatedText,
           text: botMessage,
         };
       }
@@ -469,14 +470,14 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
       setMessages(
         messages.map((message, index) => {
-          if (message.sender === "user") {
+          if (message?.sender === "user") {
             const updatedMessage = {
               ...message,
               text: data.translated_queries[userIndex],
             };
             userIndex++;
             return updatedMessage;
-          } else if (message.sender === "bot") {
+          } else if (message?.sender === "bot") {
             const botMessage = (
               <div key={index}>
                 <div className="coorg-response">
@@ -554,7 +555,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
             const updatedMessage = {
               ...message,
-              references: message.references,
+              references: message?.references,
               text: botMessage,
             };
             botIndex++;
@@ -887,7 +888,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             <div
                               className="cursor-pointer"
                               onClick={() => {
-                                handleVisionUpload(message.text.images, message.text.query);
+                                handleVisionUpload(message?.text?.images, message?.text?.query);
                               }}
                             >
                               <ReplayOutlinedIcon />
@@ -895,17 +896,17 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                           </div>
                           <div>
                             {
-                              message.text.imgs_list.map((img, index) => {
+                              message?.text?.imgs_list.map((img, index) => {
                                 return (
                                   <img src={URL.createObjectURL(img)} key={img.name} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
                                 );
                               })
                             }
-                            <p className="break-words">{message.text.query}</p>
-                            {/* <p>{message.text}</p> */}
+                            <p className="break-words">{message?.text?.query}</p>
+                            {/* <p>{message?.text}</p> */}
                           </div>
                           {isLightboxOpen && (
-                            <PreviewModal closeLightbox={closeLightbox} content={URL.createObjectURL(message.text.imgs_list[imagePreviewIndex])} />
+                            <PreviewModal closeLightbox={closeLightbox} content={URL.createObjectURL(message?.text?.imgs_list[imagePreviewIndex])} />
                           )}
                         </>
                       ) : (
@@ -915,13 +916,13 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             <div
                               className="cursor-pointer"
                               onClick={() => {
-                                handleRepeatQuestion(message.text, message?.models, true);
+                                handleRepeatQuestion(message?.text, message?.models, true);
                               }}
                             >
                               <ReplayOutlinedIcon />
                             </div>
                           </div>
-                          <div>{message.text.startsWith('blob') ? (<img src={message.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0" dangerouslySetInnerHTML={{ __html: message.text.replace(/\n/g, '<br>') }}></p>)}</div>
+                          <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0" dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
                         </>
                       )
                   }
@@ -936,7 +937,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                       : "bg-background_workspace"
                       } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
                   >
-                    {message?.models?.includes("dall-e-3") && message.img ? (
+                    {message?.models?.includes("dall-e-3") && message?.img ? (
                       <>
                         <b
                           className={`user-select-none ${theme === "light"
@@ -948,7 +949,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                         </b>
                         <div className="flex flex-col flex-1">
                           <img
-                            src={message.img}
+                            src={message?.img}
                             alt="Image is Loading ..."
                             onClick={openLightbox}
                             className="flex-1 mx-auto cursor-pointer"
@@ -962,11 +963,11 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             >
                               <AddOptionsModal
                                 models={["dall-e-3"]}
-                                text={message.img}
+                                text={message?.img}
                                 addToNewNote={addToNewNote}
                                 addToExistingNote={addToExistingNote}
                                 setExistingNote={setExistingNote}
-                                question={message.question}
+                                question={message?.question}
                                 existingNote={existingNote}
                                 onHide={onHide}
                                 isNewNote={isNewNote}
@@ -998,7 +999,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             </span>
                           </div>
                           {isLightboxOpen && (
-                            <PreviewModal closeLightbox={closeLightbox} content={message.img} />
+                            <PreviewModal closeLightbox={closeLightbox} content={message?.img} />
                           )}
                         </div>
                       </>
@@ -1018,7 +1019,72 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             : "text-textColor-100"
                             } break-words`}
                         >
-                          {message.text}
+                          {message?.text}
+                          <div>
+                            <div className="coorg-response">
+                              {message?.botText}
+                            </div>
+
+                            {!isFoundationLlm && message?.refs?.videoLinks && message?.refs?.keyframeLinks && message?.refs?.pdfLinks && (
+                              <div>
+                                <p className="mt-2 font-medium">References:</p>
+                                {message?.refs?.videoLinks?.length > 0 && (
+                                  <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
+                                    {
+                                      message?.refs?.videoLinks?.map((video) => (
+                                        <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
+                                      ))
+                                    }
+                                  </ul>
+                                )}
+                                {message?.refs?.keyframeLinks?.length > 0 && (
+                                  <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
+                                    {message?.refs?.keyframeLinks?.map((video) => (
+                                      <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
+                                    ))}
+                                  </ul>
+                                )}
+                                {message?.refs?.pdfLinks?.length > 0 && (
+                                  <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
+                                    {message?.refs?.pdfLinks}
+                                    {
+                                      message?.refs?.keyframeLinks?.map((pdf) => (
+                                        <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handlePDFLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer" />
+
+                                      ))}
+                                  </ul>
+                                )}
+                                {message?.refs?.imageLinks?.length > 0 && (
+                                  <ul className="flex flex-col gap-1 pl-1 text-sm break-all truncate whitespace-normal">
+                                    {message?.refs?.imageLinks}
+                                    {
+                                      message?.refs?.imageLinks?.map((img) => (
+                                        <Chip key={img.source_path} content={img.source_path} data-object={img} onClick={(event) => handlePDFLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
+                                      ))
+                                    }
+                                  </ul>
+                                )}
+                              </div>
+                            )}
+                            <AddOptionsModal
+                              text={
+                                message?.botText
+                              }
+                              addToNewNote={addToNewNote}
+                              refs={message?.refs}
+                              addToExistingNote={addToExistingNote}
+                              setExistingNote={setExistingNote}
+                              question={noteQuestion.current}
+                              existingNote={existingNote}
+                              onHide={onHide}
+                              isNewNote={isNewNote}
+                              setShowNoteModal={setShowNoteModal}
+                              updateSelectedNote={setSelectedNote}
+                              showNoteModal={showNoteModal}
+                              selectedNote={selectedNote}
+                              notes={notes}
+                            />
+                          </div>
                         </div>
                         {showCursor && index == responseIndex ? (
                           <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
