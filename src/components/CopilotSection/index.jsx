@@ -232,7 +232,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_selected) ? false : true}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          SessionId: currentChat?.sessionId
+          SessionId: currentChat?.session_id
         },
         heartbeatTimeout: 75000,
       });
