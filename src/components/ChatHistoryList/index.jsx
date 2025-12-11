@@ -36,7 +36,6 @@ function ChatHistoryList({ closeChatHistory }) {
     const grouped = formatChatHistoryByDate(chatHistory, { dateKey: 'timestamp', returnAsArray: true });
 
     function handleSingleChatSessionClick(chat) {
-        console.log(chat);
         setCurrentChat(chat);
         closeChatHistory && closeChatHistory();
     }
