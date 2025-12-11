@@ -7,6 +7,7 @@ import makeApiRequest from '../../api';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ChatTitleUpdaterModal from '../ChatTitleUpdaterModal';
+import './ChatHistoryList.css';
 
 function ChatHistoryList({ closeChatHistory }) {
     const { theme, chatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
@@ -85,7 +86,7 @@ function ChatHistoryList({ closeChatHistory }) {
 
 
     return (
-        <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
+        <div className={`z-50 p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
 
