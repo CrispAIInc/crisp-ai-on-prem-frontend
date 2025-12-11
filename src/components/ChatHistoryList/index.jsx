@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { formatChatHistoryByDate, formatReadableDate } from '../../utils';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import makeApiRequest from '../../api';
 
 function ChatHistoryList({ closeChatHistory }) {
@@ -64,8 +64,9 @@ function ChatHistoryList({ closeChatHistory }) {
                             <div className="px-2 text-xs text-textColor-400">No chats</div>
                         ) : (
                             group.items.map((chat, idx) => (
-                                <div key={`${chat.id || 'chat'}-${idx}`} className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? "hover:bg-[#f7f7f7]/50" : "hover:bg-textColor-200/50"} `} onClick={() => handleSingleChatSessionClick(chat)}>
-                                    <h6 className='font-semibold !mb-0 truncate '>{chat.title}</h6>
+                                <div key={`${chat.id || 'chat'}-${idx}`} className={`flex items-center  py-2 pr-2 rounded-md cursor-pointer ${theme === 'light' ? "hover:bg-[#f7f7f7]/50" : "hover:bg-textColor-200/50"} `} onClick={() => handleSingleChatSessionClick(chat)}>
+                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} />
+                                    <h6 className='font-semibold !mb-0 fex-1 truncate '>{chat.title}</h6>
                                 </div>
                             ))
                         )}
