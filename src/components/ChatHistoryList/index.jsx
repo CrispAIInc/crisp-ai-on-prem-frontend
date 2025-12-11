@@ -12,7 +12,6 @@ function ChatHistoryList({ closeChatHistory }) {
 
     async function createNewChat() {
         try {
-            //TODO: scroll to top + empty the currentChat
             setCurrentChat([]);
             workspaceContainer.current.scrollTo({
                 top: 0,
@@ -28,6 +27,8 @@ function ChatHistoryList({ closeChatHistory }) {
             }
         } catch (error) {
             console.log(error?.message);
+        } finally {
+            closeChatHistory && closeChatHistory();
         }
     }
 
@@ -37,6 +38,7 @@ function ChatHistoryList({ closeChatHistory }) {
     function handleSingleChatSessionClick(chat) {
         console.log(chat);
         setCurrentChat(chat);
+        closeChatHistory && closeChatHistory();
     }
 
 
