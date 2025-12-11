@@ -3,10 +3,10 @@ import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 import LoadingSpinner from '../LoadingSpinner';
 
-function ChatTitleUpdaterModal({ show, onHide, value, setValue, updateValue }) {
+function ChatTitleUpdaterModal({ isLoading, show, onHide, value, setValue, updateValue }) {
 
     const { theme } = useContext(MainContext);
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
 
     return (
         <Modal
