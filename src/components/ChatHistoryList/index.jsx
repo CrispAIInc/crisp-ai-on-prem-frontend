@@ -39,7 +39,7 @@ function ChatHistoryList({ closeChatHistory }) {
     // Format and group the chats by date using the util
     const grouped = useMemo(() => {
         return formatChatHistoryByDate(chatHistory, {
-            dateKey: "timestamp",
+            dateKey: "updated_at",
             returnAsArray: true,
         });
     }, [chatHistory]);
