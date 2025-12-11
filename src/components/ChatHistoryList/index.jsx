@@ -131,7 +131,7 @@ function ChatHistoryList({ closeChatHistory }) {
                     </div>
                 ))}
             </div>
-            {isUpdateChatTitleModalOpen && <ChatTitleUpdaterModal show={isUpdateChatTitleModalOpen} onHide={() => isUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} updateValue={updateChatTitle} />}
+            {isUpdateChatTitleModalOpen && <ChatTitleUpdaterModal show={isUpdateChatTitleModalOpen} onHide={() => setIsUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} updateValue={updateChatTitle} />}
         </div>
     );
 }
