@@ -1,9 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { formatChatHistoryByDate, formatReadableDate } from '../../utils';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import makeApiRequest from '../../api';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import ChatTitleUpdaterModal from '../ChatTitleUpdaterModal';
 
 function ChatHistoryList({ closeChatHistory }) {
     const { theme, chatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
@@ -40,6 +43,41 @@ function ChatHistoryList({ closeChatHistory }) {
         closeChatHistory && closeChatHistory();
     }
 
+    const [contextMenuChatId, setContextMenuChatId] = useState(null);
+    function handleContextMenuOpen(e, chatId) {
+        e.stopPropagation();
+        e.preventDefault();
+        // Implement context menu logic here
+        setContextMenuChatId(chatId);
+    }
+
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                // setIsUpdateFilenameModalOpen(false);
+                setContextMenuChatId(null);
+                setHoveredSource(null);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const [chatTitle, setChatTitle] = useState('');
+    const [isUpdateChatTitleModalOpen, setIsUpdateChatTitleModalOpen] = useState(false);
+    const [updatingChat, setUpdatingChat] = useState(null);
+    function handleOpenFilenameUpdateModal(event, chat) {
+        event.stopPropagation();
+        setChatTitle(chat?.title?.trim() || '');
+        setUpdatingChat(chat);
+        setIsUpdateChatTitleModalOpen(true);
+    }
+
 
     return (
         <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
@@ -65,7 +103,22 @@ function ChatHistoryList({ closeChatHistory }) {
                         ) : (
                             group.items.map((chat, idx) => (
                                 <div key={`${chat.id || 'chat'}-${idx}`} className={`flex items-center  py-2 pr-2 rounded-md cursor-pointer ${theme === 'light' ? "hover:bg-[#f7f7f7]/50" : "hover:bg-textColor-200/50"} `} onClick={() => handleSingleChatSessionClick(chat)}>
-                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} />
+                                    {contextMenuChatId === chat?.sessionId && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
+                                            onClick={(event) => handleOpenFilenameUpdateModal(event, chat)}>
+                                            <EditOutlinedIcon
+                                                className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                            />
+                                            <span>Rename</span>
+                                        </div>
+                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [chat]); }}>
+                                            <DeleteOutlineOutlinedIcon
+                                                className={`cursor-pointer`}
+                                            />
+                                            <span>Delete</span>
+                                        </div>
+                                    </div>}
+                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleContextMenuOpen(e)} />
                                     <h6 className='font-semibold !mb-0 fex-1 truncate '>{chat.title}</h6>
                                 </div>
                             ))
@@ -73,6 +126,7 @@ function ChatHistoryList({ closeChatHistory }) {
                     </div>
                 ))}
             </div>
+            {isUpdateChatTitleModalOpen && <ChatTitleUpdaterModal show={isUpdateChatTitleModalOpen} onHide={() => isUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} />}
         </div>
     );
 }
