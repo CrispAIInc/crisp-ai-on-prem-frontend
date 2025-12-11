@@ -305,7 +305,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   };
   const fetchReferences = async (botMessage, data) => {
-
+    console.log("fetching refssss;;;;");
     // const response = await axios.get(`${API_ENDPOINT}/references`);
     // const data = response.data;
     noteReferences.videoLinks = [];
@@ -1040,24 +1040,26 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                               {/* Video links */}
                               {message?.refs?.videoLinks?.length > 0 && (
                                 <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-                                  {message.refs.videoLinks.map((video) => (
-                                    <Chip
-                                      key={video.source_path}
-                                      content={`${video.source_path} | Timestamp: ${video.timestamp}`}
-                                      data-object={video}
-                                      onClick={(e) => handleVideoLinkClick(e, video)}
-                                      cssClasses="ml-0 cursor-pointer"
-                                    />
-                                  ))}
+                                  {message.refs.videoLinks.map((video, index) => {
+                                    return (
+                                      <Chip
+                                        key={video.source_path + '' + index}
+                                        content={`${video.source_path} | Timestamp: ${video.timestamp}`}
+                                        data-object={video}
+                                        onClick={(e) => handleVideoLinkClick(e, video)}
+                                        cssClasses="ml-0 cursor-pointer"
+                                      />
+                                    );
+                                  })}
                                 </ul>
                               )}
 
                               {/* Keyframe links */}
                               {message?.refs?.keyframeLinks?.length > 0 && (
                                 <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-                                  {message.refs.keyframeLinks.map((video) => (
+                                  {message.refs.keyframeLinks.map((video, index) => (
                                     <Chip
-                                      key={video.source_path}
+                                      key={video.source_path + '' + index}
                                       content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
                                       data-object={video}
                                       onClick={(e) => handleVideoLinkClick(e, video)}
@@ -1070,9 +1072,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                               {/* PDF links */}
                               {message?.refs?.pdfLinks?.length > 0 && (
                                 <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-                                  {message.refs.pdfLinks.map((pdf) => (
+                                  {message.refs.pdfLinks.map((pdf, index) => (
                                     <Chip
-                                      key={pdf.source_path}
+                                      key={pdf.source_path + '' + index}
                                       content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
                                       data-object={pdf}
                                       onClick={(e) => handlePDFLinkClick(e, pdf)}
@@ -1085,9 +1087,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                               {/* Image links */}
                               {message?.refs?.imageLinks?.length > 0 && (
                                 <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-                                  {message.refs.imageLinks.map((img) => (
+                                  {message.refs.imageLinks.map((img, index) => (
                                     <Chip
-                                      key={img.source_path}
+                                      key={img.source_path + '' + index}
                                       content={img.source_path}
                                       data-object={img}
                                       onClick={(e) => handlePDFLinkClick(e, img)}
