@@ -1,19 +1,23 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import { formatChatHistoryByDate, formatReadableDate } from '../../utils';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import makeApiRequest from '../../api';
 
 function ChatHistoryList({ closeChatHistory }) {
-    const { theme, chatHistory, setCurrentChat } = useContext(MainContext);
-    const { sidebarWidth } = useResizableSidebar(200, true);
+    const { theme, chatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
 
     console.log(chatHistory);
 
     async function createNewChat() {
         try {
+            //TODO: scroll to top + empty the currentChat
+            setCurrentChat([]);
+            workspaceContainer.current.scrollTo({
+                top: 0,
+                behavior: "smooth", // Enables smooth scrolling
+            });
             const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
             if (success) {
                 // Handle new chat creation logic here
