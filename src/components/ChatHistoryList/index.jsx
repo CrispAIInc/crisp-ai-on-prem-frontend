@@ -114,6 +114,31 @@ function ChatHistoryList({ closeChatHistory }) {
         }
     }
 
+    async function deleteChat(event, chatsToDelete) {
+        try {
+            event.stopPropagation();
+
+            const { success, message } = await makeApiRequest('/chat-history', 'DELETE', JSON.stringify({
+                session_ids: chatsToDelete.map(chat => chat?.session_id),
+            }));
+            if (success) {
+                toast('Chat deleted successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
+                // Refresh chat history or update state accordingly
+                setCurrentChat(prev => {
+                    if (chatsToDelete.some(chat => chat?.session_id === prev?.session_id)) {
+                        return [];
+                    }
+                    return prev;
+                });
+            } else {
+                throw new Error(message || 'Failed to delete chat');
+            }
+        } catch (error) {
+            console.log(error);
+            toast(error.message || 'Failed to delete chat', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+        }
+    }
+
 
     return (
         <div className={`z-50 p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
@@ -147,7 +172,7 @@ function ChatHistoryList({ closeChatHistory }) {
                                             />
                                             <span>Rename</span>
                                         </div>
-                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [chat]); }}>
+                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteChat(event, [chat]); }}>
                                             <DeleteOutlineOutlinedIcon
                                                 className={`cursor-pointer`}
                                             />
