@@ -8,6 +8,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ChatTitleUpdaterModal from '../ChatTitleUpdaterModal';
 import './ChatHistoryList.css';
+import toast from 'react-simple-toasts';
 
 function ChatHistoryList({ closeChatHistory }) {
     const { theme, chatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
@@ -80,8 +81,37 @@ function ChatHistoryList({ closeChatHistory }) {
         setIsUpdateChatTitleModalOpen(true);
     }
 
-    function updateChatTitle() {
-        console.log("updating chat title...");
+    const [isLoading, setIsLoading] = useState(false);
+    async function updateChatTitle() {
+        try {
+            setIsLoading(true);
+            if (!chatTitle || chatTitle.trim().length === 0) {
+                throw new Error('Chat title cannot be empty');
+            }
+            if (!updatingChat) {
+                throw new Error('No chat selected for updating title');
+            }
+            const { success, message } = await makeApiRequest('/update-session-title', 'PUT', JSON.stringify({
+                session_id: updatingChat?.session_id,
+                title: chatTitle.trim(),
+            }));
+            if (success) {
+                toast('Source renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
+                setIsUpdateChatTitleModalOpen(false);
+                // Refresh chat history or update state accordingly
+                setCurrentChat(prev => ({
+                    ...prev,
+                    title: chatTitle.trim(),
+                }));
+            } else {
+                throw new Error(message || 'Failed to rename the source');
+            }
+        } catch (error) {
+            console.log(error);
+            toast(error.message || 'Failed to rename the source', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+        } finally {
+            setIsLoading(false);
+        }
     }
 
 
