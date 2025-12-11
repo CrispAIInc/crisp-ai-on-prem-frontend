@@ -3,7 +3,7 @@ import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import SendIcon from "@mui/icons-material/Send";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import axios from "axios";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
@@ -23,6 +23,88 @@ import { TOKEN_NAME } from '../../globals.js';
 import useAuth from '../../hooks/useAuth.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+
+const ChatMessage = ({ text, refs }) => {
+  const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+  return (
+    <div>
+      <div className="coorg-response">
+        {text}
+      </div>
+      <div>
+        {(refs?.videoLinks?.length > 0 ||
+          refs?.keyframeLinks?.length > 0 ||
+          refs?.pdfLinks?.length > 0 ||
+          refs?.imageLinks?.length > 0) && (
+            <p className="mt-2 font-medium">References:</p>
+          )}
+
+        {/* Video links */}
+        {refs?.videoLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {refs.videoLinks.map((video, index) => {
+              return (
+                <Chip
+                  key={video.source_path + '' + index}
+                  content={`${video.source_path} | Timestamp: ${video.timestamp}`}
+                  data-object={video}
+                  onClick={(e) => handleVideoLinkClick(e, video)}
+                  cssClasses="ml-0 cursor-pointer"
+                />
+              );
+            })}
+          </ul>
+        )}
+
+        {/* Keyframe links */}
+        {refs?.keyframeLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {refs.keyframeLinks.map((video, index) => (
+              <Chip
+                key={video.source_path + '' + index}
+                content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
+                data-object={video}
+                onClick={(e) => handleVideoLinkClick(e, video)}
+                cssClasses="ml-0 cursor-pointer"
+              />
+            ))}
+          </ul>
+        )}
+
+        {/* PDF links */}
+        {refs?.pdfLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {refs.pdfLinks.map((pdf, index) => (
+              <Chip
+                key={pdf.source_path + '' + index}
+                content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
+                data-object={pdf}
+                onClick={(e) => handlePDFLinkClick(e, pdf)}
+                cssClasses="ml-0 cursor-pointer"
+              />
+            ))}
+          </ul>
+        )}
+
+        {/* Image links */}
+        {refs?.imageLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {refs.imageLinks.map((img, index) => (
+              <Chip
+                key={img.source_path + '' + index}
+                content={img.source_path}
+                data-object={img}
+                onClick={(e) => handlePDFLinkClick(e, img)}
+                cssClasses="ml-0 cursor-pointer"
+              />
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
   const {
     theme,
@@ -794,6 +876,84 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setImagePreviewIndex(index);
   };
 
+  const referenceList = useMemo((message) => {
+    const refs = message?.refs;
+    if (!refs) return null;
+
+    return (
+      <div>
+        {(message?.refs?.videoLinks?.length > 0 ||
+          message?.refs?.keyframeLinks?.length > 0 ||
+          message?.refs?.pdfLinks?.length > 0 ||
+          message?.refs?.imageLinks?.length > 0) && (
+            <p className="mt-2 font-medium">References:</p>
+          )}
+
+        {/* Video links */}
+        {message?.refs?.videoLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {message.refs.videoLinks.map((video, index) => {
+              return (
+                <Chip
+                  key={video.source_path + '' + index}
+                  content={`${video.source_path} | Timestamp: ${video.timestamp}`}
+                  data-object={video}
+                  onClick={(e) => handleVideoLinkClick(e, video)}
+                  cssClasses="ml-0 cursor-pointer"
+                />
+              );
+            })}
+          </ul>
+        )}
+
+        {/* Keyframe links */}
+        {message?.refs?.keyframeLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {message.refs.keyframeLinks.map((video, index) => (
+              <Chip
+                key={video.source_path + '' + index}
+                content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
+                data-object={video}
+                onClick={(e) => handleVideoLinkClick(e, video)}
+                cssClasses="ml-0 cursor-pointer"
+              />
+            ))}
+          </ul>
+        )}
+
+        {/* PDF links */}
+        {message?.refs?.pdfLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {message.refs.pdfLinks.map((pdf, index) => (
+              <Chip
+                key={pdf.source_path + '' + index}
+                content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
+                data-object={pdf}
+                onClick={(e) => handlePDFLinkClick(e, pdf)}
+                cssClasses="ml-0 cursor-pointer"
+              />
+            ))}
+          </ul>
+        )}
+
+        {/* Image links */}
+        {message?.refs?.imageLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {message.refs.imageLinks.map((img, index) => (
+              <Chip
+                key={img.source_path + '' + index}
+                content={img.source_path}
+                data-object={img}
+                onClick={(e) => handlePDFLinkClick(e, img)}
+                cssClasses="ml-0 cursor-pointer"
+              />
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }, [messages]);
+
   return (
     <article className="relative flex flex-col flex-1 mb-3 h-full overflow-y-auto max-w-[650px] mx-auto">
       <section className={`flex flex-wrap items-center gap-3 ${messages.length > 0 && 'mb-3'}`}>
@@ -833,42 +993,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           className="modal"
         /> */}
       </section>
-
-      {/* <section className="flex items-center gap-1 mx-2 my-3 rounded-md user-select-none"> */}
-      {/* <span
-          className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-            }`}
-        >
-          Selected models:{" "}
-        </span>
-        <div
-          className={`flex items-center divide-x  ${theme === "light" ? "divide-textColor-100" : "divide-textColor-300"
-            }`}
-        >
-          {selectedLLMs.length === 0 ? (
-            <span
-              className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                }`}
-            >
-              none
-            </span>
-          ) : (
-            selectedLLMs.map((model, index) => (
-              <span
-                key={index}
-                className={`text-xs ${theme === "light"
-                  ? "text-textColor-300"
-                  : "text-textColor-200"
-                  }`}
-              >
-                {model.toUpperCase()}{" "}
-              </span>
-            ))
-          )}
-        </div> */}
-      {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
-      {/* </section> */}
-
       {/* <div className="flex items-center flex-1 gap-3"> */}
       {messages?.length > 0 && <section
         className={`copilot-chat-container flex flex-col h-[700px] gap-3 overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
@@ -1022,85 +1146,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             : "text-textColor-100"
                             } break-words`}
                         >
-                          {/* {message?.text} */}
-                          <div>
-                            <div className="coorg-response">
-                              {message?.botText}
-                            </div>
-
-                            {/* {!isFoundationLlm && ( */}
-                            <div>
-                              {(message?.refs?.videoLinks?.length > 0 ||
-                                message?.refs?.keyframeLinks?.length > 0 ||
-                                message?.refs?.pdfLinks?.length > 0 ||
-                                message?.refs?.imageLinks?.length > 0) && (
-                                  <p className="mt-2 font-medium">References:</p>
-                                )}
-
-                              {/* Video links */}
-                              {message?.refs?.videoLinks?.length > 0 && (
-                                <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-                                  {message.refs.videoLinks.map((video, index) => {
-                                    return (
-                                      <Chip
-                                        key={video.source_path + '' + index}
-                                        content={`${video.source_path} | Timestamp: ${video.timestamp}`}
-                                        data-object={video}
-                                        onClick={(e) => handleVideoLinkClick(e, video)}
-                                        cssClasses="ml-0 cursor-pointer"
-                                      />
-                                    );
-                                  })}
-                                </ul>
-                              )}
-
-                              {/* Keyframe links */}
-                              {message?.refs?.keyframeLinks?.length > 0 && (
-                                <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-                                  {message.refs.keyframeLinks.map((video, index) => (
-                                    <Chip
-                                      key={video.source_path + '' + index}
-                                      content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
-                                      data-object={video}
-                                      onClick={(e) => handleVideoLinkClick(e, video)}
-                                      cssClasses="ml-0 cursor-pointer"
-                                    />
-                                  ))}
-                                </ul>
-                              )}
-
-                              {/* PDF links */}
-                              {message?.refs?.pdfLinks?.length > 0 && (
-                                <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-                                  {message.refs.pdfLinks.map((pdf, index) => (
-                                    <Chip
-                                      key={pdf.source_path + '' + index}
-                                      content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
-                                      data-object={pdf}
-                                      onClick={(e) => handlePDFLinkClick(e, pdf)}
-                                      cssClasses="ml-0 cursor-pointer"
-                                    />
-                                  ))}
-                                </ul>
-                              )}
-
-                              {/* Image links */}
-                              {message?.refs?.imageLinks?.length > 0 && (
-                                <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-                                  {message.refs.imageLinks.map((img, index) => (
-                                    <Chip
-                                      key={img.source_path + '' + index}
-                                      content={img.source_path}
-                                      data-object={img}
-                                      onClick={(e) => handlePDFLinkClick(e, img)}
-                                      cssClasses="ml-0 cursor-pointer"
-                                    />
-                                  ))}
-                                </ul>
-                              )}
-                            </div>
-                            {/* )} */}
-                          </div>
+                          <ChatMessage text={message?.botText} refs={message?.refs} />
                         </div>
                         {showCursor && index == responseIndex ? (
                           <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
@@ -1130,28 +1176,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                           selectedNote={selectedNote}
                           notes={notes}
                         />
-
-                        {/* <div className="flex flex-wrap items-center gap-1">
-                          <span
-                            className={`text-xs ${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-200"
-                              }`}
-                          >
-                            Models:{" "}
-                          </span>
-                          {message?.models?.map((item, index) => (
-                            <span
-                              key={index}
-                              className={`text-xs divide-x ${theme === "light"
-                                ? "text-textColor-300"
-                                : "text-textColor-200"
-                                }`}
-                            >
-                              {item.toUpperCase()}
-                            </span>
-                          ))}
-                        </div> */}
                       </>
                     )}
                   </div>
@@ -1160,16 +1184,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             )
           )
         )
-          // : (
-          //   <div className="flex flex-col items-center justify-center h-full loading-container">
-          //     <div className="chat-spinner">
-          //       <LoadingSpinner />
-          //     </div>
-          //     <p className="text-sm text-center loading-text text-textColor-200">
-          //       Loading Knowledgebase...
-          //     </p>
-          //   </div>
-          // )  
         }
       </section>}
 
