@@ -108,7 +108,7 @@ function ChatHistoryList({ closeChatHistory }) {
                 setChatHistory(prev =>
                     prev.map(chat =>
                         chat.session_id === updatingChat.session_id
-                            ? { ...chat, title: chatTitle.trim() }
+                            ? { ...chat, title: title.trim() }
                             : chat
                     )
                 );
