@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
+import LoadingSpinner from '../LoadingSpinner';
 
 function ChatTitleUpdaterModal({ show, onHide, value, setValue, updateValue }) {
 
@@ -35,7 +36,6 @@ function ChatTitleUpdaterModal({ show, onHide, value, setValue, updateValue }) {
                             required
                             onKeyDown={(e) => e.key === 'Enter' && updateValue()}
                         />
-                        <span className={`${theme === 'light' ? 'text-textColor-100' : 'text-textColor-200'}`}>.{extension}</span>
                     </div>
                 </div>
             </Modal.Body>
