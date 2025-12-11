@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef, useMemo } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { formatChatHistoryByDate, formatReadableDate } from '../../utils';
@@ -11,9 +11,7 @@ import './ChatHistoryList.css';
 import toast from 'react-simple-toasts';
 
 function ChatHistoryList({ closeChatHistory }) {
-    const { theme, chatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
-
-    console.log(chatHistory);
+    const { theme, chatHistory, currentChat, setChatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
 
     async function createNewChat() {
         try {
@@ -38,7 +36,12 @@ function ChatHistoryList({ closeChatHistory }) {
     }
 
     // Format and group the chats by date using the util
-    const grouped = formatChatHistoryByDate(chatHistory, { dateKey: 'timestamp', returnAsArray: true });
+    const grouped = useMemo(() => {
+        return formatChatHistoryByDate(chatHistory, {
+            dateKey: "timestamp",
+            returnAsArray: true,
+        });
+    }, [chatHistory]);
 
     function handleSingleChatSessionClick(chat) {
         setCurrentChat(chat);
@@ -91,18 +94,25 @@ function ChatHistoryList({ closeChatHistory }) {
             if (!updatingChat) {
                 throw new Error('No chat selected for updating title');
             }
-            const { success, message } = await makeApiRequest('/update-session-title', 'PUT', JSON.stringify({
+            const { success, message, title } = await makeApiRequest('/update-session-title', 'PUT', JSON.stringify({
                 session_id: updatingChat?.session_id,
                 title: chatTitle.trim(),
             }));
             if (success) {
                 toast('Source renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
-                setIsUpdateChatTitleModalOpen(false);
                 // Refresh chat history or update state accordingly
-                setCurrentChat(prev => ({
-                    ...prev,
-                    title: chatTitle.trim(),
-                }));
+                // setCurrentChat(prev => ({
+                //     ...prev,
+                //     title: title.trim(),
+                // }));
+                setChatHistory(prev =>
+                    prev.map(chat =>
+                        chat.session_id === updatingChat.session_id
+                            ? { ...chat, title: chatTitle.trim() }
+                            : chat
+                    )
+                );
+                setIsUpdateChatTitleModalOpen(false);
             } else {
                 throw new Error(message || 'Failed to rename the source');
             }
