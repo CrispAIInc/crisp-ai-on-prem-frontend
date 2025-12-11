@@ -47,6 +47,7 @@ function ChatHistoryList({ closeChatHistory }) {
     function handleContextMenuOpen(e, chatId) {
         e.stopPropagation();
         e.preventDefault();
+        console.log(chatId);
         // Implement context menu logic here
         setContextMenuChatId(chatId);
     }
@@ -58,7 +59,7 @@ function ChatHistoryList({ closeChatHistory }) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 // setIsUpdateFilenameModalOpen(false);
                 setContextMenuChatId(null);
-                setHoveredSource(null);
+                // setHoveredSource(null);
             }
         }
 
@@ -76,6 +77,10 @@ function ChatHistoryList({ closeChatHistory }) {
         setChatTitle(chat?.title?.trim() || '');
         setUpdatingChat(chat);
         setIsUpdateChatTitleModalOpen(true);
+    }
+
+    function updateChatTitle() {
+        console.log("updating chat title...");
     }
 
 
@@ -102,8 +107,8 @@ function ChatHistoryList({ closeChatHistory }) {
                             <div className="px-2 text-xs text-textColor-400">No chats</div>
                         ) : (
                             group.items.map((chat, idx) => (
-                                <div key={`${chat.id || 'chat'}-${idx}`} className={`flex items-center  py-2 pr-2 rounded-md cursor-pointer ${theme === 'light' ? "hover:bg-[#f7f7f7]/50" : "hover:bg-textColor-200/50"} `} onClick={() => handleSingleChatSessionClick(chat)}>
-                                    {contextMenuChatId === chat?.sessionId && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                <div key={`${chat.id || 'chat'}-${idx}`} className={`relative flex items-center  py-2 pr-2 rounded-md cursor-pointer ${theme === 'light' ? "hover:bg-[#f7f7f7]/50" : "hover:bg-textColor-200/50"} `} onClick={() => handleSingleChatSessionClick(chat)}>
+                                    {contextMenuChatId === chat?.session_id && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
                                         <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
                                             onClick={(event) => handleOpenFilenameUpdateModal(event, chat)}>
                                             <EditOutlinedIcon
@@ -118,7 +123,7 @@ function ChatHistoryList({ closeChatHistory }) {
                                             <span>Delete</span>
                                         </div>
                                     </div>}
-                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleContextMenuOpen(e)} />
+                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleContextMenuOpen(e, chat?.session_id)} />
                                     <h6 className='font-semibold !mb-0 fex-1 truncate '>{chat.title}</h6>
                                 </div>
                             ))
@@ -126,7 +131,7 @@ function ChatHistoryList({ closeChatHistory }) {
                     </div>
                 ))}
             </div>
-            {isUpdateChatTitleModalOpen && <ChatTitleUpdaterModal show={isUpdateChatTitleModalOpen} onHide={() => isUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} />}
+            {isUpdateChatTitleModalOpen && <ChatTitleUpdaterModal show={isUpdateChatTitleModalOpen} onHide={() => isUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} updateValue={updateChatTitle} />}
         </div>
     );
 }
