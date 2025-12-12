@@ -1104,8 +1104,7 @@ export default function MainProvider({ children, theme, setTheme }) {
                 const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
                 if (success) {
                     // Handle new chat creation logic here
-                    console.log('New chat created:', { sessionId, title, message });
-                    setCurrentChat({ sessionId, title, userId, messages: messages || [] });
+                    setCurrentChat({ sessionId, title, userId, messages: messages || [], created_at: new Date(), updated_at: new Date() });
                 } else {
                     throw new Error('Failed to create new chat');
                 }

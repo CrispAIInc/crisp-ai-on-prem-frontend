@@ -133,7 +133,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     languageOptions, setIsManualNote,
     setShowNoteDetails,
     setActiveView,
-    currentChat
+    currentChat,
+    setChatHistory,
+    setCurrentChat
   } = useContext(MainContext);
 
   const { token } = useAuth();
@@ -170,7 +172,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   // For LLM Model Selction from the popup modal
   const [selectedLLMs, setSelectedLLMs] = useState([llmModels[0].value]); // State to track multiple selected LLMs
-  const [showLLMModal, setShowLLMModal] = useState(false);
 
   useEffect(() => {
     if (messages?.length > 0) {// chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -217,8 +218,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     }
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
-  const categoryValues = categoryOptions.map((option) => option.value);
-
   let noteQuestion = useRef('');
   const [isFetchingRefs, setIsFetchingRefs] = useState(false);
   const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
@@ -254,7 +253,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setMessages([
       ...messages,
       { sender: "user", text: userMessage, models, question: userMessage },
-      { sender: "bot", text: "", models, question: userMessage },
+      { sender: "bot", text: "", models, question: userMessage, botText: "", refs: {} },
     ]);
     setResponseIndex((responseIndex) => responseIndex + 2);
 
@@ -283,6 +282,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       });
       setShowCursor(false);
     } else {
+
       // add or remove embeddings from VS
       if (!displayedSources?.every(item => item?.is_selected === false)) {
         await makeApiRequest(
@@ -293,6 +293,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           })
         );
       }
+
 
       // try {
       //   const data = await makeApiRequest(
@@ -326,6 +327,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       //   )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       // );
 
+
+
       eventSource.onmessage = async function (event) {
         const data = JSON.parse(event.data);
 
@@ -352,7 +355,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         } else if (data.type === "REFERENCES") {
           // extract the last part of the streaming and call fetchReferences
           // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
-          fetchReferences(botMessage, data.data);
+          fetchReferences(userMessage, models, botMessage, data.data);
           setIsFetchingRefs(false);
         }
       };
@@ -386,8 +389,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
 
   };
-  const fetchReferences = async (botMessage, data) => {
-    console.log("fetching refssss;;;;");
+  const fetchReferences = async (userMessage, models, botMessage, data) => {
     // const response = await axios.get(`${API_ENDPOINT}/references`);
     // const data = response.data;
     noteReferences.videoLinks = [];
@@ -401,6 +403,64 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       pdfLinks: [],
       imageLinks: [],
     };
+    setChatHistory((prevChatHistory) => {
+      const chatIndex = prevChatHistory.findIndex(chat => chat.sessionId === currentChat?.sessionId);
+      if (chatIndex === -1) {
+        const newChatEntry = {
+          sessionId: currentChat?.sessionId,
+          title: currentChat?.title || "New Chat " + (prevChatHistory.length + 1),
+          userId: currentChat?.userId || null,
+          messages: [{ sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }],
+          created_at: currentChat?.created_at || new Date(),
+          updated_at: currentChat?.updated_at || new Date(),
+        };
+        return [...prevChatHistory, newChatEntry];
+      } else {
+        const updatedChatHistory = [...prevChatHistory];
+        const chatToUpdate = updatedChatHistory[chatIndex];
+        chatToUpdate.messages = [...chatToUpdate.messages, { sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }];
+
+        updatedChatHistory[chatIndex] = chatToUpdate;
+        return updatedChatHistory;
+      }
+    });
+
+    // update currentChat and chatHistory
+    // setCurrentChat(prev => ({
+    //   ...prev,
+    //   messages: prev.messages.map((message, index) => {
+    //     if (index === responseIndex) {
+    //       return {
+    //         ...message,
+    //         botText: botMessage,
+    //         text: botMessage,
+    //         refs,
+    //       };
+    //     }
+    //     return message;
+    //   })
+    // }));
+    // setChatHistory(prevChatHistory => {
+    //   return prevChatHistory.map(chat => {
+    //     if (chat.sessionId === currentChat.sessionId) {
+    //       return {
+    //         ...chat,
+    //         messages: chat.messages.map((message, index) => {
+    //           if (index === responseIndex) {
+    //             return {
+    //               ...message,
+    //               botText: botMessage,
+    //               text: botMessage,
+    //               refs,
+    //             };
+    //           }
+    //           return message;
+    //         })
+    //       };
+    //     }
+    //     return chat;
+    //   });
+    // });
 
     const videoLinks = data.video_references.map((video) => {
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
@@ -832,16 +892,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setIsUploadingVisionImg(false);
   };
 
-
-  const selectLLMModels = (event) => {
-    event.preventDefault();
-    setShowLLMModal(true);
-  };
-
-  const onHideLLMModal = () => {
-    setShowLLMModal(false);
-  };
-
   const handleRepeatQuestion = (message, models, isRepeated = true) => {
     // setInput(message);
     if (models[0] === 'gpt-4-vision') {
@@ -875,84 +925,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setLightboxOpen(true);
     setImagePreviewIndex(index);
   };
-
-  const referenceList = useMemo((message) => {
-    const refs = message?.refs;
-    if (!refs) return null;
-
-    return (
-      <div>
-        {(message?.refs?.videoLinks?.length > 0 ||
-          message?.refs?.keyframeLinks?.length > 0 ||
-          message?.refs?.pdfLinks?.length > 0 ||
-          message?.refs?.imageLinks?.length > 0) && (
-            <p className="mt-2 font-medium">References:</p>
-          )}
-
-        {/* Video links */}
-        {message?.refs?.videoLinks?.length > 0 && (
-          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-            {message.refs.videoLinks.map((video, index) => {
-              return (
-                <Chip
-                  key={video.source_path + '' + index}
-                  content={`${video.source_path} | Timestamp: ${video.timestamp}`}
-                  data-object={video}
-                  onClick={(e) => handleVideoLinkClick(e, video)}
-                  cssClasses="ml-0 cursor-pointer"
-                />
-              );
-            })}
-          </ul>
-        )}
-
-        {/* Keyframe links */}
-        {message?.refs?.keyframeLinks?.length > 0 && (
-          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-            {message.refs.keyframeLinks.map((video, index) => (
-              <Chip
-                key={video.source_path + '' + index}
-                content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
-                data-object={video}
-                onClick={(e) => handleVideoLinkClick(e, video)}
-                cssClasses="ml-0 cursor-pointer"
-              />
-            ))}
-          </ul>
-        )}
-
-        {/* PDF links */}
-        {message?.refs?.pdfLinks?.length > 0 && (
-          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-            {message.refs.pdfLinks.map((pdf, index) => (
-              <Chip
-                key={pdf.source_path + '' + index}
-                content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
-                data-object={pdf}
-                onClick={(e) => handlePDFLinkClick(e, pdf)}
-                cssClasses="ml-0 cursor-pointer"
-              />
-            ))}
-          </ul>
-        )}
-
-        {/* Image links */}
-        {message?.refs?.imageLinks?.length > 0 && (
-          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
-            {message.refs.imageLinks.map((img, index) => (
-              <Chip
-                key={img.source_path + '' + index}
-                content={img.source_path}
-                data-object={img}
-                onClick={(e) => handlePDFLinkClick(e, img)}
-                cssClasses="ml-0 cursor-pointer"
-              />
-            ))}
-          </ul>
-        )}
-      </div>
-    );
-  }, [messages]);
 
   return (
     <article className="relative flex flex-col flex-1 mb-3 h-full overflow-y-auto max-w-[650px] mx-auto">

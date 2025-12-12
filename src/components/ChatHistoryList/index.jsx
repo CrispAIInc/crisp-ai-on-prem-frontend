@@ -24,15 +24,15 @@ function ChatHistoryList({ closeChatHistory }) {
             const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
             if (success) {
                 // Handle new chat creation logic here
-                setCurrentChat({ sessionId, title, userId, messages });
+                setCurrentChat({ sessionId, title, userId, messages: messages || [] });
                 setChatHistory(prev => ([
                     {
                         sessionId,
                         title,
-                        messages: [],
-                        user_id: userId,
-                        created_at: new Date().toISOString(),
-                        updated_at: new Date().toISOString(),
+                        messages: messages || [],
+                        userId,
+                        created_at: new Date(),
+                        updated_at: new Date(),
                     },
                     ...prev,
                 ]));
@@ -52,7 +52,7 @@ function ChatHistoryList({ closeChatHistory }) {
             dateKey: "updated_at",
             returnAsArray: true,
         });
-    }, [chatHistory]);
+    }, [chatHistory, JSON.stringify(chatHistory), chatHistory.length]);
 
     function handleSingleChatSessionClick(chat) {
         setCurrentChat(chat);
@@ -141,7 +141,7 @@ function ChatHistoryList({ closeChatHistory }) {
             event.stopPropagation();
             setIsDeleteLoading(true);
             const { success, message } = await makeApiRequest('/chat-history', 'DELETE', JSON.stringify({
-                sessionIds: chatsToDelete.map(chat => chat?.sessionId),
+                session_ids: chatsToDelete.map(chat => chat?.sessionId),
             }));
             if (success) {
                 toast('Chat deleted successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
