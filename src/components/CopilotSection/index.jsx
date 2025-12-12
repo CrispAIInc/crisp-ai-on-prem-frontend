@@ -314,7 +314,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_selected) ? false : true}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          SessionId: currentChat?.session_id
+          SessionId: currentChat?.sessionId
         },
         heartbeatTimeout: 75000,
       });
@@ -995,7 +995,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       </section>
       {/* <div className="flex items-center flex-1 gap-3"> */}
       {messages?.length > 0 && <section
-        className={`copilot-chat-container flex flex-col h-[700px] gap-3 overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
+        className={`copilot-chat-container flex flex-col h-[700px] gap-3 overflow-x-hidden overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
           }`}
         ref={chatAppRef}
       >

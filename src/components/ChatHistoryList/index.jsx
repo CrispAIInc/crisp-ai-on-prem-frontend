@@ -27,7 +27,7 @@ function ChatHistoryList({ closeChatHistory }) {
                 setCurrentChat({ sessionId, title, userId, messages });
                 setChatHistory(prev => ([
                     {
-                        session_id: sessionId,
+                        sessionId,
                         title,
                         messages: [],
                         user_id: userId,
@@ -118,7 +118,7 @@ function ChatHistoryList({ closeChatHistory }) {
                 // }));
                 setChatHistory(prev =>
                     prev.map(chat =>
-                        chat.session_id === updatingChat.session_id
+                        chat.sessionId === updatingChat.session_id
                             ? { ...chat, title: title.trim() }
                             : chat
                     )
@@ -147,16 +147,16 @@ function ChatHistoryList({ closeChatHistory }) {
                 toast('Chat deleted successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
                 // Refresh chat history or update state accordingly
                 // setCurrentChat(prev => {
-                //     if (chatsToDelete.some(chat => chat?.session_id === prev?.session_id)) {
+                //     if (chatsToDelete.some(chat => chat?.sessionId=== prev?.session_id)) {
                 //         return [];
                 //     }
                 //     return prev;
                 // });
                 setChatHistory(prev =>
-                    prev.filter(chat => !chatsToDelete.some(toDelete => toDelete?.session_id === chat?.session_id))
+                    prev.filter(chat => !chatsToDelete.some(toDelete => toDelete?.sessionId === chat?.session_id))
                 );
                 // If the current chat is deleted, clear it
-                if (chatsToDelete.some(chat => chat?.session_id === currentChat?.session_id)) {
+                if (chatsToDelete.some(chat => chat?.sessionId === currentChat?.session_id)) {
                     setCurrentChat([]);
                 }
             } else {
@@ -195,7 +195,7 @@ function ChatHistoryList({ closeChatHistory }) {
                         ) : (
                             group.items.map((chat, idx) => (
                                 <div key={`${chat.id || 'chat'}-${idx}`} className={`relative flex items-center  py-2 pr-2 rounded-md cursor-pointer ${theme === 'light' ? "hover:bg-[#f7f7f7]/50" : "hover:bg-textColor-200/50"} `} onClick={() => handleSingleChatSessionClick(chat)}>
-                                    {contextMenuChatId === chat?.session_id && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+                                    {contextMenuChatId === chat?.sessionId && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
                                         <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
                                             onClick={(event) => handleOpenFilenameUpdateModal(event, chat)}>
                                             <EditOutlinedIcon
