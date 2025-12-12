@@ -106,7 +106,7 @@ function ChatHistoryList({ closeChatHistory }) {
                 throw new Error('No chat selected for updating title');
             }
             const { success, message, title } = await makeApiRequest('/update-session-title', 'PUT', JSON.stringify({
-                session_id: updatingChat?.session_id,
+                sessionId: updatingChat?.sessionId,
                 title: chatTitle.trim(),
             }));
             if (success) {
@@ -118,7 +118,7 @@ function ChatHistoryList({ closeChatHistory }) {
                 // }));
                 setChatHistory(prev =>
                     prev.map(chat =>
-                        chat.sessionId === updatingChat.session_id
+                        chat.sessionId === updatingChat.sessionId
                             ? { ...chat, title: title.trim() }
                             : chat
                     )
@@ -141,22 +141,22 @@ function ChatHistoryList({ closeChatHistory }) {
             event.stopPropagation();
             setIsDeleteLoading(true);
             const { success, message } = await makeApiRequest('/chat-history', 'DELETE', JSON.stringify({
-                session_ids: chatsToDelete.map(chat => chat?.session_id),
+                sessionIds: chatsToDelete.map(chat => chat?.sessionId),
             }));
             if (success) {
                 toast('Chat deleted successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
                 // Refresh chat history or update state accordingly
                 // setCurrentChat(prev => {
-                //     if (chatsToDelete.some(chat => chat?.sessionId=== prev?.session_id)) {
+                //     if (chatsToDelete.some(chat => chat?.sessionId=== prev?.sessionId)) {
                 //         return [];
                 //     }
                 //     return prev;
                 // });
                 setChatHistory(prev =>
-                    prev.filter(chat => !chatsToDelete.some(toDelete => toDelete?.sessionId === chat?.session_id))
+                    prev.filter(chat => !chatsToDelete.some(toDelete => toDelete?.sessionId === chat?.sessionId))
                 );
                 // If the current chat is deleted, clear it
-                if (chatsToDelete.some(chat => chat?.sessionId === currentChat?.session_id)) {
+                if (chatsToDelete.some(chat => chat?.sessionId === currentChat?.sessionId)) {
                     setCurrentChat([]);
                 }
             } else {
@@ -210,7 +210,7 @@ function ChatHistoryList({ closeChatHistory }) {
                                             <span>Delete</span>
                                         </div>
                                     </div>}
-                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleContextMenuOpen(e, chat?.session_id)} />
+                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleContextMenuOpen(e, chat?.sessionId)} />
                                     <h6 className='font-semibold !mb-0 fex-1 truncate '>{chat.title}</h6>
                                 </div>
                             ))
