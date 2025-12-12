@@ -23,16 +23,18 @@ function ChatHistoryList({ closeChatHistory }) {
             });
             const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
             if (success) {
+                const createdAt = new Date();
+                const updatedAt = new Date();
                 // Handle new chat creation logic here
-                setCurrentChat({ sessionId, title, userId, messages: messages || [] });
+                setCurrentChat({ sessionId, title, userId, messages: messages || [], created_at: createdAt, updated_at: updatedAt });
                 setChatHistory(prev => ([
                     {
                         sessionId,
                         title,
                         messages: messages || [],
                         userId,
-                        created_at: new Date(),
-                        updated_at: new Date(),
+                        created_at: createdAt,
+                        updated_at: updatedAt,
                     },
                     ...prev,
                 ]));
