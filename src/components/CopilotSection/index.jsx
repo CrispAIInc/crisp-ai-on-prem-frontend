@@ -21,6 +21,7 @@ import AnimatedInput from '../AnimatedInput/index.jsx';
 import Chip from '../Chip/index.jsx';
 import { TOKEN_NAME } from '../../globals.js';
 import useAuth from '../../hooks/useAuth.js';
+import HorizontalChatHistoryList from '../HorizontalChatHistoryList/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -1160,8 +1161,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       </section>}
 
       {/* </div> */}
-      <section className="flex items-center gap-2 copilot-chat-container input-area max-w-[1000px] ">
+      <section className="flex copilot-chat-container input-area max-w-[1000px] border flex-col">
 
+        <HorizontalChatHistoryList />
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
