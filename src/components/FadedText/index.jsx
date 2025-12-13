@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
-export default function FadedText({ text }) {
+export default function FadedText({ text, handleClick = () => { } }) {
     const { theme } = useContext(MainContext);
     return (
-        <div className={`relative cursor-pointer min-w-fit max-w-fit overflow-hidden whitespace-nowrap p-1 text-[13px] ${theme === "light" ? "text-textColor-300" : "text-textColor-100 hover:bg-background_workspace"} rounded-full`}>
+        <div onClick={handleClick} className={`relative cursor-pointer min-w-fit max-w-fit overflow-hidden whitespace-nowrap p-1 text-[13px] ${theme === "light" ? "text-textColor-300" : "text-textColor-100 hover:bg-background_workspace"} rounded-full`}>
             {text}
 
             {/* Right fade shadow */}
