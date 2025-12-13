@@ -2,10 +2,12 @@ import React, { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import FadedText from '../FadedText';
 
-function HorizontalChatHistoryList() {
-    const { chatHistory } = useContext(MainContext);
+function HorizontalChatHistoryList({ cssClasses = "" }) {
+    const { theme, chatHistory } = useContext(MainContext);
     return (
-        <div className="flex space-x-4 overflow-x-auto py-2 px-4 border border-white">
+        <div className={`relative flex space-x-4 overflow-x-auto py-2 px-4 [&::-webkit-scrollbar]:h-2
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-900 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500'}
+         ${cssClasses}`}>
             {/* horizontally scrollable list of chat sessions */}
             {
                 chatHistory.map((chat, index) => {
@@ -15,9 +17,9 @@ function HorizontalChatHistoryList() {
                 })
             }
 
-            {/* icon to add new chat */}
-
-            {/* icon to show all chat sessions grouped by date */}
+            {/* Right fade shadow */}
+            <div className={`pointer-events-none absolute right-0 top-0 h-full w-16
+                      bg-gradient-to-r from-transparent ${theme === 'light' ? 'to-background_workspace' : ''}`} />
         </div>
     );
 }
