@@ -3,7 +3,12 @@ import { MainContext } from '../../contexts/mainContext';
 import FadedText from '../FadedText';
 
 function HorizontalChatHistoryList({ cssClasses = "" }) {
-    const { theme, chatHistory } = useContext(MainContext);
+    const { theme, chatHistory, setCurrentChat } = useContext(MainContext);
+
+    function handleSingleChatSessionClick(chat) {
+        setCurrentChat(chat);
+    }
+
     return (
         // <div className="relative w-full">
         <div className={` w-full flex space-x-4 overflow-x-auto py-2 px-4 [&::-webkit-scrollbar]:h-2
@@ -13,7 +18,7 @@ function HorizontalChatHistoryList({ cssClasses = "" }) {
             {
                 chatHistory.map((chat, index) => {
                     return (
-                        <FadedText key={index} text={chat.title} />
+                        <FadedText handleClick={() => handleSingleChatSessionClick(chat)} key={index} text={chat.title} />
                     );
                 })
             }
