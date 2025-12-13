@@ -7,9 +7,14 @@ import { MainContext } from '../../contexts/mainContext';
 function ChatHistory() {
     const { theme } = useContext(MainContext);
     return (
-        <div className={`flex items-center h-full`}>
-            <HorizontalChatHistoryList cssClasses='flex-1' />
-            <div className="flex justify-end p-2">
+        <div className={`flex items-center w-full max-w-full h-full`}>
+            <div className="relative flex-1 w-[80%] ">
+                <HorizontalChatHistoryList cssClasses='' />
+                {/* Right fade shadow */}
+                <div className={`pointer-events-none absolute right-0 top-0 h-full w-16
+                      bg-gradient-to-r from-transparent ${theme === 'light' ? 'to-background_workspace' : ''} `} />
+            </div>
+            <div className="flex p-2 w-fit">
                 <AddIcon className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
                 <KeyboardArrowUpOutlinedIcon className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
             </div>
