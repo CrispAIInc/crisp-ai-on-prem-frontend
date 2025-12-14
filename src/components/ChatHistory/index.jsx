@@ -52,7 +52,7 @@ function ChatHistory() {
             <div className="flex p-2 w-fit">
                 <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
                 <div className="relative">
-                    <ChatHistoryPopup twClasses="absolute !z-[99999]  bottom-full right-0 h-[45vh] bg-white shadow-[0px_0px_14px_-6px] border-md" />
+                    <ChatHistoryPopup twClasses="absolute !z-[99999]  bottom-full right-0 h-[45vh] shadow-[0px_0px_14px_-6px] border-md" />
                     <KeyboardArrowUpOutlinedIcon className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
                 </div>
             </div>
