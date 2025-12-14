@@ -10,7 +10,7 @@ import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
 import { formatChatHistoryByDate } from '../../utils';
 
-function ChatHistoryPopup({ closeChatHistory, twClasses = '' }) {
+function ChatHistoryPopup({ close, twClasses = '' }) {
     const { theme, chatHistory, currentChat, setChatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
 
     async function createNewChat() {
@@ -55,6 +55,7 @@ function ChatHistoryPopup({ closeChatHistory, twClasses = '' }) {
 
     function handleSingleChatSessionClick(chat) {
         setCurrentChat(chat);
+        close && close();
     }
 
     const [contextMenuChatId, setContextMenuChatId] = useState(null);
