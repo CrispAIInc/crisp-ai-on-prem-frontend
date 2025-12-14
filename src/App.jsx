@@ -55,7 +55,15 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<PrivateRoute><MainProvider theme={theme} setTheme={setTheme}><SettingsProvider><MainWorkspacePage /></SettingsProvider></MainProvider></PrivateRoute>} />
+            <Route path="/" element={
+              <PrivateRoute>
+                <MainProvider theme={theme} setTheme={setTheme}>
+                  <SettingsProvider>
+                    <MainWorkspacePage />
+                  </SettingsProvider>
+                </MainProvider>
+              </PrivateRoute>
+            } />
 
             <Route path="/sign-up" element={<AuthRoute><RegisterPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
             <Route path="/verify" element={<AuthRoute><VerifyAccount theme={theme} setTheme={setTheme} /></AuthRoute>} />
