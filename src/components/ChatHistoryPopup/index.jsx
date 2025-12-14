@@ -173,13 +173,13 @@ function ChatHistoryPopup({ closeChatHistory, twClasses = '' }) {
             {/* <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div> */}
 
-            <button className={`px-3 py-2 w-full rounded-md ${theme === 'light' ? "bg-white text-textColor-300 hover:bg-[#e6e6e6]" : "bg-textColor-200 text-textColor-100 hover:bg-textColor-400"} `} onClick={createNewChat}>New Chat</button>
+            <button className={`px-3 py-2 w-full rounded-md ${theme === 'light' ? "bg-white text-textColor-300 hover:bg-[#e6e6e6]" : "bg-textColor-200 text-textColor-100 hover:bg-textColor-400"} text-xs`} onClick={createNewChat}>New Chat</button>
 
             <div className="z-50 flex flex-col flex-1 mt-4 overflow-y-auto">
                 {grouped.map(group => (
                     <div key={group.key} className="mb-4">
                         <div className="sticky top-0 px-1 py-1 bg-transparent">
-                            <h6 className="mb-1 text-sm font-semibold">{group.label} {group.items.length > 0 && <span className="text-xs text-textColor-400">({group.items.length})</span>}</h6>
+                            <h6 className="mb-1 text-xs font-semibold">{group.label} {group.items.length > 0 && <span className="text-xs text-textColor-400">({group.items.length})</span>}</h6>
                         </div>
 
                         {group.items.length === 0 ? (
@@ -202,8 +202,8 @@ function ChatHistoryPopup({ closeChatHistory, twClasses = '' }) {
                                             <span>Delete</span>
                                         </div>
                                     </div>}
-                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleContextMenuOpen(e, chat?.sessionId)} />
-                                    <h6 className='font-semibold !mb-0 fex-1 truncate '>{chat.title}</h6>
+                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer text-xs`} onClick={e => handleContextMenuOpen(e, chat?.sessionId)} />
+                                    <h6 className='font-semibold text-xs !mb-0 fex-1 truncate '>{chat.title}</h6>
                                 </div>
                             ))
                         )}
