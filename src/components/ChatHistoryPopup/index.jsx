@@ -169,17 +169,17 @@ function ChatHistoryPopup({ closeChatHistory, twClasses = '' }) {
     }
 
     return (
-        <div className={` p-4 w-[20vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden ${twClasses}`}>
+        <div className={` p-2 w-[20vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden ${twClasses}`}>
             {/* <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div> */}
 
-            <button className={`px-3 py-2 w-full rounded-md ${theme === 'light' ? "bg-white text-textColor-300 hover:bg-[#e6e6e6]" : "bg-textColor-200 text-textColor-100 hover:bg-textColor-400"} text-xs`} onClick={createNewChat}>New Chat</button>
+            <button className={`px-3 py-2 w-full rounded-md ${theme === 'light' ? "bg-[#e6e6e6]/50 text-textColor-300 hover:bg-[#e6e6e6]" : "bg-textColor-200 text-textColor-100 hover:bg-textColor-400"} text-xs`} onClick={createNewChat}>New Chat</button>
 
-            <div className="z-50 flex flex-col flex-1 mt-4 overflow-y-auto">
+            <div className="z-50 flex flex-col flex-1 overflow-y-auto">
                 {grouped.map(group => (
                     <div key={group.key} className="mb-4">
                         <div className="sticky top-0 px-1 py-1 bg-transparent">
-                            <h6 className="mb-1 text-xs font-semibold">{group.label} {group.items.length > 0 && <span className="text-xs text-textColor-400">({group.items.length})</span>}</h6>
+                            <h6 className="mb-1 text-xs font-semibold text-gradient-x">{group.label} {group.items.length > 0 && <span className="text-xs text-textColor-400">({group.items.length})</span>}</h6>
                         </div>
 
                         {group.items.length === 0 ? (
