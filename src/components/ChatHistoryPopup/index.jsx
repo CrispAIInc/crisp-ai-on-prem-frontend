@@ -178,7 +178,7 @@ function ChatHistoryPopup({ closeChatHistory, twClasses = '' }) {
             <div className="z-50 flex flex-col flex-1 overflow-y-auto">
                 {grouped.map(group => (
                     <div key={group.key} className="mb-4">
-                        <div className="sticky top-0 px-1 py-1 bg-transparent">
+                        <div className={`sticky top-0 px-1 py-1 z-10 ${theme === 'light' ? 'bg-white' : 'bg-textColor-200'}`}>
                             <h6 className="mb-1 text-xs font-semibold text-gradient-x">{group.label} {group.items.length > 0 && <span className="text-xs text-textColor-400">({group.items.length})</span>}</h6>
                         </div>
 
