@@ -4,6 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 import { MainContext } from '../../contexts/mainContext';
 import makeApiRequest from '../../api';
+import ChatHistoryPopup from '../ChatHistoryPopup';
 
 function ChatHistory() {
     const { theme, setCurrentChat, setChatHistory, workspaceContainer } = useContext(MainContext);
@@ -50,7 +51,10 @@ function ChatHistory() {
             </div>
             <div className="flex p-2 w-fit">
                 <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
-                <KeyboardArrowUpOutlinedIcon className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
+                <div className="relative">
+                    <ChatHistoryPopup twClasses="absolute !z-[99999]  bottom-full right-0" />
+                    <KeyboardArrowUpOutlinedIcon className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
+                </div>
             </div>
         </div>
     );
