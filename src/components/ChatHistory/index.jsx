@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import HorizontalChatHistoryList from '../HorizontalChatHistoryList';
 import AddIcon from '@mui/icons-material/Add';
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
@@ -41,10 +41,28 @@ function ChatHistory() {
         }
     }
 
+    const keyboardArrowUpRef = useRef(null);
+    const ChatHistoryPopupRef = useRef(null);
+    const [isChatHistoryPopupOpen, setIsChatHistoryPopupOpen] = useState(false);
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (ChatHistoryPopupRef.current && !ChatHistoryPopupRef.current.contains(event.target) && keyboardArrowUpRef.current && !keyboardArrowUpRef.current.contains(event.target)) {
+                // setIsUpdateFilenameModalOpen(false);
+                setIsChatHistoryPopupOpen(false);
+                // setHoveredSource(null);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
         <div className={`flex items-center w-full max-w-full h-full`}>
             <div className="relative flex-1 w-[80%] ">
-                <HorizontalChatHistoryList cssClasses='' />
+                <HorizontalChatHistoryList />
                 {/* Right fade shadow */}
                 <div className={`pointer-events-none absolute right-0 top-0 h-full w-16
                       bg-gradient-to-r from-transparent ${theme === 'light' ? 'to-background_workspace' : ''} `} />
@@ -52,8 +70,8 @@ function ChatHistory() {
             <div className="flex p-2 w-fit">
                 <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
                 <div className="relative">
-                    <ChatHistoryPopup twClasses={`absolute !z-[99999]  bottom-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} />
-                    <KeyboardArrowUpOutlinedIcon className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
+                    {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup twClasses={`absolute bottom-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} /> </div>}
+                    <KeyboardArrowUpOutlinedIcon ref={keyboardArrowUpRef} className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
                 </div>
             </div>
         </div>
