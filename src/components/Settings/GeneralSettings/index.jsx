@@ -93,7 +93,7 @@ function GeneralSettings() {
                     {/* single user info */}
                     {
                         Object.entries(user).map(([key, value]) => {
-                            if (key !== "emailVerified") return (
+                            if (key !== "emailVerified" && key !== "userId") return (
                                 <>
                                     <div key={key} className="flex flex-wrap items-center justify-between">
                                         <h3 className={`text-[13px] ${theme === "light"
@@ -115,7 +115,7 @@ function GeneralSettings() {
                                 </>
                             );
                             else {
-                                if (!value) {
+                                if (key === "emailVerified" && !value) {
                                     return (
                                         <p key={key} className={`text-[10px] text-orange-400 cursor-pointer border-b border-b-transparent hover:border-b hover:border-b-orange-400 w-fit font-medium flex gap-1 items-center`} onClick={sendVerificationEmail}>
                                             {isSendingEmailPending ? <LoadingSpinner isSmall /> : <WarningAmberOutlinedIcon className='' />}
