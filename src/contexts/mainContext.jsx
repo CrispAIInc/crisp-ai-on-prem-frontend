@@ -1,4 +1,4 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 import makeApiRequest from "../api";
 
@@ -6,11 +6,13 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import useResources from '../hooks/useResources';
+import { AuthContext } from './authContext';
+import { pick } from '../utils';
 
 export const MainContext = createContext({});
 
 export default function MainProvider({ children, theme, setTheme }) {
-
+    const { user, setUser } = useContext(AuthContext);
     const [categoryOptions, setCategoryOptions] = useState([]);
     const { getIndexes } = useResources({ setCategoryOptions });
 
@@ -35,6 +37,8 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [selectedFormat, setSelectedFormat] = useState("all");
 
     const [sourcesTobeCommited, setSourcesTobeCommited] = useState([]); // Sources to be commited to the Knowledge Base
+
+
 
     // const categoryOptions = [
     //   { value: "all", label: "All" },
@@ -1104,7 +1108,7 @@ export default function MainProvider({ children, theme, setTheme }) {
                 const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
                 if (success) {
                     // Handle new chat creation logic here
-                    setCurrentChat({ sessionId, title, userId, messages: messages || [], created_at: new Date(), updated_at: new Date() });
+                    setCurrentChat({ sessionId, title, userId: user?.userId, messages: messages || [], created_at: new Date(), updated_at: new Date() });
                 } else {
                     throw new Error('Failed to create new chat');
                 }
