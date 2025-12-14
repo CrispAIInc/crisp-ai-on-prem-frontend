@@ -58,6 +58,9 @@ function ChatHistory() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+    function closePopup() {
+        setIsChatHistoryPopupOpen(false);
+    }
 
     return (
         <div className={`flex items-center w-full max-w-full h-full`}>
@@ -70,7 +73,7 @@ function ChatHistory() {
             <div className="flex p-2 w-fit">
                 <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
                 <div className="relative">
-                    {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup twClasses={`absolute bottom-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} /> </div>}
+                    {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup twClasses={`absolute bottom-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
                     <KeyboardArrowUpOutlinedIcon ref={keyboardArrowUpRef} className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
                 </div>
             </div>
