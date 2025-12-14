@@ -136,6 +136,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setShowNoteDetails,
     setActiveView,
     currentChat,
+    chatHistory,
     setChatHistory,
     setCurrentChat
   } = useContext(MainContext);
@@ -1164,8 +1165,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       {/* </div> */}
       <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
-        {/* {ChatHistory?.length > 0 && <ChatHistory />} */}
-        <ChatHistory />
+        {chatHistory?.length > 0 && <ChatHistory />}
+        {/* <ChatHistory /> */}
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
