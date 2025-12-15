@@ -73,7 +73,7 @@ function ChatHistory() {
                 <div className={`pointer-events-none absolute right-0 top-0 h-full w-16
                       bg-gradient-to-r from-transparent ${theme === 'light' ? 'to-background_workspace' : ''} `} />
             </div>}
-            <div className="flex gap-1 p-2 w-fit">
+            <div className="flex gap-1 p-2 ml-auto w-fit">
                 <KeyboardArrowLeftOutlinedIcon onClick={() => setIsHorizontalChatHistoryVisibile(prev => !prev)} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'} ${isHorizontalChatHistoryVisibile && 'rotate-180'}`} />
                 <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
                 <div className="relative">
