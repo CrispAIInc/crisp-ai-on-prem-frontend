@@ -5,6 +5,7 @@ import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutl
 import { MainContext } from '../../contexts/mainContext';
 import makeApiRequest from '../../api';
 import ChatHistoryPopup from '../ChatHistoryPopup';
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 
 function ChatHistory() {
     const { theme, setCurrentChat, setChatHistory, workspaceContainer } = useContext(MainContext);
@@ -71,10 +72,10 @@ function ChatHistory() {
                       bg-gradient-to-r from-transparent ${theme === 'light' ? 'to-background_workspace' : ''} `} />
             </div>
             <div className="flex p-2 w-fit">
-                <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
+                <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
                 <div className="relative">
                     {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup twClasses={`absolute bottom-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
-                    <KeyboardArrowUpOutlinedIcon ref={keyboardArrowUpRef} className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
+                    <ScheduleOutlinedIcon ref={keyboardArrowUpRef} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
                 </div>
             </div>
         </div>
