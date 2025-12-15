@@ -9,6 +9,7 @@ import ChatTitleUpdaterModal from '../ChatTitleUpdaterModal';
 import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
 import { formatChatHistoryByDate } from '../../utils';
+import { useFilter } from '../../hooks/useFilter';
 
 function ChatHistoryPopup({ close, twClasses = '' }) {
     const { theme, chatHistory, currentChat, setChatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
@@ -45,13 +46,20 @@ function ChatHistoryPopup({ close, twClasses = '' }) {
         }
     }
 
+    const {
+        query,
+        setQuery,
+        filteredItems: filteredChatSessions,
+    } = useFilter(chatHistory, (chat, query) =>
+        chat.title.toLowerCase().includes(query.toLowerCase())
+    );
     // Format and group the chats by date using the util
     const grouped = useMemo(() => {
-        return formatChatHistoryByDate(chatHistory, {
+        return formatChatHistoryByDate(filteredChatSessions, {
             dateKey: "updated_at",
             returnAsArray: true,
         });
-    }, [chatHistory, JSON.stringify(chatHistory), chatHistory.length]);
+    }, [filteredChatSessions, JSON.stringify(filteredChatSessions), filteredChatSessions.length]);
 
     function handleSingleChatSessionClick(chat) {
         setCurrentChat(chat);
@@ -168,12 +176,21 @@ function ChatHistoryPopup({ close, twClasses = '' }) {
         }
     }
 
+
+
     return (
         <div className={` p-2 w-[20vw] ${theme === 'light' ? "text-textColor-300 bg-white" : "text-textColor-100 !bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden ${twClasses}`}>
             {/* <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div> */}
 
             <button className={`px-3 py-2 w-full rounded-md ${theme === 'light' ? "bg-[#e6e6e6]/50  hover:bg-[#e6e6e6]" : "bg-textColor-200  hover:bg-textColor-200"} font-semibold text-xs`} onClick={createNewChat}>New Chat</button>
+
+            <input
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Search..."
+                className={`w-full p-2 font-semibold rounded-md text-xs outline-none  ${theme === 'light' ? '!border !border-textColor-100/50 bg-transparent' : 'bg-textColor-300 !border !border-textColor-200'} `}
+            />
 
             <div className="z-50 flex flex-col flex-1 overflow-y-auto">
                 {grouped.map(group => (
