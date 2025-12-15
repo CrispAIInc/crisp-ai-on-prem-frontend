@@ -51,7 +51,7 @@ const ChatMessage = ({ text, refs }) => {
                   content={`${video.source_path} | Timestamp: ${video.timestamp}`}
                   data-object={video}
                   onClick={(e) => handleVideoLinkClick(e, video)}
-                  cssClasses="ml-0 cursor-pointer"
+                  cssClasses="ml-0 cursor-pointer break-keep"
                 />
               );
             })}
@@ -67,7 +67,7 @@ const ChatMessage = ({ text, refs }) => {
                 content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
                 data-object={video}
                 onClick={(e) => handleVideoLinkClick(e, video)}
-                cssClasses="ml-0 cursor-pointer"
+                cssClasses="ml-0 cursor-pointer  break-keep"
               />
             ))}
           </ul>
@@ -82,7 +82,7 @@ const ChatMessage = ({ text, refs }) => {
                 content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
                 data-object={pdf}
                 onClick={(e) => handlePDFLinkClick(e, pdf)}
-                cssClasses="ml-0 cursor-pointer"
+                cssClasses="ml-0 cursor-pointer  break-keep"
               />
             ))}
           </ul>
@@ -97,7 +97,7 @@ const ChatMessage = ({ text, refs }) => {
                 content={img.source_path}
                 data-object={img}
                 onClick={(e) => handlePDFLinkClick(e, img)}
-                cssClasses="ml-0 cursor-pointer"
+                cssClasses="ml-0 cursor-pointer  break-keep"
               />
             ))}
           </ul>
