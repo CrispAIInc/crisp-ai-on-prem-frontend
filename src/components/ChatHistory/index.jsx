@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import HorizontalChatHistoryList from '../HorizontalChatHistoryList';
 import AddIcon from '@mui/icons-material/Add';
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
+import KeyboardArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardArrowLeftOutlined';
 import { MainContext } from '../../contexts/mainContext';
 import makeApiRequest from '../../api';
 import ChatHistoryPopup from '../ChatHistoryPopup';
@@ -63,15 +63,18 @@ function ChatHistory() {
         setIsChatHistoryPopupOpen(false);
     }
 
+    const [isHorizontalChatHistoryVisibile, setIsHorizontalChatHistoryVisibile] = useState(true);
+
     return (
         <div className={`flex items-center w-full max-w-full h-full`}>
-            <div className="relative flex-1 w-[80%] ">
+            {isHorizontalChatHistoryVisibile && <div className="relative flex-1 w-[80%] ">
                 <HorizontalChatHistoryList />
                 {/* Right fade shadow */}
                 <div className={`pointer-events-none absolute right-0 top-0 h-full w-16
                       bg-gradient-to-r from-transparent ${theme === 'light' ? 'to-background_workspace' : ''} `} />
-            </div>
+            </div>}
             <div className="flex gap-1 p-2 w-fit">
+                <KeyboardArrowLeftOutlinedIcon onClick={() => setIsHorizontalChatHistoryVisibile(prev => !prev)} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'} ${isHorizontalChatHistoryVisibile && 'rotate-180'}`} />
                 <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
                 <div className="relative">
                     {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup twClasses={`absolute bottom-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
