@@ -11,11 +11,10 @@ function ChatHistory() {
     const { theme, setCurrentChat, setChatHistory, workspaceContainer } = useContext(MainContext);
 
     const [isHorizontalChatHistoryVisibile, setIsHorizontalChatHistoryVisibile] = useState(false);
+    const [isChatHistoryPopupOpen, setIsChatHistoryPopupOpen] = useState(false);
 
     const keyboardArrowUpRef = useRef(null);
     const ChatHistoryPopupRef = useRef(null);
-
-    const [isChatHistoryPopupOpen, setIsChatHistoryPopupOpen] = useState(false);
 
     async function createNewChat() {
         try {
@@ -26,6 +25,9 @@ function ChatHistory() {
             });
             const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
             if (success) {
+                if (!isHorizontalChatHistoryVisibile) {
+                    setIsHorizontalChatHistoryVisibile(true);
+                }
                 const createdAt = new Date();
                 const updatedAt = new Date();
                 // Handle new chat creation logic here
