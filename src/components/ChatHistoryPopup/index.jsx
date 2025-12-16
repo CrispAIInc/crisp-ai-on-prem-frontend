@@ -11,7 +11,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import { formatChatHistoryByDate } from '../../utils';
 import { useFilter } from '../../hooks/useFilter';
 
-function ChatHistoryPopup({ close, twClasses = '' }) {
+function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef }) {
     const { theme, chatHistory, currentChat, setChatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
 
     async function createNewChat() {
@@ -75,6 +75,7 @@ function ChatHistoryPopup({ close, twClasses = '' }) {
     }
 
     const dropdownRef = useRef(null);
+
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -227,7 +228,7 @@ function ChatHistoryPopup({ close, twClasses = '' }) {
                     </div>
                 ))}
             </div>
-            {isUpdateChatTitleModalOpen && <ChatTitleUpdaterModal isLoading={isLoading} show={isUpdateChatTitleModalOpen} onHide={() => setIsUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} updateValue={updateChatTitle} />}
+            {isUpdateChatTitleModalOpen && <div ref={chatTitleUpdaterModalRef}><ChatTitleUpdaterModal isLoading={isLoading} show={isUpdateChatTitleModalOpen} onHide={() => setIsUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} updateValue={updateChatTitle} /></div>}
         </div>
     );
 }
