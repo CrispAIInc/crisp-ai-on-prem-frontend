@@ -1165,7 +1165,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       {/* </div> */}
       <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
-        {chatHistory?.length > 0 && <ChatHistory />}
+        <ChatHistory />
         {/* <ChatHistory /> */}
         {
           selectedLLMs[0] === 'gpt-4-vision'
