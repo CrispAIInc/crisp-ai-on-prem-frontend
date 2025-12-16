@@ -1102,23 +1102,23 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [chatHistory, setChatHistory] = useState([]);
     const [currentChat, setCurrentChat] = useState([]);
-    useEffect(() => {
-        async function initializeChatSession() {
-            try {
-                const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
-                if (success) {
-                    // Handle new chat creation logic here
-                    setCurrentChat({ sessionId, title, userId: user?.userId, messages: messages || [], created_at: new Date(), updated_at: new Date() });
-                } else {
-                    throw new Error('Failed to create new chat');
-                }
-            } catch (error) {
-                console.log(error?.message);
-            }
-        }
+    // useEffect(() => {
+    //     async function initializeChatSession() {
+    //         try {
+    //             const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
+    //             if (success) {
+    //                 // Handle new chat creation logic here
+    //                 setCurrentChat({ sessionId, title, userId: user?.userId, messages: messages || [], created_at: new Date(), updated_at: new Date() });
+    //             } else {
+    //                 throw new Error('Failed to create new chat');
+    //             }
+    //         } catch (error) {
+    //             console.log(error?.message);
+    //         }
+    //     }
 
-        initializeChatSession();
-    }, []);
+    //     initializeChatSession();
+    // }, []);
     useEffect(() => {
         async function getChatHistory() {
             try {

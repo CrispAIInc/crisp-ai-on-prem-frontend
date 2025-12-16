@@ -6,9 +6,13 @@ import { MainContext } from '../../contexts/mainContext';
 import makeApiRequest from '../../api';
 import ChatHistoryPopup from '../ChatHistoryPopup';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
+import { generateRandomId } from '../../utils';
+import { AuthContext } from '../../contexts/authContext';
 
 function ChatHistory() {
-    const { theme, setCurrentChat, setChatHistory, workspaceContainer } = useContext(MainContext);
+    const { theme, setCurrentChat, chatHistory, setChatHistory, workspaceContainer } = useContext(MainContext);
+
+    const { user } = useContext(AuthContext);
 
     const [isHorizontalChatHistoryVisibile, setIsHorizontalChatHistoryVisibile] = useState(false);
     const [isChatHistoryPopupOpen, setIsChatHistoryPopupOpen] = useState(false);
@@ -18,38 +22,30 @@ function ChatHistory() {
     const chatTitleUpdaterModalRef = useRef(null);
 
     async function createNewChat() {
-        try {
-            setCurrentChat([]);
-            workspaceContainer.current.scrollTo({
-                top: 0,
-                behavior: "smooth", // Enables smooth scrolling
-            });
-            const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
-            if (success) {
-                if (!isHorizontalChatHistoryVisibile) {
-                    setIsHorizontalChatHistoryVisibile(true);
-                }
-                const createdAt = new Date();
-                const updatedAt = new Date();
-                // Handle new chat creation logic here
-                setCurrentChat({ sessionId, title, userId, messages: messages || [], created_at: createdAt, updated_at: updatedAt });
-                setChatHistory(prev => ([
-                    {
-                        sessionId,
-                        title,
-                        messages: messages || [],
-                        userId,
-                        created_at: createdAt,
-                        updated_at: updatedAt,
-                    },
-                    ...prev,
-                ]));
-            } else {
-                throw new Error('Failed to create new chat');
-            }
-        } catch (error) {
-            console.log(error?.message);
+        // try {
+        setCurrentChat([]);
+        workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth", // Enables smooth scrolling
+        });
+        // const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
+        // if (success) {
+        if (!isHorizontalChatHistoryVisibile) {
+            setIsHorizontalChatHistoryVisibile(true);
         }
+        const createdAt = new Date();
+        const updatedAt = new Date();
+        // Handle new chat creation logic here
+        const newChat = { sessionId: generateRandomId(), title: `New Chat ${chatHistory.length}`, userId: user.userId, messages: [], created_at: createdAt, updated_at: updatedAt };
+        setCurrentChat(newChat);
+        setChatHistory(prev => ([newChat, ...prev,
+        ]));
+        //     } else {
+        //         throw new Error('Failed to create new chat');
+        //     }
+        // } catch (error) {
+        //     console.log(error?.message);
+        // }
     }
 
     useEffect(() => {
