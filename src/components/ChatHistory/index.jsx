@@ -24,15 +24,20 @@ function ChatHistory() {
     const ChatHistoryPopupRef = useRef(null);
     const chatTitleUpdaterModalRef = useRef(null);
 
-    async function createNewChat() {
+    function createNewChat() {
+        // 1. Create chat
+        addNewChat();
+
+        // 2. Scroll container
         workspaceContainer?.current.scrollTo({
             top: 0,
-            behavior: "smooth", // Enables smooth scrolling
+            behavior: "smooth",
         });
+
+        // 3. Toggle horizontal history panel
         if (!isHorizontalChatHistoryVisibile) {
             setIsHorizontalChatHistoryVisibile(true);
         }
-        addNewChat(`New Chat ${chatHistory.length + 1}`);
     }
 
     useEffect(() => {
