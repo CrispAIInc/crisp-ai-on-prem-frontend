@@ -15,7 +15,7 @@ import useChat from '../../hooks/useChat';
 function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, createNewChat }) {
     const { theme, chatHistory, currentChat, setChatHistory, setCurrentChat } = useContext(MainContext);
 
-    const { updateChatTitle } = useChat();
+    const { updateChatTitle, deleteChat } = useChat();
 
     const {
         query,
@@ -99,29 +99,13 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
     }
 
     const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-    async function deleteChat(event, chatsToDelete) {
+    async function handleDeleteChat(event, chatsToDelete) {
         try {
             event.stopPropagation();
             setIsDeleteLoading(true);
-            const { success, message } = await makeApiRequest('/chat-history', 'DELETE', JSON.stringify({
-                session_ids: chatsToDelete.map(chat => chat?.sessionId),
-            }));
+            const { success, message } = await deleteChat(chatsToDelete.map(chat => chat?.sessionId));
             if (success) {
                 toast('Chat deleted successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
-                // Refresh chat history or update state accordingly
-                // setCurrentChat(prev => {
-                //     if (chatsToDelete.some(chat => chat?.sessionId=== prev?.sessionId)) {
-                //         return [];
-                //     }
-                //     return prev;
-                // });
-                setChatHistory(prev =>
-                    prev.filter(chat => !chatsToDelete.some(toDelete => toDelete?.sessionId === chat?.sessionId))
-                );
-                // If the current chat is deleted, clear it
-                if (chatsToDelete.some(chat => chat?.sessionId === currentChat?.sessionId)) {
-                    setCurrentChat([]);
-                }
             } else {
                 throw new Error(message || 'Failed to delete chat');
             }
@@ -169,7 +153,7 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
                                             />
                                             <span>Rename</span>
                                         </div>
-                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteChat(event, [chat]); }}>
+                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); handleDeleteChat(event, [chat]); }}>
                                             {isDeleteLoading ? <LoadingSpinner isDeleting isSmall /> : <DeleteOutlineOutlinedIcon
                                                 className={`cursor-pointer`}
                                             />}
