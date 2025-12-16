@@ -8,42 +8,37 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ChatTitleUpdaterModal from '../ChatTitleUpdaterModal';
 import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
-import { formatChatHistoryByDate } from '../../utils';
+import { formatChatHistoryByDate, generateRandomId } from '../../utils';
 import { useFilter } from '../../hooks/useFilter';
+import { AuthContext } from '../../contexts/authContext';
 
 function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef }) {
     const { theme, chatHistory, currentChat, setChatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
 
+    const { user } = useContext(AuthContext);
+
     async function createNewChat() {
-        try {
-            setCurrentChat([]);
-            workspaceContainer.current.scrollTo({
-                top: 0,
-                behavior: "smooth", // Enables smooth scrolling
-            });
-            const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
-            if (success) {
-                const createdAt = new Date();
-                const updatedAt = new Date();
-                // Handle new chat creation logic here
-                setCurrentChat({ sessionId, title, userId, messages: messages || [], created_at: createdAt, updated_at: updatedAt });
-                setChatHistory(prev => ([
-                    {
-                        sessionId,
-                        title,
-                        messages: messages || [],
-                        userId,
-                        created_at: createdAt,
-                        updated_at: updatedAt,
-                    },
-                    ...prev,
-                ]));
-            } else {
-                throw new Error('Failed to create new chat');
-            }
-        } catch (error) {
-            console.log(error?.message);
-        }
+        // try {
+        // setCurrentChat([]);
+        workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth", // Enables smooth scrolling
+        });
+        // const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
+        // if (success) {
+        const createdAt = new Date();
+        const updatedAt = new Date();
+        // Handle new chat creation logic here
+        const newChat = { sessionId: generateRandomId(), title: `New Chat ${chatHistory.length}`, userId: user.userId, messages: [], created_at: createdAt, updated_at: updatedAt };
+        setCurrentChat(newChat);
+        setChatHistory(prev => ([newChat, ...prev,
+        ]));
+        //     } else {
+        //         throw new Error('Failed to create new chat');
+        //     }
+        // } catch (error) {
+        //     console.log(error?.message);
+        // }
     }
 
     const {
