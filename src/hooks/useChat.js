@@ -80,12 +80,13 @@ export default function useChat() {
                 );
                 // If the current chat is deleted, clear it
                 setCurrentChat(prev => (ids.includes(prev?.sessionId) ? [] : prev));
+                return { success: true };
             } else {
                 throw new Error(message || 'Failed to delete chat');
             }
         } catch (error) {
             console.log(error);
-            throw new Error(error.message || 'Failed to delete chat');
+            return { success: false, message: error.message || 'Failed to delete chat' };
         }
     }, [setChatHistory, setCurrentChat]);
 
