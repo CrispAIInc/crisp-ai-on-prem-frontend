@@ -204,7 +204,7 @@ export function SourceExplorer(props) {
                 .filter(
                     (file) =>
                         (file.file_type === format || format === "all") &&
-                        (file.category[1] === category || category === "all")
+                        (file.category.includes(category) || category === "all")
                 );
 
             setItemsFoundInsideCategoryOrFormat(items.length > 0);
@@ -291,7 +291,7 @@ export function SourceExplorer(props) {
                     .filter(
                         (file) =>
                             (file.file_type === format || format === "all") &&
-                            file.category[0] === category
+                            file.category.includes(category)
                     );
 
                 if ((items.length > 0 && results.length > 0)) {

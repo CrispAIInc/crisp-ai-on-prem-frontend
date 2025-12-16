@@ -19,9 +19,10 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 //     TimelineContent
 // } from '../CustomTimeline';
 import GsFile from '../GsFile';
+import Chip from '../Chip';
 
 function ReelProps({ reel, closeReelProps = () => { } }) {
-    const { filename, id, reel_video_url, thumbnail, user_id, combined_video_info, original_sources, video_filename, ...rest } = reel;
+    const { filename, id, reel_video_url, thumbnail, user_id, combined_video_info, original_sources, video_filename, edl_url, source_frame_rates, ...rest } = reel;
     const { theme } = useContext(MainContext);
     return (
         <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3`}>
@@ -63,7 +64,15 @@ function ReelProps({ reel, closeReelProps = () => { } }) {
                                     <GsFile gsUrl={video.thumbnail} alt={reel.title} className="w-12 h-12 rounded" />
                                     <div className="flex flex-col">
                                         <p className='text-sm font-semibold break-all'>{video.filename}</p>
-                                        <span className="text-xs italic">{video.category}</span>
+                                        {!Array.isArray(video?.category) ? <Chip className="text-xs italic" cssClasses="italic !text-[10px] !px-1 !py-1" content={video.category} />
+                                            :
+                                            <div className="flex flex-wrap items-center gap-1">
+                                                {
+                                                    video.category?.map((cat, index) => (
+                                                        <Chip key={`${cat}-${index}`} cssClasses="italic !text-[10px] !px-1 !py-1" content={cat} />
+                                                    ))
+                                                }
+                                            </div>}
                                     </div>
                                 </div>
                             ))}

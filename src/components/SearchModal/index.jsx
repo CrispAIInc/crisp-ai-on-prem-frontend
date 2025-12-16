@@ -13,6 +13,7 @@ import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutline
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import GsFile from '../GsFile/index.jsx';
+import Chip from '../Chip';
 
 export function SearchModal(props) {
     const { additionalSources, theme, handleCheckboxChange, onThumbnailClick } = useContext(MainContext);
@@ -106,7 +107,11 @@ export function SearchModal(props) {
                                 </div>
                                 <div className="flex flex-col self-start flex-1">
                                     <p className={`text-md font-medium break-all m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item.source_path.replace(/\.[^/.]+$/, '')}</p>
-                                    <span className="italic">{item.category}</span>
+                                    {
+                                        item.category?.map((cat, index) => (
+                                            <Chip key={`${cat}-${index}`} className="italic" content={cat} />
+                                        ))
+                                    }
                                 </div>
                                 <div className="flex items-center ">
                                     <Checkbox

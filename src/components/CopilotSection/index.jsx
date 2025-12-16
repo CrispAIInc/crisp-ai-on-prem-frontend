@@ -226,20 +226,16 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
 
       let sessionID = null; // Variable to store the session ID
-      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(
-        selectedCategory
-      )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
-        selectedLLMs[0]
-      )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`, {
+      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_selected) ? false : true}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         heartbeatTimeout: 75000,
       });
       // const eventSource = new EventSource(
-      //   `${API_ENDPOINT}/message/${encodeURIComponent(
-      //     selectedCategory
-      //   )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
+      // `${API_ENDPOINT}/message/${encodeURIComponent(
+      //   selectedCategory
+      // )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
       //     selectedLLMs[0]
       //   )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       // );
