@@ -6,7 +6,7 @@ import makeApiRequest from '../api';
 
 export default function useChat() {
 
-    const { setCurrentChat, setChatHistory } = useContext(MainContext);
+    const { currentChat, setCurrentChat, setChatHistory } = useContext(MainContext);
     const { user } = useContext(AuthContext);
 
     const addNewChat = useCallback((title) => {
@@ -68,10 +68,32 @@ export default function useChat() {
         }
     }, [setChatHistory]);
 
+    const deleteChat = useCallback(async (chatIds) => {
+        try {
+            const ids = Array.isArray(chatIds) ? chatIds : [chatIds];
+            const { success, message } = await makeApiRequest('/chat-history', 'DELETE', JSON.stringify({
+                session_ids: ids,
+            }));
+            if (success) {
+                setChatHistory(prev =>
+                    prev.filter(chat => !ids.includes(chat.sessionId))
+                );
+                // If the current chat is deleted, clear it
+                setCurrentChat(prev => (ids.includes(prev?.sessionId) ? [] : prev));
+            } else {
+                throw new Error(message || 'Failed to delete chat');
+            }
+        } catch (error) {
+            console.log(error);
+            throw new Error(error.message || 'Failed to delete chat');
+        }
+    }, [setChatHistory, setCurrentChat]);
+
 
     return {
         addNewChat,
-        updateChatTitle
+        updateChatTitle,
+        deleteChat
     };
 
 }
