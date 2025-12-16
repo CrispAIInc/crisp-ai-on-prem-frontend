@@ -4,7 +4,7 @@ import useDragScroll from '../../hooks/useDragScroll.js';
 import FadedText from '../FadedText';
 
 function HorizontalChatHistoryList({ cssClasses = "" }) {
-    const { theme, chatHistory, setCurrentChat } = useContext(MainContext);
+    const { theme, chatHistory, currentChat, setCurrentChat } = useContext(MainContext);
 
     function handleSingleChatSessionClick(chat) {
         setCurrentChat(chat);
@@ -21,7 +21,7 @@ function HorizontalChatHistoryList({ cssClasses = "" }) {
             {
                 chatHistory.map((chat, index) => {
                     return (
-                        <FadedText handleClick={() => handleSingleChatSessionClick(chat)} key={index} text={chat.title} />
+                        <FadedText twClasses={`${chat.sessionId === currentChat.sessionId && 'text-gradient-x font-bold'}`} handleClick={() => handleSingleChatSessionClick(chat)} key={index} text={chat.title} />
                     );
                 })
             }
