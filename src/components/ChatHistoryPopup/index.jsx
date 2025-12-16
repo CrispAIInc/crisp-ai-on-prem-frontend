@@ -10,9 +10,12 @@ import LoadingSpinner from '../LoadingSpinner';
 import { formatChatHistoryByDate } from '../../utils';
 import { useFilter } from '../../hooks/useFilter';
 import { AuthContext } from '../../contexts/authContext';
+import useChat from '../../hooks/useChat';
 
 function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, createNewChat }) {
     const { theme, chatHistory, currentChat, setChatHistory, setCurrentChat } = useContext(MainContext);
+
+    const { updateChatTitle } = useChat();
 
     const {
         query,
@@ -71,33 +74,18 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
     }
 
     const [isLoading, setIsLoading] = useState(false);
-    async function updateChatTitle() {
+    async function handleUpdateChatTitle() {
         try {
             setIsLoading(true);
-            if (!chatTitle || chatTitle.trim().length === 0) {
-                throw new Error('Chat title cannot be empty');
-            }
+
             if (!updatingChat) {
                 throw new Error('No chat selected for updating title');
             }
-            const { success, message, title } = await makeApiRequest('/update-session-title', 'PUT', JSON.stringify({
-                sessionId: updatingChat?.sessionId,
-                title: chatTitle.trim(),
-            }));
+
+            const { success, message } = await updateChatTitle(chatTitle, updatingChat.sessionId);
+
             if (success) {
                 toast('Source renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
-                // Refresh chat history or update state accordingly
-                // setCurrentChat(prev => ({
-                //     ...prev,
-                //     title: title.trim(),
-                // }));
-                setChatHistory(prev =>
-                    prev.map(chat =>
-                        chat.sessionId === updatingChat.sessionId
-                            ? { ...chat, title: title.trim() }
-                            : chat
-                    )
-                );
                 setIsUpdateChatTitleModalOpen(false);
             } else {
                 throw new Error(message || 'Failed to rename the source');
@@ -196,7 +184,7 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
                     </div>
                 ))}
             </div>
-            {isUpdateChatTitleModalOpen && <div ref={chatTitleUpdaterModalRef}><ChatTitleUpdaterModal isLoading={isLoading} show={isUpdateChatTitleModalOpen} onHide={() => setIsUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} updateValue={updateChatTitle} /></div>}
+            {isUpdateChatTitleModalOpen && <div ref={chatTitleUpdaterModalRef}><ChatTitleUpdaterModal isLoading={isLoading} show={isUpdateChatTitleModalOpen} onHide={() => setIsUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} updateValue={handleUpdateChatTitle} /></div>}
         </div>
     );
 }
