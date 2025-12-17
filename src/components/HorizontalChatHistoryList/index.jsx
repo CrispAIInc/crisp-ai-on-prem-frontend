@@ -7,7 +7,7 @@ function HorizontalChatHistoryList({ cssClasses = "" }) {
     const { theme, chatHistory, currentChat, setCurrentChat } = useContext(MainContext);
 
     function handleSingleChatSessionClick(chat) {
-        setCurrentChat(chat);
+        setCurrentChat(prev => prev.sessionId === chat.sessionId ? [] : chat);
     }
 
     const dragRef = useDragScroll();
