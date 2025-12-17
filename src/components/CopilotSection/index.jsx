@@ -896,20 +896,20 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setIsUploadingVisionImg(false);
   };
 
-  const handleRepeatQuestion = (message, models, isRepeated = true) => {
+  const handleRepeatQuestion = (message, model, isRepeated = true) => {
     // setInput(message);
-    if (models[0] === 'gpt-4-vision') {
+    if (model === 'gpt-4-vision') {
       handleVisionUpload(null, message);
       return;
     }
 
-    if (models[0] === 'dall-e-3') {
-      sendMessage(message, models);
+    if (model === 'dall-e-3') {
+      sendMessage(message, model);
       return;
     }
 
-    if (models[0] !== 'dall-e-3' && models[0] !== 'gpt-4-vision') {
-      sendMessage(message, models, isRepeated);
+    if (model !== 'dall-e-3' && model !== 'gpt-4-vision') {
+      sendMessage(message, model, isRepeated);
       return;
     }
   };
@@ -1019,7 +1019,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             <div
                               className="cursor-pointer"
                               onClick={() => {
-                                handleRepeatQuestion(message?.text, message?.models, true);
+                                handleRepeatQuestion(message?.text, message?.model, true);
                               }}
                             >
                               <ReplayOutlinedIcon />
