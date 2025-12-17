@@ -1137,6 +1137,15 @@ export default function MainProvider({ children, theme, setTheme }) {
         getChatHistory();
     }, []);
 
+    useEffect(() => {
+        if (Array.isArray(currentChat)) {
+            workspaceContainer.current.scrollTo({
+                top: 0,
+                behavior: "smooth", // Enables smooth scrolling
+            });
+        }
+    }, [currentChat]);
+
     // create value object with all the states
     const value = {
         chatHistory, setChatHistory,
