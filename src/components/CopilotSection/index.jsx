@@ -409,15 +409,16 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setChatHistory((prevChatHistory) => {
       const chatIndex = prevChatHistory.findIndex(chat => chat.sessionId === currentChat?.sessionId);
       if (chatIndex === -1) {
+        let now = new Date();
         const newChatEntry = {
           sessionId: currentChat?.sessionId,
           title: currentChat?.title || "New Chat " + (prevChatHistory.length + 1),
           userId: currentChat?.userId || null,
           messages: [{ sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }],
-          created_at: currentChat?.created_at || new Date(),
-          updated_at: currentChat?.updated_at || new Date(),
+          created_at: currentChat?.created_at || now,
+          updated_at: currentChat?.updated_at || now,
         };
-        return [...prevChatHistory, newChatEntry];
+        return [newChatEntry, ...prevChatHistory];
       } else {
         const updatedChatHistory = [...prevChatHistory];
         const chatToUpdate = updatedChatHistory[chatIndex];

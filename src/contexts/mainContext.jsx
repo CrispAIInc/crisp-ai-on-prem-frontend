@@ -7,7 +7,7 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import useResources from '../hooks/useResources';
 import { AuthContext } from './authContext';
-import { pick } from '../utils';
+import { generateRandomId, pick } from '../utils';
 
 export const MainContext = createContext({});
 
@@ -1102,6 +1102,10 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [chatHistory, setChatHistory] = useState([]);
     const [currentChat, setCurrentChat] = useState([]);
+    useEffect(() => {
+        let now = new Date();
+        setCurrentChat({ sessionId: generateRandomId(), title: `New Chat ${chatHistory.length + 1}`, userId: user?.userId, messages: [], created_at: now, updated_at: now });
+    }, []);
     // useEffect(() => {
     //     async function initializeChatSession() {
     //         try {
