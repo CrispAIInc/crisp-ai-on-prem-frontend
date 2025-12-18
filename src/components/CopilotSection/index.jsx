@@ -975,7 +975,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           }`}
         ref={chatAppRef}
       >
-        {chatLoaded && (
+        {
           messages.map((message, index) =>
             index % 2 == 0 ? (
               <div key={index} className="my-2 break-all w-fit">
@@ -1159,7 +1159,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
               </div>
             )
           )
-        )
+          // )
         }
       </section>}
 
