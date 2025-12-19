@@ -2,13 +2,21 @@ import React, { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import useDragScroll from '../../hooks/useDragScroll.js';
 import FadedText from '../FadedText';
+import useChat from "../../hooks/useChat.js"
 
 function HorizontalChatHistoryList({ cssClasses = "" }) {
     const { theme, chatHistory, currentChat, setCurrentChat } = useContext(MainContext);
+    const {addNewChat} = useChat()
 
     function handleSingleChatSessionClick(chat) {
-        setCurrentChat(prev => prev.sessionId === chat.sessionId ? [] : chat);
+        if (currentChat.sessionId === chat.sessionId) {
+            // close prev chat create new empty chat to future queries
+            addNewChat(`New Chat ${chatHistory.length + 1}`)
+        } else {
+            setCurrentChat(chat);
+        }
     }
+
 
     const dragRef = useDragScroll();
 
