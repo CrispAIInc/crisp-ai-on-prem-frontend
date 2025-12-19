@@ -161,7 +161,7 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
                                         </div>
                                     </div>}
                                     <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer text-xs`} onClick={e => handleContextMenuOpen(e, chat?.sessionId)} />
-                                    <h6 className='font-semibold text-xs !mb-0 fex-1 truncate '>{chat.title}</h6>
+                                    <h6 className='font-semibold text-xs !mb-0 fex-1 truncate ' title={chat.title}>{chat.title}</h6>
                                 </div>
                             ))
                         )}
