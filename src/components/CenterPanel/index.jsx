@@ -58,8 +58,8 @@ const CenterPanel = ({ workspaceContainer, combinedSummary, setCombinedSummary, 
     // }
 
     function refreshSummary() {
-        setSelectedSources(displayedSources?.filter(item => item?.is_selected)?.length);
-        if (displayedSources?.length > 1 || (displayedSources?.length > 1 && activeView === "resource")) {
+        setSelectedSources(displayedSources?.filter(item => (item?.is_selected && !('progress' in item)))?.length);
+        if ((displayedSources?.every(item => !('progress' in item))) || (displayedSources?.every(item => !('progress' in item)) && activeView === "resource")) {
             getCombinedSum();
         } else {
             setCombinedSummary(currentResource?.metadata?.summary?.content || "");
