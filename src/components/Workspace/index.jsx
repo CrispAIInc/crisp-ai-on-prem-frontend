@@ -24,15 +24,19 @@ const Workspace = () => {
         isRightSidebarOpen,
         isLeftSidebarOpen,
         chatLoaded,
-        setChatLoaded
+        setChatLoaded,
+        combinedSummary, setCombinedSummary,
+isCombinedSummaryPending, setIsCombinedSummaryPending,
+selectedLanguage, setSelectedLanguage,
+getCombinedSum,
 
     } = useContext(MainContext);
 
     const { sidebarWidth } = useResizableSidebar(200, false);
 
-    const [combinedSummary, setCombinedSummary] = useState("");
-    const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
+    // const [combinedSummary, setCombinedSummary] = useState("");
+    // const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
+    // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
     return (
         <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
@@ -53,7 +57,7 @@ const Workspace = () => {
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
             </div>
             {(activeView === 'resource' || displayedSources?.length > 0) ? (
-                <CenterPanel combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} isCombinedSummaryPending={isCombinedSummaryPending} setIsCombinedSummaryPending={setIsCombinedSummaryPending} />
+                <CenterPanel getCombinedSum={getCombinedSum} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} isCombinedSummaryPending={isCombinedSummaryPending} setIsCombinedSummaryPending={setIsCombinedSummaryPending} />
             ) : !activeView ? (
                 <div className="mt-10">
                     <NoData />

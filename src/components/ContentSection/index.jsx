@@ -1452,6 +1452,7 @@ const ContentSection = ({
 
 }) => {
     const {
+        getCombinedSum,
         isPlayerReady,
         resourceURL,
         isFileUploading, setIsFileUploading,
@@ -2267,6 +2268,8 @@ const ContentSection = ({
                 // const { progress, step, ...rest } = finalSources;
                 return finalSources;
             });
+
+             getCombinedSum && getCombinedSum();
 
             const { chat_is_initialized } = await makeApiRequest(
                 `/chat/all`,
