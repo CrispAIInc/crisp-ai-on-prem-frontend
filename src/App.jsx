@@ -19,6 +19,7 @@ import MainProvider from './contexts/mainContext.jsx';
 import SettingsProvider from './contexts/settingsContext.jsx';
 import VerifyAccount from './components/VerifyAccount';
 import AuthRoute from './components/Auth/AuthRoute.jsx';
+import ProjectsPage from './pages/ProjectsPage.jsx';
 
 
 function App() {
@@ -62,6 +63,12 @@ function App() {
                     <MainWorkspacePage />
                   </SettingsProvider>
                 </MainProvider>
+              </PrivateRoute>
+            } />
+
+            <Route path="/projects" element={
+              <PrivateRoute>
+                <ProjectsPage />
               </PrivateRoute>
             } />
 
