@@ -303,3 +303,82 @@ export function formatReadableDate(value) {
 
     return date.toLocaleString('en-US', options).replace(',', ' –');
 }
+
+
+/**
+ * Group or format chat history items into date buckets: Today, Yesterday, Last week, Older
+ *
+ * @param {Array<Object>} items - array of chat objects. Each object should contain a date field (see dateKey).
+ * @param {Object} opts
+ * @param {string} [opts.dateKey='created_at'] - property name to read date from when present on item.
+ * @param {boolean} [opts.returnAsArray=true] - whether to return an ordered array of groups (useful for rendering) or an object map.
+ * @returns {Array|Object} groups either as [{label,key,items}] or { today: [], yesterday: [], lastWeek: [], older: [] }
+ */
+export function formatChatHistoryByDate(items = [], opts = {}) {
+    const { dateKey = 'created_at', returnAsArray = true } = opts;
+
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfYesterday = new Date(startOfToday);
+    startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+    const startOfWeek = new Date(startOfToday);
+    startOfWeek.setDate(startOfWeek.getDate() - 7);
+
+    const groups = {
+        today: [],
+        yesterday: [],
+        lastWeek: [],
+        older: []
+    };
+
+    const getDateFromItem = (item) => {
+        if (!item) return null;
+        const raw = item[dateKey] ?? item.timestamp ?? item.createdAt ?? item.date ?? null;
+        if (!raw) return null;
+        const d = raw instanceof Date ? raw : new Date(raw);
+        return isNaN(d) ? null : d;
+    };
+
+    for (const item of items) {
+        const d = getDateFromItem(item);
+        if (!d) {
+            groups.older.push(item);
+            continue;
+        }
+
+        if (d >= startOfToday) groups.today.push(item);
+        else if (d >= startOfYesterday) groups.yesterday.push(item);
+        else if (d >= startOfWeek) groups.lastWeek.push(item);
+        else groups.older.push(item);
+    }
+
+    // sort each group descending by date (newest first)
+    const sortDesc = (a, b) => {
+        const da = getDateFromItem(a) || 0;
+        const db = getDateFromItem(b) || 0;
+        return db - da;
+    };
+
+    Object.keys(groups).forEach(k => groups[k].sort(sortDesc));
+
+    if (!returnAsArray) return groups;
+
+    return [
+        { label: 'Today', key: 'today', items: groups.today },
+        { label: 'Yesterday', key: 'yesterday', items: groups.yesterday },
+        { label: 'Last week', key: 'lastWeek', items: groups.lastWeek },
+        { label: 'Older', key: 'older', items: groups.older }
+    ];
+}
+
+export function generateRandomId(length = 10) {
+    const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    return result;
+}

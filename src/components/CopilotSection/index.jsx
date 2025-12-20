@@ -3,7 +3,7 @@ import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import SendIcon from "@mui/icons-material/Send";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import axios from "axios";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
@@ -21,14 +21,98 @@ import AnimatedInput from '../AnimatedInput/index.jsx';
 import Chip from '../Chip/index.jsx';
 import { TOKEN_NAME } from '../../globals.js';
 import useAuth from '../../hooks/useAuth.js';
+import HorizontalChatHistoryList from '../HorizontalChatHistoryList/index.jsx';
+import ChatHistory from '../ChatHistory/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+
+const ChatMessage = ({ text, refs }) => {
+  const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+  return (
+    <div>
+      <div className="coorg-response">
+        {text}
+      </div>
+      <div>
+        {(refs?.videoLinks?.length > 0 ||
+          refs?.keyframeLinks?.length > 0 ||
+          refs?.pdfLinks?.length > 0 ||
+          refs?.imageLinks?.length > 0) && (
+            <p className="mt-2 font-medium">References:</p>
+          )}
+
+        {/* Video links */}
+        {refs?.videoLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {refs.videoLinks.map((video, index) => {
+              return (
+                <Chip
+                  key={video.source_path + '' + index}
+                  content={`${video.source_path} | Timestamp: ${video.timestamp}`}
+                  data-object={video}
+                  onClick={(e) => handleVideoLinkClick(e, video)}
+                  cssClasses="ml-0 cursor-pointer break-keep"
+                />
+              );
+            })}
+          </ul>
+        )}
+
+        {/* Keyframe links */}
+        {refs?.keyframeLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {refs.keyframeLinks.map((video, index) => (
+              <Chip
+                key={video.source_path + '' + index}
+                content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
+                data-object={video}
+                onClick={(e) => handleVideoLinkClick(e, video)}
+                cssClasses="ml-0 cursor-pointer  break-keep"
+              />
+            ))}
+          </ul>
+        )}
+
+        {/* PDF links */}
+        {refs?.pdfLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {refs.pdfLinks.map((pdf, index) => (
+              <Chip
+                key={pdf.source_path + '' + index}
+                content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
+                data-object={pdf}
+                onClick={(e) => handlePDFLinkClick(e, pdf)}
+                cssClasses="ml-0 cursor-pointer  break-keep"
+              />
+            ))}
+          </ul>
+        )}
+
+        {/* Image links */}
+        {refs?.imageLinks?.length > 0 && (
+          <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
+            {refs.imageLinks.map((img, index) => (
+              <Chip
+                key={img.source_path + '' + index}
+                content={img.source_path}
+                data-object={img}
+                onClick={(e) => handlePDFLinkClick(e, img)}
+                cssClasses="ml-0 cursor-pointer  break-keep"
+              />
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
   const {
     theme,
     currentResource,
     llmModels,
-    chatLoaded, setChatLoaded,
+    chatLoaded,
     selectedCategory,
     fromChat, setFromChat,
     isFoundationLlm,
@@ -42,18 +126,19 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     selectedNote,
     setSelectedNote,
     showNoteModal,
-    sourcesWithExclusive,
     categoryOptions,
     setNoteIndex,
     setShowNoteModal,
     displayedSources, setShowEditor,
-    selectedSources,
-    selectedAll,
     isNewNote,
     setIsNewNote,
     languageOptions, setIsManualNote,
     setShowNoteDetails,
     setActiveView,
+    currentChat,
+    chatHistory,
+    setChatHistory,
+    setCurrentChat
   } = useContext(MainContext);
 
   const { token } = useAuth();
@@ -64,14 +149,19 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   const chatAppRef = useRef();
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(currentChat?.messages || []);
+  const [responseIndex, setResponseIndex] = useState(currentChat?.messages?.length - 1 || -1);
+  useEffect(() => {
+    setMessages(currentChat?.messages || []);
+    setResponseIndex(currentChat?.messages?.length - 1 || -1);
+  }, [currentChat]);
   const [input, setInput] = useState("");
 
   // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
   const [originalQueries, setOriginalQueries] = useState([]);
   const [originalResponses, setOriginalResponses] = useState([]);
-  const [responseIndex, setResponseIndex] = useState(-1);
+
 
 
   const [existingNote, setExistingNote] = useState(0);
@@ -85,7 +175,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   // For LLM Model Selction from the popup modal
   const [selectedLLMs, setSelectedLLMs] = useState([llmModels[0].value]); // State to track multiple selected LLMs
-  const [showLLMModal, setShowLLMModal] = useState(false);
 
   useEffect(() => {
     if (messages?.length > 0) {// chatAppRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -132,8 +221,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     }
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
-  const categoryValues = categoryOptions.map((option) => option.value);
-
   let noteQuestion = useRef('');
   const [isFetchingRefs, setIsFetchingRefs] = useState(false);
   const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
@@ -159,7 +246,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       userMessage = data.translatedText;
     } else userMessage = input || message;
 
-    userMessage = userMessage.trim();
+    userMessage = userMessage?.trim();
 
     noteQuestion.current = userMessage;
 
@@ -169,7 +256,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setMessages([
       ...messages,
       { sender: "user", text: userMessage, models, question: userMessage },
-      { sender: "bot", text: "", models, question: userMessage },
+      { sender: "bot", text: "", models, question: userMessage, botText: "", refs: {} },
     ]);
     setResponseIndex((responseIndex) => responseIndex + 2);
 
@@ -198,6 +285,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       });
       setShowCursor(false);
     } else {
+
       // add or remove embeddings from VS
       if (!displayedSources?.every(item => item?.is_selected === false)) {
         await makeApiRequest(
@@ -208,6 +296,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           })
         );
       }
+
 
       // try {
       //   const data = await makeApiRequest(
@@ -226,19 +315,22 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
 
       let sessionID = null; // Variable to store the session ID
-      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_selected) ? false : true}`, {
+      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_selected) ? false : true}`, {
         headers: {
           Authorization: `Bearer ${token}`,
+          SessionId: currentChat?.sessionId
         },
         heartbeatTimeout: 75000,
       });
       // const eventSource = new EventSource(
       // `${API_ENDPOINT}/message/${encodeURIComponent(
       //   selectedCategory
-      // )}/${encodeURIComponent(userMessage.replace(/\n/g, ' '))}/${encodeURIComponent(
+      // )}/${encodeURIComponent(usermessage?.replace(/\n/g, ' '))}/${encodeURIComponent(
       //     selectedLLMs[0]
       //   )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       // );
+
+
 
       eventSource.onmessage = async function (event) {
         const data = JSON.parse(event.data);
@@ -258,6 +350,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
               newMessages[lastMessageIndex] = {
                 ...newMessages[lastMessageIndex],
                 text: botMessage,
+                botText: botMessage,
               };
             }
             return newMessages;
@@ -265,7 +358,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         } else if (data.type === "REFERENCES") {
           // extract the last part of the streaming and call fetchReferences
           // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
-          fetchReferences(botMessage, data.data);
+          fetchReferences(userMessage, models, botMessage, data.data);
           setIsFetchingRefs(false);
         }
       };
@@ -299,8 +392,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
 
   };
-  const fetchReferences = async (botMessage, data) => {
-
+  const fetchReferences = async (userMessage, models, botMessage, data) => {
     // const response = await axios.get(`${API_ENDPOINT}/references`);
     // const data = response.data;
     noteReferences.videoLinks = [];
@@ -314,6 +406,65 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       pdfLinks: [],
       imageLinks: [],
     };
+    setChatHistory((prevChatHistory) => {
+      const chatIndex = prevChatHistory.findIndex(chat => chat.sessionId === currentChat?.sessionId);
+      if (chatIndex === -1) {
+        let now = new Date();
+        const newChatEntry = {
+          sessionId: currentChat?.sessionId,
+          title: currentChat?.title || "New Chat " + (prevChatHistory.length + 1),
+          userId: currentChat?.userId || null,
+          messages: [{ sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }],
+          created_at: currentChat?.created_at || now,
+          updated_at: currentChat?.updated_at || now,
+        };
+        return [newChatEntry, ...prevChatHistory];
+      } else {
+        const updatedChatHistory = [...prevChatHistory];
+        const chatToUpdate = updatedChatHistory[chatIndex];
+        chatToUpdate.messages = [...chatToUpdate.messages, { sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }];
+
+        updatedChatHistory[chatIndex] = chatToUpdate;
+        return updatedChatHistory;
+      }
+    });
+
+    // update currentChat and chatHistory
+    // setCurrentChat(prev => ({
+    //   ...prev,
+    //   messages: prev.messages.map((message, index) => {
+    //     if (index === responseIndex) {
+    //       return {
+    //         ...message,
+    //         botText: botMessage,
+    //         text: botMessage,
+    //         refs,
+    //       };
+    //     }
+    //     return message;
+    //   })
+    // }));
+    // setChatHistory(prevChatHistory => {
+    //   return prevChatHistory.map(chat => {
+    //     if (chat.sessionId === currentChat.sessionId) {
+    //       return {
+    //         ...chat,
+    //         messages: chat.messages.map((message, index) => {
+    //           if (index === responseIndex) {
+    //             return {
+    //               ...message,
+    //               botText: botMessage,
+    //               text: botMessage,
+    //               refs,
+    //             };
+    //           }
+    //           return message;
+    //         })
+    //       };
+    //     }
+    //     return chat;
+    //   });
+    // });
 
     const videoLinks = data.video_references.map((video) => {
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
@@ -438,6 +589,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         newMessages[lastMessageIndex] = {
           ...newMessages[lastMessageIndex],
           refs,
+          // botText: selectedLanguage == "en" ? data.bot_message : newData.translatedText,
           text: botMessage,
         };
       }
@@ -467,14 +619,14 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
       setMessages(
         messages.map((message, index) => {
-          if (message.sender === "user") {
+          if (message?.sender === "user") {
             const updatedMessage = {
               ...message,
               text: data.translated_queries[userIndex],
             };
             userIndex++;
             return updatedMessage;
-          } else if (message.sender === "bot") {
+          } else if (message?.sender === "bot") {
             const botMessage = (
               <div key={index}>
                 <div className="coorg-response">
@@ -552,7 +704,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
             const updatedMessage = {
               ...message,
-              references: message.references,
+              references: message?.references,
               text: botMessage,
             };
             botIndex++;
@@ -744,30 +896,20 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setIsUploadingVisionImg(false);
   };
 
-
-  const selectLLMModels = (event) => {
-    event.preventDefault();
-    setShowLLMModal(true);
-  };
-
-  const onHideLLMModal = () => {
-    setShowLLMModal(false);
-  };
-
-  const handleRepeatQuestion = (message, models, isRepeated = true) => {
+  const handleRepeatQuestion = (message, model, isRepeated = true) => {
     // setInput(message);
-    if (models[0] === 'gpt-4-vision') {
+    if (model === 'gpt-4-vision') {
       handleVisionUpload(null, message);
       return;
     }
 
-    if (models[0] === 'dall-e-3') {
-      sendMessage(message, models);
+    if (model === 'dall-e-3') {
+      sendMessage(message, model);
       return;
     }
 
-    if (models[0] !== 'dall-e-3' && models[0] !== 'gpt-4-vision') {
-      sendMessage(message, models, isRepeated);
+    if (model !== 'dall-e-3' && model !== 'gpt-4-vision') {
+      sendMessage(message, model, isRepeated);
       return;
     }
   };
@@ -789,7 +931,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   };
 
   return (
-    <article className="relative flex flex-col flex-1 mb-3 h-full overflow-y-auto max-w-[650px] mx-auto">
+    <article className="relative flex flex-col flex-1 mb-3 h-full max-w-[650px] mx-auto ">
       <section className={`flex flex-wrap items-center gap-3 ${messages.length > 0 && 'mb-3'}`}>
         {
           notes.map((note, i) => {
@@ -827,49 +969,13 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           className="modal"
         /> */}
       </section>
-
-      {/* <section className="flex items-center gap-1 mx-2 my-3 rounded-md user-select-none"> */}
-      {/* <span
-          className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-            }`}
-        >
-          Selected models:{" "}
-        </span>
-        <div
-          className={`flex items-center divide-x  ${theme === "light" ? "divide-textColor-100" : "divide-textColor-300"
-            }`}
-        >
-          {selectedLLMs.length === 0 ? (
-            <span
-              className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                }`}
-            >
-              none
-            </span>
-          ) : (
-            selectedLLMs.map((model, index) => (
-              <span
-                key={index}
-                className={`text-xs ${theme === "light"
-                  ? "text-textColor-300"
-                  : "text-textColor-200"
-                  }`}
-              >
-                {model.toUpperCase()}{" "}
-              </span>
-            ))
-          )}
-        </div> */}
-      {/* <BaseHeading text={`Selected models: ${selectedLLMs[0] || "None"}`} /> */}
-      {/* </section> */}
-
       {/* <div className="flex items-center flex-1 gap-3"> */}
       {messages?.length > 0 && <section
-        className={`copilot-chat-container flex flex-col h-[700px] gap-3 overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
+        className={`copilot-chat-container flex flex-col h-[700px] gap-3 overflow-x-hidden overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
           }`}
         ref={chatAppRef}
       >
-        {chatLoaded && (
+        {
           messages.map((message, index) =>
             index % 2 == 0 ? (
               <div key={index} className="my-2 break-all w-fit">
@@ -885,7 +991,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             <div
                               className="cursor-pointer"
                               onClick={() => {
-                                handleVisionUpload(message.text.images, message.text.query);
+                                handleVisionUpload(message?.text?.images, message?.text?.query);
                               }}
                             >
                               <ReplayOutlinedIcon />
@@ -893,17 +999,17 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                           </div>
                           <div>
                             {
-                              message.text.imgs_list.map((img, index) => {
+                              message?.text?.imgs_list.map((img, index) => {
                                 return (
                                   <img src={URL.createObjectURL(img)} key={img.name} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
                                 );
                               })
                             }
-                            <p className="break-words">{message.text.query}</p>
-                            {/* <p>{message.text}</p> */}
+                            <p className="break-words">{message?.text?.query}</p>
+                            {/* <p>{message?.text}</p> */}
                           </div>
                           {isLightboxOpen && (
-                            <PreviewModal closeLightbox={closeLightbox} content={URL.createObjectURL(message.text.imgs_list[imagePreviewIndex])} />
+                            <PreviewModal closeLightbox={closeLightbox} content={URL.createObjectURL(message?.text?.imgs_list[imagePreviewIndex])} />
                           )}
                         </>
                       ) : (
@@ -913,13 +1019,13 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             <div
                               className="cursor-pointer"
                               onClick={() => {
-                                handleRepeatQuestion(message.text, message?.models, true);
+                                handleRepeatQuestion(message?.text, message?.model, true);
                               }}
                             >
                               <ReplayOutlinedIcon />
                             </div>
                           </div>
-                          <div>{message.text.startsWith('blob') ? (<img src={message.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0" dangerouslySetInnerHTML={{ __html: message.text.replace(/\n/g, '<br>') }}></p>)}</div>
+                          <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0" dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
                         </>
                       )
                   }
@@ -934,7 +1040,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                       : "bg-background_workspace"
                       } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
                   >
-                    {message?.models?.includes("dall-e-3") && message.img ? (
+                    {message?.models?.includes("dall-e-3") && message?.img ? (
                       <>
                         <b
                           className={`user-select-none ${theme === "light"
@@ -946,7 +1052,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                         </b>
                         <div className="flex flex-col flex-1">
                           <img
-                            src={message.img}
+                            src={message?.img}
                             alt="Image is Loading ..."
                             onClick={openLightbox}
                             className="flex-1 mx-auto cursor-pointer"
@@ -960,11 +1066,11 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             >
                               <AddOptionsModal
                                 models={["dall-e-3"]}
-                                text={message.img}
+                                text={message?.img}
                                 addToNewNote={addToNewNote}
                                 addToExistingNote={addToExistingNote}
                                 setExistingNote={setExistingNote}
-                                question={message.question}
+                                question={message?.question}
                                 existingNote={existingNote}
                                 onHide={onHide}
                                 isNewNote={isNewNote}
@@ -996,7 +1102,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             </span>
                           </div>
                           {isLightboxOpen && (
-                            <PreviewModal closeLightbox={closeLightbox} content={message.img} />
+                            <PreviewModal closeLightbox={closeLightbox} content={message?.img} />
                           )}
                         </div>
                       </>
@@ -1016,7 +1122,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                             : "text-textColor-100"
                             } break-words`}
                         >
-                          {message.text}
+                          <ChatMessage text={message?.botText} refs={message?.refs} />
                         </div>
                         {showCursor && index == responseIndex ? (
                           <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
@@ -1028,27 +1134,24 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                           (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                         }
 
-                        {/* <div className="flex flex-wrap items-center gap-1">
-                          <span
-                            className={`text-xs ${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-200"
-                              }`}
-                          >
-                            Models:{" "}
-                          </span>
-                          {message?.models?.map((item, index) => (
-                            <span
-                              key={index}
-                              className={`text-xs divide-x ${theme === "light"
-                                ? "text-textColor-300"
-                                : "text-textColor-200"
-                                }`}
-                            >
-                              {item.toUpperCase()}
-                            </span>
-                          ))}
-                        </div> */}
+                        <AddOptionsModal
+                          text={
+                            message?.botText
+                          }
+                          addToNewNote={addToNewNote}
+                          refs={message?.refs}
+                          addToExistingNote={addToExistingNote}
+                          setExistingNote={setExistingNote}
+                          question={noteQuestion.current}
+                          existingNote={existingNote}
+                          onHide={onHide}
+                          isNewNote={isNewNote}
+                          setShowNoteModal={setShowNoteModal}
+                          updateSelectedNote={setSelectedNote}
+                          showNoteModal={showNoteModal}
+                          selectedNote={selectedNote}
+                          notes={notes}
+                        />
                       </>
                     )}
                   </div>
@@ -1056,29 +1159,21 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
               </div>
             )
           )
-        )
-          // : (
-          //   <div className="flex flex-col items-center justify-center h-full loading-container">
-          //     <div className="chat-spinner">
-          //       <LoadingSpinner />
-          //     </div>
-          //     <p className="text-sm text-center loading-text text-textColor-200">
-          //       Loading Knowledgebase...
-          //     </p>
-          //   </div>
-          // )  
+          // )
         }
       </section>}
 
       {/* </div> */}
-      <section className="flex items-center gap-2 copilot-chat-container input-area max-w-[1000px] ">
+      <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
+        <ChatHistory />
+        {/* <ChatHistory /> */}
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div className={`flex items-center w-full mt-3 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
+            <div className={`flex items-center w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
               <input
                 placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
                 value={input}

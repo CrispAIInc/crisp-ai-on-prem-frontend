@@ -1422,7 +1422,7 @@ const ChatPanel = () => {
                                       className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
                                       onClick={(event) => { event.stopPropagation(); handleOpenFilenameUpdateModal(event, reel); }}
                                     />
-                                    {isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                    {isReelDeleting ? <LoadingSpinner isSmall isDeleting /> : <DeleteIcon
                                       onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
                                       className="text-red-400 cursor-pointer"
                                     />}

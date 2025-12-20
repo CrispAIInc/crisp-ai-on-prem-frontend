@@ -1310,7 +1310,7 @@ import SourceExplorer from "../SourceExplorer";
 import Modal from 'react-bootstrap/Modal';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import { Checkbox } from "@mui/material";
+import { Checkbox, Drawer } from "@mui/material";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { MainContext } from "../../contexts/mainContext";
@@ -1328,12 +1328,11 @@ import useAuth from '../../hooks/useAuth';
 import GsFile from '../GsFile';
 import { AuthContext } from '../../contexts/authContext';
 import useResources from '../../hooks/useResources';
-import UploadToast from '../UploadToast';
-import ErrorToast from '../ErrorToast';
-import SuccessToast from '../SuccessToast';
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
 import { IndexModal } from '../IndexModal';
 import socket from "../../config/socket";
 import AnimatedText from '../AnimatedText';
+import ChatHistoryList from '../ChatHistoryList';
 
 // const socket = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000");
 
@@ -2417,6 +2416,14 @@ const ContentSection = ({
     const [isProgressStarted, setIsProgressStarted] = useState(false);
     const [progressUpdateCount, setProgressUpdateCount] = useState(0);
 
+    const [isChatHistoryOpen, setIsChatHistoryOpen] = useState(false);
+    const handleOpenChatHistory = () => {
+        setIsChatHistoryOpen(true);
+    };
+    const handleCloseChatHistory = () => {
+        setIsChatHistoryOpen(false);
+    };
+
     return (
         <>
             {/* this is where i show the list of displayedSources */}
@@ -2445,55 +2452,53 @@ const ContentSection = ({
  <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Home</span>
  </div> */}
                         {/* Ingestion */}
-                        <div className="flex flex-col justify-start gap-2 mb-1">
-                            {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Understanding</span> */}
-                            <div className="flex flex-wrap items-center gap-0">
-                                <div
-                                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={() => handleAddModal(true)}
-                                >
-                                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
-
-                                </div>
-
-                                {/* Test WebSocket Button - Remove this in production */}
-                                {/* <div
-                                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                    onClick={testWebSocketConnection}
-                                >
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Test WS</span>
-                                </div> */}
+                        {/* <div className="flex flex-col justify-start gap-2 mb-1"> */}
+                        <div className="flex flex-col gap-0">
+                            {/* <div className="flex flex-wrap items-center gap-0"> */}
+                            <div
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={() => handleAddModal(true)}
+                            >
+                                <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
 
                             </div>
-                        </div>
-                        {/* mrag */}
-                        {/* <div className="flex flex-col justify-start gap-2 mb-2"> */}
-                        {/* <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Story Generation</span> */}
-                        {/* <div className="flex flex-wrap items-center"> */}
-                        <div
-                            className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                            onClick={handleExploreSources}
-                        >
-                            <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                            <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
-                        </div>
-                        <div className="global-search">
+                            {/* </div> */}
+                            {/* </div> */}
                             <div
-                                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={handleExploreSources}
+                            >
+                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
+                            </div>
+                            {/* <div className="global-search"> */}
+                            <div
+                                className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={() => setIsSearching(!isSearching)}
                             >
                                 <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
                             </div>
+                            {
+                                isSearching && (
+                                    <div className="flex items-center gap-2">
+                                        <SearchSection chatLoaded={chatLoaded} className='flex-1' />
+                                    </div>
+                                )
+                            }
+                            {/* <div
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={handleOpenChatHistory}
+                            >
+                                <QuestionAnswerOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Chat history</span>
+                            </div> */}
                         </div>
-                        {
-                            isSearching && (
-                                <div className="flex items-center gap-2">
-                                    <SearchSection chatLoaded={chatLoaded} className='flex-1' />
-                                </div>
-                            )
-                        }
+                        {/* </div> */}
+                        <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="left" variant="persistent" open={isChatHistoryOpen} onClose={handleCloseChatHistory}>
+                            <ChatHistoryList closeChatHistory={handleCloseChatHistory} />
+                        </Drawer>
                     </div>
                     {/* </div> */}
                     {/* Settings */}

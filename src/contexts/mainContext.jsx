@@ -1,4 +1,4 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 import makeApiRequest from "../api";
 
@@ -6,11 +6,13 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import useResources from '../hooks/useResources';
+import { AuthContext } from './authContext';
+import { generateRandomId, pick } from '../utils';
 
 export const MainContext = createContext({});
 
 export default function MainProvider({ children, theme, setTheme }) {
-
+    const { user, setUser } = useContext(AuthContext);
     const [categoryOptions, setCategoryOptions] = useState([]);
     const { getIndexes } = useResources({ setCategoryOptions });
 
@@ -35,6 +37,8 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [selectedFormat, setSelectedFormat] = useState("all");
 
     const [sourcesTobeCommited, setSourcesTobeCommited] = useState([]); // Sources to be commited to the Knowledge Base
+
+
 
     // const categoryOptions = [
     //   { value: "all", label: "All" },
@@ -1095,8 +1099,57 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [reels, setReels] = useState([]);
     // const [user, setUser] = useState(null);
+
+    const [chatHistory, setChatHistory] = useState([]);
+    const [currentChat, setCurrentChat] = useState([]);
+    useEffect(() => {
+        let now = new Date();
+        setCurrentChat({ sessionId: generateRandomId(), title: `New Chat ${chatHistory.length + 1}`, userId: user?.userId, messages: [], created_at: now, updated_at: now });
+    }, []);
+    // useEffect(() => {
+    //     async function initializeChatSession() {
+    //         try {
+    //             const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
+    //             if (success) {
+    //                 // Handle new chat creation logic here
+    //                 setCurrentChat({ sessionId, title, userId: user?.userId, messages: messages || [], created_at: new Date(), updated_at: new Date() });
+    //             } else {
+    //                 throw new Error('Failed to create new chat');
+    //             }
+    //         } catch (error) {
+    //             console.log(error?.message);
+    //         }
+    //     }
+
+    //     initializeChatSession();
+    // }, []);
+    useEffect(() => {
+        async function getChatHistory() {
+            try {
+                const { chat_history } = await makeApiRequest("/chat-history", "GET");
+                setChatHistory(chat_history);
+                // setCurrentChat(chat_history[0] || []);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getChatHistory();
+    }, []);
+
+    useEffect(() => {
+        if (Array.isArray(currentChat)) {
+            workspaceContainer.current.scrollTo({
+                top: 0,
+                behavior: "smooth", // Enables smooth scrolling
+            });
+        }
+    }, [currentChat]);
+
     // create value object with all the states
     const value = {
+        chatHistory, setChatHistory,
+        currentChat, setCurrentChat,
         reels, setReels,
         persistedUploadedFiles, setPersistedUploadedFiles,
         // user, setUser,

@@ -1,9 +1,12 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import makeApiRequest from '../api';
+import { pick } from '../utils';
 
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
     const [user, setUser] = useState({
+        userId: "",
         username: "",
         firstName: "",
         lastName: "",
