@@ -20,6 +20,7 @@ import SettingsProvider from './contexts/settingsContext.jsx';
 import VerifyAccount from './components/VerifyAccount';
 import AuthRoute from './components/Auth/AuthRoute.jsx';
 import ProjectsPage from './pages/ProjectsPage.jsx';
+import ProjectsProvider from './contexts/projectsContext.jsx';
 
 
 function App() {
@@ -68,7 +69,9 @@ function App() {
 
             <Route path="/projects" element={
               <PrivateRoute>
-                <ProjectsPage />
+                <ProjectsProvider>
+                  <ProjectsPage />
+                </ProjectsProvider>
               </PrivateRoute>
             } />
 
