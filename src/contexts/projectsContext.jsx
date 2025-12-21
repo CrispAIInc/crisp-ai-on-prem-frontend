@@ -14,7 +14,9 @@ export default function ProjectsProvider({ children, value }) {
         }
 
         fetchProjects();
-    }, [])
+    }, []);
+
+    const value = { projects, setProjects };
 
   return (
     <ProjectsContext.Provider value={value}>
