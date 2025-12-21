@@ -3,7 +3,7 @@ import makeApiRequest from '../api';
 
 const ProjectsContext = createContext({});
 
-export default function ProjectsProvider({ children, value }) {
+export default function ProjectsProvider({ children }) {
 
     const [projects, setProjects] = useState([]);
 
