@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import { MainContext } from '../../contexts/mainContext';
 
 export default function ActionMenu({ actions }) {
+    const {theme} = useContext(MainContext)
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -16,11 +18,12 @@ export default function ActionMenu({ actions }) {
   }, []);
 
   return (
-    <div className="relative" ref={ref}>
+    // <div className="relative" ref={ref}>
+        <div ref={ref} className={` relative flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
       <button onClick={() => setOpen((p) => !p)}>⋮</button>
 
       {open && (
-        <div className="absolute right-0 w-40 mt-2 bg-white rounded shadow">
+        <div className="absolute left-0 w-40 mt-2 bg-white rounded shadow top-full">
           {actions.map((action) => (
             <button
               key={action.label}

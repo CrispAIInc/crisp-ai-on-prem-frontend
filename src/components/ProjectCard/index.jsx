@@ -1,7 +1,10 @@
 import React from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { formatReadableDate } from '../../utils';
+import ActionMenu from '../ActionMenu';
 
 const ProjectCard = ({project}) => {
   return (
@@ -12,7 +15,21 @@ const ProjectCard = ({project}) => {
         <div className="relative z-50 flex flex-col justify-between h-full ">
             {/* top showcase */}
             <div className="flex items-center justify-between ">
-                <MoreVertIcon className="text-white" />
+                {/* <MoreVertIcon className="text-white" /> */}
+                <ActionMenu
+                actions={[
+                    {
+                        label: "Edit title",
+                        icon: <EditOutlinedIcon />,
+                        onClick: () => console.log("chat.id"),
+                    },
+                    {
+                        label: "Delete",
+                        icon: <DeleteOutlineOutlinedIcon />,
+                        onClick: () => console.log("chat.id"),
+                    },
+                ]}
+                />
                 <ArrowForwardIosIcon  className="text-white" />
             </div>
             {/* bottom showcase */}
