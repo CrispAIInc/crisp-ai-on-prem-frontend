@@ -13,10 +13,12 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     async (config) => {
         const token = await getJwt();
+        console.log("token valuee: ", token)
         // add Authorization header if token is available
         // const token = localStorage.getItem(TOKEN_NAME);
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
+            console.log("After headers:", config.headers);
         } else {
             delete config.headers['Authorization'];
         }
@@ -33,7 +35,7 @@ axiosInstance.interceptors.request.use(
  * Generic function for calling the backend API
  */
 
-const makeApiRequest = async (endpoint, method = 'get', data = null, headers = { 'Content-Type': 'application/json' }, config = {}) => {
+const makeApiRequest = async (endpoint, method = 'get', data = null, config = {}) => {
 
     try {
         // add withCredentials
@@ -42,7 +44,6 @@ const makeApiRequest = async (endpoint, method = 'get', data = null, headers = {
             url: endpoint,
             method,
             data,
-            headers,
             ...config,
         });
         return response.data;

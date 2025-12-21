@@ -2,6 +2,7 @@ import React, { useContext, useMemo, useState } from 'react'
 import ProjectCard from '../components/ProjectCard';
 import { ProjectsContext } from '../contexts/projectsContext.jsx';
 import { sortByDate } from '../utils.js';
+import ProjectsHeader from '../components/ProjectsHeader/index.jsx';
 
 const ProjectsPage = () => {
     const {projects} = useContext(ProjectsContext);
@@ -15,6 +16,7 @@ const ProjectsPage = () => {
 
     return (
         <div className="p-4">
+            <ProjectsHeader />
             {/* recent projects */}
             <h2 className="mb-4 text-2xl font-bold text-gradient-x">Recent Projects</h2>
             <div className="flex flex-wrap items-center gap-3 mb-6 overflow-x-auto">

@@ -70,7 +70,7 @@ function App() {
             <Route path="/projects" element={
               <PrivateRoute>
                 <ProjectsProvider>
-                  <ProjectsPage />
+                    <ProjectsPage />
                 </ProjectsProvider>
               </PrivateRoute>
             } />
