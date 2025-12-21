@@ -12,6 +12,8 @@ export default function ProjectsProvider({ children, value }) {
             const projects = await makeApiRequest('/projects')
             console.log(projects);
         }
+
+        fetchProjects();
     }, [])
 
   return (
