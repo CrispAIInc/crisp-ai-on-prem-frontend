@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import makeApiRequest from '../api';
 
-const ProjectsContext = createContext({});
+export const ProjectsContext = createContext({});
 
 export default function ProjectsProvider({ children }) {
 
@@ -9,8 +9,8 @@ export default function ProjectsProvider({ children }) {
 
     useEffect(() => {
         async function fetchProjects() {
-            const projects = await makeApiRequest('/projects')
-            console.log(projects);
+            const {projects} = await makeApiRequest('/projects')
+            setProjects(projects);
         }
 
         fetchProjects();
