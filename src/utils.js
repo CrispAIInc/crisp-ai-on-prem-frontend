@@ -382,3 +382,18 @@ export function generateRandomId(length = 10) {
 
     return result;
 }
+
+export function sortByDate(array, dateKey, order = "asc") {
+  if (!Array.isArray(array)) return [];
+
+  return [...array].sort((a, b) => {
+    const dateA = new Date(a[dateKey]).getTime();
+    const dateB = new Date(b[dateKey]).getTime();
+
+    if (isNaN(dateA) || isNaN(dateB)) return 0;
+
+    return order === "asc"
+      ? dateA - dateB
+      : dateB - dateA;
+  });
+}
