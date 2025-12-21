@@ -26,7 +26,7 @@ const ProjectsPage = () => {
             </div>
 
             {/* all projects */}
-            <h2 className="mb-4 text-2xl font-bold text-gradient-x">All Projects</h2>
+            <h2 className="mb-4 text-2xl font-bold text-gradient-x">All Projects ({projectCount})</h2>
             {
                 sortedProjects.map((project) => (
                     <ProjectCard key={project.project_id} project={project} />
