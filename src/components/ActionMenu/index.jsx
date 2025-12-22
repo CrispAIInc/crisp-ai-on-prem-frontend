@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { MainContext } from '../../contexts/mainContext';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 
 export default function ActionMenu({ actions }) {
     const {theme} = useContext(MainContext)
@@ -19,8 +20,12 @@ export default function ActionMenu({ actions }) {
 
   return (
     // <div className="relative" ref={ref}>
-        <div ref={ref} className={` relative flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
-      <button onClick={() => setOpen((p) => !p)}>⋮</button>
+        <div ref={ref} className={` relative flex flex-col p-1 rounded-md shadow-lg cursor-pointer`} onClick={(e) => {
+            e.stopPropagation();
+            setOpen((p) => !p)
+        }}>
+      {/* <button onClick={() => setOpen((p) => !p)}>⋮</button> */}
+      <MoreVertOutlinedIcon className="text-white" /> 
 
       {open && (
         <div className="absolute left-0 w-40 mt-2 bg-white rounded shadow top-full">

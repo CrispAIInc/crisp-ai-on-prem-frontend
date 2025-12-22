@@ -91,7 +91,7 @@ export default function MainWorkspacePage() {
             </Helmet>
             <div className="!h-full">
                 {/* <MainWorkspace /> */}
-                {currentProject ? <MainWorkspace currentProject={currentProject} /> : <ProjectsPage setCurrentProject={setCurrentProject} projects={projects} />}
+                {currentProject ? <MainWorkspace currentProject={currentProject} /> : <ProjectsPage setCurrentProject={setCurrentProject} projects={projects} setProjects={setProjects} />}
             </div>
         </>
     );

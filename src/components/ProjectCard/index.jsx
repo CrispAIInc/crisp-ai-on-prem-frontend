@@ -14,14 +14,14 @@ import LoadingSpinner from '../LoadingSpinner';
 
 
 
-const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCurrentProject }) => {
-    const [newProjectName, setNewProjectName] = useState(currentProject ? currentProject.name : "");
+const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCurrentProject, setProjects }) => {
+    const [newProjectName, setNewProjectName] = useState(project.name);
     const {theme} = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (currentProject) {
-            setNewProjectName(currentProject.project_name);
+            setNewProjectName(currentProject.name);
         }
     }, [currentProject]);
 
@@ -32,10 +32,11 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCur
             await makeApiRequest(`/projects`, 'PUT', {
                 name: newProjectName,
             });
-            setCurrentProject({
-                ...currentProject,
-                name: newProjectName,
-            });
+            // setCurrentProject({
+            //     ...currentProject,
+            //     name: newProjectName,
+            // });
+            setProjects((prevProjects) => prevProjects.map((proj) => proj.project_id === project.project_id ? { ...proj, name: newProjectName, updated_at: new Date() } : proj));
             onHide();
         } catch (error) {
             console.error("Error updating project name:", error);
@@ -100,8 +101,8 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCur
     );
 }
 
-const ProjectCard = ({project, setCurrentProject}) => {
-    const {setProjects} = useContext(ProjectsContext);
+const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) => {
+    // const {setProjects} = useContext(ProjectsContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const deleteProject = async (projectId) => {
@@ -119,7 +120,7 @@ const ProjectCard = ({project, setCurrentProject}) => {
     }
 
   return (
-    <div style={{background: project.thumbnail ? `url('${project.thumbnail}')` : 'url("/app-logo.svg")'}} className={`!bg-cover !bg-center relative  border rounded-2xl p-3 w-80 h-48 ${project.thumbnail ? `` : 'bg-[#1E1E1E]'}   shadow-lg transition-shadow duration-300 cursor-pointer`} onClick={() => setCurrentProject(project)}>
+    <div style={{background: project.thumbnail ? `url('${project.thumbnail}')` : 'url("/app-logo.svg")'}} className={`!bg-cover !bg-center relative  border rounded-2xl p-3 w-80 h-48 ${project.thumbnail ? `` : 'bg-[#1E1E1E]'}   shadow-lg transition-shadow duration-300 `}>
         {/* top to bottom gradient overlay */}
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent to-black rounded-2xl"></div>
 
@@ -144,20 +145,20 @@ const ProjectCard = ({project, setCurrentProject}) => {
                     },
                 ]}
                 />
-                <ArrowForwardIosIcon  className="text-white" />
+                <ArrowForwardIosIcon onClick={() => setCurrentProject(project)} className="text-white cursor-pointer" />
             </div>
             {/* bottom showcase */}
             <div className="font-semibold">
                 <h2 className="text-2xl font-semibold mb-2 !text-white line-clamp-2">{project.name}</h2>
                 <div className="flex flex-wrap items-center gap-1">
-                    <p className="text-[10px] text-white">{formatReadableDate(project.updated_at)} ~ </p>
+                    <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
                     {project.selectedSources && <p className="text-[10px] text-white">{project.selectedSources} Sources.</p>}
                 </div>
             </div>
         </div>
         {
-                isModalOpen && <ProjectNameUpdaterModal show={isModalOpen} onHide={setIsModalOpen} project={project} />
-            }
+            isModalOpen && <ProjectNameUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} project={project} setProjects={setProjects} />
+        }
     </div>
   )
 }

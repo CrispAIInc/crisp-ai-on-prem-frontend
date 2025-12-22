@@ -11,7 +11,7 @@ import makeApiRequest from '../api/index.js';
 
 
 
-const ProjectsPage = ({projects, setCurrentProject}) => {
+const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
     // const {projects} = useContext(ProjectsContext);
 
     const [sortOrder, setSortOrder] = useState('asc')
@@ -43,7 +43,7 @@ const ProjectsPage = ({projects, setCurrentProject}) => {
             <div className="flex flex-wrap items-center gap-3 mb-16 overflow-x-auto">
                 {
                     sortedProjects.slice(0, 3).map((project) => (
-                        <ProjectCard key={project.project_id} project={project} />
+                        <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                     ))
                 }
             </div>
@@ -72,7 +72,7 @@ const ProjectsPage = ({projects, setCurrentProject}) => {
             </div>
             {
                 sortedProjects.map((project) => (
-                    <ProjectCard key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                    <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                 ))
             }
             </div>
