@@ -22,11 +22,6 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
     const projectCount = sortedProjects.length;
     
     const [status, setStatus] = useState("");
-
-    
-
-
-
     return (
         <div className="p-4">
             <ProjectsHeader />
@@ -50,7 +45,7 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
 
                 {/* all projects */}
                 <div className="flex items-center justify-between mt-6">
-                    <h2 className="text-xl font-bold text-gradient-x">All Projects ({projectCount})</h2>
+                    <h2 className="text-xl font-bold text-gradient-x">{projectCount > 0 ? 'All' : 'Create your new Project'} Projects ({projectCount})</h2>
                     <div className="flex items-center gap-2">
                         {projectCount > 0 && <SelectDropdown
                             value={status}
