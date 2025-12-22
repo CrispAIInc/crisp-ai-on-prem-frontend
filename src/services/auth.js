@@ -29,6 +29,7 @@ onIdTokenChanged(auth, async (user) => {
 });
 export async function getJwt() {
     if (!auth.currentUser) {
+        console.log("no user")
         return null; // no user, no token
     }
     return await auth.currentUser.getIdToken();

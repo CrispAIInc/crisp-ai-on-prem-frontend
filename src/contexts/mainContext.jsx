@@ -1139,7 +1139,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     useEffect(() => {
         if (Array.isArray(currentChat)) {
-            workspaceContainer.current.scrollTo({
+            workspaceContainer?.current?.scrollTo({
                 top: 0,
                 behavior: "smooth", // Enables smooth scrolling
             });

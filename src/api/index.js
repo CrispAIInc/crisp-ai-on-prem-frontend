@@ -13,12 +13,11 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     async (config) => {
         const token = await getJwt();
-        console.log("token valuee: ", token)
         // add Authorization header if token is available
         // const token = localStorage.getItem(TOKEN_NAME);
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
-            console.log("After headers:", config.headers);
+            console.log(config.headers)
         } else {
             delete config.headers['Authorization'];
         }
@@ -35,15 +34,24 @@ axiosInstance.interceptors.request.use(
  * Generic function for calling the backend API
  */
 
-const makeApiRequest = async (endpoint, method = 'get', data = null, config = {}) => {
+const makeApiRequest = async (endpoint, method = 'get', data = null, headers = {'Content-Type': 'application/json'}, config = {}) => {
 
     try {
         // add withCredentials
         // config.withCredentials = true;
+        // const token = await getJwt();
+        // if (token) {
+        //     console.log("token", token)
+        //     headers = {...headers, 'Authorization': `Bearer ${token}`};
+        // } else {
+        //     delete headers['Authorization'];
+        // }
+        console.log("sending api req")
         const response = await axiosInstance({
             url: endpoint,
             method,
             data,
+            headers,
             ...config,
         });
         return response.data;

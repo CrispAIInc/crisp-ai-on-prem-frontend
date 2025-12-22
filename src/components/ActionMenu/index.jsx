@@ -27,8 +27,8 @@ export default function ActionMenu({ actions }) {
           {actions.map((action) => (
             <button
               key={action.label}
-              onClick={() => {
-                action.onClick();
+              onClick={(e) => {
+                action.onClick(e);
                 setOpen(false);
               }}
               className="flex items-center w-full gap-2 px-3 py-2 hover:bg-gray-100"

@@ -14,30 +14,28 @@ export default function AuthProvider({ children }) {
         emailVerified: false,
     });
 
-    const [authReady, setAuthReady] = useState(false);
-    useEffect(() => {
-      const getUserInfo = async () => {
-        try {
-          const data = await makeApiRequest("/me");
-          const userWithSpecificProperties = pick(data, ["firstName", "lastName", "email", "username"]);
-            setUser({
-              userId: data.user_id,
-              firstName: data?.display_name.split(" ")[0] ?? data.firstName,
-              lastName: data?.display_name.split(" ").slice(1).join(" ") ?? data.lastName,
-              ...userWithSpecificProperties,
-              emailVerified: data.email_verified,
-            });
-        } catch (error) {
-            console.error("Error fetching user info:", error);
-          } finally {
-          setAuthReady(true);
-        }
-      };
-      getUserInfo();
-    }, []);
+    // const [authReady, setAuthReady] = useState(false);
+    // useEffect(() => {
+    //   const getUserInfo = async () => {
+    //     try {
+    //       const data = await makeApiRequest("/me", "get");
+    //       const userWithSpecificProperties = pick(data, ["firstName", "lastName", "email", "username"]);
+    //         setUser({
+    //           userId: data.user_id,
+    //           firstName: data?.display_name.split(" ")[0] ?? data.firstName,
+    //           lastName: data?.display_name.split(" ").slice(1).join(" ") ?? data.lastName,
+    //           ...userWithSpecificProperties,
+    //           emailVerified: data.email_verified,
+    //         });
+    //     } catch (error) {
+    //         console.error("Error fetching user info:", error);
+    //       }
+    //   };
+    //   getUserInfo();
+    // }, []);
 
     return (
-        <AuthContext.Provider value={{ user, setUser, authReady }}>
+        <AuthContext.Provider value={{ user, setUser }}>
             {children}
         </AuthContext.Provider>
     );

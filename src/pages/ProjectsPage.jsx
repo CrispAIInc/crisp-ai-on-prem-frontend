@@ -1,11 +1,18 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import ProjectCard from '../components/ProjectCard';
 import { ProjectsContext } from '../contexts/projectsContext.jsx';
 import { sortByDate } from '../utils.js';
 import ProjectsHeader from '../components/ProjectsHeader/index.jsx';
+import AppDropdown from '../components/AppDropdown';
+import AppDropdownItem from "../components/AppDropdownItem"
+import SelectDropdown from '../components/SelectDropdown/index.jsx';
+import makeApiRequest from '../api/index.js';
 
-const ProjectsPage = () => {
-    const {projects} = useContext(ProjectsContext);
+
+
+
+const ProjectsPage = ({projects, setCurrentProject}) => {
+    // const {projects} = useContext(ProjectsContext);
 
     const [sortOrder, setSortOrder] = useState('asc')
     
@@ -14,12 +21,26 @@ const ProjectsPage = () => {
         return sortByDate(projects, 'created_at', sortOrder);
     }, [projects, sortOrder]);
 
+    const [status, setStatus] = useState("");
+
+    
+
+
+
     return (
         <div className="p-4">
             <ProjectsHeader />
-            {/* recent projects */}
-            <h2 className="mb-4 text-2xl font-bold text-gradient-x">Recent Projects</h2>
-            <div className="flex flex-wrap items-center gap-3 mb-6 overflow-x-auto">
+            <div className="
+                mx-auto px-4
+                sm:max-w-[540px]
+                md:max-w-[720px]
+                lg:max-w-[960px]
+                xl:max-w-[1140px]
+                2xl:max-w-[1320px]
+            ">
+                {/* recent projects */}
+            <h2 className="text-xl font-bold text-gradient-x">Recent Projects</h2>
+            <div className="flex flex-wrap items-center gap-3 mb-16 overflow-x-auto">
                 {
                     sortedProjects.slice(0, 3).map((project) => (
                         <ProjectCard key={project.project_id} project={project} />
@@ -28,12 +49,35 @@ const ProjectsPage = () => {
             </div>
 
             {/* all projects */}
-            <h2 className="mb-4 text-2xl font-bold text-gradient-x">All Projects ({projectCount})</h2>
+            <div className="flex items-center justify-between mt-6">
+                <h2 className="text-xl font-bold text-gradient-x">All Projects ({projectCount})</h2>
+                <div className="flex items-center gap-2">
+                    <SelectDropdown
+                        value={status}
+                        onChange={(val) => {
+                            setSortOrder(val);
+                            setStatus(val);
+                        }}
+                        placeholder="Sort by date"
+                        options={[
+                            { label: "recent to olders", value: "asc" },
+                            { label: "oldest to recent", value: "desc" },
+                        ]}
+                    />
+
+                    <button className="px-4 py-2 font-semibold text-white border rounded-full bg-gradient-to-r from-purple-500 to-indigo-600">
+                        New Project
+                    </button>
+                </div>  
+            </div>
             {
                 sortedProjects.map((project) => (
-                    <ProjectCard key={project.project_id} project={project} />
+                    <ProjectCard key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                 ))
             }
+            </div>
+
+            
         </div>
     )
 }
