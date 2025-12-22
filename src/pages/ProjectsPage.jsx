@@ -16,11 +16,11 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
 
     const [sortOrder, setSortOrder] = useState('asc')
     
-    const projectCount = projects.length;
     const sortedProjects = useMemo(() => {
         return sortByDate(projects, 'created_at', sortOrder);
     }, [projects, sortOrder]);
-
+    const projectCount = sortedProjects.length;
+    
     const [status, setStatus] = useState("");
 
     
@@ -39,42 +39,42 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
                 2xl:max-w-[1320px]
             ">
                 {/* recent projects */}
-            <h2 className="text-xl font-bold text-gradient-x">Recent Projects</h2>
-            <div className="flex flex-wrap items-center gap-3 mb-16 overflow-x-auto">
+                {projectCount > 0 && <><h2 className="text-xl font-bold text-gradient-x">Recent Projects</h2>
+                <div className="flex flex-wrap items-center gap-3 mb-16 overflow-x-auto">
+                    {
+                        sortedProjects.slice(0, 3).map((project) => (
+                            <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                        ))
+                    }
+                </div></>}
+
+                {/* all projects */}
+                <div className="flex items-center justify-between mt-6">
+                    <h2 className="text-xl font-bold text-gradient-x">All Projects ({projectCount})</h2>
+                    <div className="flex items-center gap-2">
+                        {projectCount > 0 && <SelectDropdown
+                            value={status}
+                            onChange={(val) => {
+                                setSortOrder(val);
+                                setStatus(val);
+                            }}
+                            placeholder="Sort by date"
+                            options={[
+                                { label: "recent to olders", value: "asc" },
+                                { label: "oldest to recent", value: "desc" },
+                            ]}
+                        />}
+
+                        <button className="px-4 py-2 font-semibold text-white border rounded-full bg-gradient-to-r from-purple-500 to-indigo-600">
+                            New Project
+                        </button>
+                    </div>  
+                </div>
                 {
-                    sortedProjects.slice(0, 3).map((project) => (
-                        <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                    sortedProjects.map((project) => (
+                        <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                     ))
                 }
-            </div>
-
-            {/* all projects */}
-            <div className="flex items-center justify-between mt-6">
-                <h2 className="text-xl font-bold text-gradient-x">All Projects ({projectCount})</h2>
-                <div className="flex items-center gap-2">
-                    <SelectDropdown
-                        value={status}
-                        onChange={(val) => {
-                            setSortOrder(val);
-                            setStatus(val);
-                        }}
-                        placeholder="Sort by date"
-                        options={[
-                            { label: "recent to olders", value: "asc" },
-                            { label: "oldest to recent", value: "desc" },
-                        ]}
-                    />
-
-                    <button className="px-4 py-2 font-semibold text-white border rounded-full bg-gradient-to-r from-purple-500 to-indigo-600">
-                        New Project
-                    </button>
-                </div>  
-            </div>
-            {
-                sortedProjects.map((project) => (
-                    <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
-                ))
-            }
             </div>
 
             
