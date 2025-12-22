@@ -104,11 +104,13 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCur
 const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) => {
     // const {setProjects} = useContext(ProjectsContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const deleteProject = async (projectId) => {
         try {
+            setIsDeleting(true);
+            axiosInstance.defaults.headers.common['ProjectId'] = project.project_id;
             const {message, success} = await makeApiRequest('/projects', "DELETE");
-
             if (success) {
                 setProjects((prevProjects) => prevProjects.filter((proj) => proj.project_id !== projectId));
             } else {
@@ -116,6 +118,8 @@ const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) 
             }
         } catch(e) {
             console.log(e)
+        } finally {
+            setIsDeleting(false);
         }
     }
 
@@ -140,7 +144,7 @@ const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) 
                     },
                     {
                         label: "Delete",
-                        icon: <DeleteOutlineOutlinedIcon />,
+                        icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
                         onClick: () => deleteProject(project.project_id),
                     },
                 ]}
