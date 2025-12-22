@@ -65,18 +65,18 @@ export default function MainWorkspacePage() {
         //   useLayoutEffect(() => {
         //         if (currentProject) {
         //             console.log("adding header")
-        //             axiosInstance.defaults.headers.common['project_id'] = currentProject.project_id;
+        //             axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
         //         }
         //     }, [currentProject]);
 
             useLayoutEffect(() => {
                 if (!currentProject) return;
 
-                axiosInstance.defaults.headers.common['project_id'] =
+                axiosInstance.defaults.headers.common['ProjectId'] =
                     currentProject.project_id;
 
                 return () => {
-                    delete axiosInstance.defaults.headers.common['project_id'];
+                    delete axiosInstance.defaults.headers.common['ProjectId'];
                 };
             }, [currentProject]);
 

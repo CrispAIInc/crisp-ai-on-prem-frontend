@@ -5,7 +5,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { formatReadableDate } from '../../utils';
 import ActionMenu from '../ActionMenu';
-import makeApiRequest from '../../api'
+import makeApiRequest, { axiosInstance } from '../../api'
 
 import { ProjectsContext } from "../../contexts/projectsContext";
 import Modal from 'react-bootstrap/Modal';
@@ -14,7 +14,7 @@ import LoadingSpinner from '../LoadingSpinner';
 
 
 
-const ProjectNameUpdaterModal = ({ show, onHide, currentProject, setCurrentProject }) => {
+const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState(currentProject ? currentProject.name : "");
     const {theme} = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +27,8 @@ const ProjectNameUpdaterModal = ({ show, onHide, currentProject, setCurrentProje
 
     const handleSave = async () => {
         try {
-            setIsLoading(true)
+            setIsLoading(true);
+            axiosInstance.defaults.headers.common['ProjectId'] = project.project_id;
             await makeApiRequest(`/projects`, 'PUT', {
                 name: newProjectName,
             });
@@ -155,7 +156,7 @@ const ProjectCard = ({project, setCurrentProject}) => {
             </div>
         </div>
         {
-                isModalOpen && <ProjectNameUpdaterModal show={isModalOpen} onHide={setIsModalOpen} />
+                isModalOpen && <ProjectNameUpdaterModal show={isModalOpen} onHide={setIsModalOpen} project={project} />
             }
     </div>
   )
