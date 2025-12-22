@@ -6,7 +6,7 @@ import ProjectsHeader from '../components/ProjectsHeader/index.jsx';
 import AppDropdown from '../components/AppDropdown';
 import AppDropdownItem from "../components/AppDropdownItem"
 import SelectDropdown from '../components/SelectDropdown/index.jsx';
-import makeApiRequest from '../api/index.js';
+import AddIcon from '@mui/icons-material/Add';
 
 
 
@@ -65,11 +65,20 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
                         </button>
                     </div>  
                 </div>
-                {
-                    sortedProjects.map((project) => (
-                        <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
-                    ))
-                }
+                <div className="flex items-center gap-3">
+                    <div className={`flex flex-col items-center justify-center  relative border rounded-2xl p-3 w-80 h-48 shadow-lg transition-shadow duration-300 `}>
+                            <div className="flex items-center justify-center mb-2 rounded-full cursor-pointer bg-purple-300/40 w-14 h-14">
+                                <AddIcon className="text-purple-500 cursor-pointer" fontSize="large" />
+                            </div>
+                            <h3 className="text-lg text-gradient-x">New Project</h3>
+                            <p className="text-sm text-center text-textColor-100">Start a new workspace, upload files and generate content.</p>
+                    </div>
+                    {
+                        sortedProjects.map((project) => (
+                            <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                        ))
+                    }
+                </div>
             </div>
 
             
