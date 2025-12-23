@@ -1296,6 +1296,7 @@
 
 // export default ContentSection;
 
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
@@ -2758,6 +2759,25 @@ const ContentSection = ({
                                             }`}
                                     />
                                     <span>Settings</span>
+                                </div>
+
+                                <div
+                                    className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-1
+                                            ${theme === "light"
+                                            ? "hover:bg-textColor-100/20"
+                                            : "text-textColor-100 hover:bg-slate-800/50"
+                                        }`}
+                                    onClick={() => {
+                                        setIsSettingsModalOpen(true);
+                                        setIsSettingsMenuOpen(false);
+                                        setIsSearching(false);
+                                    }}
+                                >
+                                    <CloseOutlinedIcon
+                                        className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
+                                            }`}
+                                    />
+                                    <span>Exit project</span>
                                 </div>
 
                                 <div
