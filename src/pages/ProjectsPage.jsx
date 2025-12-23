@@ -130,7 +130,7 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
 
                 {/* all projects */}
                 <div className="flex items-center justify-between mt-6 mb-6">
-                    <h2 className="text-xl font-bold text-gradient-x">{projectCount > 0 ? 'All Projects' + projectCount : 'Create your new Project'}</h2>
+                    <h2 className="text-xl font-bold text-gradient-x">{projectCount > 0 ? 'All Projects' + projectCount : 'Create your first Project'}</h2>
                     <div className="flex items-center gap-2">
                         {projectCount > 0 && <SelectDropdown
                             value={status}
