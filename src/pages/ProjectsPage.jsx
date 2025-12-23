@@ -12,7 +12,6 @@ import makeApiRequest, { axiosInstance } from '../api/index.js';
 import { MainContext } from '../contexts/mainContext.jsx';
 import Modal from 'react-bootstrap/Modal';
 
-
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState("");
     const {theme} = useContext(MainContext);

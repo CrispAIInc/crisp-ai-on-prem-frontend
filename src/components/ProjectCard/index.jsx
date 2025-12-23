@@ -11,8 +11,9 @@ import { ProjectsContext } from "../../contexts/projectsContext";
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 import LoadingSpinner from '../LoadingSpinner';
-
-
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import WarningIcon from '@mui/icons-material/Warning';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCurrentProject, setProjects }) => {
     const [newProjectName, setNewProjectName] = useState(project.name);
@@ -101,10 +102,64 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCur
     );
 }
 
+const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isDeleting }) => {
+    const {theme} = useContext(MainContext);
+    const [isLoading, setIsLoading] = useState(false);
+
+    if (!show) return null;
+
+    return (
+        <Modal
+            show={show}
+            onHide={onHide}
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            scrollable={true}
+            centered
+            dialogClassName='text-left'
+        >
+
+            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
+                <div className="flex flex-col items-center justify-center">
+                    <ErrorOutlineIcon className="text-red-500 !text-[60px]" />
+                    {/* <div className="flex flex-col gap-1"> */}
+                    <h2 className="font-bold text-2xl">{heading}</h2>
+                    <p className="text-md w-2/3 text-center mx-auto">{subheading}</p>
+                    {/* </div> */}
+                </div>
+            </Modal.Body>
+            <Modal.Footer className={`flex items-center gap-2 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+                <div
+                    className={`flex items-center justify-center gap-2 rounded-full cursor-pointer w-fit py-2 px-3 ${theme === 'light' ? 'bg-textColor-100/10' : 'bg-textColor-100/20'}`}
+                    onClick={onHide}
+                >
+                    <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                        No, Keep it.
+                    </span>
+                </div>
+
+                <div
+                    className={`flex items-center justify-center gap-2 rounded-full cursor-pointer w-fit bg-red-500 text-white py-2 px-3`}
+                    onClick={confirmedFn}
+                >
+                    {
+                        isDeleting ? <div className="flex items-center gap-1">
+                            <LoadingSpinner isSmall />
+                            <span className={`select-none font-medium `}>Deleting...</span>
+                        </div> : <span className={`select-none font-medium `}>Yes, Delete!</span>
+                    }
+                    {/* {isDeleting ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium `}>Delete</span>} */}
+                </div>
+            </Modal.Footer>
+        </Modal>
+    );
+}
+
 const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) => {
     // const {setProjects} = useContext(ProjectsContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
 
     const deleteProject = async (projectId) => {
         try {
@@ -145,7 +200,7 @@ const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) 
                     {
                         label: "Delete",
                         icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
-                        onClick: () => deleteProject(project.project_id),
+                        onClick: () => setIsDeleteConfirmationOpen(true),
                     },
                 ]}
                 />
@@ -162,6 +217,21 @@ const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) 
         </div>
         {
             isModalOpen && <ProjectNameUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} project={project} setProjects={setProjects} />
+        }
+
+        {
+            isDeleteConfirmationOpen && <ConfirmationModal
+                show={isDeleteConfirmationOpen}
+                onHide={() => setIsDeleteConfirmationOpen(false)}
+                // heading="Are you sure you want to delete this project?"
+                heading={`Delete project`}
+                subheading="All your sources, reels and generated content will be permanently deleted. Are you sure?"
+                confirmedFn={async () => {
+                    await deleteProject(project.project_id);
+                    setIsDeleteConfirmationOpen(false);
+                }}
+                isDeleting={isDeleting}
+            />
         }
     </div>
   )
