@@ -16,7 +16,7 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 
 import useResources from '../../hooks/useResources';
 
-const ContentPanel = () => {
+const ContentPanel = ({setCurrentProject}) => {
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
 
     const {
@@ -205,6 +205,7 @@ const ContentPanel = () => {
                 <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'> */}
             <div className="my-3 !border-b-0 !h-full">
                 <ContentSection
+                    setCurrentProject={setCurrentProject}
                     leftWidth={leftWidth}
                     maxWidth={maxWidth}
                     knowledgeBase={knowledgeBase}
