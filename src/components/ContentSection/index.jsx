@@ -1445,6 +1445,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
 };
 
 const ContentSection = ({
+    setCurrentProject,
     onThumbnailClick,
     handleCheckboxChange,
     setKnowledgeBase,
@@ -2768,9 +2769,7 @@ const ContentSection = ({
                                             : "text-textColor-100 hover:bg-slate-800/50"
                                         }`}
                                     onClick={() => {
-                                        setIsSettingsModalOpen(true);
-                                        setIsSettingsMenuOpen(false);
-                                        setIsSearching(false);
+                                        setCurrentProject(null)
                                     }}
                                 >
                                     <CloseOutlinedIcon
