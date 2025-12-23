@@ -67,7 +67,7 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCur
                         <input
                             type="text"
                             name="indexName"
-                            placeholder='Type index name here'
+                            placeholder='New name'
                             id='indexName'
                             value={newProjectName}
                             onChange={(e) => setNewProjectName(e.target.value)}

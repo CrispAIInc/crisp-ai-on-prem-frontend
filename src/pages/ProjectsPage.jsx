@@ -60,7 +60,7 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
                         <input
                             type="text"
                             name="indexName"
-                            placeholder='Type index name here'
+                            placeholder='Project name'
                             id='indexName'
                             value={newProjectName}
                             onChange={(e) => setNewProjectName(e.target.value)}
@@ -86,7 +86,7 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
                     onClick={handleSave}
                 >
                     {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                        Save
+                        Create
                     </span>}
                 </div>
             </Modal.Footer>
