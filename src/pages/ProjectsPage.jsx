@@ -120,7 +120,7 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
                 2xl:max-w-[1320px]
             ">
                 {/* recent projects */}
-                {projectCount > 0 && <><h2 className="text-xl font-bold text-gradient-x">Recent Projects</h2>
+                {projectCount > 0 && <><h2 className="text-xl font-bold text-gradient-x mb-4">Recent Projects</h2>
                 <div className="flex flex-wrap items-center gap-4 mb-16 overflow-x-auto">
                     {
                         sortedProjects.slice(0, 3).map((project) => (
