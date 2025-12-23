@@ -14,7 +14,7 @@ import useResources from '../../hooks/useResources.js';
 import { AuthContext } from '../../contexts/authContext.jsx';
 import { pick } from '../../utils.js';
 
-const MainWorkspace = ({currentProject}) => {
+const MainWorkspace = ({currentProject, setCurrentProject}) => {
   const {
     theme,
     setSourcesTobeCommited,
@@ -123,7 +123,7 @@ const MainWorkspace = ({currentProject}) => {
       {/* <div className="absolute z-40 w-full h-12">
           <ProgressBar />
         </div> */}
-      <ContentPanel />
+      <ContentPanel setCurrentProject={setCurrentProject} />
       <Workspace />
       <ChatPanel />
     </div>
