@@ -32,11 +32,11 @@ export default function SelectDropdown({
   };
 
   return (
-    <div className="relative inline-block w-44" ref={ref}>
+    <div className="relative z-[99] inline-block w-44" ref={ref}>
       {/* Trigger */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center justify-between w-full gap-0 px-4 py-2 text-sm border rounded-full "
+        className="flex items-center justify-between gap-0 px-4 py-2 text-sm border rounded-full w-fit "
       >
         <span>
           {selectedOption ? selectedOption.label : placeholder}

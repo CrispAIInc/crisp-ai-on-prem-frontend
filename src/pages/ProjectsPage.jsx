@@ -131,7 +131,7 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
 
                 {/* all projects */}
                 <div className="flex items-center justify-between mt-6 mb-6">
-                    <h2 className="text-xl font-bold text-gradient-x">{projectCount > 0 ? 'All' : 'Create your new Project'} Projects ({projectCount})</h2>
+                    <h2 className="text-xl font-bold text-gradient-x">{projectCount > 0 ? 'All Projects' + projectCount : 'Create your new Project'}</h2>
                     <div className="flex items-center gap-2">
                         {projectCount > 0 && <SelectDropdown
                             value={status}
@@ -146,7 +146,7 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
                             ]}
                         />}
 
-                        <button className="px-4 py-2 font-semibold text-white border rounded-full bg-gradient-to-r from-purple-500 to-indigo-600">
+                        <button className="px-4 py-2 font-semibold text-white border rounded-full bg-gradient-to-r from-purple-500 to-indigo-600" onClick={() => setIsModalOpen(true)}>
                             New Project
                         </button>
                     </div>  
