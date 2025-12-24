@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import makeApiRequest from "../api";
+import makeApiRequest, { axiosInstance } from "../api";
 
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
@@ -1104,7 +1104,20 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [currentChat, setCurrentChat] = useState([]);
 
     const [projects, setProjects] = useState([]);
-    const [currentProject, setCurrentProject] = useState(null);
+    const [currentProject, setCurrentProject] = useState(JSON.parse(localStorage.getItem('current_project')));
+
+    useLayoutEffect(() => {
+        localStorage.setItem('current_project', JSON.stringify(currentProject));
+
+        if (!currentProject) return;
+
+        axiosInstance.defaults.headers.common['ProjectId'] =
+            currentProject.project_id;
+
+        return () => {
+            delete axiosInstance.defaults.headers.common['ProjectId'];
+        };
+    }, [currentProject]);
 
     useEffect(() => {
         let now = new Date();

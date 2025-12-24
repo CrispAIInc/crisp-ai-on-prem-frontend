@@ -20,11 +20,11 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCur
     const {theme} = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        if (currentProject) {
-            setNewProjectName(currentProject.name);
-        }
-    }, [currentProject]);
+    // useEffect(() => {
+    //     if (currentProject) {
+    //         setNewProjectName(currentProject.name);
+    //     }
+    // }, [currentProject]);
 
     const handleSave = async () => {
         try {

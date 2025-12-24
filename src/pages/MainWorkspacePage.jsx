@@ -71,17 +71,6 @@ export default function MainWorkspacePage() {
         //         }
         //     }, [currentProject]);
 
-            useLayoutEffect(() => {
-                if (!currentProject) return;
-
-                axiosInstance.defaults.headers.common['ProjectId'] =
-                    currentProject.project_id;
-
-                return () => {
-                    delete axiosInstance.defaults.headers.common['ProjectId'];
-                };
-            }, [currentProject]);
-
             
 
     return (
