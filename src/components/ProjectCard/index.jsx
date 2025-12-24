@@ -123,8 +123,8 @@ const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isD
                 <div className="flex flex-col items-center justify-center">
                     <ErrorOutlineIcon className="text-red-500 !text-[60px]" />
                     {/* <div className="flex flex-col gap-1"> */}
-                    <h2 className="font-bold text-2xl">{heading}</h2>
-                    <p className="text-md w-2/3 text-center mx-auto">{subheading}</p>
+                    <h2 className="text-2xl font-bold">{heading}</h2>
+                    <p className="w-2/3 mx-auto text-center text-md">{subheading}</p>
                     {/* </div> */}
                 </div>
             </Modal.Body>
@@ -179,9 +179,11 @@ const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) 
     }
 
   return (
-    <div style={{background: project.thumbnail ? `url('${project.thumbnail}')` : 'url("/app-logo.svg")'}} className={`!bg-cover !bg-center relative   rounded-2xl p-3 w-80 h-48 ${project.thumbnail ? `` : 'bg-[#1E1E1E]'} bg-clip-border  `}>
+    <div style={{background: project.thumbnail ? `url('${project.thumbnail}')` : 'url("/app-logo.svg")'}} className={`!bg-cover !bg-center relative   rounded-2xl p-3 w-80 h-48 ${project.thumbnail ? `` : 'bg-[#1E1E1E]'} bg-clip-border `}>
         {/* top to bottom gradient overlay */}
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent to-black rounded-2xl"></div>
+        <div className="absolute inset-0 shadow-md bg-gradient-to-tr from-indigo-500/30 via-transparent to-cyan-400/20 rounded-2xl"></div>
+
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-200 rounded-2xl " />
 
         <div className="relative z-50 flex flex-col justify-between h-full ">
             {/* top showcase */}
@@ -204,14 +206,14 @@ const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) 
                     },
                 ]}
                 />
-                <ArrowForwardIosIcon onClick={() => setCurrentProject(project)} className="text-white cursor-pointer" />
+                <ArrowForwardIosIcon onClick={() => setCurrentProject(project)} className="cursor-pointer text-textColor-200" />
             </div>
             {/* bottom showcase */}
             <div className="font-semibold">
-                <h2 className="text-2xl font-semibold mb-2 !text-white line-clamp-2">{project.name}</h2>
+                <h2 className="mb-0 !text-textColor-200 line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
                 <div className="flex flex-wrap items-center gap-1">
-                    <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
-                    {project.selectedSources && <p className="text-[10px] text-white">{project.selectedSources} Sources.</p>}
+                    <p className="text-[10px] text-textColor-200">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
+                    {project.selectedSources && <p className="text-[10px] text-textColor-200">{project.selectedSources} Sources.</p>}
                 </div>
             </div>
         </div>

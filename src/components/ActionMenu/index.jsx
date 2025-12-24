@@ -20,15 +20,15 @@ export default function ActionMenu({ actions }) {
 
   return (
     // <div className="relative" ref={ref}>
-        <div ref={ref} className={` relative flex flex-col p-1 rounded-md shadow-lg cursor-pointer`} onClick={(e) => {
+        <div ref={ref} className={` relative flex flex-col  shadow-lg cursor-pointer rounded-full p-2 hover:bg-white/20 backdrop-blur`} onClick={(e) => {
             e.stopPropagation();
             setOpen((p) => !p)
         }}>
       {/* <button onClick={() => setOpen((p) => !p)}>⋮</button> */}
-      <MoreVertOutlinedIcon className="text-white" /> 
+      <MoreVertOutlinedIcon className="text-textColor-200" /> 
 
       {open && (
-        <div className="absolute left-0 w-40 mt-2 bg-white rounded shadow top-full">
+        <div className="absolute left-0 w-40 mt-1 bg-white top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]">
           {actions.map((action) => (
             <button
               key={action.label}
@@ -36,7 +36,7 @@ export default function ActionMenu({ actions }) {
                 action.onClick(e);
                 setOpen(false);
               }}
-              className="flex items-center w-full gap-2 px-3 py-2 hover:bg-gray-100"
+              className={`flex items-center w-full gap-2 px-3 py-2 hover:bg-gray-100 hover:rounded-xl ${action.label === 'Delete' ? 'text-red-500' : 'text-textColor-200'}`}
             >
               {action.icon}
               {action.label}
