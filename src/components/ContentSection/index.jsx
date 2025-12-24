@@ -1454,6 +1454,7 @@ const ContentSection = ({
 
 }) => {
     const {
+        isSettingsModalOpen, setIsSettingsModalOpen,
         isPlayerReady,
         resourceURL,
         isFileUploading, setIsFileUploading,
@@ -2037,7 +2038,7 @@ const ContentSection = ({
         setIsUpdateFilenameModalOpen(true);
     }
 
-    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+    // const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     function handleOpenSettingsModal() {
         setIsSettingsModalOpen(true);
     }

@@ -1,25 +1,30 @@
 import React, { useContext } from 'react';
-import AppLogo from "/imgs/app-logo-full.png"
+import AppLogo from "/new-crisp-ai-slogan.png"
 import { AuthContext } from '../../contexts/authContext';
+import { MainContext } from "../../contexts/mainContext"
+import {SettingsModal} from "../Settings/SettingsModal"
 
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import useAuth from '../../hooks/useAuth';
+import UserMenu from '../UserMenu';
 
 const ProjectsHeader = () => {
+  const {isSettingsModalOpen, setIsSettingsModalOpen} = useContext(MainContext)
     const {user} = useContext(AuthContext);
     const {logout} = useAuth()
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="sticky top-0 z-40 flex items-center justify-between py-4 mb-6 border-b bg-white/70 backdrop-blur-xl border-gray-200/40">
         <div>
             <img src={AppLogo} className="w-40 h-auto" alt="Crisp AI logo" />
         </div>
-        <div className="flex items-center gap-1">
-            <p>{user?.firstName} {user?.lastName} | </p>
-            <div className="flex items-center gap-1 ml-2 font-semibold text-red-600 cursor-pointer" onClick={logout}>
-              <LogoutOutlinedIcon />
-              <span>Log out</span>
-            </div>
-        </div>
+        <UserMenu
+          username={user.firstName + " " + user.lastName}
+          onLogout={logout}
+          setIsSettingsModalOpen={setIsSettingsModalOpen}
+        />
+        {
+          isSettingsModalOpen && <SettingsModal show={isSettingsModalOpen} onHide={() => setIsSettingsModalOpen(false)} />
+        }
     </div>
   )
 }

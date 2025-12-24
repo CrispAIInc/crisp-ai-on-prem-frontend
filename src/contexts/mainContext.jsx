@@ -1146,8 +1146,11 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
     }, [currentChat]);
 
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+
     // create value object with all the states
     const value = {
+        isSettingsModalOpen, setIsSettingsModalOpen,
         chatHistory, setChatHistory,
         currentChat, setCurrentChat,
         reels, setReels,

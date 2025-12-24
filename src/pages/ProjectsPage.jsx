@@ -108,7 +108,7 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
-        <div className="p-4">
+        <div className="px-4 pb-4">
             <ProjectsHeader />
             <div className="
                 mx-auto px-4
