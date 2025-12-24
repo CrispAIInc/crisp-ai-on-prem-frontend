@@ -183,7 +183,7 @@ const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) 
         {/* top to bottom gradient overlay */}
         <div className="absolute inset-0 shadow-md bg-gradient-to-tr from-indigo-500/30 via-transparent to-cyan-400/20 rounded-2xl"></div>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-200 rounded-2xl " />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-600/40 rounded-2xl " />
 
         <div className="relative z-50 flex flex-col justify-between h-full ">
             {/* top showcase */}
@@ -210,10 +210,10 @@ const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) 
             </div>
             {/* bottom showcase */}
             <div className="font-semibold">
-                <h2 className="mb-0 !text-textColor-200 line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
+                <h2 className="mb-0 !text-white line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
                 <div className="flex flex-wrap items-center gap-1">
-                    <p className="text-[10px] text-textColor-200">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
-                    {project.selectedSources && <p className="text-[10px] text-textColor-200">{project.selectedSources} Sources.</p>}
+                    <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
+                    {project.selectedSources && <p className="text-[10px] text-white">{project.selectedSources} Sources.</p>}
                 </div>
             </div>
         </div>
