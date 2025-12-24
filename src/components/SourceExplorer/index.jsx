@@ -164,7 +164,14 @@ export function SourceExplorer(props) {
             );
         }
         return <>
-            {props[viewModes[viewModes.length - 1]].map((item, index) => (
+            <div
+                className="relative select-none transition-transform folder group hover:scale-110 hover:font-medium hover:bg-gradient-to-r hover:from-[#755bea] hover:to-[#b76894] hover:bg-clip-text hover:text-transparent"
+                onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder('all') : openFormatFolder('all'))}
+            >
+                <FolderOpenIcon sx={{ fontSize: 50 }} className={`${theme === 'light' ? 'text-textColor-300' : "text-[#ABAEB4]"} `} />
+                <p>All</p>
+            </div>
+            {props[viewModes[viewModes.length - 1]].filter(item => item.value !== "all").map((item, index) => (                
                 <div
                     className="relative select-none transition-transform folder group hover:scale-110 hover:font-medium hover:bg-gradient-to-r hover:from-[#755bea] hover:to-[#b76894] hover:bg-clip-text hover:text-transparent"
                     onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
