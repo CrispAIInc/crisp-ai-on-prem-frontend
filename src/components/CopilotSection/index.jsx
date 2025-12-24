@@ -109,6 +109,7 @@ const ChatMessage = ({ text, refs }) => {
 
 const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
   const {
+    currentProject,
     theme,
     currentResource,
     llmModels,
@@ -319,7 +320,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         headers: {
           Authorization: `Bearer ${token}`,
           SessionId: currentChat?.sessionId,
-          ProjectId: currentResource?.project_id,
+          ProjectId: currentProject?.project_id,
         },
         heartbeatTimeout: 75000,
       });

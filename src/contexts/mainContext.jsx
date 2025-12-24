@@ -1102,6 +1102,10 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [chatHistory, setChatHistory] = useState([]);
     const [currentChat, setCurrentChat] = useState([]);
+
+    const [projects, setProjects] = useState([]);
+    const [currentProject, setCurrentProject] = useState(null);
+
     useEffect(() => {
         let now = new Date();
         setCurrentChat({ sessionId: generateRandomId(), title: `New Chat ${chatHistory.length + 1}`, userId: user?.userId, messages: [], created_at: now, updated_at: now });
@@ -1150,6 +1154,8 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // create value object with all the states
     const value = {
+        projects, setProjects,
+        currentProject, setCurrentProject,
         isSettingsModalOpen, setIsSettingsModalOpen,
         chatHistory, setChatHistory,
         currentChat, setCurrentChat,

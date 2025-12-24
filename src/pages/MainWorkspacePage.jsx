@@ -7,6 +7,7 @@ import { pick } from '../utils';
 import { useContext } from "react";
 import { AuthContext } from '../contexts/authContext';
 import ProjectsPage from './ProjectsPage';
+import { MainContext } from '../contexts/mainContext';
 
 
 export default function MainWorkspacePage() {
@@ -14,6 +15,7 @@ export default function MainWorkspacePage() {
     // const [inputPassword, setInputPassword] = useState("");
 
     const { setUser } = useContext(AuthContext);
+    const {projects, setProjects, currentProject, setCurrentProject} = useContext(MainContext)
 
     // const handleLogin = () => {
     //     const correctPassword = "$Crisp-AI2025$";
@@ -49,8 +51,8 @@ export default function MainWorkspacePage() {
       }, []);
 
 
-      const [projects, setProjects] = useState([]);
-      const [currentProject, setCurrentProject] = useState(null);
+      // const [projects, setProjects] = useState([]);
+      // const [currentProject, setCurrentProject] = useState(null);
     //   const currentProject = useMemo(() => projects.find(project => 'isCurrent' in project), [JSON.stringify(projects)]);
       
           useEffect(() => {
