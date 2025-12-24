@@ -70,14 +70,13 @@ function ChatHistory() {
 
     return (
         <div className={`flex items-center w-full max-w-full h-full`}>
-            {chatHistory.length > 0 && <div className={`relative flex-1 w-[80%] origin-right transition-all duration-300 ease-in-out ${!isHorizontalChatHistoryVisibile && 'scale-x-0'}`}>
+            {/* {chatHistory.length > 0 && <div className={`relative flex-1 w-[80%] origin-right transition-all duration-300 ease-in-out ${!isHorizontalChatHistoryVisibile && 'scale-x-0'}`}>
                 <HorizontalChatHistoryList />
-                {/* Right fade shadow */}
                 <div className={`pointer-events-none absolute right-0 top-0 h-full w-16
                       bg-gradient-to-r from-transparent ${theme === 'light' ? 'to-background_workspace' : ''} `} />
-            </div>}
+            </div>} */}
             <div className="flex gap-1 p-2 ml-auto w-fit">
-                <KeyboardArrowLeftOutlinedIcon onClick={() => setIsHorizontalChatHistoryVisibile(prev => !prev)} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'} ${isHorizontalChatHistoryVisibile && 'rotate-180'}`} />
+                {/* <KeyboardArrowLeftOutlinedIcon onClick={() => setIsHorizontalChatHistoryVisibile(prev => !prev)} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'} ${isHorizontalChatHistoryVisibile && 'rotate-180'}`} /> */}
 
                 <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
 
