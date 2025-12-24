@@ -3,8 +3,6 @@ import AppLogo from "/new-crisp-ai-slogan.png"
 import { AuthContext } from '../../contexts/authContext';
 import { MainContext } from "../../contexts/mainContext"
 import {SettingsModal} from "../Settings/SettingsModal"
-
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import useAuth from '../../hooks/useAuth';
 import UserMenu from '../UserMenu';
 
