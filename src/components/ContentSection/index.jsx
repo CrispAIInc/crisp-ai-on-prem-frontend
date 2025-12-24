@@ -2715,7 +2715,7 @@ const ContentSection = ({
                 {/* settings & profile button */}
                 <div className="relative" ref={settingsMenuRef}>
                     {/* Main button */}
-                    <div
+                    {/* <div
                         className={`flex items-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit
  ${theme === "light"
                                 ? "hover:bg-textColor-100/50"
@@ -2735,7 +2735,37 @@ const ContentSection = ({
                         >
                             {user?.firstName + " " + user?.lastName}
                         </span>
-                    </div>
+                    </div> */}
+                    <button
+                        onClick={handleToggleSettingsMenu}
+                        className={`flex items-center gap-2
+                        px-3 py-1.5
+                        rounded-full
+                        ${theme === 'light' ? 'bg-gray-100/70 hover:bg-gray-200/70' : 'bg-gray-800/70 hover:bg-gray-700/70 '}
+                        transition`}
+                    >
+                        {/* Avatar */}
+                        <div className="flex items-center justify-center text-sm font-semibold text-white rounded-full w-7 h-7 bg-gradient-to-br from-indigo-500 to-cyan-400">
+                        {user?.firstName[0]?.toUpperCase()}{user?.lastName[0]?.toUpperCase()}
+                        </div>
+
+                        {/* Name */}
+                        <span className={`text-sm font-medium ${theme === 'light' ? 'text-gray-800' : 'text-white/80'}`}>
+                            {user?.firstName} {user?.lastName}
+                        </span>
+
+                        {/* Caret */}
+                        <svg
+                        className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white/80'} transition-transform ${
+                            !isSettingsMenuOpen && "rotate-180"
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
 
                     {/* Dropdown */}
                     {
