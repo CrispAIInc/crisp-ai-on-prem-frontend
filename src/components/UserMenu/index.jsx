@@ -3,7 +3,7 @@ import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
-export default function UserMenu({ username, onLogout, setIsSettingsModalOpen }) {
+export default function UserMenu({ firstName, lastName, onLogout, setIsSettingsModalOpen }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -33,12 +33,12 @@ export default function UserMenu({ username, onLogout, setIsSettingsModalOpen })
       >
         {/* Avatar */}
         <div className="flex items-center justify-center text-sm font-semibold text-white rounded-full w-7 h-7 bg-gradient-to-br from-indigo-500 to-cyan-400">
-          {username[0]?.toUpperCase()}
+          {firstName[0]?.toUpperCase()}{lastName[0]?.toUpperCase()}
         </div>
 
         {/* Name */}
         <span className="text-sm font-medium text-gray-800">
-          {username}
+          {firstName} {lastName}
         </span>
 
         {/* Caret */}

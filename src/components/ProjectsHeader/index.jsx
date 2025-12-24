@@ -18,7 +18,8 @@ const ProjectsHeader = () => {
             <img src={AppLogo} className="w-40 h-auto" alt="Crisp AI logo" />
         </div>
         <UserMenu
-          username={user.firstName + " " + user.lastName}
+          firstName={user.firstName}
+          lastName={user.lastName}
           onLogout={logout}
           setIsSettingsModalOpen={setIsSettingsModalOpen}
         />
