@@ -1,16 +1,14 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import ProjectCard from '../components/ProjectCard';
-import { ProjectsContext } from '../contexts/projectsContext.jsx';
 import { sortByDate } from '../utils.js';
 import ProjectsHeader from '../components/ProjectsHeader/index.jsx';
-import AppDropdown from '../components/AppDropdown';
-import AppDropdownItem from "../components/AppDropdownItem"
 import SelectDropdown from '../components/SelectDropdown/index.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import LoadingSpinner from '../components/LoadingSpinner/index.jsx';
 import makeApiRequest, { axiosInstance } from '../api/index.js';
 import { MainContext } from '../contexts/mainContext.jsx';
 import Modal from 'react-bootstrap/Modal';
+import TimestampPicker from '../components/TimestampPicker';
 
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState("");
@@ -110,6 +108,7 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
     return (
         <div className="px-4 pb-4">
             <ProjectsHeader />
+            <TimestampPicker />
             <div className="
                 mx-auto px-4
                 sm:max-w-[540px]
