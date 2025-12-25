@@ -74,7 +74,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
       const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-      console.log("timestap:", timestamp);
+      
       if (timestamp !== undefined && timestamp !== null) {
         player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
         // setCurrentResource(prev => {
@@ -122,7 +122,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     if (activeView === "resource") {
       // setTranslatedResource(currentResource);
       if (currentResource) {
-        console.log("hehehe");
+        
         const updatedResource = {
           ...currentResource,
           ...generatedResources?.find(item => item.source_path === currentResource.source_path)
@@ -141,7 +141,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
 
   function areAllItemsInSecondArray(arr1, arr2) {
     const pathsSet = new Set(arr2.map(item => item.source_path));
-    console.log(pathsSet);
+    
 
     return arr1.every(item => pathsSet.has(item.source_path));
   }
@@ -163,7 +163,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     // });
     if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
       !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-      // console.log("trueeeujl");
+      // 
       commitSelectedSources(sourcesTobeCommited);
     }
     setIsSourceUncheckedOrClosed(true);
@@ -185,7 +185,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     // });
     if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
       !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-      // console.log("trueeeujl");
+      // 
       commitSelectedSources(sourcesTobeCommited);
     }
     setIsSourceUncheckedOrClosed(true);
@@ -207,7 +207,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     // });
     if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
       !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-      // console.log("trueeeujl");
+      // 
       commitSelectedSources(sourcesTobeCommited);
     }
     setIsSourceUncheckedOrClosed(true);
@@ -290,7 +290,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       "faqs"
     ];
 
-    // console.log("jsldfjkdf");
+    // 
     let obj = (object.metadata !== undefined || object.metadata !== null) ? flattenMetadata(object) : object;
     // extract keys/values from object (summary, topic_summaries, keywords, transcript and caption)
     for (const [key, value] of Object.entries(obj)) {
@@ -312,12 +312,10 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
         "post",
         httpRequestBody
       );
-      // console.log("httpResponseBody: ", httpResponseBody);
       setTranslatedResource({ ...httpResponseBody, lang: _chosenLanguage, prevLang });
-      // console.log(knowledgeBase?.find(item => item.source_path === currentResource.source_path));
 
     } catch (error) {
-      console.log(error);
+      
     } finally {
       setIsTranslationLoading(false);
     }
@@ -329,17 +327,12 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   };
 
   const [visibleChaptersCount, setVisibleChaptersCount] = useState(3);
-  const showMoreChapters = () => {
-    setVisibleChaptersCount((prevCount) => prevCount + 3);
-  };
 
   useEffect(() => {
     return () => {
       setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
     };
   }, [currentResource]);
-
-  const isMobile = useCheckMobileScreen();
 
 
   const areSourcesSame = (arr1, arr2) => {
@@ -366,37 +359,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     }
   }, [isChecked]);
 
-  async function handleToggle(checked) {
-    setIsChecked(checked);
-    // setCurrentResource(prev => ({ ...prev, is_selected: !prev.is_selected }));
-    // handleCheckboxChange(checked, currentResource);
-    if (checked) {
-      // console.log("checked 1");
-      setActiveTab('genInsights');
-      commitSelectedSources([currentResource]);
-      // setCommittedSources([currentResource]);
-      setIsExclusiveChecked(true);
-      setSourcesWithExclusive(prev => [...prev, currentResource?.source_path]);
-      // setIsSourceUncheckedOrClosed(false)
-    } else {
-      // console.log("checked 2");
-      // commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated));
-      setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
-      if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
-        !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-        // console.log("trueeeujl");
-        commitSelectedSources(sourcesTobeCommited);
-        setCommittedSources(sourcesTobeCommited);
-      }
-
-      if (committedSources?.length === 0 || (displayedSources?.some(item => item?.is_selected) ? false : true)) {
-        setIsFoundationLlm(true);
-      }
-
-      setIsFoundationLlm(displayedSources?.some(item => item?.is_selected) ? false : true);
-    }
-  }
-
   const [parentWidth, setParentWidth] = useState(0);
 
   useEffect(() => {
@@ -406,16 +368,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   }, []);
 
   const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
-
-  // useEffect(() => {
-  //   if (currentResource?.file_type === "pdf" && currentResource?.pdf_url) {
-  //     getPublicUrl(currentResource?.pdf_url).then(setSourcePublicUrl).catch(console.error);
-  //   } else if (currentResource?.file_type === "video" && currentResource?.video_url) {
-  //     getPublicUrl(currentResource?.video_url).then(setSourcePublicUrl).catch(console.error);
-  //   } else if (currentResource?.file_type === "img" && currentResource?.thumbnail) {
-  //     getPublicUrl(currentResource?.thumbnail).then(setSourcePublicUrl).catch(console.error);
-  //   }
-  // }, [currentResource])
 
   useEffect(() => {
     if (!currentResource) return;
@@ -437,16 +389,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
 
   return (
     <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
-
-      {/* {currentResource?.metadata?.embeddings_generated && <FormControlLabel control={<Checkbox sx={{
-        color: lightBlue[800],
-        '&.Mui-checked': {
-          color: lightBlue[600],
-        },
-        borderColor: 'pink',
-        borderTopColor: pink[400],
-      }} />} checked={isChecked} onChange={e => handleToggle(e.target.checked)} label="Exclusive source for Crisp Wiz" />} */}
-
 
       {currentResource?.file_type === "video" && (
         <>

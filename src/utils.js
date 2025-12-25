@@ -113,7 +113,6 @@ export function decimalSecondsToHHMMSS(decimalSeconds) {
 
 
 export function flattenMetadata(obj) {
-    console.log(obj);
     const { metadata, ...rest } = obj;
     const flattenedMetadata = {};
 

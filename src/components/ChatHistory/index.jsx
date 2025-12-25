@@ -52,7 +52,6 @@ function ChatHistory() {
                 chatTitleUpdaterModalRef.current &&
                 chatTitleUpdaterModalRef.current.contains(event.target)
             ) {
-                console.log("hehesss");
                 setIsChatHistoryPopupOpen(false);
             }
 

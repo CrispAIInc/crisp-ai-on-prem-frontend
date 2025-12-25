@@ -17,7 +17,6 @@ axiosInstance.interceptors.request.use(
         // const token = localStorage.getItem(TOKEN_NAME);
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
-            console.log(config.headers)
         } else {
             delete config.headers['Authorization'];
         }
@@ -41,12 +40,10 @@ const makeApiRequest = async (endpoint, method = 'get', data = null, headers = {
         // config.withCredentials = true;
         // const token = await getJwt();
         // if (token) {
-        //     console.log("token", token)
         //     headers = {...headers, 'Authorization': `Bearer ${token}`};
         // } else {
         //     delete headers['Authorization'];
         // }
-        console.log("sending api req")
         const response = await axiosInstance({
             url: endpoint,
             method,

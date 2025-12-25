@@ -49,11 +49,6 @@ export default function MainWorkspacePage() {
     
         getUserInfo();
       }, []);
-
-
-      // const [projects, setProjects] = useState([]);
-      // const [currentProject, setCurrentProject] = useState(null);
-    //   const currentProject = useMemo(() => projects.find(project => 'isCurrent' in project), [JSON.stringify(projects)]);
       
           useEffect(() => {
               async function fetchProjects() {
@@ -64,15 +59,7 @@ export default function MainWorkspacePage() {
               fetchProjects();
           }, []);
 
-        //   useLayoutEffect(() => {
-        //         if (currentProject) {
-        //             console.log("adding header")
-        //             axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-        //         }
-        //     }, [currentProject]);
-
-            
-
+          
     return (
         <>
             <Helmet>

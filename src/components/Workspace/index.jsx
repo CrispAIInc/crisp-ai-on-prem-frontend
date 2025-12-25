@@ -9,8 +9,6 @@ import './workspace.css';
 import CenterPanel from "../CenterPanel";
 import CopilotSection from '../CopilotSection';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-import { Drawer } from '@mui/material';
-import ReelProps from '../ReelProps';
 
 const Workspace = () => {
 

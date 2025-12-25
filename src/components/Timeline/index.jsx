@@ -44,7 +44,6 @@ function Timeline({ theme, chapters, workspaceContainer }) {
                 {
                     chapters.map((chapter, index) => {
                         const handleReadMoreClick = () => {
-                            console.log("hello");
                             setSelectedChapter(chapter);
                             setShowChapterDetailsModal(true);
                         };

@@ -17,10 +17,8 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
     const { getStories } = useResources({ setStories });
     const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
-    const [contextFocused, setContextFocused] = useState(false);
     const [context, setContext] = useState('');
     const [storyline, setStoryline] = useState('');
-    const isActive = contextFocused || context.length > 0;
 
     const [isLoading, setIsLoading] = useState(false);
     const [isPending, setIsPending] = useState(false);
@@ -82,31 +80,10 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
             );
 
             setStory({ ...res, story_name: storyTitle || res?.story_name });
-
-
-
-            // setSelectedStory((prev) => {
-            //     prev.text.forEach((textItem, index) => {
-            //         textItem.content = [
-            //             {
-            //                 answer: sections[index][0].answer,
-            //                 refs: {
-            //                     imageLinks: sections[index][0].imgsArr,
-            //                     videoLinks: sections[index][0].videosArr,
-            //                     keyframeLinks: sections[index][0].keyframesArr,
-            //                     pdfLinks: sections[index][0].pdfsArr,
-            //                 }
-            //             }
-            //         ];
-            //     });
-
-            //     return prev;
-            // });
         } catch (error) {
             console.log(error);
         } finally {
             // setIsGeneratingIntroConlusion(false);
-            // console.log(selectedStory.text);
             setIsLoading(false);
         }
     }

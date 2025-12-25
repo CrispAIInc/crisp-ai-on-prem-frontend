@@ -6,18 +6,8 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import Accordion from "../Accordion";
-import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import ViewWeekOutlinedIcon from '@mui/icons-material/ViewWeekOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-// import {
-//     Timeline,
-//     TimelineItem,
-//     TimelineOppositeContent,
-//     TimelineSeparator,
-//     TimelineDot,
-//     TimelineConnector,
-//     TimelineContent
-// } from '../CustomTimeline';
 import GsFile from '../GsFile';
 import Chip from '../Chip';
 

@@ -202,7 +202,6 @@ export default function MainProvider({ children, theme, setTheme }) {
     // }, [sourcesTobeCommited]);
 
     const commitSelectedSources = (items) => {
-        console.log(items);
         if (items?.length === 0) {
             // setSelectedSources(sourcesTobeCommited);
             knowledgeBase.map((item) => {
@@ -276,7 +275,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         setKnowledgeBase(updatedKnowledgeBase);
 
         // update displayedsources such that if file.is_source is true, add it to displayedsources otherwise if it is already in displayedsources, just make its property "is_selected" to false without removing it from displayedsources
-        console.log("handleToggleCheckSources from main context");
         setDisplayedSources((prev) => {
             const exists = prev.find((item) => item.source_path === file.source_path);
             // const fileFromKb = knowledgeBase.find((item) => item.source_path === file.source_path);
@@ -340,7 +338,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
         // setCommittedSources(selectedSources);
         async function fetchChat() {
-            console.log('here: ', selectedCategory);
             const data = await makeApiRequest(
                 `/chat/${selectedCategory}`,
                 "post",
@@ -1066,10 +1063,10 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // useEffect(() => {
     //   if (knowledgeBase.every((item) => item.is_selected === false)) {
-    //     console.log("disabled");
+
     //     setIsIngestionEnabled(false);
     //   } else {
-    //     console.log("enable");
+
     //     setIsIngestionEnabled(true);
     //   }
     // }, [knowledgeBase]);
@@ -1136,7 +1133,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     //                 throw new Error('Failed to create new chat');
     //             }
     //         } catch (error) {
-    //             console.log(error?.message);
+
     //         }
     //     }
 
@@ -1149,7 +1146,6 @@ export default function MainProvider({ children, theme, setTheme }) {
                 setChatHistory(chat_history);
                 // setCurrentChat(chat_history[0] || []);
             } catch (error) {
-                console.log(error);
             }
         }
 

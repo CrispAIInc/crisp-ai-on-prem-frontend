@@ -23,7 +23,6 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setFromChat(isFromChat);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
             }/all/${encodeURIComponent(video.source_path)}`;
-        console.log(video);
         setCurrentResource({ ...video });
         setResourceURL(resourceURL);
         setSummary(video.summary);

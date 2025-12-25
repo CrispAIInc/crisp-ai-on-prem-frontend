@@ -11,7 +11,7 @@ const StickyNote = ({ index, setNoteIndex, note }) => {
     const previousModels = [];
 
     const { setSelectedNote,
-        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setActiveView, setShowEditor } = useContext(MainContext);
+        setIsNewNote, setShowNoteDetails, theme, setIsEditingTitle, setShowEditor } = useContext(MainContext);
 
     const showSelectedNote = (event, note, index) => {
         event.preventDefault();

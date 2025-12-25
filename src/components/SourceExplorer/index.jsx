@@ -4,7 +4,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-// import FolderIcon from "@mui/icons-material/Folder";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import PDFThumbnail from "../PDFThumbnail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -14,10 +13,8 @@ import { MainContext } from "../../contexts/mainContext.jsx";
 import "./source_explorer.css";
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import RemoveIndexModal from '../RemoveIndexModal';
 import { searchByKey, sortBySourcePath } from '../../utils';
-import { IndexModal } from '../IndexModal/index.jsx';
 
 export function SourceExplorer(props) {
     const {
@@ -191,14 +188,6 @@ export function SourceExplorer(props) {
             <RemoveIndexModal setIsIndexDeleting={setIsIndexDeleting} deleteResource={props.deleteResource} index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
         </>;
     };
-
-    // useEffect(() => {
-    //     console.log(currentPath);
-    // }, [currentPath]);
-
-    // function test() {
-    //     setItemsFoundInsideCategoryOrFormat(false);
-    // }
 
     useEffect(() => {
         if (viewModes[viewModes.length - 1] === "files") {

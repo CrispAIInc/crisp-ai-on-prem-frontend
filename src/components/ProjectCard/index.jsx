@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React, { useContext, useState } from 'react';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -7,24 +6,15 @@ import { formatReadableDate } from '../../utils';
 import ActionMenu from '../ActionMenu';
 import makeApiRequest, { axiosInstance } from '../../api'
 
-import { ProjectsContext } from "../../contexts/projectsContext";
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 import LoadingSpinner from '../LoadingSpinner';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import WarningIcon from '@mui/icons-material/Warning';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCurrentProject, setProjects }) => {
+const ProjectNameUpdaterModal = ({ show, onHide, project, setProjects }) => {
     const [newProjectName, setNewProjectName] = useState(project.name);
     const {theme} = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
-
-    // useEffect(() => {
-    //     if (currentProject) {
-    //         setNewProjectName(currentProject.name);
-    //     }
-    // }, [currentProject]);
 
     const handleSave = async () => {
         try {
@@ -33,10 +23,6 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCur
             await makeApiRequest(`/projects`, 'PUT', {
                 name: newProjectName,
             });
-            // setCurrentProject({
-            //     ...currentProject,
-            //     name: newProjectName,
-            // });
             setProjects((prevProjects) => prevProjects.map((proj) => proj.project_id === project.project_id ? { ...proj, name: newProjectName, updated_at: new Date() } : proj));
             onHide();
         } catch (error) {
@@ -104,7 +90,6 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, currentProject, setCur
 
 const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isDeleting }) => {
     const {theme} = useContext(MainContext);
-    const [isLoading, setIsLoading] = useState(false);
 
     if (!show) return null;
 
@@ -148,7 +133,6 @@ const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isD
                             <span className={`select-none font-medium `}>Deleting...</span>
                         </div> : <span className={`select-none font-medium `}>Yes, Delete!</span>
                     }
-                    {/* {isDeleting ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium `}>Delete</span>} */}
                 </div>
             </Modal.Footer>
         </Modal>
@@ -156,7 +140,6 @@ const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isD
 }
 
 const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) => {
-    // const {setProjects} = useContext(ProjectsContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);

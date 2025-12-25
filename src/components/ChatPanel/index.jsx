@@ -2,9 +2,6 @@ import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'r
 import { MainContext } from '../../contexts/mainContext.jsx';
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
@@ -12,7 +9,6 @@ import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutline
 import './chat-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import MetadataGen from '../MetadataGen';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -111,8 +107,6 @@ const ChatPanel = () => {
     setIsEditingTitle,
     setIsNewNote,
     setShowNoteDetails,
-    activeTab,
-    setActiveTab,
     reels,
     setReels,
     notes,
@@ -136,64 +130,9 @@ const ChatPanel = () => {
 
   const { getReels, getStories, getNotes } = useResources({ setReels, setStories, setNotes });
 
-  const notesSectionSteps = [
-    {
-      target: ".new-note-button",
-      content: "Click here to create a new insight.",
-      disableBeacon: true,
-      placement: "right",
-    },
-    {
-      target: ".saved-notes",
-      content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
-      placement: "right",
-    },
-  ];
-
-  const storiesSectionSteps = [
-    {
-      target: ".new-story-button",
-      content: "Click here to create a new story.",
-      disableBeacon: true,
-      placement: "right",
-    },
-    {
-      target: ".saved-stories",
-      content: "This section contains all your saved insights. Click on a saved insight to view or edit it in the workspace.",
-      placement: "right",
-    }
-  ];
-
   const [value, setValue] = useState('');
   const [noteTitle, setNoteTitle] = useState('');
   const editorRef = useRef(null);
-
-  // Test function to handle reference link clicks
-  const test = useCallback((type, value) => {
-    console.log('eee');
-    console.log(`Clicked ${type} reference:`, value);
-
-    // You can add specific logic for different reference types here
-    switch (type) {
-      case 'pdf':
-        // Handle PDF click
-        console.log('PDF link clicked:', value);
-        // Add your PDF handling logic here
-        break;
-      case 'video':
-        // Handle video click
-        console.log('Video link clicked:', value);
-        // Add your video handling logic here
-        break;
-      case 'image':
-        // Handle image click
-        console.log('Image link clicked:', value);
-        // Add your image handling logic here
-        break;
-      default:
-        console.log('Unknown reference type:', type);
-    }
-  }, []);
 
   const modules = useMemo(() => ({
     toolbar: [
@@ -205,11 +144,8 @@ const ChatPanel = () => {
     imageResize: {
       parchment: Quill.import("parchment"),
       modules: ["Resize", "DisplaySize", "Toolbar"],
-    },
-    referenceClickHandler: {
-      onReferenceClick: test
     }
-  }), [test]);
+  }), []);
 
   const formats = [
     'header',
@@ -247,78 +183,7 @@ const ChatPanel = () => {
     setShowEditor(false);
     setShowStoriesEditor(false);
   }, [setShowEditor]);
-
-  // const generateHtmlFromText = useCallback((textArray) => {
-  //   return textArray
-  //     .map((item) => {
-  //       const refs = [];
-
-  //       if (item?.references?.pdfLinks?.length > 0) {
-  //         refs.push(
-  //           `<div><strong>PDF:</strong> ${item.references.pdfLinks
-  //             .map(
-  //               (link) =>
-  //                 `<a style="font-weight: bold;" class="reference-link"  data-ref-type="pdf" data-ref-value="${link}">${link}</a>`
-  //             )
-  //             .join(", ")}</div>`
-  //         );
-  //       }
-
-  //       if (item?.references?.videoLinks?.length > 0) {
-  //         refs.push(
-  //           `<div><strong>Video:</strong> ${item.references.videoLinks
-  //             .map(
-  //               (link) =>
-  //                 `<a onClick="${() => console.log("hehe")}" class="reference-link" data-ref-type="video" data-ref-value="${link}">${link}</a>`
-  //             )
-  //             .join(", ")}</div>`
-  //         );
-  //       }
-
-  //       if (item?.references?.imageLinks?.length > 0) {
-  //         refs.push(
-  //           `<div><strong>Images:</strong> ${item.references.imageLinks
-  //             .map(
-  //               (link) =>
-  //                 `<img src="${link}" alt="image" style="max-width: 100px;" class="reference-link" data-ref-type="image" data-ref-value="${link}" />`
-  //             )
-  //             .join(" ")}</div>`
-  //         );
-  //       }
-
-  //       return `
-  //         <div style="border-left: 4px solid ${item.color}; padding-left: 8px; margin-bottom: 16px;">
-  //           <h2 style="color: #fff;"><strong>${item.question}</strong></h2>
-  //           <br />
-  //           <p>${item.answer}</p>
-  //           <p><strong>Model:</strong> ${item.model}</p>
-  //           ${refs.join("")}
-  //           <br /><br />
-  //         </div>
-  //       `;
-  //     })
-  //     .join("<hr/>");
-  // }, []);
-
-  // useEffect(() => {
-  //   const quill = editorRef.current?.getEditor();
-  //   console.log(quill);
-  //   console.log(value);
-  //   if (!quill) return;
-
-  //   quill.clipboard.dangerouslyPasteHTML(0, value);
-
-  //   const root = quill.root;
-  //   const handleClick = (e) => {
-  //     const target = e.target.closest(".reference-link");
-  //     if (target) {
-  //       console.log("Clicked:", target.dataset.refType, target.dataset.refValue);
-  //     }
-  //   };
-
-  //   root.addEventListener("click", handleClick);
-  //   return () => root.removeEventListener("click", handleClick);
-  // }, [value]);
+  
   const [isNewInsight, setIsNewInsight] = useState(false);
   function createNewInsight() {
     setSelectedNote({
@@ -375,19 +240,9 @@ const ChatPanel = () => {
     });
     setIsRightSidebarOpen(true);
   }, [setSidebarWidth, maxWidth, setIsRightSidebarOpen]);
-
-  // Effect to handle selected note changes
-  // useEffect(() => {
-  //   if (selectedNote?.note_id !== "") {
-  //     setValue(generateHtmlFromText(selectedNote?.text));
-  //     setNoteTitle(selectedNote?.note_name);
-  //     setShowEditor(true);
-  //   }
-  // }, [selectedNote, generateHtmlFromText, setShowEditor]);
   const handleReferenceClick = (e, { fileName, fileType }, file) => {
 
     const _file = file || knowledgeBase?.find(item => item?.source_path === (fileName + "." + fileType));
-    console.log(_file);
 
     if (_file) {
       if (fileType === "mp4") {
@@ -426,19 +281,17 @@ const ChatPanel = () => {
       models: [],
     });
     event.preventDefault();
-    // console.log(note);
     setNoteIndex(index);
     setSelectedNote(note);
     setIsEditingTitle(false);
     setIsNewNote(false);
     setShowNoteDetails(true);
-    // setActiveView('note');
     setShowEditor(true);
   };
 
   const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
 
-  const showSelectedStory = (e, story, index) => {
+  const showSelectedStory = (e, story) => {
     setSelectedNote({
       note_id: "",
       text: [{
@@ -452,22 +305,14 @@ const ChatPanel = () => {
       images: [],
       note_name: "",
     });
-    // setNoteTitle(story?.story_name);
     setSelectedStory(story);
     setGeneratedStory(story);
     setIsNewStory(false);
-    // setShowEditor(true);
     setShowStoriesEditor(true);
   };
   const showSelectedReel = (e, reel, index) => {
     setReel(reel);
     setIsReelOpen(true);
-    // setNoteTitle(story?.story_name);
-    // setSelectedStory(story);
-    // setGeneratedStory(story);
-    // setIsNewStory(false);
-    // setShowEditor(true);
-    // setShowStoriesEditor(true);
   };
 
   const [actualTab, setActualTab] = useState(null); //genMetadata | genStories
@@ -507,16 +352,9 @@ const ChatPanel = () => {
 
   async function deleteStory(event, id) {
     event.preventDefault();
-    console.log("hehe");
     setIsStoryDeleting(true);
     try {
       await makeApiRequest(`/stories/${id}`, 'delete');
-      // setSelectedStory({
-      //   story_id: "",
-      //   text: [],
-      //   story_name: "",
-      //   models: [],
-      // });
 
       toast('Story deleted successfully', { className: 'p-2 rounded-md', theme });
       // fetch stories
@@ -563,11 +401,6 @@ const ChatPanel = () => {
     setActualTab(item);
   }
 
-  function closeTopTabs() {
-    setActualTab(null);
-    setShowStoriesEditor(false);
-  }
-
   const [isGeneratingMetadata, setIsGeneratingMetadata] = useState(false);
   const [verbosityValue, setVerbosityValue] = useState('Medium');
   const [context, setContext] = useState('');
@@ -575,211 +408,6 @@ const ChatPanel = () => {
   const [isGeneratingReel, setIsGeneratingReel] = useState(false);
   const [reelContext, setReelContext] = useState('');
   const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1min)');
-
-  //   function exportHTML() {
-  //     var header =
-  //       "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-  //       "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-  //       "xmlns='http://www.w3.org/TR/REC-html40'>" +
-  //       `<head><meta charset='utf-8'><title>Story:${selectedStory.story_name}</title></head><body>`;
-  //     var footer = "</body></html>";
-  //     const htmlString = `
-  // <div>
-  //     <h1 style='text-align: center; margin-bottom: 30px;'>${selectedStory.story_name
-  //       }</h1>
-  // </div>
-
-  // <div>
-  //     ${selectedStory.text
-  //         ?.map(
-  //           (item) => `
-  //         <div>
-  //             ${item.outline.name
-  //               ? `
-  //                 <div>
-  //                     <div>
-  //                         <div>
-  //                             ${item.sectionImages?.length > 0
-  //                 ? `
-  //                                 <div>
-  //                                     ${item.sectionImages
-  //                   .map(
-  //                     (imgBlob) => `
-  //                                         <img width="300" height="300" src="${imgBlob}" alt="img" />
-  //                                     `
-  //                   )
-  //                   .join("")}
-  //                                 </div>
-  //                             `
-  //                 : ""
-  //               }
-  //                             <h3>${item.outline.name.replace(
-  //                 /\n/g,
-  //                 "<br>"
-  //               )}</h3>
-  //                         </div>
-  //                     </div>
-  //                 </div>
-  //             `
-  //               : ""
-  //             }
-  //             <div>
-  //                 <div>
-  //                     ${item.content
-  //               ? `
-  //                         <div>
-  //                             <div>
-  //                                 ${typeof item.content === "string"
-  //                 ? `
-  //                                     ${item.contentImages?.length > 0
-  //                   ? `
-  //                                         <div>
-  //                                             ${item.contentImages
-  //                     .map(
-  //                       (imgBlob) => `
-  //                                                 <img width="300" height="300" src="${imgBlob}" alt="img" />
-  //                                             `
-  //                     )
-  //                     .join("")}
-  //                                         </div>
-  //                                     `
-  //                   : ""
-  //                 }
-  //                                     <h5>${item.content.replace(
-  //                   /\n/g,
-  //                   "<br>"
-  //                 )}</h5>
-  //                                 `
-  //                 : `
-  //                                     ${item.content?.map(
-  //                   (i) => `
-  //                                         <div>
-  //                                             <div>
-  //                                                 ${!i.answer.includes(
-  //                     "https://oaidalleapiprodscus.blob"
-  //                   )
-  //                       ? `
-  //                                                     <p>${i.answer.replace(
-  //                         /\n/g,
-  //                         "<br>"
-  //                       )}</p>
-  //                                                 `
-  //                       : `
-  //                                                     <img width="300" height="300" src="${i.answer}" alt="image" />
-  //                                                 `
-  //                     }
-  //                                             </div>
-  //                                             ${(i?.videosArr?.length > 0 ||
-  //                       i?.keyframesArr?.length > 0 ||
-  //                       i?.pdfsArr?.length > 0 ||
-  //                       i?.imgsArr?.length > 0)
-  //                       ? `
-  //                                                 <div>
-  //                                                     <p>References:</p>
-  //                                                     ${i?.videosArr?.length >
-  //                         0
-  //                         ? `
-  //                                                         <ul>
-  //                                                             ${i?.videosArr
-  //                           ?.map(
-  //                             (video) => `
-  //                                                                 <li>${video.source_path +
-  //                               " | Timestamp: " +
-  //                               video.timestamp
-  //                               }</li>
-  //                                                             `
-  //                           )
-  //                           .join("")}
-  //                                                         </ul>
-  //                                                     `
-  //                         : ""
-  //                       }
-  //                                                     ${i?.keyframeArr
-  //                         ?.length > 0
-  //                         ? `
-  //                                                         <ul>
-  //                                                             ${i?.keyframeArr
-  //                           ?.map(
-  //                             (video) => `
-  //                                                                 <li>${video.source_path +
-  //                               " | Keyframe: " +
-  //                               video.timestamp
-  //                               }</li>
-  //                                                             `
-  //                           )
-  //                           .join("")}
-  //                                                         </ul>
-  //                                                     `
-  //                         : ""
-  //                       }
-  //                                                     ${i?.pdfsArr?.length > 0
-  //                         ? `
-  //                                                         <ul>
-  //                                                             ${i?.pdfsArr
-  //                           ?.map(
-  //                             (pdf) => `
-  //                                                                 <li>${pdf.source_path +
-  //                               " | Page: " +
-  //                               (parseInt(
-  //                                 pdf.page
-  //                               ) +
-  //                                 1)
-  //                               }</li>
-  //                                                             `
-  //                           )
-  //                           .join("")}
-  //                                                         </ul>
-  //                                                     `
-  //                         : ""
-  //                       }
-  //                                                     ${i?.imgsArr?.length > 0
-  //                         ? `
-  //                                                         <ul>
-  //                                                             ${i?.imgsArr?.map(
-  //                           (img) => `
-  //                                                                 <li>${img.source_path}</li>
-  //                                                             `
-  //                         )
-  //                           .join("")}
-  //                                                         </ul>
-  //                                                     `
-  //                         : ""
-  //                       }
-  //                                                 </div>
-  //                                             `
-  //                       : ""
-  //                     }
-  //                                         </div>
-  //                                     `
-  //                 )
-  //                   .join("")}
-  //                                 `
-  //               }
-  //                             </div>
-  //                         </div>
-  //                     `
-  //               : `<p></p>`
-  //             }
-  //                 </div>
-  //             </div>
-  //         </div>
-  //     `
-  //         )
-  //         .join("")}
-  // </div>
-  // `;
-  //     var sourceHTML = header + htmlString + footer;
-
-  //     var source =
-  //       "data:application/vnd.ms-word;charset=utf-8," +
-  //       encodeURIComponent(sourceHTML);
-  //     var fileDownload = document.createElement("a");
-  //     document.body.appendChild(fileDownload);
-  //     fileDownload.href = source;
-  //     fileDownload.download = selectedStory.story_name + ".doc";
-  //     fileDownload.click();
-  //     document.body.removeChild(fileDownload);
-  //   }
 
   const [reel, setReel] = useState({
     id: "",
@@ -838,53 +466,14 @@ const ChatPanel = () => {
     }
   };
 
-  const [showReelContextMenu, setShowReelContextMenu] = useState(null);
-  const dropdownRef = useRef(null);
   const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
   function handleOpenFilenameUpdateModal(event, reel) {
     event.stopPropagation();
     setReelTitleUpdateValue(reel.title);
     setShowUpdateReelTitleModal(true);
-
-    // setFilename(source?.source_path.split('.')?.slice(0, -1).join('.') || '');
-    // setUpdatingSource(source);
-    // setIsUpdateFilenameModalOpen(true);
-  }
-
-  function handleOpenReelContextMenu(e, reelId) {
-    e.stopPropagation();
-    setShowReelContextMenu(reelId);
-    console.log(reelId);
   }
 
   const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
-  // async function updateReelTitle(value) {
-  //       try {
-  //           if (value === "") {
-  //               toast('value cannot be empty', { className: `p-2 rounded-md !bg-red-600 text-white`, theme });
-  //               return;
-  //           }
-
-  //           setIsLoading(true);
-
-  //           const payload = {
-  //               reelId: reel.id,
-  //               videoUrl: reel.reel_video_url,
-  //               newTitle: value?.trim()
-  //           };
-  //           await makeApiRequest('/rename-reel', 'PATCH', JSON.stringify(payload));
-
-  //           // update reel title in UI
-  //           setReels(prevReels => prevReels.map(r => r.id === reel.id ? { ...r, title: value?.trim() } : r));
-  //           onHide();
-  //           toast('Reel renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
-  //       } catch (error) {
-  //           console.log(error);
-  //           toast('Something bad happened', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
-  //       } finally {
-  //           setIsLoading(false);
-  //       }
-  // }
 
   return (
     <aside
@@ -944,61 +533,6 @@ const ChatPanel = () => {
         </button>
       </div>
 
-      {/* GenMetadata & GenStories */}
-      {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-
-      {/* <Tabs
-        transition={false}
-        defaultActiveKey="genMetadata"
-        onSelect={(k) => setActiveTab(() => k)}
-        activeKey={activeTab}
-        id="uncontrolled-tab-example"
-        className={`mb-3 user-select-none  text-center flex justify-center items-center !border-b-0 ${!isRightSidebarOpen && '!hidden'
-          }`}
-      >
-        <Tab
-          eventKey="genMetadata"
-          title="GenMetadata"
-          className="flex-1 overflow-y-auto bg-red-600"
-          tabClassName="text-primary-300"
-        >
-          <MetadataGen key={0} name="genMetadata" />
-        </Tab>
-
-        <Tab
-          eventKey="insights"
-          title="Insights"
-          className="flex-1 h-full overflow-y-auto"
-        >
-          <NotesSection
-            setNoteIndex={setNoteIndex}
-            nodeIndex={noteIndex}
-            key={2}
-            name="Notes"
-          />
-          {(activeTab === 'insights' &&
-            (Boolean(localStorage.getItem('guide_completed_insights')) === false ||
-              localStorage.getItem('guide_completed_sources') === "false")) &&
-            <Guide steps={notesSectionSteps} tabIdentifier="insights" />
-          }
-        </Tab>
-
-        <Tab
-          eventKey="stories"
-          title="GenStories"
-          className="flex-1 h-full overflow-y-auto"
-        >
-          <StoriesSection />
-          {(activeTab === 'stories' &&
-            (Boolean(localStorage.getItem('guide_completed_stories')) === false ||
-              localStorage.getItem('guide_completed_sources') === "false")) &&
-            <Guide steps={storiesSectionSteps} tabIdentifier="stories" />
-          }
-        </Tab>
-      </Tabs> */}
-
-      {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-
       {/* Editor or Tabs */}
       {showEditor ? (
         <div className="flex-1 h-full overflow-y-auto">
@@ -1013,20 +547,6 @@ const ChatPanel = () => {
                   Save {currentTab === "Insights" ? "insight" : "story"}
                 </span>
               </RippleButton>
-              {/* export */}
-              {/* {selectedStory?.story_id !== "" && <div
-                className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                  ? 'hover:bg-light-hover-100/30'
-                  : 'hover:bg-light-hover-200/20'
-                  } z-10`}
-                onClick={exportHTML}
-              >
-                <FileDownloadIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                  }`}>
-                  Export
-                </span>
-              </div>} */}
             </div>
             <div>
               <input
@@ -1098,11 +618,6 @@ const ChatPanel = () => {
                 formats={formats}
               />
             </div>
-
-
-
-
-
             {selectedNote?.note_name !== "" ? <div className={`overflow-y-auto h-full max-h-full space-y-6  !z-10 relative !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'}`}>
               {selectedNote?.text.map((item, index) => (
                 <div
@@ -1113,14 +628,10 @@ const ChatPanel = () => {
                     }`}>{typeof item?.question === "string" ? item?.question : item?.question?.query}</h5>
                   <p className={`z-10 text-textColor-200 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                     }`} dangerouslySetInnerHTML={{ __html: item?.answer }}></p>
-                  {/* <p className="z-10 font-bold text-white">
-                    <strong>Model:</strong> {item.model}
-                  </p> */}
 
                   {/* PDF Links */}
                   {(item?.references?.pdfLinks?.length > 0 || item?.refs?.pdfLinks?.length > 0) && (
                     <div>
-                      {/* <strong className="z-10 font-bold text-white">PDF:</strong>{' '} */}
                       {item[item.refs ? 'refs' : 'references']?.pdfLinks?.map((link, i) => (
                         <a
                           key={i}
@@ -1137,7 +648,6 @@ const ChatPanel = () => {
                   {/* Video Links */}
                   {(item?.references?.videoLinks?.length > 0 || item?.refs?.videoLinks?.length > 0) && (
                     <div>
-                      {/* <strong className="z-10 font-bold text-white">Video:</strong>{' '} */}
                       {item[item.refs ? 'refs' : 'references']?.videoLinks?.map((link, i) => (
                         <li
                           key={i}
@@ -1153,7 +663,6 @@ const ChatPanel = () => {
                   {/* Image Links */}
                   {(item?.references?.imageLinks?.length > 0 || item?.refs?.imageLinks?.length > 0) && (
                     <div>
-                      {/* <strong className="z-10 font-bold text-white">Images:</strong>{' '} */}
                       {item[item.refs ? 'refs' : 'references']?.imageLinks?.map((link, i) => (
                         <img
                           key={i}
@@ -1171,21 +680,8 @@ const ChatPanel = () => {
               :
               <>
                 {selectedStory.story_name !== "" && <div className={`overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border bg-red-600 !border-textColor-100`}>
-                  {/* {
-                  selectedStory?.text?.map((heading) => {
-                    return (
-                      <div key={heading?.id} className="pl-2 mb-4">
-                        <h6 className={`text-md z-10 mt-2 font-bold  ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                          }`}>{heading?.outline?.name}</h6>
-                        <p className={`z-10 font-bold text-white ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                          }`}>{heading?.content?.answer}</p>
-                      </div>
-                    );
-                  })
-                } */}
                   <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                     }`}>
-                    {/* <h3 className="mb-2 italic text-center">{selectedStory.story_name}</h3> */}
                     {
                       selectedStory?.text?.map(section => (
                         <div key={section.id}>
@@ -1225,20 +721,6 @@ const ChatPanel = () => {
                 </div>
                 }</>
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           </div>
         </div>
       ) : (
@@ -1287,13 +769,6 @@ const ChatPanel = () => {
             {
               currentTab === "Insights" ?
                 <>
-                  {/* <div
-                    className={`mb-2 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit shadow-md ${theme === 'light'
-                      ? 'bg-textColor-100/40'
-                      : 'bg-light-hover-200/20 !border !border-textColor-200'
-                      } z-10`}
-                    onClick={createNewInsight}
-                  > */}
                   <RippleButton
                     // className={`select-none mt-3 flex items-center justify-center p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-200 hover:bg-light-hover-200/20'} mb-3`}
                     onClick={createNewInsight}
@@ -1302,7 +777,6 @@ const ChatPanel = () => {
                     <AddIcon className="!w-fit !p-0" />
                     <span className={` !text-[12px]`}>New Insight</span>
                   </RippleButton>
-                  {/* </div> */}
                   <div className="flex flex-col overflow-y-auto">
                     {/* search input */}
                     {(notes?.length > 0 || notesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={insightSearchValue} onChange={handleInsightSearch} />}
@@ -1337,19 +811,6 @@ const ChatPanel = () => {
                 </>
                 : currentTab === "Stories" ?
                   <>
-                    {/* <div
-                    className={`mb-3 flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                      ? 'hover:bg-textColor-100/10'
-                      : 'hover:bg-light-hover-200/20'
-                      } z-10`}
-                    onClick={createNewInsight}
-                  >
-                    <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                      }`}>
-                      New Story
-                    </span>
-                  </div> */}
                     <div className="flex flex-col overflow-y-auto">
                       {(stories?.length > 0 || storiesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={storiesSearchValue} onChange={handleStoriesSearch} />}
                       {
@@ -1391,26 +852,7 @@ const ChatPanel = () => {
 
                               {/* context menu */}
                               <div className="relative">
-                                {/* <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenReelContextMenu(e, reel?.id)} /> */}
-
-                                {/* {(showReelContextMenu === reel?.id) && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
-                                  <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
-                                    onClick={(event) => handleOpenFilenameUpdateModal(event, reel)}>
-                                    <EditOutlinedIcon
-                                      className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
-                                    />
-                                    <span>Rename</span>
-                                  </div>
-                                  <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}>
-                                    <DeleteOutlineOutlinedIcon
-                                      className={`cursor-pointer`}
-                                    />
-                                    <span>Delete</span>
-                                  </div>
-                                </div>} */}
                               </div>
-                              {/* <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} /> */}
-                              {/* <img className="w-8 h-8 rounded-md" src={`${API_ENDPOINT}${reel?.thumbnail}`} /> */}
                               <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
                               <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                 }`}>{reel.title}</p>
@@ -1443,7 +885,6 @@ const ChatPanel = () => {
                           show={showUpdateReelTitleModal}
                           onHide={() => setShowUpdateReelTitleModal(false)}
                           reel={reels.find(r => r.id === hoveredReelRef.current)}
-                        // onSave={(val) => updateReelTitle(val)}
                         />
                       )
                     }

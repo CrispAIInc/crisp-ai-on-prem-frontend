@@ -728,7 +728,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   };
 
   const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, refs = { pdfLinks: [], videoLinks: [], imageLinks: [] }) => {
-    console.log(textToAdd);
     const newText = {
       id: generateRandomHash(5),
       model: models[0] || "",
@@ -946,7 +945,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     if (isError) {
       console.log(errorMessage)
     } else {
-      console.log("just closed");
       setIsTimestampPickerOpen(false);
     }
   }
