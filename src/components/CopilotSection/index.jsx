@@ -25,6 +25,7 @@ import HorizontalChatHistoryList from '../HorizontalChatHistoryList/index.jsx';
 import ChatHistory from '../ChatHistory/index.jsx';
 import BaseHeading from "../BaseHeading"
 import TimestampPicker from '../TimestampPicker/index.jsx';
+import toast from 'react-simple-toasts';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -943,7 +944,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   const rejectFn = (isError, errorMessage) => {
     if (isError) {
-      console.log(errorMessage)
+      console.log(errorMessage);
+      toast(errorMessage, { className: `p-2 rounded-md !bg-red-600 text-white`, theme });
     } else {
       setIsTimestampPickerOpen(false);
     }
