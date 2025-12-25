@@ -93,8 +93,7 @@ export default function TimestampPicker({ confirmFn, rejectFn }) {
   }
 
   return (
-    <div className={``}>
-      <div className="flex items-center p-2 bg-red-600 shadow-xl w-fit rounded-2xl">
+      <div className="flex items-center p-2 bg-white border shadow-xl w-fit rounded-2xl">
 
       {/* Start */}
       <div className="">
@@ -150,6 +149,5 @@ export default function TimestampPicker({ confirmFn, rejectFn }) {
           <CloseIcon className={'cursor-pointer'} onClick={() => rejectFn(false)} />
         </div>
       </div>
-    </div>
   );
 }

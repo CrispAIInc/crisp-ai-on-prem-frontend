@@ -24,6 +24,7 @@ import useAuth from '../../hooks/useAuth.js';
 import HorizontalChatHistoryList from '../HorizontalChatHistoryList/index.jsx';
 import ChatHistory from '../ChatHistory/index.jsx';
 import BaseHeading from "../BaseHeading"
+import TimestampPicker from '../TimestampPicker/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -933,6 +934,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setImagePreviewIndex(index);
   };
 
+  const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
+
   return (
     <article className="relative flex flex-col flex-1 mb-3 h-full max-w-[650px] mx-auto ">
       <section className={`flex flex-wrap items-center gap-3 ${messages.length > 0 && 'mb-3'}`}>
@@ -1170,7 +1173,14 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
         <div className="flex items-center justify-between">
-          <BaseHeading text="Describe segment" className={`cursor-pointer p-2 rounded-md ${theme === "light" ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300'}`} />
+          <div className='relative'>
+
+          <BaseHeading text="Describe segment" className={`cursor-pointer w-full p-2 rounded-md ${theme === "light" ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300'}`} onClick={() => setIsTimestampPickerOpen(prev => !prev)}/>
+
+          {
+            isTimestampPickerOpen && <div className='absolute inset-0 top-[25px] bottom-full'><TimestampPicker /></div>
+          }
+          </div>
           <ChatHistory />
           </div>
         {
