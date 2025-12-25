@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import makeApiRequest, { axiosInstance } from "../api";
 
@@ -1106,6 +1106,8 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [projects, setProjects] = useState([]);
     const [currentProject, setCurrentProject] = useState(JSON.parse(localStorage.getItem('current_project')));
 
+    const checkedSourcesCount = useMemo(() => displayedSources.filter(source => source.is_selected).length, [displayedSources])
+
     useLayoutEffect(() => {
         localStorage.setItem('current_project', JSON.stringify(currentProject));
 
@@ -1167,6 +1169,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // create value object with all the states
     const value = {
+        checkedSourcesCount,
         projects, setProjects,
         currentProject, setCurrentProject,
         isSettingsModalOpen, setIsSettingsModalOpen,

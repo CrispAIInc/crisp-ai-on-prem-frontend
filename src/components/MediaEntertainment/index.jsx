@@ -14,7 +14,7 @@ import useResources from '../../hooks/useResources';
 function MediaEntertainment({
     reel,
     setReel,
-    isReelOpen,
+    checkedSourcesCount,
     setIsReelOpen,
     reels,
     setReels,
@@ -63,7 +63,7 @@ function MediaEntertainment({
     };
 
     const MAX_SOURCES_COUNT = 15;
-    const handleMouseEnter = () => (displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > MAX_SOURCES_COUNT) && setTooltipVisible(true);
+    const handleMouseEnter = () => (checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMedia() {
@@ -164,7 +164,7 @@ function MediaEntertainment({
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    disabled={isGeneratingReel || displayedSources.filter(i => i.is_selected).length === 0 || displayedSources.filter(i => i.is_selected).length > MAX_SOURCES_COUNT} onClick={generateMedia}>
+                    disabled={isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT} onClick={generateMedia}>
                     {isGeneratingReel ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </RippleButton>
                 {tooltipVisible && (

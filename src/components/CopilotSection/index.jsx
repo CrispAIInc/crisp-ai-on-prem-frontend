@@ -141,7 +141,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     currentChat,
     chatHistory,
     setChatHistory,
-    setCurrentChat
+    checkedSourcesCount
   } = useContext(MainContext);
 
   const { token } = useAuth();
@@ -1190,10 +1190,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         <div className="flex items-center justify-between">
           <div className='relative'>
 
-          {displayedSources.filter(source => source.is_selected).length > 0 && <BaseHeading text="Describe segment" className={`cursor-pointer w-full p-2 rounded-md ${theme === "light" ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300'}`} onClick={() => setIsTimestampPickerOpen(prev => !prev)}/>}
+            {checkedSourcesCount > 0 && <BaseHeading text="Describe segment" className={`cursor-pointer w-full p-2 rounded-md ${theme === "light" ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300'}`} onClick={() => setIsTimestampPickerOpen(prev => !prev)}/>}
 
           {
-            isTimestampPickerOpen && <div className='absolute inset-0 top-[32px] bottom-full'><TimestampPicker start={start} setStart={setStart} end={end} setEnd={setEnd} confirmFn={confirmFn} rejectFn={rejectFn} /></div>
+              (isTimestampPickerOpen && checkedSourcesCount > 0) && <div className='absolute inset-0 top-[32px] bottom-full'><TimestampPicker start={start} setStart={setStart} end={end} setEnd={setEnd} confirmFn={confirmFn} rejectFn={rejectFn} /></div>
           }
           </div>
           <ChatHistory />
