@@ -23,6 +23,7 @@ import { TOKEN_NAME } from '../../globals.js';
 import useAuth from '../../hooks/useAuth.js';
 import HorizontalChatHistoryList from '../HorizontalChatHistoryList/index.jsx';
 import ChatHistory from '../ChatHistory/index.jsx';
+import BaseHeading from "../BaseHeading"
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -1168,8 +1169,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       {/* </div> */}
       <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
-        <ChatHistory />
-        {/* <ChatHistory /> */}
+        <div className="flex items-center justify-between">
+          <BaseHeading text="Describe segment" className={`cursor-pointer p-2 rounded-md ${theme === "light" ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300'}`} />
+          <ChatHistory />
+          </div>
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
