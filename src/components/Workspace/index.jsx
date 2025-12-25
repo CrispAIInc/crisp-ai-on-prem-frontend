@@ -53,7 +53,7 @@ const Workspace = () => {
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
             </div>
             {(activeView === 'resource' || displayedSources?.length > 0) ? (
-                <CenterPanel combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} isCombinedSummaryPending={isCombinedSummaryPending} setIsCombinedSummaryPending={setIsCombinedSummaryPending} />
+                <CenterPanel selectedLanguage={selectedLanguage} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} isCombinedSummaryPending={isCombinedSummaryPending} setIsCombinedSummaryPending={setIsCombinedSummaryPending} />
             ) : !activeView ? (
                 <div className="mt-10">
                     <NoData />

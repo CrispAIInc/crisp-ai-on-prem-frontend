@@ -95,6 +95,8 @@ const CenterPanel = ({ workspaceContainer, combinedSummary, setCombinedSummary, 
         // setActiveView('note');
     };
 
+    const textDirection = isRtlLanguage(selectedLanguage) ? "rtl" : "ltr"
+
     // const isRtlLanguage = (langCode) => ["ar", "iw", "fa", "ur", "ps", "sd"].includes(langCode);
 
     return (
@@ -127,7 +129,7 @@ const CenterPanel = ({ workspaceContainer, combinedSummary, setCombinedSummary, 
                                 ? "text-textColor-300"
                                 : "text-textColor-100"
                                 }`}
-                            dir={isRtlLanguage(selectedLanguage) ? "rtl" : "ltr"}
+                            dir={textDirection}
                             dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== "" ? combinedSummary?.replace(/\n/gi, '<br />') : (currentResource?.metadata?.summary?.content !== undefined) ? currentResource?.metadata?.summary?.content : ""}</p>` }}
                         ></p>
                         {
