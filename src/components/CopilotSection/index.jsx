@@ -935,6 +935,18 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   };
 
   const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
+  const confirmFn = ({start, end}) => {
+    console.log("confirmed: ", {start, end})
+  }
+
+  const rejectFn = (isError, errorMessage) => {
+    if (isError) {
+      console.log(errorMessage)
+    } else {
+      console.log("just closed");
+      setIsTimestampPickerOpen(false);
+    }
+  }
 
   return (
     <article className="relative flex flex-col flex-1 mb-3 h-full max-w-[650px] mx-auto ">
@@ -1178,7 +1190,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           <BaseHeading text="Describe segment" className={`cursor-pointer w-full p-2 rounded-md ${theme === "light" ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300'}`} onClick={() => setIsTimestampPickerOpen(prev => !prev)}/>
 
           {
-            isTimestampPickerOpen && <div className='absolute inset-0 top-[32px] bottom-full'><TimestampPicker /></div>
+            isTimestampPickerOpen && <div className='absolute inset-0 top-[32px] bottom-full'><TimestampPicker confirmFn={confirmFn} rejectFn={rejectFn} /></div>
           }
           </div>
           <ChatHistory />
