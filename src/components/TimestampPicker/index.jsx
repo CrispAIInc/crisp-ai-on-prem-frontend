@@ -7,8 +7,8 @@ const generateOptions = (max) =>
     String(i).padStart(2, "0")
   );
 
-const TimeInput = ({ max, onChange }) => {
-  const [value, setValue] = useState("00");
+const TimeInput = ({ initVal, max, onChange }) => {
+  const [value, setValue] = useState(initVal);
   const options = generateOptions(max);
   const [isOpen, setIsOpen] = useState(false);
   const timeOptionsRef = useRef(null);
@@ -67,9 +67,7 @@ const TimeInput = ({ max, onChange }) => {
 };
 
 
-export default function TimestampPicker({ confirmFn, rejectFn }) {
-  const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
-  const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
+export default function TimestampPicker({ start, setStart, end, setEnd, confirmFn, rejectFn }) {
 
   const toSeconds = (t) =>
     Number(t.h) * 3600 + Number(t.m) * 60 + Number(t.s);
@@ -99,18 +97,21 @@ export default function TimestampPicker({ confirmFn, rejectFn }) {
       <div className="">
         <div className="flex items-center justify-center gap-2">
           <TimeInput
+            initVal={start.h}
             value={start.h}
             max={23}
             onChange={(v) => setStart({ ...start, h: v })}
           />
           :
           <TimeInput
+            initVal={start.m}
             value={start.m}
             max={59}
             onChange={(v) => setStart({ ...start, m: v })}
           />
           :
           <TimeInput
+            initVal={start.s}
             value={start.s}
             max={59}
             onChange={(v) => setStart({ ...start, s: v })}
@@ -125,18 +126,21 @@ export default function TimestampPicker({ confirmFn, rejectFn }) {
       <div className="">
         <div className="flex items-center justify-center gap-2">
           <TimeInput
+            initVal={end.h}
             value={end.h}
             max={23}
             onChange={(v) => setEnd({ ...end, h: v })}
           />
           :
           <TimeInput
+            initVal={end.m}
             value={end.m}
             max={59}
             onChange={(v) => setEnd({ ...end, m: v })}
           />
           :
           <TimeInput
+            initVal={end.s}
             value={end.s}
             max={59}
             onChange={(v) => setEnd({ ...end, s: v })}

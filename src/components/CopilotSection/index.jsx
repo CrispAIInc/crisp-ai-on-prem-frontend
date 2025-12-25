@@ -934,9 +934,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setImagePreviewIndex(index);
   };
 
+  const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
+  const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
   const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
   const confirmFn = ({start, end}) => {
-    console.log("confirmed: ", {start, end})
+    setInput(`Generate description between timestamps ${start} and ${end}`);
+    setIsTimestampPickerOpen(false);
   }
 
   const rejectFn = (isError, errorMessage) => {
@@ -1190,7 +1193,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           <BaseHeading text="Describe segment" className={`cursor-pointer w-full p-2 rounded-md ${theme === "light" ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300'}`} onClick={() => setIsTimestampPickerOpen(prev => !prev)}/>
 
           {
-            isTimestampPickerOpen && <div className='absolute inset-0 top-[32px] bottom-full'><TimestampPicker confirmFn={confirmFn} rejectFn={rejectFn} /></div>
+            isTimestampPickerOpen && <div className='absolute inset-0 top-[32px] bottom-full'><TimestampPicker start={start} setStart={setStart} end={end} setEnd={setEnd} confirmFn={confirmFn} rejectFn={rejectFn} /></div>
           }
           </div>
           <ChatHistory />
