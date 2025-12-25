@@ -1,6 +1,7 @@
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { MainContext } from "../../contexts/mainContext"
 
 const generateOptions = (max) =>
   Array.from({ length: max + 1 }, (_, i) =>
@@ -8,6 +9,9 @@ const generateOptions = (max) =>
   );
 
 const TimeInput = ({ initVal, max, onChange }) => {
+
+  const {theme} = useContext(MainContext)
+
   const [value, setValue] = useState(initVal);
   const options = generateOptions(max);
   const [isOpen, setIsOpen] = useState(false);
@@ -46,16 +50,16 @@ const TimeInput = ({ initVal, max, onChange }) => {
         value={value}
         onChange={handleInput}
         onClick={() => setIsOpen(!isOpen)}
-        className="py-2 text-xs font-semibold text-center border border-gray-300 rounded-lg w-9 h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400"
+        className={`py-2 text-xs font-semibold text-center rounded-lg w-9 h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400 ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}
       />
 
-      <div ref={timeOptionsRef} className={`absolute top-full left-0 w-full h-[100px] overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'}`}>
+      <div ref={timeOptionsRef} className={`absolute top-full left-0 w-full h-[100px] overflow-y-auto rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'} ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}>
         {/* <div className="flex flex-col items-center gap-1 p-2"> */}
           {options.map((opt) => (
             <button
               key={opt}
               onClick={handleTimeClick}
-              className="w-full py-2 text-xs text-gray-500 hover:bg-gray-100"
+              className={`w-full py-2 text-xs ${theme === 'light' ? 'hover:bg-gray-100 text-gray-500' : 'text-textColor-100 hover:bg-textColor-200/40'}`}
             >
               {opt}
             </button>
@@ -68,6 +72,7 @@ const TimeInput = ({ initVal, max, onChange }) => {
 
 
 export default function TimestampPicker({ start, setStart, end, setEnd, confirmFn, rejectFn }) {
+  const {theme} = useContext(MainContext)
 
   const toSeconds = (t) =>
     Number(t.h) * 3600 + Number(t.m) * 60 + Number(t.s);
@@ -91,7 +96,7 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
   }
 
   return (
-      <div className="flex items-center p-2 bg-white border shadow-xl w-fit rounded-2xl">
+    <div className={`flex items-center p-2 shadow-xl w-fit rounded-2xl ${theme === 'light' ? 'bg-white !border' : 'bg-textColor-300 !border !border-textColor-200/40'}`}>
 
       {/* Start */}
       <div className="">
