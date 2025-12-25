@@ -1178,7 +1178,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           <BaseHeading text="Describe segment" className={`cursor-pointer w-full p-2 rounded-md ${theme === "light" ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300'}`} onClick={() => setIsTimestampPickerOpen(prev => !prev)}/>
 
           {
-            isTimestampPickerOpen && <div className='absolute inset-0 top-[25px] bottom-full'><TimestampPicker /></div>
+            isTimestampPickerOpen && <div className='absolute inset-0 top-[32px] bottom-full'><TimestampPicker /></div>
           }
           </div>
           <ChatHistory />
