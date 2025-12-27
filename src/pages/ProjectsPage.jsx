@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import ProjectCard from '../components/ProjectCard';
 import { sortByDate } from '../utils.js';
 import ProjectsHeader from '../components/ProjectsHeader/index.jsx';
@@ -8,17 +8,16 @@ import LoadingSpinner from '../components/LoadingSpinner/index.jsx';
 import makeApiRequest, { axiosInstance } from '../api/index.js';
 import { MainContext } from '../contexts/mainContext.jsx';
 import Modal from 'react-bootstrap/Modal';
-import TimestampPicker from '../components/TimestampPicker';
 
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState("");
-    const {theme} = useContext(MainContext);
+    const { theme } = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSave = async () => {
         try {
             setIsLoading(true);
-            const {success, message, project } = await makeApiRequest(`/projects`, 'POST', {
+            const { success, message, project } = await makeApiRequest(`/projects`, 'POST', {
                 name: newProjectName,
             });
             if (success) {
@@ -89,26 +88,25 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
             </Modal.Footer>
         </Modal>
     );
-}
+};
 
 
-const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
+const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
     // const {projects} = useContext(ProjectsContext);
 
-    const [sortOrder, setSortOrder] = useState('asc')
-    
+    const [sortOrder, setSortOrder] = useState('asc');
+
     const sortedProjects = useMemo(() => {
         return sortByDate(projects, 'created_at', sortOrder);
     }, [projects, sortOrder]);
     const projectCount = sortedProjects.length;
-    
+
     const [status, setStatus] = useState("");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
         <div className="px-4 pb-4">
             <ProjectsHeader />
-            <TimestampPicker />
             <div className="
                 mx-auto px-4
                 sm:max-w-[540px]
@@ -119,13 +117,13 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
             ">
                 {/* recent projects */}
                 {projectCount > 0 && <><h2 className="mb-4 text-xl font-bold text-textColor-200">Recent Projects</h2>
-                <div className="flex flex-wrap items-center gap-6 mb-16 overflow-x-auto hover:z-10 md:gap-8">
-                    {
-                        sortedProjects.slice(0, 3).map((project) => (
-                            <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
-                        ))
-                    }
-                </div></>}
+                    <div className="flex flex-wrap items-center gap-6 mb-16 overflow-x-auto hover:z-10 md:gap-8">
+                        {
+                            sortedProjects.slice(0, 3).map((project) => (
+                                <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                            ))
+                        }
+                    </div></>}
 
                 {/* all projects */}
                 <div className="flex items-center justify-between mt-6 mb-6">
@@ -147,18 +145,18 @@ const ProjectsPage = ({projects, setProjects, setCurrentProject}) => {
                         <button className="px-4 py-2 font-semibold text-white border rounded-full bg-gradient-to-r from-purple-500 to-indigo-600" onClick={() => setIsModalOpen(true)}>
                             New Project
                         </button>
-                    </div>  
+                    </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
                     {/* new project */}
                     <div className={`flex flex-col items-center justify-center  relative rounded-2xl p-3 w-80 h-48 shadow-lg transition-shadow duration-300 border-2 border-dashed border-purple-500/40
 hover:border-purple-500
 hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}>
-                            <div className="flex items-center justify-center mb-2 rounded-full cursor-pointer bg-purple-300/40 w-14 h-14">
-                                <AddIcon className="text-purple-500" fontSize="large" />
-                            </div>
-                            <h3 className="text-lg text-gradient-x">New Project</h3>
-                            <p className="text-sm text-center text-textColor-100">Start a new workspace, upload files and generate content.</p>
+                        <div className="flex items-center justify-center mb-2 rounded-full cursor-pointer bg-purple-300/40 w-14 h-14">
+                            <AddIcon className="text-purple-500" fontSize="large" />
+                        </div>
+                        <h3 className="text-lg text-gradient-x">New Project</h3>
+                        <p className="text-sm text-center text-textColor-100">Start a new workspace, upload files and generate content.</p>
                     </div>
                     {
                         sortedProjects.map((project) => (
@@ -168,14 +166,14 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                 </div>
             </div>
 
-        {isModalOpen && <CreateProjectModal
-            show={isModalOpen}
-            onHide={() => setIsModalOpen(false)}
-            setProjects={setProjects}
-            setCurrentProject={setCurrentProject}
-        />}
+            {isModalOpen && <CreateProjectModal
+                show={isModalOpen}
+                onHide={() => setIsModalOpen(false)}
+                setProjects={setProjects}
+                setCurrentProject={setCurrentProject}
+            />}
         </div>
-    )
-}
+    );
+};
 
-export default ProjectsPage
+export default ProjectsPage;

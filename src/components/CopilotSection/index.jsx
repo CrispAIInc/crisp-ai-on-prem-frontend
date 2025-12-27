@@ -23,8 +23,7 @@ import { TOKEN_NAME } from '../../globals.js';
 import useAuth from '../../hooks/useAuth.js';
 import HorizontalChatHistoryList from '../HorizontalChatHistoryList/index.jsx';
 import ChatHistory from '../ChatHistory/index.jsx';
-import BaseHeading from "../BaseHeading"
-import TimestampPicker from '../TimestampPicker/index.jsx';
+import BaseHeading from "../BaseHeading";
 import toast from 'react-simple-toasts';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -937,10 +936,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
   const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
   const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
-  const confirmFn = ({start, end}) => {
+  const confirmFn = ({ start, end }) => {
     setInput(`Generate description between timestamps ${start} and ${end}`);
     setIsTimestampPickerOpen(false);
-  }
+  };
 
   const rejectFn = (isError, errorMessage) => {
     if (isError) {
@@ -949,7 +948,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     } else {
       setIsTimestampPickerOpen(false);
     }
-  }
+  };
 
   return (
     <article className="relative flex flex-col flex-1 mb-3 h-full max-w-[650px] mx-auto ">
@@ -1188,16 +1187,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
         <div className="flex items-center justify-between">
-          <div className='relative'>
-
-            {checkedSourcesCount > 0 && <BaseHeading text="Describe segment" className={`cursor-pointer w-full p-2 rounded-md ${theme === "light" ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300'}`} onClick={() => setIsTimestampPickerOpen(prev => !prev)}/>}
-
-          {
-              (isTimestampPickerOpen && checkedSourcesCount > 0) && <div className='absolute inset-0 top-[32px] bottom-full'><TimestampPicker start={start} setStart={setStart} end={end} setEnd={setEnd} confirmFn={confirmFn} rejectFn={rejectFn} /></div>
-          }
-          </div>
           <ChatHistory />
-          </div>
+        </div>
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
