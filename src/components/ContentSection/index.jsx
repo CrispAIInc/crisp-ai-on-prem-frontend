@@ -1327,7 +1327,7 @@ const ContentSection = ({
                     >
                         {/* Avatar */}
                         <div className="flex items-center justify-center text-sm font-semibold text-white rounded-full w-7 h-7 bg-gradient-to-br from-indigo-500 to-cyan-400">
-                        {user?.firstName[0]?.toUpperCase()}{user?.lastName[0]?.toUpperCase()}
+                            {user?.firstName[0]?.toUpperCase()}{user?.lastName[0]?.toUpperCase()}
                         </div>
 
                         {/* Name */}
@@ -1337,14 +1337,13 @@ const ContentSection = ({
 
                         {/* Caret */}
                         <svg
-                        className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white/80'} transition-transform ${
-                            !isSettingsMenuOpen && "rotate-180"
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                            className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white/80'} transition-transform ${!isSettingsMenuOpen && "rotate-180"
+                                }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
                         >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
@@ -1352,11 +1351,11 @@ const ContentSection = ({
                     {
                         isSettingsMenuOpen && (
                             <div
-                                className={`absolute left-0 bottom-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === "dark" ? "bg-gray-900" : "bg-white"
+                                className={`absolute left-0 bottom-full z-10 flex flex-col py-1 px-3 rounded-md shadow-lg ${theme === "dark" ? "bg-gray-900" : "bg-white"
                                     }`}
                             >
                                 <div
-                                    className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-1
+                                    className={`flex items-center cursor-pointer gap-2 py-2 pl-1
  ${theme === "light"
                                             ? "hover:bg-textColor-100/20"
                                             : "text-textColor-100 hover:bg-slate-800/50"
@@ -1375,13 +1374,13 @@ const ContentSection = ({
                                 </div>
 
                                 <div
-                                    className={`flex items-center cursor-pointer gap-2 py-2 pr-10 pl-1
+                                    className={`flex items-center cursor-pointer gap-2 py-2 pl-1
                                             ${theme === "light"
                                             ? "hover:bg-textColor-100/20"
                                             : "text-textColor-100 hover:bg-slate-800/50"
                                         }`}
                                     onClick={() => {
-                                        setCurrentProject(null)
+                                        setCurrentProject(null);
                                     }}
                                 >
                                     <CloseOutlinedIcon
@@ -1392,7 +1391,7 @@ const ContentSection = ({
                                 </div>
 
                                 <div
-                                    className={`flex text-red-600 items-center cursor-pointer gap-2 py-2 pr-10 pl-1
+                                    className={`flex text-red-600 items-center cursor-pointer gap-2 py-2 pl-1
  ${theme === "light"
                                             ? "hover:bg-textColor-100/20"
                                             : "hover:bg-slate-800/50"
