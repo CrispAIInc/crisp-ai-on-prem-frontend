@@ -9,13 +9,15 @@ import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
 import { formatChatHistoryByDate } from '../../utils';
 import { useFilter } from '../../hooks/useFilter';
-import { AuthContext } from '../../contexts/authContext';
 import useChat from '../../hooks/useChat';
+import { useGlowingBorder } from '../../hooks/useGlowingBorder';
 
-function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, createNewChat }) {
-    const { theme, chatHistory, currentChat, setChatHistory, setCurrentChat } = useContext(MainContext);
+function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, createNewChat, crispWizInputContainerRef, crispWizInputRef }) {
+    const { theme, chatHistory, setCurrentChat } = useContext(MainContext);
 
     const { updateChatTitle, deleteChat } = useChat();
+
+    const triggerGlow = useGlowingBorder(crispWizInputContainerRef);
 
     const {
         query,
@@ -34,6 +36,10 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
 
     function handleSingleChatSessionClick(chat) {
         setCurrentChat(chat);
+        // auto-focus on the input
+        crispWizInputRef.current.focus();
+        // 3. Add border glowing effect
+        triggerGlow();
         close && close();
     }
 

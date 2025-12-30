@@ -165,7 +165,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   const [originalQueries, setOriginalQueries] = useState([]);
   const [originalResponses, setOriginalResponses] = useState([]);
 
-
+  const crispWizInputRef = useRef(null);
+  const crispWizInputContainerRef = useRef(null);
 
   const [existingNote, setExistingNote] = useState(0);
 
@@ -1187,18 +1188,19 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
         <div className="flex items-center justify-between ml-auto">
-          <ChatHistory />
+          <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
         </div>
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div className={`flex items-center w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
+            <div ref={crispWizInputContainerRef} className={`flex items-center gap-2 w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
               <input
                 placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
                 value={input}
                 rows="1"
+                ref={crispWizInputRef}
                 disabled={showCursor}
                 onChange={e => setInput(e.target.value)}
                 className={`!flex-1 pr-2 py-3 !pl-4 rounded-full bg-transparent outline-none`}
@@ -1208,7 +1210,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                   }
                 }} />
               <div
-                className={`p-2 mr-3 text-sm cursor-pointer bg-textColor-300 text-white/80 rounded-full`}
+                className={`p-2 mr-4 text-sm cursor-pointer bg-textColor-300 text-white/80 rounded-full`}
                 onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
               >
                 <SendIcon className={``} />
