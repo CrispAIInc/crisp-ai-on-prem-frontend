@@ -52,6 +52,8 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
     }
 
     const dropdownRef = useRef(null);
+    const popupRef = useRef(null);
+    const modalRef = useRef(null);
 
 
     useEffect(() => {
@@ -66,6 +68,27 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+    useEffect(() => {
+        function handleClickOutsidePopup(event) {
+            const popup = popupRef.current;
+            const modal = modalRef.current;
+
+            if (
+                popup &&
+                !popup.contains(event.target) &&   // not dropdown
+                (!modal || !modal.contains(event.target)) // not modal
+            ) {
+                // setIsUpdateFilenameModalOpen(false);
+                close();
+                // setHoveredSource(null);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutsidePopup);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutsidePopup);
         };
     }, []);
 
@@ -126,7 +149,7 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
 
 
     return (
-        <div className={` p-2 w-[20vw] ${theme === 'light' ? "text-textColor-300 bg-white" : "text-textColor-100 !bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden ${twClasses}`}>
+        <div ref={popupRef} className={` p-2 w-[20vw] ${theme === 'light' ? "text-textColor-300 bg-white" : "text-textColor-100 !bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden ${twClasses}`}>
             {/* <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div> */}
 
@@ -174,7 +197,7 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
                     </div>
                 ))}
             </div>
-            {isUpdateChatTitleModalOpen && <div ref={chatTitleUpdaterModalRef}><ChatTitleUpdaterModal isLoading={isLoading} show={isUpdateChatTitleModalOpen} onHide={() => setIsUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} updateValue={handleUpdateChatTitle} /></div>}
+            {isUpdateChatTitleModalOpen && <div ref={chatTitleUpdaterModalRef}><ChatTitleUpdaterModal modalRef={modalRef} isLoading={isLoading} show={isUpdateChatTitleModalOpen} onHide={() => setIsUpdateChatTitleModalOpen(false)} value={chatTitle} setValue={setChatTitle} updateValue={handleUpdateChatTitle} /></div>}
         </div>
     );
 }
