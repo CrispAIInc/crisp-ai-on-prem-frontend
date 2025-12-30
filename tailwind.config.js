@@ -107,13 +107,13 @@ export default {
             boxShadow: '0 0 0 0px rgba(99,102,241,0)',
           },
           '20%': {
-            boxShadow: '0 0 6px 2px #8a38d7',
+            boxShadow: '0 0 2px 2px #8a38d7',
           },
           '50%': {
-            boxShadow: '0 0 12px 6px #e036bc',
+            boxShadow: '0 0 4px 4px #e036bc',
           },
           '80%': {
-            boxShadow: '0 0 6px 2px #8a38d7',
+            boxShadow: '0 0 2px 2px #8a38d7',
           },
           '100%': {
             boxShadow: '0 0 0 0 rgba(99,102,241,0)',
