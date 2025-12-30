@@ -1186,7 +1186,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       {/* </div> */}
       <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between ml-auto">
           <ChatHistory />
         </div>
         {
