@@ -109,7 +109,7 @@ const ChatMessage = ({ text, refs }) => {
   );
 };
 
-const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
+const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending, messages, setMessages }) => {
   const {
     currentProject,
     theme,
@@ -152,7 +152,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   const chatAppRef = useRef();
 
-  const [messages, setMessages] = useState(currentChat?.messages || []);
+  // const [messages, setMessages] = useState(currentChat?.messages || []);
   const [responseIndex, setResponseIndex] = useState(currentChat?.messages?.length - 1 || -1);
   useEffect(() => {
     setMessages(currentChat?.messages || []);

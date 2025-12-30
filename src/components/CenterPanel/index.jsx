@@ -13,10 +13,9 @@ import RippleButton from '../RippleButton/index.jsx';
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import Accordion from '../Accordion/index.jsx';
 
-const CenterPanel = ({ workspaceContainer, combinedSummary, setCombinedSummary, isCombinedSummaryPending, setIsCombinedSummaryPending, selectedLanguage, setSelectedLanguage }) => {
+const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombinedSummaryPending, setIsCombinedSummaryPending, selectedLanguage }) => {
     const {
         currentResource,
-        // chatLoaded, setChatLoaded,
         displayedSources,
         activeView,
         selectedNote,
@@ -35,6 +34,8 @@ const CenterPanel = ({ workspaceContainer, combinedSummary, setCombinedSummary, 
     const metadataPanelContainer = useRef(null);
 
     const [selectedSources, setSelectedSources] = useState(0);
+
+
     // const [combinedSummary, setCombinedSummary] = useState("");
     // const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
 
@@ -95,13 +96,13 @@ const CenterPanel = ({ workspaceContainer, combinedSummary, setCombinedSummary, 
         // setActiveView('note');
     };
 
-    const textDirection = isRtlLanguage(selectedLanguage) ? "rtl" : "ltr"
+    const textDirection = isRtlLanguage(selectedLanguage) ? "rtl" : "ltr";
 
     // const isRtlLanguage = (langCode) => ["ar", "iw", "fa", "ur", "ps", "sd"].includes(langCode);
 
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
-            {(activeView === 'resource') && <Accordion chosenLanguage={"en"} heading={`Sources Summary ${selectedSources > 0 && `(${selectedSources} Source${selectedSources > 1 ? "s" : ""})`}`} >
+            {(activeView === 'resource') && <Accordion isFirstOpen={messages.length > 0 ? false : true} chosenLanguage={"en"} heading={`Sources Summary ${selectedSources > 0 && `(${selectedSources} Source${selectedSources > 1 ? "s" : ""})`}`} >
                 <div className="flex-1">
                     <div className={`${theme === "light"
                         ? "text-textColor-300"

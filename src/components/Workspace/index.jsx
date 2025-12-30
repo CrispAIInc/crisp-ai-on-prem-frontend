@@ -22,6 +22,7 @@ const Workspace = () => {
         isRightSidebarOpen,
         isLeftSidebarOpen,
         chatLoaded,
+        currentChat,
         setChatLoaded
 
     } = useContext(MainContext);
@@ -31,6 +32,8 @@ const Workspace = () => {
     const [combinedSummary, setCombinedSummary] = useState("");
     const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
+
+    const [messages, setMessages] = useState(currentChat?.messages || []);
 
     return (
         <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
@@ -51,7 +54,8 @@ const Workspace = () => {
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)} />
             </div>
             {(activeView === 'resource' || displayedSources?.length > 0) ? (
-                <CenterPanel selectedLanguage={selectedLanguage} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} isCombinedSummaryPending={isCombinedSummaryPending} setIsCombinedSummaryPending={setIsCombinedSummaryPending} />
+                <CenterPanel messages={messages}
+                    selectedLanguage={selectedLanguage} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} isCombinedSummaryPending={isCombinedSummaryPending} setIsCombinedSummaryPending={setIsCombinedSummaryPending} />
             ) : !activeView ? (
                 <div className="mt-10">
                     <NoData />
@@ -59,7 +63,8 @@ const Workspace = () => {
             ) : null}
 
             <div className={`mt-3 h-[700px]`}>
-                <CopilotSection selectedLanguage={selectedLanguage} setSelectedLanguage={setSelectedLanguage} setIsCombinedSummaryPending={setIsCombinedSummaryPending} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
+                <CopilotSection messages={messages}
+                    setMessages={setMessages} selectedLanguage={selectedLanguage} setSelectedLanguage={setSelectedLanguage} setIsCombinedSummaryPending={setIsCombinedSummaryPending} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
             </div>
 
             {/* right sidebar collapser */}
