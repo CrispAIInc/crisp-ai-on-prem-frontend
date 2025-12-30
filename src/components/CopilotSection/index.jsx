@@ -32,7 +32,7 @@ const ChatMessage = ({ text, refs }) => {
   const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
   return (
     <div>
-      <div className="coorg-response">
+      <div className="coorg-response break-keep">
         {text}
       </div>
       <div>
@@ -1025,7 +1025,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                                 );
                               })
                             }
-                            <p className="break-words">{message?.text?.query}</p>
+                            <p className="break-words break-keep">{message?.text?.query}</p>
                             {/* <p>{message?.text}</p> */}
                           </div>
                           {isLightboxOpen && (
@@ -1045,7 +1045,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                               <ReplayOutlinedIcon />
                             </div>
                           </div>
-                          <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0" dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
+                          <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0 break-keep" dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
                         </>
                       )
                   }
