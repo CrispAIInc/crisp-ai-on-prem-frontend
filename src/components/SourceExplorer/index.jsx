@@ -13,8 +13,11 @@ import { MainContext } from "../../contexts/mainContext.jsx";
 import "./source_explorer.css";
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
-import RemoveIndexModal from '../RemoveIndexModal';
 import { searchByKey, sortBySourcePath } from '../../utils';
+import makeApiRequest from '../../api/index.js';
+import useResources from '../../hooks/useResources.js';
+import toast from 'react-simple-toasts';
+import ConfirmationModal from '../ConfirmationModal/index.jsx';
 
 export function SourceExplorer(props) {
     const {
@@ -26,7 +29,7 @@ export function SourceExplorer(props) {
         sourcesTobeCommited,
         selectedFormat,
         knowledgeBase,
-        setKnowledgeBase,
+        setCategoryOptions,
         categoryOptions
     } = useContext(MainContext);
 
@@ -147,6 +150,24 @@ export function SourceExplorer(props) {
     const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
 
     const [isIndexDeleting, setIsIndexDeleting] = useState(false);
+    const { getIndexes } = useResources({ setCategoryOptions });
+    async function deleteIndex() {
+        try {
+            // remove sources before index
+            setIsIndexDeleting(true);
+            const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(itemToRemove));
+            if (itemsToBeDeleted.length > 0) await props.deleteResource(null, itemsToBeDeleted);
+            await makeApiRequest(`/remove-index`, 'post', { index: itemToRemove });
+            getIndexes();
+            toast('Index deleted', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            setShowRemoveIndexModal(false);
+        } catch (error) {
+            console.log(error.response.data.error);
+            toast(error.response.data.error || 'Error deleting index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+        } finally {
+            setIsIndexDeleting(false);
+        }
+    }
 
     const renderFolders = () => {
         if (viewModes[viewModes.length - 1] === "categories" && categoryOptions?.filter(cat => cat.value !== "all").length === 0) {
@@ -168,7 +189,7 @@ export function SourceExplorer(props) {
                 <FolderOpenIcon sx={{ fontSize: 50 }} className={`${theme === 'light' ? 'text-textColor-300' : "text-[#ABAEB4]"} `} />
                 <p>All</p>
             </div>
-            {props[viewModes[viewModes.length - 1]].filter(item => item.value !== "all").map((item, index) => (                
+            {props[viewModes[viewModes.length - 1]].filter(item => item.value !== "all").map((item, index) => (
                 <div
                     className="relative select-none transition-transform folder group hover:scale-110 hover:font-medium hover:bg-gradient-to-r hover:from-[#755bea] hover:to-[#b76894] hover:bg-clip-text hover:text-transparent"
                     onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
@@ -185,7 +206,7 @@ export function SourceExplorer(props) {
                     <p>{item.label}</p>
                 </div>
             ))}
-            <RemoveIndexModal setIsIndexDeleting={setIsIndexDeleting} deleteResource={props.deleteResource} index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
+            <ConfirmationModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} heading="Are you sure you want to delete this index?" subheading="CAUTION: all sources from this category will be permanently deleted." confirmedFn={deleteIndex} isDeleting={isIndexDeleting} />
         </>;
     };
 
@@ -414,7 +435,6 @@ export function SourceExplorer(props) {
                     {viewModes[viewModes.length - 1] !== "files"
                         ? renderFolders()
                         : renderFiles()}
-                    {/* <RemoveIndexModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} /> */}
                 </div>
             </Modal.Body>
             <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"} z-20`}>

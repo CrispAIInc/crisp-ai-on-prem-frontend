@@ -1,43 +1,10 @@
-import Modal from 'react-bootstrap/Modal';
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext.jsx';
-import makeApiRequest from '../../api';
-import toast from 'react-simple-toasts';
-import useResources from '../../hooks/useResources';
-import LoadingSpinner from '../LoadingSpinner/index.jsx';
+import Modal from "react-bootstrap/Modal";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { useContext } from 'react';
+import { MainContext } from '../../contexts/mainContext';
+import LoadingSpinner from '../LoadingSpinner';
 
-function RemoveIndexModal({ show, onHide, index, deleteResource, setIsIndexDeleting }) {
-    const { theme, knowledgeBase, setCategoryOptions } = useContext(MainContext);
-
-    const { getIndexes } = useResources({ setCategoryOptions });
-
-    async function deleteIndex() {
-        try {
-            // remove sources before index
-            setIsIndexDeleting(true);
-            const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(index));
-            if (itemsToBeDeleted.length > 0) await deleteResource(null, itemsToBeDeleted);
-            await makeApiRequest(`/remove-index`, 'post', { index: index });
-            getIndexes();
-            toast('Index deleted', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
-        } catch (error) {
-            console.log(error.response.data.error);
-            toast(error.response.data.error || 'Error deleting index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
-        } finally {
-            setIsIndexDeleting(false);
-        }
-    }
-
-    return (
-        <ConfirmationModal show={show} onHide={onHide} heading="Are you sure you want to delete this index?" subheading="CAUTION: all sources from this category will be permanently deleted." confirmedFn={deleteIndex} />
-    );
-}
-
-export default RemoveIndexModal;
-
-const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isDeleting }) => {
+export default function ConfirmationModal({ show, onHide, heading, subheading, confirmedFn, isDeleting }) {
     const { theme } = useContext(MainContext);
 
     if (!show) return null;
