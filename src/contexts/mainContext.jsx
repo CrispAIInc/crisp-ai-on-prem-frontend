@@ -1100,23 +1100,11 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [chatHistory, setChatHistory] = useState([]);
     const [currentChat, setCurrentChat] = useState([]);
 
-    const [projects, setProjects] = useState([]);
-    const [currentProject, setCurrentProject] = useState(JSON.parse(localStorage.getItem('current_project')));
 
-    const checkedSourcesCount = useMemo(() => displayedSources.filter(source => source.is_selected).length, [displayedSources])
 
-    useLayoutEffect(() => {
-        localStorage.setItem('current_project', JSON.stringify(currentProject));
+    const checkedSourcesCount = useMemo(() => displayedSources.filter(source => source.is_selected).length, [displayedSources]);
 
-        if (!currentProject) return;
 
-        axiosInstance.defaults.headers.common['ProjectId'] =
-            currentProject.project_id;
-
-        return () => {
-            delete axiosInstance.defaults.headers.common['ProjectId'];
-        };
-    }, [currentProject]);
 
     useEffect(() => {
         let now = new Date();
@@ -1161,7 +1149,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
     }, [currentChat]);
 
-    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+
 
     // create value object with all the states
     const value = {
