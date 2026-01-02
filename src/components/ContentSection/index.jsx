@@ -377,6 +377,7 @@ const ContentSection = ({
     }, []);
 
     async function log() {
+        localStorage.setItem('current_project', null);
         await logout();
     }
 

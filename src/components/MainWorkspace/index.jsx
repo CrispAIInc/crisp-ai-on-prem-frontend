@@ -14,11 +14,12 @@ import useResources from '../../hooks/useResources.js';
 import { AuthContext } from '../../contexts/authContext.jsx';
 import { pick } from '../../utils.js';
 
-const MainWorkspace = ({currentProject, setCurrentProject}) => {
+const MainWorkspace = ({ currentProject, setCurrentProject }) => {
   const {
     theme,
     setSourcesTobeCommited,
     knowledgeBase,
+    setChatLoaded,
     setIsNotesLoading,
     setNotes,
     setSelectedNote,
@@ -30,6 +31,24 @@ const MainWorkspace = ({currentProject, setCurrentProject}) => {
   } = useContext(MainContext);
 
   const { setUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    async function intializeContent() {
+      const { chat_is_initialized } = await makeApiRequest(
+        `/chat/all`,
+        "post",
+        JSON.stringify({
+          sources: [],
+          category: "all",
+          selectedAll: false,
+          is_exclusive: false
+        })
+      );
+      setChatLoaded(chat_is_initialized);
+    }
+
+    intializeContent();
+  }, []);
 
   const { getReels, getStories, getNotes, getIndexes } = useResources({ setReels, setStories, setNotes, setCategoryOptions });
   useEffect(() => {

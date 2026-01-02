@@ -54,6 +54,7 @@ function GeneralSettings() {
             setError(false);
 
             setInterval(() => {
+                localStorage.setItem('current_project', null);
                 logOut();
                 navigate('/verify', {
                     state: {
