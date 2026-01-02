@@ -25,6 +25,7 @@ import HorizontalChatHistoryList from '../HorizontalChatHistoryList/index.jsx';
 import ChatHistory from '../ChatHistory/index.jsx';
 import BaseHeading from "../BaseHeading";
 import toast from 'react-simple-toasts';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -111,7 +112,6 @@ const ChatMessage = ({ text, refs }) => {
 
 const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending, messages, setMessages }) => {
   const {
-    currentProject,
     theme,
     currentResource,
     llmModels,
@@ -143,6 +143,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setChatHistory,
     checkedSourcesCount
   } = useContext(MainContext);
+
+  const { currentProject } = useContext(ProjectContext);
 
   const { token } = useAuth();
 
