@@ -33,6 +33,7 @@ import useResources from '../../hooks/useResources';
 import { IndexModal } from '../IndexModal';
 import socket from "../../config/socket";
 import AnimatedText from '../AnimatedText';
+import { ProjectContext } from '../../contexts/projectContext';
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
     const { theme, setDisplayedSources, setKnowledgeBase } = useContext(MainContext);
@@ -150,7 +151,6 @@ const ContentSection = ({
 
 }) => {
     const {
-        isSettingsModalOpen, setIsSettingsModalOpen,
         isPlayerReady,
         resourceURL,
         isFileUploading, setIsFileUploading,
@@ -174,6 +174,8 @@ const ContentSection = ({
         theme,
         chatLoaded, setPersistedUploadedFiles
     } = useContext(MainContext);
+
+    const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
 
     const { categoryValuesWithoutAll } = useResources();
 

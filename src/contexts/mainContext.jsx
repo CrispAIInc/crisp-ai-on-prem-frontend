@@ -1153,10 +1153,8 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // create value object with all the states
     const value = {
+        theme, setTheme,
         checkedSourcesCount,
-        projects, setProjects,
-        currentProject, setCurrentProject,
-        isSettingsModalOpen, setIsSettingsModalOpen,
         chatHistory, setChatHistory,
         currentChat, setCurrentChat,
         reels, setReels,
@@ -1177,7 +1175,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         generatedResources, setGeneratedResources,
         categoryOptions, setCategoryOptions, showEditor, setShowEditor,
         languageOptions,
-        theme, activeView, setActiveView,
+        activeView, setActiveView,
         chatLoaded, setChatLoaded,
         fileFormats,
         displayedSources, setDisplayedSources,
@@ -1198,7 +1196,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         resourceURL,
         setResourceURL,
         jumpToPage, setJumpToPage,
-        setTheme,
         isNewStory, setIsNewStory,
         selectedGenStoriesModels, setSelectedGenStoriesModels,
         summaries, setSummaries,

@@ -4,7 +4,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { formatReadableDate } from '../../utils';
 import ActionMenu from '../ActionMenu';
-import makeApiRequest, { axiosInstance } from '../../api'
+import makeApiRequest, { axiosInstance } from '../../api';
 
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
@@ -13,7 +13,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const ProjectNameUpdaterModal = ({ show, onHide, project, setProjects }) => {
     const [newProjectName, setNewProjectName] = useState(project.name);
-    const {theme} = useContext(MainContext);
+    const { theme } = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSave = async () => {
@@ -45,9 +45,9 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, setProjects }) => {
             dialogClassName='text-left'
         >
 
-            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
+            <Modal.Body>
                 <div className="flex flex-col">
-                    <label htmlFor="indexName" className={`block text-sm font-medium ${theme === 'dark' && 'text-gray-300'}`}>
+                    <label htmlFor="indexName" className={`block text-sm font-medium `}>
                         Rename project
                     </label>
                     <div className="flex items-center gap-1">
@@ -58,38 +58,38 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, setProjects }) => {
                             id='indexName'
                             value={newProjectName}
                             onChange={(e) => setNewProjectName(e.target.value)}
-                            className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${theme === 'dark' && 'bg-textColor-300'}`}
+                            className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500`}
                             required
                             onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                         />
                     </div>
                 </div>
             </Modal.Body>
-            <Modal.Footer className={`flex items-center gap-3 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+            <Modal.Footer className={`flex items-center gap-3 `}>
                 <div
-                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100`}
                     onClick={onHide}
                 >
-                    <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    <span className={`select-none font-medium text-textColor-300`}>
                         Cancel
                     </span>
                 </div>
 
                 <div
-                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100`}
                     onClick={handleSave}
                 >
-                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium text-textColor-300`}>
                         Save
                     </span>}
                 </div>
             </Modal.Footer>
         </Modal>
     );
-}
+};
 
 const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isDeleting }) => {
-    const {theme} = useContext(MainContext);
+    // const { theme } = useContext(MainContext);
 
     if (!show) return null;
 
@@ -104,7 +104,7 @@ const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isD
             dialogClassName='text-left'
         >
 
-            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
+            <Modal.Body>
                 <div className="flex flex-col items-center justify-center">
                     <ErrorOutlineIcon className="text-red-500 !text-[60px]" />
                     {/* <div className="flex flex-col gap-1"> */}
@@ -113,12 +113,12 @@ const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isD
                     {/* </div> */}
                 </div>
             </Modal.Body>
-            <Modal.Footer className={`flex items-center gap-2 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+            <Modal.Footer className={`flex items-center gap-2`}>
                 <div
-                    className={`flex items-center justify-center gap-2 rounded-full cursor-pointer w-fit py-2 px-3 ${theme === 'light' ? 'bg-textColor-100/10' : 'bg-textColor-100/20'}`}
+                    className={`flex items-center justify-center gap-2 rounded-full cursor-pointer w-fit py-2 px-3 bg-textColor-100/10`}
                     onClick={onHide}
                 >
-                    <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    <span className={`select-none font-medium text-textColor-300`}>
                         No, Keep it.
                     </span>
                 </div>
@@ -137,9 +137,9 @@ const ConfirmationModal = ({ show, onHide, heading, subheading, confirmedFn, isD
             </Modal.Footer>
         </Modal>
     );
-}
+};
 
-const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) => {
+const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
@@ -148,78 +148,78 @@ const ProjectCard = ({recent = false, project, setProjects, setCurrentProject}) 
         try {
             setIsDeleting(true);
             axiosInstance.defaults.headers.common['ProjectId'] = project.project_id;
-            const {message, success} = await makeApiRequest('/projects', "DELETE");
+            const { message, success } = await makeApiRequest('/projects', "DELETE");
             if (success) {
                 setProjects((prevProjects) => prevProjects.filter((proj) => proj.project_id !== projectId));
             } else {
-                throw new Error(message)
+                throw new Error(message);
             }
-        } catch(e) {
-            console.log(e)
+        } catch (e) {
+            console.log(e);
         } finally {
             setIsDeleting(false);
         }
-    }
+    };
 
-  return (
-    <div style={{background: project.thumbnail ? `url('${project.thumbnail}')` : 'url("/app-logo.svg")'}} className={`!bg-cover !bg-center relative   rounded-2xl p-3 w-80 h-48 ${project.thumbnail ? `` : 'bg-[#1E1E1E]'} bg-clip-border `}>
-        {/* top to bottom gradient overlay */}
-        <div className="absolute inset-0 shadow-md bg-gradient-to-tr from-indigo-500/30 via-transparent to-cyan-400/20 rounded-2xl"></div>
+    return (
+        <div style={{ background: project.thumbnail ? `url('${project.thumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-cover !bg-center relative   rounded-2xl p-3 w-80 h-48 ${project.thumbnail ? `` : 'bg-[#1E1E1E]'} bg-clip-border `}>
+            {/* top to bottom gradient overlay */}
+            <div className="absolute inset-0 shadow-md bg-gradient-to-tr from-indigo-500/30 via-transparent to-cyan-400/20 rounded-2xl"></div>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-600/40 rounded-2xl " />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-600/40 rounded-2xl " />
 
-        <div className="relative z-50 flex flex-col justify-between h-full ">
-            {/* top showcase */}
-            <div className="flex items-center justify-between ">
-                {/* <MoreVertIcon className="text-white" /> */}
-                <ActionMenu
-                actions={[
-                    {
-                        label: "Edit title",
-                        icon: <EditOutlinedIcon />,
-                        onClick: (e) => {
-                            e.stopPropagation();
-                            setIsModalOpen(true);
-                        },
-                    },
-                    {
-                        label: "Delete",
-                        icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
-                        onClick: () => setIsDeleteConfirmationOpen(true),
-                    },
-                ]}
-                />
-                <ArrowForwardIosIcon onClick={() => setCurrentProject(project)} className="cursor-pointer text-textColor-200" />
-            </div>
-            {/* bottom showcase */}
-            <div className="font-semibold">
-                <h2 className="mb-0 !text-white line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
-                <div className="flex flex-wrap items-center gap-1">
-                    <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
-                    {project.selectedSources && <p className="text-[10px] text-white">{project.selectedSources} Sources.</p>}
+            <div className="relative z-50 flex flex-col justify-between h-full ">
+                {/* top showcase */}
+                <div className="flex items-center justify-between ">
+                    {/* <MoreVertIcon className="text-white" /> */}
+                    <ActionMenu
+                        actions={[
+                            {
+                                label: "Edit title",
+                                icon: <EditOutlinedIcon />,
+                                onClick: (e) => {
+                                    e.stopPropagation();
+                                    setIsModalOpen(true);
+                                },
+                            },
+                            {
+                                label: "Delete",
+                                icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
+                                onClick: () => setIsDeleteConfirmationOpen(true),
+                            },
+                        ]}
+                    />
+                    <ArrowForwardIosIcon onClick={() => setCurrentProject(project)} className="cursor-pointer text-textColor-200" />
+                </div>
+                {/* bottom showcase */}
+                <div className="font-semibold">
+                    <h2 className="mb-0 !text-white line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
+                    <div className="flex flex-wrap items-center gap-1">
+                        <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
+                        {project.selectedSources && <p className="text-[10px] text-white">{project.selectedSources} Sources.</p>}
+                    </div>
                 </div>
             </div>
+            {
+                isModalOpen && <ProjectNameUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} project={project} setProjects={setProjects} />
+            }
+
+            {
+                isDeleteConfirmationOpen && <ConfirmationModal
+                    show={isDeleteConfirmationOpen}
+                    onHide={() => setIsDeleteConfirmationOpen(false)}
+                    // heading="Are you sure you want to delete this project?"
+                    heading={`Delete project`}
+                    subheading="All your sources, reels and generated content will be permanently deleted. Are you sure?"
+                    confirmedFn={async () => {
+                        await deleteProject(project.project_id);
+                        setIsDeleteConfirmationOpen(false);
+                    }}
+                    isDeleting={isDeleting}
+                />
+            }
         </div>
-        {
-            isModalOpen && <ProjectNameUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} project={project} setProjects={setProjects} />
-        }
+    );
+};
 
-        {
-            isDeleteConfirmationOpen && <ConfirmationModal
-                show={isDeleteConfirmationOpen}
-                onHide={() => setIsDeleteConfirmationOpen(false)}
-                // heading="Are you sure you want to delete this project?"
-                heading={`Delete project`}
-                subheading="All your sources, reels and generated content will be permanently deleted. Are you sure?"
-                confirmedFn={async () => {
-                    await deleteProject(project.project_id);
-                    setIsDeleteConfirmationOpen(false);
-                }}
-                isDeleting={isDeleting}
-            />
-        }
-    </div>
-  )
-}
-
-export default ProjectCard
+export default ProjectCard;

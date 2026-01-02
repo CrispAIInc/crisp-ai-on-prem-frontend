@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import { ProjectContext } from '../../contexts/projectContext';
 
-export default function UserMenu({ firstName, lastName, onLogout, setIsSettingsModalOpen }) {
+export default function UserMenu({ firstName, lastName, onLogout }) {
+  const { setIsSettingsModalOpen } = useContext(ProjectContext);
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -43,9 +44,8 @@ export default function UserMenu({ firstName, lastName, onLogout, setIsSettingsM
 
         {/* Caret */}
         <svg
-          className={`w-4 h-4 text-gray-500 transition-transform ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`w-4 h-4 text-gray-500 transition-transform ${open ? "rotate-180" : ""
+            }`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

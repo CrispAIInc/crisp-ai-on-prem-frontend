@@ -4,7 +4,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useContext } from 'react';
 import { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import MainWorkspacePage from './pages/MainWorkspacePage';
@@ -20,11 +20,13 @@ import SettingsProvider from './contexts/settingsContext.jsx';
 import VerifyAccount from './components/VerifyAccount';
 import AuthRoute from './components/Auth/AuthRoute.jsx';
 import ProjectsPage from './pages/ProjectsPage.jsx';
-import ProjectsProvider from './contexts/projectsContext.jsx';
+import ProjectProvider from './contexts/projectContext.jsx';
+import { ThemeContext } from '@emotion/react';
 
 
 function App() {
 
+  // const { theme, setTheme } = useContext(ThemeContext);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   toastConfig({ theme });
 
@@ -59,11 +61,11 @@ function App() {
           <Routes>
             <Route path="/" element={
               <PrivateRoute>
-                <MainProvider theme={theme} setTheme={setTheme}>
+                <ProjectProvider theme={theme} setTheme={setTheme}>
                   <SettingsProvider>
                     <MainWorkspacePage />
                   </SettingsProvider>
-                </MainProvider>
+                </ProjectProvider>
               </PrivateRoute>
             } />
 

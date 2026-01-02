@@ -8,10 +8,11 @@ import LoadingSpinner from '../components/LoadingSpinner/index.jsx';
 import makeApiRequest, { axiosInstance } from '../api/index.js';
 import { MainContext } from '../contexts/mainContext.jsx';
 import Modal from 'react-bootstrap/Modal';
+import { ThemeContext } from '../contexts/themeContext.jsx';
+import { ProjectContext } from '../contexts/projectContext.jsx';
 
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState("");
-    const { theme } = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSave = async () => {
@@ -47,9 +48,9 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
             dialogClassName='text-left'
         >
 
-            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
+            <Modal.Body>
                 <div className="flex flex-col">
-                    <label htmlFor="indexName" className={`block text-sm font-medium ${theme === 'dark' && 'text-gray-300'}`}>
+                    <label htmlFor="indexName" className={`block text-sm font-medium`}>
                         New project
                     </label>
                     <div className="flex items-center gap-1">
@@ -60,28 +61,28 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
                             id='indexName'
                             value={newProjectName}
                             onChange={(e) => setNewProjectName(e.target.value)}
-                            className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${theme === 'dark' && 'bg-textColor-300'}`}
+                            className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500`}
                             required
                             onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                         />
                     </div>
                 </div>
             </Modal.Body>
-            <Modal.Footer className={`flex items-center gap-3 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+            <Modal.Footer className={`flex items-center gap-3 `}>
                 <div
-                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100`}
                     onClick={onHide}
                 >
-                    <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    <span className={`select-none font-medium text-textColor-300`}>
                         Cancel
                     </span>
                 </div>
 
                 <div
-                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100`}
                     onClick={handleSave}
                 >
-                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium text-textColor-300`}>
                         Create
                     </span>}
                 </div>
@@ -95,6 +96,8 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
     // const {projects} = useContext(ProjectsContext);
 
     const [sortOrder, setSortOrder] = useState('asc');
+
+    // const { theme, setTheme } = useContext(ProjectContext);
 
     const sortedProjects = useMemo(() => {
         return sortByDate(projects, 'created_at', sortOrder);
