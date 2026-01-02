@@ -6,7 +6,7 @@ import SelectDropdown from '../components/SelectDropdown/index.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import LoadingSpinner from '../components/LoadingSpinner/index.jsx';
 import makeApiRequest, { axiosInstance } from '../api/index.js';
-import { MainContext } from '../contexts/mainContext.jsx';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Modal from 'react-bootstrap/Modal';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 
@@ -64,12 +64,18 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
 
             <Modal.Body>
                 <div className='flex items-start justify-center gap-2'>
-                    {/* project thumbnail */}
                     {/* project thumbnail wrapper */}
-                    <div onClick={() => projectThumbnailRef.current.click()} className="flex flex-col items-center justify-center w-20 h-20 border rounded-md cursor-pointer border-textColor-100">
+                    <div onClick={() => projectThumbnailRef.current.click()} className="relative flex flex-col items-center justify-center w-20 h-20 border rounded-md cursor-pointer border-textColor-100">
                         {imagePreview ? <img src={imagePreview} alt="Thumbnail preview"
                             className="object-cover w-full h-full " /> : <FileUploadOutlinedIcon className="!h-16 !w-16 text-textColor-100" />}
+
+                        {/* clear preview X icon */}
+                        {imagePreview && <CloseOutlinedIcon onClick={(e) => {
+                            e.stopPropagation();
+                            setImagePreview(null);
+                        }} className="absolute p-1 !text-[17px] text-white rounded-full cursor-pointer bg-textColor-300 -top-2 -left-2" />}
                     </div>
+                    {/* thumbnail input */}
                     <input accept="image/*" ref={projectThumbnailRef} type="file" className="hidden" onChange={e => handleThumbnailChange(e)} />
 
                     {/* project name */}
