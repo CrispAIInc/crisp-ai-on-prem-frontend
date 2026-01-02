@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import ProjectCard from '../components/ProjectCard';
-import { sortByDate } from '../utils.js';
+import { extractThumbnail, sortByDate } from '../utils.js';
 import ProjectsHeader from '../components/ProjectsHeader/index.jsx';
 import SelectDropdown from '../components/SelectDropdown/index.jsx';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,27 +8,34 @@ import LoadingSpinner from '../components/LoadingSpinner/index.jsx';
 import makeApiRequest, { axiosInstance } from '../api/index.js';
 import { MainContext } from '../contexts/mainContext.jsx';
 import Modal from 'react-bootstrap/Modal';
-import { ThemeContext } from '../contexts/themeContext.jsx';
-import { ProjectContext } from '../contexts/projectContext.jsx';
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [projectThumbnail, setProjectThumbnail] = useState(null);
+
+    const projectThumbnailRef = useRef(null);
 
     const handleSave = async () => {
         try {
             setIsLoading(true);
-            const { success, message, project } = await makeApiRequest(`/projects`, 'POST', {
-                name: newProjectName,
-            });
+            const formData = new FormData();
+            formData.append("name", newProjectName);
+            formData.append("project_thumbnail", projectThumbnail);
+            const { success, message, project } = await makeApiRequest(`/projects`, 'POST', formData, { 'Content-type': "multipart/form-data" });
             if (success) {
                 // TODO: add the newly created project to the projects list
                 setProjects((prevProjects) => [project, ...prevProjects]);
                 // TODO: set current project value and redirect to dashboard
                 setCurrentProject(project);
                 onHide();
+            } else {
+                throw new Error(message);
             }
         } catch (error) {
+            console.log(error?.message);
             console.error("Error updating project name:", error);
         } finally {
             setIsLoading(false);
@@ -36,6 +43,13 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
     };
 
     if (!show) return null;
+
+    function handleThumbnailChange(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        setProjectThumbnail(file);
+        setImagePreview(extractThumbnail(file));
+    }
 
     return (
         <Modal
@@ -49,22 +63,33 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
         >
 
             <Modal.Body>
-                <div className="flex flex-col">
-                    <label htmlFor="indexName" className={`block text-sm font-medium`}>
-                        New project
-                    </label>
-                    <div className="flex items-center gap-1">
-                        <input
-                            type="text"
-                            name="indexName"
-                            placeholder='Project name'
-                            id='indexName'
-                            value={newProjectName}
-                            onChange={(e) => setNewProjectName(e.target.value)}
-                            className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500`}
-                            required
-                            onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-                        />
+                <div className='flex items-start justify-center gap-2'>
+                    {/* project thumbnail */}
+                    {/* project thumbnail wrapper */}
+                    <div onClick={() => projectThumbnailRef.current.click()} className="flex flex-col items-center justify-center w-20 h-20 border rounded-md cursor-pointer border-textColor-100">
+                        {imagePreview ? <img src={imagePreview} alt="Thumbnail preview"
+                            className="object-cover w-full h-full " /> : <FileUploadOutlinedIcon className="!h-16 !w-16 text-textColor-100" />}
+                    </div>
+                    <input accept="image/*" ref={projectThumbnailRef} type="file" className="hidden" onChange={e => handleThumbnailChange(e)} />
+
+                    {/* project name */}
+                    <div className="flex flex-col">
+                        <label htmlFor="indexName" className={`block text-sm font-medium`}>
+                            New project
+                        </label>
+                        <div className="flex items-center gap-1">
+                            <input
+                                type="text"
+                                name="indexName"
+                                placeholder='Project name'
+                                id='indexName'
+                                value={newProjectName}
+                                onChange={(e) => setNewProjectName(e.target.value)}
+                                className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500`}
+                                required
+                                onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+                            />
+                        </div>
                     </div>
                 </div>
             </Modal.Body>
