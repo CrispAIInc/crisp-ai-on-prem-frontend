@@ -12,26 +12,8 @@ import { ProjectContext } from '../contexts/projectContext';
 
 
 export default function MainWorkspacePage() {
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [inputPassword, setInputPassword] = useState("");
 
   const { theme, setTheme, projects, setProjects, currentProject, setCurrentProject } = useContext(ProjectContext);
-
-  // const handleLogin = () => {
-  //     const correctPassword = "$Crisp-AI2025$";
-  //     if (inputPassword === correctPassword) {
-  //         setIsAuthenticated(true);
-  //     } else {
-  //         alert("Incorrect password!");
-  //     }
-  // };
-
-  // if (isAuthenticated) {
-  //     return <WorkspaceAuth inputPassword={inputPassword} setInputPassword={setInputPassword} handleLogin={handleLogin} />;
-  // }
-
-
-
 
   return (
     <>
