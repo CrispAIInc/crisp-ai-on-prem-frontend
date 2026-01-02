@@ -20,6 +20,7 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
 
     const handleSave = async () => {
         try {
+            if (newProjectName === "") return;
             setIsLoading(true);
             const formData = new FormData();
             formData.append("name", newProjectName);
