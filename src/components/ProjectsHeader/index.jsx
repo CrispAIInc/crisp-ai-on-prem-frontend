@@ -22,7 +22,7 @@ const ProjectsHeader = () => {
         onLogout={logout}
       />
       {
-        isSettingsModalOpen && <SettingsModal show={isSettingsModalOpen} onHide={() => setIsSettingsModalOpen(false)} />
+        isSettingsModalOpen && <SettingsModal hideTheme show={isSettingsModalOpen} onHide={() => setIsSettingsModalOpen(false)} />
       }
     </div>
   );

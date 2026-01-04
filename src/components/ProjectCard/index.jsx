@@ -162,7 +162,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
     };
 
     return (
-        <div style={{ background: project.thumbnail ? `url('${project.thumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-cover !bg-center relative   rounded-2xl p-3 w-80 h-48 ${project.thumbnail ? `` : 'bg-[#1E1E1E]'} bg-clip-border `}>
+        <div style={{ background: project.thumbnail ? `url('${project.thumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-cover !bg-center relative   rounded-2xl p-3 w-80 h-48 bg-clip-border `}>
             {/* top to bottom gradient overlay */}
             <div className="absolute inset-0 shadow-md bg-gradient-to-tr from-indigo-500/30 via-transparent to-cyan-400/20 rounded-2xl"></div>
 
