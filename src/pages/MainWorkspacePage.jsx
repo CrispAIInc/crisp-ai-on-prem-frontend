@@ -19,7 +19,7 @@ export default function MainWorkspacePage() {
     <>
       <Helmet>
         <meta name="robots" content="noindex, nofollow" />
-        <title>Workspace - Crisp AI</title>
+        <title>Crisp AI - My Projects</title>
         <meta name="description" content="Crisp AI Workspace to manage and create interactive reports." />
       </Helmet>
       <div className="!h-full">
