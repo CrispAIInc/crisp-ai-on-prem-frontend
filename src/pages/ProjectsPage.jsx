@@ -200,7 +200,7 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                     </div>
                     {
                         sortedProjects.map((project) => (
-                            <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={{ ...project, thumbnail: 'gs://crispai-app-462614.firebasestorage.app/projects/thumbnails/71gNlHObbePRpLSZHIJnP00k2wF3/c7b67bf0-9785-43fa-8976-01350f9c074c.png' }} />
+                            <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                         ))
                     }
                 </div>
