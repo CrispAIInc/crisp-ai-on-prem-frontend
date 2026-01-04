@@ -9,6 +9,7 @@ import makeApiRequest, { axiosInstance } from '../api/index.js';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Modal from 'react-bootstrap/Modal';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState("");
@@ -64,25 +65,30 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
         >
 
             <Modal.Body>
-                <div className='flex items-start justify-center gap-2'>
-                    {/* project thumbnail wrapper */}
-                    <div onClick={() => projectThumbnailRef.current.click()} className="relative flex flex-col items-center justify-center w-20 h-20 border rounded-md cursor-pointer border-textColor-100">
-                        {imagePreview ? <img src={imagePreview} alt="Thumbnail preview"
-                            className="object-cover w-full h-full " /> : <FileUploadOutlinedIcon className="!h-16 !w-16 text-textColor-100" />}
+                <div className='flex flex-col items-start justify-center gap-3'>
+                    <div className="flex flex-col w-full gap-1">
+                        {/* project thumbnail wrapper */}
+                        <label htmlFor="indexName" className={`block text-sm font-medium`}>
+                            Project Thumbnail (optional)
+                        </label>
+                        <div onClick={() => projectThumbnailRef.current.click()} className="relative flex flex-col items-center justify-center w-full border-2 border-dashed rounded-md cursor-pointer h-28 border-purple-500/40">
+                            {imagePreview ? <img src={imagePreview} alt="Thumbnail preview"
+                                className="object-cover w-full h-full " /> : <FileUploadOutlinedIcon className="!h-16 !w-16 text-purple-500" />}
 
-                        {/* clear preview X icon */}
-                        {imagePreview && <CloseOutlinedIcon onClick={(e) => {
-                            e.stopPropagation();
-                            setImagePreview(null);
-                        }} className="absolute p-1 !text-[17px] text-white rounded-full cursor-pointer bg-textColor-300 -top-2 -left-2" />}
+                            {/* clear preview X icon */}
+                            {imagePreview && <DeleteOutlinedIcon onClick={(e) => {
+                                e.stopPropagation();
+                                setImagePreview(null);
+                            }} className="absolute p-1 !text-[23px] text-white rounded-full cursor-pointer bg-purple-500 -top-2 -left-2" />}
+                        </div>
+                        {/* thumbnail input */}
+                        <input accept="image/*" ref={projectThumbnailRef} type="file" className="hidden" onChange={e => handleThumbnailChange(e)} />
                     </div>
-                    {/* thumbnail input */}
-                    <input accept="image/*" ref={projectThumbnailRef} type="file" className="hidden" onChange={e => handleThumbnailChange(e)} />
 
                     {/* project name */}
                     <div className="flex flex-col">
                         <label htmlFor="indexName" className={`block text-sm font-medium`}>
-                            New project
+                            Project Name
                         </label>
                         <div className="flex items-center gap-1">
                             <input
@@ -114,7 +120,7 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
                     className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100`}
                     onClick={handleSave}
                 >
-                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium text-textColor-300`}>
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium text-purple-500`}>
                         Create
                     </span>}
                 </div>
