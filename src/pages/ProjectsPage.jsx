@@ -154,7 +154,7 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                 {projectCount > 0 && <><h2 className="mb-4 text-xl font-bold text-textColor-200">Recent Projects</h2>
                     <div className="flex flex-wrap items-center gap-6 mb-16 overflow-x-auto hover:z-10 md:gap-8">
                         {
-                            sortedProjects.slice(0, 3).map((project) => (
+                            sortedProjects.slice(0, 2).map((project) => (
                                 <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                             ))
                         }
@@ -162,7 +162,7 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
 
                 {/* all projects */}
                 <div className="flex items-center justify-between mt-6 mb-6">
-                    <h2 className="text-xl font-bold text-textColor-200">{projectCount > 0 ? 'All Projects' + projectCount : 'Create your first Project'}</h2>
+                    <h2 className="text-xl font-bold text-textColor-200">{projectCount > 0 ? `All Projects (${projectCount})` : 'Create your first Project'}</h2>
                     <div className="flex items-center gap-2">
                         {projectCount > 0 && <SelectDropdown
                             value={status}

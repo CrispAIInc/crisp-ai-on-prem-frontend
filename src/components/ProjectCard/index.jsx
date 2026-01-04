@@ -168,7 +168,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
 
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-600/40 rounded-2xl " />
 
-            <div className="relative z-50 flex flex-col justify-between h-full ">
+            <div className="relative z-40 flex flex-col justify-between h-full ">
                 {/* top showcase */}
                 <div className="flex items-center justify-between ">
                     {/* <MoreVertIcon className="text-white" /> */}
