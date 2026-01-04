@@ -6,7 +6,6 @@ import SelectDropdown from '../components/SelectDropdown/index.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import LoadingSpinner from '../components/LoadingSpinner/index.jsx';
 import makeApiRequest, { axiosInstance } from '../api/index.js';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Modal from 'react-bootstrap/Modal';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
@@ -68,12 +67,12 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
                 <div className='flex flex-col items-start justify-center gap-3'>
                     <div className="flex flex-col w-full gap-1">
                         {/* project thumbnail wrapper */}
-                        <label htmlFor="indexName" className={`block text-sm font-medium`}>
+                        <label className={`block text-sm font-medium`}>
                             Project Thumbnail (optional)
                         </label>
-                        <div onClick={() => projectThumbnailRef.current.click()} className="relative flex flex-col items-center justify-center w-full border-2 border-dashed rounded-md cursor-pointer h-28 border-purple-500/40">
+                        <div onClick={() => projectThumbnailRef.current.click()} className="relative flex flex-col items-center justify-center w-full border-2 border-dashed rounded-md cursor-pointer h-36 border-purple-500/40">
                             {imagePreview ? <img src={imagePreview} alt="Thumbnail preview"
-                                className="object-cover w-full h-full " /> : <FileUploadOutlinedIcon className="!h-16 !w-16 text-purple-500" />}
+                                className="object-cover w-full h-full rounded-md" /> : <FileUploadOutlinedIcon className="!h-16 !w-16 text-purple-500" />}
 
                             {/* clear preview X icon */}
                             {imagePreview && <DeleteOutlinedIcon onClick={(e) => {
@@ -201,7 +200,7 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                     </div>
                     {
                         sortedProjects.map((project) => (
-                            <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                            <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={{ ...project, thumbnail: 'gs://crispai-app-462614.firebasestorage.app/projects/thumbnails/71gNlHObbePRpLSZHIJnP00k2wF3/c7b67bf0-9785-43fa-8976-01350f9c074c.png' }} />
                         ))
                     }
                 </div>
