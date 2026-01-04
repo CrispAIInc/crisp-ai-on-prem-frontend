@@ -54,12 +54,7 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, setProjects }) => {
                 setProjects(prev =>
                     prev.map(proj =>
                         proj.project_id === updatedProject.project_id
-                            ? {
-                                ...proj,
-                                name: updatedProject.name,
-                                thumbnail: updatedProject.thumbnail,
-                                updated_at: new Date(),
-                            }
+                            ? updatedProject
                             : proj
                     )
                 );
