@@ -430,8 +430,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         const updatedChatHistory = [...prevChatHistory];
         const chatToUpdate = updatedChatHistory[chatIndex];
         chatToUpdate.messages = [...chatToUpdate.messages, { sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }];
-
-        updatedChatHistory[chatIndex] = chatToUpdate;
+        const { isTemp, ...rest } = chatToUpdate;
+        updatedChatHistory[chatIndex] = rest;
         return updatedChatHistory;
       }
     });

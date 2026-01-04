@@ -13,13 +13,13 @@ import useChat from '../../hooks/useChat';
 import { useGlowingBorder } from '../../hooks/useGlowingBorder';
 
 function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, createNewChat, crispWizInputContainerRef, crispWizInputRef }) {
-    const { theme, chatHistory, setCurrentChat } = useContext(MainContext);
+    const { theme, chatHistory, setChatHistory, setCurrentChat } = useContext(MainContext);
 
     const { updateChatTitle, deleteChat } = useChat();
 
     const triggerGlow = useGlowingBorder(crispWizInputContainerRef);
 
-    const {
+    let {
         query,
         setQuery,
         filteredItems: filteredChatSessions,
@@ -131,6 +131,15 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
     async function handleDeleteChat(event, chatsToDelete) {
         try {
             event.stopPropagation();
+            // if chat has not been saved to DB, delete it locally without calling the endpoing
+            if (chatsToDelete[0]?.isTemp) {
+                setChatHistory(prev =>
+                    prev.filter(
+                        item => item.sessionId !== chatsToDelete[0].sessionId
+                    )
+                );
+                return;
+            }
             setIsDeleteLoading(true);
             const { success, message } = await deleteChat(chatsToDelete.map(chat => chat?.sessionId));
             if (success) {
