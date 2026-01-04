@@ -86,7 +86,7 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
                     </div>
 
                     {/* project name */}
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-full">
                         <label htmlFor="indexName" className={`block text-sm font-medium`}>
                             Project Name
                         </label>
