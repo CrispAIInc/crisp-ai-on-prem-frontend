@@ -34,6 +34,10 @@
   }
 }
 
+label {
+  user-select: none;
+}
+
 :root {
   --color-primary-200: #77a8f9;
 }
