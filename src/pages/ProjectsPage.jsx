@@ -136,9 +136,9 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
 
     // const { theme, setTheme } = useContext(ProjectContext);
 
-    // const sortedProjects = useMemo(() => {
-    //     return sortByDate(projects, 'created_at', sortOrder);
-    // }, [projects, sortOrder]);
+    const sortedProjects = useMemo(() => {
+        return sortByDate(projects, 'created_at', sortOrder);
+    }, [projects, sortOrder]);
 
     const getSortedProjects = useCallback(
         (key, order = sortOrder) => {

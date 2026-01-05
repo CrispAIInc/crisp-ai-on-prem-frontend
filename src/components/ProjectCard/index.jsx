@@ -314,7 +314,17 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                             },
                         ]}
                     />
-                    <ArrowForwardIosIcon onClick={() => setCurrentProject(project)} className="cursor-pointer text-textColor-200" />
+                    <ArrowForwardIosIcon onClick={() => {
+                        const now = new Date();
+                        setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
+                            if (prev?.project_id === project.project_id) {
+                                return {
+                                    ...prev,
+                                    updated_at: now
+                                };
+                            } return prev;
+                        });
+                    }} className="cursor-pointer text-textColor-200" />
                 </div>
                 {/* bottom showcase */}
                 <div className="font-semibold">
