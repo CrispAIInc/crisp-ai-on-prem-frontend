@@ -183,7 +183,7 @@ const ChatPanel = () => {
     setShowEditor(false);
     setShowStoriesEditor(false);
   }, [setShowEditor]);
-  
+
   const [isNewInsight, setIsNewInsight] = useState(false);
   function createNewInsight() {
     setSelectedNote({
@@ -730,7 +730,7 @@ const ChatPanel = () => {
           <div>
             {/* buttons */}
             <div className="flex justify-center gap-5 mt-2 flex-items">
-              {[{ id: "genMetadata", title: "AI Readiness" }, { id: "genStories", title: "Narratives & Posts" }, { id: "genMedia", title: "Sizzle Reel" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`text-[14px] select-none text-md cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
+              {[{ id: "genMetadata", title: "Cataloging" }, { id: "genStories", title: "Stories" }, { id: "genMedia", title: "Reels" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`text-[14px] select-none text-md cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
