@@ -137,7 +137,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
                             combinedSummary === "" && currentResource?.metadata?.summary?.content === undefined &&
                             <div className="flex items-center gap-2 mt-3">
                                 <WarningAmberOutlinedIcon style={{ color: theme === 'light' ? '#FBBF24' : '#F59E0B' }} />
-                                <span className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>No summary available for this resource.</span>
+                                <span className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Summary not available.</span>
                             </div>
                         }
                         {combinedSummary !== "" && <RippleButton

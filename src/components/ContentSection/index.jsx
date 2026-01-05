@@ -875,51 +875,33 @@ const ContentSection = ({
 
             const finalData = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
-            setDisplayedSources(prev => prev.map(source => {
-                // loop through finalData.uploaded_data and see if there same source_path
-                const uploadedSource = finalData.uploaded_data.find(item => item.source_path === source.source_path);
-                const { progess, step, ...rest } = source;
-                if (uploadedSource) {
-                    return {
-                        ...rest,
-                        ...uploadedSource,
-                    };
-                }
-                return {
-                    ...rest
-                };
-            }));
+            // ---------- 2. Fetch data ----------
+            const data = await makeApiRequest(
+                "/content",
+                "post",
+                JSON.stringify(categoryValuesWithoutAll)
+            );
 
-            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValuesWithoutAll));
+            // ---------- 3. Prepare reusable collections ----------
+            const sourcesToAdd = data.filter(item =>
+                processedFiles.includes(item.source_path)
+            );
 
-            // Filter sources that match the uploaded files
-            const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
+            const selectedSourcePaths = new Set(
+                sourcesToAdd.map(s => s.source_path)
+            );
 
-            setSourcesTobeCommited(prev => [...new Set([...prev, ...sourcesToAdd.map(item => ({ ...item, is_selected: true }))])]); // Ensure uniqueness
-            // Update knowledge base
-            setKnowledgeBase(data.map(item => ({
-                ...item,
-                is_selected: sourcesToAdd.some(s => s.source_path === item.source_path) || sourcesTobeCommited.find(i => i.source_path === item.source_path)?.is_selected,
-            })));
-
-            // add new uploaded sources to displayedSources
-            setDisplayedSources(prev => {
-                const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
-                // sort the sources
-                const finalSources = sortArrayOfObjects([...prev, ...newSources.map(item => ({ ...item, is_selected: true }))], "source_path");
-
-                // remove progress and step from all objects in finalSources
-                return finalSources.map((source) => {
-                    const { progress, step, ...rest } = source;
-                    return {
-                        ...rest
-                    };
-                });
-                // const { progress, step, ...rest } = finalSources;
-                return finalSources;
-            });
-
-             getCombinedSum && getCombinedSum();
+            // ---------- 5. Update knowledge base ----------
+            setKnowledgeBase(
+                data.map(item => ({
+                    ...item,
+                    is_selected:
+                        selectedSourcePaths.has(item.source_path) ||
+                        sourcesTobeCommited.find(
+                            s => s.source_path === item.source_path
+                        )?.is_selected,
+                }))
+            );
 
             const { chat_is_initialized } = await makeApiRequest(
                 `/chat/all`,
@@ -951,110 +933,9 @@ const ContentSection = ({
             setIsProgressStarted(false);
         }
     };
-    const handleUploadOne = async (event, fileFormat, _files) => {
-        try {
-            setUploadStatus("uploading");
-            setIsUploadFailed(false);
-            setIsFileUploading(true);
-            setIsProgressStarted(true);
-            setShowAddModal(false);
-
-
-            // await fakeApiCall(4000);
-
-            const files = _files || Array.from(event.target.files);
-            const processedFiles = files.map(file => file.name);
-
-            setUploadedSources(processedFiles); // Updates state but is asynchronous
-
-            const formData = new FormData();
-            // Always try to reuse existing session ID, only create new one if none exists
-            let sessionId = localStorage.getItem("sessionId");
-            if (!sessionId) {
-                sessionId = Math.random();
-                localStorage.setItem("sessionId", sessionId);
-                console.log("🆕 Created new session_id:", sessionId);
-            } else {
-                console.log("♻️ Reusing existing session_id:", sessionId);
-            }
-
-            // Ensure we're joined to the session room before starting upload
-            console.log("Joining session room before upload:", sessionId);
-            console.log("Current socket ID:", socket.id);
-            socket.emit("join_upload_session", { session_id: sessionId });
-
-            // Wait a moment for the join to complete
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            // Set up periodic rejoin to ensure we stay in the room during long uploads
-            const rejoinInterval = setInterval(() => {
-                if (socket.connected) {
-                    console.log("🔄 Periodic rejoin to session:", sessionId);
-                    socket.emit("join_upload_session", { session_id: sessionId });
-                }
-            }, 5000); // Rejoin every 30 seconds
-
-            files.forEach(file => {
-                formData.append("file", file);
-                formData.append("category", selectedCategory);
-                formData.append("fileType", file.type);
-                formData.append("session_id", sessionId);
-            });
-
-            // await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
-            setUploadStatus("success");
-
-            // toast('Upload complete. Generate metadata from the right panel', { className: "p-2 rounded-md", theme });
-            // setActiveTab('genMetadata');
-
-            // Fetch updated content
-            const data = await makeApiRequest("/content", "post", JSON.stringify(categoryValuesWithoutAll));
-
-            // Filter sources that match the uploaded files
-            const sourcesToAdd = data.filter(item => processedFiles.includes(item.source_path));
-
-            setSourcesTobeCommited(prev => [...new Set([...prev, ...sourcesToAdd.map(item => ({ ...item, is_selected: true }))])]); // Ensure uniqueness
-            // Update knowledge base
-            setKnowledgeBase(data.map(item => ({
-                ...item,
-                is_selected: sourcesToAdd.some(s => s.source_path === item.source_path) || sourcesTobeCommited.find(i => i.source_path === item.source_path)?.is_selected,
-            })));
-
-            // add new uploaded sources to displayedSources
-            setDisplayedSources(prev => {
-                const newSources = sourcesToAdd.filter(item => !prev.some(i => i.source_path === item.source_path));
-                // sort the sources
-                const finalSources = sortArrayOfObjects([...prev, ...newSources.map(item => ({ ...item, is_selected: true }))], "source_path");
-                return finalSources;
-            });
-
-            setCurrentResource(sourcesToAdd[0]);
-
-            if (sourcesToAdd.length > 0) {
-                setActiveView('resource');
-            }
-
-        } catch (error) {
-            setIsUploadFailed(true);
-            setUploadStatus("error");
-            console.error(error);
-            setuploadErrorMessage(error?.response?.data?.error || 'Upload failed. Please try again.');
-            // toast(error?.response?.data?.error, { className: `p-2 rounded-md z-20 ${theme === 'light' ? 'text-textColor-100 bg-textColor-300' : 'bg-textColor-200'}`, });
-        } finally {
-            // await delay(2500);
-            // setTimeout(() => {
-            // setTimeout(() => {
-            setIsFileUploading(false);
-            setIsProgressStarted(false);
-            // }, 4000);
-
-            // }, 3000);
-            // setTimeout(() => {
-            // setShowAddModal(false);
-            // }, 650);
-        }
-
-    };
+    useEffect(() => {
+        getCombinedSum();
+    }, [getCombinedSum]);
 
     useEffect(() => {
         if (uploadStatus === "success" || uploadStatus === "error") {
@@ -1274,7 +1155,7 @@ const ContentSection = ({
                                                     />}
                                             </div>
                                             <div className="flex flex-col ">
-                                                {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-all' text={option?.step} />}
+                                                {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-keep' text={option?.step} />}
                                                 <span className={`text-md font-medium line-clamp-2 ${theme === 'dark' && 'text-textColor-100'}`}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>

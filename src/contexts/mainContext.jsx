@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import makeApiRequest, { axiosInstance } from "../api";
 
@@ -1229,22 +1229,37 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
-    async function getCombinedSum() {
+    const getCombinedSum = useCallback(async () => {
         try {
             setIsCombinedSummaryPending(true);
             setActiveView('resource');
-            const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
-                sources: displayedSources?.filter(source => source?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-                lang: selectedLanguage
-            }));
+
+            const sources = displayedSources
+                .filter(s => s.is_selected)
+                .map(({ source_path, category }) => ({ source_path, category }));
+
+            if (!sources.length) {
+                setCombinedSummary("");
+                return;
+            }
+
+            const summary = await makeApiRequest(
+                '/combine-summaries',
+                'POST',
+                JSON.stringify({
+                    sources,
+                    lang: selectedLanguage,
+                })
+            );
+
             setCombinedSummary(summary?.combined_summary || "");
         } catch (e) {
-            console.log(e);
+            console.error(e);
         } finally {
             setIsCombinedSummaryPending(false);
-
         }
-    }
+    }, [displayedSources, selectedLanguage]);
+
 
     // create value object with all the states
     const value = {
