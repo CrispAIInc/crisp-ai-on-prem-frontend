@@ -1229,7 +1229,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
-    const getCombinedSum = useCallback(async () => {
+    const getCombinedSum = async () => {
         try {
             setIsCombinedSummaryPending(true);
             setActiveView('resource');
@@ -1258,7 +1258,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         } finally {
             setIsCombinedSummaryPending(false);
         }
-    }, [displayedSources, selectedLanguage]);
+    };
+    // }, [displayedSources, selectedLanguage]);
 
 
     // create value object with all the states
