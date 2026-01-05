@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import makeApiRequest from "../api";
+import makeApiRequest, { axiosInstance } from "../api";
 
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
@@ -14,7 +14,10 @@ export const MainContext = createContext({});
 export default function MainProvider({ children, theme, setTheme }) {
     const { user, setUser } = useContext(AuthContext);
     const [categoryOptions, setCategoryOptions] = useState([]);
-    const { getIndexes } = useResources({ setCategoryOptions });
+    const [reels, setReels] = useState([]);
+    const [stories, setStories] = useState([]);
+    const [notes, setNotes] = useState([]);
+    const { getReels, getStories, getNotes, getIndexes } = useResources({ setReels, setStories, setNotes, setCategoryOptions });
 
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
     const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace
@@ -24,7 +27,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const player = useRef(null); // Video Play in the Workspace Component
     const [isPlayerReady, setIsPlayerReady] = useState(false); // Flag indicating that the video player is rendered. So we can do a timestamp jump properly.
 
-    const [notes, setNotes] = useState([]);
+
     // const [isAddingNote, setIsAddingNote] = useState(false);
     const [showNoteModal, setShowNoteModal] = useState(false); // Flag indicating whether or not to show the Note Modal
     const [showNoteDetails, setShowNoteDetails] = useState(false);
@@ -78,9 +81,84 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [persistedUploadedFiles, setPersistedUploadedFiles] = useState([]);
 
+    useEffect(() => {
+        async function intializeContent() {
+            const { chat_is_initialized } = await makeApiRequest(
+                `/chat/all`,
+                "post",
+                JSON.stringify({
+                    sources: [],
+                    category: "all",
+                    selectedAll: false,
+                    is_exclusive: false
+                })
+            );
+            setChatLoaded(chat_is_initialized);
+        }
+
+        intializeContent();
+    }, []);
 
     useEffect(() => {
         getIndexes();
+    }, []);
+
+    // update sourcesTobeCommited depending on knowledgeBase change
+    useEffect(() => {
+        setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
+    }, [knowledgeBase]);
+
+    useEffect(() => {
+        const getAllNotes = async () => {
+            try {
+                setIsNotesLoading(true);
+                getNotes();
+                setSelectedNote({
+                    note_id: "",
+                    text: [{
+                        content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+                            videoLinks: [],
+                            keyframeLinks: [],
+                            pdfLinks: [],
+                            imageLinks: [],
+                        }
+                    }],
+                    images: [],
+                    note_name: "",
+                });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsNotesLoading(false);
+            }
+        };
+
+        getAllNotes();
+    }, []);
+
+    useEffect(() => {
+        const getAllStories = async () => {
+            try {
+                setIsStoriesLoading(true);
+                getStories();
+                setSelectedStory({
+                    story_id: "",
+                    text: [],
+                    story_name: "",
+                    models: [],
+                });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsStoriesLoading(false);
+            }
+        };
+
+        getAllStories();
+    }, []);
+
+    useEffect(() => {
+        getReels();
     }, []);
 
     const contentPanelContainerRef = useRef(null);
@@ -117,7 +195,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         imageLinks: [],
     });
 
-    const [stories, setStories] = useState([]);
+
     const [selectedStory, setSelectedStory] = useState({
         story_id: "",
         text: [],
@@ -202,7 +280,6 @@ export default function MainProvider({ children, theme, setTheme }) {
     // }, [sourcesTobeCommited]);
 
     const commitSelectedSources = (items) => {
-        console.log(items);
         if (items?.length === 0) {
             // setSelectedSources(sourcesTobeCommited);
             knowledgeBase.map((item) => {
@@ -276,7 +353,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         setKnowledgeBase(updatedKnowledgeBase);
 
         // update displayedsources such that if file.is_source is true, add it to displayedsources otherwise if it is already in displayedsources, just make its property "is_selected" to false without removing it from displayedsources
-        console.log("handleToggleCheckSources from main context");
         setDisplayedSources((prev) => {
             const exists = prev.find((item) => item.source_path === file.source_path);
             // const fileFromKb = knowledgeBase.find((item) => item.source_path === file.source_path);
@@ -340,7 +416,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
         // setCommittedSources(selectedSources);
         async function fetchChat() {
-            console.log('here: ', selectedCategory);
             const data = await makeApiRequest(
                 `/chat/${selectedCategory}`,
                 "post",
@@ -1066,10 +1141,10 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // useEffect(() => {
     //   if (knowledgeBase.every((item) => item.is_selected === false)) {
-    //     console.log("disabled");
+
     //     setIsIngestionEnabled(false);
     //   } else {
-    //     console.log("enable");
+
     //     setIsIngestionEnabled(true);
     //   }
     // }, [knowledgeBase]);
@@ -1096,12 +1171,17 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [uploadedSources, setUploadedSources] = useState([]);
     const [isFileUploading, setIsFileUploading] = useState(false);
-
-    const [reels, setReels] = useState([]);
     // const [user, setUser] = useState(null);
 
     const [chatHistory, setChatHistory] = useState([]);
     const [currentChat, setCurrentChat] = useState([]);
+
+
+
+    const checkedSourcesCount = useMemo(() => displayedSources.filter(source => source.is_selected).length, [displayedSources]);
+
+
+
     useEffect(() => {
         let now = new Date();
         setCurrentChat({ sessionId: generateRandomId(), title: `New Chat ${chatHistory.length + 1}`, userId: user?.userId, messages: [], created_at: now, updated_at: now });
@@ -1117,7 +1197,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     //                 throw new Error('Failed to create new chat');
     //             }
     //         } catch (error) {
-    //             console.log(error?.message);
+
     //         }
     //     }
 
@@ -1130,7 +1210,6 @@ export default function MainProvider({ children, theme, setTheme }) {
                 setChatHistory(chat_history);
                 // setCurrentChat(chat_history[0] || []);
             } catch (error) {
-                console.log(error);
             }
         }
 
@@ -1139,7 +1218,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     useEffect(() => {
         if (Array.isArray(currentChat)) {
-            workspaceContainer.current.scrollTo({
+            workspaceContainer?.current?.scrollTo({
                 top: 0,
                 behavior: "smooth", // Enables smooth scrolling
             });
@@ -1147,32 +1226,34 @@ export default function MainProvider({ children, theme, setTheme }) {
     }, [currentChat]);
 
     const [combinedSummary, setCombinedSummary] = useState("");
-        const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
-        const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
+    const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
     async function getCombinedSum() {
-            try {
-                setIsCombinedSummaryPending(true);
-                setActiveView('resource');
-                const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
-                    sources: displayedSources?.filter(source => source?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-                    lang: selectedLanguage
-                }));
-                setCombinedSummary(summary?.combined_summary || "");
-            } catch (e) {
-                console.log(e);
-            } finally {
-                setIsCombinedSummaryPending(false);
-    
-            }
+        try {
+            setIsCombinedSummaryPending(true);
+            setActiveView('resource');
+            const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
+                sources: displayedSources?.filter(source => source?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                lang: selectedLanguage
+            }));
+            setCombinedSummary(summary?.combined_summary || "");
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setIsCombinedSummaryPending(false);
+
         }
+    }
 
     // create value object with all the states
     const value = {
         combinedSummary, setCombinedSummary,
-isCombinedSummaryPending, setIsCombinedSummaryPending,
-selectedLanguage, setSelectedLanguage,
-getCombinedSum,
+        isCombinedSummaryPending, setIsCombinedSummaryPending,
+        selectedLanguage, setSelectedLanguage,
+        getCombinedSum,
+        theme, setTheme,
+        checkedSourcesCount,
         chatHistory, setChatHistory,
         currentChat, setCurrentChat,
         reels, setReels,
@@ -1193,7 +1274,7 @@ getCombinedSum,
         generatedResources, setGeneratedResources,
         categoryOptions, setCategoryOptions, showEditor, setShowEditor,
         languageOptions,
-        theme, activeView, setActiveView,
+        activeView, setActiveView,
         chatLoaded, setChatLoaded,
         fileFormats,
         displayedSources, setDisplayedSources,
@@ -1214,7 +1295,6 @@ getCombinedSum,
         resourceURL,
         setResourceURL,
         jumpToPage, setJumpToPage,
-        setTheme,
         isNewStory, setIsNewStory,
         selectedGenStoriesModels, setSelectedGenStoriesModels,
         summaries, setSummaries,

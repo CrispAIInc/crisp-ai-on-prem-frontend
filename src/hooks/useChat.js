@@ -21,7 +21,8 @@ export default function useChat() {
 
         const now = new Date();
 
-        const newChat = { sessionId: generateRandomId(), title, userId: user.userId, messages: [], created_at: now, updated_at: now };
+        // isTemp means that this chat session has not yet been saved to DB
+        const newChat = { sessionId: generateRandomId(), isTemp: true, title, userId: user.userId, messages: [], created_at: now, updated_at: now };
         setCurrentChat(newChat);
         setChatHistory(prev => ([newChat, ...prev]));
     }, [user?.userId, setCurrentChat, setChatHistory]);

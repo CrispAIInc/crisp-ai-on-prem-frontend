@@ -13,7 +13,7 @@ import { Alert } from '@mui/material';
 import LoadingSpinner from '../../LoadingSpinner';
 import { logOut } from '../../../services/auth';
 
-function GeneralSettings() {
+function GeneralSettings({ hideTheme = false }) {
     const navigate = useNavigate();
     const { theme } = useContext(MainContext);
     const { user, setUser } = useContext(AuthContext);
@@ -54,6 +54,7 @@ function GeneralSettings() {
             setError(false);
 
             setInterval(() => {
+                localStorage.setItem('current_project', null);
                 logOut();
                 navigate('/verify', {
                     state: {
@@ -80,13 +81,13 @@ function GeneralSettings() {
                     ) : null
                 }
                 {/* app theme switcher */}
-                <div className="flex flex-wrap items-center justify-between">
+                {!hideTheme && <div className="flex flex-wrap items-center justify-between">
                     <h3 className={`text-[13px] ${theme === "light"
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}>Theme</h3>
                     <ThemeToggle />
-                </div>
+                </div>}
 
                 {/* user info */}
                 <div className="flex flex-col gap-3">

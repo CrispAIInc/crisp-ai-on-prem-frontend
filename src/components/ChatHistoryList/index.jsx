@@ -65,7 +65,6 @@ function ChatHistoryList({ closeChatHistory }) {
     function handleContextMenuOpen(e, chatId) {
         e.stopPropagation();
         e.preventDefault();
-        console.log(chatId);
         // Implement context menu logic here
         setContextMenuChatId(chatId);
     }

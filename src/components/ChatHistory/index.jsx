@@ -9,15 +9,16 @@ import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import { generateRandomId } from '../../utils';
 import { AuthContext } from '../../contexts/authContext';
 import useChat from '../../hooks/useChat';
+import { useGlowingBorder } from '../../hooks/useGlowingBorder';
 
-function ChatHistory() {
+function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
     const { theme, setCurrentChat, chatHistory, setChatHistory, workspaceContainer } = useContext(MainContext);
 
-    const { user } = useContext(AuthContext);
+    const triggerGlow = useGlowingBorder(crispWizInputContainerRef);
 
     const { addNewChat } = useChat();
 
-    const [isHorizontalChatHistoryVisibile, setIsHorizontalChatHistoryVisibile] = useState(false);
+    // const [isHorizontalChatHistoryVisibile, setIsHorizontalChatHistoryVisibile] = useState(false);
     const [isChatHistoryPopupOpen, setIsChatHistoryPopupOpen] = useState(false);
 
     const keyboardArrowUpRef = useRef(null);
@@ -28,16 +29,17 @@ function ChatHistory() {
         // 1. Create chat
         addNewChat(`New Chat ${chatHistory.length + 1}`);
 
+        // auto-focus on the input
+        crispWizInputRef.current.focus();
+
         // 2. Scroll container
         workspaceContainer?.current.scrollTo({
             top: 0,
             behavior: "smooth",
         });
 
-        // 3. Toggle horizontal history panel
-        if (!isHorizontalChatHistoryVisibile) {
-            setIsHorizontalChatHistoryVisibile(true);
-        }
+        // 3. Add border glowing effect
+        triggerGlow();
     }
 
     useEffect(() => {
@@ -52,7 +54,6 @@ function ChatHistory() {
                 chatTitleUpdaterModalRef.current &&
                 chatTitleUpdaterModalRef.current.contains(event.target)
             ) {
-                console.log("hehesss");
                 setIsChatHistoryPopupOpen(false);
             }
 
@@ -69,20 +70,20 @@ function ChatHistory() {
     }
 
     return (
-        <div className={`flex items-center w-full max-w-full h-full`}>
-            {chatHistory.length > 0 && <div className={`relative flex-1 w-[80%] origin-right transition-all duration-300 ease-in-out ${!isHorizontalChatHistoryVisibile && 'scale-x-0'}`}>
+        <div className={``}>
+            {/* {chatHistory.length > 0 && <div className={`relative flex-1 w-[80%] origin-right transition-all duration-300 ease-in-out ${!isHorizontalChatHistoryVisibile && 'scale-x-0'}`}>
                 <HorizontalChatHistoryList />
-                {/* Right fade shadow */}
                 <div className={`pointer-events-none absolute right-0 top-0 h-full w-16
                       bg-gradient-to-r from-transparent ${theme === 'light' ? 'to-background_workspace' : ''} `} />
-            </div>}
-            <div className="flex gap-1 p-2 ml-auto w-fit">
-                <KeyboardArrowLeftOutlinedIcon onClick={() => setIsHorizontalChatHistoryVisibile(prev => !prev)} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'} ${isHorizontalChatHistoryVisibile && 'rotate-180'}`} />
+            </div>} */}
+            <div className="flex gap-1 p-2 w-fit">
+                {/* <KeyboardArrowLeftOutlinedIcon onClick={() => setIsHorizontalChatHistoryVisibile(prev => !prev)} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'} ${isHorizontalChatHistoryVisibile && 'rotate-180'}`} /> */}
 
                 <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
 
                 <div className="relative">
-                    {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup chatTitleUpdaterModalRef={chatTitleUpdaterModalRef} createNewChat={createNewChat} twClasses={`absolute bottom-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
+                    {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup crispWizInputContainerRef={crispWizInputContainerRef}
+                        crispWizInputRef={crispWizInputRef} chatTitleUpdaterModalRef={chatTitleUpdaterModalRef} createNewChat={createNewChat} twClasses={`absolute top-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
                     <ScheduleOutlinedIcon ref={keyboardArrowUpRef} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
                 </div>
             </div>

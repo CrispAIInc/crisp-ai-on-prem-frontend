@@ -6,23 +6,13 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import Accordion from "../Accordion";
-import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import ViewWeekOutlinedIcon from '@mui/icons-material/ViewWeekOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-// import {
-//     Timeline,
-//     TimelineItem,
-//     TimelineOppositeContent,
-//     TimelineSeparator,
-//     TimelineDot,
-//     TimelineConnector,
-//     TimelineContent
-// } from '../CustomTimeline';
 import GsFile from '../GsFile';
 import Chip from '../Chip';
 
 function ReelProps({ reel, closeReelProps = () => { } }) {
-    const { filename, id, reel_video_url, thumbnail, user_id, combined_video_info, original_sources, video_filename, edl_url, source_frame_rates, ...rest } = reel;
+    const { filename, id, reel_video_url, thumbnail, user_id, combined_video_info, original_sources, video_filename, edl_url, source_frame_rates, reel_frame_rate, project_id, ...rest } = reel;
     const { theme } = useContext(MainContext);
     return (
         <div className={`p-4 w-[30vw] ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3`}>

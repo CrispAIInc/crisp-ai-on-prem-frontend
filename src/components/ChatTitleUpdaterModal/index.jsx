@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 import LoadingSpinner from '../LoadingSpinner';
 
-function ChatTitleUpdaterModal({ isLoading, show, onHide, value, setValue, updateValue }) {
+function ChatTitleUpdaterModal({ isLoading, show, onHide, value, setValue, updateValue, modalRef }) {
 
     const { theme } = useContext(MainContext);
     // const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +17,7 @@ function ChatTitleUpdaterModal({ isLoading, show, onHide, value, setValue, updat
             scrollable={true}
             centered
             dialogClassName='text-left'
+            ref={modalRef}
         >
 
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>

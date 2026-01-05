@@ -33,11 +33,17 @@ axiosInstance.interceptors.request.use(
  * Generic function for calling the backend API
  */
 
-const makeApiRequest = async (endpoint, method = 'get', data = null, headers = { 'Content-Type': 'application/json' }, config = {}) => {
+const makeApiRequest = async (endpoint, method = 'get', data = null, headers = {'Content-Type': 'application/json'}, config = {}) => {
 
     try {
         // add withCredentials
         // config.withCredentials = true;
+        // const token = await getJwt();
+        // if (token) {
+        //     headers = {...headers, 'Authorization': `Bearer ${token}`};
+        // } else {
+        //     delete headers['Authorization'];
+        // }
         const response = await axiosInstance({
             url: endpoint,
             method,

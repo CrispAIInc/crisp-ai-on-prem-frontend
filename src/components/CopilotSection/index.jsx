@@ -23,6 +23,9 @@ import { TOKEN_NAME } from '../../globals.js';
 import useAuth from '../../hooks/useAuth.js';
 import HorizontalChatHistoryList from '../HorizontalChatHistoryList/index.jsx';
 import ChatHistory from '../ChatHistory/index.jsx';
+import BaseHeading from "../BaseHeading";
+import toast from 'react-simple-toasts';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -30,7 +33,7 @@ const ChatMessage = ({ text, refs }) => {
   const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
   return (
     <div>
-      <div className="coorg-response">
+      <div className="coorg-response break-keep">
         {text}
       </div>
       <div>
@@ -107,7 +110,7 @@ const ChatMessage = ({ text, refs }) => {
   );
 };
 
-const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending }) => {
+const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, combinedSummary, setCombinedSummary, setIsCombinedSummaryPending, messages, setMessages }) => {
   const {
     theme,
     currentResource,
@@ -138,8 +141,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     currentChat,
     chatHistory,
     setChatHistory,
-    setCurrentChat
+    checkedSourcesCount
   } = useContext(MainContext);
+
+  const { currentProject } = useContext(ProjectContext);
 
   const { token } = useAuth();
 
@@ -149,7 +154,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   const chatAppRef = useRef();
 
-  const [messages, setMessages] = useState(currentChat?.messages || []);
+  // const [messages, setMessages] = useState(currentChat?.messages || []);
   const [responseIndex, setResponseIndex] = useState(currentChat?.messages?.length - 1 || -1);
   useEffect(() => {
     setMessages(currentChat?.messages || []);
@@ -162,7 +167,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   const [originalQueries, setOriginalQueries] = useState([]);
   const [originalResponses, setOriginalResponses] = useState([]);
 
-
+  const crispWizInputRef = useRef(null);
+  const crispWizInputContainerRef = useRef(null);
 
   const [existingNote, setExistingNote] = useState(0);
 
@@ -318,7 +324,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_selected) ? false : true}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          SessionId: currentChat?.sessionId
+          SessionId: currentChat?.sessionId,
+          ProjectId: currentProject?.project_id,
         },
         heartbeatTimeout: 75000,
       });
@@ -423,8 +430,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         const updatedChatHistory = [...prevChatHistory];
         const chatToUpdate = updatedChatHistory[chatIndex];
         chatToUpdate.messages = [...chatToUpdate.messages, { sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }];
-
-        updatedChatHistory[chatIndex] = chatToUpdate;
+        const { isTemp, ...rest } = chatToUpdate;
+        updatedChatHistory[chatIndex] = rest;
         return updatedChatHistory;
       }
     });
@@ -724,7 +731,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   };
 
   const addToNewNote = async (textToAdd, file, question = '', models = selectedLLMs, refs = { pdfLinks: [], videoLinks: [], imageLinks: [] }) => {
-    console.log(textToAdd);
     const newText = {
       id: generateRandomHash(5),
       model: models[0] || "",
@@ -930,6 +936,23 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setImagePreviewIndex(index);
   };
 
+  const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
+  const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
+  const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
+  const confirmFn = ({ start, end }) => {
+    setInput(`Generate description between timestamps ${start} and ${end}`);
+    setIsTimestampPickerOpen(false);
+  };
+
+  const rejectFn = (isError, errorMessage) => {
+    if (isError) {
+      console.log(errorMessage);
+      toast(errorMessage, { className: `p-2 rounded-md !bg-red-600 text-white`, theme });
+    } else {
+      setIsTimestampPickerOpen(false);
+    }
+  };
+
   return (
     <article className="relative flex flex-col flex-1 mb-3 h-full max-w-[650px] mx-auto ">
       <section className={`flex flex-wrap items-center gap-3 ${messages.length > 0 && 'mb-3'}`}>
@@ -1005,7 +1028,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                                 );
                               })
                             }
-                            <p className="break-words">{message?.text?.query}</p>
+                            <p className="break-words break-keep">{message?.text?.query}</p>
                             {/* <p>{message?.text}</p> */}
                           </div>
                           {isLightboxOpen && (
@@ -1025,7 +1048,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                               <ReplayOutlinedIcon />
                             </div>
                           </div>
-                          <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0" dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
+                          <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0 break-keep" dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
                         </>
                       )
                   }
@@ -1166,18 +1189,20 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       {/* </div> */}
       <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
-        <ChatHistory />
-        {/* <ChatHistory /> */}
+        <div className="flex items-center justify-between ml-auto">
+          <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
+        </div>
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div className={`flex items-center w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
+            <div ref={crispWizInputContainerRef} className={`flex items-center gap-2 w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
               <input
                 placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
                 value={input}
                 rows="1"
+                ref={crispWizInputRef}
                 disabled={showCursor}
                 onChange={e => setInput(e.target.value)}
                 className={`!flex-1 pr-2 py-3 !pl-4 rounded-full bg-transparent outline-none`}
@@ -1187,7 +1212,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                   }
                 }} />
               <div
-                className={`p-2 mr-3 text-sm cursor-pointer bg-textColor-300 text-white/80 rounded-full`}
+                className={`p-2 mr-4 text-sm cursor-pointer bg-textColor-300 text-white/80 rounded-full`}
                 onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
               >
                 <SendIcon className={``} />

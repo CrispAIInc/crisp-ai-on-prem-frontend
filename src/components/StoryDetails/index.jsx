@@ -125,7 +125,6 @@ function StoryDetails() {
                 console.log(error);
             } finally {
                 setIsGeneratingIntroConlusion(false);
-                console.log(selectedStory.text);
             }
         }
     }
@@ -409,7 +408,6 @@ function StoryDetails() {
     }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
     const handleVideoLinkClick = (event, video) => {
-        console.log("klklkl");
         event.preventDefault();
         setFromChat(false);
         const resourceURL = `${API_ENDPOINT}/${video.file_type

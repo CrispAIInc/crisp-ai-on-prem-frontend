@@ -98,6 +98,50 @@ export default {
           '0%, 100%': { opacity: 1 },
           '50%': { opacity: 0.1 }, // customize this value
         },
+        fadeInMenu: {
+          '0%': { opacity: 0, transform: 'translateY(-4px) scale(0.98)' },
+          '100%': { opacity: 1, transform: 'translateY(0) scale(1)' },
+        },
+        glowPulse: {
+          '0%': {
+            boxShadow: '0 0 0 0px rgba(99,102,241,0)',
+          },
+          '20%': {
+            boxShadow: '0 0 2px 2px #8a38d7',
+          },
+          '50%': {
+            boxShadow: '0 0 4px 4px #e036bc',
+          },
+          '80%': {
+            boxShadow: '0 0 2px 2px #8a38d7',
+          },
+          '100%': {
+            boxShadow: '0 0 0 0 rgba(99,102,241,0)',
+          },
+        },
+        aiGlow: {
+          '0%': {
+            opacity: '0',
+            boxShadow: '0 0 0 0 rgba(0,0,0,0)',
+          },
+          '15%': {
+            opacity: '1',
+            boxShadow:
+              '0 0 6px #8a38d7, 0 0 12px #e036bc',
+          },
+          '40%': {
+            boxShadow:
+              '0 0 14px #8a38f9, 0 0 28px #e036ca',
+          },
+          '70%': {
+            boxShadow:
+              '0 0 6px #8a38d1, 0 0 12px #e036bb',
+          },
+          '100%': {
+            opacity: '0',
+            boxShadow: '0 0 0 0 rgba(0,0,0,0)',
+          },
+        },
       },
       animation: {
         blink: 'blink 1s step-start infinite',
@@ -105,6 +149,8 @@ export default {
         smoothPing: 'smoothPing 1.8s linear infinite',
         'fade-in': 'fadeIn 1.5s forwards infinite',
         customPulse: 'customPulse 1.5s ease-in-out infinite',
+        'glow-twice': 'glowPulse .75s ease-out forwards 2',
+        'ai-glow-activate': 'aiGlow 1.2s ease-out 2',
       },
       colors: {
         background: "var(--background-color)",

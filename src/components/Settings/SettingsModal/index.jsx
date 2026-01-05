@@ -13,7 +13,7 @@ export function SettingsModal(props) {
     const renderActiveSettingsTab = () => {
         switch (activeTab) {
             case "General":
-                return <GeneralSettings />;
+                return <GeneralSettings hideTheme={props?.hideTheme} />;
             case "Account":
                 return <AccountSettings />;
             // case "Privacy":

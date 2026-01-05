@@ -56,14 +56,12 @@ function ReelViewer({
         try {
             setIsDownloading(true);
             const downloadableUrl = await getDownloadableUrl(_url);
-            console.log(downloadableUrl);
 
             const response = await fetch(downloadableUrl);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const blob = await response.blob();
-            console.log(blob);
 
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -333,17 +331,8 @@ function ReelViewer({
                 throttleDrag={0}
                 onDrag={({
                     target,
-                    beforeDelta, beforeDist,
-                    left, top,
-                    right, bottom,
-                    delta, dist,
                     transform,
-                    clientX, clientY,
                 }) => {
-                    console.log("onDrag left, top", left, top);
-                    // target!.style.left = `${left}px`;
-                    // target!.style.top = `${top}px`;
-                    console.log("onDrag translate", dist);
                     target.style.transform = transform;
                 }}
 

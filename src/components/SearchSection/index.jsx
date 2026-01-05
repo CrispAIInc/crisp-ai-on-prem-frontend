@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import BaseHeading from '../BaseHeading';
 import toast from 'react-simple-toasts';
@@ -63,12 +62,8 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
                 resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
             }
 
-            console.log({ knowledgeBase, source });
             setCurrentResource({ ...source, timestamp });
             setResourceURL(resourceURL);
-            // setActiveView('resource');
-
-            // response.file_type === 'img' ? setSummary(response.caption) : setSummary(response.summary);
             setSummary(rest.summary);
             if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             setAdditionalSources(additional_sources);

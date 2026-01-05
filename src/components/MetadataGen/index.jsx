@@ -15,7 +15,7 @@ import useResources from '../../hooks/useResources.js';
 
 function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityValue, setVerbosityValue, context, setContext }) {
 
-    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
+    const { knowledgeBase, theme, checkedSourcesCount, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
 
     const { categoryValuesWithoutAll } = useResources();
 
@@ -58,7 +58,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         });
     };
 
-    const handleMouseEnter = () => displayedSources.filter(item => item.is_selected).length === 0 && setTooltipVisible(true);
+    const handleMouseEnter = () => checkedSourcesCount === 0 && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMetadata() {
@@ -70,7 +70,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         //     toast('You must select at least one metadata option');
         // }
 
-        if (displayedSources.filter(item => item.is_selected).length === 0) {
+        if (checkedSourcesCount === 0) {
             toast('You must check at least one source');
         }
 
@@ -170,7 +170,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    disabled={isGeneratingMetadata || displayedSources.filter(item => item.is_selected).length === 0} onClick={generateMetadata}>
+                    disabled={isGeneratingMetadata || checkedSourcesCount === 0} onClick={generateMetadata}>
                     {isGeneratingMetadata ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </RippleButton>
                 {tooltipVisible && (

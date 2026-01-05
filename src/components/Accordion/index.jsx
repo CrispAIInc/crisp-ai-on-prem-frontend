@@ -22,7 +22,7 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, ch
 
                 <div>
                     {IconComponent && <span className="mr-2">{IconComponent}</span>}
-                    <span className={`${theme === 'dark' && 'text-textColor-100'} uppercase text-sm font-bold tracking-widest ${fromReelProps && 'text-gradient-x'}`}>{heading}</span>
+                    <span className={`select-none ${theme === 'dark' && 'text-textColor-100'} uppercase text-sm font-bold tracking-widest ${fromReelProps && 'text-gradient-x'}`}>{heading}</span>
                 </div>
                 <svg
                     className={`w-6 h-6 transform transition-transform ${isOpen ? "rotate-180" : ""

@@ -46,9 +46,7 @@ export default function Register() {
             const { success, message } = await makeApiRequest('/sign-up', 'POST', JSON.stringify(userInfo));
 
             if (success) {
-                console.log("Registration successful! but need to verify email");
                 // const user = await loginWithAccessAndRefreshToken(userInfo.email, userInfo.password);
-                // console.log("user from firebase sign in login", user);
                 // await sendEmail(user);
                 //show user a info card letting them know that a verification email has been send to their email
                 setError(false);
