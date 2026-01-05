@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import ProjectCard from '../components/ProjectCard';
 import { extractThumbnail, sortByDate } from '../utils.js';
 import ProjectsHeader from '../components/ProjectsHeader/index.jsx';
@@ -136,9 +136,17 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
 
     // const { theme, setTheme } = useContext(ProjectContext);
 
-    const sortedProjects = useMemo(() => {
-        return sortByDate(projects, 'created_at', sortOrder);
-    }, [projects, sortOrder]);
+    // const sortedProjects = useMemo(() => {
+    //     return sortByDate(projects, 'created_at', sortOrder);
+    // }, [projects, sortOrder]);
+
+    const getSortedProjects = useCallback(
+        (key, order = sortOrder) => {
+            return sortByDate(projects, key, order);
+        },
+        [projects, sortOrder]
+    );
+
     const projectCount = sortedProjects.length;
 
     const [status, setStatus] = useState("");
@@ -159,7 +167,7 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                 {projectCount > 0 && <><h2 className="mb-4 text-xl font-bold text-textColor-200">Recent Projects</h2>
                     <div className="flex flex-wrap items-center gap-6 mb-16 overflow-x-auto hover:z-10 md:gap-8">
                         {
-                            sortedProjects.slice(0, 2).map((project) => (
+                            getSortedProjects("updated_at", "desc").slice(0, 3).map((project) => (
                                 <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                             ))
                         }
@@ -199,7 +207,7 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                         <p className="text-sm text-center text-textColor-100">Start a new workspace, upload files and generate content.</p>
                     </div>
                     {
-                        sortedProjects.map((project) => (
+                        getSortedProjects("created_at", sortOrder).map((project) => (
                             <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                         ))
                     }
