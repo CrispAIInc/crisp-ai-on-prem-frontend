@@ -168,8 +168,8 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                 {projectCount > 0 && (
                     <>
                         <h2 className="mb-4 text-xl font-bold text-textColor-200">Recent Projects</h2>
-                        <div className={`flex items-center gap-4 pb-8 mb-16 overflow-x-auto md:gap-8 [&::-webkit-scrollbar]:h-2
-        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-900 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500'} cursor-grab active:cursor-grabbing touch-pan-y snap-mandatory`}>
+                        <div className={`flex items-center gap-4 pb-4 mb-16 overflow-x-auto md:gap-8 [&::-webkit-scrollbar]:h-2
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-900 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500'} touch-pan-y snap-mandatory`}>
                             {
                                 getSortedProjects("updated_at", "desc").slice(0, 3).map((project) => (
                                     <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
