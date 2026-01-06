@@ -35,29 +35,6 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
 
     const [selectedSources, setSelectedSources] = useState(0);
 
-
-    // const [combinedSummary, setCombinedSummary] = useState("");
-    // const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
-
-    // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
-
-    // async function getCombinedSum() {
-    //     try {
-    //         setIsCombinedSummaryPending(true);
-    //         setActiveView('resource');
-    //         const summary = await makeApiRequest('/combine-summaries', "POST", JSON.stringify({
-    //             sources: displayedSources?.filter(source => source?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-    //             lang: selectedLanguage
-    //         }));
-    //         setCombinedSummary(summary?.combined_summary || "");
-    //     } catch (e) {
-    //         console.log(e);
-    //     } finally {
-    //         setIsCombinedSummaryPending(false);
-
-    //     }
-    // }
-
     function refreshSummary() {
         setSelectedSources(displayedSources?.filter(item => (item?.is_selected && !('progress' in item)))?.length);
         if ((displayedSources?.every(item => !('progress' in item))) || (displayedSources?.every(item => !('progress' in item)) && activeView === "resource")) {

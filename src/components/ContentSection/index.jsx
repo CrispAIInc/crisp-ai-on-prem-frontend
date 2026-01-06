@@ -151,7 +151,6 @@ const ContentSection = ({
 
 }) => {
     const {
-        getCombinedSum,
         isPlayerReady,
         resourceURL,
         isFileUploading, setIsFileUploading,
@@ -934,9 +933,6 @@ const ContentSection = ({
             setIsProgressStarted(false);
         }
     };
-    useEffect(() => {
-        getCombinedSum();
-    }, [getCombinedSum]);
 
     useEffect(() => {
         if (uploadStatus === "success" || uploadStatus === "error") {
