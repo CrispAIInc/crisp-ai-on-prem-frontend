@@ -9,6 +9,7 @@ import makeApiRequest, { axiosInstance } from '../api/index.js';
 import Modal from 'react-bootstrap/Modal';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { ProjectContext } from '../contexts/projectContext.jsx';
 
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState("");
@@ -134,7 +135,7 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
 
     const [sortOrder, setSortOrder] = useState('asc');
 
-    // const { theme, setTheme } = useContext(ProjectContext);
+    const { theme } = useContext(ProjectContext);
 
     const sortedProjects = useMemo(() => {
         return sortByDate(projects, 'created_at', sortOrder);
@@ -164,14 +165,19 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                 2xl:max-w-[1320px]
             ">
                 {/* recent projects */}
-                {projectCount > 0 && <><h2 className="mb-4 text-xl font-bold text-textColor-200">Recent Projects</h2>
-                    <div className="flex flex-wrap items-center gap-6 mb-16 overflow-x-auto hover:z-10 md:gap-8">
-                        {
-                            getSortedProjects("updated_at", "desc").slice(0, 3).map((project) => (
-                                <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
-                            ))
-                        }
-                    </div></>}
+                {projectCount > 0 && (
+                    <>
+                        <h2 className="mb-4 text-xl font-bold text-textColor-200">Recent Projects</h2>
+                        <div className={`flex items-center gap-4 pb-8 mb-16 overflow-x-auto md:gap-8 [&::-webkit-scrollbar]:h-2
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-900 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500'} cursor-grab active:cursor-grabbing touch-pan-y snap-mandatory`}>
+                            {
+                                getSortedProjects("updated_at", "desc").slice(0, 3).map((project) => (
+                                    <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                                ))
+                            }
+                        </div>
+                    </>
+                )}
 
                 {/* all projects */}
                 <div className="flex items-center justify-between mt-6 mb-6">
