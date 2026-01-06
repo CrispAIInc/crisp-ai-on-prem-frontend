@@ -1186,30 +1186,15 @@ export default function MainProvider({ children, theme, setTheme }) {
         let now = new Date();
         setCurrentChat({ sessionId: generateRandomId(), title: `New Chat ${chatHistory.length + 1}`, userId: user?.userId, messages: [], created_at: now, updated_at: now });
     }, []);
-    // useEffect(() => {
-    //     async function initializeChatSession() {
-    //         try {
-    //             const { success, sessionId, title, message, messages, userId } = await makeApiRequest('/new-chat');
-    //             if (success) {
-    //                 // Handle new chat creation logic here
-    //                 setCurrentChat({ sessionId, title, userId: user?.userId, messages: messages || [], created_at: new Date(), updated_at: new Date() });
-    //             } else {
-    //                 throw new Error('Failed to create new chat');
-    //             }
-    //         } catch (error) {
 
-    //         }
-    //     }
-
-    //     initializeChatSession();
-    // }, []);
     useEffect(() => {
         async function getChatHistory() {
             try {
-                const { chat_history } = await makeApiRequest("/chat-history", "GET");
+                const { chat_history, current_chat_id } = await makeApiRequest("/chat-history", "GET");
                 setChatHistory(chat_history);
-                // setCurrentChat(chat_history[0] || []);
+                setCurrentChat(chat_history.find(item => item.sessionId === current_chat_id));
             } catch (error) {
+                console.log(error);
             }
         }
 
