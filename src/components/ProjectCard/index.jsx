@@ -289,9 +289,9 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
     return (
         <div style={{ background: project.thumbnail ? `url('${projectThumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-cover !bg-center relative   rounded-2xl p-3 w-80 h-48 bg-clip-border `}>
             {/* top to bottom gradient overlay */}
-            <div className="absolute inset-0 shadow-md bg-gradient-to-tr from-indigo-500/30 via-transparent to-cyan-400/20 rounded-2xl"></div>
+            <div className="absolute inset-0 shadow-md bg-gradient-to-b from-transparent to-black/70 rounded-2xl"></div>
 
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-600/40 rounded-2xl " />
+            {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-600/40 rounded-2xl " /> */}
 
             <div className="relative z-40 flex flex-col justify-between h-full ">
                 {/* top showcase */}
@@ -314,17 +314,19 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                             },
                         ]}
                     />
-                    <ArrowForwardIosIcon onClick={() => {
-                        const now = new Date();
-                        setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
-                            if (prev?.project_id === project.project_id) {
-                                return {
-                                    ...prev,
-                                    updated_at: now
-                                };
-                            } return prev;
-                        });
-                    }} className="cursor-pointer text-textColor-200" />
+                    <div className="relative flex flex-col p-2 rounded-full shadow-lg cursor-pointer hover:bg-white/20 backdrop-blur">
+                        <ArrowForwardIosIcon onClick={() => {
+                            const now = new Date();
+                            setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
+                                if (prev?.project_id === project.project_id) {
+                                    return {
+                                        ...prev,
+                                        updated_at: now
+                                    };
+                                } return prev;
+                            });
+                        }} className="font-bold text-purple-500 cursor-pointer backdrop-blur" />
+                    </div>
                 </div>
                 {/* bottom showcase */}
                 <div className="font-semibold cursor-pointer" onClick={() => {

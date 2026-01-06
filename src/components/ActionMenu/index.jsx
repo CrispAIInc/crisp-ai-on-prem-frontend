@@ -23,7 +23,7 @@ export default function ActionMenu({ actions }) {
       e.stopPropagation();
       setOpen((p) => !p);
     }}>
-      <MoreVertOutlinedIcon className="text-textColor-200" />
+      <MoreVertOutlinedIcon className="text-purple-500" />
 
       {open && (
         <div className="absolute left-0 w-40 mt-1 bg-white top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]">
@@ -34,7 +34,7 @@ export default function ActionMenu({ actions }) {
                 action.onClick(e);
                 setOpen(false);
               }}
-              className={`flex items-center w-full gap-2 px-3 py-2 hover:bg-gray-100 hover:rounded-xl ${action.label === 'Delete' ? 'text-red-500' : 'text-textColor-200'}`}
+              className={`flex items-center w-full gap-2 px-3 py-2 hover:bg-gray-100 hover:rounded-xl ${action.label === 'Delete' ? 'text-red-500' : 'text-textColor-200'} `}
             >
               {action.icon}
               {action.label}
