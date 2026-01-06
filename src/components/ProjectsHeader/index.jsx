@@ -12,7 +12,7 @@ const ProjectsHeader = () => {
   const { user } = useContext(AuthContext);
   const { logout } = useAuth();
   return (
-    <div className="flex items-center justify-between py-4 mb-6 border-b bg-white/70 backdrop-blur-xl border-gray-200/40">
+    <div className="flex items-center justify-between py-4 mb-6 border-b border-gray-200 bg-white/70 backdrop-blur-xl">
       <div>
         <img src={AppLogo} className="w-40 h-auto" alt="Crisp AI logo" />
       </div>
