@@ -729,7 +729,7 @@ const ChatPanel = () => {
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
           <div>
             {/* buttons */}
-            <div className="flex justify-center gap-5 mt-2 flex-items">
+            <div className="flex justify-around gap-5 mt-2 flex-items">
               {[{ id: "genMetadata", title: "Cataloging" }, { id: "genStories", title: "Stories" }, { id: "genMedia", title: "Reels" }].map(item => <h6 onClick={() => handleTabClick(item.id)} className={`text-[14px] select-none text-md cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`} key={item.id}>{item.title}</h6>)}
             </div>
           </div>
