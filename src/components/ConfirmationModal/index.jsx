@@ -53,4 +53,4 @@ export default function ConfirmationModal({ show, onHide, heading, subheading, c
             </Modal.Footer>
         </Modal>
     );
-};
+}
