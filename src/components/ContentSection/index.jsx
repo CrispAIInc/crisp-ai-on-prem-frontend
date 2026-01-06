@@ -947,16 +947,16 @@ const ContentSection = ({
         }
     }, [uploadStatus]);
 
-    const [isProgressStarted, setIsProgressStarted] = useState(false);
-    const [progressUpdateCount, setProgressUpdateCount] = useState(0);
-
-    const [isChatHistoryOpen, setIsChatHistoryOpen] = useState(false);
-    const handleOpenChatHistory = () => {
-        setIsChatHistoryOpen(true);
-    };
-    const handleCloseChatHistory = () => {
-        setIsChatHistoryOpen(false);
-    };
+    async function handleExitProject() {
+        setCurrentProject(null);
+        await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
+            sources: {
+                checked: displayedSources.filter(item => item.is_selected).map(item => item.source_path),
+                unchecked: displayedSources.filter(item => !item.is_selected).map(item => item.source_path),
+            },
+            chat: currentChat.sessionId
+        }));
+    }
 
     return (
         <>
@@ -1266,9 +1266,7 @@ const ContentSection = ({
                                             ? "hover:bg-textColor-100/20"
                                             : "text-textColor-100 hover:bg-slate-800/50"
                                         }`}
-                                    onClick={() => {
-                                        setCurrentProject(null);
-                                    }}
+                                    onClick={handleExitProject}
                                 >
                                     <CloseOutlinedIcon
                                         className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
