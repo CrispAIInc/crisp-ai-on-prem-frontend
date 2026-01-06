@@ -10,6 +10,8 @@ import Modal from 'react-bootstrap/Modal';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { ProjectContext } from '../contexts/projectContext.jsx';
+import ProjectsTable from '../components/ProjectsTable/index.jsx';
+import LayoutToggle from '../components/LayoutToggle/index.jsx';
 
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState("");
@@ -153,6 +155,8 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
     const [status, setStatus] = useState("");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [viewMode, setViewMode] = React.useState("grid");
     return (
         <div className="px-4 pb-4">
             <ProjectsHeader />
@@ -168,14 +172,18 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                 {projectCount > 0 && (
                     <>
                         <h2 className="mb-4 text-xl font-bold text-textColor-200">Recent Projects</h2>
-                        <div className={`flex items-center gap-4 pb-4 mb-16 overflow-x-auto md:gap-8 [&::-webkit-scrollbar]:h-2
+                        {viewMode === "grid" ? (
+                            <div className={`flex items-center gap-4 pb-4 mb-16 overflow-x-auto md:gap-8 [&::-webkit-scrollbar]:h-2
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-900 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500'} touch-pan-y snap-mandatory`}>
-                            {
-                                getSortedProjects("updated_at", "desc").slice(0, 3).map((project) => (
-                                    <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
-                                ))
-                            }
-                        </div>
+                                {
+                                    getSortedProjects("updated_at", "desc").slice(0, 3).map((project) => (
+                                        <ProjectCard recent setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                                    ))
+                                }
+                            </div>
+                        ) : (
+                            <ProjectsTable projects={getSortedProjects("updated_at", "desc").slice(0, 3)} recent />
+                        )}
                     </>
                 )}
 
@@ -183,6 +191,8 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                 <div className="flex items-center justify-between mt-6 mb-6">
                     <h2 className="text-xl font-bold text-textColor-200">{projectCount > 0 ? `All Projects (${projectCount})` : 'Create your first Project'}</h2>
                     <div className="flex items-center gap-2">
+                        <LayoutToggle viewMode={viewMode} onChange={setViewMode} />
+
                         {projectCount > 0 && <SelectDropdown
                             value={status}
                             onChange={(val) => {
@@ -202,20 +212,29 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                     </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
-                    {/* new project */}
-                    <div className={`flex flex-col items-center justify-center  relative rounded-2xl p-3 w-80 h-48 shadow-lg transition-shadow duration-300 border-2 border-dashed border-purple-500/40
+                    {/* new project card only if viewmode is grid */}
+                    {viewMode === "grid" && (
+                        <div className={`flex flex-col items-center justify-center  relative rounded-2xl p-3 w-80 h-48 shadow-lg transition-shadow duration-300 border-2 border-dashed border-purple-500/40
 hover:border-purple-500
 hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}>
-                        <div className="flex items-center justify-center mb-2 rounded-full cursor-pointer bg-purple-300/40 w-14 h-14">
-                            <AddIcon className="text-purple-500" fontSize="large" />
+                            <div className="flex items-center justify-center mb-2 rounded-full cursor-pointer bg-purple-300/40 w-14 h-14">
+                                <AddIcon className="text-purple-500" fontSize="large" />
+                            </div>
+                            <h3 className="text-lg text-gradient-x">New Project</h3>
+                            <p className="text-sm text-center text-textColor-100">Start a new workspace, upload files and generate content.</p>
                         </div>
-                        <h3 className="text-lg text-gradient-x">New Project</h3>
-                        <p className="text-sm text-center text-textColor-100">Start a new workspace, upload files and generate content.</p>
-                    </div>
+                    )}
+
                     {
-                        getSortedProjects("created_at", sortOrder).map((project) => (
-                            <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
-                        ))
+                        viewMode === "grid" ? (
+                            <>
+                                {getSortedProjects("created_at", sortOrder).map((project) => (
+                                    <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                                ))}
+                            </>
+                        ) : (
+                            <ProjectsTable projects={projects} recent />
+                        )
                     }
                 </div>
             </div>

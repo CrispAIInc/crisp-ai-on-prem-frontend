@@ -1,11 +1,11 @@
 import Modal from "react-bootstrap/Modal";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useContext } from 'react';
-import { MainContext } from '../../contexts/mainContext';
+import { ProjectContext } from '../../contexts/projectContext';
 import LoadingSpinner from '../LoadingSpinner';
 
 export default function ConfirmationModal({ show, onHide, heading, subheading, confirmedFn, isDeleting }) {
-    const { theme } = useContext(MainContext);
+    const { theme } = useContext(ProjectContext);
 
     if (!show) return null;
 
@@ -53,4 +53,4 @@ export default function ConfirmationModal({ show, onHide, heading, subheading, c
             </Modal.Footer>
         </Modal>
     );
-};
+}

@@ -1,12 +1,12 @@
 import { useContext, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { MainContext } from '../../../contexts/mainContext.jsx';
 import GeneralSettings from '../GeneralSettings';
 import AccountSettings from "../AccountSettings";
+import { ProjectContext } from '../../../contexts/projectContext.jsx';
 
 export function SettingsModal(props) {
 
-    const { theme } = useContext(MainContext);
+    const { theme } = useContext(ProjectContext);
 
     const [activeTab, setActiveTab] = useState("General");
 
