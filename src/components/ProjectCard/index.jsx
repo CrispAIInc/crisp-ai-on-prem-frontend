@@ -9,25 +9,23 @@ import ActionMenu from '../ActionMenu';
 import ConfirmationModal from '../ConfirmationModal';
 import LoadingSpinner from '../LoadingSpinner';
 import ProjectNameUpdaterModal from "../ProjectNameUpdatedModal";
+import useProject from '../../hooks/useProject';
 
 const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }) => {
+
+    const { deleteProject } = useProject();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [projectThumbnail, setProjectThumbnail] = useState(null);
 
-    const deleteProject = async (projectId) => {
+    const handleDeleteProject = async (projectId) => {
+        setIsDeleting(true);
         try {
-            setIsDeleting(true);
-            axiosInstance.defaults.headers.common['ProjectId'] = project.project_id;
-            const { message, success } = await makeApiRequest('/projects', "DELETE");
-            if (success) {
-                setProjects((prevProjects) => prevProjects.filter((proj) => proj.project_id !== projectId));
-            } else {
-                throw new Error(message);
-            }
-        } catch (e) {
-            console.log(e);
+            deleteProject(projectId);
+        } catch (error) {
+            console.log(error);
         } finally {
             setIsDeleting(false);
         }
@@ -117,7 +115,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     heading={`Delete project`}
                     subheading="All your sources, reels and generated content will be permanently deleted. Are you sure?"
                     confirmedFn={async () => {
-                        await deleteProject(project.project_id);
+                        await handleDeleteProject(project.project_id);
                         setIsDeleteConfirmationOpen(false);
                     }}
                     isDeleting={isDeleting}

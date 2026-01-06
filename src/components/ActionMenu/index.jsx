@@ -19,14 +19,14 @@ export default function ActionMenu({ actions }) {
   }, []);
 
   return (
-    <div ref={ref} className={` relative flex flex-col  shadow-lg cursor-pointer rounded-full p-2 hover:bg-white/20 backdrop-blur`} onClick={(e) => {
+    <div ref={ref} className={` relative flex flex-col cursor-pointer rounded-full p-2 hover:bg-white/20`} onClick={(e) => {
       e.stopPropagation();
       setOpen((p) => !p);
     }}>
       <MoreVertOutlinedIcon className="text-purple-500" />
 
       {open && (
-        <div className="absolute left-0 w-40 mt-1 bg-white top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]">
+        <div className="absolute left-0 w-40 z-10 mt-1 bg-white top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]">
           {actions.map((action) => (
             <button
               key={action.label}

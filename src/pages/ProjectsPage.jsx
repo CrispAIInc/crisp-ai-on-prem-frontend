@@ -10,6 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { ProjectContext } from '../contexts/projectContext.jsx';
+import ProjectsTable from '../components/ProjectsTable/index.jsx';
 
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
     const [newProjectName, setNewProjectName] = useState("");
@@ -165,7 +166,7 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                 2xl:max-w-[1320px]
             ">
                 {/* recent projects */}
-                {projectCount > 0 && (
+                {/* {projectCount > 0 && (
                     <>
                         <h2 className="mb-4 text-xl font-bold text-textColor-200">Recent Projects</h2>
                         <div className={`flex items-center gap-4 pb-4 mb-16 overflow-x-auto md:gap-8 [&::-webkit-scrollbar]:h-2
@@ -177,7 +178,9 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                             }
                         </div>
                     </>
-                )}
+                )} */}
+
+                <ProjectsTable projects={projects} recent />
 
                 {/* all projects */}
                 <div className="flex items-center justify-between mt-6 mb-6">
