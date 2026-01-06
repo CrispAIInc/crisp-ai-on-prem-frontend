@@ -1,18 +1,14 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { extractThumbnail, formatReadableDate } from '../../utils';
-import ActionMenu from '../ActionMenu';
+import { useEffect, useState } from 'react';
 import makeApiRequest, { axiosInstance } from '../../api';
-import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import Modal from 'react-bootstrap/Modal';
-import LoadingSpinner from '../LoadingSpinner';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import useFirebase from '../../hooks/useFirebase';
-import ProjectNameUpdaterModal from "../ProjectNameUpdatedModal";
+import { formatReadableDate } from '../../utils';
+import ActionMenu from '../ActionMenu';
 import ConfirmationModal from '../ConfirmationModal';
+import LoadingSpinner from '../LoadingSpinner';
+import ProjectNameUpdaterModal from "../ProjectNameUpdatedModal";
 
 const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
