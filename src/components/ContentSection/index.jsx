@@ -173,7 +173,8 @@ const ContentSection = ({
         selectedAll,
         setSelectedAll,
         theme,
-        chatLoaded, setPersistedUploadedFiles
+        chatLoaded, setPersistedUploadedFiles,
+        currentChat
     } = useContext(MainContext);
 
     const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
@@ -948,14 +949,14 @@ const ContentSection = ({
     }, [uploadStatus]);
 
     async function handleExitProject() {
-        setCurrentProject(null);
         await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
             sources: {
                 checked: displayedSources.filter(item => item.is_selected).map(item => item.source_path),
                 unchecked: displayedSources.filter(item => !item.is_selected).map(item => item.source_path),
             },
-            chat: currentChat.sessionId
+            chat: currentChat?.sessionId
         }));
+        setCurrentProject(null);
     }
 
     return (
