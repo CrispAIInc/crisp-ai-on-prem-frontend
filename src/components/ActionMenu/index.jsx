@@ -3,7 +3,7 @@ import { MainContext } from '../../contexts/mainContext';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 
 export default function ActionMenu({ actions }) {
-    const {theme} = useContext(MainContext)
+  const { theme } = useContext(MainContext);
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -19,13 +19,11 @@ export default function ActionMenu({ actions }) {
   }, []);
 
   return (
-    // <div className="relative" ref={ref}>
-        <div ref={ref} className={` relative flex flex-col  shadow-lg cursor-pointer rounded-full p-2 hover:bg-white/20 backdrop-blur`} onClick={(e) => {
-            e.stopPropagation();
-            setOpen((p) => !p)
-        }}>
-      {/* <button onClick={() => setOpen((p) => !p)}>⋮</button> */}
-      <MoreVertOutlinedIcon className="text-textColor-200" /> 
+    <div ref={ref} className={` relative flex flex-col  shadow-lg cursor-pointer rounded-full p-2 hover:bg-white/20 backdrop-blur`} onClick={(e) => {
+      e.stopPropagation();
+      setOpen((p) => !p);
+    }}>
+      <MoreVertOutlinedIcon className="text-textColor-200" />
 
       {open && (
         <div className="absolute left-0 w-40 mt-1 bg-white top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]">

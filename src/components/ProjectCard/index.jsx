@@ -327,7 +327,17 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     }} className="cursor-pointer text-textColor-200" />
                 </div>
                 {/* bottom showcase */}
-                <div className="font-semibold">
+                <div className="font-semibold cursor-pointer" onClick={() => {
+                    const now = new Date();
+                    setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
+                        if (prev?.project_id === project.project_id) {
+                            return {
+                                ...prev,
+                                updated_at: now
+                            };
+                        } return prev;
+                    });
+                }}>
                     <h2 className="mb-0 !text-white line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
                     <div className="flex flex-wrap items-center gap-1">
                         <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
