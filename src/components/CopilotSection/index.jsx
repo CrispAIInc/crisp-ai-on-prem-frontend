@@ -303,23 +303,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         );
       }
 
-
-      // try {
-      //   const data = await makeApiRequest(
-      //     "/content",
-      //     "post",
-      //     JSON.stringify(categoryValues.filter((option) => {
-      //     if (option !== 'all') return option;
-      // }))
-      // JSON.stringify(categoryValuesWithoutAll)
-      //   );
-      //   setKnowledgeBase(data);
-      // } catch (error) {
-      //   console.warn(error);
-      // }
-
-
-
       let sessionID = null; // Variable to store the session ID
       const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_checked) ? false : true}`, {
         headers: {
@@ -329,15 +312,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         },
         heartbeatTimeout: 75000,
       });
-      // const eventSource = new EventSource(
-      // `${API_ENDPOINT}/message/${encodeURIComponent(
-      //   selectedCategory
-      // )}/${encodeURIComponent(usermessage?.replace(/\n/g, ' '))}/${encodeURIComponent(
-      //     selectedLLMs[0]
-      //   )}/${displayedSources?.some(item => item?.is_checked) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
-      // );
-
-
 
       eventSource.onmessage = async function (event) {
         const data = JSON.parse(event.data);
@@ -375,21 +349,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         eventSource.close();
 
         if (eventSource.readyState === EventSource.CLOSED) {
-          // Extract session ID from the eventSource's URL
-          // fetchReferences(botMessage); // Function to fetch references
-          // try {
-          //   const data = await makeApiRequest(
-          //     "/content",
-          //     "post",
-          //     JSON.stringify(categoryValues.filter((option) => {
-          //     if (option !== 'all') return option;
-          // }))
-          //     JSON.stringify(categoryValuesWithoutAll)
-          //   );
-          //   setKnowledgeBase(data);
-          // } catch (error) {
-          //   console.warn(error);
-          // }
           setOriginalResponses([...originalResponses, botMessage]);
         } else {
           console.error("Connection was closed due to an error.");

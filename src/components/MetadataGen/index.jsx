@@ -95,30 +95,36 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
             //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_checked).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             // };
             const payload = {
-                sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: source.category.filter(cat => cat !== "all")[0] })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context, verbosityValue: verbosityValue
+                sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: source.category.filter(cat => cat !== "all")[0] })),
+                selectedOptions: selectedOptions.map(op => op.id),
+                inputContext: context,
+                verbosityValue: verbosityValue
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_checked));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
-            // update content in /content
-            // ... /content
-            const data = await makeApiRequest(
-                "/content",
-                "post",
-                JSON.stringify(categoryValuesWithoutAll)
-            );
-            //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
-            let updatedKnowledgeBase = data.map(item => {
-                let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
 
-                if (selected) {
-                    return { ...item, is_checked: true };
-                } else {
+            setKnowledgeBase(prev => {
+                // Build a lookup map from results
+                const resultsMap = new Map(
+                    results.map(r => [r.source_path, r.metadata])
+                );
+
+                return prev.map(item => {
+                    // If this item exists in results, update metadata
+                    if (resultsMap.has(item.source_path)) {
+                        return {
+                            ...item,
+                            metadata: resultsMap.get(item.source_path),
+                        };
+                    }
+
+                    // Otherwise, leave it unchanged
                     return item;
-                }
+                });
             });
 
-            setKnowledgeBase(updatedKnowledgeBase);
+
             setGeneratedResources(results);
             setVerbosityValue('Medium');
             setContext('');
