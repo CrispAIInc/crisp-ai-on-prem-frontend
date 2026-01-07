@@ -97,17 +97,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     }
   }, [jumpToPage, numPages, isPdfLoaded]);
 
-  const categoryValues = categoryOptions.map((option) => option.value);
-
-  async function updateContent() {
-    const data = await makeApiRequest(
-      "/content",
-      "post",
-      JSON.stringify(categoryValuesWithoutAll)
-    );
-
-    setKnowledgeBase(data);
-  }
   useEffect(() => {
     if (activeView === "resource") {
       // setTranslatedResource(currentResource);

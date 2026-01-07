@@ -429,11 +429,11 @@ const ContentSection = ({
                 setCurrentResource(null);
             }
 
-            // remove all items in the items array from knowledgebase
-            // item.source_path !== items[0].source_path
-            setKnowledgeBase((prev) => prev.filter(item => {
-                return !items.some(i => i.source_path === item.source_path);
-            }));
+            // reflect changes to knowledgeBase
+            setKnowledgeBase(prev => {
+                let deletedSourcePaths = payload.map(item => item.fileName);
+                return prev.filter(item => !deletedSourcePaths.includes(item.source_path));
+            });
 
             setChatLoaded(false);
             const { chat_is_initialized } = await makeApiRequest(
@@ -447,24 +447,6 @@ const ContentSection = ({
                 })
             );
             setChatLoaded(chat_is_initialized);
-            const data = await makeApiRequest(
-                `/content`,
-                "post",
-                JSON.stringify(categoryValues)
-            );
-            // setKnowledgeBase(data);
-            // update knowledgebase so that it gets populated with the data value and also update the is_checked value to either true or false depending if an item in data exists in the sourcesTobeCommitted array
-            let updatedKnowledgeBase = data.map(item => {
-                let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
-
-                if (selected) {
-                    return { ...item, is_checked: true };
-                } else {
-                    return item;
-                }
-            });
-
-            setKnowledgeBase(updatedKnowledgeBase);
 
             setCurrentResource(null);
             setActiveView(null);
