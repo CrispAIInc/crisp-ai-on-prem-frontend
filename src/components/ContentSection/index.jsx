@@ -21,7 +21,7 @@ import BaseHeading from '../BaseHeading';
 import NoData from '../NoData';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import SearchSection from '../SearchSection';
-import { getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
+import { delay, getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
 import MetadataPanel from "../MetadataPanel";
 import toast from 'react-simple-toasts';
 import AddSourceModal from "../AddSourceModal";
@@ -761,24 +761,22 @@ const ContentSection = ({
                 };
             });
 
+            // count files to be uploaded
+            const totalFiles = files.length;
+
             setPersistedUploadedFiles(fileSources);
-            setKnowledgeBase(prev => {
-                return [...fileSources, ...prev];
+
+            setKnowledgeBase((prev) => {
+                // Merge existing knowledgeBase with new fileSources, avoiding duplicates
+                const existingPaths = new Set(prev.map(item => item.source_path));
+                const newSources = fileSources.filter(item => !existingPaths.has(item.source_path));
+                return [...newSources, ...prev];
             });
-            // setKnowledgeBase((prev) => {
-            //     // Merge existing knowledgeBase with new fileSources, avoiding duplicates
-            //     const existingPaths = new Set(prev.map(item => item.source_path));
-            //     const newSources = fileSources.filter(item => !existingPaths.has(item.source_path));
-            //     return [...newSources, ...prev];
-            // });
-            // setDisplayedSources((prev) => {
-            //     return [...fileSources, ...prev];
-            // });
 
             const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
             // ----------  Update knowledge base ----------
-            setKnowledgeBase(prev => [...uploaded_data, ...prev]);
+            setKnowledgeBase(prev => [...uploaded_data, ...prev.slice(totalFiles)]);
 
             const { chat_is_initialized } = await makeApiRequest(
                 `/chat/all`,
