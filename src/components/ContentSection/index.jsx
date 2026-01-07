@@ -547,26 +547,9 @@ const ContentSection = ({
     }
 
     function handleToggleCheckSources(isChecked) {
-        if (isChecked) {
-            setDisplayedSources(prev => prev.map(item => ({ ...item, is_checked: true })));
-            // update knowledgebase depending on the items selected in displayedSources
-            const updatedKnowledgeBase = knowledgeBase.map((prev) => {
-                let itemExist = results?.find(i => i?.source_path === prev?.source_path);
-                if (itemExist) {
-                    return { ...prev, is_checked: true };
-                }
-                return prev;
-            });
-            setKnowledgeBase(updatedKnowledgeBase);
-        } else {
-            const updatedKnowledgeBase = knowledgeBase.map((item) => {
-                return { ...item, is_checked: false };
-            });
-            setKnowledgeBase(updatedKnowledgeBase);
-            // setSelectedSources([]);
-            setSourcesTobeCommited([]);
-            setDisplayedSources(prev => prev.map(item => ({ ...item, is_checked: false })));
-        }
+        setKnowledgeBase(prev => {
+            return prev.filter(item => item.is_selected).map(item => ({ ...item, is_checked: isChecked }));
+        });
     }
 
     const [hoveredSource, setHoveredSource] = useState(null);
