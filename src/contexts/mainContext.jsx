@@ -357,7 +357,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
         let updatedKnowledgeBase = knowledgeBase.map(item => {
             if (item.source_path === file.source_path) {
-                return { ...item, is_checked: !item.is_checked };
+                return { ...item, is_selected: true, is_checked: !item.is_checked };
             }
 
             return item;
