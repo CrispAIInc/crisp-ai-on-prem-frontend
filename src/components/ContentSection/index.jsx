@@ -184,7 +184,8 @@ const ContentSection = ({
 
     const { logout } = useAuth();
 
-    const [prevCurrentIndex, setPrevCurrentIndex] = useState();
+    const [isProgressStarted, setIsProgressStarted] = useState(false);
+    const [progressUpdateCount, setProgressUpdateCount] = useState(0);
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -450,15 +451,6 @@ const ContentSection = ({
             toast('Source deleted successfully', { className: `p-2 rounded-md`, theme });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
-                // setActiveView(() => {
-                // if (selectedStory.text.length > 0) {
-                // return "story";
-                // }
-                // if (selectedNote.text.length > 1) {
-                // return "note";
-                // }
-                // return null;
-                // });
             }
 
             // remove all items in the items array from knowledgebase
@@ -500,17 +492,6 @@ const ContentSection = ({
 
             setCurrentResource(null);
             setActiveView(null);
-            // prev.pop();
-            // setActiveView(prev => prev?.length > 1 ? prev?.filter(item => item !== "resource") : []);
-            // setActiveView(() => {
-            // if (selectedStory.text.length > 0) {
-            // return "story";
-            // }
-            // if (selectedNote.text.length > 1) {
-            // return "note";
-            // }
-            // return null;
-            // });
         } catch (error) {
             setIsDeleting(false);
             console.log(error);
@@ -569,41 +550,7 @@ const ContentSection = ({
             });
             setKnowledgeBase(updatedKnowledgeBase);
             setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-            // setDisplayedSources(updatedKnowledgeBase.filter((item) => item.is_selected));
         }
-        // } else {
-        // if (category === undefined) {
-        // setSelectedAll(false);
-        // setKnowledgeBase((prev) => {
-        // return prev.map((item) => {
-        // return { ...item, is_selected: false };
-        // });
-        // });
-        // setSourcesTobeCommited([]);
-        // setDisplayedSources(knowledgeBase.map((item) => {
-        // return { ...item, is_selected: false };
-        // }));
-        // } else if (category !== undefined && format === undefined) {
-        // const updatedKnowledgeBase = knowledgeBase.map((item) => {
-        // if (item.category.includes(category)) {
-        // item.is_selected = false;
-        // }
-        // return item;
-        // });
-        // setKnowledgeBase(updatedKnowledgeBase);
-        // setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-        // } else if (category !== undefined && format !== undefined) {
-        // const updatedKnowledgeBase = knowledgeBase.map((item) => {
-        // if ((category === 'all' || item.category.includes(category)) && (item.file_type === format || format === "all")) {
-        // item.is_selected = false;
-        // }
-        // return item;
-        // });
-        // setKnowledgeBase(updatedKnowledgeBase);
-        // setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
-        // setDisplayedSources(updatedKnowledgeBase.filter((item) => item.is_selected));
-        // }
-        // }
     };
 
     const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
@@ -714,20 +661,6 @@ const ContentSection = ({
     const [results, setResults] = useState(displayedSources);
     const [searchValue, setSearchValue] = useState("");
 
-    // Update displayedSources when knowledgeBase changes
-    // useEffect(() => {
-    //     const knowledgePaths = new Set(knowledgeBase.map(item => item.source_path));
-    //     setDisplayedSources(prev =>
-    //         return {
-    //             ...prev.filter(item => knowledgePaths.has(item.source_path)),
-    //         }
-    //     );
-    // }, [knowledgeBase]);
-
-    // useEffect(() => {
-    // setDisplayedSources
-    // }, [displayedSources])
-
     // Update results whenever displayedSources or searchValue changes
     useEffect(() => {
         let filtered = displayedSources;
@@ -763,7 +696,6 @@ const ContentSection = ({
     upload to DB and GCP
     */
     const [fileThumbnails, setFileThumbnails] = useState([]);
-    const [currentPointerIndex, setCurrentPointerIndex] = useState(0);
 
     const extractThumbnail = (file) => {
         // const thumbnails = files.map((file) => {
@@ -945,13 +877,13 @@ const ContentSection = ({
     }, [uploadStatus]);
 
     async function handleExitProject() {
-        await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
-            sources: {
-                checked: displayedSources.filter(item => item.is_selected).map(item => item.source_path),
-                unchecked: displayedSources.filter(item => !item.is_selected).map(item => item.source_path),
-            },
-            chat: currentChat?.sessionId
-        }));
+        // await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
+        //     sources: {
+        //         checked: displayedSources.filter(item => item.is_selected).map(item => item.source_path),
+        //         unchecked: displayedSources.filter(item => !item.is_selected).map(item => item.source_path),
+        //     },
+        //     chat: currentChat?.sessionId
+        // }));
         setCurrentProject(null);
     }
 
@@ -1037,9 +969,6 @@ const ContentSection = ({
 
                     {displayedSources.length > 0 && <input className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[75%] rounded-full !pl-[10px]`} placeholder={"Search in workspace sources..."} value={searchValue} onChange={handleSearch} />}
 
-                    {/* <div className="w-fit">
- <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
- </div> */}
                     {results?.length > 0 && <div className="flex items-center mt-2">
                         <span
                             className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
@@ -1057,40 +986,9 @@ const ContentSection = ({
                         />
                     </div>}
 
-                    {/* <div className="flex items-center mt-4 ">
- <span
- className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
- }`}
- >
- select all sources
- </span>
- <Checkbox
- className={`select-all-checkbox p-0 "
- }`}
- checked={results?.every(item => item?.is_selected)}
- onChange={(e) => handleToggleSelectedSources(e.target.checked)}
- inputProps={{ "aria-label": "Select All Sources" }}
- label="Select All Sources"
- />
- </div> */}
-
                     <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                         {
                             results?.length > 0 && <div className={` h-full gap-2 w-full max-w-full mt-2 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
-                                {/* {displayedSources?.slice(0).reverse().map((item, index) => {
- // if (canRenderSourceThumbnail(item)) {
- return (<ContentPanelThumbnail
- key={index}
- index={index}
- isDeleting={isDeleting}
- clickedIndex={clickedIndex}
- item={item}
- handleCheckboxChange={handleCheckboxChange}
- onThumbnailClick={onThumbnailClick}
- deleteResource={deleteResource}
- />);
- // }
- })} */}
                                 {
                                     results?.map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
