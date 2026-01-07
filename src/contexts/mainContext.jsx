@@ -1190,9 +1190,10 @@ export default function MainProvider({ children, theme, setTheme }) {
     useEffect(() => {
         async function getChatHistory() {
             try {
-                const { chat_history, current_chat_id } = await makeApiRequest("/chat-history", "GET");
+                const { chat_history } = await makeApiRequest("/chat-history", "GET");
                 setChatHistory(chat_history);
-                setCurrentChat(chat_history.find(item => item.sessionId === current_chat_id));
+                console.log(chat_history);
+                setCurrentChat(chat_history.find(item => item.is_current_chat));
             } catch (error) {
                 console.log(error);
             }
