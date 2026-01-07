@@ -105,18 +105,8 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       "post",
       JSON.stringify(categoryValuesWithoutAll)
     );
-    //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
-    let updatedKnowledgeBase = data.map(item => {
-      let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
 
-      if (selected) {
-        return { ...item, is_checked: true };
-      } else {
-        return item;
-      }
-    });
-
-    setKnowledgeBase(updatedKnowledgeBase);
+    setKnowledgeBase(data);
   }
   useEffect(() => {
     if (activeView === "resource") {
@@ -221,7 +211,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   const pageRefs = useRef({});
 
   async function translateMetadata(_chosenLanguage, object) {
-    updateContent();
+    // updateContent();
     let prevLang = chosenLanguage;
     setChosenLanguage(_chosenLanguage);
     setIsTranslationLoading(true);
