@@ -374,7 +374,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     useEffect(() => {
         // add all selected sources from knowledgebase to displayedsources
-        setDisplayedSources(knowledgeBase.filter(item => item.is_checked));
+        setDisplayedSources(knowledgeBase.filter(item => item.is_selected));
     }, [knowledgeBase]);
 
     // const [selectedCategory] = useState("all");
