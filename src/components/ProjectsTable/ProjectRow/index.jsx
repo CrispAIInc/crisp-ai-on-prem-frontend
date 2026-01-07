@@ -8,6 +8,7 @@ import ProjectNameUpdaterModal from '../../ProjectNameUpdatedModal';
 import ConfirmationModal from '../../ConfirmationModal';
 import { ProjectContext } from '../../../contexts/projectContext';
 import useProject from '../../../hooks/useProject';
+import { formatReadableDate } from '../../../utils';
 
 export default function ProjectRow({ project, recent }) {
 
@@ -97,7 +98,7 @@ export default function ProjectRow({ project, recent }) {
                             {/* Mobile meta */}
                             <div className="flex gap-3 mt-1 text-xs md:hidden text-muted-foreground">
                                 {/* <span>{project.sources} Sources</span> */}
-                                <span>{recent ? project.updated_at : project.created_at}</span>
+                                <span>{recent ? formatReadableDate(project.updated_at) : formatReadableDate(project.created_at)}</span>
                             </div>
                         </div>
                     </div>
@@ -110,7 +111,7 @@ export default function ProjectRow({ project, recent }) {
 
                 {/* Created */}
                 <td className="hidden px-4 py-2 text-sm md:table-cell">
-                    {recent ? project.updated_at : project.created_at}
+                    {recent ? formatReadableDate(project.updated_at) : formatReadableDate(project.created_at)}
                 </td>
             </tr>
 
