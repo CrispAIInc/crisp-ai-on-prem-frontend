@@ -805,35 +805,10 @@ const ContentSection = ({
                 return [...fileSources, ...prev];
             });
 
-            const finalData = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
+            const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
-            // ---------- 2. Fetch data ----------
-            const data = await makeApiRequest(
-                "/content",
-                "post",
-                JSON.stringify(categoryValuesWithoutAll)
-            );
-
-            // ---------- 3. Prepare reusable collections ----------
-            const sourcesToAdd = data.filter(item =>
-                processedFiles.includes(item.source_path)
-            );
-
-            const selectedSourcePaths = new Set(
-                sourcesToAdd.map(s => s.source_path)
-            );
-
-            // ---------- 5. Update knowledge base ----------
-            setKnowledgeBase(
-                data.map(item => ({
-                    ...item,
-                    is_selected:
-                        selectedSourcePaths.has(item.source_path) ||
-                        sourcesTobeCommited.find(
-                            s => s.source_path === item.source_path
-                        )?.is_selected,
-                }))
-            );
+            // ----------  Update knowledge base ----------
+            setKnowledgeBase(prev => [...uploaded_data, ...prev]);
 
             const { chat_is_initialized } = await makeApiRequest(
                 `/chat/all`,
@@ -847,9 +822,9 @@ const ContentSection = ({
             );
             setChatLoaded(chat_is_initialized);
 
-            setCurrentResource(sourcesToAdd[0]);
+            setCurrentResource(prev => prev && uploaded_data[0]);
 
-            if (sourcesToAdd.length > 0) {
+            if (uploaded_data.length > 0) {
                 setActiveView('resource');
             }
 
@@ -877,13 +852,13 @@ const ContentSection = ({
     }, [uploadStatus]);
 
     async function handleExitProject() {
-        // await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
-        //     sources: {
-        //         checked: displayedSources.filter(item => item.is_selected).map(item => item.source_path),
-        //         unchecked: displayedSources.filter(item => !item.is_selected).map(item => item.source_path),
-        //     },
-        //     chat: currentChat?.sessionId
-        // }));
+        await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
+            sources: {
+                checked: displayedSources.filter(item => item.is_selected).map(item => item.source_path),
+                unchecked: displayedSources.filter(item => !item.is_selected).map(item => item.source_path),
+            },
+            chat: currentChat?.sessionId
+        }));
         setCurrentProject(null);
     }
 
