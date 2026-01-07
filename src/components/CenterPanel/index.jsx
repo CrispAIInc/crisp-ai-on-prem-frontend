@@ -36,7 +36,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
     const [selectedSources, setSelectedSources] = useState(0);
 
     function refreshSummary() {
-        setSelectedSources(displayedSources?.filter(item => (item?.is_selected && !('progress' in item)))?.length);
+        setSelectedSources(displayedSources?.filter(item => (item?.is_checked && !('progress' in item)))?.length);
         if ((displayedSources?.every(item => !('progress' in item))) || (displayedSources?.every(item => !('progress' in item)) && activeView === "resource")) {
             getCombinedSum();
         } else {

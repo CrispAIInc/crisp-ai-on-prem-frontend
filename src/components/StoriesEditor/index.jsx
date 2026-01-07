@@ -59,16 +59,16 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
         const httpPayload = {
             storyContext: context,
             storyline,
-            with_checked_sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category }))
+            with_checked_sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, category: item?.category }))
         };
         try {
 
-            if (!displayedSources?.every(item => item?.is_selected === false)) {
+            if (!displayedSources?.every(item => item?.is_checked === false)) {
                 await makeApiRequest(
                     `/handle-embeddings`,
                     "post",
                     JSON.stringify({
-                        sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                        sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
                     })
                 );
             }

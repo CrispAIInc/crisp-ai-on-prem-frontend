@@ -39,7 +39,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         setVerbosityValue(event.target.value);
     }
 
-    // const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_selected === false));
+    // const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_checked === false));
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -92,12 +92,12 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
 
         try {
             // const payload = {
-            //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
+            //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_checked).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
             // };
             const payload = {
-                sources: displayedSources.filter(item => item.is_selected).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: source.category.filter(cat => cat !== "all")[0] })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context, verbosityValue: verbosityValue
+                sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: source.category.filter(cat => cat !== "all")[0] })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context, verbosityValue: verbosityValue
             };
-            setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
+            setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_checked));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
             // update content in /content
@@ -112,7 +112,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                 let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
 
                 if (selected) {
-                    return { ...item, is_selected: true };
+                    return { ...item, is_checked: true };
                 } else {
                     return item;
                 }

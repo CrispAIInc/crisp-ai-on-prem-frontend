@@ -89,7 +89,7 @@ export function SearchModal(props) {
                                 <div className="flex items-center ">
                                     <Checkbox
                                         className="p-0 !ml-1"
-                                        checked={item.is_selected}
+                                        checked={item.is_checked}
                                         onClick={(e) => e.stopPropagation()}
                                         onChange={(e) => { e.stopPropagation(); handleCheckboxChange(e?.target?.checked, item); }}
                                         inputProps={{ "aria-label": "Select source" }}

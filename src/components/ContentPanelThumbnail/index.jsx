@@ -33,7 +33,7 @@ const ContentPanelThumbnail = ({
         <div className="flex items-center justify-between">
           <Checkbox
             className="p-0 !ml-1"
-            checked={item.is_selected}
+            checked={item.is_checked}
             onChange={(e) => handleCheckboxChange(e?.target?.checked, item)}
             onClick={(event) => event.stopPropagation()}
             inputProps={{ "aria-label": "Select source" }}

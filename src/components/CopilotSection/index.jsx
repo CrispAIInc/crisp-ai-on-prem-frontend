@@ -293,12 +293,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     } else {
 
       // add or remove embeddings from VS
-      if (!displayedSources?.every(item => item?.is_selected === false)) {
+      if (!displayedSources?.every(item => item?.is_checked === false)) {
         await makeApiRequest(
           `/handle-embeddings`,
           "post",
           JSON.stringify({
-            sources: displayedSources?.filter(item => item?.is_selected)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+            sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
           })
         );
       }
@@ -321,7 +321,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
 
       let sessionID = null; // Variable to store the session ID
-      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_selected) ? false : true}`, {
+      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_checked) ? false : true}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           SessionId: currentChat?.sessionId,
@@ -334,7 +334,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       //   selectedCategory
       // )}/${encodeURIComponent(usermessage?.replace(/\n/g, ' '))}/${encodeURIComponent(
       //     selectedLLMs[0]
-      //   )}/${displayedSources?.some(item => item?.is_selected) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
+      //   )}/${displayedSources?.some(item => item?.is_checked) ? false : true}/${Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)}`
       // );
 
 

@@ -64,7 +64,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
             );
             setKnowledgeBase(data.map(item => {
                 if (item?.source_path === filename + "." + extension) {
-                    return { ...item, is_selected: true };
+                    return { ...item, is_checked: true };
                 }
                 return item;
             }));
@@ -254,7 +254,7 @@ const ContentSection = ({
                                     // ...persistedUploadedFiles,
                                     ...rest,
                                     ...data,
-                                    is_selected: true
+                                    is_checked: true
                                 };
                             }
                             if (data?.step_name === "Summarizing...") {
@@ -304,7 +304,7 @@ const ContentSection = ({
                                 ...rest,
                                 // ...persistedUploadedFiles,
                                 // ...data,
-                                is_selected: true
+                                is_checked: true
                             };
                         }
                     }
@@ -336,7 +336,7 @@ const ContentSection = ({
                         const { progress, step, ...rest } = prev;
                         return {
                             ...rest,
-                            is_selected: true
+                            is_checked: true
                         };
                     }
                     return prev;
@@ -427,7 +427,7 @@ const ContentSection = ({
 
     useEffect(() => {
         // Check if every item in knowledgeBase is selected
-        const allSelected = knowledgeBase.every((item) => item.is_selected);
+        const allSelected = knowledgeBase.every((item) => item.is_checked);
 
         // Update selectedAll state based on the check
         setSelectedAll(allSelected);
@@ -477,12 +477,12 @@ const ContentSection = ({
                 JSON.stringify(categoryValues)
             );
             // setKnowledgeBase(data);
-            // update knowledgebase so that it gets populated with the data value and also update the is_selected value to either true or false depending if an item in data exists in the sourcesTobeCommitted array
+            // update knowledgebase so that it gets populated with the data value and also update the is_checked value to either true or false depending if an item in data exists in the sourcesTobeCommitted array
             let updatedKnowledgeBase = data.map(item => {
                 let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
 
                 if (selected) {
-                    return { ...item, is_selected: true };
+                    return { ...item, is_checked: true };
                 } else {
                     return item;
                 }
@@ -520,12 +520,12 @@ const ContentSection = ({
             setSelectedAll(isChecked);
             setKnowledgeBase((prev) => {
                 return prev.map((item) => {
-                    return { ...item, is_selected: isChecked };
+                    return { ...item, is_checked: isChecked };
                 });
             });
             setSourcesTobeCommited(isChecked ? knowledgeBase : []);
             setDisplayedSources(knowledgeBase.map((item) => {
-                return { ...item, is_selected: isChecked };
+                return { ...item, is_checked: isChecked };
             }));
         }
 
@@ -533,23 +533,23 @@ const ContentSection = ({
             const updatedKnowledgeBase = knowledgeBase.map((item) => {
                 //! what about if all the sources in KB have "all" by default?
                 if (item.category.includes(category) || category === 'all') {
-                    item.is_selected = isChecked;
+                    item.is_checked = isChecked;
                 }
                 return item;
             });
             setKnowledgeBase(updatedKnowledgeBase);
-            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_checked));
         }
         else if (category !== undefined && format !== undefined) {
             const updatedKnowledgeBase = knowledgeBase.map((item) => {
                 if ((category === 'all' || item.category.includes(category)) && (item.file_type === format || format === "all")) {
-                    item.is_selected = isChecked;
+                    item.is_checked = isChecked;
                 }
                 return item;
 
             });
             setKnowledgeBase(updatedKnowledgeBase);
-            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_selected));
+            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_checked));
         }
     };
 
@@ -565,24 +565,24 @@ const ContentSection = ({
 
     function handleToggleCheckSources(isChecked) {
         if (isChecked) {
-            setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: true })));
+            setDisplayedSources(prev => prev.map(item => ({ ...item, is_checked: true })));
             // update knowledgebase depending on the items selected in displayedSources
             const updatedKnowledgeBase = knowledgeBase.map((prev) => {
                 let itemExist = results?.find(i => i?.source_path === prev?.source_path);
                 if (itemExist) {
-                    return { ...prev, is_selected: true };
+                    return { ...prev, is_checked: true };
                 }
                 return prev;
             });
             setKnowledgeBase(updatedKnowledgeBase);
         } else {
             const updatedKnowledgeBase = knowledgeBase.map((item) => {
-                return { ...item, is_selected: false };
+                return { ...item, is_checked: false };
             });
             setKnowledgeBase(updatedKnowledgeBase);
             // setSelectedSources([]);
             setSourcesTobeCommited([]);
-            setDisplayedSources(prev => prev.map(item => ({ ...item, is_selected: false })));
+            setDisplayedSources(prev => prev.map(item => ({ ...item, is_checked: false })));
         }
     }
 
@@ -778,7 +778,7 @@ const ContentSection = ({
                     file_type: getFileType(file.type),
                     source_path: file.name,
                     thumbnail: extractThumbnail(file) || null,
-                    is_selected: false,
+                    is_checked: false,
                     progress: 0,
                     step: "Initialize upload",
                     metadata: {
@@ -854,8 +854,8 @@ const ContentSection = ({
     async function handleExitProject() {
         await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
             sources: {
-                checked: displayedSources.filter(item => item.is_selected).map(item => item.source_path),
-                unchecked: displayedSources.filter(item => !item.is_selected).map(item => item.source_path),
+                checked: displayedSources.filter(item => item.is_checked).map(item => item.source_path),
+                unchecked: displayedSources.filter(item => !item.is_checked).map(item => item.source_path),
             },
             chat: currentChat?.sessionId
         }));
@@ -940,7 +940,7 @@ const ContentSection = ({
 
                 <div className="flex flex-col flex-1 w-full h-full max-h-full overflow-y-auto">
 
-                    <BaseHeading text={`Workspace sources (${results?.length} selected & ${results?.filter(i => i?.is_selected)?.length} checked.)`} className={` mt-4`} />
+                    <BaseHeading text={`Workspace sources (${results?.length} selected & ${results?.filter(i => i?.is_checked)?.length} checked.)`} className={` mt-4`} />
 
                     {displayedSources.length > 0 && <input className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[75%] rounded-full !pl-[10px]`} placeholder={"Search in workspace sources..."} value={searchValue} onChange={handleSearch} />}
 
@@ -954,7 +954,7 @@ const ContentSection = ({
                         <Checkbox
                             className={`select-all-checkbox p-0 "
  }`}
-                            checked={results?.every(item => item?.is_selected)}
+                            checked={results?.every(item => item?.is_checked)}
                             onChange={(e) => handleToggleCheckSources(e.target.checked)}
                             inputProps={{ "aria-label": "Select All Sources" }}
                             label="Check All Sources"
@@ -1032,7 +1032,7 @@ const ContentSection = ({
                                         <div className="flex items-center ">
                                             <Checkbox
                                                 className="p-0 !ml-1"
-                                                checked={option.is_selected}
+                                                checked={option.is_checked}
                                                 onChange={(e) => handleCheckboxChange(e?.target?.checked, option)}
                                                 onClick={(event) => event.stopPropagation()}
                                                 inputProps={{ "aria-label": "Select source" }}

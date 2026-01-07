@@ -75,7 +75,7 @@ function MediaEntertainment({
             setIsReelOpen(false);
             setIsGeneratingReel(true);
             const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
-                sources: displayedSources.filter(item => item.is_selected).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
+                sources: displayedSources.filter(item => item.is_checked).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
                 context,
                 title: reel.title,
                 verbosityValue: verbosityValue.split(" ")[0]?.toLowerCase() || "short"

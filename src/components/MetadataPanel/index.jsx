@@ -74,7 +74,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
       const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-      
+
       if (timestamp !== undefined && timestamp !== null) {
         player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
         // setCurrentResource(prev => {
@@ -110,7 +110,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
 
       if (selected) {
-        return { ...item, is_selected: true };
+        return { ...item, is_checked: true };
       } else {
         return item;
       }
@@ -122,7 +122,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     if (activeView === "resource") {
       // setTranslatedResource(currentResource);
       if (currentResource) {
-        
+
         const updatedResource = {
           ...currentResource,
           ...generatedResources?.find(item => item.source_path === currentResource.source_path)
@@ -141,7 +141,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
 
   function areAllItemsInSecondArray(arr1, arr2) {
     const pathsSet = new Set(arr2.map(item => item.source_path));
-    
+
 
     return arr1.every(item => pathsSet.has(item.source_path));
   }
@@ -315,7 +315,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       setTranslatedResource({ ...httpResponseBody, lang: _chosenLanguage, prevLang });
 
     } catch (error) {
-      
+
     } finally {
       setIsTranslationLoading(false);
     }
