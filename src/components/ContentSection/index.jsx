@@ -745,6 +745,7 @@ const ContentSection = ({
                     source_path: file.name,
                     thumbnail: extractThumbnail(file) || null,
                     is_checked: false,
+                    is_selected: true,
                     progress: 0,
                     step: "Initialize upload",
                     metadata: {
@@ -761,15 +762,18 @@ const ContentSection = ({
             });
 
             setPersistedUploadedFiles(fileSources);
-            setKnowledgeBase((prev) => {
-                // Merge existing knowledgeBase with new fileSources, avoiding duplicates
-                const existingPaths = new Set(prev.map(item => item.source_path));
-                const newSources = fileSources.filter(item => !existingPaths.has(item.source_path));
-                return [...newSources, ...prev];
-            });
-            setDisplayedSources((prev) => {
+            setKnowledgeBase(prev => {
                 return [...fileSources, ...prev];
             });
+            // setKnowledgeBase((prev) => {
+            //     // Merge existing knowledgeBase with new fileSources, avoiding duplicates
+            //     const existingPaths = new Set(prev.map(item => item.source_path));
+            //     const newSources = fileSources.filter(item => !existingPaths.has(item.source_path));
+            //     return [...newSources, ...prev];
+            // });
+            // setDisplayedSources((prev) => {
+            //     return [...fileSources, ...prev];
+            // });
 
             const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
