@@ -473,42 +473,36 @@ const ContentSection = ({
         const category = pathSegments[0];
         const format = pathSegments[1];
 
-        // if (isChecked) {
+        let updatedKnowledgeBase;
+
         if (category === undefined) {
             setCheckedAll(isChecked);
-            setKnowledgeBase((prev) => {
-                return prev.map((item) => {
-                    return { ...item, is_checked: isChecked };
-                });
+            updatedKnowledgeBase = knowledgeBase.map((item) => {
+                return { ...item, is_selected: true, is_checked: isChecked };
             });
-            setSourcesTobeCommited(isChecked ? knowledgeBase : []);
-            setDisplayedSources(knowledgeBase.map((item) => {
-                return { ...item, is_checked: isChecked };
-            }));
         }
 
         else if (category !== undefined && format === undefined) {
-            const updatedKnowledgeBase = knowledgeBase.map((item) => {
-                //! what about if all the sources in KB have "all" by default?
+            updatedKnowledgeBase = knowledgeBase.map((item) => {
                 if (item.category.includes(category) || category === 'all') {
                     item.is_checked = isChecked;
+                    item.is_selected = true;
                 }
                 return item;
             });
-            setKnowledgeBase(updatedKnowledgeBase);
-            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_checked));
         }
         else if (category !== undefined && format !== undefined) {
-            const updatedKnowledgeBase = knowledgeBase.map((item) => {
+            updatedKnowledgeBase = knowledgeBase.map((item) => {
                 if ((category === 'all' || item.category.includes(category)) && (item.file_type === format || format === "all")) {
                     item.is_checked = isChecked;
+                    item.is_selected = true;
                 }
                 return item;
 
             });
-            setKnowledgeBase(updatedKnowledgeBase);
-            setSourcesTobeCommited(updatedKnowledgeBase.filter((item) => item.is_checked));
         }
+
+        setKnowledgeBase(updatedKnowledgeBase);
     };
 
     const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
