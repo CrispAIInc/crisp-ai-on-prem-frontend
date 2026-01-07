@@ -62,10 +62,10 @@ export function SourceExplorer(props) {
     }
 
 
-    const [isSelectAll, setIsSelectAll] = useState(false);
+    const [isCheckedAll, setisCheckedAll] = useState(false);
 
     useEffect(() => {
-        setIsSelectAll(ge());
+        setisCheckedAll(ge());
     }, [currentPath, selectedCategory, selectedFormat, sourcesTobeCommited]);
 
 
@@ -442,7 +442,7 @@ export function SourceExplorer(props) {
                     <Checkbox
                         className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
                             }`}
-                        checked={selectedAll || isSelectAll}
+                        checked={selectedAll || isCheckedAll}
                         onChange={(e) => props.handleSelectAllCheckboxChange(currentPath, e.target.checked)}
                         inputProps={{ "aria-label": "Select All Sources" }}
                         label="Select All Sources"

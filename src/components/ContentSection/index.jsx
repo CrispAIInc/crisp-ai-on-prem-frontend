@@ -170,7 +170,7 @@ const ContentSection = ({
         sourcesTobeCommited, setSourcesTobeCommited,
         selectedSources,
         selectedAll,
-        setSelectedAll,
+        setCheckedAll,
         theme,
         chatLoaded, setPersistedUploadedFiles,
         currentChat
@@ -400,23 +400,6 @@ const ContentSection = ({
         useState();
 
     useEffect(() => {
-        const makeRequest = async () => {
-            try {
-                const data = await makeApiRequest(
-                    "/content",
-                    "post",
-                    JSON.stringify(categoryValuesWithoutAll)
-                );
-                setKnowledgeBase(data);
-            } catch (error) {
-                console.warn(error);
-            }
-        };
-
-        makeRequest();
-    }, [categoryOptions]);
-
-    useEffect(() => {
         if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
             const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
             if (timestamp && Number.isInteger(+timestamp))
@@ -430,7 +413,7 @@ const ContentSection = ({
         const allSelected = knowledgeBase.every((item) => item.is_checked);
 
         // Update selectedAll state based on the check
-        setSelectedAll(allSelected);
+        setCheckedAll(allSelected);
     }, [knowledgeBase]);
 
     const deleteResource = async (event, items) => {
@@ -517,7 +500,7 @@ const ContentSection = ({
 
         // if (isChecked) {
         if (category === undefined) {
-            setSelectedAll(isChecked);
+            setCheckedAll(isChecked);
             setKnowledgeBase((prev) => {
                 return prev.map((item) => {
                     return { ...item, is_checked: isChecked };

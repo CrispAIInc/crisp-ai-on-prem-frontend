@@ -33,7 +33,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [showNoteDetails, setShowNoteDetails] = useState(false);
 
     const [selectedSources, setSelectedSources] = useState([]); // Selected Sources to stage before commiting into the current Knowledge Base
-    const [selectedAll, setSelectedAll] = useState(false); // Flag to handle selecting all sources (all categories, all formats)
+    const [selectedAll, setCheckedAll] = useState(false); // Flag to handle selecting all sources (all categories, all formats)
     const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
     // From Content Panel
     const [selectedCategory, setSelectedCategory] = useState("all");
@@ -82,6 +82,23 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [persistedUploadedFiles, setPersistedUploadedFiles] = useState([]);
 
     useEffect(() => {
+        const makeRequest = async () => {
+            try {
+                const data = await makeApiRequest(
+                    "/content",
+                    "post",
+                    JSON.stringify(categoryOptions.map((option) => option.value).filter(item => item !== "all"))
+                );
+                setKnowledgeBase(data);
+            } catch (error) {
+                console.warn(error);
+            }
+        };
+
+        makeRequest();
+    }, [categoryOptions]);
+
+    useEffect(() => {
         async function intializeContent() {
             const { chat_is_initialized } = await makeApiRequest(
                 `/chat/all`,
@@ -105,7 +122,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // update sourcesTobeCommited depending on knowledgeBase change
     useEffect(() => {
-        setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
+        setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_checked));
     }, [knowledgeBase]);
 
     useEffect(() => {
@@ -283,7 +300,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         if (items?.length === 0) {
             // setSelectedSources(sourcesTobeCommited);
             knowledgeBase.map((item) => {
-                if (item.is_selected) {
+                if (item.is_checked) {
                     setSelectedSources((prev) => {
                         const itemExist = prev.find(i => i.source_path === item.source_path);
                         if (!itemExist) {
@@ -310,13 +327,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
     };
 
-    useEffect(() => {
-        // add all selected sources from knowledgebase to displayedsources
-        setDisplayedSources(prev => {
-            const newSources = knowledgeBase.filter(item => item.is_selected && !prev.some(i => i.source_path === item.source_path));
-            return [...prev, ...newSources];
-        });
-    }, [knowledgeBase]);
+
+
 
     const [, setTranscription] = useState("");
 
@@ -342,68 +354,28 @@ export default function MainProvider({ children, theme, setTheme }) {
     };
 
     const handleCheckboxChange = (isChecked, file) => {
-        // Create a new array with updated items
-        const updatedKnowledgeBase = knowledgeBase.map((item) => {
+
+        let updatedKnowledgeBase = knowledgeBase.map(item => {
             if (item.source_path === file.source_path) {
-                return { ...item, is_selected: !item.is_selected };
+                return { ...item, is_checked: !item.is_checked };
             }
-            if (item.is_selected) setSelectedAll(false);
+
             return item;
         });
+
         setKnowledgeBase(updatedKnowledgeBase);
 
-        // update displayedsources such that if file.is_source is true, add it to displayedsources otherwise if it is already in displayedsources, just make its property "is_selected" to false without removing it from displayedsources
-        setDisplayedSources((prev) => {
-            const exists = prev.find((item) => item.source_path === file.source_path);
-            // const fileFromKb = knowledgeBase.find((item) => item.source_path === file.source_path);
-            if (!file.is_selected) {
-                if (!exists) {
-                    return [...prev, { ...file, is_selected: true }];
-                } else if (exists) {
-                    return prev.map((item) => {
-                        if (item.source_path === file.source_path) {
-                            return { ...item, is_selected: true };
-                        }
-                        return item;
-                    });
-                    // return [...prev, {...file, is_selected: false}]
-                }
-            } else {
-                if (exists) {
-                    return prev.map((item) => {
-                        if (item.source_path === file.source_path) {
-                            return { ...item, is_selected: false };
-                        }
-                        return item;
-                    });
-                }
-            }
-
-            return prev;
-        });
-
-        // item should exist in selectedSources and isSelected is true => remove it from selectedSources
-        if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
-            setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
-            // setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-            // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-        }
-
-        // updated sourcesTobeCommiter
-        // if (!file.is_selected) {
-        //   setSourcesTobeCommited((prev) => [...prev, { ...file, is_selected: true }]);
-        //   // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-        // }
-        // else {
-        //   setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-        //   // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-        // }
+        if (!isChecked) setCheckedAll(false);
 
         if (isChecked === true) {
             onThumbnailClick(undefined, file, true);
-            // setShowMetadata(false);
         }
     };
+
+    useEffect(() => {
+        // add all selected sources from knowledgebase to displayedsources
+        setDisplayedSources(knowledgeBase.filter(item => item.is_checked));
+    }, [knowledgeBase]);
 
     // const [selectedCategory] = useState("all");
 
@@ -455,14 +427,14 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [isExclusiveChecked, setIsExclusiveChecked] = useState(false);
     useEffect(() => {
         // set isFoundationLlm to true if there is no selectedSources, otherwise false
-        setIsFoundationLlm(selectedSources.length === 0 || (displayedSources?.some(item => item?.is_selected) ? false : true));
+        setIsFoundationLlm(selectedSources.length === 0 || (displayedSources?.some(item => item?.is_checked) ? false : true));
         if (!isExclusiveChecked) {
             setCommittedSources(selectedSources);
         }
     }, [selectedSources]);
 
     useEffect(() => {
-        setIsFoundationLlm(displayedSources?.some(item => item?.is_selected) ? false : true);
+        setIsFoundationLlm(displayedSources?.some(item => item?.is_checked) ? false : true);
     }, [displayedSources]);
 
     const languageOptions = [
@@ -1140,7 +1112,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [showEditor, setShowEditor] = useState(false);
 
     // useEffect(() => {
-    //   if (knowledgeBase.every((item) => item.is_selected === false)) {
+    //   if (knowledgeBase.every((item) => item.is_checked === false)) {
 
     //     setIsIngestionEnabled(false);
     //   } else {
@@ -1178,7 +1150,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
 
 
-    const checkedSourcesCount = useMemo(() => displayedSources.filter(source => source.is_selected).length, [displayedSources]);
+    const checkedSourcesCount = useMemo(() => displayedSources.filter(source => source.is_checked).length, [displayedSources]);
 
 
 
@@ -1192,8 +1164,7 @@ export default function MainProvider({ children, theme, setTheme }) {
             try {
                 const { chat_history } = await makeApiRequest("/chat-history", "GET");
                 setChatHistory(chat_history);
-                console.log(chat_history);
-                setCurrentChat(chat_history.find(item => item.is_current_chat));
+                setCurrentChat(chat_history.find(item => item.is_current_chat) ?? null);
             } catch (error) {
                 console.log(error);
             }
@@ -1221,7 +1192,7 @@ export default function MainProvider({ children, theme, setTheme }) {
             setActiveView('resource');
 
             const sources = displayedSources
-                .filter(s => s.is_selected)
+                .filter(s => s.is_checked)
                 .map(({ source_path, category }) => ({ source_path, category }));
 
             if (!sources.length) {
@@ -1318,7 +1289,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         selectedSources,
         setSelectedSources,
         selectedAll,
-        setSelectedAll,
+        setCheckedAll,
         setSelectedCategory,
         selectedFormat,
         setSelectedFormat,
