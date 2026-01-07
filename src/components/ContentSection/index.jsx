@@ -57,21 +57,14 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
                 filetype
             };
             await makeApiRequest('/rename', 'PATCH', JSON.stringify(payload));
-            const data = await makeApiRequest(
-                "/content",
-                "post",
-                JSON.stringify(categoryValuesWithoutAll)
-            );
-            setKnowledgeBase(data.map(item => {
-                if (item?.source_path === filename + "." + extension) {
-                    return { ...item, is_checked: true };
-                }
-                return item;
-            }));
-            setDisplayedSources(prev => {
-                return prev?.map(item => {
+
+            setKnowledgeBase(prev => {
+                return prev.map(item => {
                     if (item.source_path === oldFilename) {
-                        return { ...item, source_path: filename + "." + extension };
+                        return {
+                            ...item,
+                            source_path: filename + "." + extension
+                        };
                     }
                     return item;
                 });
