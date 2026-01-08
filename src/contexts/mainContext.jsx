@@ -120,11 +120,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         getIndexes();
     }, []);
 
-    // update sourcesTobeCommited depending on knowledgeBase change
-    useEffect(() => {
-        setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_checked));
-    }, [knowledgeBase]);
-
     useEffect(() => {
         const getAllNotes = async () => {
             try {
@@ -180,7 +175,6 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const contentPanelContainerRef = useRef(null);
 
-
     // can either be 'resource', 'note' or null
     // indicates wether the user is viewing a resource or a note in workspace
     const [activeView, setActiveView] = useState(null);
@@ -211,7 +205,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         pdfLinks: [],
         imageLinks: [],
     });
-
 
     const [selectedStory, setSelectedStory] = useState({
         story_id: "",
@@ -326,9 +319,6 @@ export default function MainProvider({ children, theme, setTheme }) {
             setSelectedSources(items.map(i => i));
         }
     };
-
-
-
 
     const [, setTranscription] = useState("");
 
