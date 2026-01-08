@@ -9,7 +9,7 @@ export default function useChat() {
     const { currentChat, setCurrentChat, setChatHistory } = useContext(MainContext);
     const { user } = useContext(AuthContext);
 
-    const addNewChat = useCallback((title) => {
+    const addNewChat = useCallback((title, messages = []) => {
 
         if (!user?.userId) {
             throw new Error('User must be authenticated to create a chat');
@@ -22,7 +22,7 @@ export default function useChat() {
         const now = new Date();
 
         // isTemp means that this chat session has not yet been saved to DB
-        const newChat = { sessionId: generateRandomId(), isTemp: true, title, userId: user.userId, messages: [], created_at: now, updated_at: now };
+        const newChat = { sessionId: generateRandomId(), isTemp: true, title, userId: user.userId, messages, created_at: now, updated_at: now };
         setCurrentChat(newChat);
         setChatHistory(prev => ([newChat, ...prev]));
     }, [user?.userId, setCurrentChat, setChatHistory]);
@@ -98,4 +98,4 @@ export default function useChat() {
         deleteChat
     };
 
-}
+}  

@@ -26,6 +26,7 @@ import ChatHistory from '../ChatHistory/index.jsx';
 import BaseHeading from "../BaseHeading";
 import toast from 'react-simple-toasts';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
+import useChat from '../../hooks/useChat.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -129,7 +130,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     selectedNote,
     setSelectedNote,
     showNoteModal,
-    categoryOptions,
+    setCurrentChat,
     setNoteIndex,
     setShowNoteModal,
     displayedSources, setShowEditor,
@@ -147,6 +148,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   const { currentProject } = useContext(ProjectContext);
 
   const { token } = useAuth();
+
+  const { addNewChat } = useChat();
 
   const { maxWidth } = useResizableSidebar(200, false);
 
@@ -372,28 +375,19 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       pdfLinks: [],
       imageLinks: [],
     };
-    setChatHistory((prevChatHistory) => {
-      const chatIndex = prevChatHistory.findIndex(chat => chat.sessionId === currentChat?.sessionId);
-      if (chatIndex === -1) {
-        let now = new Date();
-        const newChatEntry = {
-          sessionId: currentChat?.sessionId,
-          title: currentChat?.title || "New Chat " + (prevChatHistory.length + 1),
-          userId: currentChat?.userId || null,
-          messages: [{ sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }],
-          created_at: currentChat?.created_at || now,
-          updated_at: currentChat?.updated_at || now,
-        };
-        return [newChatEntry, ...prevChatHistory];
-      } else {
-        const updatedChatHistory = [...prevChatHistory];
-        const chatToUpdate = updatedChatHistory[chatIndex];
+    const chatIndex = chatHistory.findIndex(chat => chat.sessionId === currentChat?.sessionId);
+    if (chatIndex === -1) {
+      addNewChat("New Chat " + (chatHistory.length + 1), [{ sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }]);
+    } else {
+      setChatHistory(prev => {
+        const chatToUpdate = prev[chatIndex];
         chatToUpdate.messages = [...chatToUpdate.messages, { sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }];
         const { isTemp, ...rest } = chatToUpdate;
-        updatedChatHistory[chatIndex] = rest;
-        return updatedChatHistory;
-      }
-    });
+        prev[chatIndex] = rest;
+        return prev;
+      });
+      setCurrentChat(chatHistory[chatIndex]);
+    }
 
     // update currentChat and chatHistory
     // setCurrentChat(prev => ({
