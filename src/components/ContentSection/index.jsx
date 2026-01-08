@@ -788,7 +788,9 @@ const ContentSection = ({
         }
     }, [uploadStatus]);
 
+    const [isExitPending, setIsExitPending] = useState(false);
     async function handleExitProject() {
+        setIsExitPending(true);
         await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
             sources: {
                 checked: displayedSources.filter(item => item.is_checked).map(item => item.source_path),
@@ -797,6 +799,7 @@ const ContentSection = ({
             chat: currentChat?.sessionId
         }));
         setCurrentProject(null);
+        setIsExitPending(false);
     }
 
     return (
@@ -1075,10 +1078,10 @@ const ContentSection = ({
                                         }`}
                                     onClick={handleExitProject}
                                 >
-                                    <CloseOutlinedIcon
+                                    {isExitPending ? <LoadingSpinner isSmall /> : <CloseOutlinedIcon
                                         className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
                                             }`}
-                                    />
+                                    />}
                                     <span>Exit project</span>
                                 </div>
 
