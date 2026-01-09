@@ -199,10 +199,10 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
 
   const pageRefs = useRef({});
 
-  async function translateMetadata(_chosenLanguage, object) {
+  async function translateMetadata(_chosenLanguage, object, fromTranslateDropdown = false) {
     // updateContent();
     let prevLang = chosenLanguage;
-    setChosenLanguage(_chosenLanguage);
+    setChosenLanguage(fromTranslateDropdown ? _chosenLanguage : prevLang);
     setIsTranslationLoading(true);
     // make sure response body is also like httpRequestBody (w/o lang)
     // the response body object must contain keys in English
@@ -294,7 +294,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       setTranslatedResource({ ...httpResponseBody, lang: _chosenLanguage, prevLang });
 
     } catch (error) {
-
+      console.log(error);
     } finally {
       setIsTranslationLoading(false);
     }
@@ -406,7 +406,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                     withIcon
                     options={languageOptions}
                     onChange={(lang) =>
-                      translateMetadata(lang.value, translatedResource)
+                      translateMetadata(lang.value, translatedResource, true)
                     }
                     placeholder="Select a language"
                     className="!border-none"
@@ -587,7 +587,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                     withIcon
                     options={languageOptions}
                     onChange={(lang) =>
-                      translateMetadata(lang.value, translatedResource)
+                      translateMetadata(lang.value, translatedResource, true)
                     }
                     placeholder="Select a language"
                     className="!border-none"
@@ -723,7 +723,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                     withIcon
                     options={languageOptions}
                     onChange={(lang) =>
-                      translateMetadata(lang.value, translatedResource)
+                      translateMetadata(lang.value, translatedResource, true)
                     }
                     placeholder="Select a language"
                     className="!border-none"
