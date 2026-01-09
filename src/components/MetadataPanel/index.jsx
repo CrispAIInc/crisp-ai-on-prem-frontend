@@ -68,7 +68,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   const [numPages, setNumPages] = useState();
   const [isPdfLoaded, setIsPdfLoaded] = useState(false);
   const [chosenLanguage, setChosenLanguage] = useState(currentResource?.originalSourceLanguage || "en");
-  const PdfContainer = useRef();
   const metadataPanelContainer = useRef(null);
 
   useEffect(() => {
@@ -118,80 +117,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     }
   }, [currentResource?.source_path, JSON.stringify(generatedResources)]);
 
-  function areAllItemsInSecondArray(arr1, arr2) {
-    const pathsSet = new Set(arr2.map(item => item.source_path));
-
-
-    return arr1.every(item => pathsSet.has(item.source_path));
-  }
-
-  const closeVideo = async (event) => {
-    event.preventDefault();
-    // setCurrentResource(null);
-    setResourceURL(null);
-    setIsPlayerReady(false);
-    setShowMetadata(false);
-    // setActiveView(() => {
-    //   if (selectedStory.text.length > 0) {
-    //     return "story";
-    //   }
-    //   if (selectedNote.text.length > 1) {
-    //     return "note";
-    //   }
-    //   return null;
-    // });
-    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
-      !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-      // 
-      commitSelectedSources(sourcesTobeCommited);
-    }
-    setIsSourceUncheckedOrClosed(true);
-  };
-
-  const closePDF = async (event) => {
-    event.preventDefault();
-    // setCurrentResource(null);
-    setResourceURL(null);
-    setShowMetadata(false);
-    // setActiveView(() => {
-    //   if (selectedStory.text.length > 0) {
-    //     return "story";
-    //   }
-    //   if (selectedNote.text.length > 1) {
-    //     return "note";
-    //   }
-    //   return null;
-    // });
-    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
-      !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-      // 
-      commitSelectedSources(sourcesTobeCommited);
-    }
-    setIsSourceUncheckedOrClosed(true);
-  };
-
-  const closeImage = async (event) => {
-    event.preventDefault();
-    // setCurrentResource(null);
-    setResourceURL(null);
-    setShowMetadata(false);
-    // setActiveView(() => {
-    //   if (selectedStory.text.length > 0) {
-    //     return "story";
-    //   }
-    //   if (selectedNote.text.length > 1) {
-    //     return "note";
-    //   }
-    //   return null;
-    // });
-    if (!areSourcesSame(committedSources, sourcesTobeCommited) && committedSources?.length !== 0 &&
-      !areAllItemsInSecondArray(committedSources, sourcesTobeCommited)) {
-      // 
-      commitSelectedSources(sourcesTobeCommited);
-    }
-    setIsSourceUncheckedOrClosed(true);
-  };
-
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
     setIsPdfLoaded(true);
@@ -202,13 +127,13 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   async function translateMetadata(_chosenLanguage, object, fromTranslateDropdown = false) {
     // updateContent();
     let prevLang = chosenLanguage;
-    setChosenLanguage(fromTranslateDropdown ? _chosenLanguage : prevLang);
+    setChosenLanguage(prev => fromTranslateDropdown ? _chosenLanguage : prev);
     setIsTranslationLoading(true);
     // make sure response body is also like httpRequestBody (w/o lang)
     // the response body object must contain keys in English
     let httpRequestBody = {
-      lang: _chosenLanguage,
       prevLang,
+      lang: _chosenLanguage,
       summary: {
         title: "",
         content: "",
