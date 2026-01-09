@@ -1048,11 +1048,11 @@ const ContentSection = ({
                     {
                         isSettingsMenuOpen && (
                             <div
-                                className={`absolute left-0 bottom-full z-10 flex flex-col py-1 px-3 rounded-md shadow-lg ${theme === "dark" ? "bg-gray-900" : "bg-white"
+                                className={`absolute left-0 bottom-full z-10 flex flex-col py-1 rounded-md shadow-lg ${theme === "dark" ? "bg-gray-900" : "bg-white"
                                     }`}
                             >
                                 <div
-                                    className={`flex items-center cursor-pointer gap-2 py-2 pl-1
+                                    className={`flex  px-3 items-center cursor-pointer gap-2 py-2 pl-1
  ${theme === "light"
                                             ? "hover:bg-textColor-100/20"
                                             : "text-textColor-100 hover:bg-slate-800/50"
@@ -1071,7 +1071,7 @@ const ContentSection = ({
                                 </div>
 
                                 <div
-                                    className={`flex items-center cursor-pointer gap-2 py-2 pl-1
+                                    className={`flex  px-3 items-center cursor-pointer gap-2 py-2 pl-1
                                             ${theme === "light"
                                             ? "hover:bg-textColor-100/20"
                                             : "text-textColor-100 hover:bg-slate-800/50"
@@ -1086,7 +1086,7 @@ const ContentSection = ({
                                 </div>
 
                                 <div
-                                    className={`flex text-red-600 items-center cursor-pointer gap-2 py-2 pl-1
+                                    className={`flex  px-3 text-red-600 items-center cursor-pointer gap-2 py-2 pl-1
  ${theme === "light"
                                             ? "hover:bg-textColor-100/20"
                                             : "hover:bg-slate-800/50"
