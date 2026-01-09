@@ -113,7 +113,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
         // Call translateMetadata with the updated resource
 
         // updateContent();
-        translateMetadata("en", updatedResource);
+        translateMetadata(chosenLanguage, updatedResource);
       }
     }
   }, [currentResource?.source_path, JSON.stringify(generatedResources)]);
