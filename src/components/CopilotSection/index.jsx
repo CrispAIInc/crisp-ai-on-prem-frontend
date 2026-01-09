@@ -587,85 +587,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             userIndex++;
             return updatedMessage;
           } else if (message?.sender === "bot") {
-            const botMessage = (
-              <div key={index}>
-                <div className="coorg-response">
-                  {data.translated_responses[botIndex]}
-                </div>
-                {(message?.refs?.videoLinks.length > 0 ||
-                  message?.refs?.keyframeObjects.length > 0 ||
-                  message?.refs?.pdfObjects.length > 0 ||
-                  message?.refs?.imageObjects.length > 0) && (
-                    <div>
-                      {/* <p className="m-0">References:</p> */}
-                      {
-                        message?.refs?.videoLinks?.map((video) => {
-                          return (
-                            <li key={video.source_path} className="ml-4 list-none" data-object={video}>
-                              <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-                                {video.source_path + " | Timestamp: " + video.timestamp}
-                              </Link>
-                            </li>
-                          );
-                        })
-                      }
-                      {
-                        message?.refs?.keyframeObjects?.map((video) => {
-                          return (
-                            <li key={video.source_path} className="ml-4 list-none" data-object={video}>
-                              <Link onClick={(event) => handleVideoLinkClick(event, video)}>
-                                {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      {
-                        message?.refs?.pdfObjects?.map((pdf) => {
-                          return (
-                            <li key={pdf.source_path} className="ml-4 list-none" data-object={pdf}>
-                              <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
-                                {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
-                              </Link>
-                            </li>
-                          );
-                        })
-                      }
-                      {
-                        message?.refs?.imageObjects?.map((img) => {
-                          return (
-                            <li key={img.source_path} className="ml-4 list-none" data-object={img}>
-                              <Link onClick={(event) => handlePDFLinkClick(event, img)}>
-                                {img.source_path}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                    </div>
-                  )}
-
-                <AddOptionsModal
-                  text={data.translated_responses[botIndex]}
-                  addToNewNote={addToNewNote}
-                  refs={message?.refs}
-                  addToExistingNote={addToExistingNote}
-                  setExistingNote={setExistingNote}
-                  question={data.translated_queries[userIndex - 1]}
-                  existingNote={existingNote}
-                  onHide={onHide}
-                  isNewNote={isNewNote}
-                  setShowNoteModal={setShowNoteModal}
-                  updateSelectedNote={setSelectedNote}
-                  showNoteModal={showNoteModal}
-                  selectedNote={selectedNote}
-                  notes={notes}
-                />
-              </div>
-            );
 
             const updatedMessage = {
               ...message,
               references: message?.references,
-              text: botMessage,
+              text: data.translated_responses[botIndex],
+              botText: data.translated_responses[botIndex],
             };
             botIndex++;
             return updatedMessage;
