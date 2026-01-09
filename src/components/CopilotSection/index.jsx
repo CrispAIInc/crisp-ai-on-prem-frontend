@@ -567,8 +567,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         "/translate-chat",
         "post",
         JSON.stringify({
-          queries: originalQueries,
-          responses: originalResponses,
+          queries: messages.filter(msg => msg.sender === "user").map(item => item.question),
+          responses: messages.filter(msg => msg.sender === "bot").map(item => item.botText),
           language: chosenLanguage,
           combinedSummary,
         })
