@@ -558,9 +558,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
 
   };
-
+  const [isChatTranslating, setIsChatTranslating] = useState(false);
   const handleLanguageChange = async (chosenLanguage) => {
     try {
+      setIsChatTranslating(true);
       setSelectedLanguage(chosenLanguage);
       setIsCombinedSummaryPending(true);
       const data = await makeApiRequest(
@@ -607,6 +608,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       console.log(e);
     } finally {
       setIsCombinedSummaryPending(false);
+      setIsChatTranslating(false);
     }
   };
 
@@ -874,10 +876,17 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       </section>
       {/* <div className="flex items-center flex-1 gap-3"> */}
       {messages?.length > 0 && <section
-        className={`copilot-chat-container flex flex-col h-[700px] gap-3 overflow-x-hidden overflow-y-auto ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
-          }`}
+        className={`copilot-chat-container relative flex flex-col  gap-3 overflow-x-hidden  ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
+          } ${isChatTranslating ? '' : 'h-[700px] overflow-y-auto'}`}
         ref={chatAppRef}
       >
+        {/* loading overlay */}
+        {isChatTranslating && <div className={`absolute top-0 left-0 flex flex-col items-center justify-center w-full h-[700px] ${theme === 'light' ? 'bg-white/80' : 'bg-black/80'}`}>
+          <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
+            <AutoAwesomeIcon className="animate-fade-in" />
+            <AnimatedText text='Translating chat...' />
+          </div>
+        </div>}
         {
           messages.map((message, index) =>
             index % 2 == 0 ? (
