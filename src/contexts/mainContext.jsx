@@ -81,7 +81,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [persistedUploadedFiles, setPersistedUploadedFiles] = useState([]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const makeRequest = async () => {
             try {
                 const data = await makeApiRequest(
