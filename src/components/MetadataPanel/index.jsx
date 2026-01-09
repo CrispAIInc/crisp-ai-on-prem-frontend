@@ -67,7 +67,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
   const [numPages, setNumPages] = useState();
   const [isPdfLoaded, setIsPdfLoaded] = useState(false);
-  const [chosenLanguage, setChosenLanguage] = useState("en");
+  const [chosenLanguage, setChosenLanguage] = useState(currentResource?.originalSourceLanguage || "en");
   const PdfContainer = useRef();
   const metadataPanelContainer = useRef(null);
 

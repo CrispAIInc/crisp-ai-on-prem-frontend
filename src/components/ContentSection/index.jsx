@@ -716,6 +716,7 @@ const ContentSection = ({
                     is_checked: false,
                     is_selected: true,
                     progress: 0,
+                    originalSourceLanguage: "en",
                     step: "Initialize upload",
                     metadata: {
                         chapters: {},
