@@ -584,6 +584,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             const updatedMessage = {
               ...message,
               text: data.translated_queries[userIndex],
+              question: data.translated_queries[userIndex],
             };
             userIndex++;
             return updatedMessage;
@@ -602,6 +603,33 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           }
         })
       );
+
+      // setCurrentChat(prev => ({
+      //   ...prev,
+      //   messages: messages.map((message, index) => {
+      //     if (message?.sender === "user") {
+      //       const updatedMessage = {
+      //         ...message,
+      //         text: data.translated_queries[userIndex],
+      //         question: data.translated_queries[userIndex],
+      //       };
+      //       userIndex++;
+      //       return updatedMessage;
+      //     } else if (message?.sender === "bot") {
+
+      //       const updatedMessage = {
+      //         ...message,
+      //         references: message?.references,
+      //         text: data.translated_responses[botIndex],
+      //         botText: data.translated_responses[botIndex],
+      //       };
+      //       botIndex++;
+      //       return updatedMessage;
+      //     } else {
+      //       return message;
+      //     }
+      //   })
+      // }));
 
       setCombinedSummary(data?.translated_combined_summary);
     } catch (e) {
