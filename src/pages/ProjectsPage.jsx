@@ -233,7 +233,7 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                                 ))}
                             </>
                         ) : (
-                            <ProjectsTable projects={projects} />
+                            <ProjectsTable projects={getSortedProjects("created_at", sortOrder)} />
                         )
                     }
                 </div>
