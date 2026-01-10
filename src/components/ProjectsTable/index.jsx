@@ -9,7 +9,7 @@ export default function ProjectsTable({ projects, recent }) {
                     <tr className="text-sm text-left border-b text-muted-foreground border-white/10">
                         <th className="px-4 py-3">Actions</th>
                         <th className="px-4 py-3">Project name</th>
-                        {/* <th className="px-4 py-3">Sources</th> */}
+                        <th className="px-4 py-3">Sources</th>
                         <th className="px-4 py-3">{recent ? "Updated" : "Created"}</th>
                     </tr>
                 </thead>

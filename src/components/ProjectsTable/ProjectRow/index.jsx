@@ -105,9 +105,9 @@ export default function ProjectRow({ project, recent }) {
                 </td>
 
                 {/* Sources */}
-                {/* <td className="hidden px-4 py-2 text-sm md:table-cell">
-                {project.sources} Sources
-            </td> */}
+                <td className="hidden px-4 py-2 text-sm md:table-cell">
+                    {project?.checked_sources?.length + project?.unchecked_sources?.length} Sources.
+                </td>
 
                 {/* Created */}
                 <td className="hidden px-4 py-2 text-sm md:table-cell">
