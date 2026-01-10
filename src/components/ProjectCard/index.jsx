@@ -99,7 +99,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     <h2 className="mb-0 !text-white line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
                     <div className="flex flex-wrap items-center gap-1">
                         <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
-                        {project.selectedSources && <p className="text-[10px] text-white">{project.selectedSources} Sources.</p>}
+                        {project.selectedSources && <p className="text-[10px] text-white">{project?.checked_sources?.length + project?.unchecked_sources?.length} Sources.</p>}
                     </div>
                 </div>
             </div>
