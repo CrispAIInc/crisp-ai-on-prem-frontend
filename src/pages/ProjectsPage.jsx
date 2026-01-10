@@ -233,7 +233,7 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                                 ))}
                             </>
                         ) : (
-                            <ProjectsTable projects={projects} recent />
+                            <ProjectsTable projects={projects} />
                         )
                     }
                 </div>
