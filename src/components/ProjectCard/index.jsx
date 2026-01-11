@@ -102,7 +102,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     <div className="flex flex-wrap items-center gap-1">
                         <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
                         <p className="text-[10px] text-white">
-                            {projectSourcesTotal} Source{`${projectSourcesTotal > 1 && "s"}`}.
+                            {projectSourcesTotal} Source{`${projectSourcesTotal > 1 ? "s" : ""}`}.
                         </p>
                     </div>
                 </div>

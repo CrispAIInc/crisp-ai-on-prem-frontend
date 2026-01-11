@@ -108,7 +108,7 @@ export default function ProjectRow({ project, recent }) {
 
                 {/* Sources */}
                 <td className="hidden px-4 py-2 text-sm md:table-cell">
-                    {projectSourcesTotal} Source{`${projectSourcesTotal > 1 && "s"}`}.
+                    {projectSourcesTotal} Source{`${projectSourcesTotal > 1 ? "s" : ""}`}.
                 </td>
 
                 {/* Created */}
