@@ -1,20 +1,15 @@
-import { useContext, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import AnimatedInput from '../AnimatedInput';
-import RippleButton from "../RippleButton";
-import GoogleAuthButton from "../Auth/GoogleAuthButton";
-import HorizontalOrText from '../HorizontalOrText';
-import { loginWithUsernameAndPassword } from '../../services/auth.js';
 import { Alert } from '@mui/material';
 import { onIdTokenChanged } from "firebase/auth";
+import { useContext, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { auth } from "../../config/firebase.js"; // adjust path
+import { loginWithUsernameAndPassword } from '../../services/auth.js';
+import AnimatedInput from '../AnimatedInput';
+import GoogleAuthButton from "../Auth/GoogleAuthButton";
+import HorizontalOrText from '../HorizontalOrText';
+import RippleButton from "../RippleButton";
 
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import { isValidEmail } from '../../utils.js';
 
 export default function Login() {
     const navigate = useNavigate();

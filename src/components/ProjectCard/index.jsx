@@ -42,6 +42,8 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
         convertUrl();
     }, [project.thumbnail, getPublicUrl]);
 
+    const projectSourcesTotal = project?.checked_sources?.length + project?.unchecked_sources?.length;
+
     return (
         <div style={{ background: project.thumbnail ? `url('${projectThumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-cover !bg-center relative rounded-2xl p-3 min-w-80 h-48 bg-clip-border `}>
             {/* top to bottom gradient overlay */}
@@ -99,7 +101,9 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     <h2 className="mb-0 !text-white line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
                     <div className="flex flex-wrap items-center gap-1">
                         <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
-                        {project.selectedSources && <p className="text-[10px] text-white">{project?.checked_sources?.length + project?.unchecked_sources?.length} Sources.</p>}
+                        <p className="text-[10px] text-white">
+                            {projectSourcesTotal} Source{`${projectSourcesTotal > 1 && "s"}`}.
+                        </p>
                     </div>
                 </div>
             </div>

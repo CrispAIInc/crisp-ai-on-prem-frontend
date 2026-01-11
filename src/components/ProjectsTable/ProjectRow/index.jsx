@@ -48,6 +48,8 @@ export default function ProjectRow({ project, recent }) {
         }
     }
 
+    const projectSourcesTotal = project?.checked_sources?.length + project?.unchecked_sources?.length;
+
     return (
         <>
             <tr
@@ -106,7 +108,7 @@ export default function ProjectRow({ project, recent }) {
 
                 {/* Sources */}
                 <td className="hidden px-4 py-2 text-sm md:table-cell">
-                    {project?.checked_sources?.length + project?.unchecked_sources?.length} Sources.
+                    {projectSourcesTotal} Source{`${projectSourcesTotal > 1 && "s"}`}.
                 </td>
 
                 {/* Created */}
