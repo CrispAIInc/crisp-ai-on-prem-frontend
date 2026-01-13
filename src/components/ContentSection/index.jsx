@@ -38,7 +38,7 @@ import { ProjectContext } from '../../contexts/projectContext';
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
     const { theme, setDisplayedSources, setKnowledgeBase } = useContext(MainContext);
 
-    const { categoryValuesWithoutAll } = useResources();
+    const { notify } = useToast();
     const [isLoading, setIsLoading] = useState(false);
 
     async function updateFilename() {
@@ -75,7 +75,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
             });
             onHide();
             notify({
-                variant: "error",
+                variant: "success",
                 heading: "Source renamed successfully!",
             });
         } catch (error) {
@@ -438,7 +438,7 @@ const ContentSection = ({
             await makeApiRequest(`/delete`, "post", { sources: payload });
             setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
             notify({
-                variant: "error",
+                variant: "success",
                 heading: "Source deleted successfully!",
             });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
@@ -759,7 +759,7 @@ const ContentSection = ({
                 return [...newSources, ...prev];
             });
 
-            const { uploaded_data } = await makeApiRequest("/uploadd", "post", formData, { 'Content-type': "multipart/form-data" });
+            const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
             // ----------  Update knowledge base ----------
             setKnowledgeBase(prev => [...uploaded_data, ...prev.slice(totalFiles)]);

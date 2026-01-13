@@ -373,7 +373,7 @@ const ChatPanel = () => {
     try {
       await makeApiRequest(`/stories/${id}`, 'delete');
       notify({
-        variant: "error",
+        variant: "success",
         heading: "Story deleted successfully!",
       });
       // fetch stories
@@ -411,7 +411,7 @@ const ChatPanel = () => {
       }));
 
       notify({
-        variant: "error",
+        variant: "success",
         heading: "Reel deleted successfully!",
       });
       getReels();
