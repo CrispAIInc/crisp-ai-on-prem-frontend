@@ -79,7 +79,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
 
     return (
         <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
-            {(activeView === 'resource') && <Accordion isFirstOpen={Boolean(messages.length > 0)} chosenLanguage={"en"} heading={`Sources Summary ${selectedSources > 0 ? `(${selectedSources} Source${selectedSources > 1 ? "s" : ""})` : ""}`} >
+            {(activeView === 'resource') && <Accordion isFirstOpen={Boolean(messages.length === 0)} chosenLanguage={"en"} heading={`Sources Summary ${selectedSources > 0 ? `(${selectedSources} Source${selectedSources > 1 ? "s" : ""})` : ""}`} >
                 <div className="flex-1">
                     <div className={`${theme === "light"
                         ? "text-textColor-300"
@@ -95,7 +95,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
                         className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                         onClick={() => refreshSummary()}
                     > */}
-                    <RippleButton cssClasses="flex items-center mb-3 py-2 pl-2 !pr-3" onClick={() => refreshSummary()}>
+                    <RippleButton cssClasses="flex items-center gap-2 mb-3 py-2 pl-2 !pr-3" onClick={() => refreshSummary()}>
                         {isCombinedSummaryPending ? <span className="loader-atom"></span> :
                             <RefreshOutlinedIcon />}
                         <span>Refresh summary</span>
