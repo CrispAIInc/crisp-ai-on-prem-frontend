@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 
 
 /**
@@ -65,12 +69,19 @@ export default function AppAlert({
         right: "animate-slide-left",
     };
 
+    const icons = {
+        info: <InfoOutlinedIcon />,
+        success: <DoneOutlinedIcon />,
+        warning: <WarningAmberOutlinedIcon />,
+        error: <ErrorOutlineOutlinedIcon />,
+    };
+
     return (
         <div
             onMouseEnter={pauseOnHover ? stopTimer : undefined}
             onMouseLeave={pauseOnHover ? startTimer : undefined}
             className={`
-        relative flex items-start gap-3
+        absolute z-[9999999] right-5 top-5 flex items-start gap-3
         w-full max-w-sm rounded-xl border
         px-4 py-3 shadow-lg backdrop-blur
         ${variants[variant]}
@@ -79,10 +90,8 @@ export default function AppAlert({
       `}
         >
             {showIcon && (
-                <div className="mt-0.5">
-                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/60 text-sm">
-                        ⚠️
-                    </span>
+                <div className="mt-0.5 text-current">
+                    {icons[variant]}
                 </div>
             )}
 
