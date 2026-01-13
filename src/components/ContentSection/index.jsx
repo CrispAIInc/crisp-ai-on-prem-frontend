@@ -1,39 +1,40 @@
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import CircularProgressWithLabel from "../CircularProgressWithLabel";
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import AddIcon from '@mui/icons-material/Add';
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import { useContext, useEffect, useRef, useState } from "react";
-import makeApiRequest from "../../api";
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import SourceExplorer from "../SourceExplorer";
-import Modal from 'react-bootstrap/Modal';
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import { Checkbox } from "@mui/material";
+import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { MainContext } from "../../contexts/mainContext";
-import LoadingSpinner from "../LoadingSpinner";
-import BaseHeading from '../BaseHeading';
-import NoData from '../NoData';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import SearchSection from '../SearchSection';
-import { delay, getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
-import MetadataPanel from "../MetadataPanel";
-import { useToast } from "../../contexts/toastContext";
-import AddSourceModal from "../AddSourceModal";
-import { SettingsModal } from "../Settings/SettingsModal";
-import useAuth from '../../hooks/useAuth';
-import GsFile from '../GsFile';
-import { AuthContext } from '../../contexts/authContext';
-import useResources from '../../hooks/useResources';
-import { IndexModal } from '../IndexModal';
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { Checkbox } from "@mui/material";
+import { useContext, useEffect, useRef, useState } from "react";
+import Modal from 'react-bootstrap/Modal';
+import makeApiRequest from "../../api";
 import socket from "../../config/socket";
-import AnimatedText from '../AnimatedText';
+import { AuthContext } from '../../contexts/authContext';
+import { MainContext } from "../../contexts/mainContext";
 import { ProjectContext } from '../../contexts/projectContext';
+import { useToast } from "../../contexts/toastContext";
+import useAuth from '../../hooks/useAuth';
+import { getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
+import AddSourceModal from "../AddSourceModal";
+import AnimatedText from '../AnimatedText';
+import BaseHeading from '../BaseHeading';
+import CircularProgressWithLabel from "../CircularProgressWithLabel";
+import GsFile from '../GsFile';
+import { IndexModal } from '../IndexModal';
+import LoadingSpinner from "../LoadingSpinner";
+import MetadataPanel from "../MetadataPanel";
+import NoData from '../NoData';
+import SearchSection from '../SearchSection';
+import { SettingsModal } from "../Settings/SettingsModal";
+import SourceExplorer from "../SourceExplorer";
+
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
     const { theme, setDisplayedSources, setKnowledgeBase } = useContext(MainContext);
@@ -171,7 +172,6 @@ const ContentSection = ({
         selectedCategory,
         setActiveView,
         setChatLoaded,
-        sourcesTobeCommited, setSourcesTobeCommited,
         selectedSources,
         selectedAll,
         setCheckedAll,
@@ -183,8 +183,6 @@ const ContentSection = ({
     const { notify } = useToast();
 
     const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
-
-    const { categoryValuesWithoutAll } = useResources();
 
     const { user } = useContext(AuthContext);
 
@@ -389,8 +387,6 @@ const ContentSection = ({
         await logout();
     }
 
-    const categoryValues = categoryOptions.map((option) => option.value);
-
     const formatOptions = [
         { value: "all", label: "All" },
         { value: "video", label: "Videos" },
@@ -583,11 +579,6 @@ const ContentSection = ({
         setFilename(source?.source_path.split('.')?.slice(0, -1).join('.') || '');
         setUpdatingSource(source);
         setIsUpdateFilenameModalOpen(true);
-    }
-
-    // const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-    function handleOpenSettingsModal() {
-        setIsSettingsModalOpen(true);
     }
 
     const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
@@ -837,7 +828,14 @@ const ContentSection = ({
                 <div className="w-full">
                     <div className="w-full max-w-4xl pr-3">
                         <div className="flex flex-col gap-0">
-                            {/* <div className="flex flex-wrap items-center gap-0"> */}
+                            <div
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                onClick={handleExitProject}
+                            >
+                                {isExitPending ? <LoadingSpinner isSmall /> : <ChangeCircleOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />}
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Switch project</span>
+                            </div>
+
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={() => handleAddModal(true)}
@@ -846,8 +844,7 @@ const ContentSection = ({
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
 
                             </div>
-                            {/* </div> */}
-                            {/* </div> */}
+
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={handleExploreSources}
@@ -855,7 +852,7 @@ const ContentSection = ({
                                 <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
                             </div>
-                            {/* <div className="global-search"> */}
+
                             <div
                                 className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={() => setIsSearching(!isSearching)}
@@ -870,17 +867,7 @@ const ContentSection = ({
                                     </div>
                                 )
                             }
-                            {/* <div
-                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={handleOpenChatHistory}
-                            >
-                                <QuestionAnswerOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Chat history</span>
-                            </div> */}
                         </div>
-                        {/* <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="left" variant="persistent" open={isChatHistoryOpen} onClose={handleCloseChatHistory}>
-                            <ChatHistoryList closeChatHistory={handleCloseChatHistory} />
-                        </Drawer> */}
                     </div>
                     <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} />
                     <AddSourceModal show={showAddModal} setShowAddModal={setShowAddModal} isUploading={isFileUploading} setIsUploading={setIsFileUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
@@ -952,12 +939,6 @@ const ContentSection = ({
                                                 </div>
                                             </div>}
                                             {
-                                                // hoveredSource === option?.source_path && (
-                                                // <DeleteOutlineOutlinedIcon
-                                                // onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}
-                                                // style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                                // className="cursor-pointermr-1"
-                                                // />
                                                 !('progress' in option) ?
                                                     <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} /> : <CircularProgressWithLabel value={option.progress} variant="determinate" isUploadFiled={false} />
 
@@ -1098,7 +1079,7 @@ const ContentSection = ({
                                     <span>Settings</span>
                                 </div>
 
-                                <div
+                                {/* <div
                                     className={`flex  px-3 items-center cursor-pointer gap-2 py-2 pl-1
                                             ${theme === "light"
                                             ? "hover:bg-textColor-100/20"
@@ -1111,7 +1092,7 @@ const ContentSection = ({
                                             }`}
                                     />}
                                     <span>Exit project</span>
-                                </div>
+                                </div> */}
 
                                 <div
                                     className={`flex  px-3 text-red-600 items-center cursor-pointer gap-2 py-2 pl-1
