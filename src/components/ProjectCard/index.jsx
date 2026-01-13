@@ -2,7 +2,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useEffect, useState } from 'react';
-import makeApiRequest, { axiosInstance } from '../../api';
+import AnimatedText from "../AnimatedText";
 import useFirebase from '../../hooks/useFirebase';
 import { formatReadableDate } from '../../utils';
 import ActionMenu from '../ActionMenu';
@@ -22,8 +22,9 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
 
     const handleDeleteProject = async (projectId) => {
         setIsDeleting(true);
+        setIsDeleteConfirmationOpen(false);
         try {
-            deleteProject(projectId);
+            await deleteProject(projectId);
         } catch (error) {
             console.log(error);
         } finally {
@@ -57,6 +58,11 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     } return prev;
                 });
             }}>
+                {/* delete overlap */}
+                {isDeleting && <div className="absolute inset-0 w-full h-full bg-white/80 flex flex-col items-center justify-center">
+                    <AnimatedText text='Deleting...' cssClasses='!text-lg !text-black' />
+                </div>}
+
                 {/* top to bottom gradient overlay */}
                 <div className="absolute inset-0 shadow-md bg-gradient-to-b from-transparent to-black/70 rounded-2xl"></div>
 
