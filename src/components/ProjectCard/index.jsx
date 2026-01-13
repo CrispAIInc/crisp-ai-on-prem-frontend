@@ -46,7 +46,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
 
     return (
         <>
-            <div style={{ background: project.thumbnail ? `url('${projectThumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-contain !bg-no-repeat !bg-center relative rounded-2xl p-3 min-w-80 h-48 bg-clip-border cursor-pointer`} onClick={() => {
+            <div style={{ background: project.thumbnail ? `url('${projectThumbnail}')` : 'url("/app-logo.svg")' }} className={`${project.thumbnail ? '!bg-cover' : '!bg-contain'} !bg-no-repeat !bg-center relative rounded-2xl p-3 min-w-80 h-48 bg-clip-border cursor-pointer`} onClick={() => {
                 const now = new Date();
                 setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
                     if (prev?.project_id === project.project_id) {
