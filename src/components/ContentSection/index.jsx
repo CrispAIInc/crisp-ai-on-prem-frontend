@@ -743,7 +743,7 @@ const ContentSection = ({
                 return [...newSources, ...prev];
             });
 
-            const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
+            const { uploaded_data } = await makeApiRequest("/uploadd", "post", formData, { 'Content-type': "multipart/form-data" });
 
             // ----------  Update knowledge base ----------
             setKnowledgeBase(prev => [...uploaded_data, ...prev.slice(totalFiles)]);
@@ -770,8 +770,9 @@ const ContentSection = ({
         } catch (error) {
             setIsUploadFailed(true);
             setUploadStatus("error");
-            console.error(error);
+            toast(error.message || 'Failed to upload new sources', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
             setuploadErrorMessage(error?.response?.data?.error || 'Upload failed. Please try again.');
+            setKnowledgeBase(prev => prev.filter(item => !('progress' in item)));
         } finally {
             clearInterval(rejoinInterval);
             setIsFileUploading(false);
