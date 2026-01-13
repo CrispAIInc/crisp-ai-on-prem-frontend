@@ -8,11 +8,13 @@ import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import useResources from '../hooks/useResources';
 import { AuthContext } from './authContext';
 import { generateRandomId, pick } from '../utils';
+import { ProjectContext } from './projectContext';
 
 export const MainContext = createContext({});
 
 export default function MainProvider({ children, theme, setTheme }) {
     const { user, setUser } = useContext(AuthContext);
+    const { currentProject, setProjects } = useContext(ProjectContext);
     const [categoryOptions, setCategoryOptions] = useState([]);
     const [reels, setReels] = useState([]);
     const [stories, setStories] = useState([]);
@@ -365,6 +367,22 @@ export default function MainProvider({ children, theme, setTheme }) {
     useEffect(() => {
         // add all selected sources from knowledgebase to displayedsources
         setDisplayedSources(knowledgeBase.filter(item => item.is_selected));
+
+        // update current project 'checked_sources' and 'unchecked_sources'
+        const checkedSources = knowledgeBase.filter(item => (item.is_selected && item.is_checked));
+        const uncheckedSources = knowledgeBase.filter(item => (item.is_selected && !item.is_checked));
+
+        setProjects(prev => prev.map(project => {
+            if (project.project_id === currentProject.project_id) {
+                return {
+                    ...project,
+                    checked_sources: checkedSources,
+                    unchecked_sources: uncheckedSources
+                };
+            }
+
+            return project;
+        }));
     }, [knowledgeBase]);
 
     // const [selectedCategory] = useState("all");
