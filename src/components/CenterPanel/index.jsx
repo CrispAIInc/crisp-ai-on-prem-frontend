@@ -1,19 +1,16 @@
-import { useContext, useRef, useState, useEffect } from "react";
-import CopilotSection from "../CopilotSection";
-import { MainContext } from "../../contexts/mainContext.jsx";
-import makeApiRequest from "../../api/index.js";
+import AddIcon from '@mui/icons-material/Add';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+import { useContext, useEffect, useRef, useState } from "react";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
-import TextSkeleton from '../Skeletons/Base/TextSkeleton.jsx';
-import AddIcon from '@mui/icons-material/Add';
+import { MainContext } from "../../contexts/mainContext.jsx";
 import { generateRandomHash, isRtlLanguage } from '../../utils.js';
-import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
-import RippleButton from '../RippleButton/index.jsx';
-import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import Accordion from '../Accordion/index.jsx';
+import RippleButton from '../RippleButton/index.jsx';
+import TextSkeleton from '../Skeletons/Base/TextSkeleton.jsx';
 
-const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombinedSummaryPending, setIsCombinedSummaryPending, selectedLanguage }) => {
+const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombinedSummaryPending, selectedLanguage }) => {
     const {
         currentResource,
         displayedSources,
@@ -85,16 +82,8 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
                         ? "text-textColor-300"
                         : "text-textColor-100"
                         }`}>
-                        {/* <h2 className="mb-0 text-3xl font-semibold break-words">
-                            Sources Summary
-                        </h2> */}
-                        {/* {selectedSources > 0 && <span className="font-medium select-none">{selectedSources} Source{selectedSources > 1 ? "s" : ""}</span>} */}
                     </div>
                     {/* refresh summary */}
-                    {/* <div
-                        className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                        onClick={() => refreshSummary()}
-                    > */}
                     <RippleButton cssClasses="flex items-center gap-2 mb-3 py-2 pl-2 !pr-3" onClick={() => refreshSummary()}>
                         {isCombinedSummaryPending ? <span className="loader-atom"></span> :
                             <RefreshOutlinedIcon />}
