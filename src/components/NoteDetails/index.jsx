@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import toast from 'react-simple-toasts';
+import { useToast } from "../../contexts/toastContext";
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import { decimalSecondsToHHMMSS, generateRandomHash } from '../../utils';
@@ -30,6 +30,8 @@ function NoteDetails() {
 
     const { getNotes } = useResources({ setNotes });
 
+    const { notify } = useToast();
+
     const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
     const [llmAggregation, setLlmAggregation] = useState('gpt-4');
@@ -45,7 +47,11 @@ function NoteDetails() {
         event && event.preventDefault();
         if (selectedNote.note_name === "") {
             // add shadow to toast classnames
-            toast('Note title cannot be empty', { className: `p-2 rounded-md`, theme });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Note title cannot be empty",
+            });
             return;
         }
         if (isNewNote && notes.every(n => n.note_name !== selectedNote.note_name)) {
@@ -57,7 +63,10 @@ function NoteDetails() {
             await makeApiRequest(`/save-note`, 'post', { noteID: selectedNote.note_id, selectedNote, noteName: 'note_json', noteNumber: parseInt(noteIndex), isNewNote: isNewNote });
 
             getNotes();
-            toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });
+            notify({
+                variant: "success",
+                heading: "Insight saved successfully!",
+            });
         } catch (error) {
             console.log(error);
         }
@@ -68,7 +77,10 @@ function NoteDetails() {
             await makeApiRequest(`/delete-note`, 'post', { noteID: selectedNote.note_id, noteName: selectedNote.note_name });
             // send request to update notes
             getNotes();
-            toast('Insight deleted successfully', { className: 'p-2 rounded-md', theme });
+            notify({
+                variant: "success",
+                heading: "Insight deleted successfully!",
+            });
         } catch (error) {
             console.log(error);
         } finally {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import BaseHeading from '../BaseHeading';
-import toast from 'react-simple-toasts';
+import { useToast } from "../../contexts/toastContext";
 import { timeToSeconds } from '../../utils';
 import RippleButton from '../RippleButton';
 import AnimatedText from '../AnimatedText';
@@ -21,8 +21,9 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
         knowledgeBase
     } = useContext(MainContext);
 
+    const { notify } = useToast();
+
     const [, setFromChat] = useState(false);
-    // const [selectedCategory] = useState('all');
     const [searchQuestion, setSearchQuestion] = useState('');
     const [isSearching, setIsSearching] = useState(false);
 
@@ -47,13 +48,9 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             })
             );
             const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
-            // const response = await axios.post(`${API_ENDPOINT}/process-query`, { selectedCategory, searchQuestion, currentResource: isGlobalSearch ? null : currentResource, selectedFormat });
-            // if (response.status === 200) {
             let resourceURL = '';
-            // let timestamp;
             if (source.file_type == 'video') {
                 resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(rest.source_path)}`;
-                // timestamp = rest.timestamp;
             }
             else if (source.file_type == 'pdf') {
                 resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
@@ -67,19 +64,20 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             setSummary(rest.summary);
             if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             setAdditionalSources(additional_sources);
-            // if (activeView !== 'resource') {
             if (!fromMetadata) {
                 setShowSearchModal(true);
             }
-            // }
 
             if (source.file_type === "pdf") {
                 setJumpToPage({ page });
             }
-            // }
         } catch (error) {
             console.log(error);
-            toast('An error occurred while searching');
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "An error occured while discovering",
+            });
         } finally {
             setIsSearching(false);
         }

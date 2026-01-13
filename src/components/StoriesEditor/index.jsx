@@ -7,7 +7,7 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import AddIcon from '@mui/icons-material/Add';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import toast from 'react-simple-toasts';
+import {useToast} from "../../contexts/toastContext"
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import RippleButton from '../RippleButton';
 import useResources from '../../hooks/useResources';
@@ -22,6 +22,8 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
 
     const [isLoading, setIsLoading] = useState(false);
     const [isPending, setIsPending] = useState(false);
+
+    const { notify } = useToast();
 
     const [value, setValue] = useState('');
     const editorRef = useRef(null);
@@ -105,14 +107,21 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
         try {
             setIsPending(true);
             await makeApiRequest('/stories', "POST", JSON.stringify({ ...story, story_name: storyTitle || story?.story_name }));
-            toast('Story saved successfully', { className: 'p-2 rounded-md', theme });
+            notify({
+                variant: "success",
+                heading: "Story saved successfully!",
+            });
 
             // update stories
             getStories();
         }
         catch (e) {
             console.log(e);
-            toast('Something bad happened', { className: `p-2 rounded-md`, theme });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: 'Something bad happened. Please try again.',
+            });
         } finally {
             setIsPending(false);
         }

@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import makeApiRequest from "../../api";
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from "../../contexts/mainContext";
+import { useToast } from "../../contexts/toastContext";
 import LoadingSpinner from "../LoadingSpinner";
 import toast from 'react-simple-toasts';
 import useResources from '../../hooks/useResources';
@@ -10,12 +11,17 @@ export default function UpdateFilenameModal({ show, onHide, value, setValue, lab
     const { theme, setReels } = useContext(MainContext);
     const [isLoading, setIsLoading] = useState(false);
     const { getReels } = useResources({ setReels });
+    const { notify } = useToast();
 
     async function update() {
-        // onSave && onSave(value);
+        // onSave?.(value);
         try {
             if (value === "") {
-                toast('value cannot be empty', { className: `p-2 rounded-md !bg-red-600 text-white`, theme });
+                notify({
+                    variant: "error",
+                    heading: "Empty value!",
+                    subheading: "value cannot be empty.",
+                });
                 return;
             }
 
@@ -32,10 +38,17 @@ export default function UpdateFilenameModal({ show, onHide, value, setValue, lab
             setReels(prevReels => prevReels.map(r => r.id === reel.id ? { ...r, title: value?.trim() } : r));
             await getReels();
             onHide();
-            toast('Reel renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
+            notify({
+                variant: "success",
+                heading: "Reel renamed successfully!",
+            });
         } catch (error) {
             console.log(error);
-            toast('Something bad happened', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Renaming failed!",
+                subheading: error.message || "Something went wrong. Please Try again.",
+            });
         } finally {
             setIsLoading(false);
         }

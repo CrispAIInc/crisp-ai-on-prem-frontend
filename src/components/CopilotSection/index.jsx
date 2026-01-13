@@ -849,19 +849,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
   const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
   const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
-  const confirmFn = ({ start, end }) => {
-    setInput(`Generate description between timestamps ${start} and ${end}`);
-    setIsTimestampPickerOpen(false);
-  };
-
-  const rejectFn = (isError, errorMessage) => {
-    if (isError) {
-      console.log(errorMessage);
-      toast(errorMessage, { className: `p-2 rounded-md !bg-red-600 text-white`, theme });
-    } else {
-      setIsTimestampPickerOpen(false);
-    }
-  };
 
   return (
     <article className="relative flex flex-col flex-1 mb-3 h-full max-w-[650px] mx-auto ">

@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import FileUploaderModal from "../FileUploaderModal";
-import toast from 'react-simple-toasts';
+import { useToast } from '../../contexts/toastContext';
 import makeApiRequest from '../../api';
 import LoadingSpinner from "../LoadingSpinner";
 import useResources from '../../hooks/useResources';
@@ -10,6 +10,8 @@ import useResources from '../../hooks/useResources';
 export function IndexModal({ show, onHide, handleUpload }) {
 
     const { theme, categoryOptions, setCategoryOptions } = useContext(MainContext);
+
+    const { notify } = useToast();
 
     const [indexName, setIndexName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +22,11 @@ export function IndexModal({ show, onHide, handleUpload }) {
     async function createIndex() {
         setIsLoading(true);
         if (indexName === '') {
-            toast('Index cannot be empty', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Index cannot be empty!",
+            });
             setIsLoading(false);
             return;
         }
@@ -29,9 +35,17 @@ export function IndexModal({ show, onHide, handleUpload }) {
             const newIndex = await makeApiRequest('/create-new-index', 'post', { category: indexName });
             setIndexName(newIndex?.category);
             getIndexes();
+            notify({
+                variant: "error",
+                heading: "Index created!",
+            });
         } catch (error) {
             console.log(error.response.data.error);
-            toast(error.response.data.error || 'Error creating index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Error creating index",
+            });
             setIsLoading(false);
         } finally {
             setIsLoading(false);

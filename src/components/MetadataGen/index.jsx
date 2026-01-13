@@ -2,22 +2,16 @@ import { useContext, useEffect, useState } from 'react';
 import MetadataAdvancedParams from '../MetadataAdvancedParams';
 import MetadataOptions from "../MetadataOptions";
 import { MainContext } from '../../contexts/mainContext.jsx';
-import toast from 'react-simple-toasts';
-import LoadingSpinner from '../LoadingSpinner';
+import { useToast } from "../../contexts/toastContext";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 import makeApiRequest from '../../api';
 import RippleButton from '../RippleButton';
-import useResources from '../../hooks/useResources.js';
-
-
 
 
 function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityValue, setVerbosityValue, context, setContext }) {
 
-    const { knowledgeBase, theme, checkedSourcesCount, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
-
-    const { categoryValuesWithoutAll } = useResources();
+    const { knowledgeBase, theme, checkedSourcesCount, setKnowledgeBase, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
 
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
 
@@ -28,18 +22,11 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         });
     }, [sourcesTobeCommited]);
 
-    // const [temperatureValue, setTemperatureValue] = useState(0.2);
-    // function handleTemperatureChange(e) {
-    //     setTemperatureValue(e.target.value);
-    // }
-
 
 
     function handleChange(event) {
         setVerbosityValue(event.target.value);
     }
-
-    // const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_checked === false));
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -48,7 +35,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
 
     const [contextFocused, setContextFocused] = useState(false);
 
-    const isActive = contextFocused || context.length > 0;
+    const { notify } = useToast();
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -63,37 +50,16 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
 
     async function generateMetadata() {
         setIsGeneratingMetadata(true);
-        // if (isKnowledgeBaseEmpty) {
-        //     toast('You must select some sources to generate metadata');
-        // }
-        // if (selectedOptions.length === 0) {
-        //     toast('You must select at least one metadata option');
-        // }
 
         if (checkedSourcesCount === 0) {
-            toast('You must check at least one source');
-        }
-
-        const categoryValues = categoryOptions.map((option) => option.value);
-
-        function getCategories(items) {
-            const categories = new Set();
-
-            items.forEach(item => {
-                item.category.forEach(cat => {
-                    if (cat.toLowerCase() !== "all") {
-                        categories.add(cat);
-                    }
-                });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "You must check at least one source",
             });
-
-            return Array.from(categories);
         }
 
         try {
-            // const payload = {
-            //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_checked).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
-            // };
             const payload = {
                 sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: source.category.filter(cat => cat !== "all")[0] })),
                 selectedOptions: selectedOptions.map(op => op.id),

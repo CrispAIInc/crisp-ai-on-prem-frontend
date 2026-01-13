@@ -5,13 +5,12 @@ import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
 import InfoIcon from '@mui/icons-material/Info';
 import useFirebase from '../../hooks/useFirebase.js';
-import toast from 'react-simple-toasts';
+import { useToast } from "../../contexts/toastContext";
 import { useContext, useState, useEffect } from 'react';
 import { timeToSeconds } from "../../utils.js";
 import LoadingSpinner from "../LoadingSpinner";
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
-import useResources from '../../hooks/useResources';
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
 import { Drawer } from '@mui/material';
 import ReelProps from '../ReelProps/index.jsx';
@@ -22,15 +21,14 @@ import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 
 function ReelViewer({
     closeReel,
-    reel,
-    setReels }) {
+    reel, }) {
 
     const { theme } = useContext(MainContext);
     const { getPublicUrl, getDownloadableUrl } = useFirebase();
 
     const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
-    const { getReels } = useResources({ setReels });
+    const { notify } = useToast();
 
     const [isDownloading, setIsDownloading] = useState(false);
     const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
@@ -73,10 +71,17 @@ function ReelViewer({
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
 
-            // toast('Reel downloaded successfully!', { className: 'p-2 rounded-md bg-primary-200 text-white', theme });
+            notify({
+                variant: "success",
+                heading: "Reel downloaded successfully!",
+            });
         } catch (err) {
             console.error("Download failed", err);
-            toast('Download failed. Please try again.', { className: 'p-2 rounded-md', theme });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Download failed. Plase try again.",
+            });
         } finally {
             setIsDownloading(false);
         }

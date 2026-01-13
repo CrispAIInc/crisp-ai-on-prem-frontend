@@ -27,6 +27,7 @@ import useResources from '../../hooks/useResources';
 import GsFile from '../GsFile/index.jsx';
 import useFirebase from '../../hooks/useFirebase.js';
 import FilenameUpdateModal from "../AppSingleValueModal";
+import { useToast } from '../../contexts/toastContext.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -128,6 +129,8 @@ const ChatPanel = () => {
     setStories
   } = useContext(MainContext);
 
+  const { notify } = useToast();
+
   const { getReels, getStories, getNotes } = useResources({ setReels, setStories, setNotes });
 
   const [value, setValue] = useState('');
@@ -206,7 +209,11 @@ const ChatPanel = () => {
   const handleSave = async (event) => {
     event?.preventDefault();
     if ((!isNewInsight && selectedNote.note_name === "") || (isNewInsight && noteTitle === "")) {
-      toast('Note title cannot be empty', { className: 'p-2 rounded-md', theme });
+      notify({
+        variant: "error",
+        heading: "Oops!",
+        subheading: "Note title cannot be empty",
+      });
       return;
     }
 
@@ -226,10 +233,17 @@ const ChatPanel = () => {
       });
 
       getNotes();
-      toast('Insight saved successfully', { className: 'p-2 rounded-md', theme });
+      notify({
+        variant: "success",
+        heading: "Insight saved successfully!",
+      });
     } catch (error) {
       console.error('Error saving note:', error);
-      toast('Failed to save insight', { className: 'p-2 rounded-md', theme });
+      notify({
+        variant: "error",
+        heading: "Oops!",
+        subheading: "Failed to save insight.",
+      });
     }
   };
 
@@ -331,7 +345,10 @@ const ChatPanel = () => {
       setIsInsightDeleting(true);
       await makeApiRequest(`/delete-note`, 'post', { noteID: id, noteName: name });
       // send request to update notes
-      toast('Insight deleted successfully', { className: 'p-2 rounded-md', theme });
+      notify({
+        variant: "success",
+        heading: "Insight deleted successfully!",
+      });
       getNotes();
     } catch (e) {
       console.log(e);
@@ -355,13 +372,19 @@ const ChatPanel = () => {
     setIsStoryDeleting(true);
     try {
       await makeApiRequest(`/stories/${id}`, 'delete');
-
-      toast('Story deleted successfully', { className: 'p-2 rounded-md', theme });
+      notify({
+        variant: "error",
+        heading: "Story deleted successfully!",
+      });
       // fetch stories
       getStories();
     } catch (error) {
       console.log(error);
-      toast('An error occurred while deleting story', { className: 'p-2 rounded-md', theme });
+      notify({
+        variant: "error",
+        heading: "Oops!",
+        subheading: "An error occurred while deleting story",
+      });
     } finally {
       setIsStoryDeleting(false);
     }
@@ -387,11 +410,18 @@ const ChatPanel = () => {
         videoUrl: publicReelUrl,
       }));
 
-      toast('Reel deleted successfully', { className: 'p-2 rounded-md bg-background_workspace' });
+      notify({
+        variant: "error",
+        heading: "Reel deleted successfully!",
+      });
       getReels();
     } catch (error) {
       console.log(error);
-      toast('An error occurred while deleting reel', { className: 'p-2 rounded-md  bg-background_workspace' });
+      notify({
+        variant: "error",
+        heading: "Oops!",
+        subheading: "An error occurred while deleting the reel",
+      });
     } finally {
       setIsReelDeleting(false);
     }

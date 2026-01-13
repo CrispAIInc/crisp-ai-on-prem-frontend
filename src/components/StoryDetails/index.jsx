@@ -8,7 +8,7 @@ import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
-import toast from "react-simple-toasts";
+import { useToast } from "../../contexts/toastContext";
 import "react-simple-toasts/dist/theme/dark.css";
 import "react-simple-toasts/dist/theme/light.css";
 import makeApiRequest from "../../api";
@@ -47,6 +47,8 @@ function StoryDetails() {
         setJumpToPage,
     } = useContext(MainContext);
 
+    const { notify } = useToast();
+
     const { getStories } = useResources({ setStories });
 
     const [isGeneratingIntroConclusion, setIsGeneratingIntroConlusion] =
@@ -54,9 +56,10 @@ function StoryDetails() {
 
     const handleSave = async () => {
         if (!selectedStory.story_name) {
-            toast("Story title cannot be empty", {
-                className: "p-2 rounded-md",
-                theme,
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Story title cannot be empty!",
             });
             return;
         }
@@ -75,12 +78,16 @@ function StoryDetails() {
                 );
             }
             getStories();
-            toast("Story saved successfully", { className: "p-2 rounded-md", theme });
+            notify({
+                variant: "success",
+                heading: "Story saved successfully!",
+            });
         } catch (error) {
             console.log(error);
-            toast("An error occurred while saving story", {
-                className: "p-2 rounded-md",
-                theme,
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error?.response?.data?.error || 'An error occured while saving the story',
             });
         }
     };
@@ -141,15 +148,16 @@ function StoryDetails() {
             setActiveView(null);
 
             getStories();
-            toast("Story deleted successfully", {
-                className: "p-2 rounded-md",
-                theme,
+            notify({
+                variant: "success",
+                heading: "Story deleted successfully!",
             });
         } catch (error) {
             console.log(error);
-            toast("An error occurred while deleting story", {
-                className: "p-2 rounded-md",
-                theme,
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error?.response?.data?.error || 'An error occured while deleting story',
             });
         }
     };

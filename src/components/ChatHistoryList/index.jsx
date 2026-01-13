@@ -10,9 +10,12 @@ import ChatTitleUpdaterModal from '../ChatTitleUpdaterModal';
 import './ChatHistoryList.css';
 import toast from 'react-simple-toasts';
 import LoadingSpinner from '../LoadingSpinner';
+import { useToast } from '../../contexts/toastContext';
 
 function ChatHistoryList({ closeChatHistory }) {
     const { theme, chatHistory, currentChat, setChatHistory, setCurrentChat, workspaceContainer } = useContext(MainContext);
+
+    const { notify } = useToast();
 
     async function createNewChat() {
         try {
@@ -111,12 +114,10 @@ function ChatHistoryList({ closeChatHistory }) {
                 title: chatTitle.trim(),
             }));
             if (success) {
-                toast('Source renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
-                // Refresh chat history or update state accordingly
-                // setCurrentChat(prev => ({
-                //     ...prev,
-                //     title: title.trim(),
-                // }));
+                notify({
+                    variant: "success",
+                    heading: "Chat renamed successfully!",
+                });
                 setChatHistory(prev =>
                     prev.map(chat =>
                         chat.sessionId === updatingChat.sessionId
@@ -130,7 +131,11 @@ function ChatHistoryList({ closeChatHistory }) {
             }
         } catch (error) {
             console.log(error);
-            toast(error.message || 'Failed to rename the source', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Renaming failed!",
+                subheading: error.message || 'Failed to rename the chat',
+            });
         } finally {
             setIsLoading(false);
         }
@@ -145,14 +150,10 @@ function ChatHistoryList({ closeChatHistory }) {
                 session_ids: chatsToDelete.map(chat => chat?.sessionId),
             }));
             if (success) {
-                toast('Chat deleted successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
-                // Refresh chat history or update state accordingly
-                // setCurrentChat(prev => {
-                //     if (chatsToDelete.some(chat => chat?.sessionId=== prev?.sessionId)) {
-                //         return [];
-                //     }
-                //     return prev;
-                // });
+                notify({
+                    variant: "success",
+                    heading: "Chat deleted successfully!",
+                });
                 setChatHistory(prev =>
                     prev.filter(chat => !chatsToDelete.some(toDelete => toDelete?.sessionId === chat?.sessionId))
                 );
@@ -165,7 +166,11 @@ function ChatHistoryList({ closeChatHistory }) {
             }
         } catch (error) {
             console.log(error);
-            toast(error.message || 'Failed to delete chat', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Deleting failed!",
+                subheading: error.message || 'Failed to delete the chat',
+            });
         } finally {
             setIsDeleteLoading(false);
         }

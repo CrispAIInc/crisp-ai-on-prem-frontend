@@ -23,7 +23,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import SearchSection from '../SearchSection';
 import { delay, getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
 import MetadataPanel from "../MetadataPanel";
-import toast from 'react-simple-toasts';
+import { useToast } from "../../contexts/toastContext";
 import AddSourceModal from "../AddSourceModal";
 import { SettingsModal } from "../Settings/SettingsModal";
 import useAuth from '../../hooks/useAuth';
@@ -44,7 +44,11 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
     async function updateFilename() {
         try {
             if (filename === "") {
-                toast('filename cannot be empty', { className: `p-2 rounded-md !bg-red-600 text-white`, theme });
+                notify({
+                    variant: "error",
+                    heading: "Oops!",
+                    subheading: "Filename cannot be empty.",
+                });
                 return;
             }
 
@@ -70,10 +74,17 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
                 });
             });
             onHide();
-            toast('Source renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Source renamed successfully!",
+            });
         } catch (error) {
             console.log(error);
-            toast('Something bad happened', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Something bad happened",
+            });
         } finally {
             setIsLoading(false);
         }
@@ -168,6 +179,8 @@ const ContentSection = ({
         chatLoaded, setPersistedUploadedFiles,
         currentChat
     } = useContext(MainContext);
+
+    const { notify } = useToast();
 
     const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
 
@@ -424,7 +437,10 @@ const ContentSection = ({
 
             await makeApiRequest(`/delete`, "post", { sources: payload });
             setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
-            toast('Source deleted successfully', { className: `p-2 rounded-md`, theme });
+            notify({
+                variant: "error",
+                heading: "Source deleted successfully!",
+            });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
             }
@@ -770,7 +786,11 @@ const ContentSection = ({
         } catch (error) {
             setIsUploadFailed(true);
             setUploadStatus("error");
-            toast(error.message || 'Failed to upload new sources', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Failed to upload new source. Please try again.",
+            });
             setuploadErrorMessage(error?.response?.data?.error || 'Upload failed. Please try again.');
             setKnowledgeBase(prev => prev.filter(item => !('progress' in item)));
         } finally {

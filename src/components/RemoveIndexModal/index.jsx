@@ -1,17 +1,18 @@
 import Modal from 'react-bootstrap/Modal';
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import makeApiRequest from '../../api';
-import toast from 'react-simple-toasts';
+import { useToast } from "../../contexts/toastContext";
 import useResources from '../../hooks/useResources';
 import LoadingSpinner from '../LoadingSpinner/index.jsx';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 function RemoveIndexModal({ show, onHide, index, deleteResource, setIsIndexDeleting }) {
-    const { theme, knowledgeBase, setCategoryOptions } = useContext(MainContext);
+    const { knowledgeBase, setCategoryOptions } = useContext(MainContext);
 
     const { getIndexes } = useResources({ setCategoryOptions });
+
+    const { notify } = useToast();
 
     async function deleteIndex() {
         try {
@@ -21,10 +22,17 @@ function RemoveIndexModal({ show, onHide, index, deleteResource, setIsIndexDelet
             if (itemsToBeDeleted.length > 0) await deleteResource(null, itemsToBeDeleted);
             await makeApiRequest(`/remove-index`, 'post', { index: index });
             getIndexes();
-            toast('Index deleted', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            notify({
+                variant: "success",
+                heading: "Index deleted!",
+            });
         } catch (error) {
             console.log(error.response.data.error);
-            toast(error.response.data.error || 'Error deleting index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error?.response?.data?.eroor || "An error occured while deleting eindex",
+            });
         } finally {
             setIsIndexDeleting(false);
         }

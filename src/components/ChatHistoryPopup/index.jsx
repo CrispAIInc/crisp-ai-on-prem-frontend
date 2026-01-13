@@ -11,9 +11,12 @@ import { formatChatHistoryByDate } from '../../utils';
 import { useFilter } from '../../hooks/useFilter';
 import useChat from '../../hooks/useChat';
 import { useGlowingBorder } from '../../hooks/useGlowingBorder';
+import { useToast } from '../../contexts/toastContext';
 
 function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, createNewChat, crispWizInputContainerRef, crispWizInputRef }) {
     const { theme, chatHistory, setChatHistory, setCurrentChat } = useContext(MainContext);
+
+    const { notify } = useToast();
 
     const { updateChatTitle, deleteChat } = useChat();
 
@@ -114,14 +117,21 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
             const { success, message } = await updateChatTitle(chatTitle, updatingChat.sessionId);
 
             if (success) {
-                toast('Source renamed successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
+                notify({
+                    variant: "success",
+                    heading: "Source renamed successfully!",
+                });
                 setIsUpdateChatTitleModalOpen(false);
             } else {
                 throw new Error(message || 'Failed to rename the source');
             }
         } catch (error) {
             console.log(error);
-            toast(error.message || 'Failed to rename the source', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Renaming failed!",
+                subheading: error.message || 'Failed to rename the source',
+            });
         } finally {
             setIsLoading(false);
         }
@@ -143,13 +153,20 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
             setIsDeleteLoading(true);
             const { success, message } = await deleteChat(chatsToDelete.map(chat => chat?.sessionId));
             if (success) {
-                toast('Chat deleted successfully', { className: `p-2 rounded-md bg-green-600 text-white`, theme });
+                notify({
+                    variant: "success",
+                    heading: "Chat deleted successfully!",
+                });
             } else {
                 throw new Error(message || 'Failed to delete chat');
             }
         } catch (error) {
             console.log(error);
-            toast(error.message || 'Failed to delete chat', { className: `p-2 rounded-md bg-red-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Deleting failed!",
+                subheading: error.message || 'Failed to delete the chat',
+            });
         } finally {
             setIsDeleteLoading(false);
         }

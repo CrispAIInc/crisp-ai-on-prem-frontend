@@ -1,10 +1,8 @@
 import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
-
+import { useToast } from "../../contexts/toastContext";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import makeApiRequest from '../../api';
-import toast from 'react-simple-toasts';
 import MetadataVerbosity from '../MetadataVerbosity';
 import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
@@ -31,18 +29,7 @@ function MediaEntertainment({
 
     const [, setContextFocused] = useState(false);
 
-
-    // const [reel, setReel] = useState({
-    //     id: "",
-    //     title: "",
-    //     reel_video_url: "",
-    //     thumbnail: ""
-    // });
-    // const [videoUrl, setVideoUrl] = useState("http://localhost:5000/api/video/all/videoplayback.mp4");
-    // const [reelTitle, setReelTitle] = useState('');
-    // const [isReelOpen, setIsReelOpen] = useState(false);
-
-    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+    const { notify } = useToast();
 
     const [isReelGenerated, setIsReelGenerated] = useState(false);
 
@@ -68,7 +55,11 @@ function MediaEntertainment({
 
     async function generateMedia() {
         if (reel.title === "") {
-            toast('Reel title is required!', { className: 'p-2 text-white rounded-md !bg-red-600' });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Reel title is required!",
+            });
             return;
         }
         try {
@@ -98,7 +89,11 @@ function MediaEntertainment({
 
         } catch (error) {
             console.log(error);
-            toast(error?.response?.data?.error || "Something went wrong", { className: 'p-2 rounded-md z-20', theme });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error?.response?.data?.error || "Somthing went wrong",
+            });
         } finally {
             setIsGeneratingReel(false);
         }

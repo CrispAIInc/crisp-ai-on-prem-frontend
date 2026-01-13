@@ -16,7 +16,7 @@ import StagedImageThumbnail from '../StagedImageThumbnail';
 import { searchByKey, sortBySourcePath } from '../../utils';
 import makeApiRequest from '../../api/index.js';
 import useResources from '../../hooks/useResources.js';
-import toast from 'react-simple-toasts';
+import { useToast } from "../../contexts/toastContext";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
 
 export function SourceExplorer(props) {
@@ -32,6 +32,8 @@ export function SourceExplorer(props) {
         setCategoryOptions,
         categoryOptions
     } = useContext(MainContext);
+
+    const { notify } = useToast();
 
     // const [currentPath, setCurrentPath] = useState('/');
     const [viewModes, setViewModes] = useState(["categories"]); // 'categories' or 'formats'
@@ -159,11 +161,18 @@ export function SourceExplorer(props) {
             if (itemsToBeDeleted.length > 0) await props.deleteResource(null, itemsToBeDeleted);
             await makeApiRequest(`/remove-index`, 'post', { index: itemToRemove });
             getIndexes();
-            toast('Index deleted', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            notify({
+                variant: "success",
+                heading: "Index deleted!",
+            });
             setShowRemoveIndexModal(false);
         } catch (error) {
             console.log(error.response.data.error);
-            toast(error.response.data.error || 'Error deleting index', { className: `p-2 rounded-md`, theme: theme === 'light' ? 'dark' : 'light' });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error?.response?.data?.error || 'Error deleting index',
+            });
         } finally {
             setIsIndexDeleting(false);
         }
