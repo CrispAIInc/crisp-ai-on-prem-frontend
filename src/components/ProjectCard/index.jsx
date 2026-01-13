@@ -45,7 +45,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
     const projectSourcesTotal = project?.checked_sources?.length + project?.unchecked_sources?.length;
 
     return (
-        <div style={{ background: project.thumbnail ? `url('${projectThumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-cover !bg-center relative rounded-2xl p-3 min-w-80 h-48 bg-clip-border `}>
+        <div style={{ background: project.thumbnail ? `url('${projectThumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-contain !bg-no-repeat !bg-center relative rounded-2xl p-3 min-w-80 h-48 bg-clip-border `}>
             {/* top to bottom gradient overlay */}
             <div className="absolute inset-0 shadow-md bg-gradient-to-b from-transparent to-black/70 rounded-2xl"></div>
 
