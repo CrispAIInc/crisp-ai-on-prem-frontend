@@ -764,6 +764,12 @@ const ContentSection = ({
             // ----------  Update knowledge base ----------
             setKnowledgeBase(prev => [...uploaded_data, ...prev.slice(totalFiles)]);
 
+            // show success message
+            notify({
+                variant: "success",
+                heading: "Source uploaded successfully!",
+            });
+
             const { chat_is_initialized } = await makeApiRequest(
                 `/chat/all`,
                 "post",
