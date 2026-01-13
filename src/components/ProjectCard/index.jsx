@@ -45,65 +45,67 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
     const projectSourcesTotal = project?.checked_sources?.length + project?.unchecked_sources?.length;
 
     return (
-        <div style={{ background: project.thumbnail ? `url('${projectThumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-contain !bg-no-repeat !bg-center relative rounded-2xl p-3 min-w-80 h-48 bg-clip-border `}>
-            {/* top to bottom gradient overlay */}
-            <div className="absolute inset-0 shadow-md bg-gradient-to-b from-transparent to-black/70 rounded-2xl"></div>
+        <>
+            <div style={{ background: project.thumbnail ? `url('${projectThumbnail}')` : 'url("/app-logo.svg")' }} className={`!bg-contain !bg-no-repeat !bg-center relative rounded-2xl p-3 min-w-80 h-48 bg-clip-border cursor-pointer`} onClick={() => {
+                const now = new Date();
+                setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
+                    if (prev?.project_id === project.project_id) {
+                        return {
+                            ...prev,
+                            updated_at: now
+                        };
+                    } return prev;
+                });
+            }}>
+                {/* top to bottom gradient overlay */}
+                <div className="absolute inset-0 shadow-md bg-gradient-to-b from-transparent to-black/70 rounded-2xl"></div>
 
-            {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-600/40 rounded-2xl " /> */}
+                {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-600/40 rounded-2xl " /> */}
 
-            <div className="relative z-40 flex flex-col justify-between h-full ">
-                {/* top showcase */}
-                <div className="flex items-center justify-between ">
-                    {/* <MoreVertIcon className="text-white" /> */}
-                    <ActionMenu
-                        actions={[
-                            {
-                                label: "Edit Project",
-                                icon: <EditOutlinedIcon />,
-                                onClick: (e) => {
-                                    e.stopPropagation();
-                                    setIsModalOpen(true);
+                <div className="relative z-40 flex flex-col justify-between h-full ">
+                    {/* top showcase */}
+                    <div className="flex items-center justify-between ">
+                        {/* <MoreVertIcon className="text-white" /> */}
+                        <ActionMenu
+                            actions={[
+                                {
+                                    label: "Edit Project",
+                                    icon: <EditOutlinedIcon />,
+                                    onClick: (e) => {
+                                        e.stopPropagation();
+                                        setIsModalOpen(true);
+                                    },
                                 },
-                            },
-                            {
-                                label: "Delete",
-                                icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
-                                onClick: () => setIsDeleteConfirmationOpen(true),
-                            },
-                        ]}
-                    />
-                    <div className="relative flex flex-col p-2 rounded-full shadow-lg cursor-pointer hover:bg-white/20 backdrop-blur">
-                        <ArrowForwardIosIcon onClick={() => {
-                            const now = new Date();
-                            setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
-                                if (prev?.project_id === project.project_id) {
-                                    return {
-                                        ...prev,
-                                        updated_at: now
-                                    };
-                                } return prev;
-                            });
-                        }} className="font-bold text-purple-500 cursor-pointer backdrop-blur" />
+                                {
+                                    label: "Delete",
+                                    icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
+                                    onClick: () => setIsDeleteConfirmationOpen(true),
+                                },
+                            ]}
+                        />
+                        <div className="relative flex flex-col p-2 rounded-full shadow-lg cursor-pointer hover:bg-white/20 backdrop-blur">
+                            <ArrowForwardIosIcon onClick={() => {
+                                const now = new Date();
+                                setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
+                                    if (prev?.project_id === project.project_id) {
+                                        return {
+                                            ...prev,
+                                            updated_at: now
+                                        };
+                                    } return prev;
+                                });
+                            }} className="font-bold text-purple-500 cursor-pointer backdrop-blur" />
+                        </div>
                     </div>
-                </div>
-                {/* bottom showcase */}
-                <div className="font-semibold cursor-pointer" onClick={() => {
-                    const now = new Date();
-                    setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
-                        if (prev?.project_id === project.project_id) {
-                            return {
-                                ...prev,
-                                updated_at: now
-                            };
-                        } return prev;
-                    });
-                }}>
-                    <h2 className="mb-0 !text-white line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
-                    <div className="flex flex-wrap items-center gap-1">
-                        <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
-                        <p className="text-[10px] text-white">
-                            {projectSourcesTotal} Source{`${projectSourcesTotal > 1 ? "s" : ""}`}.
-                        </p>
+                    {/* bottom showcase */}
+                    <div className="font-semibold">
+                        <h2 className="mb-0 !text-white line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
+                        <div className="flex flex-wrap items-center gap-1">
+                            <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
+                            <p className="text-[10px] text-white">
+                                {projectSourcesTotal} Source{`${projectSourcesTotal > 1 ? "s" : ""}`}.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -125,7 +127,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     isDeleting={isDeleting}
                 />
             }
-        </div>
+        </>
     );
 };
 
