@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
-import AppLogo from "/new-crisp-ai-slogan.png";
+import { useContext } from 'react';
 import { AuthContext } from '../../contexts/authContext';
-import { MainContext } from "../../contexts/mainContext";
-import { SettingsModal } from "../Settings/SettingsModal";
-import useAuth from '../../hooks/useAuth';
-import UserMenu from '../UserMenu';
 import { ProjectContext } from '../../contexts/projectContext';
+import useAuth from '../../hooks/useAuth';
+import { SettingsModal } from "../Settings/SettingsModal";
+import UserMenu from '../UserMenu';
+import AppLogo from "/new-crisp-ai-slogan.png";
 
 const ProjectsHeader = () => {
   const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
