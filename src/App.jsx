@@ -22,6 +22,8 @@ import AuthRoute from './components/Auth/AuthRoute.jsx';
 import ProjectsPage from './pages/ProjectsPage.jsx';
 import ProjectProvider from './contexts/projectContext.jsx';
 import { ThemeContext } from '@emotion/react';
+import AppAlert from './components/AppAlert/index.jsx';
+import { ToastProvider } from './contexts/toastContext.jsx';
 
 
 function App() {
@@ -55,21 +57,21 @@ function App() {
 
   return (
     <div className={`App ${theme}`}>
+      <ToastProvider>
+        <AuthProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={
+                <PrivateRoute>
+                  <ProjectProvider theme={theme} setTheme={setTheme}>
+                    <SettingsProvider>
+                      <MainWorkspacePage />
+                    </SettingsProvider>
+                  </ProjectProvider>
+                </PrivateRoute>
+              } />
 
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={
-              <PrivateRoute>
-                <ProjectProvider theme={theme} setTheme={setTheme}>
-                  <SettingsProvider>
-                    <MainWorkspacePage />
-                  </SettingsProvider>
-                </ProjectProvider>
-              </PrivateRoute>
-            } />
-
-            {/* <Route path="/projects" element={
+              {/* <Route path="/projects" element={
               <PrivateRoute>
                 <ProjectsProvider>
                     <ProjectsPage />
@@ -77,15 +79,16 @@ function App() {
               </PrivateRoute>
             } /> */}
 
-            <Route path="/sign-up" element={<AuthRoute><RegisterPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
-            <Route path="/verify" element={<AuthRoute><VerifyAccount theme={theme} setTheme={setTheme} /></AuthRoute>} />
-            <Route path="/login" element={<AuthRoute><LoginPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
-            <Route path="/forgot-password" element={<AuthRoute><ForgotPasswordPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
-            <Route path="/reset-password" element={<AuthRoute><ResetPasswordPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
-            <Route path="*" element={<NotFound theme={theme} setTheme={setTheme} />} />
-          </Routes>
-        </Router>
-      </AuthProvider>
+              <Route path="/sign-up" element={<AuthRoute><RegisterPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
+              <Route path="/verify" element={<AuthRoute><VerifyAccount theme={theme} setTheme={setTheme} /></AuthRoute>} />
+              <Route path="/login" element={<AuthRoute><LoginPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
+              <Route path="/forgot-password" element={<AuthRoute><ForgotPasswordPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
+              <Route path="/reset-password" element={<AuthRoute><ResetPasswordPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
+              <Route path="*" element={<NotFound theme={theme} setTheme={setTheme} />} />
+            </Routes>
+          </Router>
+        </AuthProvider>
+      </ToastProvider>
     </div>
   );
 }
