@@ -1,26 +1,23 @@
-import { useContext, useRef, useState, useEffect } from "react";
-import { MainContext } from "../../contexts/mainContext.jsx";
-import makeApiRequest from "../../api";
-import ReactPlayer from "react-player";
-import CancelIcon from "@mui/icons-material/Cancel";
+import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
+import { useContext, useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import CustomSelectTwo from "../CustomSelectTwo";
-import { flattenMetadata, timeToSeconds } from '../../utils.js';
-import Chip from '../Chip/index.jsx';
-import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
-import SearchSection from '../SearchSection';
-import Faqs from '../Faqs';
-import Accordion from '../Accordion/index.jsx';
-import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
-import useCheckMobileScreen from '../../hooks/useCheckMobileScreen.js';
-import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
-import HorizontalCard from '../HorizontalCard/index.jsx';
-import GsFile from "../GsFile";
-import useFirebase from '../../hooks/useFirebase.js';
+import ReactPlayer from "react-player";
+import makeApiRequest from "../../api";
+import { MainContext } from "../../contexts/mainContext.jsx";
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
-import useResources from '../../hooks/useResources.js';
+import useFirebase from '../../hooks/useFirebase.js';
+import { flattenMetadata, timeToSeconds } from '../../utils.js';
+import Accordion from '../Accordion/index.jsx';
+import Chip from '../Chip/index.jsx';
+import CustomSelectTwo from "../CustomSelectTwo";
+import Faqs from '../Faqs';
+import GsFile from "../GsFile";
+import HorizontalCard from '../HorizontalCard/index.jsx';
+import SearchSection from '../SearchSection';
+import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
+import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
@@ -29,7 +26,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     setCurrentResource,
     resourceURL,
     chatLoaded,
-    setResourceURL,
     sourcesWithExclusive, setSourcesWithExclusive,
     player,
     setIsSourceUncheckedOrClosed,
@@ -38,27 +34,13 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     setIsPlayerReady,
     contentPanelContainerRef,
     jumpToPage,
-    selectedNote,
-    setCommittedSources,
-    setShowMetadata,
-    sourcesTobeCommited,
-    setIsFoundationLlm,
-    setIsExclusiveChecked,
-    displayedSources,
     committedSources,
     activeView,
     theme,
-    commitSelectedSources,
-    selectedStory,
-    categoryOptions,
-    setKnowledgeBase,
-    setActiveTab,
     generatedResources,
   } = useContext(MainContext);
 
   const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
-
-  const { categoryValuesWithoutAll } = useResources();
 
   const { getPublicUrl } = useFirebase();
 
@@ -338,22 +320,20 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                   />
                 </div>}
                 <>
-                  {translatedResource?.transcription?.content !== undefined && <>
-                    <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.transcription?.title}>
-                      <p
-                        className={`text-md ${theme === "light"
-                          ? "text-textColor-300"
-                          : "text-textColor-100"
-                          }`}
-
-                      // dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
-                      >
-                        <div className="flex flex-col gap-3">
-                          {
-                            Array.isArray(translatedResource?.transcription?.content) && translatedResource?.transcription?.content?.map((topic, index) => (
+                  {/* {translatedResource?.transcription?.content !== undefined && <> */}
+                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.transcription?.title || "Transcription"}>
+                    <p
+                      className={`text-md ${theme === "light"
+                        ? "text-textColor-300"
+                        : "text-textColor-100"
+                        }`}
+                    >
+                      <div className="flex flex-col gap-3">
+                        {
+                          (translatedResource?.transcription?.content &&
+                            Array.isArray(translatedResource?.transcription?.content)) ? translatedResource?.transcription?.content?.map((topic, index) => (
                               <div key={topic.content} className="flex flex-col">
                                 <div>
-                                  {/* <h4 className='text-[16px] font-semibold '>{topic.speaker?.toLowerCase()}: </h4> */}
                                   <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                                     setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
                                     contentPanelContainerRef?.current.scrollTo({
@@ -361,18 +341,21 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                                       behavior: "smooth", // Enables smooth scrolling
                                     });
                                   }}>
-                                    {/* <AccessTimeIcon size="8px" className="text-[8px]" /> */}
                                     <h6 className='mb-0 text-xs font-semibold text-primary-200 '>{topic.start_time} - {topic.end_time}</h6>
                                   </div>
                                 </div>
                                 <p className="select-text" dangerouslySetInnerHTML={{ __html: topic.content.replace(/\n/g, "<br>") }}></p>
                               </div>
                             ))
-                          }
-                        </div>
-                      </p>
-                    </Accordion>
-                  </>}
+                            :
+                            (
+                              <p className="italic">Transcription not available for this source.</p>
+                            )
+                        }
+                      </div>
+                    </p>
+                  </Accordion>
+                  {/* </>} */}
                   {translatedResource?.summary?.content !== undefined &&
                     <>
                       <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.summary?.title}>
@@ -385,31 +368,12 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                         ></p>
                       </Accordion>
                     </>}
-
-                  {/* {translatedResource?.topic_summaries?.content !== undefined &&
-                    <>
-                      <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.topic_summaries?.title}>
-                        <p
-                          className={`text-md ${theme === "light"
-                            ? "text-textColor-300"
-                            : "text-textColor-100"
-                            }`}
-                          dangerouslySetInnerHTML={{ __html: `${translatedResource?.topic_summaries?.content?.replace(/\n/gi, '<br />')}` }}
-                        ></p>
-                      </Accordion>
-                    </>} */}
                 </>
 
                 {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
                 {translatedResource?.chapters?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.chapters?.title}>
                   {/* {isMobile ? ( */}
                   <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
-                  {/* ) : (
-                    <>
-                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
-                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
-                    </>
-                  )} */}
                 </Accordion>}
 
 
@@ -433,7 +397,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                       {
                         translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
                       }
-                      {/* {translatedResource?.keywords?.content} */}
                     </p>
                   </Accordion>
                 </>}
@@ -455,17 +418,10 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       {
         currentResource?.file_type === "pdf" && (
           <>
-            {/* <iframe
-              src="https://storage.googleapis.com/crispai-app-462614.firebasestorage.app/pdf_uploads/pdfs/media/Deep%20Seek.pdf"
-              width="100%"
-              height="600px"
-              className="w-[90%] mx-auto"
-            /> */}
             <div
               className="relative w-[90%] h-[430px] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
               ref={contentPanelContainerRef}
               style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
-            // style={{ height: '370px', overflow: 'auto' }}
             >
               <Document
                 className="!w-full mx-auto relative"
@@ -504,7 +460,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                   }`}
               >
                 {/* search */}
-                {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
                 <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-10 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
                   <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
@@ -518,20 +473,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                     className="!border-none"
                   />
                 </div>}
-
-                {/* {translatedResource?.transcription?.content !== undefined && <>
-                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.transcription?.title}>
-                    <p
-                      className={`text-md ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
-                    >
-                    </p>
-                  </Accordion>
-                </>} */}
                 {translatedResource?.summary?.content !== undefined && <>
                   <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.summary?.title}>
                     <p
@@ -547,12 +488,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 {translatedResource?.chapters?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.chapters?.title}>
                   {/* {isMobile ? ( */}
                   <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
-                  {/* ) : (
-                    <>
-                      <Timeline workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content?.slice(0, visibleChaptersCount)} />
-                      {translatedResource?.chapters?.content?.slice(0, visibleChaptersCount).length < translatedResource?.chapters?.content?.length && <p className='flex flex-col items-center justify-center p-2 mx-auto mt-3 text-lg font-semibold text-white rounded-full cursor-pointer w-9 h-9 bg-primary-300' onClick={showMoreChapters}>+</p>}
-                    </>
-                  )} */}
                 </Accordion>}
 
                 {translatedResource?.highlights?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.highlights?.title}>
@@ -575,7 +510,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                       {
                         translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
                       }
-                      {/* {translatedResource?.keywords?.content} */}
                     </p>
                   </Accordion>
                 </>}
@@ -586,31 +520,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
                   <Faqs chosenLanguage={chosenLanguage} heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
                 </div>}
-
-                {/* {translatedResource?.transcription?.content !== undefined && <>
-                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.transcription?.title}>
-                    <p
-                      className={`text-md ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.transcription?.content?.replace(/\n/gi, '<br />')}` }}
-                    ></p>
-                  </Accordion>
-                </>} */}
-                {/* 
-                {translatedResource?.keywords?.content !== undefined && (<>
-                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.keywords?.title}>
-                    <p
-                      className={`flex items-center gap-2 flex-wrap`}
-                    >
-                      {
-                        translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
-                      }
-                    </p>
-                  </Accordion>
-                </>)} */}
               </div>
             ) : (
               <div className="flex items-center gap-3 mt-10">
@@ -640,8 +549,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                   }`}
               >
                 {/* search */}
-                {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
-                {/* <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' /> */}
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-10 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
                   <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
                   <CustomSelectTwo
@@ -676,7 +583,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                       {
                         translatedResource?.keywords?.content?.map(({ keyword, id }) => <Chip key={id} content={keyword} />)
                       }
-                      {/* {translatedResource?.metadata?.keywords?.content} */}
                     </p>
                   </Accordion>
                 </>}
