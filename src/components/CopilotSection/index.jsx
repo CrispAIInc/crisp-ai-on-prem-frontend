@@ -142,7 +142,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     currentChat,
     chatHistory,
     setChatHistory,
-    checkedSourcesCount
   } = useContext(MainContext);
 
   const { currentProject } = useContext(ProjectContext);
@@ -195,25 +194,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       });
     }
   }, [messages]);
-
-  // useEffect(() => {
-  //   setChatLoaded(false);
-  //   async function fetchChat() {
-  //     const data = await makeApiRequest(
-  //       `/chat/${selectedCategory}`,
-  //       "post",
-  //       JSON.stringify({
-  //         sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
-  //         category: selectedCategory,
-  //         selectedAll,
-  //         is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
-  //       })
-  //     );
-  //     setChatLoaded(data?.chat_is_initialized);
-  //   }
-
-  //   fetchChat();
-  // }, [selectedCategory, selectedSources, displayedSources]);
 
   useEffect(() => {
     if (
@@ -603,33 +583,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           }
         })
       );
-
-      // setCurrentChat(prev => ({
-      //   ...prev,
-      //   messages: messages.map((message, index) => {
-      //     if (message?.sender === "user") {
-      //       const updatedMessage = {
-      //         ...message,
-      //         text: data.translated_queries[userIndex],
-      //         question: data.translated_queries[userIndex],
-      //       };
-      //       userIndex++;
-      //       return updatedMessage;
-      //     } else if (message?.sender === "bot") {
-
-      //       const updatedMessage = {
-      //         ...message,
-      //         references: message?.references,
-      //         text: data.translated_responses[botIndex],
-      //         botText: data.translated_responses[botIndex],
-      //       };
-      //       botIndex++;
-      //       return updatedMessage;
-      //     } else {
-      //       return message;
-      //     }
-      //   })
-      // }));
 
       setCombinedSummary(data?.translated_combined_summary);
     } catch (e) {
@@ -1093,7 +1046,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       {/* </div> */}
       <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
 
-        <div className="flex items-center justify-between ml-auto">
+        <div className="flex items-center justify-between">
           <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
         </div>
         {

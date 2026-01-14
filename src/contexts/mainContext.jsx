@@ -1182,12 +1182,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     }, []);
 
     useEffect(() => {
-        if (Array.isArray(currentChat)) {
-            workspaceContainer?.current?.scrollTo({
-                top: 0,
-                behavior: "smooth", // Enables smooth scrolling
-            });
-        }
+        // if (Array.isArray(currentChat)) {
+        workspaceContainer?.current?.scrollTo({
+            top: 0,
+            behavior: "smooth", // Enables smooth scrolling
+        });
+        // }
     }, [currentChat]);
 
     const [combinedSummary, setCombinedSummary] = useState("");

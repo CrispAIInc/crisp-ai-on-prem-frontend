@@ -1,18 +1,15 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import HorizontalChatHistoryList from '../HorizontalChatHistoryList';
 import AddIcon from '@mui/icons-material/Add';
-import KeyboardArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardArrowLeftOutlined';
-import { MainContext } from '../../contexts/mainContext';
-import makeApiRequest from '../../api';
-import ChatHistoryPopup from '../ChatHistoryPopup';
+import CloseIcon from "@mui/icons-material/Close";
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
-import { generateRandomId } from '../../utils';
-import { AuthContext } from '../../contexts/authContext';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { MainContext } from '../../contexts/mainContext';
 import useChat from '../../hooks/useChat';
 import { useGlowingBorder } from '../../hooks/useGlowingBorder';
+import ChatHistoryPopup from '../ChatHistoryPopup';
+import Chip from '../Chip';
 
 function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
-    const { theme, setCurrentChat, chatHistory, setChatHistory, workspaceContainer } = useContext(MainContext);
+    const { theme, currentChat, setCurrentChat, chatHistory, setChatHistory, workspaceContainer } = useContext(MainContext);
 
     const triggerGlow = useGlowingBorder(crispWizInputContainerRef);
 
@@ -70,22 +67,32 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
     }
 
     return (
-        <div className={``}>
-            {/* {chatHistory.length > 0 && <div className={`relative flex-1 w-[80%] origin-right transition-all duration-300 ease-in-out ${!isHorizontalChatHistoryVisibile && 'scale-x-0'}`}>
-                <HorizontalChatHistoryList />
-                <div className={`pointer-events-none absolute right-0 top-0 h-full w-16
-                      bg-gradient-to-r from-transparent ${theme === 'light' ? 'to-background_workspace' : ''} `} />
-            </div>} */}
-            <div className="flex gap-1 p-2 w-fit">
-                {/* <KeyboardArrowLeftOutlinedIcon onClick={() => setIsHorizontalChatHistoryVisibile(prev => !prev)} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'} ${isHorizontalChatHistoryVisibile && 'rotate-180'}`} /> */}
-
-                <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
-
-                <div className="relative">
-                    {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup crispWizInputContainerRef={crispWizInputContainerRef}
-                        crispWizInputRef={crispWizInputRef} chatTitleUpdaterModalRef={chatTitleUpdaterModalRef} createNewChat={createNewChat} twClasses={`absolute top-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
-                    <ScheduleOutlinedIcon ref={keyboardArrowUpRef} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
+        <div className={`flex gap-1 p-2 ${currentChat ? 'w-full' : 'ml-auto'}`}>
+            {/* current chat name */}
+            {currentChat && (
+                <div className="flex items-center flex-1 gap-1">
+                    {/* <CloseIcon fontSize="2" className='cursor-pointer' onClick={() => setCurrentChat(null)} /> */}
+                    <Chip
+                        content={(
+                            <>
+                                <CloseIcon className='font-bold cursor-pointer !text-[16px]' onClick={() => setCurrentChat(null)} />
+                                <p className={`text-gradient-x font-bold`}>{currentChat.title}</p>
+                            </>
+                        )}
+                        cssClasses='flex items-center gap-1'
+                    />
+                    {/* <p className={`text-gradient-x font-bold`}>{currentChat.title}</p> */}
                 </div>
+            )}
+
+            {/* add new chat icon */}
+            <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
+
+            {/* Chat istory popup */}
+            <div className="relative">
+                {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup crispWizInputContainerRef={crispWizInputContainerRef}
+                    crispWizInputRef={crispWizInputRef} chatTitleUpdaterModalRef={chatTitleUpdaterModalRef} createNewChat={createNewChat} twClasses={`absolute top-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
+                <ScheduleOutlinedIcon ref={keyboardArrowUpRef} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
             </div>
         </div>
     );
