@@ -229,7 +229,7 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                         viewMode === "grid" ? (
                             <>
                                 {getSortedProjects("created_at", sortOrder).map((project) => (
-                                    <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
+                                    <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={{ ...project, is_shared: true }} />
                                 ))}
                             </>
                         ) : (
