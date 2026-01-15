@@ -61,7 +61,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
 
         try {
             const payload = {
-                sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: source.category.filter(cat => cat !== "all")[0] })),
+                sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
                 selectedOptions: selectedOptions.map(op => op.id),
                 inputContext: context,
                 verbosityValue: verbosityValue
