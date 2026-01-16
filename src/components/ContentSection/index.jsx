@@ -449,12 +449,12 @@ const ContentSection = ({
 
             setChatLoaded(false);
             const { chat_is_initialized } = await makeApiRequest(
-                `/chat/${selectedCategory}`,
+                `/chat/all`,
                 "post",
                 JSON.stringify({
-                    sources: selectedSources,
-                    category: selectedCategory,
-                    selectedAll,
+                    sources: [],
+                    category: "all",
+                    selectedAll: false,
                     reinitialize: true,
                 })
             );
