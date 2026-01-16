@@ -387,30 +387,25 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // const [selectedCategory] = useState("all");
 
-    useEffect(() => {
-        setChatLoaded(false);
-        if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length > 0) {
-            // checked
-        } else {
-            // unchecked
-        }
-        // setCommittedSources(selectedSources);
-        async function fetchChat() {
-            const data = await makeApiRequest(
-                `/chat/${selectedCategory}`,
-                "post",
-                JSON.stringify({
-                    sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
-                    category: selectedCategory,
-                    selectedAll,
-                    is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
-                })
-            );
-            setChatLoaded(data?.chat_is_initialized);
-        }
+    // useEffect(() => {
+    //     setChatLoaded(false);
+    //     // setCommittedSources(selectedSources);
+    //     async function fetchChat() {
+    //         const data = await makeApiRequest(
+    //             `/chat/${selectedCategory}`,
+    //             "post",
+    //             JSON.stringify({
+    //                 sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
+    //                 category: selectedCategory,
+    //                 selectedAll,
+    //                 is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
+    //             })
+    //         );
+    //         setChatLoaded(data?.chat_is_initialized);
+    //     }
 
-        fetchChat();
-    }, [selectedCategory, selectedSources]);
+    //     fetchChat();
+    // }, [selectedCategory, selectedSources]);
 
     const [fromChat, setFromChat] = useState(false);
     const [isManualNote, setIsManualNote] = useState(false);
