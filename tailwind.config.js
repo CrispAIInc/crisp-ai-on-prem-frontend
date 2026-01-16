@@ -127,7 +127,7 @@ export default {
         'fade-in': 'fadeIn 1.5s forwards infinite',
         customPulse: 'customPulse 1.5s ease-in-out infinite',
         'glow-twice': 'glowPulse .75s linear forwards 2',
-        'glow-multiple': 'glowPulse .9s linear 10 forwards',
+        'glow-multiple': 'glowPulse .9s linear 5 forwards',
         'glow-infinite': 'glowPulse .9s linear infinite',
       },
       colors: {
