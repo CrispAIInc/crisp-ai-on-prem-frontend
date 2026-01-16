@@ -71,14 +71,6 @@ function App() {
                 </PrivateRoute>
               } />
 
-              {/* <Route path="/projects" element={
-              <PrivateRoute>
-                <ProjectsProvider>
-                    <ProjectsPage />
-                </ProjectsProvider>
-              </PrivateRoute>
-            } /> */}
-
               <Route path="/sign-up" element={<AuthRoute><RegisterPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
               <Route path="/verify" element={<AuthRoute><VerifyAccount theme={theme} setTheme={setTheme} /></AuthRoute>} />
               <Route path="/login" element={<AuthRoute><LoginPage theme={theme} setTheme={setTheme} /></AuthRoute>} />

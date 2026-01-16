@@ -133,24 +133,25 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
 
 
 const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
-    // const {projects} = useContext(ProjectsContext);
+
+    console.log(projects);
+
+    const exampleProject = projects?.find(proj => proj?.is_shared === true);
+    console.log(exampleProject);
 
     const [sortOrder, setSortOrder] = useState('asc');
 
     const { theme } = useContext(ProjectContext);
 
-    const sortedProjects = useMemo(() => {
-        return sortByDate(projects, 'created_at', sortOrder);
-    }, [projects, sortOrder]);
-
     const getSortedProjects = useCallback(
         (key, order = sortOrder) => {
-            return sortByDate(projects, key, order);
+            const sorted = sortByDate(projects, key, order);
+            return sorted?.filter(item => !('is_shared' in item) || item.is_shared !== true);
         },
         [projects, sortOrder]
     );
 
-    const projectCount = sortedProjects.length;
+    const projectCount = getSortedProjects("created_at", sortOrder).length;
 
     const [status, setStatus] = useState("");
 
@@ -228,11 +229,13 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                     {
                         viewMode === "grid" ? (
                             <>
-                                {getSortedProjects("created_at", sortOrder).map((project) => (
-                                    <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={{ ...project, is_shared: true }} />
+                                <ProjectCard setProjects={setProjects} setCurrentProject={setCurrentProject} project={exampleProject} />
+                                {getSortedProjects("created_at", sortOrder).map((project, index) => (
+                                    <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                                 ))}
                             </>
                         ) : (
+
                             <ProjectsTable projects={getSortedProjects("created_at", sortOrder)} />
                         )
                     }
