@@ -11,8 +11,6 @@ export default function MainWorkspacePage() {
 
   const { theme, setTheme, projects, setProjects, currentProject, setCurrentProject } = useContext(ProjectContext);
 
-  console.log(projects);
-
   return (
     <>
       <Helmet>
@@ -26,7 +24,7 @@ export default function MainWorkspacePage() {
           <MainProvider theme={theme} setTheme={setTheme} >
             <MainWorkspace currentProject={currentProject} setCurrentProject={setCurrentProject} />
           </MainProvider>
-        ) : <ProjectsPage setCurrentProject={setCurrentProject} projects={[{ ...projects[0], is_shared: true, created_at: new Date() }, ...projects]} setProjects={setProjects} />}
+        ) : <ProjectsPage setCurrentProject={setCurrentProject} projects={projects} setProjects={setProjects} />}
       </div>
     </>
   );

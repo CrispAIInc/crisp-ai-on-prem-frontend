@@ -134,19 +134,16 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
 
 const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
 
-    console.log(projects);
-
-    const exampleProject = projects?.find(proj => proj?.is_shared === true);
-    console.log(exampleProject);
-
     const [sortOrder, setSortOrder] = useState('asc');
 
     const { theme } = useContext(ProjectContext);
 
     const getSortedProjects = useCallback(
         (key, order = sortOrder) => {
-            const sorted = sortByDate(projects, key, order);
-            return sorted?.filter(item => !('is_shared' in item) || item.is_shared !== true);
+            if (projects[0]?.is_shared === true) {
+                return [projects[0], ...sortByDate(projects.slice(1), key, order)];
+            }
+            return sortByDate(projects, key, order);
         },
         [projects, sortOrder]
     );
@@ -229,8 +226,7 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                     {
                         viewMode === "grid" ? (
                             <>
-                                <ProjectCard setProjects={setProjects} setCurrentProject={setCurrentProject} project={exampleProject} />
-                                {getSortedProjects("created_at", sortOrder).map((project, index) => (
+                                {getSortedProjects("created_at", sortOrder).map((project) => (
                                     <ProjectCard setProjects={setProjects} key={project.project_id} setCurrentProject={setCurrentProject} project={project} />
                                 ))}
                             </>
