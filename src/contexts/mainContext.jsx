@@ -86,10 +86,10 @@ export default function MainProvider({ children, theme, setTheme }) {
     useLayoutEffect(() => {
         const makeRequest = async () => {
             try {
+                axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
                 const data = await makeApiRequest(
                     "/content",
-                    "post",
-                    JSON.stringify(categoryOptions.map((option) => option.value).filter(item => item !== "all"))
+                    "GET"
                 );
                 setKnowledgeBase(data);
             } catch (error) {
@@ -98,7 +98,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         };
 
         makeRequest();
-    }, [categoryOptions]);
+    }, []);
 
     useEffect(() => {
         async function intializeContent() {
