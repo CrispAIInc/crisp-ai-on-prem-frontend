@@ -1,7 +1,7 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import AnimatedText from "../AnimatedText";
 import useFirebase from '../../hooks/useFirebase';
 import { formatReadableDate } from '../../utils';
@@ -11,10 +11,13 @@ import LoadingSpinner from '../LoadingSpinner';
 import ProjectNameUpdaterModal from "../ProjectNameUpdatedModal";
 import useProject from '../../hooks/useProject';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import { AuthContext } from '../../contexts/authContext';
 
 const PROJECT_OWNER_ID = "uCWw2cICQzb2qyqWkwSPqPTzBkV2";
 
 const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }) => {
+
+    const { user: { userId } } = useContext(AuthContext);
 
     const { deleteProject } = useProject();
 
@@ -74,7 +77,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                 <div className="relative z-40 flex flex-col justify-between h-full ">
                     {/* top showcase */}
                     <div className="flex items-center justify-between ">
-                        {(project?.is_shared && project.user_id !== PROJECT_OWNER_ID) ? (
+                        {(project?.is_shared && userId !== PROJECT_OWNER_ID) ? (
                             <div className="flex items-center gap-2 px-2 py-1 bg-white rounded-md text-black/70 font-semibolt">
                                 <AutoAwesomeOutlinedIcon />
                                 <p>Example Project</p>
