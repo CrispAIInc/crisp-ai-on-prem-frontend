@@ -454,8 +454,9 @@ const ContentSection = ({
                 JSON.stringify({
                     sources: [],
                     category: "all",
+                    is_exclusive: false,
                     selectedAll: false,
-                    reinitialize: true,
+                    // reinitialize: true,
                 })
             );
             setChatLoaded(chat_is_initialized);
