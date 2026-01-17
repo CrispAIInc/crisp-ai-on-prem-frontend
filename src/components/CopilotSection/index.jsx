@@ -1055,7 +1055,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             <ImageUpload handleUpload={handleVisionUpload} />
             :
             <div ref={crispWizInputContainerRef} className={`flex items-center gap-2 w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
-              <input
+              <textarea
                 placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
                 value={input}
                 rows="1"
