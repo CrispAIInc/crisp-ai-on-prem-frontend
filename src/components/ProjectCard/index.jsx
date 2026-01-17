@@ -12,6 +12,8 @@ import ProjectNameUpdaterModal from "../ProjectNameUpdatedModal";
 import useProject from '../../hooks/useProject';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 
+const PROJECT_OWNER_ID = "uCWw2cICQzb2qyqWkwSPqPTzBkV2";
+
 const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }) => {
 
     const { deleteProject } = useProject();
@@ -72,7 +74,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                 <div className="relative z-40 flex flex-col justify-between h-full ">
                     {/* top showcase */}
                     <div className="flex items-center justify-between ">
-                        {project?.is_shared ? (
+                        {(project?.is_shared && project.user_id !== PROJECT_OWNER_ID) ? (
                             <div className="flex items-center gap-2 px-2 py-1 bg-white rounded-md text-black/70 font-semibolt">
                                 <AutoAwesomeOutlinedIcon />
                                 <p>Example Project</p>
