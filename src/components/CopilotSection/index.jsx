@@ -213,7 +213,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   let noteQuestion = useRef('');
   const [isFetchingRefs, setIsFetchingRefs] = useState(false);
   const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
-    if (!chatLoaded) return;
+    // if (!chatLoaded) return;
 
     if (message === "" && input === "") {
       return;
