@@ -452,11 +452,10 @@ const ContentSection = ({
                 `/chat/all`,
                 "post",
                 JSON.stringify({
-                    sources: [],
-                    category: "all",
-                    is_exclusive: false,
-                    selectedAll: false,
-                    // reinitialize: true,
+                    sources: selectedSources,
+                    category: selectedCategory,
+                    selectedAll,
+                    reinitialize: true,
                 })
             );
             setChatLoaded(chat_is_initialized);
