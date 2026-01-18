@@ -40,13 +40,17 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
         event.preventDefault();
         setIsSearching(true);
         try {
-            const { additional_sources, timestamp, page, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+            const { additional_sources, timestamp, page, message, success, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
                 selectedCategory,
                 searchQuestion,
                 currentResource: isGlobalSearch ? null : currentResource,
                 selectedFormat
             })
             );
+
+            if (!success) {
+                throw new Error(message);
+            }
             const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
             let resourceURL = '';
             if (source.file_type == 'video') {
@@ -76,7 +80,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             notify({
                 variant: "error",
                 heading: "Oops!",
-                subheading: "An error occured while discovering",
+                subheading: error.message || "An error occured while discovering",
             });
         } finally {
             setIsSearching(false);
