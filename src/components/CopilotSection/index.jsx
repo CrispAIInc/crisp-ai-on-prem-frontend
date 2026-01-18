@@ -27,6 +27,7 @@ import BaseHeading from "../BaseHeading";
 import toast from 'react-simple-toasts';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 import useChat from '../../hooks/useChat.js';
+import ChatInput from '../ChatInput/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -1054,27 +1055,42 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div ref={crispWizInputContainerRef} className={`flex items-center gap-2 w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
-              <textarea
-                placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
-                value={input}
-                rows="1"
-                ref={crispWizInputRef}
-                disabled={showCursor}
-                onChange={e => setInput(e.target.value)}
-                className={`!flex-1 pr-2 py-3 !pl-4 rounded-full bg-transparent outline-none`}
-                onKeyDown={(e) => {
+            <div className="mb-5" ref={crispWizInputContainerRef}>
+              <ChatInput
+                handleKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     sendMessage(input);
                   }
-                }} />
-              <div
-                className={`p-2 mr-4 text-sm cursor-pointer bg-textColor-300 text-white/80 rounded-full`}
-                onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
-              >
-                <SendIcon className={``} />
-              </div>
-            </div>}
+                }}
+                onSend={(message) => sendMessage(message)}
+                placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
+                value={input}
+                inputRef={crispWizInputRef}
+                onChange={value => setInput(value)}
+              />
+            </div>
+          // <div ref={crispWizInputContainerRef} className={`flex items-center gap-2 w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
+          //   <textarea
+          // placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
+          // value={input}
+          //     rows="1"
+          // ref={crispWizInputRef}
+          // disabled={showCursor}
+          // onChange={e => setInput(e.target.value)}
+          //     className={`!flex-1 pr-2 py-3 !pl-4 rounded-full bg-transparent outline-none`}
+          // onKeyDown={(e) => {
+          //   if (e.key === "Enter" && !e.shiftKey) {
+          //     sendMessage(input);
+          //   }
+          // }} />
+          // <div
+          //   className={`p-2 mr-4 text-sm cursor-pointer bg-textColor-300 text-white/80 rounded-full`}
+          //   onClick={(e) => { sendMessage(input); e.target.value = e.target.value?.replace(/(\r\n|\n\r)/gm, ""); }}
+          // >
+          //   <SendIcon className={``} />
+          // </div>
+          // </div>
+        }
 
       </section>
 
