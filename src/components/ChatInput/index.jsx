@@ -35,6 +35,7 @@ export default function ChatInput({
     return (
         <div
             className={`
+                relative
         w-full bg-transparent shadow-sm
         transition-all duration-200
         ${isMultiline ? "rounded-3xl" : "rounded-full"}
@@ -58,7 +59,7 @@ export default function ChatInput({
                     onClick={() => {
                         onSend(value.trim());
                     }}
-                    className={`flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/40' : 'hover:bg-textColor-300/30'}`}
+                    className={`absolute right-2 flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/40' : 'hover:bg-textColor-300/30'}`}
                 >
                     <NorthIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
                 </button>
