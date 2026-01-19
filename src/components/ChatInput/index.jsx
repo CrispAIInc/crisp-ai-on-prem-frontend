@@ -16,6 +16,8 @@ export default function ChatInput({
     const [isMultiline, setIsMultiline] = useState(false);
     const textareaRef = useRef(null);
 
+    const [showTooltip, setShowTooltip] = useState(false);
+
     useEffect(() => {
         const el = textareaRef.current;
         if (!el) return;
@@ -32,6 +34,14 @@ export default function ChatInput({
 
         setIsMultiline(el.scrollHeight > maxSingleHeight);
     }, [value]);
+
+    function handleMouseOver() {
+        setShowTooltip(Boolean(value.trim()) === false);
+    }
+
+    function handleMouseLeave() {
+        setShowTooltip(false);
+    }
 
     return (
         <div
@@ -60,12 +70,14 @@ export default function ChatInput({
                     onClick={() => {
                         onSend(value.trim());
                     }}
+                    onMouseOver={handleMouseOver}
+                    onMouseLeave={handleMouseLeave}
                     className={`absolute right-2 flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/40' : 'hover:bg-textColor-300/30'}`}
                 >
                     <NorthIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
 
                     {
-                        !value.trim() && (
+                        showTooltip && (
                             <AppTooltip content="Message is empty" />
                         )
                     }
