@@ -47,12 +47,12 @@ export default function ChatInput({
         <div
             className={`
                 relative
-        w-full shadow-sm
-        transition-all duration-200
-        ${isMultiline ? "rounded-3xl" : "rounded-full"}
-        focus-within:ring-2 focus-within:ring-neutral-300
-        ${theme === 'light' ? "!border !border-textColor-100/50 bg-transparent" : " bg-zinc-900"}
-      `}
+                w-full shadow-sm
+                rounded-3xl
+                transition-all duration-200
+                focus-within:ring-2 focus-within:ring-neutral-300
+                ${theme === 'light' ? "!border !border-textColor-100/50 bg-transparent" : " bg-zinc-900"}
+            `}
         >
             <div className="flex items-end gap-2 px-4 py-2">
                 <textarea

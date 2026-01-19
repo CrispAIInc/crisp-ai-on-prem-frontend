@@ -1063,7 +1063,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div className="mb-5 rounded-full" ref={crispWizInputContainerRef}>
+            <div className="mb-5 rounded-3xl" ref={crispWizInputContainerRef}>
               <ChatInput
                 handleKeyDown={(e) => handleKeyDown(e)}
                 onSend={(message) => sendMessage(message)}
