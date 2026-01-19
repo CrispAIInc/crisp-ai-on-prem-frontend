@@ -1055,21 +1055,22 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       {/* </div> */}
       <section className="flex copilot-chat-container input-area max-w-[1000px] flex-col">
 
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
-        </div>
+        </div> */}
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div className="mb-5 rounded-full" ref={crispWizInputContainerRef}>
+            <div className="mb-5 rounded-3xl" ref={crispWizInputContainerRef}>
               <ChatInput
                 handleKeyDown={(e) => handleKeyDown(e)}
                 onSend={(message) => sendMessage(message)}
                 placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
                 value={input}
-                inputRef={crispWizInputRef}
+                crispWizInputRef={crispWizInputRef}
+                crispWizInputContainerRef={crispWizInputContainerRef}
                 onChange={value => setInput(value)}
               />
             </div>

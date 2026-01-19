@@ -3,14 +3,16 @@ import SendIcon from "@mui/icons-material/Send";
 import NorthIcon from '@mui/icons-material/North';
 import { MainContext } from '../../contexts/mainContext';
 import AppTooltip from '../AppTooltip';
+import ChatHistory from '../ChatHistory';
 
 export default function ChatInput({
     onSend,
     placeholder,
     value,
     onChange,
-    inputRef,
-    handleKeyDown
+    crispWizInputRef,
+    handleKeyDown,
+    crispWizInputContainerRef
 }) {
     const { theme } = useContext(MainContext);
     const [isMultiline, setIsMultiline] = useState(false);
@@ -47,17 +49,17 @@ export default function ChatInput({
         <div
             className={`
                 relative
-        w-full shadow-sm
-        transition-all duration-200
-        ${isMultiline ? "rounded-3xl" : "rounded-full"}
-        focus-within:ring-2 focus-within:ring-neutral-300
-        ${theme === 'light' ? "!border !border-textColor-100/50 bg-transparent" : " bg-zinc-900"}
-      `}
+                w-full shadow-sm
+                rounded-3xl
+                transition-all duration-200
+                focus-within:ring-2 focus-within:ring-neutral-300
+                ${theme === 'light' ? "!border !border-textColor-100/50 bg-transparent" : " bg-zinc-900"}
+            `}
         >
             <div className="flex items-end gap-2 px-4 py-2">
                 <textarea
                     ref={el => {
-                        inputRef.current = el;
+                        crispWizInputRef.current = el;
                         textareaRef.current = el;
                     }}
                     rows={1}
@@ -77,7 +79,7 @@ export default function ChatInput({
                     onMouseLeave={handleMouseLeave}
                     className={`absolute right-2 flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/40' : 'hover:bg-textColor-300/30'}`}
                 >
-                    <NorthIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
+                    <NorthIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
 
                     {
                         showTooltip && (
@@ -85,6 +87,10 @@ export default function ChatInput({
                         )
                     }
                 </button>
+            </div>
+
+            <div className="flex items-center justify-between">
+                <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
             </div>
         </div>
     );
