@@ -73,7 +73,7 @@ function ReelViewer({
 
             notify({
                 variant: "success",
-                heading: "Reel downloaded successfully!",
+                heading: `${urlFileExtension === 'mp4' ? 'Reel' : "Edl"} downloaded successfully!`,
             });
         } catch (err) {
             console.error("Download failed", err);
