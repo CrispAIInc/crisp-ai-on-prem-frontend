@@ -1053,7 +1053,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       </section>}
 
       {/* </div> */}
-      <section className="flex copilot-chat-container input-area  max-w-[1000px] flex-col">
+      <section className="flex copilot-chat-container input-area max-w-[1000px] flex-col">
 
         <div className="flex items-center justify-between">
           <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
@@ -1063,7 +1063,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div className="mb-5" ref={crispWizInputContainerRef}>
+            <div className="mb-5 rounded-full" ref={crispWizInputContainerRef}>
               <ChatInput
                 handleKeyDown={(e) => handleKeyDown(e)}
                 onSend={(message) => sendMessage(message)}
