@@ -212,17 +212,25 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
   let noteQuestion = useRef('');
+
   const [isFetchingRefs, setIsFetchingRefs] = useState(false);
-  const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
-    // if (!chatLoaded) return;
 
-    if (message === "" && input === "") {
-      return;
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (!e.shiftKey) {
+        e.preventDefault(); // stop newline
+        sendMessage(input);
+      }
+      // Shift + Enter → allow default behavior (newline)
     }
+  };
 
-    if (input === '' && !isRepeated) return;
+  const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
 
-    // const validatedInput = input.replace('\n', ' ');
+    if (message.trim() === "" && input.trim() === "") return;
+
+    if (input.trim() === '' && !isRepeated) return;
+
     setShowCursor(true);
 
     let userMessage = "";
@@ -1057,11 +1065,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             :
             <div className="mb-5" ref={crispWizInputContainerRef}>
               <ChatInput
-                handleKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    sendMessage(input);
-                  }
-                }}
+                handleKeyDown={(e) => handleKeyDown(e)}
                 onSend={(message) => sendMessage(message)}
                 placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
                 value={input}
