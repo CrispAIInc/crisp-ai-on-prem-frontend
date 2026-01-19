@@ -58,7 +58,7 @@ export default function ChatInput({
                     onClick={() => {
                         onSend(value.trim());
                     }}
-                    className={`flex items-center justify-center transition rounded-full h-9 w-9   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/30' : 'hover:bg-textColor-300/30'}`}
+                    className={`flex items-center justify-center transition rounded-full h-9 w-9   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/40' : 'hover:bg-textColor-300/30'}`}
                 >
                     <NorthIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
                 </button>
