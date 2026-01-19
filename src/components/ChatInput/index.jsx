@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
+import NorthIcon from '@mui/icons-material/North';
 import { MainContext } from '../../contexts/mainContext';
 
 export default function ChatInput({
@@ -57,9 +58,9 @@ export default function ChatInput({
                     onClick={() => {
                         onSend(value.trim());
                     }}
-                    className="flex items-center justify-center text-white transition rounded-full h-9 w-9 bg-neutral-900 disabled:bg-neutral-300 disabled:cursor-not-allowed"
+                    className={`flex items-center justify-center transition rounded-full h-9 w-9   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/30' : 'hover:bg-textColor-300/30'}`}
                 >
-                    <SendIcon className={``} />
+                    <NorthIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
                 </button>
             </div>
         </div>
