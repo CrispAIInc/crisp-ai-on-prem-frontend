@@ -81,7 +81,7 @@ export default function AppAlert({
             onMouseEnter={pauseOnHover ? stopTimer : undefined}
             onMouseLeave={pauseOnHover ? startTimer : undefined}
             className={`
-        absolute z-[9999999] right-5 top-5 flex items-start gap-3
+        absolute z-[9999999] right-5 top-5 flex items-center gap-3
         w-full max-w-sm rounded-xl border
         px-4 py-3 shadow-lg backdrop-blur
         ${variants[variant]}
@@ -109,7 +109,7 @@ export default function AppAlert({
             {closable && (
                 <button
                     onClick={close}
-                    className="ml-2 rounded-md p-1 opacity-60 transition hover:opacity-100 hover:bg-black/5"
+                    className="p-1 ml-2 transition rounded-md opacity-60 hover:opacity-100 hover:bg-black/5"
                 >
                     ✕
                 </button>
