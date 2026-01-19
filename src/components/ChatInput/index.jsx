@@ -47,22 +47,25 @@ export default function ChatInput({
         <div
             className={`
                 relative
-        w-full bg-transparent shadow-sm
+        w-full shadow-sm
         transition-all duration-200
         ${isMultiline ? "rounded-3xl" : "rounded-full"}
         focus-within:ring-2 focus-within:ring-neutral-300
-        ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"}
+        ${theme === 'light' ? "!border !border-textColor-100 bg-textColor-100" : "!border !border-textColor-300 bg-textColor-300"}
       `}
         >
             <div className="flex items-end gap-2 px-4 py-2">
                 <textarea
-                    ref={inputRef}
+                    ref={el => {
+                        inputRef.current = el;
+                        textareaRef.current = el;
+                    }}
                     rows={1}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     onKeyDown={e => handleKeyDown(e)}
                     placeholder={placeholder}
-                    className="flex-1 py-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-40 placeholder:text-neutral-400"
+                    className="w-[95%] py-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-40 placeholder:text-neutral-400"
                 />
 
                 <button
