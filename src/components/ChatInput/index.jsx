@@ -3,14 +3,16 @@ import SendIcon from "@mui/icons-material/Send";
 import NorthIcon from '@mui/icons-material/North';
 import { MainContext } from '../../contexts/mainContext';
 import AppTooltip from '../AppTooltip';
+import ChatHistory from '../ChatHistory';
 
 export default function ChatInput({
     onSend,
     placeholder,
     value,
     onChange,
-    inputRef,
-    handleKeyDown
+    crispWizInputRef,
+    handleKeyDown,
+    crispWizInputContainerRef
 }) {
     const { theme } = useContext(MainContext);
     const [isMultiline, setIsMultiline] = useState(false);
@@ -57,7 +59,7 @@ export default function ChatInput({
             <div className="flex items-end gap-2 px-4 py-2">
                 <textarea
                     ref={el => {
-                        inputRef.current = el;
+                        crispWizInputRef.current = el;
                         textareaRef.current = el;
                     }}
                     rows={1}
@@ -85,6 +87,10 @@ export default function ChatInput({
                         )
                     }
                 </button>
+            </div>
+
+            <div className="flex items-center justify-between">
+                <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
             </div>
         </div>
     );
