@@ -853,203 +853,207 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       </section>
       {/* <div className="flex items-center flex-1 gap-3"> */}
       {messages?.length > 0 && <section
-        className={`copilot-chat-container relative flex flex-col  gap-3 overflow-x-hidden  ${messages?.length > 0 && 'py-3'} ${theme === "light" ? "!border" : "!border !border-textColor-300"
-          } ${isChatTranslating ? '' : 'h-[700px] overflow-y-auto'}`}
-        ref={chatAppRef}
+        className={`rounded-3xl overflow-hidden ${theme === "light" ? "!border" : "!border !border-textColor-300"
+          }`}
       >
-        {/* loading overlay */}
-        {isChatTranslating && <div className={`absolute top-0 left-0 flex flex-col items-center justify-center w-full h-[700px] ${theme === 'light' ? 'bg-white/80' : 'bg-black/80'}`}>
-          <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
-            <AutoAwesomeIcon className="animate-fade-in" />
-            <AnimatedText text='Translating chat...' />
-          </div>
-        </div>}
-        {
-          messages.map((message, index) =>
-            index % 2 == 0 ? (
-              <div key={index} className="my-2 break-all w-fit">
-                <div
-                  className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
-                >
-                  {
-                    message?.models?.includes('gpt-4-vision')
-                      ? (
-                        <>
-                          <div className="flex items-center justify-between">
-                            <b className="user-select-none">You: </b>
-                            <div
-                              className="cursor-pointer"
-                              onClick={() => {
-                                handleVisionUpload(message?.text?.images, message?.text?.query);
-                              }}
-                            >
-                              <ReplayOutlinedIcon />
+        <div
+          className={`copilot-chat-container relative flex flex-col gap-3 overflow-y-auto max-h-[500px] ${messages?.length > 0 && 'py-3'} ${isChatTranslating && 'overflow-y-visible h-auto'}`}
+          ref={chatAppRef}
+        >
+          {/* loading overlay */}
+          {isChatTranslating && <div className={`absolute top-0 left-0 flex flex-col items-center justify-center w-full h-full ${theme === 'light' ? 'bg-white/80' : 'bg-black/80'}`}>
+            <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
+              <AutoAwesomeIcon className="animate-fade-in" />
+              <AnimatedText text='Translating chat...' />
+            </div>
+          </div>}
+          {
+            messages.map((message, index) =>
+              index % 2 == 0 ? (
+                <div key={index} className="my-2 break-all w-fit">
+                  <div
+                    className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
+                  >
+                    {
+                      message?.models?.includes('gpt-4-vision')
+                        ? (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <b className="user-select-none">You: </b>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => {
+                                  handleVisionUpload(message?.text?.images, message?.text?.query);
+                                }}
+                              >
+                                <ReplayOutlinedIcon />
+                              </div>
                             </div>
+                            <div>
+                              {
+                                message?.text?.imgs_list.map((img, index) => {
+                                  return (
+                                    <img src={URL.createObjectURL(img)} key={img.name} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
+                                  );
+                                })
+                              }
+                              <p className="break-words break-keep">{message?.text?.query}</p>
+                              {/* <p>{message?.text}</p> */}
+                            </div>
+                            {isLightboxOpen && (
+                              <PreviewModal closeLightbox={closeLightbox} content={URL.createObjectURL(message?.text?.imgs_list[imagePreviewIndex])} />
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <b className="user-select-none">You: </b>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => {
+                                  handleRepeatQuestion(message?.text, message?.model, true);
+                                }}
+                              >
+                                <ReplayOutlinedIcon />
+                              </div>
+                            </div>
+                            <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0 break-keep" dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
+                          </>
+                        )
+                    }
+                  </div>
+                </div>
+              ) : (
+                <div key={index}>
+                  <div className={`message bot-message h-full`}>
+                    <div
+                      className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
+                        ? "bg-separator text-textColor-200"
+                        : "bg-background_workspace"
+                        } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
+                    >
+                      {message?.models?.includes("dall-e-3") && message?.img ? (
+                        <>
+                          <b
+                            className={`user-select-none ${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-100"
+                              }`}
+                          >
+                            Crisp Wiz:{" "}
+                          </b>
+                          <div className="flex flex-col flex-1">
+                            <img
+                              src={message?.img}
+                              alt="Image is Loading ..."
+                              onClick={openLightbox}
+                              className="flex-1 mx-auto cursor-pointer"
+                            />
+                            <div className="flex flex-wrap items-center gap-1 mt-3">
+                              <span
+                                className={`text-xs ${theme === "light"
+                                  ? "text-textColor-300"
+                                  : "text-textColor-200"
+                                  }`}
+                              >
+                                <AddOptionsModal
+                                  models={["dall-e-3"]}
+                                  text={message?.img}
+                                  addToNewNote={addToNewNote}
+                                  addToExistingNote={addToExistingNote}
+                                  setExistingNote={setExistingNote}
+                                  question={message?.question}
+                                  existingNote={existingNote}
+                                  onHide={onHide}
+                                  isNewNote={isNewNote}
+                                  setShowNoteModal={setShowNoteModal}
+                                  updateSelectedNote={setSelectedNote}
+                                  showNoteModal={showNoteModal}
+                                  selectedNote={selectedNote}
+                                  notes={notes} />
+                              </span>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-1 mt-3">
+                              <span
+                                className={`text-xs ${theme === "light"
+                                  ? "text-textColor-300"
+                                  : "text-textColor-200"
+                                  }`}
+                              >
+                                {message?.models?.map((item, index) => (
+                                  <span
+                                    key={index}
+                                    className={`text-xs divide-x ${theme === "light"
+                                      ? "text-textColor-300"
+                                      : "text-textColor-200"
+                                      }`}
+                                  >
+                                    {item.toUpperCase()}
+                                  </span>
+                                ))}
+                              </span>
+                            </div>
+                            {isLightboxOpen && (
+                              <PreviewModal closeLightbox={closeLightbox} content={message?.img} />
+                            )}
                           </div>
-                          <div>
-                            {
-                              message?.text?.imgs_list.map((img, index) => {
-                                return (
-                                  <img src={URL.createObjectURL(img)} key={img.name} alt='uploaded image' className='flex-1 mb-2 cursor-pointer' onClick={() => showImageInPreview(index)} />
-                                );
-                              })
-                            }
-                            <p className="break-words break-keep">{message?.text?.query}</p>
-                            {/* <p>{message?.text}</p> */}
-                          </div>
-                          {isLightboxOpen && (
-                            <PreviewModal closeLightbox={closeLightbox} content={URL.createObjectURL(message?.text?.imgs_list[imagePreviewIndex])} />
-                          )}
                         </>
                       ) : (
                         <>
-                          <div className="flex items-center justify-between">
-                            <b className="user-select-none">You: </b>
-                            <div
-                              className="cursor-pointer"
-                              onClick={() => {
-                                handleRepeatQuestion(message?.text, message?.model, true);
-                              }}
-                            >
-                              <ReplayOutlinedIcon />
+                          <b
+                            className={`user-select-none ${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-100"
+                              }`}
+                          >
+                            Crisp Wiz:{" "}
+                          </b>
+                          <div
+                            className={`${theme === "light"
+                              ? "text-textColor-300"
+                              : "text-textColor-100"
+                              } break-words`}
+                          >
+                            <ChatMessage text={message?.botText} refs={message?.refs} />
+                          </div>
+                          {showCursor && index == responseIndex ? (
+                            <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
+                              <AutoAwesomeIcon className="animate-fade-in" />
+                              <AnimatedText text='Thinking...' />
                             </div>
-                          </div>
-                          <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0 break-keep" dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
-                        </>
-                      )
-                  }
-                </div>
-              </div>
-            ) : (
-              <div key={index}>
-                <div className={`message bot-message h-full`}>
-                  <div
-                    className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
-                      ? "bg-separator text-textColor-200"
-                      : "bg-background_workspace"
-                      } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
-                  >
-                    {message?.models?.includes("dall-e-3") && message?.img ? (
-                      <>
-                        <b
-                          className={`user-select-none ${theme === "light"
-                            ? "text-textColor-300"
-                            : "text-textColor-100"
-                            }`}
-                        >
-                          Crisp Wiz:{" "}
-                        </b>
-                        <div className="flex flex-col flex-1">
-                          <img
-                            src={message?.img}
-                            alt="Image is Loading ..."
-                            onClick={openLightbox}
-                            className="flex-1 mx-auto cursor-pointer"
-                          />
-                          <div className="flex flex-wrap items-center gap-1 mt-3">
-                            <span
-                              className={`text-xs ${theme === "light"
-                                ? "text-textColor-300"
-                                : "text-textColor-200"
-                                }`}
-                            >
-                              <AddOptionsModal
-                                models={["dall-e-3"]}
-                                text={message?.img}
-                                addToNewNote={addToNewNote}
-                                addToExistingNote={addToExistingNote}
-                                setExistingNote={setExistingNote}
-                                question={message?.question}
-                                existingNote={existingNote}
-                                onHide={onHide}
-                                isNewNote={isNewNote}
-                                setShowNoteModal={setShowNoteModal}
-                                updateSelectedNote={setSelectedNote}
-                                showNoteModal={showNoteModal}
-                                selectedNote={selectedNote}
-                                notes={notes} />
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap items-center gap-1 mt-3">
-                            <span
-                              className={`text-xs ${theme === "light"
-                                ? "text-textColor-300"
-                                : "text-textColor-200"
-                                }`}
-                            >
-                              {message?.models?.map((item, index) => (
-                                <span
-                                  key={index}
-                                  className={`text-xs divide-x ${theme === "light"
-                                    ? "text-textColor-300"
-                                    : "text-textColor-200"
-                                    }`}
-                                >
-                                  {item.toUpperCase()}
-                                </span>
-                              ))}
-                            </span>
-                          </div>
-                          {isLightboxOpen && (
-                            <PreviewModal closeLightbox={closeLightbox} content={message?.img} />
-                          )}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <b
-                          className={`user-select-none ${theme === "light"
-                            ? "text-textColor-300"
-                            : "text-textColor-100"
-                            }`}
-                        >
-                          Crisp Wiz:{" "}
-                        </b>
-                        <div
-                          className={`${theme === "light"
-                            ? "text-textColor-300"
-                            : "text-textColor-100"
-                            } break-words`}
-                        >
-                          <ChatMessage text={message?.botText} refs={message?.refs} />
-                        </div>
-                        {showCursor && index == responseIndex ? (
-                          <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
-                            <AutoAwesomeIcon className="animate-fade-in" />
-                            <AnimatedText text='Thinking...' />
-                          </div>
-                        ) : null}
-                        {
-                          (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
-                        }
-
-                        <AddOptionsModal
-                          text={
-                            message?.botText
+                          ) : null}
+                          {
+                            (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                           }
-                          addToNewNote={addToNewNote}
-                          refs={message?.refs}
-                          addToExistingNote={addToExistingNote}
-                          setExistingNote={setExistingNote}
-                          question={noteQuestion.current}
-                          existingNote={existingNote}
-                          onHide={onHide}
-                          isNewNote={isNewNote}
-                          setShowNoteModal={setShowNoteModal}
-                          updateSelectedNote={setSelectedNote}
-                          showNoteModal={showNoteModal}
-                          selectedNote={selectedNote}
-                          notes={notes}
-                        />
-                      </>
-                    )}
+
+                          <AddOptionsModal
+                            text={
+                              message?.botText
+                            }
+                            addToNewNote={addToNewNote}
+                            refs={message?.refs}
+                            addToExistingNote={addToExistingNote}
+                            setExistingNote={setExistingNote}
+                            question={noteQuestion.current}
+                            existingNote={existingNote}
+                            onHide={onHide}
+                            isNewNote={isNewNote}
+                            setShowNoteModal={setShowNoteModal}
+                            updateSelectedNote={setSelectedNote}
+                            showNoteModal={showNoteModal}
+                            selectedNote={selectedNote}
+                            notes={notes}
+                          />
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )
             )
-          )
-          // )
-        }
+            // )
+          }
+        </div>
       </section>}
 
       {/* </div> */}
