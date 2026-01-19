@@ -63,7 +63,7 @@ export default function Login() {
                 navigate('/');
             }, 3000);
         } catch (e) {
-            setError(e?.message || e?.response?.data?.message || "Please verify your data and try again.");
+            setError(e.message || "Please verify your data and try again.");
             setIsPending(false);
         }
     }

@@ -33,30 +33,54 @@ axiosInstance.interceptors.request.use(
  * Generic function for calling the backend API
  */
 
-const makeApiRequest = async (endpoint, method = 'get', data = null, headers = {'Content-Type': 'application/json'}, config = {}) => {
-
+const makeApiRequest = async (
+    endpoint,
+    method = 'get',
+    data = null,
+    headers = { 'Content-Type': 'application/json' },
+    config = {}
+) => {
     try {
-        // add withCredentials
-        // config.withCredentials = true;
-        // const token = await getJwt();
-        // if (token) {
-        //     headers = {...headers, 'Authorization': `Bearer ${token}`};
-        // } else {
-        //     delete headers['Authorization'];
-        // }
         const response = await axiosInstance({
             url: endpoint,
             method,
-            data,
+            ...(method.toLowerCase() === 'get' ? { params: data } : { data }),
             headers,
             ...config,
         });
+
+        // Optional: if backend uses success=false even with 200
+        if (response.data?.success === false) {
+            const error = new Error(response.data.message || 'Request failed');
+            error.data = response.data;
+            throw error;
+        }
+
         return response.data;
     } catch (error) {
-        console.error('Request failed because: ', error.message);
-        throw error;
+        // Axios error (backend responded)
+        if (error.response) {
+            const backendError = error.response.data;
+
+            const customError = new Error(
+                backendError?.message || 'Something went wrong'
+            );
+
+            customError.status = error.response.status;
+            customError.data = backendError;
+
+            throw customError;
+        }
+
+        // Network / timeout / unexpected error
+        const unknownError = new Error(
+            error.message || 'Network error'
+        );
+
+        throw unknownError;
     }
 };
+
 
 
 export default makeApiRequest;
