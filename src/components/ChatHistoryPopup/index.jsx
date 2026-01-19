@@ -175,7 +175,7 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
 
 
     return (
-        <div ref={popupRef} className={` p-2 w-[20vw] ${theme === 'light' ? "text-textColor-300 bg-white" : "text-textColor-100 !bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden ${twClasses}`}>
+        <div ref={popupRef} className={` p-2 w-[20vw] ${theme === 'light' ? "text-textColor-300 bg-white" : "text-textColor-100 !bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden ${twClasses} z-50`}>
             {/* <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div> */}
 
