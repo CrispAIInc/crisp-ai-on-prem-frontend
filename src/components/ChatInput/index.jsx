@@ -51,7 +51,7 @@ export default function ChatInput({
         transition-all duration-200
         ${isMultiline ? "rounded-3xl" : "rounded-full"}
         focus-within:ring-2 focus-within:ring-neutral-300
-        ${theme === 'light' ? "!border !border-textColor-100 bg-textColor-100" : "!border !border-textColor-300 bg-textColor-300"}
+        ${theme === 'light' ? "!border !border-textColor-100/50 bg-transparent" : " bg-zinc-900"}
       `}
         >
             <div className="flex items-end gap-2 px-4 py-2">
