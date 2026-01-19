@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
+import { MainContext } from '../../contexts/mainContext';
 
 export default function ChatInput({
     onSend,
     placeholder,
     value,
-    disabled,
     onChange,
     inputRef,
     handleKeyDown
 }) {
-    // const [value, setValue] = useState("");
+    const { theme } = useContext(MainContext);
     const [isMultiline, setIsMultiline] = useState(false);
     const textareaRef = useRef(null);
 
@@ -34,10 +34,11 @@ export default function ChatInput({
     return (
         <div
             className={`
-        w-full bg-white border border-neutral-200 shadow-sm
+        w-full bg-transparent shadow-sm
         transition-all duration-200
         ${isMultiline ? "rounded-3xl" : "rounded-full"}
         focus-within:ring-2 focus-within:ring-neutral-300
+        ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"}
       `}
         >
             <div className="flex items-end gap-2 px-4 py-2">
