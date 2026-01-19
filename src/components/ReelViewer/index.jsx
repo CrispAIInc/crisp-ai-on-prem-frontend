@@ -276,29 +276,22 @@ function ReelViewer({
                             </CSSTransition>
                         </SwitchTransition>}
                         <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
-                            {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
-                        {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
-                            onClick={(event) => handleRemoveReel(event)}
-                            className="!text-[15px] w-full h-full text-white rounded-full" />}
-                    </div> */}
                             {areReelControlsVisible ? <div title="Collapse"><PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} /></div> : <div title="Expand"><AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} /></div>}
                             <div title="Reel properties"><InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} /></div>
-                            <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
+                            <div className="" onClick={() => setShowDownloadOption(prev => !prev)} >
                                 {isDownloading ? <LoadingSpinner isSmall /> : (
                                     <>
-                                        <div title="Download"><FileDownloadIcon /></div>
+                                        <div title="Download"><FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" /></div>
                                         {
                                             showDownloadOption && (
-                                                // <div onClick={(e) => e.stopPropagation()}>
                                                 <>
                                                     {downloadOptions()}
                                                 </>
-                                                // </div>
                                             )
                                         }
                                     </>
                                 )}
-                            </span>
+                            </div>
                             <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                         </div>
                     </div>
@@ -312,8 +305,6 @@ function ReelViewer({
                         loop={video_loop}
                         onProgress={handleProgress}
                         onDuration={handleDuration}
-                        // onReady={() => setIsPlayerReady(true)}
-                        // ref={player}
                         controls
                     />
                 </div>
@@ -349,17 +340,6 @@ function ReelViewer({
                 resizable={false}
                 throttleResize={0}
                 onResize={({ target, width, height, drag }) => {
-                    // Clamp width/height to min/max values
-                    // const newWidth = Math.min(Math.max(width, MIN_W), MAX_W);
-                    // const newHeight = Math.min(Math.max(height, MIN_H), MAX_H);
-
-                    // Show or hide reel controls based on size
-                    // if (newWidth <= 350 || newHeight <= 350) {
-                    //     setAreReelControlsVisible(false);
-                    // } else {
-                    //     setAreReelControlsVisible(true);
-                    // }
-
                     // Apply size to target
                     // const el = target.current;
                     target.style.width = `${width}px`;
