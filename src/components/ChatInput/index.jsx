@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import NorthIcon from '@mui/icons-material/North';
 import { MainContext } from '../../contexts/mainContext';
+import AppTooltip from '../AppTooltip';
 
 export default function ChatInput({
     onSend,
@@ -62,6 +63,12 @@ export default function ChatInput({
                     className={`absolute right-2 flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/40' : 'hover:bg-textColor-300/30'}`}
                 >
                     <NorthIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
+
+                    {
+                        !value.trim() && (
+                            <AppTooltip content="Message is empty" />
+                        )
+                    }
                 </button>
             </div>
         </div>
