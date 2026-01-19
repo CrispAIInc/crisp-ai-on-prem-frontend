@@ -281,12 +281,12 @@ function ReelViewer({
                             onClick={(event) => handleRemoveReel(event)}
                             className="!text-[15px] w-full h-full text-white rounded-full" />}
                     </div> */}
-                            {areReelControlsVisible ? <PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} /> : <AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} />}
-                            <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
+                            {areReelControlsVisible ? <div title="Collapse"><PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} /></div> : <div title="Expand"><AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} /></div>}
+                            <div title="Reel properties"><InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} /></div>
                             <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
                                 {isDownloading ? <LoadingSpinner isSmall /> : (
                                     <>
-                                        <FileDownloadIcon />
+                                        <div title="Download"><FileDownloadIcon /></div>
                                         {
                                             showDownloadOption && (
                                                 // <div onClick={(e) => e.stopPropagation()}>
