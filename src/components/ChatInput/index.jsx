@@ -11,7 +11,6 @@ export default function ChatInput({
     selectedModel,
     setSelectedModel,
     onSend,
-    placeholder,
     value,
     onChange,
     crispWizInputRef,
@@ -71,7 +70,7 @@ export default function ChatInput({
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     onKeyDown={e => handleKeyDown(e)}
-                    placeholder={placeholder}
+                    placeholder={crispModels.find(model => model.value === selectedModel)?.placeholder || "Ask Crisp Wiz anything..."}
                     className="w-[95%] py-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-40 placeholder:text-neutral-400"
                 />
 

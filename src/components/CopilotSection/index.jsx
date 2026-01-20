@@ -946,9 +946,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   // crisp wiz models
   const MODELS = [
-    { name: 'Smart Search', icon: <SearchOutlinedIcon />, value: 'search' },
-    { name: 'Video Segment Description', icon: <NotesOutlinedIcon />, value: 'timestamps_description' },
-    { name: 'Find Moments in Video', icon: <AccessTimeOutlinedIcon />, value: 'captioning' },
+    { name: 'Smart Search', icon: <SearchOutlinedIcon />, value: 'search', placeholder: "Ask Crisp Wiz anything..." },
+    { name: 'Video Segment Description', icon: <NotesOutlinedIcon />, value: 'timestamps_description', placeholder: "Enter start and end timestamps (e.g. 00:01:20 – 00:02:10)" },
+    { name: 'Find Moments in Video', icon: <AccessTimeOutlinedIcon />, value: 'captioning', placeholder: "What do you want to find in the video? (e.g. Q1 statistics)" },
   ];
   const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
 
@@ -1197,7 +1197,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                   setSelectedModel={setSelectedModel}
                   handleKeyDown={(e) => handleKeyDown(e)}
                   onSend={(message) => sendMessage(message)}
-                  placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
                   value={input}
                   crispWizInputRef={crispWizInputRef}
                   crispWizInputContainerRef={crispWizInputContainerRef}
