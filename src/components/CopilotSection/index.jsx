@@ -1196,7 +1196,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <>
+            <div className="flex flex-col gap-2">
               <SegmentDescription start={start} setStart={setStart} end={end} setEnd={setEnd} canGenerateSegmentDescription={canGenerateSegmentDescription}
                 setCanGenerateSegmentDescription={setCanGenerateSegmentDescription} handleGenerate={handleGenerateSegmentDescription} />
               <div className="mb-5 rounded-3xl" ref={crispWizInputContainerRef}>
@@ -1210,7 +1210,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                   onChange={value => setInput(value)}
                 />
               </div>
-            </>
+            </div>
           // <div ref={crispWizInputContainerRef} className={`flex items-center gap-2 w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
           //   <textarea
           // placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
