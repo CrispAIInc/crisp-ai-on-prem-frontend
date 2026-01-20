@@ -946,9 +946,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   // crisp wiz models
   const MODELS = [
-    { name: 'Search', icon: <SearchOutlinedIcon />, value: 'search' },
-    { name: 'Timestamps description', icon: <NotesOutlinedIcon />, value: 'timestamps_description' },
-    { name: 'Captioning', icon: <AccessTimeOutlinedIcon />, value: 'captioning' },
+    { name: 'Smart Search', icon: <SearchOutlinedIcon />, value: 'search' },
+    { name: 'Video Segment Description', icon: <NotesOutlinedIcon />, value: 'timestamps_description' },
+    { name: 'Find Moments in Video', icon: <AccessTimeOutlinedIcon />, value: 'captioning' },
   ];
   const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
 
