@@ -1,9 +1,18 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import SendIcon from "@mui/icons-material/Send";
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import NorthIcon from '@mui/icons-material/North';
 import { MainContext } from '../../contexts/mainContext';
 import AppTooltip from '../AppTooltip';
 import ChatHistory from '../ChatHistory';
+import CrispWizModels from '../CrispWizModels';
+
+const MODELS = [
+    { name: 'Search', icon: <SearchOutlinedIcon />, value: 'search' },
+    { name: 'Timestamps description', icon: <NotesOutlinedIcon />, value: 'timestamps_description' },
+    { name: 'Captioning', icon: <AccessTimeOutlinedIcon />, value: 'captioning' },
+];
 
 export default function ChatInput({
     onSend,
@@ -45,6 +54,9 @@ export default function ChatInput({
         setShowTooltip(false);
     }
 
+    // crisp wiz models
+    const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
+
     return (
         <div
             className={`
@@ -56,6 +68,7 @@ export default function ChatInput({
                 ${theme === 'light' ? "!border !border-textColor-100/50 bg-transparent" : " bg-zinc-900"}
             `}
         >
+            {/* upper part of crisp wiz */}
             <div className="flex items-end gap-2 px-4 py-2">
                 <textarea
                     ref={el => {
@@ -89,8 +102,17 @@ export default function ChatInput({
                 </button>
             </div>
 
-            <div className="flex items-center justify-between">
-                <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
+            {/* bottom part of crisp wiz */}
+            <div className="flex items-center justify-between px-2">
+                {/* crisp wiz models */}
+                <div className="flex items-center gap-2">
+                    <CrispWizModels models={MODELS} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+                </div>
+
+                {/* chat history */}
+                <div className="flex items-center justify-between">
+                    <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
+                </div>
             </div>
         </div>
     );
