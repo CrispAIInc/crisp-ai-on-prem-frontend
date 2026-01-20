@@ -949,38 +949,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             <p key={i}>{note.note_name}</p>;
           })
         }
-        {(combinedSummary !== "" || messages.length > 0) && <div className={`flex flex-wrap rounded-full items-center !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"}`}>
-          <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
-          <CustomSelectTwo
-            options={languageOptions}
-            onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage.value)}
-            placeholder='Select a language'
-            withIcon
-          />
-        </div>}
-
-        {/* <div className="models-list-button">
-          <CustomButton
-            className={`my-0 ${theme === "light"
-              ? "bg-light-hover-100/30 !text-dark border border-textColor-100"
-              : " !text-textColor-100 !border bg-light-hover-200/20 !border-textColor-300"
-              }`}
-            style={{ width: "100%" }}
-            onClick={selectLLMModels}
-          >
-            Models
-          </CustomButton>
-        </div>
-        <LLMModal
-          show={showLLMModal}
-          onHide={onHideLLMModal}
-          selectedLLMs={selectedLLMs}
-          setSelectedLLMs={setSelectedLLMs}
-          llmModels={llmModels}
-          className="modal"
-        /> */}
       </section>
-      {/* <div className="flex items-center flex-1 gap-3"> */}
+
       {messages?.length > 0 && <section
         className={`rounded-3xl overflow-hidden ${theme === "light" ? "!border" : "!border !border-textColor-300"
           }`}
@@ -1185,20 +1155,28 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         </div>
       </section>}
 
-      {/* </div> */}
       <section className="flex copilot-chat-container input-area max-w-[1000px] flex-col">
 
-        {/* <div className="flex items-center justify-between">
-          <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
-        </div> */}
         {
           selectedLLMs[0] === 'gpt-4-vision'
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
             <div className="flex flex-col gap-2">
-              <SegmentDescription start={start} setStart={setStart} end={end} setEnd={setEnd} canGenerateSegmentDescription={canGenerateSegmentDescription}
-                setCanGenerateSegmentDescription={setCanGenerateSegmentDescription} handleGenerate={handleGenerateSegmentDescription} />
+              <div className="flex items-center justify-between">
+                <SegmentDescription start={start} setStart={setStart} end={end} setEnd={setEnd} canGenerateSegmentDescription={canGenerateSegmentDescription}
+                  setCanGenerateSegmentDescription={setCanGenerateSegmentDescription} handleGenerate={handleGenerateSegmentDescription} />
+
+                {(combinedSummary !== "" || messages.length > 0) && <div className={`flex flex-wrap rounded-full items-center !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"}`}>
+                  <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
+                  <CustomSelectTwo
+                    options={languageOptions}
+                    onChange={(chosenLanguage) => handleLanguageChange(chosenLanguage.value)}
+                    placeholder='Select a language'
+                    withIcon
+                  />
+                </div>}
+              </div>
               <div className="mb-5 rounded-3xl" ref={crispWizInputContainerRef}>
                 <ChatInput
                   handleKeyDown={(e) => handleKeyDown(e)}
