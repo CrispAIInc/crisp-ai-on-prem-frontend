@@ -39,7 +39,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, canGenerateSegmentDe
             } ml-4`}>
             <div className="relative flex flex-col">
                 <div className="flex gap-1">
-                    <div className={`flex flex-col select-none ${canGenerateSegmentDescription && `rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/30' : 'hover:bg-textColor-300'} `}`} onClick={handleToggleTimestampPicker}>
+                    <div className={`flex flex-col select-none ${canGenerateSegmentDescription && `rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300'} `}`} onClick={handleToggleTimestampPicker}>
                         <BaseHeading
                             text="Segment description"
                         />
