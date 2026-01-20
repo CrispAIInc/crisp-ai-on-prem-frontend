@@ -1196,19 +1196,21 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             ?
             <ImageUpload handleUpload={handleVisionUpload} />
             :
-            <div className="mb-5 rounded-3xl" ref={crispWizInputContainerRef}>
+            <>
               <SegmentDescription start={start} setStart={setStart} end={end} setEnd={setEnd} canGenerateSegmentDescription={canGenerateSegmentDescription}
                 setCanGenerateSegmentDescription={setCanGenerateSegmentDescription} handleGenerate={handleGenerateSegmentDescription} />
-              <ChatInput
-                handleKeyDown={(e) => handleKeyDown(e)}
-                onSend={(message) => sendMessage(message)}
-                placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
-                value={input}
-                crispWizInputRef={crispWizInputRef}
-                crispWizInputContainerRef={crispWizInputContainerRef}
-                onChange={value => setInput(value)}
-              />
-            </div>
+              <div className="mb-5 rounded-3xl" ref={crispWizInputContainerRef}>
+                <ChatInput
+                  handleKeyDown={(e) => handleKeyDown(e)}
+                  onSend={(message) => sendMessage(message)}
+                  placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
+                  value={input}
+                  crispWizInputRef={crispWizInputRef}
+                  crispWizInputContainerRef={crispWizInputContainerRef}
+                  onChange={value => setInput(value)}
+                />
+              </div>
+            </>
           // <div ref={crispWizInputContainerRef} className={`flex items-center gap-2 w-full mt-1 mb-4 flex-1 mx-auto ${theme === 'light' ? "!border !border-textColor-100" : "!border !border-textColor-300"} rounded-full`}>
           //   <textarea
           // placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}
