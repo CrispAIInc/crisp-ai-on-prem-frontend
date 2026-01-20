@@ -30,7 +30,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setActiveView('resource');
         setSidebarWidth(prev => {
             if (prev !== maxWidth) return maxWidth;
-            return window.innerWidth / 3.3333;
+            return window.innerWidth / 4;
         });
         setIsLeftSidebarOpen(true);
         // workspaceContainer.current.scrollTo({
@@ -53,7 +53,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setJumpToPage({ page: parseInt(pdf?.page) + 1 });
         setSidebarWidth(prev => {
             if (prev !== maxWidth) return maxWidth;
-            return window.innerWidth / 3.3333;
+            return window.innerWidth / 4;
         });
         setIsLeftSidebarOpen(true);
         // workspaceContainer.current.scrollTo({

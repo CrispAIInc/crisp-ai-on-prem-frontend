@@ -16,7 +16,7 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 
 import useResources from '../../hooks/useResources';
 
-const ContentPanel = ({setCurrentProject}) => {
+const ContentPanel = ({ setCurrentProject }) => {
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
 
     const {
@@ -182,7 +182,7 @@ const ContentPanel = ({setCurrentProject}) => {
                     <button className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
                         setSidebarWidth(prev => {
                             if (prev !== (maxWidth - (maxWidth * 0.3))) return maxWidth - (maxWidth * 0.3);
-                            return window.innerWidth / 3.3333;
+                            return window.innerWidth / 4;
                         });
                         setIsLeftSidebarOpen(true);
                     }}>
