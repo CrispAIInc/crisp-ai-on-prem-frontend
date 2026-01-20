@@ -50,7 +50,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, canGenerateSegmentDe
                 {
                     isTimestampPickerOpen && (
                         <div className="absolute z-10 mt-2 top-full">
-                            <TimestampPicker sourceDuration={Math.ceil(displayedSources.find(s => s.is_checked)?.source_duration)} start={start} setStart={setStart} end={end} setEnd={setEnd} confirmFn={confirmFn} rejectFn={rejectFn} />
+                            <TimestampPicker sourceDuration={Math.ceil(displayedSources.find(s => s.is_checked)?.source_duration || 0)} start={start} setStart={setStart} end={end} setEnd={setEnd} confirmFn={confirmFn} rejectFn={rejectFn} />
                         </div>
                     )
                 }
