@@ -7,7 +7,7 @@ import ToggleSwitch from '../ToggleSwitch';
 
 const SegmentDescription = ({ start, setStart, end, setEnd, canGenerateSegmentDescription, setCanGenerateSegmentDescription, handleGenerate }) => {
 
-    const { displayedSources, theme, displayedSourcesLength } = useContext(MainContext);
+    const { displayedSources, theme, checkedSourcesCount } = useContext(MainContext);
 
     const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
 
@@ -33,7 +33,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, canGenerateSegmentDe
     };
 
     return (
-        <div className={`relative flex flex-col ${displayedSourcesLength !== 1
+        <div className={`relative flex flex-col ${checkedSourcesCount !== 1
             ? 'pointer-events-none opacity-50 select-none'
             : 'pointer-events-auto opacity-100 select-all'
             } ml-4`}>
