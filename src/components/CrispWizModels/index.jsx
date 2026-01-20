@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import TuneIcon from '@mui/icons-material/Tune';
 import { MainContext } from '../../contexts/mainContext';
 
@@ -12,6 +12,18 @@ const CrispWizModels = ({
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const modelsDropdownRef = useRef(null);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (modelsDropdownRef.current && !modelsDropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     function toggleDropdown() {
         setIsDropdownOpen(!isDropdownOpen);
