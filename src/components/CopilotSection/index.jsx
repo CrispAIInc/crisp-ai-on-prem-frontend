@@ -239,6 +239,11 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   }
 
   const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
+    if (selectedModel === "captioning") {
+      console.log("handle captioning");
+      // handleCpationing()
+      return;
+    }
 
     if (!canGenerateSegmentDescription || isRepeated) {
       if (message.trim() === "" && input.trim() === "") return;
