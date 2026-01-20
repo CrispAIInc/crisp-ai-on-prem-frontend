@@ -66,7 +66,7 @@ const Workspace = () => {
                 </div>
             ) : null}
 
-            <div className={`mt-3 h-[700px]`}>
+            <div className={`mt-3`}>
                 <CopilotSection messages={messages}
                     setMessages={setMessages} selectedLanguage={selectedLanguage} setSelectedLanguage={setSelectedLanguage} setIsCombinedSummaryPending={setIsCombinedSummaryPending} combinedSummary={combinedSummary} setCombinedSummary={setCombinedSummary} chatLoaded={chatLoaded} setChatLoaded={setChatLoaded} sidebarWidth={sidebarWidth} key={0} name="genInsights" />
             </div>
