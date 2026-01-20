@@ -847,7 +847,7 @@ const ChatPanel = () => {
                         (storiesResults?.length === 0 || stories?.length === 0) ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                           :
                           storiesResults?.map((story, index) => (
-                            <div key={story.story_id} className={`flex gap-2 ${theme === 'light'
+                            <div key={story.story_id} className={`flex items-center gap-2 ${theme === 'light'
                               ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
