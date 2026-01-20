@@ -875,14 +875,11 @@ const ChatPanel = () => {
                         (reels?.length === 0 || reelsResults?.length === 0) ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                           :
                           reelsResults?.map((reel, index) => (
-                            <div key={reel.id} className={`flex gap-2 ${theme === 'light'
+                            <div key={reel.id} className={`flex items-center gap-2 ${theme === 'light'
                               ? 'hover:bg-textColor-100/10'
                               : 'hover:bg-light-hover-200/20'
                               } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
 
-                              {/* context menu */}
-                              <div className="relative">
-                              </div>
                               <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
                               <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                 }`}>{reel.title}</p>
