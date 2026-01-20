@@ -7,6 +7,7 @@ import { MainContext } from '../../contexts/mainContext';
 import AppTooltip from '../AppTooltip';
 import ChatHistory from '../ChatHistory';
 import CrispWizModels from '../CrispWizModels';
+import Chip from '../Chip';
 
 const MODELS = [
     { name: 'Search', icon: <SearchOutlinedIcon />, value: 'search' },
@@ -55,7 +56,7 @@ export default function ChatInput({
     }
 
     // crisp wiz models
-    const [selectedModel, setSelectedModel] = useState(null);
+    const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
 
     return (
         <div
@@ -107,6 +108,9 @@ export default function ChatInput({
                 {/* crisp wiz models */}
                 <div className="flex items-center gap-2">
                     <CrispWizModels models={MODELS} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+
+                    {/* selected crisp wiz model */}
+                    <Chip content={MODELS.find(model => model.value === selectedModel)?.name || MODELS[0].name} cssClasses="text-gradient-x" />
                 </div>
 
                 {/* chat history */}
