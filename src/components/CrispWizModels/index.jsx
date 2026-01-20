@@ -3,7 +3,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import { MainContext } from '../../contexts/mainContext';
 
 const CrispWizModels = ({
-    models,
+    crispModels,
     selectedModel,
     setSelectedModel,
 }) => {
@@ -22,7 +22,6 @@ const CrispWizModels = ({
         setIsDropdownOpen(false);
     }
 
-
     return (
         <div className="relative">
             {/* Icon to toggle models dropdown */}
@@ -36,7 +35,7 @@ ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300/80'}
                 isDropdownOpen && (
                     <div ref={modelsDropdownRef} className={`absolute left-0 z-50 flex flex-col mt-2 overflow-x-hidden shadow-md w-fit rounded-2xl top-7 ${theme === "light" ? "border" : "!border !border-textColor-300"}`}>
                         {
-                            models.map((model) => (
+                            crispModels.map((model) => (
                                 <div
                                     key={model.value}
                                     onClick={() => handleModelChange(model.value)}

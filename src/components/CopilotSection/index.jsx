@@ -29,6 +29,9 @@ import { ProjectContext } from '../../contexts/projectContext.jsx';
 import useChat from '../../hooks/useChat.js';
 import ChatInput from '../ChatInput/index.jsx';
 import SegmentDescription from '../SegmentDescription/index.jsx';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -941,6 +944,14 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setImagePreviewIndex(index);
   };
 
+  // crisp wiz models
+  const MODELS = [
+    { name: 'Search', icon: <SearchOutlinedIcon />, value: 'search' },
+    { name: 'Timestamps description', icon: <NotesOutlinedIcon />, value: 'timestamps_description' },
+    { name: 'Captioning', icon: <AccessTimeOutlinedIcon />, value: 'captioning' },
+  ];
+  const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
+
   return (
     <article className="relative flex flex-col flex-1 mb-3 h-full max-w-[650px] mx-auto ">
       <section className={`flex flex-wrap items-center gap-3 ${messages.length > 0 && 'mb-3'}`}>
@@ -1164,8 +1175,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             :
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <SegmentDescription start={start} setStart={setStart} end={end} setEnd={setEnd} canGenerateSegmentDescription={canGenerateSegmentDescription}
-                  setCanGenerateSegmentDescription={setCanGenerateSegmentDescription} handleGenerate={handleGenerateSegmentDescription} />
+                {selectedModel === "timestamps_description" && (
+                  <SegmentDescription start={start} setStart={setStart} end={end} setEnd={setEnd} canGenerateSegmentDescription={canGenerateSegmentDescription}
+                    setCanGenerateSegmentDescription={setCanGenerateSegmentDescription} handleGenerate={handleGenerateSegmentDescription} />
+                )}
 
                 {(combinedSummary !== "" || messages.length > 0) && <div className={`flex flex-wrap rounded-full items-center !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"}`}>
                   <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
@@ -1179,6 +1192,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
               </div>
               <div className="mb-5 rounded-3xl" ref={crispWizInputContainerRef}>
                 <ChatInput
+                  crispModels={MODELS}
+                  selectedModel={selectedModel}
+                  setSelectedModel={setSelectedModel}
                   handleKeyDown={(e) => handleKeyDown(e)}
                   onSend={(message) => sendMessage(message)}
                   placeholder={displayedSources.length > 0 ? "Interact" : "Ask Crisp Wiz anything…"}

@@ -1,7 +1,4 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import NorthIcon from '@mui/icons-material/North';
 import { MainContext } from '../../contexts/mainContext';
 import AppTooltip from '../AppTooltip';
@@ -9,13 +6,10 @@ import ChatHistory from '../ChatHistory';
 import CrispWizModels from '../CrispWizModels';
 import Chip from '../Chip';
 
-const MODELS = [
-    { name: 'Search', icon: <SearchOutlinedIcon />, value: 'search' },
-    { name: 'Timestamps description', icon: <NotesOutlinedIcon />, value: 'timestamps_description' },
-    { name: 'Captioning', icon: <AccessTimeOutlinedIcon />, value: 'captioning' },
-];
-
 export default function ChatInput({
+    crispModels,
+    selectedModel,
+    setSelectedModel,
     onSend,
     placeholder,
     value,
@@ -54,9 +48,6 @@ export default function ChatInput({
     function handleMouseLeave() {
         setShowTooltip(false);
     }
-
-    // crisp wiz models
-    const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
 
     return (
         <div
@@ -107,10 +98,10 @@ export default function ChatInput({
             <div className="flex items-center justify-between px-2">
                 {/* crisp wiz models */}
                 <div className="flex items-center gap-2">
-                    <CrispWizModels models={MODELS} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+                    <CrispWizModels crispModels={crispModels} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
 
                     {/* selected crisp wiz model */}
-                    <Chip content={MODELS.find(model => model.value === selectedModel)?.name || MODELS[0].name} cssClasses="text-gradient-x" />
+                    <Chip content={crispModels.find(model => model.value === selectedModel)?.name || crispModels[0].name} cssClasses="text-gradient-x" />
                 </div>
 
                 {/* chat history */}
