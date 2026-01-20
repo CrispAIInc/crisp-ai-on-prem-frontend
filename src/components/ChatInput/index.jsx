@@ -55,7 +55,7 @@ export default function ChatInput({
     }
 
     // crisp wiz models
-    const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
+    const [selectedModel, setSelectedModel] = useState(null);
 
     return (
         <div
@@ -90,7 +90,7 @@ export default function ChatInput({
                     }}
                     onMouseOver={handleMouseOver}
                     onMouseLeave={handleMouseLeave}
-                    className={`absolute right-2 flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/40' : 'hover:bg-textColor-300/30'}`}
+                    className={`absolute right-2 flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300/80'}`}
                 >
                     <NorthIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
 
