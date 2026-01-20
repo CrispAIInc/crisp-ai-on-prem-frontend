@@ -76,7 +76,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
                         content={(
                             <>
                                 <CloseIcon className='font-bold cursor-pointer !text-[16px]' onClick={() => setCurrentChat(null)} />
-                                <p className={`text-gradient-x font-bold !text-[12px]`}>{currentChat.title}</p>
+                                <p className={`text-gradient-x font-bold !text-[11px]`}>{currentChat.title}</p>
                             </>
                         )}
                         cssClasses='flex items-center gap-1'
