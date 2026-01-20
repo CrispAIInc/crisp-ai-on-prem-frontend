@@ -79,8 +79,8 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     <div className="flex items-center justify-between ">
                         {(project?.is_shared && userId !== PROJECT_OWNER_ID) ? (
                             <div className="flex items-center gap-2 px-2 py-1 bg-white rounded-md text-black/70 font-semibolt">
-                                <AutoAwesomeOutlinedIcon />
-                                <p>Example Project</p>
+                                <AutoAwesomeOutlinedIcon className="text-purple-600" />
+                                <p className="font-bold text-gradient-x">Example Project</p>
                             </div>
                         ) : (
                             <>
