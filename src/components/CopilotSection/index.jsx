@@ -7,7 +7,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
-import { decimalSecondsToHHMMSS, delay, generateRandomHash, timeToSeconds, toBase64 } from '../../utils';
+import { decimalSecondsToHHMMSS, delay, formatTime, generateRandomHash, timeToSeconds, toBase64, toSeconds } from '../../utils';
 import AddOptionsModal from "../AddOptionsModal";
 import CustomSelectTwo from '../CustomSelectTwo';
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -230,6 +230,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
   const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
   const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
+  const [canGenerateSegmentDescription, setCanGenerateSegmentDescription] = useState(false);
+  function handleGenerateSegmentDescription() {
+    console.log(start);
+    console.log(formatTime(start));
+    setInput("Generate a description between timestamps " + formatTime(start) + " and " + formatTime(end));
+  }
 
   const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
 
