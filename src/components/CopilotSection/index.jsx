@@ -229,11 +229,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   // Segment description
   const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
   const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
-  const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
   const [canGenerateSegmentDescription, setCanGenerateSegmentDescription] = useState(false);
+
   function handleGenerateSegmentDescription() {
-    console.log(start);
-    console.log(formatTime(start));
     setInput("Generate a description between timestamps " + formatTime(start) + " and " + formatTime(end));
   }
 
