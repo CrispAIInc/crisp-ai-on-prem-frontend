@@ -408,3 +408,21 @@ export const extractThumbnail = (file) => {
     // });
     // setFileThumbnails((prev) => [...prev, ...thumbnails]);
 };
+
+export const toSeconds = ({ h, m, s }) =>
+    Number(h) * 3600 + Number(m) * 60 + Number(s);
+
+export const fromSeconds = (total) => {
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    const seconds = total % 60;
+
+    return {
+        hours: String(hours).padStart(2, "0"),
+        minutes: String(minutes).padStart(2, "0"),
+        seconds: String(seconds).padStart(2, "0"),
+    };
+};
+
+export const formatTime = ({ h, m, s }) =>
+    `${h}:${m}:${s}`;
