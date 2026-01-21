@@ -45,20 +45,17 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                 <KeyboardDoubleArrowLeftIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={onHide} />
             </div>
 
-            {/* current project */}
-
-
             {/* switch project */}
             <div className="relative">
                 {/* dropdown header */}
-                <div className={`cursor-pointer flex items-center gap-10 px-3 py-2 border rounded-md justify-between hover:bg-${theme === 'light' ? 'gray-200' : 'textColor-400'}`}
+                <div className={`cursor-pointer flex items-center shadow-sm gap-10 px-3 py-2 rounded-md justify-between ${theme === 'light' ? '!border !border-textColor-100/20' : '!border !border-zinc-600'}`}
                     onClick={() => setShowProjects(!showProjects)}>
                     <p>{currentProject?.name || "Untitled Project"}</p>
                     <UnfoldMoreOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                 </div>
 
                 {/* List of projects dropdown */}
-                {showProjects && <div ref={projectsDropdownRef} className={`absolute top-full left-0 w-full h-[40vh] z-50 flex flex-col flex-1 px-3 py-0 gap-3 overflow-y-auto bg-background_workspace`}>
+                {showProjects && <div ref={projectsDropdownRef} className={`absolute top-full left-0 w-full h-[40vh] z-50 flex flex-col flex-1 px-3 py-0 gap-3 overflow-y-auto shadow-sm bg-background_workspace`}>
                     {grouped.map(group => (
                         <div key={group.key} className="">
                             <div className={`sticky top-0 px-1 py-1 z-10 ${theme === 'light' ? 'bg-gray-100' : 'bg-textColor-300'} `}>
