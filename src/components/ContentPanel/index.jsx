@@ -9,12 +9,10 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 
 import './content-panel.css';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-
-import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 
 import useResources from '../../hooks/useResources';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 
 const ContentPanel = ({ setCurrentProject }) => {
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
@@ -156,24 +154,33 @@ const ContentPanel = ({ setCurrentProject }) => {
         setShowMetadata(false);
     };
 
+    const openProjectsDrawer = () => {
+        console.log("opening....");
+    };
+
 
     return (
         <aside className={`relative select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col relative`} ref={contentPanelContainerRef} style={{
             width: leftWidth
         }}>
+
             <div className="flex items-center justify-between">
                 {/* return button */}
-                {
-                    showMetadata && (
-                        <h5
-                            onClick={closeEditor}
-                            className={`return-icon absolute left-1 top-2 cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                } text-[22px]`}
-                        >
-                            <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                        </h5>
-                    )
-                }
+                <h5
+                    onClick={showMetadata ? closeEditor : openProjectsDrawer}
+                    className={`return-icon absolute left-1 top-2 cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-[#ABAEB4]"
+                        } text-[22px]`}
+                    title={showMetadata ? "Close Metadata Panel" : "Open Projects Drawer"}
+                >
+                    {
+                        showMetadata ? (
+                            <KeyboardReturnIcon className={`${theme === 'light' ? 'bg-[#333]' : 'bg-[#ABAEB4]'}`} />
+                        ) : (
+                            <AccountTreeOutlinedIcon />
+                        )
+                    }
+                </h5>
+
                 <h5 className={`flex-1 mb-0 select-none p-[10px] text-center  ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
                     }`}>Sources</h5>
                 <div
@@ -195,14 +202,7 @@ const ContentPanel = ({ setCurrentProject }) => {
             {/* <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-90% top-10 -z-1 blur-[160px]"></div> */}
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
-            {/* <Tabs
-                transition={false}
-                defaultActiveKey="sources"
-                onSelect={(k) => setActiveTab(() => k)}
-                id="uncontrolled-tab-example"
-                className="my-3  flex  items-center !border-b-0"
-            >
-                <Tab eventKey="sources" title="Sources" className='flex-1 h-full overflow-y-auto'> */}
+
             <div className="my-3 !border-b-0 !h-full">
                 <ContentSection
                     setCurrentProject={setCurrentProject}
@@ -220,22 +220,6 @@ const ContentPanel = ({ setCurrentProject }) => {
                 />
                 {(activeTab === 'sources' && (Boolean(localStorage.getItem(`guide_completed_sources`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={contentSectionSteps} tabIdentifier="sources" />}
             </div>
-            {/* </Tab>
-                <Tab eventKey="insights" title="Insights" className='flex-1 h-full overflow-y-auto'>
-                    <NotesSection
-                        setNoteIndex={setNoteIndex}
-                        nodeIndex={noteIndex}
-                        key={2}
-                        name="Notes"
-                    />
-                    {(activeTab === 'insights' && (Boolean(localStorage.getItem(`guide_completed_insights`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={notesSectionSteps} tabIdentifier="insights" />}
-                </Tab>
-                <Tab eventKey="stories" title="Stories" className='flex-1 h-full overflow-y-auto'>
-                    <StoriesSection
-                    />
-                    {(activeTab === 'stories' && (Boolean(localStorage.getItem(`guide_completed_stories`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={storiesSectionSteps} tabIdentifier="stories" />}
-                </Tab>
-            </Tabs> */}
 
             {
                 isLeftSidebarOpen && <div
@@ -245,8 +229,6 @@ const ContentPanel = ({ setCurrentProject }) => {
                     onDoubleClick={handleDoubleClick}
                 ></div>
             }
-
-
 
             <SearchModal
                 show={showSearchModal}
