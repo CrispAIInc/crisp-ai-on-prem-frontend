@@ -13,6 +13,8 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 
 import useResources from '../../hooks/useResources';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import ProjectDrawer from '../ProjectDrawer/index.jsx';
+import { Drawer } from '@mui/material';
 
 const ContentPanel = ({ setCurrentProject }) => {
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
@@ -154,8 +156,9 @@ const ContentPanel = ({ setCurrentProject }) => {
         setShowMetadata(false);
     };
 
+    const [showProjectDrawer, setShowProjectDrawer] = useState(false);
     const openProjectsDrawer = () => {
-        console.log("opening....");
+        setShowProjectDrawer(true);
     };
 
 
@@ -163,6 +166,10 @@ const ContentPanel = ({ setCurrentProject }) => {
         <aside className={`relative select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col relative`} ref={contentPanelContainerRef} style={{
             width: leftWidth
         }}>
+
+            <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="left" variant="persistent" open={showProjectDrawer} onClose={() => setShowProjectDrawer(false)} >
+                <ProjectDrawer contentPanelContainerRef={contentPanelContainerRef} onHide={() => setShowProjectDrawer(false)} />
+            </Drawer>
 
             <div className="flex items-center justify-between">
                 {/* return button */}
