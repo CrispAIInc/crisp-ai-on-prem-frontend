@@ -724,7 +724,7 @@ const ContentSection = ({
                     is_selected: true,
                     progress: 0,
                     originalSourceLanguage: "en",
-                    step: "Initialize upload",
+                    step: "Initialize ingestion...",
                     metadata: {
                         chapters: {},
                         embeddings_generated: false,

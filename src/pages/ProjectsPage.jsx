@@ -219,7 +219,7 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
                                 <AddIcon className="text-purple-500" fontSize="large" />
                             </div>
                             <h3 className="text-lg text-gradient-x">New Project</h3>
-                            <p className="text-sm text-center text-textColor-100">Start a new workspace, upload files and generate content.</p>
+                            <p className="text-sm text-center text-textColor-100">Start a new workspace, ingest files and generate content.</p>
                         </div>
                     )}
 

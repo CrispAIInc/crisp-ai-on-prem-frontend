@@ -110,7 +110,7 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
                     <p className="mt-1 text-sm">
                         Supported: Images, Videos, PDFs | File size ≤2GB
                     </p>
-                </> : <p className="text-sm">Processing source upload...</p>
+                </> : <p className="text-sm">Processing source ingestion...</p>
                 }
             </label>
             <div className="grid w-full grid-cols-3 gap-4 mt-4">
