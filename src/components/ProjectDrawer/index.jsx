@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ProjectContext } from '../../contexts/projectContext';
 import { MainContext } from '../../contexts/mainContext';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
 const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
 
@@ -19,7 +19,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
 
             <div className="flex items-center justify-between">
                 <h5 className='mb-0 '>Manage Projects</h5>
-                <KeyboardReturnIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={onHide} />
+                <KeyboardDoubleArrowLeftIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={onHide} />
             </div>
         </div>
     );
