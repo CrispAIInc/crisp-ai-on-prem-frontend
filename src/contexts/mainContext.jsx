@@ -98,7 +98,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         };
 
         makeRequest();
-    }, [currentProject]);
+    }, [currentProject.project_id]);
 
     useEffect(() => {
         async function intializeContent() {
@@ -116,11 +116,11 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         intializeContent();
-    }, [currentProject]);
+    }, [currentProject.project_id]);
 
     useEffect(() => {
         getIndexes();
-    }, [currentProject]);
+    }, [currentProject.project_id]);
 
     useEffect(() => {
         const getAllNotes = async () => {
@@ -148,7 +148,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         };
 
         getAllNotes();
-    }, [currentProject]);
+    }, [currentProject.project_id]);
 
     useEffect(() => {
         const getAllStories = async () => {
@@ -169,11 +169,11 @@ export default function MainProvider({ children, theme, setTheme }) {
         };
 
         getAllStories();
-    }, [currentProject]);
+    }, [currentProject.project_id]);
 
     useEffect(() => {
         getReels();
-    }, [currentProject]);
+    }, [currentProject.project_id]);
 
     const contentPanelContainerRef = useRef(null);
 
@@ -1151,11 +1151,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [chatHistory, setChatHistory] = useState([]);
     const [currentChat, setCurrentChat] = useState([]);
 
-
-
     const checkedSourcesCount = useMemo(() => displayedSources.filter(source => source.is_checked).length, [displayedSources]);
-
-
 
     // useEffect(() => {
     //     let now = new Date();
@@ -1174,7 +1170,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         getChatHistory();
-    }, [currentProject]);
+    }, [currentProject.project_id]);
 
     useEffect(() => {
         // if (Array.isArray(currentChat)) {
