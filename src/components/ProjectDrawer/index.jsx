@@ -39,9 +39,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
         };
     }, []);
 
-    const [isExitPending, setIsExitPending] = useState(false);
-    async function handleExitProject() {
-        setIsExitPending(true);
+    async function exitProjectEndpoint() {
         await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
             sources: {
                 checked: displayedSources.filter(item => item.is_checked).map(item => item.source_path),
@@ -49,8 +47,36 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
             },
             chat: currentChat?.sessionId
         }));
-        setCurrentProject(null);
-        setIsExitPending(false);
+    }
+
+    const [wantedProjectId, setWantedProjectId] = useState(null);
+    const [isExitPending, setIsExitPending] = useState(false);
+    const [isSwitchingPending, setIsSwitchingPending] = useState(false);
+    async function handleExitProject() {
+        setIsExitPending(true);
+        try {
+            await exitProjectEndpoint();
+            setCurrentProject(null);
+        } catch (e) {
+            console.log(e.message);
+        } finally {
+            setIsExitPending(false);
+        }
+    }
+
+    async function handleSwitchProject(project) {
+        try {
+            setWantedProjectId(project.project_id);
+            setIsSwitchingPending(true);
+            await exitProjectEndpoint();
+            setCurrentProject(project);
+            setShowProjects(false);
+            onHide();
+        } catch (e) {
+            console.log(e.message);
+        } finally {
+            setIsSwitchingPending(false);
+        }
     }
 
     return (
@@ -88,14 +114,15 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                                     ) : (
                                         group.items.map(project => (
                                             <div key={project.id} className={`flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-${theme === 'light' ? 'gray-200' : 'textColor-400'} ${theme === 'light' ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300/80'}`} onClick={() => {
-                                                setCurrentProject(project);
-                                                setShowProjects(false);
-                                                onHide();
+                                                handleSwitchProject(project);
                                             }}>
                                                 <div>
                                                     <div className="text-sm font-semibold">{project.name || "Untitled Project"}</div>
                                                     <div className="text-xs">Last updated: {formatReadableDate(project.updated_at)}</div>
                                                 </div>
+                                                {
+                                                    isSwitchingPending && wantedProjectId === project.project_id ? <LoadingSpinner isSmall /> : null
+                                                }
                                                 {
                                                     currentProject?.project_id === project.project_id && (
                                                         <CheckOutlinedIcon />
