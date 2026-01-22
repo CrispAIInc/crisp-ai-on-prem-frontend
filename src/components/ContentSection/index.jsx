@@ -828,13 +828,6 @@ const ContentSection = ({
                 <div className="w-full">
                     <div className="w-full max-w-4xl pr-3">
                         <div className="flex flex-col gap-0">
-                            <div
-                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={handleExitProject}
-                            >
-                                {isExitPending ? <LoadingSpinner isSmall /> : <ChangeCircleOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />}
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Switch project</span>
-                            </div>
 
                             <div
                                 className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}

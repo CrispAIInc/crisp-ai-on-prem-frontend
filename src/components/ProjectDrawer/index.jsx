@@ -6,11 +6,14 @@ import { formatChatHistoryByDate, formatReadableDate } from '../../utils';
 import UnfoldMoreOutlinedIcon from '@mui/icons-material/UnfoldMoreOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import BaseHeading from "../BaseHeading";
+import makeApiRequest from '../../api';
+import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
+import LoadingSpinner from "../LoadingSpinner";
 
 const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
 
-    const { theme } = useContext(MainContext);
-    const { currentProject, projects } = useContext(ProjectContext);
+    const { theme, displayedSources, currentChat } = useContext(MainContext);
+    const { currentProject, setCurrentProject, projects } = useContext(ProjectContext);
 
     // Format and group the chats by date using the util
     const grouped = useMemo(() => {
@@ -36,17 +39,31 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
         };
     }, []);
 
+    const [isExitPending, setIsExitPending] = useState(false);
+    async function handleExitProject() {
+        setIsExitPending(true);
+        await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
+            sources: {
+                checked: displayedSources.filter(item => item.is_checked).map(item => item.source_path),
+                unchecked: displayedSources.filter(item => !item.is_checked).map(item => item.source_path),
+            },
+            chat: currentChat?.sessionId
+        }));
+        setCurrentProject(null);
+        setIsExitPending(false);
+    }
+
     return (
         <div style={{ width: contentPanelContainerRef?.current?.offsetWidth || 0 }} className={`z-50 p-4 ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between z-50">
                 <h5 className='mb-0 '>Manage Projects</h5>
                 <KeyboardDoubleArrowLeftIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={onHide} />
             </div>
 
-            <div className="flex flex-col gap-7">
+            <div className="flex flex-col gap-7 z-50">
                 <div>
                     <BaseHeading text="Select Project" className="mb-2" />
                     {/* switch project */}
@@ -91,6 +108,13 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                 </div>
                 <div>
                     <BaseHeading text="Projects settings" className="mb-2" />
+                    <div
+                        className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit hover:bg-red-600/10`}
+                        onClick={handleExitProject}
+                    >
+                        {isExitPending ? <LoadingSpinner isSmall /> : <ChangeCircleOutlinedIcon className="text-red-600" />}
+                        <span className={`font-medium text-red-600`}>Exit project</span>
+                    </div>
                 </div>
             </div>
         </div >
