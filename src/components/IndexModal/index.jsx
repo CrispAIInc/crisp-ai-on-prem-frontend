@@ -36,7 +36,7 @@ export function IndexModal({ show, onHide, handleUpload }) {
             setIndexName(newIndex?.category);
             getIndexes();
             notify({
-                variant: "error",
+                variant: "success",
                 heading: "Index created!",
             });
         } catch (error) {
