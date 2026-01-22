@@ -98,7 +98,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         };
 
         makeRequest();
-    }, []);
+    }, [currentProject]);
 
     useEffect(() => {
         async function intializeContent() {
@@ -116,11 +116,11 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         intializeContent();
-    }, []);
+    }, [currentProject]);
 
     useEffect(() => {
         getIndexes();
-    }, []);
+    }, [currentProject]);
 
     useEffect(() => {
         const getAllNotes = async () => {
@@ -148,7 +148,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         };
 
         getAllNotes();
-    }, []);
+    }, [currentProject]);
 
     useEffect(() => {
         const getAllStories = async () => {
@@ -169,11 +169,11 @@ export default function MainProvider({ children, theme, setTheme }) {
         };
 
         getAllStories();
-    }, []);
+    }, [currentProject]);
 
     useEffect(() => {
         getReels();
-    }, []);
+    }, [currentProject]);
 
     const contentPanelContainerRef = useRef(null);
 
@@ -1157,10 +1157,10 @@ export default function MainProvider({ children, theme, setTheme }) {
 
 
 
-    useEffect(() => {
-        let now = new Date();
-        setCurrentChat({ sessionId: generateRandomId(), title: `New Chat ${chatHistory.length + 1}`, userId: user?.userId, messages: [], created_at: now, updated_at: now });
-    }, []);
+    // useEffect(() => {
+    //     let now = new Date();
+    //     setCurrentChat({ sessionId: generateRandomId(), title: `New Chat ${chatHistory.length + 1}`, userId: user?.userId, messages: [], created_at: now, updated_at: now });
+    // }, []);
 
     useEffect(() => {
         async function getChatHistory() {
@@ -1174,7 +1174,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         getChatHistory();
-    }, []);
+    }, [currentProject]);
 
     useEffect(() => {
         // if (Array.isArray(currentChat)) {

@@ -87,7 +87,11 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                                         <div className="px-2 text-xs text-textColor-400">No project</div>
                                     ) : (
                                         group.items.map(project => (
-                                            <div key={project.id} className={`flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-${theme === 'light' ? 'gray-200' : 'textColor-400'} ${theme === 'light' ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300/80'}`} onClick={() => console.log("hello")}>
+                                            <div key={project.id} className={`flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-${theme === 'light' ? 'gray-200' : 'textColor-400'} ${theme === 'light' ? 'hover:bg-textColor-100/10' : 'hover:bg-textColor-300/80'}`} onClick={() => {
+                                                setCurrentProject(project);
+                                                setShowProjects(false);
+                                                onHide();
+                                            }}>
                                                 <div>
                                                     <div className="text-sm font-semibold">{project.name || "Untitled Project"}</div>
                                                     <div className="text-xs">Last updated: {formatReadableDate(project.updated_at)}</div>
