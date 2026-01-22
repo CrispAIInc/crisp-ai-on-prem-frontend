@@ -1215,6 +1215,9 @@ export default function MainProvider({ children, theme, setTheme }) {
             setIsCombinedSummaryPending(false);
         }
     };
+    useEffect(() => {
+        getCombinedSum();
+    }, [currentProject.project_id]);
     // }, [displayedSources, selectedLanguage]);
 
 
