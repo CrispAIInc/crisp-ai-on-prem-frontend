@@ -1,21 +1,20 @@
-import { useEffect, useContext } from "react";
+import { useState } from "react";
 
-// import { MainContext } from "../../contexts/mainContext.jsx";
-
-import makeApiRequest from "../../api";
-
+import ChatPanel from "../ChatPanel";
 import ContentPanel from "../ContentPanel";
 import Workspace from "../Workspace";
-import ChatPanel from "../ChatPanel";
+import JoyrideTooltip, { JOYRIDE_STEPS } from '../JoyrideTooltip';
+
+import { Helmet } from 'react-helmet';
+import Joyride from 'react-joyride';
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import { MainContext } from '../../contexts/mainContext.jsx';
-import useResources from '../../hooks/useResources.js';
-import { AuthContext } from '../../contexts/authContext.jsx';
-import { pick } from '../../utils.js';
-import { Helmet } from 'react-helmet';
+import "./MainWorkspace.css";
 
 const MainWorkspace = ({ currentProject, setCurrentProject }) => {
+
+  // ================== joyride =================
+  const [run, setRun] = useState(true);
 
   return (
     <>
@@ -23,9 +22,37 @@ const MainWorkspace = ({ currentProject, setCurrentProject }) => {
         <title>Crisp AI - {currentProject?.name}</title>
       </Helmet>
       <div className="flex relative !h-full divide-x divide-separator main-workspace-container">
-        {/* <div className="absolute z-40 w-full h-12">
-          <ProgressBar />
-        </div> */}
+        {/* ================ joyride ================= */}
+        <Joyride
+          steps={JOYRIDE_STEPS}
+          run={run}
+          continuous
+          scrollToFirstStep
+          showProgress={true}
+          showSkipButton={true}
+          disableOverlayClose
+          spotlightPadding={6}
+          components={{
+            Tooltip: JoyrideTooltip,
+          }}
+          styles={{
+            options: {
+              zIndex: 10000,
+              overlayColor: "rgba(0,0,0,0.55)",
+              primaryColor: "#333",
+            },
+            spotlight: {
+              borderRadius: 12,
+              boxShadow: "0 0 0 9999px rgba(0,0,0,0.55)",
+            },
+          }}
+          callback={(data) => {
+            if (data.status === "finished" || data.status === "skipped") {
+              setRun(false);
+            }
+          }}
+        />
+
         <ContentPanel setCurrentProject={setCurrentProject} />
         <Workspace />
         <ChatPanel />

@@ -1,6 +1,66 @@
 // JoyrideTooltip.jsx
 import React from "react";
 
+export const JOYRIDE_STEPS = [
+    {
+        target: "#left_panel",
+        title: "Your Workspace",
+        content: "This is the main navigation panel where all your sources and tools live.",
+        placement: "right",
+    },
+    {
+        target: "#upload_sources",
+        title: "Upload Sources",
+        content: "Upload documents, videos, or files to start building your knowledge base.",
+        placement: "right",
+    },
+    {
+        target: "#source_explorer",
+        title: "Source Explorer",
+        content: "Browse, manage, and organize all your uploaded sources in one place.",
+        placement: "right",
+    },
+    {
+        target: "#discovery",
+        title: "Discovery",
+        content: "Explore insights and patterns extracted from your content automatically.",
+        placement: "right",
+    },
+    {
+        target: "#interaction",
+        title: "Interaction",
+        content: "Ask questions and interact with your content conversationally.",
+    },
+    {
+        target: "#combined_summary",
+        title: "Combined Summary",
+        content: "Get a unified summary generated from multiple sources.",
+    },
+    {
+        target: "#copilot",
+        title: "AI Copilot",
+        content: "Your AI assistant that helps you reason, analyze, and generate insights.",
+    },
+    {
+        target: "#genMetadata",
+        title: "Generate Metadata",
+        content: "Automatically extract structured metadata from your content.",
+        placement: "left",
+    },
+    {
+        target: "#genStories",
+        title: "Generate Stories",
+        content: "Turn raw information into clear, engaging stories and reports.",
+        placement: "left",
+    },
+    {
+        target: "#genMedia",
+        title: "Generate Media",
+        content: "Create visual or multimedia outputs based on your content.",
+        placement: "left",
+    },
+];
+
 export default function JoyrideTooltip({
     continuous,
     index,
@@ -13,7 +73,7 @@ export default function JoyrideTooltip({
     return (
         <div
             {...tooltipProps}
-            className="max-w-sm rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl border border-gray-200 p-5"
+            className="max-w-sm rounded-2xl !bg-red-600/90 backdrop-blur-xl shadow-2xl border  p-5"
         >
             {/* Header */}
             <div className="flex items-center justify-between mb-3">

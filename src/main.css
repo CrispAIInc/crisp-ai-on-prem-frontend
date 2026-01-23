@@ -34,6 +34,76 @@
   }
 }
 
+/* ===============================
+   Joyride Overlay & Spotlight
+   =============================== */
+
+.react-joyride__overlay {
+  @apply bg-black/60;
+}
+
+.react-joyride__spotlight {
+  @apply rounded-xl shadow-[0_0_0_9999px_rgba(0,0,0,0.6)];
+}
+
+/* ===============================
+   Tooltip Container
+   =============================== */
+
+.react-joyride__tooltip {
+  @apply rounded-2xl bg-zinc-950 text-left text-white/30 p-5 !important;
+}
+
+.react-joyride__tooltip-container {
+  @apply p-5 max-w-sm;
+}
+
+/* ===============================
+   Title & Content
+   =============================== */
+
+.react-joyride__tooltip-title {
+  @apply text-lg font-semibold text-gray-900 mb-2;
+}
+
+.react-joyride__tooltip-content {
+  @apply text-sm text-gray-600 leading-relaxed;
+}
+
+/* ===============================
+   Buttons
+   =============================== */
+
+.react-joyride__button--primary {
+  @apply px-4 py-2 rounded-lg text-sm font-semibold 
+         bg-black text-white 
+         hover:bg-gray-800 transition;
+}
+
+.react-joyride__button--secondary {
+  @apply px-4 py-2 rounded-lg text-sm font-medium 
+         text-gray-600 
+         hover:bg-gray-100 transition;
+}
+
+.react-joyride__button--close {
+  @apply text-gray-400 hover:text-gray-700 transition;
+}
+
+/* ===============================
+   Beacon (Pulse animation)
+   =============================== */
+
+.react-joyride__beacon {
+  @apply relative;
+}
+
+.react-joyride__beacon::after {
+  content: "";
+  @apply absolute inset-0 rounded-full 
+         animate-ping bg-black/30;
+}
+
 label {
   user-select: none;
 }
@@ -128,8 +198,8 @@ p {
 } */
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 input {
