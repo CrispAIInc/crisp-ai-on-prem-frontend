@@ -324,10 +324,10 @@ const ChatPanel = () => {
     setIsNewStory(false);
     setShowStoriesEditor(true);
   };
-  const showSelectedReel = (e, reel, index) => {
-    setReel(reel);
-    setIsReelOpen(true);
-  };
+  // const showSelectedReel = (e, reel, index) => {
+  //   setReel(reel);
+  //   setIsReelOpen(true);
+  // };
 
   const [actualTab, setActualTab] = useState(null); //genMetadata | genStories
 
@@ -390,42 +390,42 @@ const ChatPanel = () => {
     }
   }
 
-  const [hoveredReel, setHoveredReel] = useState(null);
-  const hoveredReelRef = useRef(null);
-  const handleMouseEnterReel = (id) => {
-    setHoveredReel(id);
-    hoveredReelRef.current = id;
-  };
-  const handleMouseLeaveReel = () => {
-    setHoveredReel(null);
-  };
+  // const [hoveredReel, setHoveredReel] = useState(null);
+  // const hoveredReelRef = useRef(null);
+  // const handleMouseEnterReel = (id) => {
+  //   setHoveredReel(id);
+  //   hoveredReelRef.current = id;
+  // };
+  // const handleMouseLeaveReel = () => {
+  //   setHoveredReel(null);
+  // };
 
-  const [isReelDeleting, setIsReelDeleting] = useState(false);
-  async function deleteReel(event, reel) {
-    event.preventDefault();
-    setIsReelDeleting(true);
-    try {
-      const publicReelUrl = await getPublicUrl(reel.reel_video_url);
-      await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
-        videoUrl: publicReelUrl,
-      }));
+  // const [isReelDeleting, setIsReelDeleting] = useState(false);
+  // async function deleteReel(event, reel) {
+  //   event.preventDefault();
+  //   setIsReelDeleting(true);
+  //   try {
+  //     const publicReelUrl = await getPublicUrl(reel.reel_video_url);
+  //     await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
+  //       videoUrl: publicReelUrl,
+  //     }));
 
-      notify({
-        variant: "success",
-        heading: "Reel deleted successfully!",
-      });
-      getReels();
-    } catch (error) {
-      console.log(error);
-      notify({
-        variant: "error",
-        heading: "Oops!",
-        subheading: "An error occurred while deleting the reel",
-      });
-    } finally {
-      setIsReelDeleting(false);
-    }
-  }
+  //     notify({
+  //       variant: "success",
+  //       heading: "Reel deleted successfully!",
+  //     });
+  //     getReels();
+  //   } catch (error) {
+  //     console.log(error);
+  //     notify({
+  //       variant: "error",
+  //       heading: "Oops!",
+  //       subheading: "An error occurred while deleting the reel",
+  //     });
+  //   } finally {
+  //     setIsReelDeleting(false);
+  //   }
+  // }
 
   function handleTabClick(item) {
     setActualTab(item);
@@ -479,31 +479,31 @@ const ChatPanel = () => {
       setStoriesResults(sortArrayOfObjects(filtered, "story_name"));
     }
   };
-  const [reelsSearchValue, setReelsSearchValue] = useState("");
-  const [reelsResults, setReelsResults] = useState(reels);
-  useEffect(() => {
-    setReelsResults(sortBySourcePath(reels));
-  }, [reels]);
-  const handleReelsSearch = (e) => {
-    const value = e.target.value;
-    setReelsSearchValue(value);
+  // const [reelsSearchValue, setReelsSearchValue] = useState("");
+  // const [reelsResults, setReelsResults] = useState(reels);
+  // useEffect(() => {
+  //   setReelsResults(sortBySourcePath(reels));
+  // }, [reels]);
+  // const handleReelsSearch = (e) => {
+  //   const value = e.target.value;
+  //   setReelsSearchValue(value);
 
-    if (value.trim() === "") {
-      setReelsResults(sortArrayOfObjects(reels, "title"));
-    } else {
-      const filtered = searchByKey(reels, "title", value);
-      setReelsResults(sortArrayOfObjects(filtered, "title"));
-    }
-  };
+  //   if (value.trim() === "") {
+  //     setReelsResults(sortArrayOfObjects(reels, "title"));
+  //   } else {
+  //     const filtered = searchByKey(reels, "title", value);
+  //     setReelsResults(sortArrayOfObjects(filtered, "title"));
+  //   }
+  // };
 
-  const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
-  function handleOpenFilenameUpdateModal(event, reel) {
-    event.stopPropagation();
-    setReelTitleUpdateValue(reel.title);
-    setShowUpdateReelTitleModal(true);
-  }
+  // const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
+  // function handleOpenFilenameUpdateModal(event, reel) {
+  //   event.stopPropagation();
+  //   setReelTitleUpdateValue(reel.title);
+  //   setShowUpdateReelTitleModal(true);
+  // }
 
-  const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
+  // const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
 
   return (
     <aside
@@ -878,7 +878,7 @@ const ChatPanel = () => {
                   </>
                   :
                   <>
-                    <div className="flex flex-col overflow-y-auto">
+                    {/* <div className="flex flex-col overflow-y-auto">
                       {(reels?.length > 0 || reelsResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={reelsSearchValue} onChange={handleReelsSearch} />}
                       {
                         (reels?.length === 0 || reelsResults?.length === 0) ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
@@ -923,7 +923,7 @@ const ChatPanel = () => {
                           reel={reels.find(r => r.id === hoveredReelRef.current)}
                         />
                       )
-                    }
+                    } */}
                   </>
             }
           </div>}
