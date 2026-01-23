@@ -760,7 +760,11 @@ const ChatPanel = () => {
           <div>
             {/* buttons */}
             <div className="flex justify-around gap-5 mt-2 flex-items">
-              {[{ id: "genMetadata", title: "Cataloging" }, { id: "genStories", title: "Stories" }, { id: "genMedia", title: "Reels" }].map(item => (
+              {[
+                { id: "genMetadata", title: "Cataloging" },
+                { id: "genStories", title: "Stories" },
+                { id: "genMedia", title: "Reels" }
+              ].map(item => (
                 <h6
                   id={item.id}
                   onClick={() => handleTabClick(item.id)}
@@ -793,7 +797,20 @@ const ChatPanel = () => {
               {/* <MetadataGen key={0} name="genMetadata" /> */}
               <div className="relative z-10 flex items-center gap-3 mt-4 mb-3">
                 {
-                  [{ icon: ArticleOutlinedIcon, title: "Insights" }, { icon: AutoStoriesOutlinedIcon, title: "Stories" }, { icon: PlayCircleOutlineOutlinedIcon, title: "Sizzle Reels" }].map(({ icon: Icon, title }, index) => {
+                  [
+                    {
+                      icon: ArticleOutlinedIcon,
+                      title: "Insights"
+                    },
+                    {
+                      icon: AutoStoriesOutlinedIcon,
+                      title: "Stories"
+                    },
+                    // {
+                    //   icon: PlayCircleOutlineOutlinedIcon,
+                    //   title: "Sizzle Reels"
+                    // }
+                  ].map(({ icon: Icon, title }, index) => {
                     return (
                       <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
                         <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
