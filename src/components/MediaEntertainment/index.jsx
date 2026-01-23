@@ -189,9 +189,9 @@ function MediaEntertainment({
     };
 
     return (
-        <div className='z-20 flex flex-col gap-3 h-full'>
+        <div className='z-20 flex flex-col gap-1 h-full'>
             {/* context */}
-            <div className="relative w-full mt-6">
+            <div className="relative w-full">
                 <div className="flex flex-col mb-2">
                     <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel topic</label>
                     <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>When no context or topic is provided, the reel will be based on the existing highlights.</span>
@@ -253,7 +253,15 @@ function MediaEntertainment({
 
             {/* ============= list of reels ============= */}
             <div className="flex flex-col mb-2 gap-2 h-full overflow-hidden">
-                {(reels?.length > 0 || reelsResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={reelsSearchValue} onChange={handleReelsSearch} />}
+                <BaseHeading text="Your reels" className="mt-2" />
+                {(reels?.length > 0 || reelsResults?.length > 0) && (
+                    <input
+                        className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`}
+                        placeholder={"Search..."}
+                        value={reelsSearchValue}
+                        onChange={handleReelsSearch}
+                    />
+                )}
                 {
 
                     (reels?.length === 0 || reelsResults?.length === 0) ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
