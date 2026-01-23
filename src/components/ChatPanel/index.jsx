@@ -329,7 +329,7 @@ const ChatPanel = () => {
   //   setIsReelOpen(true);
   // };
 
-  const [actualTab, setActualTab] = useState(null); //genMetadata | genStories
+  const [actualTab, setActualTab] = useState("genMetadata"); //genMetadata | genStories
 
   const [hoveredInsight, setHoveredInsight] = useState(null);
   const handleMouseEnterInsight = (id) => {
