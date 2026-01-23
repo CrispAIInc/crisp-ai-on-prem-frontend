@@ -1,0 +1,31 @@
+.react-joyride__tooltip {
+  background-color: rgb(30, 30, 31) !important;
+  color: #ffffff !important;
+  padding: 15px !important;
+}
+
+.react-joyride__tooltip > div {
+  text-align: left !important;
+}
+
+button[data-test-id="button-primary"] {
+  color: #fff !important;
+  background: rgb(128 120 221) !important;
+}
+
+button[data-test-id="button-skip"] {
+  color: rgb(128 120 221) !important;
+  background: transparent !important;
+}
+
+button[data-test-id="button-back"] {
+  color: #fff !important;
+}
+
+.react-joyride__tooltip path {
+  fill: #fff !important;
+}
+
+polygon {
+  fill: rgb(30, 30, 31) !important;
+}

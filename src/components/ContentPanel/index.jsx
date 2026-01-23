@@ -163,7 +163,7 @@ const ContentPanel = ({ setCurrentProject }) => {
 
 
     return (
-        <aside className={`relative select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col relative`} ref={contentPanelContainerRef} style={{
+        <aside id="left_panel" className={`relative select-none !h-full content-panel w-1/4 pl-3 bg-background overflow-y-auto overflow-x-hidden ${!isLeftSidebarOpen ? '!w-0 !p-0 !border-none' : "px-2"} ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col relative `} ref={contentPanelContainerRef} style={{
             width: leftWidth
         }}>
 

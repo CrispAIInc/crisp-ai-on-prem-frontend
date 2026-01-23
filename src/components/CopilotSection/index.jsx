@@ -958,7 +958,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   const [selectedModel, setSelectedModel] = useState(MODELS[0].value);
 
   return (
-    <article className="relative flex flex-col flex-1 mb-3 h-full max-w-[650px] mx-auto ">
+    <article
+      id="copilot"
+      className="relative flex flex-col flex-1 mb-3 h-full max-w-[650px] mx-auto ">
       <section className={`flex flex-wrap items-center gap-3 ${messages.length > 0 && 'mb-3'}`}>
         {
           notes.map((note, i) => {
