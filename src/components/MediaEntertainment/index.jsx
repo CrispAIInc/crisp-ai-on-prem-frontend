@@ -1,12 +1,20 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import { useToast } from "../../contexts/toastContext";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import makeApiRequest from '../../api';
 import MetadataVerbosity from '../MetadataVerbosity';
 import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
 import useResources from '../../hooks/useResources';
+import GsFile from '../GsFile/index.jsx';
+import LoadingSpinner from '../LoadingSpinner/index.jsx';
+import BaseHeading from '../BaseHeading/index.jsx';
+import { searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils.js';
+import FilenameUpdateModal from "../AppSingleValueModal";
+import useFirebase from '../../hooks/useFirebase.js';
 
 // const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function MediaEntertainment({
@@ -22,6 +30,8 @@ function MediaEntertainment({
     setVerbosityValue,
     isGeneratingReel,
     setIsGeneratingReel }) {
+
+    const { getPublicUrl } = useFirebase();
 
     const { getReels } = useResources({ setReels });
 
@@ -110,8 +120,76 @@ function MediaEntertainment({
         });
     }
 
+    const [reelsSearchValue, setReelsSearchValue] = useState("");
+    const [reelsResults, setReelsResults] = useState(reels);
+    useEffect(() => {
+        setReelsResults(sortBySourcePath(reels));
+    }, [reels]);
+    const handleReelsSearch = (e) => {
+        const value = e.target.value;
+        setReelsSearchValue(value);
+
+        if (value.trim() === "") {
+            setReelsResults(sortArrayOfObjects(reels, "title"));
+        } else {
+            const filtered = searchByKey(reels, "title", value);
+            setReelsResults(sortArrayOfObjects(filtered, "title"));
+        }
+    };
+
+    const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
+    function handleOpenFilenameUpdateModal(event, reel) {
+        event.stopPropagation();
+        setReelTitleUpdateValue(reel.title);
+        setShowUpdateReelTitleModal(true);
+    }
+
+    const [hoveredReel, setHoveredReel] = useState(null);
+    const hoveredReelRef = useRef(null);
+    const handleMouseEnterReel = (id) => {
+        setHoveredReel(id);
+        hoveredReelRef.current = id;
+    };
+    const handleMouseLeaveReel = () => {
+        setHoveredReel(null);
+    };
+
+    const [isReelDeleting, setIsReelDeleting] = useState(false);
+    async function deleteReel(event, reel) {
+        event.preventDefault();
+        setIsReelDeleting(true);
+        try {
+            const publicReelUrl = await getPublicUrl(reel.reel_video_url);
+            await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
+                videoUrl: publicReelUrl,
+            }));
+
+            notify({
+                variant: "success",
+                heading: "Reel deleted successfully!",
+            });
+            getReels();
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "An error occurred while deleting the reel",
+            });
+        } finally {
+            setIsReelDeleting(false);
+        }
+    }
+
+    const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
+
+    const showSelectedReel = (e, reel, index) => {
+        setReel(reel);
+        setIsReelOpen(true);
+    };
+
     return (
-        <div className='z-20 flex flex-col gap-3'>
+        <div className='z-20 flex flex-col gap-3 h-full'>
             {/* context */}
             <div className="relative w-full mt-6">
                 <div className="flex flex-col mb-2">
@@ -173,6 +251,56 @@ function MediaEntertainment({
                 )}
             </div>
 
+            {/* ============= list of reels ============= */}
+            <div className="flex flex-col mb-2 gap-2 h-full overflow-hidden">
+                {(reels?.length > 0 || reelsResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={reelsSearchValue} onChange={handleReelsSearch} />}
+                {
+
+                    (reels?.length === 0 || reelsResults?.length === 0) ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                        :
+                        <div className="overflow-y-auto h-full">
+                            {reelsResults?.map((reel, index) => (
+                                <div key={reel.id} className={`flex items-center gap-2 ${theme === 'light'
+                                    ? 'hover:bg-textColor-100/10'
+                                    : 'hover:bg-light-hover-200/20'
+                                    } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
+
+                                    <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
+                                    <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                        }`}>{reel.title}</p>
+
+                                    {
+                                        hoveredReel === reel?.id && (
+                                            <>
+                                                <EditOutlinedIcon
+                                                    className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                                    onClick={(event) => { event.stopPropagation(); handleOpenFilenameUpdateModal(event, reel); }}
+                                                />
+                                                {isReelDeleting ? <LoadingSpinner isSmall isDeleting /> : <DeleteIcon
+                                                    onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
+                                                    className="text-red-400 cursor-pointer"
+                                                />}
+                                            </>
+                                        )
+                                    }
+                                </div>
+                            ))}
+                        </div>
+                }
+            </div>
+
+            {
+                showUpdateReelTitleModal && (
+                    <FilenameUpdateModal
+                        value={reelTitleUpdateValue}
+                        setValue={setReelTitleUpdateValue}
+                        label="Update reel title"
+                        show={showUpdateReelTitleModal}
+                        onHide={() => setShowUpdateReelTitleModal(false)}
+                        reel={reels.find(r => r.id === hoveredReelRef.current)}
+                    />
+                )
+            }
             {(isReelGenerated) && <ReelViewer closeReel={closeReel} reel={reel} setReel={setReel} reels={reels} setReels={setReels} />}
         </div>
     );
