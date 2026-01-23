@@ -830,6 +830,7 @@ const ContentSection = ({
                         <div className="flex flex-col gap-0">
 
                             <div
+                                id="upload_sources"
                                 className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={() => handleAddModal(true)}
                             >
@@ -839,6 +840,7 @@ const ContentSection = ({
                             </div>
 
                             <div
+                                id="source_explorer"
                                 className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={handleExploreSources}
                             >
@@ -847,6 +849,7 @@ const ContentSection = ({
                             </div>
 
                             <div
+                                id="discovery"
                                 className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={() => setIsSearching(!isSearching)}
                             >

@@ -75,7 +75,9 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
     // const isRtlLanguage = (langCode) => ["ar", "iw", "fa", "ur", "ps", "sd"].includes(langCode);
 
     return (
-        <div className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
+        <div
+            id="combined_summary"
+            className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
             {(activeView === 'resource') && <Accordion isFirstOpen={Boolean(messages.length === 0)} chosenLanguage={"en"} heading={`Sources Summary ${selectedSources > 0 ? `(${selectedSources} Source${selectedSources > 1 ? "s" : ""})` : ""}`} >
                 <div className="flex-1">
                     <div className={`${theme === "light"

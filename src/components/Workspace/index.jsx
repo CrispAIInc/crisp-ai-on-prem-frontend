@@ -37,7 +37,9 @@ const Workspace = () => {
     const [messages, setMessages] = useState(currentChat?.messages || []);
 
     return (
-        <main className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
+        <main
+            id="interaction"
+            className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
 
             <h5 className={`select-none text-center ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
                 } py-[10px]`}>Interaction</h5>
@@ -77,10 +79,6 @@ const Workspace = () => {
             >
                 <SwapHorizOutlinedIcon className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => { setIsRightSidebarOpen(!isRightSidebarOpen); }} />
             </div>
-
-            {/* <Drawer anchor="right" open={true}>
-                <ReelProps />
-            </Drawer> */}
         </main>
     );
 };
