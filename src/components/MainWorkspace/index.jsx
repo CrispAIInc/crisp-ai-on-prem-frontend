@@ -14,26 +14,26 @@ import "./MainWorkspace.css";
 export const JOYRIDE_STEPS = [
   {
     target: "#left_panel",
-    title: "Your Workspace",
-    content: "This is the main navigation panel where all your sources and tools live.",
+    title: "Ingestion section",
+    content: "This is where all your ingested (uploaded) sources live.",
     placement: "right",
   },
   {
     target: "#upload_sources",
-    title: "Upload Sources",
-    content: "Upload documents, videos, or files to start building your knowledge base.",
+    title: "Ingest",
+    content: "Create indexes or Upload videos, files or any other documents to start building your knowledge base.",
     placement: "right",
   },
   {
     target: "#source_explorer",
     title: "Source Explorer",
-    content: "Browse, manage, and organize all your uploaded sources in one place.",
+    content: "Browse, manage, and organize all your ingested sources in one place.",
     placement: "right",
   },
   {
     target: "#discovery",
     title: "Discovery",
-    content: "Explore insights and patterns extracted from your content automatically.",
+    content: "Explore moments extracted from your sources automatically.",
     placement: "right",
   },
   {
@@ -44,17 +44,17 @@ export const JOYRIDE_STEPS = [
   {
     target: "#combined_summary",
     title: "Combined Summary",
-    content: "Get a unified summary generated from multiple sources.",
+    content: "Get a unified summary generated from one or multiple sources.",
   },
   {
     target: "#copilot",
     title: "AI Copilot",
-    content: "Your AI assistant that helps you reason, analyze, and generate insights.",
+    content: "Your Crisp Wiz assistant that helps you reason, analyze, and generate insights.",
   },
   {
     target: "#genMetadata",
     title: "Generate Metadata",
-    content: "Automatically extract structured metadata from your content.",
+    content: "Automatically extract structured metadata from your content (e.g. Chapters, Highlights, Keywords, etc.).",
     placement: "left",
   },
   {
