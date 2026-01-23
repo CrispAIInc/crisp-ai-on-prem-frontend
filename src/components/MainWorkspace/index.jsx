@@ -74,7 +74,8 @@ export const JOYRIDE_STEPS = [
 const MainWorkspace = ({ currentProject, setCurrentProject }) => {
 
   // ================== joyride =================
-  const [run, setRun] = useState(true);
+  const [run, setRun] = useState(JSON.parse(localStorage.getItem("app_guide_completed")) !== true);
+
 
   return (
     <>
@@ -103,9 +104,10 @@ const MainWorkspace = ({ currentProject, setCurrentProject }) => {
               boxShadow: "0 0 0 9999px rgba(0,0,0,0.55)",
             },
           }}
-          callback={(data) => {
-            if (data.status === "finished" || data.status === "skipped") {
+          callback={({ status }) => {
+            if (status === "finished" || status === "skipped") {
               setRun(false);
+              localStorage.setItem("app_guide_completed", true);
             }
           }}
         />
