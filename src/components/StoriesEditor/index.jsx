@@ -754,7 +754,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
 
 
             {/* list of insights and stories */}
-            <div className='relative z-10 flex flex-col flex-1 h-full overflow-y-hidden'>
+            <div className='relative z-10 flex flex-col flex-1 h-full overflow-hidden'>
                 <div>
                     {/* <MetadataGen key={0} name="genMetadata" /> */}
                     <div className="relative z-10 flex items-center gap-3 mt-4 mb-3">
@@ -782,7 +782,9 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                 {/* notes */}
                 {
                     currentTab === "Insights" ?
-                        <InsightsList />
+                        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
+                            <InsightsList />
+                        </div>
                         : currentTab === "Stories" ?
                             <>
                                 <div className="flex flex-col overflow-y-auto">
