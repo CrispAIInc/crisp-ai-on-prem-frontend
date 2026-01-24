@@ -762,7 +762,7 @@ const ChatPanel = () => {
             <div className="flex justify-around gap-5 mt-2 flex-items">
               {[
                 { id: "genMetadata", title: "Cataloging" },
-                { id: "genStories", title: "Stories" },
+                { id: "genStories", title: "Insights & Stories" },
                 { id: "genMedia", title: "Reels" }
               ].map(item => (
                 <h6
