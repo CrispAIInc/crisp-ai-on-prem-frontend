@@ -1,5 +1,3 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import LoadingSpinner from '../LoadingSpinner';
 import makeApiRequest from '../../api';
@@ -7,14 +5,226 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import AddIcon from '@mui/icons-material/Add';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import {useToast} from "../../contexts/toastContext"
+import { useToast } from "../../contexts/toastContext";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import RippleButton from '../RippleButton';
 import useResources from '../../hooks/useResources';
+import useFirebase from '../../hooks/useFirebase.js';
+import InsightsList from "../InsightsList";
+import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import DeleteIcon from "@mui/icons-material/Delete";
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import { useResizableSidebar } from '../../hooks/useResizableSidebar';
+import MetadataGen from '../MetadataGen';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import ReactQuill, { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import ImageResize from "quill-image-resize-module-react";
+import toast from 'react-simple-toasts';
+import BaseHeading from '../BaseHeading';
+import { generateRandomHash, htmlToPlainText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
+import MediaEntertainment from '../MediaEntertainment';
+import ReelViewer from '../ReelViewer';
+import GsFile from '../GsFile/index.jsx';
+import FilenameUpdateModal from "../AppSingleValueModal";
 
 function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, setShowStoriesEditor }) {
-    const { displayedSources, theme, setStories } = useContext(MainContext);
-    const { getStories } = useResources({ setStories });
+
+    const { getPublicUrl } = useFirebase();
+
+    const [generatedStory, setGeneratedStory] = useState(null);
+
+    const {
+        setSelectedNote,
+        setIsEditingTitle,
+        setIsNewNote,
+        setShowNoteDetails,
+        reels,
+        setReels,
+        notes,
+        isNewNote,
+        setNotes,
+        showEditor,
+        setShowEditor,
+        selectedNote,
+        noteIndex,
+        setNoteIndex,
+        knowledgeBase,
+        isRightSidebarOpen,
+        setIsRightSidebarOpen,
+        stories,
+        setSelectedStory,
+        selectedStory,
+        displayedSources, theme, setStories,
+        setIsNewStory,
+    } = useContext(MainContext);
+
+    const { notify } = useToast();
+    const { getReels, getStories, getNotes } = useResources({ setReels, setStories, setNotes });
+
+    const [noteTitle, setNoteTitle] = useState('');
+
+    const [isNewInsight, setIsNewInsight] = useState(false);
+    function createNewInsight() {
+        setSelectedNote({
+            note_id: "",
+            text: [{
+                content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
+                    videoLinks: [],
+                    keyframeLinks: [],
+                    pdfLinks: [],
+                    imageLinks: [],
+                }
+            }],
+            images: [],
+            note_name: "",
+        });
+        setIsNewInsight(true);
+        setShowEditor(true);
+    }
+
+    useEffect(() => {
+        setNoteTitle(selectedNote?.note_name);
+    }, [selectedNote?.note_name]);
+
+    const showSelectedNote = (event, note, index) => {
+        setSelectedStory({
+            story_id: "",
+            text: [],
+            story_name: "",
+            models: [],
+        });
+        event.preventDefault();
+        setNoteIndex(index);
+        setSelectedNote(note);
+        setIsEditingTitle(false);
+        setIsNewNote(false);
+        setShowNoteDetails(true);
+        setShowEditor(true);
+    };
+
+    const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
+
+    const showSelectedStory = (e, story) => {
+        setSelectedNote({
+            note_id: "",
+            text: [{
+                content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
+                    videoLinks: [],
+                    keyframeLinks: [],
+                    pdfLinks: [],
+                    imageLinks: [],
+                }
+            }],
+            images: [],
+            note_name: "",
+        });
+        setSelectedStory(story);
+        setGeneratedStory(story);
+        setIsNewStory(false);
+        setShowStoriesEditor(true);
+    };
+
+    const [actualTab, setActualTab] = useState("genMetadata"); //genMetadata | genStories
+
+    const [hoveredInsight, setHoveredInsight] = useState(null);
+    const handleMouseEnterInsight = (id) => {
+        setHoveredInsight(id);
+    };
+    const handleMouseLeaveInsight = () => {
+        setHoveredInsight(null);
+    };
+
+    const [isInsightDeleting, setIsInsightDeleting] = useState(false);
+    async function deleteInsight(id, name) {
+        try {
+            setIsInsightDeleting(true);
+            await makeApiRequest(`/delete-note`, 'post', { noteID: id, noteName: name });
+            // send request to update notes
+            notify({
+                variant: "success",
+                heading: "Insight deleted successfully!",
+            });
+            getNotes();
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setIsInsightDeleting(false);
+        }
+    }
+
+    const [hoveredStory, setHoveredStory] = useState(null);
+    const handleMouseEnterStory = (id) => {
+        setHoveredStory(id);
+    };
+    const handleMouseLeaveStory = () => {
+        setHoveredStory(null);
+    };
+
+    const [isStoryDeleting, setIsStoryDeleting] = useState(false);
+
+    async function deleteStory(event, id) {
+        event.preventDefault();
+        setIsStoryDeleting(true);
+        try {
+            await makeApiRequest(`/stories/${id}`, 'delete');
+            notify({
+                variant: "success",
+                heading: "Story deleted successfully!",
+            });
+            // fetch stories
+            getStories();
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "An error occurred while deleting story",
+            });
+        } finally {
+            setIsStoryDeleting(false);
+        }
+    }
+
+    const [insightSearchValue, setInsightSearchValue] = useState("");
+    const [notesResults, setNotesResults] = useState(notes);
+    useEffect(() => {
+        setNotesResults(sortBySourcePath(notes));
+    }, [notes]);
+    const handleInsightSearch = (e) => {
+        const value = e.target.value;
+        setInsightSearchValue(value);
+
+        if (value.trim() === "") {
+            setNotesResults(sortArrayOfObjects(notes, "note_name"));
+        } else {
+            const filtered = searchByKey(notes, "note_name", value);
+            setNotesResults(sortArrayOfObjects(filtered, "note_name"));
+        }
+    };
+    const [storiesSearchValue, setStoriesSearchValue] = useState("");
+    const [storiesResults, setStoriesResults] = useState(stories);
+    useEffect(() => {
+        setStoriesResults(sortBySourcePath(stories));
+    }, [stories]);
+    const handleStoriesSearch = (e) => {
+        const value = e.target.value;
+        setStoriesSearchValue(value);
+
+        if (value.trim() === "") {
+            setStoriesResults(sortArrayOfObjects(stories, "story_name"));
+        } else {
+            const filtered = searchByKey(stories, "story_name", value);
+            setStoriesResults(sortArrayOfObjects(filtered, "story_name"));
+        }
+    };
+
+
+
+
     const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
     const [context, setContext] = useState('');
@@ -22,8 +232,6 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
 
     const [isLoading, setIsLoading] = useState(false);
     const [isPending, setIsPending] = useState(false);
-
-    const { notify } = useToast();
 
     const [value, setValue] = useState('');
     const editorRef = useRef(null);
@@ -484,9 +692,9 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                     </style>
                 )
             }
-            <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
-                {/* story title */}
-                <input
+            {/* <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'> */}
+            {/* story title */}
+            {/* <input
                     className={`${theme === 'dark' && 'text-textColor-100'
                         } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} !outline-none w-full`}
                     placeholder="New title..."
@@ -506,7 +714,6 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
 
                 {story !== null && <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                     }`}>
-                    {/* <h3 className="mb-2 italic text-center">{story.story_name}</h3> */}
                     {
                         (story.text.length === 0 && story?.content !== "") ? (
                             <p dangerouslySetInnerHTML={{ __html: story?.content }}></p>
@@ -517,7 +724,6 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                                     section.content?.map((content, index) => (
                                         <div key={index}>
                                             <p>{content.answer}</p>
-                                            {/* refs */}
                                             <div className="mt-2 mb-4">
                                                 {
                                                     content?.videosArr?.map((ref, index) => (
@@ -537,14 +743,77 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                                                 }
 
                                             </div>
-                                            {/* ... */}
                                         </div>
                                     ))
                                 }
                             </div>
                         ))
                     }
-                </div>}
+                </div>} */}
+            {/* </div> */}
+
+
+            {/* list of insights and stories */}
+            <div className='relative z-10 flex flex-col flex-1 h-full overflow-y-hidden'>
+                <div>
+                    {/* <MetadataGen key={0} name="genMetadata" /> */}
+                    <div className="relative z-10 flex items-center gap-3 mt-4 mb-3">
+                        {
+                            [
+                                {
+                                    icon: ArticleOutlinedIcon,
+                                    title: "Insights"
+                                },
+                                {
+                                    icon: AutoStoriesOutlinedIcon,
+                                    title: "Stories"
+                                },
+                            ].map(({ icon: Icon, title }, index) => {
+                                return (
+                                    <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
+                                        <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
+                                        <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+                </div>
+                {/* notes */}
+                {
+                    currentTab === "Insights" ?
+                        <InsightsList />
+                        : currentTab === "Stories" ?
+                            <>
+                                <div className="flex flex-col overflow-y-auto">
+                                    {(stories?.length > 0 || storiesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={storiesSearchValue} onChange={handleStoriesSearch} />}
+                                    {
+                                        (storiesResults?.length === 0 || stories?.length === 0) ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                                            :
+                                            storiesResults?.map((story, index) => (
+                                                <div key={story.story_id} className={`flex items-center gap-2 ${theme === 'light'
+                                                    ? 'hover:bg-textColor-100/10'
+                                                    : 'hover:bg-light-hover-200/20'
+                                                    } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
+                                                    <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                                                    <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                                        }`}>{story.story_name}</p>
+                                                    {
+                                                        hoveredStory === story?.story_id && (
+                                                            isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                                                onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
+                                                                className="text-red-400 cursor-pointer"
+                                                            />
+                                                        )
+                                                    }
+                                                </div>
+                                            ))
+                                    }
+                                </div>
+                            </>
+                            :
+                            null
+                }
             </div>
         </div>
     );

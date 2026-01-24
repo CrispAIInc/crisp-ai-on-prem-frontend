@@ -163,7 +163,7 @@ const ChatPanel = () => {
 
   const closeEditor = useCallback(() => {
     setIsNewInsight(false);
-    setActualTab(null);
+    // setActualTab(null);
     setSelectedNote({
       note_id: "",
       text: [{
@@ -519,7 +519,7 @@ const ChatPanel = () => {
             Studio</h5>
         </div>
         {/* <RippleButton>Hello</RippleButton> */}
-        {(showEditor || actualTab !== null || showStoriesEditor) && (
+        {(showEditor || showStoriesEditor) && (
           <h5
             onClick={closeEditor}
             className={`absolute right-0 top-2 rotate-180 cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
@@ -788,160 +788,6 @@ const ChatPanel = () => {
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : null
-            }
-          </div>}
-          {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-          {/* insights and stories list */}
-          {actualTab === null && <div className='relative z-10 flex flex-col flex-1 h-full overflow-y-hidden'>
-            <div>
-              {/* <MetadataGen key={0} name="genMetadata" /> */}
-              <div className="relative z-10 flex items-center gap-3 mt-4 mb-3">
-                {
-                  [
-                    {
-                      icon: ArticleOutlinedIcon,
-                      title: "Insights"
-                    },
-                    {
-                      icon: AutoStoriesOutlinedIcon,
-                      title: "Stories"
-                    },
-                    // {
-                    //   icon: PlayCircleOutlineOutlinedIcon,
-                    //   title: "Sizzle Reels"
-                    // }
-                  ].map(({ icon: Icon, title }, index) => {
-                    return (
-                      <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
-                        <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
-                        <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
-                      </div>
-                    );
-                  })
-                }
-              </div>
-            </div>
-            {/* notes */}
-            {
-              currentTab === "Insights" ?
-                <>
-                  <RippleButton
-                    // className={`select-none mt-3 flex items-center justify-center p-1 rounded-full cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/10 !border !border-textColor-100' : '!border !border-textColor-200 hover:bg-light-hover-200/20'} mb-3`}
-                    onClick={createNewInsight}
-                    cssClasses='!py-1 !px-2 !pr-4'
-                  >
-                    <AddIcon className="!w-fit !p-0" />
-                    <span className={` !text-[12px]`}>New Insight</span>
-                  </RippleButton>
-                  <div className="flex flex-col overflow-y-auto">
-                    {/* search input */}
-                    {(notes?.length > 0 || notesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={insightSearchValue} onChange={handleInsightSearch} />}
-                    {
-                      (notesResults?.length === 0 || notes?.length === 0) ? <BaseHeading text="No notes found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
-                        :
-                        (
-                          <div className="flex flex-col gap-2">
-                            {/* list of notes */}
-                            {notesResults?.map((note, index) => (
-                              <div key={note.note_id} className={`flex items-start gap-2 ${theme === 'light'
-                                ? 'hover:bg-textColor-100/10'
-                                : 'hover:bg-light-hover-200/20'
-                                } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterInsight(note.note_id)} onMouseLeave={handleMouseLeaveInsight} onClick={(event) => showSelectedNote(event, note, index)}>
-                                <ArticleOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                                <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                  }`}>{note.note_name}</p>
-                                {
-                                  hoveredInsight === note?.note_id && (
-                                    isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                      onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
-                                      className="text-red-400 cursor-pointer"
-                                    />
-                                  )
-                                }
-                              </div>
-                            ))}
-                          </div>
-                        )
-                    }
-                  </div>
-                </>
-                : currentTab === "Stories" ?
-                  <>
-                    <div className="flex flex-col overflow-y-auto">
-                      {(stories?.length > 0 || storiesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={storiesSearchValue} onChange={handleStoriesSearch} />}
-                      {
-                        (storiesResults?.length === 0 || stories?.length === 0) ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
-                          :
-                          storiesResults?.map((story, index) => (
-                            <div key={story.story_id} className={`flex items-center gap-2 ${theme === 'light'
-                              ? 'hover:bg-textColor-100/10'
-                              : 'hover:bg-light-hover-200/20'
-                              } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
-                              <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                              <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`}>{story.story_name}</p>
-                              {
-                                hoveredStory === story?.story_id && (
-                                  isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                    onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
-                                    className="text-red-400 cursor-pointer"
-                                  />
-                                )
-                              }
-                            </div>
-                          ))
-                      }
-                    </div>
-                  </>
-                  :
-                  <>
-                    {/* <div className="flex flex-col overflow-y-auto">
-                      {(reels?.length > 0 || reelsResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={reelsSearchValue} onChange={handleReelsSearch} />}
-                      {
-                        (reels?.length === 0 || reelsResults?.length === 0) ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
-                          :
-                          reelsResults?.map((reel, index) => (
-                            <div key={reel.id} className={`flex items-center gap-2 ${theme === 'light'
-                              ? 'hover:bg-textColor-100/10'
-                              : 'hover:bg-light-hover-200/20'
-                              } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
-
-                              <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
-                              <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`}>{reel.title}</p>
-
-                              {
-                                hoveredReel === reel?.id && (
-                                  <>
-                                    <EditOutlinedIcon
-                                      className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
-                                      onClick={(event) => { event.stopPropagation(); handleOpenFilenameUpdateModal(event, reel); }}
-                                    />
-                                    {isReelDeleting ? <LoadingSpinner isSmall isDeleting /> : <DeleteIcon
-                                      onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
-                                      className="text-red-400 cursor-pointer"
-                                    />}
-                                  </>
-                                )
-                              }
-                            </div>
-                          ))
-                      }
-                    </div>
-
-                    {
-                      showUpdateReelTitleModal && (
-                        <FilenameUpdateModal
-                          value={reelTitleUpdateValue}
-                          setValue={setReelTitleUpdateValue}
-                          label="Update reel title"
-                          show={showUpdateReelTitleModal}
-                          onHide={() => setShowUpdateReelTitleModal(false)}
-                          reel={reels.find(r => r.id === hoveredReelRef.current)}
-                        />
-                      )
-                    } */}
-                  </>
             }
           </div>}
         </div>
