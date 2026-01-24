@@ -1,42 +1,40 @@
 import "react-quill/dist/quill.snow.css";
-import LoadingSpinner from '../LoadingSpinner';
-import makeApiRequest from '../../api';
+import LoadingSpinner from '../LoadingSpinner/index.jsx';
+import makeApiRequest from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick.js';
 import AddIcon from '@mui/icons-material/Add';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { useToast } from "../../contexts/toastContext";
+import { useToast } from "../../contexts/toastContext.jsx";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import RippleButton from '../RippleButton';
-import useResources from '../../hooks/useResources';
+import RippleButton from '../RippleButton/index.jsx';
+import useResources from '../../hooks/useResources.js';
 import useFirebase from '../../hooks/useFirebase.js';
-import InsightsList from "../InsightsList";
+import InsightsList from "../InsightsList/index.jsx";
 import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import DeleteIcon from "@mui/icons-material/Delete";
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-import MetadataGen from '../MetadataGen';
+import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
+import MetadataGen from '../MetadataGen/index.jsx';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
 import toast from 'react-simple-toasts';
-import BaseHeading from '../BaseHeading';
-import { generateRandomHash, htmlToPlainText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
-import MediaEntertainment from '../MediaEntertainment';
-import ReelViewer from '../ReelViewer';
+import BaseHeading from '../BaseHeading/index.jsx';
+import { generateRandomHash, htmlToPlainText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils.js';
+import MediaEntertainment from '../MediaEntertainment/index.jsx';
+import ReelViewer from '../ReelViewer/index.jsx';
 import GsFile from '../GsFile/index.jsx';
-import FilenameUpdateModal from "../AppSingleValueModal";
+import FilenameUpdateModal from "../AppSingleValueModal/index.jsx";
 import StoriesList from '../StoriesList/index.jsx';
 
-function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, setShowStoriesEditor }) {
+function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowStoriesEditor }) {
 
     const { getPublicUrl } = useFirebase();
-
-    const [generatedStory, setGeneratedStory] = useState(null);
 
     const {
         setSelectedNote,
@@ -290,7 +288,7 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                 httpPayload
             );
 
-            setStory({ ...res, story_name: storyTitle || res?.story_name });
+            setGeneratedStory({ ...res, story_name: storyTitle || res?.story_name });
         } catch (error) {
             console.log(error);
         } finally {
@@ -601,159 +599,6 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                 )}
             </div>
 
-            {/* save button */}
-            {story !== null && <div className="flex items-center gap-1">
-                <div
-                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                        ? 'hover:bg-light-hover-100/30'
-                        : 'hover:bg-light-hover-200/20'
-                        } z-10`}
-                    onClick={handleSaveStory}
-                >
-                    {isPending ? <LoadingSpinner isSmall /> : <AddIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />}
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                        }`}>
-                        Save story
-                    </span>
-                </div>
-                <div
-                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                        ? 'hover:bg-light-hover-100/30'
-                        : 'hover:bg-light-hover-200/20'
-                        } z-10`}
-                    onClick={exportHTML}
-                >
-                    <FileDownloadIcon style={{ color: theme === 'light' ? '#333' : '#ABAEB4' }} />
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                        }`}>
-                        Export
-                    </span>
-                </div>
-                <div
-                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light'
-                        ? 'hover:bg-light-hover-100/30'
-                        : 'hover:bg-light-hover-200/20'
-                        } z-10`}
-                    onClick={() => { setStory(null); setStoryTitle(''); setContext(''); setShowStoriesEditor(false); }}
-                >
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'
-                        }`}>
-                        Clear story
-                    </span>
-                </div>
-
-            </div>
-            }
-
-            {/* editor */}
-
-            <style>
-                {`
-                    .ql-toolbar.ql-snow + .ql-container.ql-snow {
-                        display: none !important;
-                    }
-                `}
-            </style>
-
-            {
-                theme === "light" ? (
-                    <style>
-                        {`
-                        .ql-toolbar {
-                          border-color: #78716C;
-                          background-color: rgba(119, 168, 249, 0.2) !important;
-                          color: red;
-                        }
-                        .ql-snow .ql-stroke {
-                          stroke: #333 !important;
-                        }
-
-                        .ql-picker-label {
-                          color: #333 !important;
-                        }
-                    `}
-                    </style>
-                ) : (
-                    <style>
-                        {`
-                        .ql-toolbar {
-                          border-color: #78716C;
-                          background-color: rgba(119, 168, 249, 0.2) !important;
-                          color: red;
-                        }
-                        .ql-snow .ql-stroke {
-                          stroke: #fff !important;
-                          fill: #fff !important;
-                        }
-
-                        .ql-picker-label {
-                          color: #fff !important;
-                        }
-                    `}
-                    </style>
-                )
-            }
-            {/* <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'> */}
-            {/* story title */}
-            {/* <input
-                    className={`${theme === 'dark' && 'text-textColor-100'
-                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} !outline-none w-full`}
-                    placeholder="New title..."
-                    value={storyTitle}
-                    onChange={(e) => setStoryTitle(e.target.value)}
-                />
-                <ReactQuill
-                    ref={editorRef}
-                    theme="snow"
-                    value={value}
-                    onChange={setValue}
-                    readOnly={false}
-                    className=""
-                    modules={modules}
-                    formats={formats}
-                />
-
-                {story !== null && <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                    }`}>
-                    {
-                        (story.text.length === 0 && story?.content !== "") ? (
-                            <p dangerouslySetInnerHTML={{ __html: story?.content }}></p>
-                        ) : story?.text?.map(section => (
-                            <div key={section.id}>
-                                <h4>{section.outline.name}</h4>
-                                {
-                                    section.content?.map((content, index) => (
-                                        <div key={index}>
-                                            <p>{content.answer}</p>
-                                            <div className="mt-2 mb-4">
-                                                {
-                                                    content?.videosArr?.map((ref, index) => (
-                                                        <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                    ))
-                                                }
-
-                                                {
-                                                    content?.pdfsArr?.map((ref, index) => (
-                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path + " | Page: " + (parseInt(ref?.page) + 1)}</p>
-                                                    ))
-                                                }
-                                                {
-                                                    content?.imgsArr?.map((ref, index) => (
-                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path}</p>
-                                                    ))
-                                                }
-
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        ))
-                    }
-                </div>} */}
-            {/* </div> */}
-
-
             {/* list of insights and stories */}
             <div className='relative z-10 flex flex-col flex-1 h-full overflow-hidden'>
                 <div>
@@ -800,4 +645,4 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
     );
 }
 
-export default StoriesEditor;
+export default StoriesInsightsTab;

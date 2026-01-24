@@ -18,7 +18,7 @@ import makeApiRequest from '../../api';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import BaseHeading from '../BaseHeading';
 import { generateRandomHash, htmlToPlainText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
-import StoriesEditor from '../StoriesEditor';
+import StoriesInsightsTab from '../StoriesInsightsTab';
 import LoadingSpinner from '../LoadingSpinner';
 import MediaEntertainment from '../MediaEntertainment';
 import ReelViewer from '../ReelViewer';
@@ -439,6 +439,12 @@ const ChatPanel = () => {
   const [reelContext, setReelContext] = useState('');
   const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1min)');
 
+  const [storyTitle, setStoryTitle] = useState(generatedStory?.story_name);
+
+  useEffect(() => {
+    setStoryTitle(generatedStory?.story_name);
+  }, [generatedStory?.story_name]);
+
   const [reel, setReel] = useState({
     id: "",
     title: "",
@@ -549,7 +555,7 @@ const ChatPanel = () => {
         />
       )}
 
-      {showStoriesEditor && <StoriesEditor setShowStoriesEditor={setShowStoriesEditor} generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />}
+
 
       {/* Toggle button */}
       <div className="absolute left-0 z-10 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md top-1.5 w-fit">
@@ -753,6 +759,66 @@ const ChatPanel = () => {
             }
           </div>
         </div>
+      ) : showStoriesEditor ? (
+        <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
+          {/* story title */}
+          <input
+            className={`${theme === 'dark' && 'text-textColor-100'
+              } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} !outline-none w-full`}
+            placeholder="New title..."
+            value={storyTitle}
+            onChange={(e) => setStoryTitle(e.target.value)}
+          />
+          {/* <ReactQuill
+            ref={editorRef}
+            theme="snow"
+            value={value}
+            onChange={setValue}
+            readOnly={false}
+            className=""
+            modules={modules}
+            formats={formats}
+          /> */}
+
+          {generatedStory !== null && <div className={`z-10 flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+            }`}>
+            {
+              (generatedStory.text.length === 0 && generatedStory?.content !== "") ? (
+                <p dangerouslySetInnerHTML={{ __html: generatedStory?.content }}></p>
+              ) : generatedStory?.text?.map(section => (
+                <div key={section.id}>
+                  <h4>{section.outline.name}</h4>
+                  {
+                    section.content?.map((content, index) => (
+                      <div key={index}>
+                        <p>{content.answer}</p>
+                        <div className="mt-2 mb-4">
+                          {
+                            content?.videosArr?.map((ref, index) => (
+                              <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                            ))
+                          }
+
+                          {
+                            content?.pdfsArr?.map((ref, index) => (
+                              <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path + " | Page: " + (parseInt(ref?.page) + 1)}</p>
+                            ))
+                          }
+                          {
+                            content?.imgsArr?.map((ref, index) => (
+                              <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path}</p>
+                            ))
+                          }
+
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+              ))
+            }
+          </div>}
+        </div>
       ) : (
         <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
@@ -782,7 +848,7 @@ const ChatPanel = () => {
                 <MetadataGen verbosityValue={verbosityValue} setVerbosityValue={setVerbosityValue}
                   context={context} setContext={setContext} isGeneratingMetadata={isGeneratingMetadata} setIsGeneratingMetadata={setIsGeneratingMetadata} />
               ) : actualTab === "genStories" ? (
-                <StoriesEditor generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
+                <StoriesInsightsTab setShowStoriesEditor={setShowStoriesEditor} generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
               ) : actualTab === "genMedia" ? (
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}

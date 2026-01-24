@@ -123,7 +123,7 @@ function InsightsList() {
                 {/* search input */}
                 {(notes?.length > 0 || notesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={insightSearchValue} onChange={handleInsightSearch} />}
                 {
-                    (notesResults?.length === 0 || notes?.length === 0) ? <BaseHeading text="No notes found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                    (notesResults?.length === 0 || notes?.length === 0) ? <BaseHeading text="No insights found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                         :
                         (
                             <div className="flex flex-col gap-2">
