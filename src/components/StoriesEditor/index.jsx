@@ -30,6 +30,7 @@ import MediaEntertainment from '../MediaEntertainment';
 import ReelViewer from '../ReelViewer';
 import GsFile from '../GsFile/index.jsx';
 import FilenameUpdateModal from "../AppSingleValueModal";
+import StoriesList from '../StoriesList/index.jsx';
 
 function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, setShowStoriesEditor }) {
 
@@ -787,30 +788,8 @@ function StoriesEditor({ generatedStory: story, setGeneratedStory: setStory, set
                         </div>
                         : currentTab === "Stories" ?
                             <>
-                                <div className="flex flex-col overflow-y-auto">
-                                    {(stories?.length > 0 || storiesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={storiesSearchValue} onChange={handleStoriesSearch} />}
-                                    {
-                                        (storiesResults?.length === 0 || stories?.length === 0) ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
-                                            :
-                                            storiesResults?.map((story, index) => (
-                                                <div key={story.story_id} className={`flex items-center gap-2 ${theme === 'light'
-                                                    ? 'hover:bg-textColor-100/10'
-                                                    : 'hover:bg-light-hover-200/20'
-                                                    } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
-                                                    <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                                                    <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                                        }`}>{story.story_name}</p>
-                                                    {
-                                                        hoveredStory === story?.story_id && (
-                                                            isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                                                onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
-                                                                className="text-red-400 cursor-pointer"
-                                                            />
-                                                        )
-                                                    }
-                                                </div>
-                                            ))
-                                    }
+                                <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
+                                    <StoriesList setShowStoriesEditor={setShowStoriesEditor} setGeneratedStory={setGeneratedStory} />
                                 </div>
                             </>
                             :
