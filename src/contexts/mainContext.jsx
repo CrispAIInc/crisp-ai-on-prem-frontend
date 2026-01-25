@@ -1129,7 +1129,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
 
     const metadataOptions = [
-        // { id: "summary", name: "Summary", description: "Generate concise overview" },
+        { id: "summary", name: "Summary", description: "Generate concise overview" },
         // { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
         { id: "highlights", name: "Highlights", description: "Capture key moments" },
         { id: "chapters", name: "Chapters", description: "Divide source into meaningful sections" },
