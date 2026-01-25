@@ -19,6 +19,7 @@ import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
 import StoriesInsightsTab from '../StoriesInsightsTab';
 import './chat-panel.css';
+import StoryEditor from '../StoryEditor/index.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -122,7 +123,7 @@ const ChatPanel = () => {
 
   const { notify } = useToast();
 
-  const { getReels, getStories, getNotes } = useResources({ setReels, setStories, setNotes });
+  const { getStories, getNotes } = useResources({ setReels, setStories, setNotes });
 
   const [value, setValue] = useState('');
   const [noteTitle, setNoteTitle] = useState('');
@@ -982,85 +983,7 @@ const ChatPanel = () => {
           </div>
         </div>
       ) : showStoriesEditor ? (
-        <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
-          <div className="flex gap-2">
-            <RippleButton
-              cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
-              onClick={handleSaveStory}
-            >
-              <AddIcon />
-              <span className={` !text-[12px] font-medium`}>
-                Save story
-              </span>
-            </RippleButton>
-            <RippleButton
-              cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
-              onClick={exportHTML}
-            >
-              <FileDownloadOutlinedIcon />
-              <span className={` !text-[12px] font-medium`}>
-                Export story
-              </span>
-            </RippleButton>
-          </div>
-          {/* story title */}
-          <input
-            className={`${theme === 'dark' && 'text-textColor-100'
-              } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} !outline-none w-full`}
-            placeholder="New title..."
-            value={storyTitle}
-            onChange={(e) => setStoryTitle(e.target.value)}
-          />
-          {/* <ReactQuill
-            ref={editorRef}
-            theme="snow"
-            value={value}
-            onChange={setValue}
-            readOnly={false}
-            className=""
-            modules={modules}
-            formats={formats}
-          /> */}
-
-          {generatedStory !== null && <div className={`z-10 flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-            }`}>
-            {
-              (generatedStory.text.length === 0 && generatedStory?.content !== "") ? (
-                <p dangerouslySetInnerHTML={{ __html: generatedStory?.content }}></p>
-              ) : generatedStory?.text?.map(section => (
-                <div key={section.id}>
-                  <h4>{section.outline.name}</h4>
-                  {
-                    section.content?.map((content, index) => (
-                      <div key={index}>
-                        <p>{content.answer}</p>
-                        <div className="mt-2 mb-4">
-                          {
-                            content?.videosArr?.map((ref, index) => (
-                              <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                            ))
-                          }
-
-                          {
-                            content?.pdfsArr?.map((ref, index) => (
-                              <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path + " | Page: " + (parseInt(ref?.page) + 1)}</p>
-                            ))
-                          }
-                          {
-                            content?.imgsArr?.map((ref, index) => (
-                              <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path}</p>
-                            ))
-                          }
-
-                        </div>
-                      </div>
-                    ))
-                  }
-                </div>
-              ))
-            }
-          </div>}
-        </div>
+        <StoryEditor generatedStory={generatedStory} storyTitle={storyTitle} setStoryTitle={setStoryTitle} />
       ) : (
         <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
