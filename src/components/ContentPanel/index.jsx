@@ -181,7 +181,7 @@ const ContentPanel = ({ setCurrentProject }) => {
                 >
                     {
                         showMetadata ? (
-                            <KeyboardReturnIcon className={`${theme === 'light' ? 'bg-[#333]' : 'bg-[#ABAEB4]'}`} />
+                            <KeyboardReturnIcon />
                         ) : (
                             <AccountTreeOutlinedIcon />
                         )
