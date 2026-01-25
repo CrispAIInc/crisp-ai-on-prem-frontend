@@ -1,33 +1,24 @@
-import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { MainContext } from '../../contexts/mainContext.jsx';
-import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from '@mui/icons-material/Add';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import './chat-panel.css';
-import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-import MetadataGen from '../MetadataGen';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import ImageResize from "quill-image-resize-module-react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import ImageResize from "quill-image-resize-module-react";
-import toast from 'react-simple-toasts';
 import makeApiRequest from '../../api';
+import { MainContext } from '../../contexts/mainContext.jsx';
+import { useToast } from '../../contexts/toastContext.jsx';
+import useFirebase from '../../hooks/useFirebase.js';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
-import BaseHeading from '../BaseHeading';
+import { useResizableSidebar } from '../../hooks/useResizableSidebar';
+import useResources from '../../hooks/useResources';
 import { generateRandomHash, htmlToPlainText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
-import StoriesInsightsTab from '../StoriesInsightsTab';
-import LoadingSpinner from '../LoadingSpinner';
 import MediaEntertainment from '../MediaEntertainment';
+import MetadataGen from '../MetadataGen';
 import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
-import useResources from '../../hooks/useResources';
-import GsFile from '../GsFile/index.jsx';
-import useFirebase from '../../hooks/useFirebase.js';
-import FilenameUpdateModal from "../AppSingleValueModal";
-import { useToast } from '../../contexts/toastContext.jsx';
+import StoriesInsightsTab from '../StoriesInsightsTab';
+import './chat-panel.css';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -511,6 +502,237 @@ const ChatPanel = () => {
 
   // const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
 
+  const [isPending, setIsPending] = useState(false);
+
+  async function handleSaveStory() {
+    try {
+      setIsPending(true);
+      await makeApiRequest('/stories', "POST", JSON.stringify({ ...generatedStory, story_name: storyTitle || generatedStory?.story_name }));
+      notify({
+        variant: "success",
+        heading: "Story saved successfully!",
+      });
+
+      // update stories
+      getStories();
+    }
+    catch (e) {
+      console.log(e);
+      notify({
+        variant: "error",
+        heading: "Oops!",
+        subheading: 'Something bad happened. Please try again.',
+      });
+    } finally {
+      setIsPending(false);
+    }
+  }
+
+  function exportHTML() {
+    var header =
+      "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+      "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+      "xmlns='http://www.w3.org/TR/REC-html40'>" +
+      `<head><meta charset='utf-8'><title>Story:${generatedStory.story_name}</title></head><body>`;
+    var footer = "</body></html>";
+    const htmlString = `
+    <div>
+        <h1 style='text-align: center; margin-bottom: 30px;'>${generatedStory.story_name
+      }</h1>
+    </div>
+    
+    <div>
+        ${generatedStory?.content ? `<div>${generatedStory?.content}</div>` : generatedStory.text
+        ?.map(
+          (item) => `
+            <div>
+                ${item.outline.name
+              ? `
+                    <div>
+                        <div>
+                            <div>
+                                ${item.sectionImages?.length > 0
+                ? `
+                                    <div>
+                                        ${item.sectionImages
+                  .map(
+                    (imgBlob) => `
+                                            <img width="300" height="300" src="${imgBlob}" alt="img" />
+                                        `
+                  )
+                  .join("")}
+                                    </div>
+                                `
+                : ""
+              }
+                                <h3>${item.outline.name.replace(
+                /\n/g,
+                "<br>"
+              )}</h3>
+                            </div>
+                        </div>
+                    </div>
+                `
+              : ""
+            }
+                <div>
+                    <div>
+                        ${item.content
+              ? `
+                            <div>
+                                <div>
+                                    ${typeof item.content === "string"
+                ? `
+                                        ${item.contentImages?.length > 0
+                  ? `
+                                            <div>
+                                                ${item.contentImages
+                    .map(
+                      (imgBlob) => `
+                                                    <img width="300" height="300" src="${imgBlob}" alt="img" />
+                                                `
+                    )
+                    .join("")}
+                                            </div>
+                                        `
+                  : ""
+                }
+                                        <h5>${item.content.replace(
+                  /\n/g,
+                  "<br>"
+                )}</h5>
+                                    `
+                : `
+                                        ${item.content?.map(
+                  (i) => `
+                                            <div>
+                                                <div>
+                                                    ${!i.answer.includes(
+                    "https://oaidalleapiprodscus.blob"
+                  )
+                      ? `
+                                                        <p>${i.answer.replace(
+                        /\n/g,
+                        "<br>"
+                      )}</p>
+                                                    `
+                      : `
+                                                        <img width="300" height="300" src="${i.answer}" alt="image" />
+                                                    `
+                    }
+                                                </div>
+                                                ${(i?.videosArr?.length > 0 ||
+                      i?.keyframesArr?.length > 0 ||
+                      i?.pdfsArr?.length > 0 ||
+                      i?.imgsArr?.length > 0)
+                      ? `
+                                                    <div>
+                                                        <p>References:</p>
+                                                        ${i?.videosArr?.length >
+                        0
+                        ? `
+                                                            <ul>
+                                                                ${i?.videosArr
+                          ?.map(
+                            (video) => `
+                                                                    <li>${video.source_path +
+                              " | Timestamp: " +
+                              video.timestamp
+                              }</li>
+                                                                `
+                          )
+                          .join("")}
+                                                            </ul>
+                                                        `
+                        : ""
+                      }
+                                                        ${i?.keyframeArr
+                        ?.length > 0
+                        ? `
+                                                            <ul>
+                                                                ${i?.keyframeArr
+                          ?.map(
+                            (video) => `
+                                                                    <li>${video.source_path +
+                              " | Keyframe: " +
+                              video.timestamp
+                              }</li>
+                                                                `
+                          )
+                          .join("")}
+                                                            </ul>
+                                                        `
+                        : ""
+                      }
+                                                        ${i?.pdfsArr?.length > 0
+                        ? `
+                                                            <ul>
+                                                                ${i?.pdfsArr
+                          ?.map(
+                            (pdf) => `
+                                                                    <li>${pdf.source_path +
+                              " | Page: " +
+                              (parseInt(
+                                pdf.page
+                              ) +
+                                1)
+                              }</li>
+                                                                `
+                          )
+                          .join("")}
+                                                            </ul>
+                                                        `
+                        : ""
+                      }
+                                                        ${i?.imgsArr?.length > 0
+                        ? `
+                                                            <ul>
+                                                                ${i?.imgsArr?.map(
+                          (img) => `
+                                                                    <li>${img.source_path}</li>
+                                                                `
+                        )
+                          .join("")}
+                                                            </ul>
+                                                        `
+                        : ""
+                      }
+                                                    </div>
+                                                `
+                      : ""
+                    }
+                                            </div>
+                                        `
+                )
+                  .join("")}
+                                    `
+              }
+                                </div>
+                            </div>
+                        `
+              : `<p></p>`
+            }
+                    </div>
+                </div>
+            </div>
+        `
+        )
+        .join("")}
+    </div>
+    `;
+    var sourceHTML = header + htmlString + footer;
+
+    var source =
+      "data:application/vnd.ms-word;charset=utf-8," +
+      encodeURIComponent(sourceHTML);
+    var fileDownload = document.createElement("a");
+    document.body.appendChild(fileDownload);
+    fileDownload.href = source;
+    fileDownload.download = generatedStory.story_name + ".doc";
+    fileDownload.click();
+    document.body.removeChild(fileDownload);
+  }
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
@@ -761,6 +983,26 @@ const ChatPanel = () => {
         </div>
       ) : showStoriesEditor ? (
         <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
+          <div className="flex gap-2">
+            <RippleButton
+              cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
+              onClick={handleSaveStory}
+            >
+              <AddIcon />
+              <span className={` !text-[12px] font-medium`}>
+                Save story
+              </span>
+            </RippleButton>
+            <RippleButton
+              cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
+              onClick={exportHTML}
+            >
+              <FileDownloadOutlinedIcon />
+              <span className={` !text-[12px] font-medium`}>
+                Export story
+              </span>
+            </RippleButton>
+          </div>
           {/* story title */}
           <input
             className={`${theme === 'dark' && 'text-textColor-100'
