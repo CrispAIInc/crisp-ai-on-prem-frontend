@@ -63,14 +63,14 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
             };
             const response = await makeApiRequest('/rename', 'PATCH', JSON.stringify(payload));
 
-            const [[dynamicKey, dynamicValue]] = Object.entries(response);
+            const mediaKey = ['video_url', 'pdf_url', 'img_url'].find(key => response[key]);
 
             setKnowledgeBase(prev => {
                 return prev.map(item => {
                     if (item.source_path === oldFilename) {
                         return {
                             ...item,
-                            [dynamicKey]: dynamicValue,
+                            [mediaKey]: response[mediaKey],
                             source_path: `${filename}.${extension}`
                         };
                     }
