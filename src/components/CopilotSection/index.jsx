@@ -47,7 +47,7 @@ const ChatMessage = ({ text, refs }) => {
           refs?.keyframeLinks?.length > 0 ||
           refs?.pdfLinks?.length > 0 ||
           refs?.imageLinks?.length > 0) && (
-            <p className="mt-2 font-medium">References:</p>
+            <p className="mt-2 font-medium  text-gradient-x">References:</p>
           )}
 
         {/* Video links */}
@@ -60,7 +60,7 @@ const ChatMessage = ({ text, refs }) => {
                   content={`${video.source_path} | Timestamp: ${video.timestamp}`}
                   data-object={video}
                   onClick={(e) => handleVideoLinkClick(e, video)}
-                  cssClasses="ml-0 cursor-pointer break-keep"
+                  cssClasses="ml-0 cursor-pointer break-keep text-gradient-x"
                 />
               );
             })}
@@ -76,7 +76,7 @@ const ChatMessage = ({ text, refs }) => {
                 content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
                 data-object={video}
                 onClick={(e) => handleVideoLinkClick(e, video)}
-                cssClasses="ml-0 cursor-pointer  break-keep"
+                cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
               />
             ))}
           </ul>
@@ -91,7 +91,7 @@ const ChatMessage = ({ text, refs }) => {
                 content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
                 data-object={pdf}
                 onClick={(e) => handlePDFLinkClick(e, pdf)}
-                cssClasses="ml-0 cursor-pointer  break-keep"
+                cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
               />
             ))}
           </ul>
@@ -106,7 +106,7 @@ const ChatMessage = ({ text, refs }) => {
                 content={img.source_path}
                 data-object={img}
                 onClick={(e) => handlePDFLinkClick(e, img)}
-                cssClasses="ml-0 cursor-pointer  break-keep"
+                cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
               />
             ))}
           </ul>
@@ -560,7 +560,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
       refs["videoLinks"].push(video);
       return (
-        <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
+        <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         // <li key={video.source_path} className="ml-0" data-object={video}>
         //   <Link onClick={(event) => handleVideoLinkClick(event, video)}>
         //     {video.source_path + " | Timestamp: " + video.timestamp}
@@ -573,7 +573,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
       refs["keyframeLinks"].push(video);
       return (
-        <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
+        <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         // <li key={video.source_path} className="ml-0" data-object={video}>
         //   <Link onClick={(event) => handleVideoLinkClick(event, video)}>
         //     {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
@@ -586,7 +586,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
       refs["pdfLinks"].push(pdf);
       return (
-        <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handlePDFLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer" />
+        <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handlePDFLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         // <li key={pdf.source_path} className="ml-0" data-object={pdf}>
         //   <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
         //     {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
@@ -1044,125 +1044,132 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                 <div key={index}>
                   <div className={`message bot-message h-full`}>
                     <div
-                      className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
-                        ? "bg-separator text-textColor-200"
-                        : "bg-background_workspace"
+                      className={`relative flex flex-col h-full p-2 m-2 rounded-md break-words shadow-sm ${theme === "light"
+                        ? "!border text-textColor-200"
+                        : "!border !border-textColor-200/30"
                         } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
                     >
-                      {message?.models?.includes("dall-e-3") && message?.img ? (
-                        <>
-                          <b
-                            className={`user-select-none ${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-100"
-                              }`}
-                          >
-                            Crisp Wiz:{" "}
-                          </b>
-                          <div className="flex flex-col flex-1">
-                            <img
-                              src={message?.img}
-                              alt="Image is Loading ..."
-                              onClick={openLightbox}
-                              className="flex-1 mx-auto cursor-pointer"
-                            />
-                            <div className="flex flex-wrap items-center gap-1 mt-3">
-                              <span
-                                className={`text-xs ${theme === "light"
-                                  ? "text-textColor-300"
-                                  : "text-textColor-200"
-                                  }`}
-                              >
-                                <AddOptionsModal
-                                  models={["dall-e-3"]}
-                                  text={message?.img}
-                                  addToNewNote={addToNewNote}
-                                  addToExistingNote={addToExistingNote}
-                                  setExistingNote={setExistingNote}
-                                  question={message?.question}
-                                  existingNote={existingNote}
-                                  onHide={onHide}
-                                  isNewNote={isNewNote}
-                                  setShowNoteModal={setShowNoteModal}
-                                  updateSelectedNote={setSelectedNote}
-                                  showNoteModal={showNoteModal}
-                                  selectedNote={selectedNote}
-                                  notes={notes} />
-                              </span>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-1 mt-3">
-                              <span
-                                className={`text-xs ${theme === "light"
-                                  ? "text-textColor-300"
-                                  : "text-textColor-200"
-                                  }`}
-                              >
-                                {message?.models?.map((item, index) => (
-                                  <span
-                                    key={index}
-                                    className={`text-xs divide-x ${theme === "light"
-                                      ? "text-textColor-300"
-                                      : "text-textColor-200"
-                                      }`}
-                                  >
-                                    {item.toUpperCase()}
-                                  </span>
-                                ))}
-                              </span>
-                            </div>
-                            {isLightboxOpen && (
-                              <PreviewModal closeLightbox={closeLightbox} content={message?.img} />
-                            )}
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <b
-                            className={`user-select-none ${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-100"
-                              }`}
-                          >
-                            Crisp Wiz:{" "}
-                          </b>
-                          <div
-                            className={`${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-100"
-                              } break-words`}
-                          >
-                            <ChatMessage text={message?.botText} refs={message?.refs} />
-                          </div>
-                          {showCursor && index == responseIndex ? (
-                            <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
-                              <AutoAwesomeIcon className="animate-fade-in" />
-                              <AnimatedText text='Thinking...' />
-                            </div>
-                          ) : null}
-                          {
-                            (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
-                          }
 
-                          <AddOptionsModal
-                            text={
-                              message?.botText
+                      <div className="z-10">
+                        {message?.models?.includes("dall-e-3") && message?.img ? (
+                          <>
+                            <b
+                              className={`user-select-none ${theme === "light"
+                                ? "text-textColor-300"
+                                : "text-textColor-100"
+                                }`}
+                            >
+                              Crisp Wiz:{" "}
+                            </b>
+                            <div className="flex flex-col flex-1">
+                              <img
+                                src={message?.img}
+                                alt="Image is Loading ..."
+                                onClick={openLightbox}
+                                className="flex-1 mx-auto cursor-pointer"
+                              />
+                              <div className="flex flex-wrap items-center gap-1 mt-3">
+                                <span
+                                  className={`text-xs ${theme === "light"
+                                    ? "text-textColor-300"
+                                    : "text-textColor-200"
+                                    }`}
+                                >
+                                  <AddOptionsModal
+                                    models={["dall-e-3"]}
+                                    text={message?.img}
+                                    addToNewNote={addToNewNote}
+                                    addToExistingNote={addToExistingNote}
+                                    setExistingNote={setExistingNote}
+                                    question={message?.question}
+                                    existingNote={existingNote}
+                                    onHide={onHide}
+                                    isNewNote={isNewNote}
+                                    setShowNoteModal={setShowNoteModal}
+                                    updateSelectedNote={setSelectedNote}
+                                    showNoteModal={showNoteModal}
+                                    selectedNote={selectedNote}
+                                    notes={notes} />
+                                </span>
+                              </div>
+                              <div className="flex flex-wrap items-center gap-1 mt-3">
+                                <span
+                                  className={`text-xs ${theme === "light"
+                                    ? "text-textColor-300"
+                                    : "text-textColor-200"
+                                    }`}
+                                >
+                                  {message?.models?.map((item, index) => (
+                                    <span
+                                      key={index}
+                                      className={`text-xs divide-x ${theme === "light"
+                                        ? "text-textColor-300"
+                                        : "text-textColor-200"
+                                        }`}
+                                    >
+                                      {item.toUpperCase()}
+                                    </span>
+                                  ))}
+                                </span>
+                              </div>
+                              {isLightboxOpen && (
+                                <PreviewModal closeLightbox={closeLightbox} content={message?.img} />
+                              )}
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {/* mesh gradient */}
+                            <div className="w-16 h-16 bg-blue-500 rounded-full absolute left-0 top-0 z-50 blur-[160px]"></div>
+                            <div className="w-16 h-16 bg-purple-500 rounded-full absolute left-35 top-40 z-50 blur-[160px]"></div>
+                            <div className="w-16 h-16 bg-pink-400 rounded-full absolute left-1/2 top-80 z-50 blur-[160px]"></div>
+                            <b
+                              className={`user-select-none ${theme === "light"
+                                ? "text-textColor-300"
+                                : "text-textColor-100"
+                                }`}
+                            >
+                              Crisp Wiz:{" "}
+                            </b>
+                            <div
+                              className={`${theme === "light"
+                                ? "text-textColor-300"
+                                : "text-textColor-100"
+                                } break-words`}
+                            >
+                              <ChatMessage text={message?.botText} refs={message?.refs} />
+                            </div>
+                            {showCursor && index == responseIndex ? (
+                              <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
+                                <AutoAwesomeIcon className="animate-fade-in" />
+                                <AnimatedText text='Thinking...' />
+                              </div>
+                            ) : null}
+                            {
+                              (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                             }
-                            addToNewNote={addToNewNote}
-                            refs={message?.refs}
-                            addToExistingNote={addToExistingNote}
-                            setExistingNote={setExistingNote}
-                            question={noteQuestion.current}
-                            existingNote={existingNote}
-                            onHide={onHide}
-                            isNewNote={isNewNote}
-                            setShowNoteModal={setShowNoteModal}
-                            updateSelectedNote={setSelectedNote}
-                            showNoteModal={showNoteModal}
-                            selectedNote={selectedNote}
-                            notes={notes}
-                          />
-                        </>
-                      )}
+
+                            <AddOptionsModal
+                              text={
+                                message?.botText
+                              }
+                              addToNewNote={addToNewNote}
+                              refs={message?.refs}
+                              addToExistingNote={addToExistingNote}
+                              setExistingNote={setExistingNote}
+                              question={noteQuestion.current}
+                              existingNote={existingNote}
+                              onHide={onHide}
+                              isNewNote={isNewNote}
+                              setShowNoteModal={setShowNoteModal}
+                              updateSelectedNote={setSelectedNote}
+                              showNoteModal={showNoteModal}
+                              selectedNote={selectedNote}
+                              notes={notes}
+                            />
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
