@@ -70,6 +70,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
                     if (item.source_path === oldFilename) {
                         return {
                             ...item,
+                            thumbnail: response.thumbnail,
                             [mediaKey]: response[mediaKey],
                             source_path: `${filename}.${extension}`
                         };
@@ -980,6 +981,7 @@ const ContentSection = ({
                                                         className="object-cover w-full h-full rounded-md"
                                                         gsUrl={option.thumbnail}
                                                         alt="Video Thumbnail"
+                                                        isPrivate
                                                     />}
                                             </div>
                                             <div className="flex flex-col ">
