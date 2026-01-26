@@ -1053,8 +1053,8 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
     ${theme === "light"
                         ? "!border text-textColor-200"
                         : "!border !border-textColor-200/30 text-textColor-100"}
-    ${sidebarWidth === maxWidth && "!w-2/3 mx-auto"} bg-[radial-gradient(at_15%_20%,rgba(171,95,199,0.22),transparent_40%),radial-gradient(at_85%_25%,rgba(119,83,237,0.20),transparent_50%),radial-gradient(at_50%_80%,rgba(171,95,199,0.16),transparent_55%)]
-  `}
+    ${sidebarWidth === maxWidth && "!w-2/3 mx-auto"} bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
+  backdrop-blur-sm`}
                   >
 
                     <div className="z-10">
