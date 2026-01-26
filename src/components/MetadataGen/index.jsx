@@ -13,6 +13,8 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
 
     const { knowledgeBase, theme, checkedSourcesCount, setKnowledgeBase, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
 
+    const { notify } = useToast();
+
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
 
     useEffect(() => {
@@ -34,8 +36,6 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
     const [contextFocused, setContextFocused] = useState(false);
-
-    const { notify } = useToast();
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -96,6 +96,11 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
             setContext('');
         } catch (error) {
             console.error(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error.message || "You must check at least one metadata option",
+            });
         } finally {
             setIsGeneratingMetadata(false);
             if (selectedOptions.find(op => op.id === 'embeddings') && selectedSourcesToGen.length !== 0) {
