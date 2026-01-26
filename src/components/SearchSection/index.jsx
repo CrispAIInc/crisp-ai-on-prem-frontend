@@ -28,7 +28,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
     const [isSearching, setIsSearching] = useState(false);
 
     useEffect(() => {
-        if (isPlayerReady && resourceURL && currentResource.file_type === 'video') {
+        if (isPlayerReady && resourceURL && currentResource?.file_type === 'video') {
             const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
             if (timestamp !== undefined && timestamp !== null) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             else;
@@ -53,13 +53,13 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             }
             const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
             let resourceURL = '';
-            if (source.file_type == 'video') {
+            if (source?.file_type == 'video') {
                 resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(rest.source_path)}`;
             }
-            else if (source.file_type == 'pdf') {
+            else if (source?.file_type == 'pdf') {
                 resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
             }
-            else if (source.file_type == 'img') {
+            else if (source?.file_type == 'img') {
                 resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
             }
 
@@ -72,7 +72,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
                 setShowSearchModal(true);
             }
 
-            if (source.file_type === "pdf") {
+            if (source?.file_type === "pdf") {
                 setJumpToPage({ page });
             }
         } catch (error) {
