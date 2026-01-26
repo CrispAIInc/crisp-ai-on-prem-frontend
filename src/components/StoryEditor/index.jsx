@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import RippleButton from '../RippleButton';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
@@ -9,6 +9,7 @@ import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
 import useResources from '../../hooks/useResources';
 import LoadingSpinner from '../LoadingSpinner';
+import ReactQuill, { Quill } from 'react-quill';
 
 function StoryEditor({
     generatedStory,
@@ -25,8 +26,125 @@ function StoryEditor({
     const { getStories } = useResources({ setStories });
     const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
+    const modules = useMemo(() => ({
+        toolbar: [
+            [{ header: [1, 2, 3, 4, 5, 6, true] }],
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image', 'video'],
+        ],
+        imageResize: {
+            parchment: Quill.import("parchment"),
+            modules: ["Resize", "DisplaySize", "Toolbar"],
+        }
+    }), []);
+
+    const formats = [
+        'header',
+        'bold',
+        'italic',
+        'underline',
+        'list',
+        'bullet',
+        'link',
+        'image',
+    ];
+
+    const generateStoryHTML = (generatedStory) => {
+        if (!generatedStory) return "";
+
+        // Case 1: raw HTML content
+        if (
+            generatedStory.text.length === 0 &&
+            generatedStory.content !== ""
+        ) {
+            return generatedStory.content;
+        }
+
+        // Case 2: structured sections
+        return generatedStory.text
+            .map(section => `
+      <h4>${section.outline.name}</h4>
+      ${section.content
+                    ?.map(content => `
+          <p>${content.answer}</p>
+
+          <div style="margin: 8px 0 16px 8px;">
+            ${content.videosArr
+                            ?.map(ref => `
+                <p class="ref-link"
+                   data-type="video"
+                   data-source="${ref.source_path}"
+                   data-timestamp="${ref.timestamp}">
+                  ${ref.source_path} | ${ref.timestamp}
+                </p>
+              `)
+                            .join("")}
+
+            ${content.pdfsArr
+                            ?.map(ref => `
+                <p class="ref-link"
+                   data-type="pdf"
+                   data-source="${ref.source_path}"
+                   data-page="${parseInt(ref.page) + 1}">
+                  ${ref.source_path} | Page: ${parseInt(ref.page) + 1}
+                </p>
+              `)
+                            .join("")}
+
+            ${content.imgsArr
+                            ?.map(ref => `
+                <p class="ref-link"
+                   data-type="image"
+                   data-source="${ref.source_path}">
+                  ${ref.source_path}
+                </p>
+              `)
+                            .join("")}
+          </div>
+        `)
+                    .join("")}
+    `)
+            .join("");
+    };
+
 
     const [isPending, setIsPending] = useState(false);
+    const [value, setValue] = useState(generateStoryHTML(generatedStory) || "");
+    const editorRef = useRef(null);
+
+    useEffect(() => {
+        const handler = (e) => {
+            const el = e.target.closest(".ref-link");
+            if (!el) return;
+
+            const type = el.dataset.type;
+
+            if (type === "video") {
+                handleVideoLinkClick(e, {
+                    source_path: el.dataset.source,
+                    timestamp: el.dataset.timestamp,
+                });
+            }
+
+            if (type === "pdf") {
+                handlePDFLinkClick(e, {
+                    source_path: el.dataset.source,
+                    page: el.dataset.page,
+                });
+            }
+
+            if (type === "image") {
+                handlePDFLinkClick(e, {
+                    source_path: el.dataset.source,
+                });
+            }
+        };
+
+        document.addEventListener("click", handler);
+        return () => document.removeEventListener("click", handler);
+    }, []);
+
 
     async function handleSaveStory() {
         try {
@@ -257,6 +375,7 @@ function StoryEditor({
         document.body.removeChild(fileDownload);
     }
 
+
     return (
         <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
             <div className="flex gap-2">
@@ -287,55 +406,67 @@ function StoryEditor({
                 value={storyTitle}
                 onChange={(e) => setStoryTitle(e.target.value)}
             />
-            {/* <ReactQuill
-                ref={editorRef}
-                theme="snow"
-                value={value}
-                onChange={setValue}
-                readOnly={false}
-                className=""
-                modules={modules}
-                formats={formats}
-              /> */}
-
-            {generatedStory !== null && <div className={`z-10 flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                }`}>
+            <div className="h-full overflow-y-auto mt-2">
                 {
-                    (generatedStory.text.length === 0 && generatedStory?.content !== "") ? (
-                        <p dangerouslySetInnerHTML={{ __html: generatedStory?.content }}></p>
-                    ) : generatedStory?.text?.map(section => (
-                        <div key={section.id}>
-                            <h4>{section.outline.name}</h4>
-                            {
-                                section.content?.map((content, index) => (
-                                    <div key={index}>
-                                        <p>{content.answer}</p>
-                                        <div className="mt-2 mb-4">
-                                            {
-                                                content?.videosArr?.map((ref, index) => (
-                                                    <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                ))
-                                            }
+                    theme === "light" ? (
+                        <style>
+                            {`
+                                .ql-container {
+                                    border: 1px solid #ccc !important;
+                                }
+                                .custom-quill .ql-editor { 
+                                    color: #333 !important;
+                                }
+                                .ql-toolbar {
+                                    border-top-left-radius: 8px !important;
+                                    border-top-right-radius: 8px !important;
+                                    border-color: #ccc !important;
+                                    background-color: rgba(119, 168, 249, 0.2) !important;
+                                    color: red;
+                                }
+                                .ql-snow .ql-stroke {
+                                    stroke: #333 !important;
+                                }
 
-                                            {
-                                                content?.pdfsArr?.map((ref, index) => (
-                                                    <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path + " | Page: " + (parseInt(ref?.page) + 1)}</p>
-                                                ))
-                                            }
-                                            {
-                                                content?.imgsArr?.map((ref, index) => (
-                                                    <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path}</p>
-                                                ))
-                                            }
+                                .ql-picker-label {
+                                    color: #333 !important;
+                                }
+                            `}
+                        </style>
+                    ) : (
+                        <style>
+                            {`
+                                .custom-quill .ql-editor {
+                                    color: #FFF !important;
+                                }
+                                .ql-toolbar {
+                                    border-color: #78716C;
+                                    background-color: rgba(119, 168, 249, 0.2) !important;
+                                    color: red;
+                                }
+                                .ql-snow .ql-stroke {
+                                    stroke: #fff !important;
+                                    fill: #fff !important;
+                                }
 
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    ))
+                                .ql-picker-label {
+                                    color: #fff !important;
+                                }
+                            `}
+                        </style>
+                    )
                 }
-            </div>}
+                <ReactQuill
+                    ref={editorRef}
+                    theme="snow"
+                    value={value}
+                    onChange={setValue}
+                    readOnly={false}
+                    className=""
+                    modules={modules}
+                    formats={formats}
+                />
+            </div>
         </div>
     );
 }
