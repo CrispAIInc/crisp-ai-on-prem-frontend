@@ -11,6 +11,8 @@ import useResources from '../../hooks/useResources';
 import LoadingSpinner from '../LoadingSpinner';
 import ReactQuill, { Quill } from 'react-quill';
 
+
+
 function StoryEditor({
     generatedStory,
     storyTitle,
@@ -72,33 +74,33 @@ function StoryEditor({
           <div style="margin: 8px 0 16px 8px;">
             ${content.videosArr
                             ?.map(ref => `
-                <p class="ref-link"
+                <li class="ref-link"
                    data-type="video"
                    data-source="${ref.source_path}"
                    data-timestamp="${ref.timestamp}">
                   ${ref.source_path} | ${ref.timestamp}
-                </p>
+                </li>
               `)
                             .join("")}
 
             ${content.pdfsArr
                             ?.map(ref => `
-                <p class="ref-link"
+                <li class="ref-link"
                    data-type="pdf"
                    data-source="${ref.source_path}"
                    data-page="${parseInt(ref.page) + 1}">
                   ${ref.source_path} | Page: ${parseInt(ref.page) + 1}
-                </p>
+                </li>
               `)
                             .join("")}
 
             ${content.imgsArr
                             ?.map(ref => `
-                <p class="ref-link"
+                <li class="ref-link"
                    data-type="image"
                    data-source="${ref.source_path}">
                   ${ref.source_path}
-                </p>
+                </li>
               `)
                             .join("")}
           </div>
@@ -107,6 +109,118 @@ function StoryEditor({
     `)
             .join("");
     };
+
+    function escapeHTML(str) {
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    function formatReferenceLabel(ref, type) {
+        if (type === "video") {
+            return `${escapeHTML(ref.file_type || "video")} | ${escapeHTML(
+                ref.metadata?.chapters?.title || "Video reference"
+            )}`;
+        }
+
+        if (type === "pdf") {
+            return `${escapeHTML(ref.source_path)} | Page ${parseInt(ref.page, 10) + 1
+                }`;
+        }
+
+        // image
+        return escapeHTML(ref.source_path || "Image reference");
+    }
+
+
+    function renderReferences(
+        refs = [],
+        type,
+        sectionIndex,
+        blockIndex
+    ) {
+        if (!refs || refs.length === 0) return "";
+
+        return refs
+            .map((ref, refIndex) => {
+                return `
+        <p
+          class="reference-link"
+          data-ref-type="${type}"
+          data-section-index="${sectionIndex}"
+          data-block-index="${blockIndex}"
+          data-ref-index="${refIndex}"
+          data-ref-payload='${encodeURIComponent(
+                    JSON.stringify(ref)
+                )}'
+          style="
+            color: #2563eb;
+            cursor: pointer;
+            margin: 4px 0;
+            word-break: break-word;
+          "
+        >
+          ${formatReferenceLabel(ref, type)}
+        </p>
+      `;
+            })
+            .join("");
+    }
+
+
+    function storyToHTML(sections = []) {
+        return sections
+            .map((section, sectionIndex) => {
+                return `
+        <h2
+          style="
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin: 20px 0 10px;
+          "
+        >
+          ${escapeHTML(section.outline?.name || "")}
+        </h2>
+
+        ${section.content
+                        .map((block, blockIndex) => {
+                            return `
+              <p style="margin: 6px 0 10px;">
+                ${escapeHTML(block.answer || "")}
+              </p>
+
+              <div style="margin-left: 20px; margin-bottom: 12px;">
+                ${renderReferences(
+                                block.videosArr,
+                                "video",
+                                sectionIndex,
+                                blockIndex
+                            )}
+                ${renderReferences(
+                                block.pdfsArr,
+                                "pdf",
+                                sectionIndex,
+                                blockIndex
+                            )}
+                ${renderReferences(
+                                block.imgsArr,
+                                "image",
+                                sectionIndex,
+                                blockIndex
+                            )}
+              </div>
+            `;
+                        })
+                        .join("")}
+      `;
+            })
+            .join("");
+    }
+
 
 
     const [isPending, setIsPending] = useState(false);
@@ -144,6 +258,11 @@ function StoryEditor({
         document.addEventListener("click", handler);
         return () => document.removeEventListener("click", handler);
     }, []);
+
+    useEffect(() => {
+        if (!generatedStory?.text) return;
+        setValue(storyToHTML(generatedStory?.text));
+    }, [generatedStory?.text]);
 
 
     async function handleSaveStory() {

@@ -153,6 +153,10 @@ const ChatPanel = () => {
     'image',
   ];
 
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
+
   const closeEditor = useCallback(() => {
     setIsNewInsight(false);
     // setActualTab(null);
@@ -794,7 +798,7 @@ const ChatPanel = () => {
 
       {/* Editor or Tabs */}
       {showEditor ? (
-        <div className="flex-1 h-full overflow-y-auto">
+        <div className="flex-1 h-full overflow-y-auto z-10">
           <div className="h-full max-h-full ml-auto overflow-y-auto !overflow-y-hidden flex flex-col">
             <div className="flex items-center justify-between">
               <RippleButton
@@ -871,7 +875,7 @@ const ChatPanel = () => {
                 theme="snow"
                 value={value}
                 onChange={setValue}
-                readOnly={!isNewInsight}
+                readOnly={false}
                 className="h-full custom-quill"
                 modules={modules}
                 formats={formats}
