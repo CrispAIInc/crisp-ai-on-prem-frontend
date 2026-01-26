@@ -989,21 +989,24 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
               index % 2 == 0 ? (
                 <div key={index} className="my-2 break-all w-fit">
                   <div
-                    className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
+                    className={`message user-message h-full flex flex-col m-2 p-2 shadow-sm rounded-md ${theme === "light"
+                      ? "!border"
+                      : "!border !border-textColor-200/30"
+                      }`}
                   >
                     {
                       message?.models?.includes('gpt-4-vision')
                         ? (
                           <>
                             <div className="flex items-center justify-between">
-                              <b className="user-select-none">You: </b>
+                              <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} user-select-none`}>You: </b>
                               <div
                                 className="cursor-pointer"
                                 onClick={() => {
                                   handleVisionUpload(message?.text?.images, message?.text?.query);
                                 }}
                               >
-                                <ReplayOutlinedIcon />
+                                <ReplayOutlinedIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
                               </div>
                             </div>
                             <div>
@@ -1024,17 +1027,18 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                         ) : (
                           <>
                             <div className="flex items-center justify-between">
-                              <b className="user-select-none">You: </b>
+                              <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} user-select-none`}>You: </b>
                               <div
                                 className="cursor-pointer"
                                 onClick={() => {
                                   handleRepeatQuestion(message?.text, message?.model, true);
                                 }}
                               >
-                                <ReplayOutlinedIcon />
+                                <ReplayOutlinedIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
                               </div>
                             </div>
-                            <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className="m-0 break-keep" dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
+                            <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className={`m-0 break-keep ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}
+${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
                           </>
                         )
                     }
@@ -1057,10 +1061,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                       {message?.models?.includes("dall-e-3") && message?.img ? (
                         <>
                           <b
-                            className={`user-select-none ${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-100"
-                              }`}
+                            className={`user-select-none text-gradient-x`}
                           >
                             Crisp Wiz:{" "}
                           </b>
@@ -1123,10 +1124,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                       ) : (
                         <>
                           <b
-                            className={`user-select-none ${theme === "light"
-                              ? "text-textColor-300"
-                              : "text-textColor-100"
-                              }`}
+                            className={`user-select-none text-gradient-x inline-block mb-2`}
                           >
                             Crisp Wiz:{" "}
                           </b>
