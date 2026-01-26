@@ -1049,11 +1049,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     ${theme === "light"
                         ? "!border text-textColor-200"
                         : "!border !border-textColor-200/30 text-textColor-100"}
-    ${sidebarWidth === maxWidth && "!w-2/3 mx-auto"}
-
-    before:absolute before:inset-0 before:-z-10
-    before:bg-[radial-gradient(at_20%_20%,rgba(99,102,241,0.18),transparent_40%),radial-gradient(at_80%_30%,rgba(14,165,233,0.15),transparent_45%),radial-gradient(at_50%_80%,rgba(168,85,247,0.12),transparent_50%)]
-    before:opacity-70
+    ${sidebarWidth === maxWidth && "!w-2/3 mx-auto"} bg-[radial-gradient(at_15%_20%,rgba(171,95,199,0.22),transparent_45%),radial-gradient(at_85%_25%,rgba(119,83,237,0.20),transparent_50%),radial-gradient(at_50%_80%,rgba(171,95,199,0.16),transparent_55%)]
   `}
                   >
 
