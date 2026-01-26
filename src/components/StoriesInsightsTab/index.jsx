@@ -1,261 +1,50 @@
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
+import { useContext, useEffect, useState } from 'react';
 import "react-quill/dist/quill.snow.css";
-import LoadingSpinner from '../LoadingSpinner/index.jsx';
 import makeApiRequest from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import useReferenceLinkClick from '../../hooks/useReferenceLinkClick.js';
-import AddIcon from '@mui/icons-material/Add';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useToast } from "../../contexts/toastContext.jsx";
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import RippleButton from '../RippleButton/index.jsx';
-import useResources from '../../hooks/useResources.js';
-import useFirebase from '../../hooks/useFirebase.js';
-import InsightsList from "../InsightsList/index.jsx";
-import { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import DeleteIcon from "@mui/icons-material/Delete";
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
-import MetadataGen from '../MetadataGen/index.jsx';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import ReactQuill, { Quill } from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import ImageResize from "quill-image-resize-module-react";
-import toast from 'react-simple-toasts';
+import { sortBySourcePath } from '../../utils.js';
 import BaseHeading from '../BaseHeading/index.jsx';
-import { generateRandomHash, htmlToPlainText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils.js';
-import MediaEntertainment from '../MediaEntertainment/index.jsx';
-import ReelViewer from '../ReelViewer/index.jsx';
-import GsFile from '../GsFile/index.jsx';
-import FilenameUpdateModal from "../AppSingleValueModal/index.jsx";
+import InsightsList from "../InsightsList/index.jsx";
+import RippleButton from '../RippleButton/index.jsx';
 import StoriesList from '../StoriesList/index.jsx';
 
 function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowStoriesEditor }) {
 
-    const { getPublicUrl } = useFirebase();
-
     const {
-        setSelectedNote,
-        setIsEditingTitle,
-        setIsNewNote,
-        setShowNoteDetails,
-        reels,
-        setReels,
         notes,
-        isNewNote,
-        setNotes,
-        showEditor,
-        setShowEditor,
         selectedNote,
-        noteIndex,
-        setNoteIndex,
-        knowledgeBase,
-        isRightSidebarOpen,
-        setIsRightSidebarOpen,
         stories,
-        setSelectedStory,
-        selectedStory,
-        displayedSources, theme, setStories,
-        setIsNewStory,
+        displayedSources, theme,
     } = useContext(MainContext);
 
     const { notify } = useToast();
-    const { getReels, getStories, getNotes } = useResources({ setReels, setStories, setNotes });
 
     const [noteTitle, setNoteTitle] = useState('');
-
-    const [isNewInsight, setIsNewInsight] = useState(false);
-    function createNewInsight() {
-        setSelectedNote({
-            note_id: "",
-            text: [{
-                content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
-                    videoLinks: [],
-                    keyframeLinks: [],
-                    pdfLinks: [],
-                    imageLinks: [],
-                }
-            }],
-            images: [],
-            note_name: "",
-        });
-        setIsNewInsight(true);
-        setShowEditor(true);
-    }
 
     useEffect(() => {
         setNoteTitle(selectedNote?.note_name);
     }, [selectedNote?.note_name]);
 
-    const showSelectedNote = (event, note, index) => {
-        setSelectedStory({
-            story_id: "",
-            text: [],
-            story_name: "",
-            models: [],
-        });
-        event.preventDefault();
-        setNoteIndex(index);
-        setSelectedNote(note);
-        setIsEditingTitle(false);
-        setIsNewNote(false);
-        setShowNoteDetails(true);
-        setShowEditor(true);
-    };
-
     const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
 
-    const showSelectedStory = (e, story) => {
-        setSelectedNote({
-            note_id: "",
-            text: [{
-                content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
-                    videoLinks: [],
-                    keyframeLinks: [],
-                    pdfLinks: [],
-                    imageLinks: [],
-                }
-            }],
-            images: [],
-            note_name: "",
-        });
-        setSelectedStory(story);
-        setGeneratedStory(story);
-        setIsNewStory(false);
-        setShowStoriesEditor(true);
-    };
-
-    const [actualTab, setActualTab] = useState("genMetadata"); //genMetadata | genStories
-
-    const [hoveredInsight, setHoveredInsight] = useState(null);
-    const handleMouseEnterInsight = (id) => {
-        setHoveredInsight(id);
-    };
-    const handleMouseLeaveInsight = () => {
-        setHoveredInsight(null);
-    };
-
-    const [isInsightDeleting, setIsInsightDeleting] = useState(false);
-    async function deleteInsight(id, name) {
-        try {
-            setIsInsightDeleting(true);
-            await makeApiRequest(`/delete-note`, 'post', { noteID: id, noteName: name });
-            // send request to update notes
-            notify({
-                variant: "success",
-                heading: "Insight deleted successfully!",
-            });
-            getNotes();
-        } catch (e) {
-            console.log(e);
-        } finally {
-            setIsInsightDeleting(false);
-        }
-    }
-
-    const [hoveredStory, setHoveredStory] = useState(null);
-    const handleMouseEnterStory = (id) => {
-        setHoveredStory(id);
-    };
-    const handleMouseLeaveStory = () => {
-        setHoveredStory(null);
-    };
-
-    const [isStoryDeleting, setIsStoryDeleting] = useState(false);
-
-    async function deleteStory(event, id) {
-        event.preventDefault();
-        setIsStoryDeleting(true);
-        try {
-            await makeApiRequest(`/stories/${id}`, 'delete');
-            notify({
-                variant: "success",
-                heading: "Story deleted successfully!",
-            });
-            // fetch stories
-            getStories();
-        } catch (error) {
-            console.log(error);
-            notify({
-                variant: "error",
-                heading: "Oops!",
-                subheading: "An error occurred while deleting story",
-            });
-        } finally {
-            setIsStoryDeleting(false);
-        }
-    }
-
-    const [insightSearchValue, setInsightSearchValue] = useState("");
     const [notesResults, setNotesResults] = useState(notes);
     useEffect(() => {
         setNotesResults(sortBySourcePath(notes));
     }, [notes]);
-    const handleInsightSearch = (e) => {
-        const value = e.target.value;
-        setInsightSearchValue(value);
 
-        if (value.trim() === "") {
-            setNotesResults(sortArrayOfObjects(notes, "note_name"));
-        } else {
-            const filtered = searchByKey(notes, "note_name", value);
-            setNotesResults(sortArrayOfObjects(filtered, "note_name"));
-        }
-    };
-    const [storiesSearchValue, setStoriesSearchValue] = useState("");
     const [storiesResults, setStoriesResults] = useState(stories);
     useEffect(() => {
         setStoriesResults(sortBySourcePath(stories));
     }, [stories]);
-    const handleStoriesSearch = (e) => {
-        const value = e.target.value;
-        setStoriesSearchValue(value);
-
-        if (value.trim() === "") {
-            setStoriesResults(sortArrayOfObjects(stories, "story_name"));
-        } else {
-            const filtered = searchByKey(stories, "story_name", value);
-            setStoriesResults(sortArrayOfObjects(filtered, "story_name"));
-        }
-    };
-
-
-
-
-    const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
     const [context, setContext] = useState('');
     const [storyline, setStoryline] = useState('');
 
     const [isLoading, setIsLoading] = useState(false);
-    const [isPending, setIsPending] = useState(false);
-
-    const [value, setValue] = useState('');
-    const editorRef = useRef(null);
-
-    const modules = {
-        toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, true] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image', 'video'],
-        ],
-    };
-
-    const formats = [
-        'header',
-        'bold',
-        'italic',
-        'underline',
-        'list',
-        'bullet',
-        'link',
-        'image',
-    ];
-
-    // const [story, setStory] = useState(generatedStory);
 
     const [storyTitle, setStoryTitle] = useState(story?.story_name);
     useEffect(() => {

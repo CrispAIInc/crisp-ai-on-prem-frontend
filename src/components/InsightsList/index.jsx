@@ -38,6 +38,10 @@ function InsightsList() {
     const [insightSearchValue, setInsightSearchValue] = useState("");
     const [hoveredInsight, setHoveredInsight] = useState(null);
 
+    // useEffect(() => {
+    //     setNotesResults(sortBySourcePath(notes));
+    //   }, [notes]);
+
 
     const handleInsightSearch = (e) => {
         const value = e.target.value;

@@ -1,5 +1,4 @@
 import AddIcon from '@mui/icons-material/Add';
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import ImageResize from "quill-image-resize-module-react";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -8,18 +7,17 @@ import "react-quill/dist/quill.snow.css";
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import { useToast } from '../../contexts/toastContext.jsx';
-import useFirebase from '../../hooks/useFirebase.js';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
 import useResources from '../../hooks/useResources';
-import { generateRandomHash, htmlToPlainText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
+import { generateRandomHash, htmlToPlainText } from '../../utils';
 import MediaEntertainment from '../MediaEntertainment';
 import MetadataGen from '../MetadataGen';
 import ReelViewer from '../ReelViewer';
 import RippleButton from '../RippleButton';
 import StoriesInsightsTab from '../StoriesInsightsTab';
-import './chat-panel.css';
 import StoryEditor from '../StoryEditor/index.jsx';
+import './chat-panel.css';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -85,21 +83,15 @@ ReferenceLink.tagName = "li"; // or 'div', depending on your use
 Quill.register(ReferenceLink, true);
 Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
   const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
 
-  const { getPublicUrl } = useFirebase();
-
   const [generatedStory, setGeneratedStory] = useState(null);
 
   const {
     setSelectedNote,
-    setIsEditingTitle,
-    setIsNewNote,
-    setShowNoteDetails,
     reels,
     setReels,
     notes,
@@ -109,15 +101,12 @@ const ChatPanel = () => {
     setShowEditor,
     selectedNote,
     noteIndex,
-    setNoteIndex,
     knowledgeBase,
     isRightSidebarOpen,
     setIsRightSidebarOpen,
     theme,
-    stories,
     setSelectedStory,
     selectedStory,
-    setIsNewStory,
     setStories
   } = useContext(MainContext);
 
@@ -184,23 +173,6 @@ const ChatPanel = () => {
   }, [setShowEditor]);
 
   const [isNewInsight, setIsNewInsight] = useState(false);
-  function createNewInsight() {
-    setSelectedNote({
-      note_id: "",
-      text: [{
-        content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
-          videoLinks: [],
-          keyframeLinks: [],
-          pdfLinks: [],
-          imageLinks: [],
-        }
-      }],
-      images: [],
-      note_name: "",
-    });
-    setIsNewInsight(true);
-    setShowEditor(true);
-  }
 
   const handleSave = async (event) => {
     event?.preventDefault();
@@ -283,145 +255,15 @@ const ChatPanel = () => {
   }, [selectedNote?.note_name]);
 
   const [showStoriesEditor, setShowStoriesEditor] = useState(false);
-  const showSelectedNote = (event, note, index) => {
-    setSelectedStory({
-      story_id: "",
-      text: [],
-      story_name: "",
-      models: [],
-    });
-    event.preventDefault();
-    setNoteIndex(index);
-    setSelectedNote(note);
-    setIsEditingTitle(false);
-    setIsNewNote(false);
-    setShowNoteDetails(true);
-    setShowEditor(true);
-  };
 
   const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
 
-  const showSelectedStory = (e, story) => {
-    setSelectedNote({
-      note_id: "",
-      text: [{
-        content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
-          videoLinks: [],
-          keyframeLinks: [],
-          pdfLinks: [],
-          imageLinks: [],
-        }
-      }],
-      images: [],
-      note_name: "",
-    });
-    setSelectedStory(story);
-    setGeneratedStory(story);
-    setIsNewStory(false);
-    setShowStoriesEditor(true);
-  };
   // const showSelectedReel = (e, reel, index) => {
   //   setReel(reel);
   //   setIsReelOpen(true);
   // };
 
   const [actualTab, setActualTab] = useState("genMetadata"); //genMetadata | genStories
-
-  const [hoveredInsight, setHoveredInsight] = useState(null);
-  const handleMouseEnterInsight = (id) => {
-    setHoveredInsight(id);
-  };
-  const handleMouseLeaveInsight = () => {
-    setHoveredInsight(null);
-  };
-
-  const [isInsightDeleting, setIsInsightDeleting] = useState(false);
-  async function deleteInsight(id, name) {
-    try {
-      setIsInsightDeleting(true);
-      await makeApiRequest(`/delete-note`, 'post', { noteID: id, noteName: name });
-      // send request to update notes
-      notify({
-        variant: "success",
-        heading: "Insight deleted successfully!",
-      });
-      getNotes();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setIsInsightDeleting(false);
-    }
-  }
-
-  const [hoveredStory, setHoveredStory] = useState(null);
-  const handleMouseEnterStory = (id) => {
-    setHoveredStory(id);
-  };
-  const handleMouseLeaveStory = () => {
-    setHoveredStory(null);
-  };
-
-  const [isStoryDeleting, setIsStoryDeleting] = useState(false);
-
-  async function deleteStory(event, id) {
-    event.preventDefault();
-    setIsStoryDeleting(true);
-    try {
-      await makeApiRequest(`/stories/${id}`, 'delete');
-      notify({
-        variant: "success",
-        heading: "Story deleted successfully!",
-      });
-      // fetch stories
-      getStories();
-    } catch (error) {
-      console.log(error);
-      notify({
-        variant: "error",
-        heading: "Oops!",
-        subheading: "An error occurred while deleting story",
-      });
-    } finally {
-      setIsStoryDeleting(false);
-    }
-  }
-
-  // const [hoveredReel, setHoveredReel] = useState(null);
-  // const hoveredReelRef = useRef(null);
-  // const handleMouseEnterReel = (id) => {
-  //   setHoveredReel(id);
-  //   hoveredReelRef.current = id;
-  // };
-  // const handleMouseLeaveReel = () => {
-  //   setHoveredReel(null);
-  // };
-
-  // const [isReelDeleting, setIsReelDeleting] = useState(false);
-  // async function deleteReel(event, reel) {
-  //   event.preventDefault();
-  //   setIsReelDeleting(true);
-  //   try {
-  //     const publicReelUrl = await getPublicUrl(reel.reel_video_url);
-  //     await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
-  //       videoUrl: publicReelUrl,
-  //     }));
-
-  //     notify({
-  //       variant: "success",
-  //       heading: "Reel deleted successfully!",
-  //     });
-  //     getReels();
-  //   } catch (error) {
-  //     console.log(error);
-  //     notify({
-  //       variant: "error",
-  //       heading: "Oops!",
-  //       subheading: "An error occurred while deleting the reel",
-  //     });
-  //   } finally {
-  //     setIsReelDeleting(false);
-  //   }
-  // }
 
   function handleTabClick(item) {
     setActualTab(item);
@@ -449,294 +291,6 @@ const ChatPanel = () => {
   });
   const [isReelOpen, setIsReelOpen] = useState(false);
 
-  const [insightSearchValue, setInsightSearchValue] = useState("");
-  const [notesResults, setNotesResults] = useState(notes);
-  useEffect(() => {
-    setNotesResults(sortBySourcePath(notes));
-  }, [notes]);
-  const handleInsightSearch = (e) => {
-    const value = e.target.value;
-    setInsightSearchValue(value);
-
-    if (value.trim() === "") {
-      setNotesResults(sortArrayOfObjects(notes, "note_name"));
-    } else {
-      const filtered = searchByKey(notes, "note_name", value);
-      setNotesResults(sortArrayOfObjects(filtered, "note_name"));
-    }
-  };
-  const [storiesSearchValue, setStoriesSearchValue] = useState("");
-  const [storiesResults, setStoriesResults] = useState(stories);
-  useEffect(() => {
-    setStoriesResults(sortBySourcePath(stories));
-  }, [stories]);
-  const handleStoriesSearch = (e) => {
-    const value = e.target.value;
-    setStoriesSearchValue(value);
-
-    if (value.trim() === "") {
-      setStoriesResults(sortArrayOfObjects(stories, "story_name"));
-    } else {
-      const filtered = searchByKey(stories, "story_name", value);
-      setStoriesResults(sortArrayOfObjects(filtered, "story_name"));
-    }
-  };
-  // const [reelsSearchValue, setReelsSearchValue] = useState("");
-  // const [reelsResults, setReelsResults] = useState(reels);
-  // useEffect(() => {
-  //   setReelsResults(sortBySourcePath(reels));
-  // }, [reels]);
-  // const handleReelsSearch = (e) => {
-  //   const value = e.target.value;
-  //   setReelsSearchValue(value);
-
-  //   if (value.trim() === "") {
-  //     setReelsResults(sortArrayOfObjects(reels, "title"));
-  //   } else {
-  //     const filtered = searchByKey(reels, "title", value);
-  //     setReelsResults(sortArrayOfObjects(filtered, "title"));
-  //   }
-  // };
-
-  // const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
-  // function handleOpenFilenameUpdateModal(event, reel) {
-  //   event.stopPropagation();
-  //   setReelTitleUpdateValue(reel.title);
-  //   setShowUpdateReelTitleModal(true);
-  // }
-
-  // const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
-
-  const [isPending, setIsPending] = useState(false);
-
-  async function handleSaveStory() {
-    try {
-      setIsPending(true);
-      await makeApiRequest('/stories', "POST", JSON.stringify({ ...generatedStory, story_name: storyTitle || generatedStory?.story_name }));
-      notify({
-        variant: "success",
-        heading: "Story saved successfully!",
-      });
-
-      // update stories
-      getStories();
-    }
-    catch (e) {
-      console.log(e);
-      notify({
-        variant: "error",
-        heading: "Oops!",
-        subheading: 'Something bad happened. Please try again.',
-      });
-    } finally {
-      setIsPending(false);
-    }
-  }
-
-  function exportHTML() {
-    var header =
-      "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-      "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-      "xmlns='http://www.w3.org/TR/REC-html40'>" +
-      `<head><meta charset='utf-8'><title>Story:${generatedStory.story_name}</title></head><body>`;
-    var footer = "</body></html>";
-    const htmlString = `
-    <div>
-        <h1 style='text-align: center; margin-bottom: 30px;'>${generatedStory.story_name
-      }</h1>
-    </div>
-    
-    <div>
-        ${generatedStory?.content ? `<div>${generatedStory?.content}</div>` : generatedStory.text
-        ?.map(
-          (item) => `
-            <div>
-                ${item.outline.name
-              ? `
-                    <div>
-                        <div>
-                            <div>
-                                ${item.sectionImages?.length > 0
-                ? `
-                                    <div>
-                                        ${item.sectionImages
-                  .map(
-                    (imgBlob) => `
-                                            <img width="300" height="300" src="${imgBlob}" alt="img" />
-                                        `
-                  )
-                  .join("")}
-                                    </div>
-                                `
-                : ""
-              }
-                                <h3>${item.outline.name.replace(
-                /\n/g,
-                "<br>"
-              )}</h3>
-                            </div>
-                        </div>
-                    </div>
-                `
-              : ""
-            }
-                <div>
-                    <div>
-                        ${item.content
-              ? `
-                            <div>
-                                <div>
-                                    ${typeof item.content === "string"
-                ? `
-                                        ${item.contentImages?.length > 0
-                  ? `
-                                            <div>
-                                                ${item.contentImages
-                    .map(
-                      (imgBlob) => `
-                                                    <img width="300" height="300" src="${imgBlob}" alt="img" />
-                                                `
-                    )
-                    .join("")}
-                                            </div>
-                                        `
-                  : ""
-                }
-                                        <h5>${item.content.replace(
-                  /\n/g,
-                  "<br>"
-                )}</h5>
-                                    `
-                : `
-                                        ${item.content?.map(
-                  (i) => `
-                                            <div>
-                                                <div>
-                                                    ${!i.answer.includes(
-                    "https://oaidalleapiprodscus.blob"
-                  )
-                      ? `
-                                                        <p>${i.answer.replace(
-                        /\n/g,
-                        "<br>"
-                      )}</p>
-                                                    `
-                      : `
-                                                        <img width="300" height="300" src="${i.answer}" alt="image" />
-                                                    `
-                    }
-                                                </div>
-                                                ${(i?.videosArr?.length > 0 ||
-                      i?.keyframesArr?.length > 0 ||
-                      i?.pdfsArr?.length > 0 ||
-                      i?.imgsArr?.length > 0)
-                      ? `
-                                                    <div>
-                                                        <p>References:</p>
-                                                        ${i?.videosArr?.length >
-                        0
-                        ? `
-                                                            <ul>
-                                                                ${i?.videosArr
-                          ?.map(
-                            (video) => `
-                                                                    <li>${video.source_path +
-                              " | Timestamp: " +
-                              video.timestamp
-                              }</li>
-                                                                `
-                          )
-                          .join("")}
-                                                            </ul>
-                                                        `
-                        : ""
-                      }
-                                                        ${i?.keyframeArr
-                        ?.length > 0
-                        ? `
-                                                            <ul>
-                                                                ${i?.keyframeArr
-                          ?.map(
-                            (video) => `
-                                                                    <li>${video.source_path +
-                              " | Keyframe: " +
-                              video.timestamp
-                              }</li>
-                                                                `
-                          )
-                          .join("")}
-                                                            </ul>
-                                                        `
-                        : ""
-                      }
-                                                        ${i?.pdfsArr?.length > 0
-                        ? `
-                                                            <ul>
-                                                                ${i?.pdfsArr
-                          ?.map(
-                            (pdf) => `
-                                                                    <li>${pdf.source_path +
-                              " | Page: " +
-                              (parseInt(
-                                pdf.page
-                              ) +
-                                1)
-                              }</li>
-                                                                `
-                          )
-                          .join("")}
-                                                            </ul>
-                                                        `
-                        : ""
-                      }
-                                                        ${i?.imgsArr?.length > 0
-                        ? `
-                                                            <ul>
-                                                                ${i?.imgsArr?.map(
-                          (img) => `
-                                                                    <li>${img.source_path}</li>
-                                                                `
-                        )
-                          .join("")}
-                                                            </ul>
-                                                        `
-                        : ""
-                      }
-                                                    </div>
-                                                `
-                      : ""
-                    }
-                                            </div>
-                                        `
-                )
-                  .join("")}
-                                    `
-              }
-                                </div>
-                            </div>
-                        `
-              : `<p></p>`
-            }
-                    </div>
-                </div>
-            </div>
-        `
-        )
-        .join("")}
-    </div>
-    `;
-    var sourceHTML = header + htmlString + footer;
-
-    var source =
-      "data:application/vnd.ms-word;charset=utf-8," +
-      encodeURIComponent(sourceHTML);
-    var fileDownload = document.createElement("a");
-    document.body.appendChild(fileDownload);
-    fileDownload.href = source;
-    fileDownload.download = generatedStory.story_name + ".doc";
-    fileDownload.click();
-    document.body.removeChild(fileDownload);
-  }
 
   return (
     <aside

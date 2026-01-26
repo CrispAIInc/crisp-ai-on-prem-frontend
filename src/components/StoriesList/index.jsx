@@ -23,6 +23,10 @@ function StoriesList({ setShowStoriesEditor, setGeneratedStory }) {
     const { notify } = useToast();
     const { getStories } = useResources({ setStories });
 
+    // useEffect(() => {
+    //     setStoriesResults(sortBySourcePath(stories));
+    //   }, [stories]);
+
     const showSelectedStory = (e, story) => {
         setSelectedNote({
             note_id: "",
