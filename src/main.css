@@ -34,6 +34,18 @@
   }
 }
 
+.ql-editor .ql-reference {
+  color: #2563eb; /* blue */
+  cursor: pointer;
+  margin: 4px 0;
+  margin-left: 16px; /* indent */
+  word-break: break-word;
+}
+
+.ql-editor .ql-reference:hover {
+  text-decoration: underline;
+}
+
 label {
   user-select: none;
 }

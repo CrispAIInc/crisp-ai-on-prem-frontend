@@ -10,8 +10,71 @@ import { useToast } from '../../contexts/toastContext';
 import useResources from '../../hooks/useResources';
 import LoadingSpinner from '../LoadingSpinner';
 import ReactQuill, { Quill } from 'react-quill';
+import ImageResize from "quill-image-resize-module-react";
 
+Quill.register("modules/imageResize", ImageResize);
 
+// Custom module to handle reference link clicks
+class ReferenceClickHandler {
+    constructor(quill, options) {
+        this.quill = quill;
+        this.options = options;
+        this.handleClick = this.handleClick.bind(this);
+
+        // Add click event listener to the editor
+        this.quill.root.addEventListener('click', this.handleClick);
+    }
+
+    handleClick(e) {
+        const target = e.target;
+
+        // Check if clicked element is a reference link
+        if (target.classList.contains('reference-link')) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const type = target.getAttribute('data-ref-type');
+            const value = target.getAttribute('data-ref-value');
+
+            // Call the callback function passed from options
+            if (this.options.onReferenceClick && type && value) {
+                this.options.onReferenceClick(type, value);
+            }
+        }
+    }
+}
+
+// Extend the Block blot to allow custom attributes
+const Block = Quill.import("blots/block");
+
+class ReferenceLink extends Block {
+    static create(value) {
+        const node = super.create();
+        if (value?.["data-ref-type"]) {
+            node.setAttribute("data-ref-type", value["data-ref-type"]);
+        }
+        if (value?.["data-ref-value"]) {
+            node.setAttribute("data-ref-value", value["data-ref-value"]);
+        }
+        if (value?.["class"]) {
+            node.classList.add(value["class"]);
+        }
+        return node;
+    }
+
+    static formats(domNode) {
+        return {
+            "data-ref-type": domNode.getAttribute("data-ref-type"),
+            "data-ref-value": domNode.getAttribute("data-ref-value"),
+            class: domNode.getAttribute("class"),
+        };
+    }
+}
+
+ReferenceLink.blotName = "reference";
+ReferenceLink.tagName = "li"; // or 'div', depending on your use
+Quill.register(ReferenceLink, true);
+Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 
 function StoryEditor({
     generatedStory,
@@ -110,6 +173,38 @@ function StoryEditor({
             .join("");
     };
 
+    useEffect(() => {
+        const handleClick = (e) => {
+            const el = e.target.closest(".reference-link");
+            if (!el) return;
+
+            e.preventDefault();
+
+            const payload = JSON.parse(
+                decodeURIComponent(el.dataset.refPayload)
+            );
+
+            const info = {
+                type: el.dataset.refType,
+                sectionIndex: Number(el.dataset.sectionIndex),
+                blockIndex: Number(el.dataset.blockIndex),
+                refIndex: Number(el.dataset.refIndex),
+                payload,
+            };
+
+            console.log("Reference clicked:", info);
+
+            // Route based on type
+            // if (info.type === "video") handleVideo(info.payload)
+            // if (info.type === "pdf") handlePDF(info.payload)
+            // if (info.type === "image") handleImage(info.payload)
+        };
+
+        document.addEventListener("click", handleClick);
+        return () => document.removeEventListener("click", handleClick);
+    }, []);
+
+
     function escapeHTML(str) {
         return String(str)
             .replace(/&/g, "&amp;")
@@ -122,9 +217,7 @@ function StoryEditor({
 
     function formatReferenceLabel(ref, type) {
         if (type === "video") {
-            return `${escapeHTML(ref.file_type || "video")} | ${escapeHTML(
-                ref.metadata?.chapters?.title || "Video reference"
-            )}`;
+            return `${ref.source_path} | Timestamp: ${ref.timestamp}`;
         }
 
         if (type === "pdf") {
@@ -145,18 +238,21 @@ function StoryEditor({
     ) {
         if (!refs || refs.length === 0) return "";
 
-        return refs
-            .map((ref, refIndex) => {
-                return `
-        <p
-          class="reference-link"
+        return `
+            <h3 style="font-weight: 400; margin-top: 5px;">References: </h3>
+            ${refs
+                .map((ref, refIndex) => {
+                    return `
+        <li
+          
+          class="reference-link ql-reference"
           data-ref-type="${type}"
           data-section-index="${sectionIndex}"
           data-block-index="${blockIndex}"
           data-ref-index="${refIndex}"
           data-ref-payload='${encodeURIComponent(
-                    JSON.stringify(ref)
-                )}'
+                        JSON.stringify(ref)
+                    )}'
           style="
             color: #2563eb;
             cursor: pointer;
@@ -165,10 +261,12 @@ function StoryEditor({
           "
         >
           ${formatReferenceLabel(ref, type)}
-        </p>
+        </li>
       `;
-            })
-            .join("");
+                })
+                .join("")
+            }
+        `;
     }
 
 
@@ -496,7 +594,7 @@ function StoryEditor({
 
 
     return (
-        <div className='flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
+        <div className='z-10 flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
             <div className="flex gap-2">
                 <RippleButton
                     cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
@@ -525,13 +623,13 @@ function StoryEditor({
                 value={storyTitle}
                 onChange={(e) => setStoryTitle(e.target.value)}
             />
-            <div className="h-full overflow-y-auto mt-2">
+            <div className="h-full mt-2 flex flex-col overflow-y-hidden">
                 {
                     theme === "light" ? (
                         <style>
                             {`
-                                .ql-container {
-                                    border: 1px solid #ccc !important;
+                                .ql-toolbar.ql-snow + .ql-container.ql-snow {
+                                    display: none !important;
                                 }
                                 .custom-quill .ql-editor { 
                                     color: #333 !important;
@@ -555,6 +653,9 @@ function StoryEditor({
                     ) : (
                         <style>
                             {`
+                                .ql-toolbar.ql-snow + .ql-container.ql-snow {
+                                    display: none !important;
+                                }
                                 .custom-quill .ql-editor {
                                     color: #FFF !important;
                                 }
@@ -585,6 +686,46 @@ function StoryEditor({
                     modules={modules}
                     formats={formats}
                 />
+
+                {/* JSX render of the story (no editor) */}
+                {generatedStory !== null && <div className={`!z-10 flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                    }`}>
+                    {
+                        (generatedStory.text.length === 0 && generatedStory?.content !== "") ? (
+                            <p dangerouslySetInnerHTML={{ __html: generatedStory?.content }}></p>
+                        ) : generatedStory?.text?.map(section => (
+                            <div key={section.id}>
+                                <h4>{section.outline.name}</h4>
+                                {
+                                    section.content?.map((content, index) => (
+                                        <div key={index}>
+                                            <p>{content.answer}</p>
+                                            <div className="mt-2 mb-4">
+                                                {
+                                                    content?.videosArr?.map((ref, index) => (
+                                                        <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
+                                                    ))
+                                                }
+
+                                                {
+                                                    content?.pdfsArr?.map((ref, index) => (
+                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path + " | Page: " + (parseInt(ref?.page) + 1)}</p>
+                                                    ))
+                                                }
+                                                {
+                                                    content?.imgsArr?.map((ref, index) => (
+                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path}</p>
+                                                    ))
+                                                }
+
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        ))
+                    }
+                </div>}
             </div>
         </div>
     );
