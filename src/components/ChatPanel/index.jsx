@@ -263,7 +263,7 @@ const ChatPanel = () => {
   //   setIsReelOpen(true);
   // };
 
-  const [actualTab, setActualTab] = useState("genMetadata"); //genMetadata | genStories
+  const [actualTab, setActualTab] = useState("genMedia"); //genMetadata | genStories | genMedia
 
   function handleTabClick(item) {
     setActualTab(item);
