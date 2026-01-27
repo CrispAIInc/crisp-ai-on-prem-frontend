@@ -53,17 +53,27 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
 
     return (
         <>
-            <div style={{ background: project.thumbnail ? `url('${projectThumbnail}')` : 'url("/app-logo.svg")' }} className={`${project.thumbnail ? '!bg-cover' : '!bg-contain'} !bg-no-repeat !bg-center relative rounded-2xl p-3 min-w-80 h-48 bg-clip-border cursor-pointer ${project?.is_shared && 'animate-glow-multiple'}`} onClick={() => {
-                const now = new Date();
-                setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
-                    if (prev?.project_id === project.project_id) {
-                        return {
-                            ...prev,
-                            updated_at: now
-                        };
-                    } return prev;
-                });
-            }}>
+            <div
+                style={{
+                    backgroundImage: project.thumbnail
+                        ? `url('${projectThumbnail}')`
+                        : 'url("/new-crisp-ai-slogan.png")',
+                    backgroundSize: project.thumbnail ? 'contain' : '185px auto',
+                }}
+                className={`bg-no-repeat bg-center relative rounded-2xl p-3 min-w-80 h-48 cursor-pointer ${project?.is_shared && 'animate-glow-multiple'
+                    }`}
+                onClick={() => {
+                    const now = new Date();
+                    setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
+                        if (prev?.project_id === project.project_id) {
+                            return {
+                                ...prev,
+                                updated_at: now
+                            };
+                        } return prev;
+                    });
+                }}
+            >
                 {/* delete overlap */}
                 {isDeleting && <div className="absolute inset-0 flex flex-col items-center justify-center w-full h-full bg-white/80">
                     <AnimatedText text='Deleting...' cssClasses='!text-lg !text-black' />
