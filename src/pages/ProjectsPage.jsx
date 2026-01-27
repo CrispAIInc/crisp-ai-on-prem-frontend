@@ -204,9 +204,9 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                             ]}
                         />}
 
-                        <button className="px-4 py-2 font-semibold text-white border rounded-full bg-gradient-to-r from-purple-500 to-indigo-600" onClick={() => setIsModalOpen(true)}>
+                        {viewMode === "list" && <button className="px-4 py-2 font-semibold text-white border rounded-full bg-gradient-to-r from-purple-500 to-indigo-600" onClick={() => setIsModalOpen(true)}>
                             New Project
-                        </button>
+                        </button>}
                     </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
