@@ -46,6 +46,18 @@
   text-decoration: underline;
 }
 
+.ql-container .ql-snow {
+  overflow-y: auto;
+}
+
+.ref-link {
+  display: block;
+  margin-left: 1rem;
+  color: #3b82f6;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 label {
   user-select: none;
 }

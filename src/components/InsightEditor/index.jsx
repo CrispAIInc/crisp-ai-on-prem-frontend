@@ -129,9 +129,114 @@ function InsightEditor({ isNewInsight }) {
         };
     }
 
+    const [editorHTML, setEditorHTML] = useState('');
+    useEffect(() => {
+        if (!selectedNote?.text) return;
+        setEditorHTML(noteTextToHTML(selectedNote.text));
+    }, [selectedNote.note_id]);
+
+    function noteTextToHTML(textArr = []) {
+        if (!Array.isArray(textArr)) return '';
+        return textArr.map(block => {
+            const { question, answer, refs = {} } = block;
+
+            const refsHTML = [
+                ...(refs.videoLinks || []),
+                ...(refs.pdfLinks || []),
+                ...(refs.imageLinks || []),
+                ...(refs.keyframeLinks || [])
+            ]
+                .map((ref, i) => `
+        <li
+          data-ref-type="${ref.file_type}"
+          data-ref-index="${i}"
+          class="ref-link"
+        >
+          🔗 ${ref.source_path}
+          ${ref.file_type === "video"
+                        ? ` (timestamp: ${ref.timestamp})`
+                        : ` (page: ${ref.page})`}
+        </li>
+      `)
+                .join('');
+
+            return `
+      <section data-block-id="${block.id}">
+        <h2><strong>${question}</strong></h2>
+        <p>${answer}</p>
+        ${refsHTML ? `<ul class="refs">${refsHTML}</ul>` : ''}
+      </section>
+    `;
+        }).join('');
+    }
+
+
+    const html = useMemo(() => {
+        if (!selectedNote?.text) return '';
+        return noteTextToHTML(selectedNote.text);
+    }, [selectedNote?.text]);
+
+    useEffect(() => {
+        const handler = e => {
+            const el = e.target.closest('.ref-link');
+            if (!el) return;
+
+            const type = el.dataset.refType;
+            const index = el.dataset.refIndex;
+
+            console.log('Clicked ref:', type, index);
+            // open modal / seek video / open PDF / etc
+        };
+
+        document.addEventListener('click', handler);
+        return () => document.removeEventListener('click', handler);
+    }, []);
+
+    function htmlToNoteText(html, prevText = []) {
+        if (!html || !Array.isArray(prevText)) return prevText;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        return prevText.map(block => {
+            const section = doc.querySelector(
+                `section[data-block-id="${block.id}"]`
+            );
+
+            if (!section) return block;
+
+            const answerEl = section.querySelector('p');
+
+            console.log({
+                ...block,
+                answer: answerEl?.innerHTML || block.answer
+            });
+
+            return {
+                ...block,
+                answer: answerEl?.innerHTML || block.answer
+            };
+        });
+    }
+
+    const handleChange = () => {
+        setNotes(prev =>
+            prev.map(n => {
+                if (n.note_id !== selectedNote.note_id) return n;
+
+                return {
+                    ...n,
+                    text: htmlToNoteText(editorHTML, n.text)
+                };
+            })
+        );
+    };
+
+
+
+
     return (
-        <div className="flex-1 h-full overflow-y-auto z-10">
-            <div className="h-full max-h-full ml-auto overflow-y-auto !overflow-y-hidden flex flex-col">
+        <div className="flex-1 h-full z-10 overflow-y-hidden">
+            <div className="h-full max-h-full ml-auto overflow-y-hidden flex flex-col">
                 <div className="flex items-center justify-between">
                     <RippleButton
                         cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
@@ -152,16 +257,19 @@ function InsightEditor({ isNewInsight }) {
                         onChange={(e) => setNoteTitle(e.target.value)}
                     />
                 </div>
-                <div className={`${isNewInsight && 'h-full'}`}>
-                    {!isNewInsight && (
-                        <style>
-                            {`
-                    .ql-toolbar.ql-snow + .ql-container.ql-snow {
-                      display: none !important;
-                    }
-                  `}
-                        </style>
-                    )}
+                <div className={`${isNewInsight && 'h-full'} overflow-y-hidden`}>
+                    <style>
+                        {`
+                                .ql-container.ql-snow {
+                                    overflow-y: auto !important;
+                                }
+
+                                .quill .custom-quill {
+                                    overflow-y: hidden !important;
+                                    height: 100% !important;
+                                }
+                            `}
+                    </style>
                     {
                         theme === "light" ? (
                             <style>
@@ -205,117 +313,13 @@ function InsightEditor({ isNewInsight }) {
                     <ReactQuill
                         ref={editorRef}
                         theme="snow"
-                        value={value}
-                        onChange={setValue}
-                        readOnly={false}
+                        value={editorHTML}
+                        onChange={(html) => setEditorHTML(html)}
                         className="h-full custom-quill"
                         modules={modules}
                         formats={formats}
                     />
                 </div>
-                {selectedNote?.note_name !== "" ? <div className={`overflow-y-auto h-full max-h-full space-y-6  !z-10 relative !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'}`}>
-                    {selectedNote?.text.map((item, index) => (
-                        <div
-                            key={index}
-                            className="pl-2 mb-4"
-                        >
-                            <h5 className={`z-10 mt-2 font-bold ${theme === "light" ? "text-textColor-300" : "text-textColor-200 text-md"
-                                }`}>{typeof item?.question === "string" ? item?.question : item?.question?.query}</h5>
-                            <p className={`z-10 text-textColor-200 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`} dangerouslySetInnerHTML={{ __html: item?.answer }}></p>
-
-                            {/* PDF Links */}
-                            {(item?.references?.pdfLinks?.length > 0 || item?.refs?.pdfLinks?.length > 0) && (
-                                <div>
-                                    {item[item.refs ? 'refs' : 'references']?.pdfLinks?.map((link, i) => (
-                                        <a
-                                            key={i}
-                                            href="#"
-                                            onClick={(e) => handleReferenceClick(e, extractFilenameAndType(typeof link === "string" ? link : link?.source_path), (typeof link === "string" ? null : link))}
-                                            className="z-10 mr-2 reference-link"
-                                        >
-                                            {typeof link === "string" ? link : (link?.source_path + " | " + parseInt(link?.page) + 1)}
-                                        </a>
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Video Links */}
-                            {(item?.references?.videoLinks?.length > 0 || item?.refs?.videoLinks?.length > 0) && (
-                                <div>
-                                    {item[item.refs ? 'refs' : 'references']?.videoLinks?.map((link, i) => (
-                                        <li
-                                            key={i}
-                                            onClick={(e) => handleReferenceClick(e, extractFilenameAndType(typeof link === "string" ? link : link?.source_path), (typeof link === "string" ? null : link))}
-                                            className="z-10 mr-2 text-blue-600 break-words list-none cursor-pointer reference-link"
-                                        >
-                                            {typeof link === "string" ? link : (link?.source_path + " | " + link?.timestamp)}
-                                        </li>
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Image Links */}
-                            {(item?.references?.imageLinks?.length > 0 || item?.refs?.imageLinks?.length > 0) && (
-                                <div>
-                                    {item[item.refs ? 'refs' : 'references']?.imageLinks?.map((link, i) => (
-                                        <img
-                                            key={i}
-                                            src={typeof link === "string" ? link : link?.source_path}
-                                            alt="image"
-                                            className="z-10 max-w-full mr-2 reference-link"
-                                            onClick={(e) => handleReferenceClick(e, typeof link === "string" ? link : link?.source_path, typeof link === "string" ? null : link)}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-                    :
-                    <>
-                        {selectedStory.story_name !== "" && <div className={`overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border bg-red-600 !border-textColor-100`}>
-                            <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`}>
-                                {
-                                    selectedStory?.text?.map(section => (
-                                        <div key={section.id}>
-                                            <h4>{section.outline.name}</h4>
-                                            {
-                                                section.content?.map((content, index) => (
-                                                    <div key={index}>
-                                                        <p>{content.answer}</p>
-                                                        {/* refs */}
-                                                        <div className="mt-2 mb-4">
-                                                            {
-                                                                content?.videosArr?.map((ref, index) => (
-                                                                    <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                                ))
-                                                            }
-
-                                                            {
-                                                                content?.pdfsArr?.map((ref, index) => (
-                                                                    <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                                ))
-                                                            }
-                                                            {
-                                                                content?.imgsArr?.map((ref, index) => (
-                                                                    <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                                ))
-                                                            }
-
-                                                        </div>
-                                                        {/* ... */}
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                        }</>
-                }
             </div>
         </div>
     );
