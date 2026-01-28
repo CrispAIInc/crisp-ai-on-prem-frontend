@@ -451,18 +451,18 @@ const ContentSection = ({
                 return prev.filter(item => !deletedSourcePaths.includes(item.source_path));
             });
 
-            setChatLoaded(false);
-            const { chat_is_initialized } = await makeApiRequest(
-                `/chat/all`,
-                "post",
-                JSON.stringify({
-                    sources: selectedSources,
-                    category: selectedCategory,
-                    selectedAll,
-                    reinitialize: true,
-                })
-            );
-            setChatLoaded(chat_is_initialized);
+            // setChatLoaded(false);
+            // const { chat_is_initialized } = await makeApiRequest(
+            //     `/chat/all`,
+            //     "post",
+            //     JSON.stringify({
+            //         sources: selectedSources,
+            //         category: selectedCategory,
+            //         selectedAll,
+            //         reinitialize: true,
+            //     })
+            // );
+            // setChatLoaded(chat_is_initialized);
 
             setCurrentResource(null);
             setActiveView(null);
