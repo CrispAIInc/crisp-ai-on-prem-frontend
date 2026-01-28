@@ -775,17 +775,17 @@ const ContentSection = ({
                 heading: "Source uploaded successfully!",
             });
 
-            const { chat_is_initialized } = await makeApiRequest(
-                `/chat/all`,
-                "post",
-                JSON.stringify({
-                    sources: [],
-                    category: "all",
-                    selectedAll: false,
-                    is_exclusive: false
-                })
-            );
-            setChatLoaded(chat_is_initialized);
+            // const { chat_is_initialized } = await makeApiRequest(
+            //     `/chat/all`,
+            //     "post",
+            //     JSON.stringify({
+            //         sources: [],
+            //         category: "all",
+            //         selectedAll: false,
+            //         is_exclusive: false
+            //     })
+            // );
+            // setChatLoaded(chat_is_initialized);
 
             setCurrentResource(prev => prev && uploaded_data[0]);
 
