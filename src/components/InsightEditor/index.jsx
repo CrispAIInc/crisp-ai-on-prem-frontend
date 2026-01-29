@@ -164,67 +164,32 @@ function InsightEditor({ isNewInsight }) {
         return () => document.removeEventListener('click', handler);
     }, []);
 
-    function htmlToNoteText(html, prevText = []) {
-        if (!html || !Array.isArray(prevText)) return prevText;
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-
-        return prevText.map(block => {
-            const section = doc.querySelector(
-                `section[data-block-id="${block.id}"]`
-            );
-
-            if (!section) return block;
-
-            const answerEl = section.querySelector('p');
-
-            console.log({
-                ...block,
-                answer: answerEl?.innerHTML || block.answer
-            });
-
-            return {
-                ...block,
-                answer: answerEl?.innerHTML || block.answer
-            };
-        });
-    }
-
-    const handleChange = () => {
-        setNotes(prev =>
-            prev.map(n => {
-                if (n.note_id !== selectedNote.note_id) return n;
-                return {
-                    ...n,
-                    text: htmlToNoteText(editorHTML, n.text)
-                };
-            })
-        );
-    };
-
     const initialHTML = useMemo(() => {
         return selectedNote.text.map((item, index) => `
-      <section class="item-group" data-index="${index}">
-        <div class="question-block" style="color: blue;">${item.question}</div>
-        <div class="answer-block">${item.answer}</div>
-      </section>
-    `).join('<hr />');
+            <section class="item-group" data-index="${index}">
+                ${item.questionHtml}
+                ${item.answerHtml}
+            </section>
+        `).join('<hr />');
     }, [selectedNote.note_id]);
 
     const handleSave = (htmlContent) => {
-        console.log(htmlContent);
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         const groups = doc.querySelectorAll('.item-group');
 
         const updatedTextArray = Array.from(groups).map((group, index) => {
             const qText = group.querySelector('.question-block')?.textContent || "";
+            const qHtml = group.querySelector('.question-block')?.outerHTML || "";
             const aText = group.querySelector('.answer-block')?.textContent || "";
+            const aHtml = group.querySelector('.answer-block')?.outerHTML || "";
 
             return {
                 ...selectedNote.text[index],
                 question: qText.trim(),
+                questionHtml: qHtml,
                 answer: aText.trim(),
+                answerHtml: aHtml
             };
         });
 
@@ -232,6 +197,22 @@ function InsightEditor({ isNewInsight }) {
             ...prev,
             text: updatedTextArray
         }));
+
+        setNotes(prev => {
+            if (prev.length === 0) {
+                return [{
+                    ...selectedNote,
+                    text: updatedTextArray
+                }];
+            }
+            return prev.map(item => {
+                if (item.note_id === selectedNote.note_id) {
+                    return selectedNote;
+                }
+
+                return item;
+            });
+        });
     };
 
     const config = useMemo(() => ({
@@ -256,13 +237,6 @@ function InsightEditor({ isNewInsight }) {
                             Save insight
                         </span>
                     </RippleButton>
-
-                    <button
-                        onClick={handleChange}
-                        className="px-4 py-2 rounded bg-purple-600 text-white"
-                    >
-                        Save
-                    </button>
                 </div>
                 <div>
                     <input

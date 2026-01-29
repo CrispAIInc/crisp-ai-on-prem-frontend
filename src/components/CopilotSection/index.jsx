@@ -658,7 +658,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           refs={refs}
           addToExistingNote={addToExistingNote}
           setExistingNote={setExistingNote}
-          question={noteQuestion.current}
+          question={userMessage}
           existingNote={existingNote}
           onHide={onHide}
           isNewNote={isNewNote}
@@ -750,13 +750,16 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       question,
       questionHtml: `<div class="question-block" style="font-weight: bold; font-size: 16px;">${question}</div>`,
       answer: textToAdd,
-      answerHtml: `<div class="answer-block">${textToAdd}</div>`,
+      answerHtml: `<div class="answer-block" style="display: block;">${textToAdd}</div>`,
       refs,
     };
     const newNote = {
       ...selectedNote,
+      note_id: generateRandomHash(5),
       note_name: `new title ${Math.floor(Math.random() * 100)}`,
-      text: newText
+      text: [
+        { ...newText }
+      ]
     };
     setIsNewNote(true);
     setNoteIndex(notes.length);
@@ -1156,7 +1159,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                             refs={message?.refs}
                             addToExistingNote={addToExistingNote}
                             setExistingNote={setExistingNote}
-                            question={noteQuestion.current}
+                            question={message.question}
                             existingNote={existingNote}
                             onHide={onHide}
                             isNewNote={isNewNote}
