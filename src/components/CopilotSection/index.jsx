@@ -748,15 +748,15 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       id: generateRandomHash(5),
       model: models[0] || "",
       question,
+      questionHtml: `<div class="question-block" style="font-weight: bold; font-size: 16px;">${question}</div>`,
       answer: textToAdd,
+      answerHtml: `<div class="answer-block">${textToAdd}</div>`,
       refs,
     };
     const newNote = {
       ...selectedNote,
       note_name: `new title ${Math.floor(Math.random() * 100)}`,
-      text: [{
-        ...newText
-      }]
+      text: newText
     };
     setIsNewNote(true);
     setNoteIndex(notes.length);
@@ -789,7 +789,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       id: generateRandomHash(5),
       model: models[0],
       question,
+      questionHtml: `<div class="question-block" style="font-weight: bold; font-size: 16px;">${question}</div>`,
       answer: newTextContent,
+      answerHtml: `<div class="answer-block">${newTextContent}</div>`,
       refs
     };
 
