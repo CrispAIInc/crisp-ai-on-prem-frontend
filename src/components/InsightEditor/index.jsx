@@ -25,7 +25,7 @@ function InsightEditor({ isNewInsight }) {
         selectedStory,
     } = useContext(MainContext);
 
-    const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+    const { handleSourceLinkClick } = useReferenceLinkClick(true);
 
     const { notify } = useToast();
 
@@ -104,14 +104,16 @@ function InsightEditor({ isNewInsight }) {
 
     useEffect(() => {
         const handler = e => {
-            const el = e.target.closest('.ref-link');
-            if (!el) return;
+            const li = e.target.closest(".ref-link");
+            if (!li) return;
 
-            const type = el.dataset.refType;
-            const index = el.dataset.refIndex;
 
-            console.log('Clicked ref:', type, index);
-            // open modal / seek video / open PDF / etc
+            const raw = li.getAttribute("data-source-object");
+            const ref = JSON.parse(
+                decodeURIComponent(escape(atob(raw)))
+            );
+
+            handleSourceLinkClick(null, ref);
         };
 
         document.addEventListener('click', handler);
@@ -134,7 +136,7 @@ function InsightEditor({ isNewInsight }) {
                 .flat()
                 .map(ref => {
                     return `
-                            <li class="ref-link" style="margin-bottom: 0px;">
+                            <li data-source-object='${btoa(unescape(encodeURIComponent(JSON.stringify(ref))))}' class="ref-link" style="margin-bottom: 0px;">
                                 ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${ref.page + 1}` : `timestamp: ${ref.timestamp}`}
                             </li>
                         `;

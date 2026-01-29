@@ -40,6 +40,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     generatedResources,
   } = useContext(MainContext);
 
+
   const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
   const { getPublicUrl } = useFirebase();
