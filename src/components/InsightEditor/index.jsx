@@ -9,6 +9,7 @@ import ReactQuill, { Quill } from 'react-quill';
 import { MainContext } from '../../contexts/mainContext';
 import { generateRandomHash, htmlToPlainText } from '../../utils';
 import makeApiRequest from '../../api';
+import JoditEditor from 'jodit-react';
 
 function InsightEditor({ isNewInsight }) {
 
@@ -17,6 +18,7 @@ function InsightEditor({ isNewInsight }) {
         isNewNote,
         setNotes,
         selectedNote,
+        setSelectedNote,
         noteIndex,
         knowledgeBase,
         theme,
@@ -44,15 +46,13 @@ function InsightEditor({ isNewInsight }) {
         }
     }), []);
 
-    const formats = [
-        'header',
-        'bold',
-        'italic',
-        'underline',
-        'list',
-        'bullet',
-        'link',
-        'image',
+    const allowedFormats = [
+        'header', 'font', 'size',
+        'bold', 'italic', 'underline', 'strike', 'blockquote',
+        'list', 'bullet', 'indent',
+        'link', 'image', 'video',
+        'align', 'color', 'background',
+        'style', 'section'
     ];
 
     const [value, setValue] = useState('');
@@ -61,7 +61,7 @@ function InsightEditor({ isNewInsight }) {
         setNoteTitle(selectedNote?.note_name);
     }, [selectedNote?.note_name]);
 
-    const handleSave = async (event) => {
+    const handleSaveNote = async (event) => {
         event?.preventDefault();
         if ((!isNewInsight && selectedNote.note_name === "") || (isNewInsight && noteTitle === "")) {
             notify({
@@ -101,33 +101,6 @@ function InsightEditor({ isNewInsight }) {
             });
         }
     };
-    const handleReferenceClick = (e, { fileName, fileType }, file) => {
-
-        const _file = file || knowledgeBase?.find(item => item?.source_path === (fileName + "." + fileType));
-
-        if (_file) {
-            if (fileType === "mp4") {
-                handleVideoLinkClick(e, _file);
-            } else {
-                handlePDFLinkClick(e, _file);
-            }
-        }
-    };
-
-    function extractFilenameAndType(input) {
-        const trimmed = input.split('|')[0].trim(); // Get part before '|'
-        const parts = trimmed.split('.');
-
-        if (parts.length < 2) return null; // Invalid format
-
-        const fileType = parts.pop(); // Get extension
-        const fileName = parts.join('.'); // Join rest in case filename has dots
-
-        return {
-            fileName,
-            fileType
-        };
-    }
 
     const [editorHTML, setEditorHTML] = useState('');
     useEffect(() => {
@@ -147,26 +120,25 @@ function InsightEditor({ isNewInsight }) {
                 ...(refs.keyframeLinks || [])
             ]
                 .map((ref, i) => `
-        <li
-          data-ref-type="${ref.file_type}"
-          data-ref-index="${i}"
-          class="ref-link"
-        >
-          🔗 ${ref.source_path}
-          ${ref.file_type === "video"
-                        ? ` (timestamp: ${ref.timestamp})`
-                        : ` (page: ${ref.page})`}
-        </li>
-      `)
-                .join('');
+                    <li
+                    data-ref-type="${ref.file_type}"
+                    data-ref-index="${i}"
+                    class="ref-link"
+                    style="color: red;"
+                    >
+                    🔗 ${ref.source_path} ${ref.file_type === "video"
+                        ? ` | timestamp: ${ref.timestamp}`
+                        : ` | page: ${ref.page}`}
+                    </li>
+                `).join('');
 
             return `
-      <section data-block-id="${block.id}">
-        <h2><strong>${question}</strong></h2>
-        <p>${answer}</p>
-        ${refsHTML ? `<ul class="refs">${refsHTML}</ul>` : ''}
-      </section>
-    `;
+                <section data-block-id="${block.id}">
+                    <h2><strong>${question}</strong></h2>
+                    <p>${answer}</p>
+                    ${refsHTML ? `<ul class="refs">${refsHTML}</ul>` : ''}
+                </section>
+                `;
         }).join('');
     }
 
@@ -222,7 +194,6 @@ function InsightEditor({ isNewInsight }) {
         setNotes(prev =>
             prev.map(n => {
                 if (n.note_id !== selectedNote.note_id) return n;
-
                 return {
                     ...n,
                     text: htmlToNoteText(editorHTML, n.text)
@@ -231,8 +202,46 @@ function InsightEditor({ isNewInsight }) {
         );
     };
 
+    const initialHTML = useMemo(() => {
+        return selectedNote.text.map((item, index) => `
+      <section class="item-group" data-index="${index}">
+        <div class="question-block" style="color: blue;">${item.question}</div>
+        <div class="answer-block">${item.answer}</div>
+      </section>
+    `).join('<hr />');
+    }, [selectedNote.note_id]);
 
+    const handleSave = (htmlContent) => {
+        console.log(htmlContent);
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        const groups = doc.querySelectorAll('.item-group');
 
+        const updatedTextArray = Array.from(groups).map((group, index) => {
+            const qText = group.querySelector('.question-block')?.textContent || "";
+            const aText = group.querySelector('.answer-block')?.textContent || "";
+
+            return {
+                ...selectedNote.text[index],
+                question: qText.trim(),
+                answer: aText.trim(),
+            };
+        });
+
+        setSelectedNote(prev => ({
+            ...prev,
+            text: updatedTextArray
+        }));
+    };
+
+    const config = useMemo(() => ({
+        readonly: false,
+        cleanHTML: { fillEmptyParagraph: false },
+        allowTags: 'section,div,p,br,hr,style',
+        extraAllowedAttributes: ['class', 'style', 'data-index'],
+        // Highlighting the "Source" button so you can see the tags being used
+        buttons: 'source,bold,italic,underline,font,fontsize,brush,paragraph,ul,ol,hr'
+    }), []);
 
     return (
         <div className="flex-1 h-full z-10 overflow-y-hidden">
@@ -240,13 +249,20 @@ function InsightEditor({ isNewInsight }) {
                 <div className="flex items-center justify-between">
                     <RippleButton
                         cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
-                        onClick={handleSave}
+                        onClick={handleSaveNote}
                     >
                         <AddIcon />
                         <span className={` !text-[12px] font-medium`}>
                             Save insight
                         </span>
                     </RippleButton>
+
+                    <button
+                        onClick={handleChange}
+                        className="px-4 py-2 rounded bg-purple-600 text-white"
+                    >
+                        Save
+                    </button>
                 </div>
                 <div>
                     <input
@@ -267,6 +283,23 @@ function InsightEditor({ isNewInsight }) {
                                 .quill .custom-quill {
                                     overflow-y: hidden !important;
                                     height: 100% !important;
+                                }
+
+
+                                .jodit-react-container,
+                                .single-editor-container {
+                                    height: 100% !important;
+                                }
+
+                                .jodit-container {
+                                    display: flex !important;
+                                    flex-direction: column !important;
+                                    height: 100% !important;
+                                    overflow-y: hidden !important;
+                                }
+
+                                .jodit-status-bar {
+                                    display: none !important;
                                 }
                             `}
                     </style>
@@ -310,15 +343,23 @@ function InsightEditor({ isNewInsight }) {
                             </style>
                         )
                     }
-                    <ReactQuill
+                    {/* <ReactQuill
                         ref={editorRef}
                         theme="snow"
                         value={editorHTML}
                         onChange={(html) => setEditorHTML(html)}
                         className="h-full custom-quill"
                         modules={modules}
-                        formats={formats}
-                    />
+                        formats={allowedFormats}
+                    /> */}
+
+                    <div className="single-editor-container">
+                        <JoditEditor
+                            value={initialHTML}
+                            config={config}
+                            onBlur={handleSave} // Saves back to state when you click away
+                        />
+                    </div>
                 </div>
             </div>
         </div>
