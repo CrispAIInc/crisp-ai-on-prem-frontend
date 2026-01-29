@@ -155,7 +155,7 @@ function InsightEditor({ isNewInsight }) {
 
                 ${item?.refs && renderRefs(item.refs)}
             </section>
-        `).join('<hr />');
+        `).join('<br />');
     }, [selectedNote.note_id, renderRefs]);
 
     const handleSave = (htmlContent) => {
