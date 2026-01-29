@@ -102,52 +102,6 @@ function InsightEditor({ isNewInsight }) {
         }
     };
 
-    const [editorHTML, setEditorHTML] = useState('');
-    useEffect(() => {
-        if (!selectedNote?.text) return;
-        setEditorHTML(noteTextToHTML(selectedNote.text));
-    }, [selectedNote.note_id]);
-
-    function noteTextToHTML(textArr = []) {
-        if (!Array.isArray(textArr)) return '';
-        return textArr.map(block => {
-            const { question, answer, refs = {} } = block;
-
-            const refsHTML = [
-                ...(refs.videoLinks || []),
-                ...(refs.pdfLinks || []),
-                ...(refs.imageLinks || []),
-                ...(refs.keyframeLinks || [])
-            ]
-                .map((ref, i) => `
-                    <li
-                    data-ref-type="${ref.file_type}"
-                    data-ref-index="${i}"
-                    class="ref-link"
-                    style="color: red;"
-                    >
-                    🔗 ${ref.source_path} ${ref.file_type === "video"
-                        ? ` | timestamp: ${ref.timestamp}`
-                        : ` | page: ${ref.page}`}
-                    </li>
-                `).join('');
-
-            return `
-                <section data-block-id="${block.id}">
-                    <h2><strong>${question}</strong></h2>
-                    <p>${answer}</p>
-                    ${refsHTML ? `<ul class="refs">${refsHTML}</ul>` : ''}
-                </section>
-                `;
-        }).join('');
-    }
-
-
-    const html = useMemo(() => {
-        if (!selectedNote?.text) return '';
-        return noteTextToHTML(selectedNote.text);
-    }, [selectedNote?.text]);
-
     useEffect(() => {
         const handler = e => {
             const el = e.target.closest('.ref-link');
@@ -164,14 +118,43 @@ function InsightEditor({ isNewInsight }) {
         return () => document.removeEventListener('click', handler);
     }, []);
 
+    function areRefsEmpty(refs = {}) {
+        Object.keys(refs).every((key) => refs[key]?.length === 0);
+    }
+
+    function renderRefs(refs = {}) {
+        if (areRefsEmpty(refs)) return null;
+
+        // return HTML version of refs
+        return `
+            <div class="refs-block" contenteditable="false">
+                <h6 style="margin-top: 5px;">References</h6>
+                <ul>
+                    ${Object.values(refs)
+                .flat()
+                .map(ref => {
+                    return `
+                            <li class="ref-link" style="margin-bottom: 0px;">
+                                ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${ref.page + 1}` : `timestamp: ${ref.timestamp}`}
+                            </li>
+                        `;
+                })
+                .join("")}
+                </ul>
+            </div>
+        `;
+    }
+
     const initialHTML = useMemo(() => {
         return selectedNote.text.map((item, index) => `
             <section class="item-group" data-index="${index}">
                 ${item.questionHtml}
                 ${item.answerHtml}
+
+                ${item?.refs && renderRefs(item.refs)}
             </section>
         `).join('<hr />');
-    }, [selectedNote.note_id]);
+    }, [selectedNote.note_id, renderRefs]);
 
     const handleSave = (htmlContent) => {
         const parser = new DOMParser();
