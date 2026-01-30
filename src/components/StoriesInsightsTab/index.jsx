@@ -77,7 +77,26 @@ function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowS
                 httpPayload
             );
 
-            setGeneratedStory({ ...res, story_name: storyTitle || res?.story_name });
+            // setGeneratedStory({ ...res, story_name: storyTitle || res?.story_name });
+            setGeneratedStory(prev => ({
+                ...prev,
+                ...res,
+                story_name: storyTitle || res?.story_name,
+                text: res.text.map(section => ({
+                    ...section,
+
+                    outline: {
+                        ...section.outline,
+                        nameHtml: `<h3 class="outline-block">${section.outline.name}</h3>`
+                    },
+
+                    content: section.content.map(item => ({
+                        ...item,
+                        answerHtml: `<p class="answer-block">${item.answer}</p>`
+                    }))
+                }))
+            }));
+
             setShowStoriesEditor(true);
         } catch (error) {
             console.log(error);

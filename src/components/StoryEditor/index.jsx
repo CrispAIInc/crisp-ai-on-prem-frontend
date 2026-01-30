@@ -626,7 +626,9 @@ function StoryEditor({
         return generatedStory.text.map((item) => `
                 <section class="item-group" data-id="${item.id}">
                     ${item.outline.nameHtml}
-                    ${item.content.answerHtml}
+                    ${Array.isArray(item.content)
+                ? item.content?.map(item => item.answerHtml)
+                : item.content.answerHtml}
     
                     ${item?.refs && renderRefs([item.content.imgsArr, item.content.pdfsArr, item.content.videosArr].flat())}
                 </section>
@@ -729,62 +731,7 @@ function StoryEditor({
 
                 <div className="single-editor-container">
                     <JoditEditor
-                        value={`<section>
-  <h1>The Quiet Complexity of Modern Software</h1>
-
-  <p>
-    Software systems today rarely fail because of a single obvious mistake.
-    Instead, they tend to collapse under the weight of many small assumptions
-    layered on top of one another over time. Each decision, harmless in
-    isolation, compounds into a structure that is difficult to reason about,
-    debug, or safely extend.
-  </p>
-
-  <p>
-    Developers often underestimate the cognitive load required to understand a
-    mature codebase. What begins as a clean abstraction slowly accumulates
-    edge cases, performance workarounds, and historical compromises. The result
-    is not necessarily bad code, but code that reflects the reality of changing
-    requirements, human limitations, and business pressure.
-  </p>
-
-  <h2>Abstractions and Trade-offs</h2>
-
-  <p>
-    Abstractions are powerful tools, but they are not free. Every layer added to
-    a system hides details while simultaneously introducing new constraints.
-    When abstractions leak, developers are forced to understand not only the
-    high-level API, but also the underlying implementation they were trying to
-    avoid thinking about in the first place.
-  </p>
-
-  <p>
-    This tension is most visible in distributed systems, where latency,
-    partial failures, and inconsistent state are not exceptional cases but
-    normal operating conditions. Designing for these realities requires a
-    mindset that embraces uncertainty rather than attempting to eliminate it.
-  </p>
-
-  <blockquote>
-    “Complexity is not a flaw to be removed, but a force to be managed.”
-  </blockquote>
-
-  <p>
-    Over time, successful teams learn to favor clarity over cleverness.
-    Boring solutions that are well understood often outperform elegant designs
-    that only make sense to their original authors. Documentation, naming, and
-    predictable behavior become more valuable than theoretical purity.
-  </p>
-
-  <h3>Looking Forward</h3>
-
-  <p>
-    As tools evolve and abstractions improve, the nature of complexity shifts
-    rather than disappears. The challenge for modern developers is not to avoid
-    complexity entirely, but to place it deliberately where it can be reasoned
-    about, tested, and communicated effectively.
-  </p>
-  </section`}
+                        value={initialHTML}
                         config={config}
                     // onBlur={handleSave} // Saves back to state when you click away
                     />
