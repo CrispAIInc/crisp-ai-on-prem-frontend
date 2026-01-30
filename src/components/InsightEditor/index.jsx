@@ -137,7 +137,7 @@ function InsightEditor({ isNewInsight }) {
                 .map(ref => {
                     return `
                             <li data-source-object='${btoa(unescape(encodeURIComponent(JSON.stringify(ref))))}' class="ref-link" style="margin-bottom: 0px;">
-                                ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${ref.page + 1}` : `timestamp: ${ref.timestamp}`}
+                                ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${parseInt(ref.page) + 1}` : `timestamp: ${ref.timestamp}`}
                             </li>
                         `;
                 })
@@ -233,75 +233,7 @@ function InsightEditor({ isNewInsight }) {
                     />
                 </div>
                 <div className={`${isNewInsight && 'h-full'} overflow-y-hidden`}>
-                    <style>
-                        {`
-                                .ql-container.ql-snow {
-                                    overflow-y: auto !important;
-                                }
 
-                                .quill .custom-quill {
-                                    overflow-y: hidden !important;
-                                    height: 100% !important;
-                                }
-
-
-                                .jodit-react-container,
-                                .single-editor-container {
-                                    height: 100% !important;
-                                }
-
-                                .jodit-container {
-                                    display: flex !important;
-                                    flex-direction: column !important;
-                                    height: 100% !important;
-                                    overflow-y: hidden !important;
-                                }
-
-                                .jodit-status-bar {
-                                    display: none !important;
-                                }
-                            `}
-                    </style>
-                    {
-                        theme === "light" ? (
-                            <style>
-                                {`
-                    .custom-quill .ql-editor { color: #333 !important; }
-                        .ql-toolbar {
-                          border-color: #78716C;
-                          background-color: rgba(119, 168, 249, 0.2) !important;
-                          color: red;
-                        }
-                        .ql-snow .ql-stroke {
-                          stroke: #333 !important;
-                        }
-
-                        .ql-picker-label {
-                          color: #333 !important;
-                        }
-                    `}
-                            </style>
-                        ) : (
-                            <style>
-                                {`
-                    .custom-quill .ql-editor { color: #FFF !important; }
-                        .ql-toolbar {
-                          border-color: #78716C;
-                          background-color: rgba(119, 168, 249, 0.2) !important;
-                          color: red;
-                        }
-                        .ql-snow .ql-stroke {
-                          stroke: #fff !important;
-                          fill: #fff !important;
-                        }
-
-                        .ql-picker-label {
-                          color: #fff !important;
-                        }
-                    `}
-                            </style>
-                        )
-                    }
                     {/* <ReactQuill
                         ref={editorRef}
                         theme="snow"

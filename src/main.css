@@ -50,6 +50,25 @@
   overflow-y: auto;
 }
 
+.jodit-toolbar__box {
+  min-height: fit-content !important;
+}
+.jodit-react-container,
+.single-editor-container {
+  height: 100% !important;
+}
+
+.jodit-container {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  overflow-y: hidden !important;
+}
+
+.jodit-status-bar {
+  display: none !important;
+}
+
 .refs-block {
   user-select: text; /* allow copy */
   cursor: default;
