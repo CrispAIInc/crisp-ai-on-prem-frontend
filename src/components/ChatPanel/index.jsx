@@ -81,8 +81,6 @@ Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const [generatedStory, setGeneratedStory] = useState(null);
-
   const {
     setSelectedNote,
     reels,
@@ -92,6 +90,7 @@ const ChatPanel = () => {
     isRightSidebarOpen,
     setIsRightSidebarOpen,
     theme,
+    selectedStory,
     setSelectedStory,
   } = useContext(MainContext);
 
@@ -152,11 +151,11 @@ const ChatPanel = () => {
   const [reelContext, setReelContext] = useState('');
   const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1min)');
 
-  const [storyTitle, setStoryTitle] = useState(generatedStory?.story_name);
+  const [storyTitle, setStoryTitle] = useState(selectedStory?.story_name);
 
   useEffect(() => {
-    setStoryTitle(generatedStory?.story_name);
-  }, [generatedStory?.story_name]);
+    setStoryTitle(selectedStory?.story_name);
+  }, [selectedStory?.story_name]);
 
   const [reel, setReel] = useState({
     id: "",
@@ -229,7 +228,7 @@ const ChatPanel = () => {
       {showEditor ? (
         <InsightEditor isNewInsight={isNewInsight} />
       ) : showStoriesEditor ? (
-        <StoryEditor generatedStory={generatedStory} storyTitle={storyTitle} setStoryTitle={setStoryTitle} />
+        <StoryEditor storyTitle={storyTitle} setStoryTitle={setStoryTitle} />
       ) : (
         <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
@@ -259,7 +258,7 @@ const ChatPanel = () => {
                 <MetadataGen verbosityValue={verbosityValue} setVerbosityValue={setVerbosityValue}
                   context={context} setContext={setContext} isGeneratingMetadata={isGeneratingMetadata} setIsGeneratingMetadata={setIsGeneratingMetadata} />
               ) : actualTab === "genStories" ? (
-                <StoriesInsightsTab setShowStoriesEditor={setShowStoriesEditor} generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
+                <StoriesInsightsTab setShowStoriesEditor={setShowStoriesEditor} />
               ) : actualTab === "genMedia" ? (
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}

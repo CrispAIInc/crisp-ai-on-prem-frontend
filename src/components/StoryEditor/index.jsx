@@ -78,13 +78,14 @@ Quill.register(ReferenceLink, true);
 Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 
 function StoryEditor({
-    generatedStory,
     storyTitle,
     setStoryTitle,
 }) {
 
     const {
         theme,
+        selectedStory,
+        setSelectedStory,
         setStories
     } = useContext(MainContext);
     const { notify } = useToast();
@@ -323,7 +324,7 @@ function StoryEditor({
 
 
     const [isPending, setIsPending] = useState(false);
-    const [value, setValue] = useState(generateStoryHTML(generatedStory) || "");
+    const [value, setValue] = useState(generateStoryHTML(selectedStory) || "");
     const editorRef = useRef(null);
 
     useEffect(() => {
@@ -359,15 +360,15 @@ function StoryEditor({
     }, []);
 
     useEffect(() => {
-        if (!generatedStory?.text) return;
-        setValue(storyToHTML(generatedStory?.text));
-    }, [generatedStory?.text]);
+        if (!selectedStory?.text) return;
+        setValue(storyToHTML(selectedStory?.text));
+    }, [selectedStory?.text]);
 
 
     async function handleSaveStory() {
         try {
             setIsPending(true);
-            await makeApiRequest('/stories', "POST", JSON.stringify({ ...generatedStory, story_name: storyTitle || generatedStory?.story_name }));
+            await makeApiRequest('/stories', "POST", JSON.stringify({ ...selectedStory, story_name: storyTitle || selectedStory?.story_name }));
             notify({
                 variant: "success",
                 heading: "Story saved successfully!",
@@ -393,16 +394,16 @@ function StoryEditor({
             "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
             "xmlns:w='urn:schemas-microsoft-com:office:word' " +
             "xmlns='http://www.w3.org/TR/REC-html40'>" +
-            `<head><meta charset='utf-8'><title>Story:${generatedStory.story_name}</title></head><body>`;
+            `<head><meta charset='utf-8'><title>Story:${selectedStory.story_name}</title></head><body>`;
         var footer = "</body></html>";
         const htmlString = `
         <div>
-            <h1 style='text-align: center; margin-bottom: 30px;'>${generatedStory.story_name
+            <h1 style='text-align: center; margin-bottom: 30px;'>${selectedStory.story_name
             }</h1>
         </div>
         
         <div>
-            ${generatedStory?.content ? `<div>${generatedStory?.content}</div>` : generatedStory.text
+            ${selectedStory?.content ? `<div>${selectedStory?.content}</div>` : selectedStory.text
                 ?.map(
                     (item) => `
                 <div>
@@ -588,7 +589,7 @@ function StoryEditor({
         var fileDownload = document.createElement("a");
         document.body.appendChild(fileDownload);
         fileDownload.href = source;
-        fileDownload.download = generatedStory.story_name + ".doc";
+        fileDownload.download = selectedStory.story_name + ".doc";
         fileDownload.click();
         document.body.removeChild(fileDownload);
     }
@@ -603,17 +604,17 @@ function StoryEditor({
     }), []);
 
     function renderRefs(refs) {
-        if (refs.length === 0) return null;
+        if (refs.length === 0) return;
 
         // return HTML version of refs
         return `
             <div class="refs-block" contenteditable="false">
                 <h6 style="margin-top: 5px;">References</h6>
-                <ul>
+                <ul style="display: flex; flex-direction: column; gap: 5px;">
                     ${refs.map(ref => {
             return `
                             <li data-source-object='${btoa(unescape(encodeURIComponent(JSON.stringify(ref))))}' class="ref-link" style="margin-bottom: 0px;">
-                                ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${parseInt(ref.page) + 1}` : `timestamp: ${ref.timestamp}`}
+                               🔗 ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${parseInt(ref.page) + 1}` : `timestamp: ${ref.timestamp}`}
                             </li>
                         `;
         }).join("")}
@@ -623,17 +624,66 @@ function StoryEditor({
     }
 
     const initialHTML = useMemo(() => {
-        return generatedStory.text.map((item) => `
+        return selectedStory.text.map((item) => `
                 <section class="item-group" data-id="${item.id}">
                     ${item.outline.nameHtml}
                     ${Array.isArray(item.content)
                 ? item.content?.map(item => item.answerHtml)
                 : item.content.answerHtml}
     
-                    ${item?.refs && renderRefs([item.content.imgsArr, item.content.pdfsArr, item.content.videosArr].flat())}
+                    ${renderRefs([item.content[0].imgsArr, item.content[0].pdfsArr, item.content[0].videosArr].flat())}
                 </section>
             `).join('<br />');
-    }, [generatedStory.story_id, renderRefs]);
+    }, [selectedStory.story_id, renderRefs]);
+
+    const handleSave = (htmlContent) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        const groups = doc.querySelectorAll('.item-group');
+
+        const updatedTextArray = Array.from(groups).map((group, index) => {
+            const oText = group.querySelector('.outline-block')?.textContent || "";
+            const oHtml = group.querySelector('.outline-block')?.outerHTML || "";
+            const aText = group.querySelector('.answer-block')?.textContent || "";
+            const aHtml = group.querySelector('.answer-block')?.outerHTML || "";
+
+            return {
+                ...selectedStory.text[index],
+                content: selectedStory.text[index].content.map(c => ({
+                    ...c,
+                    answer: aText,
+                    answerHtml: aHtml
+                })),
+                outline: {
+                    ...selectedStory.text[index].outline,
+                    name: oText,
+                    nameHtml: oHtml
+                }
+            };
+        });
+
+        setSelectedStory(prev => ({
+            ...prev,
+            text: updatedTextArray
+        }));
+
+        setStories(prev => {
+            if (prev.length === 0) {
+                return [{
+                    ...selectedStory,
+                    text: updatedTextArray,
+                    story_name: storyTitle
+                }];
+            }
+            return prev.map(item => {
+                if (item.story_id === selectedStory.story_id) {
+                    return selectedStory;
+                }
+
+                return item;
+            });
+        });
+    };
 
     return (
         <div className='z-10 flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
@@ -733,17 +783,17 @@ function StoryEditor({
                     <JoditEditor
                         value={initialHTML}
                         config={config}
-                    // onBlur={handleSave} // Saves back to state when you click away
+                        onBlur={handleSave}
                     />
                 </div>
 
                 {/* JSX render of the story (no editor) */}
-                {/* {generatedStory !== null && <div className={`!z-10 flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                {/* {selectedStory !== null && <div className={`!z-10 flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                     }`}>
                     {
-                        (generatedStory.text.length === 0 && generatedStory?.content !== "") ? (
-                            <p dangerouslySetInnerHTML={{ __html: generatedStory?.content }}></p>
-                        ) : generatedStory?.text?.map(section => (
+                        (selectedStory.text.length === 0 && selectedStory?.content !== "") ? (
+                            <p dangerouslySetInnerHTML={{ __html: selectedStory?.content }}></p>
+                        ) : selectedStory?.text?.map(section => (
                             <div key={section.id}>
                                 <h4>{section.outline.name}</h4>
                                 {

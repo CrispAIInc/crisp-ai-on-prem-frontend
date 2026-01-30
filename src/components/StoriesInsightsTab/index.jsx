@@ -12,12 +12,14 @@ import InsightsList from "../InsightsList/index.jsx";
 import RippleButton from '../RippleButton/index.jsx';
 import StoriesList from '../StoriesList/index.jsx';
 
-function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowStoriesEditor }) {
+function StoriesInsightsTab({ setShowStoriesEditor }) {
 
     const {
         notes,
         selectedNote,
         stories,
+        selectedStory,
+        setSelectedStory,
         displayedSources, theme,
     } = useContext(MainContext);
 
@@ -46,11 +48,11 @@ function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowS
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const [storyTitle, setStoryTitle] = useState(story?.story_name);
+    const [storyTitle, setStoryTitle] = useState(selectedStory?.story_name);
     useEffect(() => {
-        story?.story_name?.replace(/#/g, "").trim();
-        setStoryTitle(story?.story_name);
-    }, [story?.story_name]);
+        selectedStory?.story_name?.replace(/#/g, "").trim();
+        setStoryTitle(selectedStory?.story_name);
+    }, [selectedStory?.story_name]);
 
     async function autoGenerateStory() {
         setIsLoading(true);
@@ -77,8 +79,8 @@ function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowS
                 httpPayload
             );
 
-            // setGeneratedStory({ ...res, story_name: storyTitle || res?.story_name });
-            setGeneratedStory(prev => ({
+            // setSelectedStory({ ...res, story_name: storyTitle || res?.story_name });
+            setSelectedStory(prev => ({
                 ...prev,
                 ...res,
                 story_name: storyTitle || res?.story_name,
@@ -214,7 +216,7 @@ function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowS
                         : currentTab === "Stories" ?
                             <>
                                 <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
-                                    <StoriesList setShowStoriesEditor={setShowStoriesEditor} setGeneratedStory={setGeneratedStory} />
+                                    <StoriesList setShowStoriesEditor={setShowStoriesEditor} />
                                 </div>
                             </>
                             :

@@ -9,7 +9,7 @@ import makeApiRequest from '../../api';
 import useResources from '../../hooks/useResources';
 import { useToast } from '../../contexts/toastContext';
 
-function StoriesList({ setShowStoriesEditor, setGeneratedStory }) {
+function StoriesList({ setShowStoriesEditor }) {
 
     const {
         stories,
@@ -42,7 +42,6 @@ function StoriesList({ setShowStoriesEditor, setGeneratedStory }) {
             note_name: "",
         });
         setSelectedStory(story);
-        setGeneratedStory(story);
         setIsNewStory(false);
         setShowStoriesEditor(true);
     };
