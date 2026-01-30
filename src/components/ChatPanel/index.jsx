@@ -123,19 +123,25 @@ const ChatPanel = () => {
   }, [setShowEditor]);
 
 
-
   const handleSidebarToggle = useCallback(() => {
     setSidebarWidth(prev => {
       if (prev !== (maxWidth - (maxWidth * 0.3))) return maxWidth - (maxWidth * 0.3);
-      return window.innerWidth / 4;
+      return window.innerWidth / 3.3333;
     });
     setIsRightSidebarOpen(true);
   }, [setSidebarWidth, maxWidth, setIsRightSidebarOpen]);
 
-
-
-
   const [showStoriesEditor, setShowStoriesEditor] = useState(false);
+
+  useEffect(() => {
+    if (showStoriesEditor === true) {
+      setSidebarWidth(prev => {
+        if (prev !== (maxWidth - (maxWidth * 0.3))) return maxWidth - (maxWidth * 0.5);
+        return window.innerWidth / 5;
+      });
+      setIsRightSidebarOpen(true);
+    }
+  }, [showStoriesEditor]);
 
   const [actualTab, setActualTab] = useState("genMedia"); //genMetadata | genStories | genMedia
 
