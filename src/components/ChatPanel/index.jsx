@@ -134,14 +134,14 @@ const ChatPanel = () => {
   const [showStoriesEditor, setShowStoriesEditor] = useState(false);
 
   useEffect(() => {
-    if (showStoriesEditor === true) {
+    if (showStoriesEditor === true || showEditor === true) {
       setSidebarWidth(prev => {
         if (prev !== (maxWidth - (maxWidth * 0.3))) return maxWidth - (maxWidth * 0.5);
         return window.innerWidth / 5;
       });
       setIsRightSidebarOpen(true);
     }
-  }, [showStoriesEditor]);
+  }, [showStoriesEditor, showEditor]);
 
   const [actualTab, setActualTab] = useState("genMedia"); //genMetadata | genStories | genMedia
 
