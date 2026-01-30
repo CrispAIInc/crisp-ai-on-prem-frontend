@@ -96,6 +96,8 @@ const ChatPanel = () => {
 
   const [isNewInsight, setIsNewInsight] = useState(false);
 
+  const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
+
   const closeEditor = useCallback(() => {
     setIsNewInsight(false);
     // setActualTab(null);
@@ -264,7 +266,7 @@ const ChatPanel = () => {
                 <MetadataGen verbosityValue={verbosityValue} setVerbosityValue={setVerbosityValue}
                   context={context} setContext={setContext} isGeneratingMetadata={isGeneratingMetadata} setIsGeneratingMetadata={setIsGeneratingMetadata} />
               ) : actualTab === "genStories" ? (
-                <StoriesInsightsTab setShowStoriesEditor={setShowStoriesEditor} />
+                <StoriesInsightsTab currentTab={currentTab} setCurrentTab={setCurrentTab} setShowStoriesEditor={setShowStoriesEditor} />
               ) : actualTab === "genMedia" ? (
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}

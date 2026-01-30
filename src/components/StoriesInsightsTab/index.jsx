@@ -5,43 +5,22 @@ import { useContext, useEffect, useState } from 'react';
 import "react-quill/dist/quill.snow.css";
 import makeApiRequest from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import { useToast } from "../../contexts/toastContext.jsx";
-import { sortBySourcePath } from '../../utils.js';
 import BaseHeading from '../BaseHeading/index.jsx';
 import InsightsList from "../InsightsList/index.jsx";
 import RippleButton from '../RippleButton/index.jsx';
 import StoriesList from '../StoriesList/index.jsx';
 
-function StoriesInsightsTab({ setShowStoriesEditor }) {
+function StoriesInsightsTab({
+    setShowStoriesEditor,
+    currentTab,
+    setCurrentTab
+}) {
 
     const {
-        notes,
-        selectedNote,
-        stories,
         selectedStory,
         setSelectedStory,
         displayedSources, theme,
     } = useContext(MainContext);
-
-    const { notify } = useToast();
-
-    const [noteTitle, setNoteTitle] = useState('');
-
-    useEffect(() => {
-        setNoteTitle(selectedNote?.note_name);
-    }, [selectedNote?.note_name]);
-
-    const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
-
-    const [notesResults, setNotesResults] = useState(notes);
-    useEffect(() => {
-        setNotesResults(sortBySourcePath(notes));
-    }, [notes]);
-
-    const [storiesResults, setStoriesResults] = useState(stories);
-    useEffect(() => {
-        setStoriesResults(sortBySourcePath(stories));
-    }, [stories]);
 
     const [context, setContext] = useState('');
     const [storyline, setStoryline] = useState('');
