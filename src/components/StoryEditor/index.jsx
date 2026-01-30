@@ -91,278 +91,28 @@ function StoryEditor({
     const { notify } = useToast();
 
     const { getStories } = useResources({ setStories });
-    const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+    const { handleSourceLinkClick } = useReferenceLinkClick(true);
 
-    const modules = useMemo(() => ({
-        toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, true] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image', 'video'],
-        ],
-        imageResize: {
-            parchment: Quill.import("parchment"),
-            modules: ["Resize", "DisplaySize", "Toolbar"],
-        }
-    }), []);
-
-    const formats = [
-        'header',
-        'bold',
-        'italic',
-        'underline',
-        'list',
-        'bullet',
-        'link',
-        'image',
-    ];
-
-    const generateStoryHTML = (generatedStory) => {
-        if (!generatedStory) return "";
-
-        // Case 1: raw HTML content
-        if (
-            generatedStory.text.length === 0 &&
-            generatedStory.content !== ""
-        ) {
-            return generatedStory.content;
-        }
-
-        // Case 2: structured sections
-        return generatedStory.text
-            .map(section => `
-      <h4>${section.outline.name}</h4>
-      ${section.content
-                    ?.map(content => `
-          <p>${content.answer}</p>
-
-          <div style="margin: 8px 0 16px 8px;">
-            ${content.videosArr
-                            ?.map(ref => `
-                <li class="ref-link"
-                   data-type="video"
-                   data-source="${ref.source_path}"
-                   data-timestamp="${ref.timestamp}">
-                  ${ref.source_path} | ${ref.timestamp}
-                </li>
-              `)
-                            .join("")}
-
-            ${content.pdfsArr
-                            ?.map(ref => `
-                <li class="ref-link"
-                   data-type="pdf"
-                   data-source="${ref.source_path}"
-                   data-page="${parseInt(ref.page) + 1}">
-                  ${ref.source_path} | Page: ${parseInt(ref.page) + 1}
-                </li>
-              `)
-                            .join("")}
-
-            ${content.imgsArr
-                            ?.map(ref => `
-                <li class="ref-link"
-                   data-type="image"
-                   data-source="${ref.source_path}">
-                  ${ref.source_path}
-                </li>
-              `)
-                            .join("")}
-          </div>
-        `)
-                    .join("")}
-    `)
-            .join("");
-    };
 
     useEffect(() => {
-        const handleClick = (e) => {
-            const el = e.target.closest(".reference-link");
-            if (!el) return;
+        const handler = e => {
+            const li = e.target.closest(".ref-link");
+            if (!li) return;
 
-            e.preventDefault();
 
-            const payload = JSON.parse(
-                decodeURIComponent(el.dataset.refPayload)
+            const raw = li.getAttribute("data-source-object");
+            const ref = JSON.parse(
+                decodeURIComponent(escape(atob(raw)))
             );
 
-            const info = {
-                type: el.dataset.refType,
-                sectionIndex: Number(el.dataset.sectionIndex),
-                blockIndex: Number(el.dataset.blockIndex),
-                refIndex: Number(el.dataset.refIndex),
-                payload,
-            };
-
-            console.log("Reference clicked:", info);
-
-            // Route based on type
-            // if (info.type === "video") handleVideo(info.payload)
-            // if (info.type === "pdf") handlePDF(info.payload)
-            // if (info.type === "image") handleImage(info.payload)
+            handleSourceLinkClick(null, ref);
         };
 
-        document.addEventListener("click", handleClick);
-        return () => document.removeEventListener("click", handleClick);
+        document.addEventListener('click', handler);
+        return () => document.removeEventListener('click', handler);
     }, []);
-
-
-    function escapeHTML(str) {
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-
-    function formatReferenceLabel(ref, type) {
-        if (type === "video") {
-            return `${ref.source_path} | Timestamp: ${ref.timestamp}`;
-        }
-
-        if (type === "pdf") {
-            return `${escapeHTML(ref.source_path)} | Page ${parseInt(ref.page, 10) + 1
-                }`;
-        }
-
-        // image
-        return escapeHTML(ref.source_path || "Image reference");
-    }
-
-
-    function renderReferences(
-        refs = [],
-        type,
-        sectionIndex,
-        blockIndex
-    ) {
-        if (!refs || refs.length === 0) return "";
-
-        return `
-            <h3 style="font-weight: 400; margin-top: 5px;">References: </h3>
-            ${refs
-                .map((ref, refIndex) => {
-                    return `
-        <li
-          
-          class="reference-link ql-reference"
-          data-ref-type="${type}"
-          data-section-index="${sectionIndex}"
-          data-block-index="${blockIndex}"
-          data-ref-index="${refIndex}"
-          data-ref-payload='${encodeURIComponent(
-                        JSON.stringify(ref)
-                    )}'
-          style="
-            color: #2563eb;
-            cursor: pointer;
-            margin: 4px 0;
-            word-break: break-word;
-          "
-        >
-          ${formatReferenceLabel(ref, type)}
-        </li>
-      `;
-                })
-                .join("")
-            }
-        `;
-    }
-
-
-    function storyToHTML(sections = []) {
-        return sections
-            .map((section, sectionIndex) => {
-                return `
-        <h2
-          style="
-            font-weight: 700;
-            font-size: 1.3rem;
-            margin: 20px 0 10px;
-          "
-        >
-          ${escapeHTML(section.outline?.name || "")}
-        </h2>
-
-        ${section.content
-                        .map((block, blockIndex) => {
-                            return `
-              <p style="margin: 6px 0 10px;">
-                ${escapeHTML(block.answer || "")}
-              </p>
-
-              <div style="margin-left: 20px; margin-bottom: 12px;">
-                ${renderReferences(
-                                block.videosArr,
-                                "video",
-                                sectionIndex,
-                                blockIndex
-                            )}
-                ${renderReferences(
-                                block.pdfsArr,
-                                "pdf",
-                                sectionIndex,
-                                blockIndex
-                            )}
-                ${renderReferences(
-                                block.imgsArr,
-                                "image",
-                                sectionIndex,
-                                blockIndex
-                            )}
-              </div>
-            `;
-                        })
-                        .join("")}
-      `;
-            })
-            .join("");
-    }
-
-
 
     const [isPending, setIsPending] = useState(false);
-    const [value, setValue] = useState(generateStoryHTML(selectedStory) || "");
-    const editorRef = useRef(null);
-
-    useEffect(() => {
-        const handler = (e) => {
-            const el = e.target.closest(".ref-link");
-            if (!el) return;
-
-            const type = el.dataset.type;
-
-            if (type === "video") {
-                handleVideoLinkClick(e, {
-                    source_path: el.dataset.source,
-                    timestamp: el.dataset.timestamp,
-                });
-            }
-
-            if (type === "pdf") {
-                handlePDFLinkClick(e, {
-                    source_path: el.dataset.source,
-                    page: el.dataset.page,
-                });
-            }
-
-            if (type === "image") {
-                handlePDFLinkClick(e, {
-                    source_path: el.dataset.source,
-                });
-            }
-        };
-
-        document.addEventListener("click", handler);
-        return () => document.removeEventListener("click", handler);
-    }, []);
-
-    useEffect(() => {
-        if (!selectedStory?.text) return;
-        setValue(storyToHTML(selectedStory?.text));
-    }, [selectedStory?.text]);
 
 
     async function handleSaveStory() {
@@ -604,9 +354,6 @@ function StoryEditor({
     }), []);
 
     function renderRefs(refs) {
-        if (refs.length === 0) return;
-
-        // return HTML version of refs
         return `
             <div class="refs-block" contenteditable="false">
                 <h6 style="margin-top: 5px;">References</h6>
@@ -624,16 +371,20 @@ function StoryEditor({
     }
 
     const initialHTML = useMemo(() => {
-        return selectedStory.text.map((item) => `
+        return selectedStory.text.map((item) => {
+            const flatRefs = [item.content[0].imgsArr, item.content[0].pdfsArr, item.content[0].videosArr].flat();
+
+            return `
                 <section class="item-group" data-id="${item.id}">
                     ${item.outline.nameHtml}
                     ${Array.isArray(item.content)
-                ? item.content?.map(item => item.answerHtml)
-                : item.content.answerHtml}
+                    ? item.content?.map(item => item.answerHtml)
+                    : item.content.answerHtml}
     
-                    ${renderRefs([item.content[0].imgsArr, item.content[0].pdfsArr, item.content[0].videosArr].flat())}
+                    ${flatRefs.length > 0 ? renderRefs(flatRefs) : ''}
                 </section>
-            `).join('<br />');
+            `;
+        }).join('<br />');
     }, [selectedStory.story_id, renderRefs]);
 
     const handleSave = (htmlContent) => {
@@ -768,16 +519,6 @@ function StoryEditor({
                         </style>
                     )
                 }
-                {/* <ReactQuill
-                    ref={editorRef}
-                    theme="snow"
-                    value={value}
-                    onChange={setValue}
-                    readOnly={false}
-                    className=""
-                    modules={modules}
-                    formats={formats}
-                /> */}
 
                 <div className="single-editor-container">
                     <JoditEditor
@@ -786,46 +527,6 @@ function StoryEditor({
                         onBlur={handleSave}
                     />
                 </div>
-
-                {/* JSX render of the story (no editor) */}
-                {/* {selectedStory !== null && <div className={`!z-10 flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                    }`}>
-                    {
-                        (selectedStory.text.length === 0 && selectedStory?.content !== "") ? (
-                            <p dangerouslySetInnerHTML={{ __html: selectedStory?.content }}></p>
-                        ) : selectedStory?.text?.map(section => (
-                            <div key={section.id}>
-                                <h4>{section.outline.name}</h4>
-                                {
-                                    section.content?.map((content, index) => (
-                                        <div key={index}>
-                                            <p>{content.answer}</p>
-                                            <div className="mt-2 mb-4">
-                                                {
-                                                    content?.videosArr?.map((ref, index) => (
-                                                        <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                    ))
-                                                }
-
-                                                {
-                                                    content?.pdfsArr?.map((ref, index) => (
-                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path + " | Page: " + (parseInt(ref?.page) + 1)}</p>
-                                                    ))
-                                                }
-                                                {
-                                                    content?.imgsArr?.map((ref, index) => (
-                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path}</p>
-                                                    ))
-                                                }
-
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        ))
-                    }
-                </div>} */}
             </div>
         </div>
     );
