@@ -126,7 +126,7 @@ function MediaEntertainment({
         setReelsResults(sortBySourcePath(reels));
     }, [reels]);
     const handleReelsSearch = (e) => {
-        const value = e.target.value;
+        const value = e?.target?.value || "";
         setReelsSearchValue(value);
 
         if (value.trim() === "") {
@@ -136,6 +136,10 @@ function MediaEntertainment({
             setReelsResults(sortArrayOfObjects(filtered, "title"));
         }
     };
+
+    useEffect(() => {
+        handleReelsSearch();
+    }, [JSON.stringify(reels)]);
 
     const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
     function handleOpenFilenameUpdateModal(event, reel) {
@@ -168,7 +172,8 @@ function MediaEntertainment({
                 variant: "success",
                 heading: "Reel deleted successfully!",
             });
-            getReels();
+            setReels(prev => prev.filter(item => item.id !== reel.id));
+            // getReels();
         } catch (error) {
             console.log(error);
             notify({
