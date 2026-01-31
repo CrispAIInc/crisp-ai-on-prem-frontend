@@ -5,7 +5,7 @@ import RippleButton from '../RippleButton';
 import AddIcon from '@mui/icons-material/Add';
 import { useToast } from '../../contexts/toastContext';
 import useResources from '../../hooks/useResources';
-import ReactQuill, { Quill } from 'react-quill';
+import LoadingSpinner from "../LoadingSpinner";
 import { MainContext } from '../../contexts/mainContext';
 import { generateRandomHash, htmlToPlainText } from '../../utils';
 import makeApiRequest from '../../api';
@@ -31,29 +31,8 @@ function InsightEditor({ isNewInsight }) {
 
     const { getNotes } = useResources({ setNotes });
     const [noteTitle, setNoteTitle] = useState('');
-    const editorRef = useRef(null);
 
-    const modules = useMemo(() => ({
-        toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, true] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image', 'video'],
-        ],
-        imageResize: {
-            parchment: Quill.import("parchment"),
-            modules: ["Resize", "DisplaySize", "Toolbar"],
-        }
-    }), []);
-
-    const allowedFormats = [
-        'header', 'font', 'size',
-        'bold', 'italic', 'underline', 'strike', 'blockquote',
-        'list', 'bullet', 'indent',
-        'link', 'image', 'video',
-        'align', 'color', 'background',
-        'style', 'section'
-    ];
+    const [isSavingPending, setIsSavingPending] = useState(false);
 
     const [value, setValue] = useState('');
 
@@ -62,6 +41,7 @@ function InsightEditor({ isNewInsight }) {
     }, [selectedNote?.note_name]);
 
     const handleSaveNote = async (event) => {
+        setIsSavingPending(true);
         event?.preventDefault();
         if ((!isNewInsight && selectedNote.note_name === "") || (isNewInsight && noteTitle === "")) {
             notify({
@@ -99,6 +79,8 @@ function InsightEditor({ isNewInsight }) {
                 heading: "Oops!",
                 subheading: "Failed to save insight.",
             });
+        } finally {
+            setIsSavingPending(false);
         }
     };
 
@@ -217,8 +199,8 @@ function InsightEditor({ isNewInsight }) {
                         cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
                         onClick={handleSaveNote}
                     >
-                        <AddIcon />
-                        <span className={` !text-[12px] font-medium`}>
+                        {isSavingPending ? <LoadingSpinner isSmall /> : <AddIcon />}
+                        <span className={`${isSavingPending && 'ml-2'} !text-[12px] font-medium`}>
                             Save insight
                         </span>
                     </RippleButton>
