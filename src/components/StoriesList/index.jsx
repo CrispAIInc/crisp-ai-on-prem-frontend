@@ -65,8 +65,9 @@ function StoriesList({ setShowStoriesEditor }) {
                 variant: "success",
                 heading: "Story deleted successfully!",
             });
+            setStories(prev => prev.filter(item => item.story_id !== id));
             // fetch stories
-            getStories();
+            // getStories();
         } catch (error) {
             console.log(error);
             notify({
@@ -86,7 +87,7 @@ function StoriesList({ setShowStoriesEditor }) {
         setStoriesResults(sortBySourcePath(stories));
     }, [stories]);
     const handleStoriesSearch = (e) => {
-        const value = e.target.value;
+        const value = e?.target?.value || "";
         setStoriesSearchValue(value);
 
         if (value.trim() === "") {
@@ -96,6 +97,10 @@ function StoriesList({ setShowStoriesEditor }) {
             setStoriesResults(sortArrayOfObjects(filtered, "story_name"));
         }
     };
+
+    useEffect(() => {
+        handleStoriesSearch();
+    }, [JSON.stringify(stories)]);
 
     return (
         <div className="flex flex-col overflow-y-auto">
