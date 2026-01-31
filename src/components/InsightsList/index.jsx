@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import RippleButton from "../RippleButton";
 import BaseHeading from "../BaseHeading";
@@ -44,7 +44,7 @@ function InsightsList() {
 
 
     const handleInsightSearch = (e) => {
-        const value = e.target.value;
+        const value = e?.target?.value || "";
         setInsightSearchValue(value);
 
         if (value.trim() === "") {
@@ -106,13 +106,18 @@ function InsightsList() {
                 variant: "success",
                 heading: "Insight deleted successfully!",
             });
-            getNotes();
+            setNotes(prev => prev.filter(item => item.note_id !== id));
+            // getNotes();
         } catch (e) {
             console.log(e);
         } finally {
             setIsInsightDeleting(false);
         }
     }
+
+    useEffect(() => {
+        handleInsightSearch();
+    }, [JSON.stringify(notes)]);
 
     return (
         <div>

@@ -93,6 +93,8 @@ function StoryEditor({
     const { getStories } = useResources({ setStories });
     const { handleSourceLinkClick } = useReferenceLinkClick(true);
 
+    const [isSavingPending, setIsSavingPending] = useState(false);
+
 
     useEffect(() => {
         const handler = e => {
@@ -444,7 +446,7 @@ function StoryEditor({
                     onClick={handleSaveStory}
                 >
                     {isPending ? <LoadingSpinner isSmall /> : <AddIcon />}
-                    <span className={` !text-[12px] font-medium`}>
+                    <span className={`${isPending && 'ml-2'}  !text-[12px] font-medium`}>
                         Save story
                     </span>
                 </RippleButton>
