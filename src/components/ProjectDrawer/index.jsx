@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { ProjectContext } from '../../contexts/projectContext';
 import { MainContext } from '../../contexts/mainContext';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
@@ -11,6 +12,8 @@ import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
 import LoadingSpinner from "../LoadingSpinner";
 
 const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
+
+    const navigate = useNavigate();
 
     const { theme, displayedSources, currentChat } = useContext(MainContext);
     const { currentProject, setCurrentProject, projects } = useContext(ProjectContext);
@@ -72,6 +75,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
             setCurrentProject(project);
             setShowProjects(false);
             onHide();
+            navigate(0);
         } catch (e) {
             console.log(e.message);
         } finally {

@@ -9,7 +9,7 @@ import makeApiRequest from '../../api';
 import useResources from '../../hooks/useResources';
 import { useToast } from '../../contexts/toastContext';
 
-function StoriesList({ setShowStoriesEditor, setGeneratedStory }) {
+function StoriesList({ setShowStoriesEditor }) {
 
     const {
         stories,
@@ -42,7 +42,6 @@ function StoriesList({ setShowStoriesEditor, setGeneratedStory }) {
             note_name: "",
         });
         setSelectedStory(story);
-        setGeneratedStory(story);
         setIsNewStory(false);
         setShowStoriesEditor(true);
     };
@@ -66,8 +65,9 @@ function StoriesList({ setShowStoriesEditor, setGeneratedStory }) {
                 variant: "success",
                 heading: "Story deleted successfully!",
             });
+            setStories(prev => prev.filter(item => item.story_id !== id));
             // fetch stories
-            getStories();
+            // getStories();
         } catch (error) {
             console.log(error);
             notify({
@@ -87,7 +87,7 @@ function StoriesList({ setShowStoriesEditor, setGeneratedStory }) {
         setStoriesResults(sortBySourcePath(stories));
     }, [stories]);
     const handleStoriesSearch = (e) => {
-        const value = e.target.value;
+        const value = e?.target?.value || "";
         setStoriesSearchValue(value);
 
         if (value.trim() === "") {
@@ -97,6 +97,10 @@ function StoriesList({ setShowStoriesEditor, setGeneratedStory }) {
             setStoriesResults(sortArrayOfObjects(filtered, "story_name"));
         }
     };
+
+    useEffect(() => {
+        handleStoriesSearch();
+    }, [JSON.stringify(stories)]);
 
     return (
         <div className="flex flex-col overflow-y-auto">

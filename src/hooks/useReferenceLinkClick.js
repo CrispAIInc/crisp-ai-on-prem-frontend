@@ -18,8 +18,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setActiveView
     } = useContext(MainContext);
 
-    const handleVideoLinkClick = (event, video) => {
-        if (event) event.preventDefault();
+    const handleVideoLinkClick = (video) => {
         setFromChat(isFromChat);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
             }/all/${encodeURIComponent(video.source_path)}`;
@@ -41,8 +40,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         // setShowNoteDetails(false);
     };
 
-    const handlePDFLinkClick = (event, pdf) => {
-        if (event) event.preventDefault();
+    const handlePDFLinkClick = (pdf) => {
         const resourceURL = `${API_ENDPOINT}/${pdf.file_type
             }/all/${encodeURIComponent(pdf.source_path)}`;
         setCurrentResource({ ...pdf });
@@ -64,8 +62,18 @@ export default function useReferenceLinkClick(isFromChat = false) {
         // setShowNoteDetails(false);
     };
 
+    const handleSourceLinkClick = (event, source) => {
+        if (!source) return;
+
+        if (event) event.preventDefault();
+
+        if (source.file_type === "video") handleVideoLinkClick(source);
+        else handlePDFLinkClick(source);
+    };
+
     return {
         handleVideoLinkClick,
-        handlePDFLinkClick
+        handlePDFLinkClick,
+        handleSourceLinkClick
     };
 }

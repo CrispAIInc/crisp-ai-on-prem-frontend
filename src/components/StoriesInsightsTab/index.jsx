@@ -5,52 +5,33 @@ import { useContext, useEffect, useState } from 'react';
 import "react-quill/dist/quill.snow.css";
 import makeApiRequest from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import { useToast } from "../../contexts/toastContext.jsx";
-import { sortBySourcePath } from '../../utils.js';
 import BaseHeading from '../BaseHeading/index.jsx';
 import InsightsList from "../InsightsList/index.jsx";
 import RippleButton from '../RippleButton/index.jsx';
 import StoriesList from '../StoriesList/index.jsx';
 
-function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowStoriesEditor }) {
+function StoriesInsightsTab({
+    setShowStoriesEditor,
+    currentTab,
+    setCurrentTab
+}) {
 
     const {
-        notes,
-        selectedNote,
-        stories,
+        selectedStory,
+        setSelectedStory,
         displayedSources, theme,
     } = useContext(MainContext);
-
-    const { notify } = useToast();
-
-    const [noteTitle, setNoteTitle] = useState('');
-
-    useEffect(() => {
-        setNoteTitle(selectedNote?.note_name);
-    }, [selectedNote?.note_name]);
-
-    const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
-
-    const [notesResults, setNotesResults] = useState(notes);
-    useEffect(() => {
-        setNotesResults(sortBySourcePath(notes));
-    }, [notes]);
-
-    const [storiesResults, setStoriesResults] = useState(stories);
-    useEffect(() => {
-        setStoriesResults(sortBySourcePath(stories));
-    }, [stories]);
 
     const [context, setContext] = useState('');
     const [storyline, setStoryline] = useState('');
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const [storyTitle, setStoryTitle] = useState(story?.story_name);
+    const [storyTitle, setStoryTitle] = useState(selectedStory?.story_name);
     useEffect(() => {
-        story?.story_name?.replace(/#/g, "").trim();
-        setStoryTitle(story?.story_name);
-    }, [story?.story_name]);
+        selectedStory?.story_name?.replace(/#/g, "").trim();
+        setStoryTitle(selectedStory?.story_name);
+    }, [selectedStory?.story_name]);
 
     async function autoGenerateStory() {
         setIsLoading(true);
@@ -77,7 +58,26 @@ function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowS
                 httpPayload
             );
 
-            setGeneratedStory({ ...res, story_name: storyTitle || res?.story_name });
+            // setSelectedStory({ ...res, story_name: storyTitle || res?.story_name });
+            setSelectedStory(prev => ({
+                ...prev,
+                ...res,
+                story_name: storyTitle || res?.story_name,
+                text: res.text.map(section => ({
+                    ...section,
+
+                    outline: {
+                        ...section.outline,
+                        nameHtml: `<h3 class="outline-block">${section.outline.name}</h3>`
+                    },
+
+                    content: section.content.map(item => ({
+                        ...item,
+                        answerHtml: `<p class="answer-block">${item.answer}</p>`
+                    }))
+                }))
+            }));
+
             setShowStoriesEditor(true);
         } catch (error) {
             console.log(error);
@@ -195,7 +195,7 @@ function StoriesInsightsTab({ generatedStory: story, setGeneratedStory, setShowS
                         : currentTab === "Stories" ?
                             <>
                                 <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
-                                    <StoriesList setShowStoriesEditor={setShowStoriesEditor} setGeneratedStory={setGeneratedStory} />
+                                    <StoriesList setShowStoriesEditor={setShowStoriesEditor} />
                                 </div>
                             </>
                             :

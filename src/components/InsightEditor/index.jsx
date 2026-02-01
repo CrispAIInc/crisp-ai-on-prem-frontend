@@ -5,10 +5,11 @@ import RippleButton from '../RippleButton';
 import AddIcon from '@mui/icons-material/Add';
 import { useToast } from '../../contexts/toastContext';
 import useResources from '../../hooks/useResources';
-import ReactQuill, { Quill } from 'react-quill';
+import LoadingSpinner from "../LoadingSpinner";
 import { MainContext } from '../../contexts/mainContext';
 import { generateRandomHash, htmlToPlainText } from '../../utils';
 import makeApiRequest from '../../api';
+import JoditEditor from 'jodit-react';
 
 function InsightEditor({ isNewInsight }) {
 
@@ -17,43 +18,21 @@ function InsightEditor({ isNewInsight }) {
         isNewNote,
         setNotes,
         selectedNote,
+        setSelectedNote,
         noteIndex,
         knowledgeBase,
         theme,
         selectedStory,
     } = useContext(MainContext);
 
-    const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+    const { handleSourceLinkClick } = useReferenceLinkClick(true);
 
     const { notify } = useToast();
 
     const { getNotes } = useResources({ setNotes });
     const [noteTitle, setNoteTitle] = useState('');
-    const editorRef = useRef(null);
 
-    const modules = useMemo(() => ({
-        toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, true] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image', 'video'],
-        ],
-        imageResize: {
-            parchment: Quill.import("parchment"),
-            modules: ["Resize", "DisplaySize", "Toolbar"],
-        }
-    }), []);
-
-    const formats = [
-        'header',
-        'bold',
-        'italic',
-        'underline',
-        'list',
-        'bullet',
-        'link',
-        'image',
-    ];
+    const [isSavingPending, setIsSavingPending] = useState(false);
 
     const [value, setValue] = useState('');
 
@@ -61,7 +40,8 @@ function InsightEditor({ isNewInsight }) {
         setNoteTitle(selectedNote?.note_name);
     }, [selectedNote?.note_name]);
 
-    const handleSave = async (event) => {
+    const handleSaveNote = async (event) => {
+        setIsSavingPending(true);
         event?.preventDefault();
         if ((!isNewInsight && selectedNote.note_name === "") || (isNewInsight && noteTitle === "")) {
             notify({
@@ -99,46 +79,128 @@ function InsightEditor({ isNewInsight }) {
                 heading: "Oops!",
                 subheading: "Failed to save insight.",
             });
-        }
-    };
-    const handleReferenceClick = (e, { fileName, fileType }, file) => {
-
-        const _file = file || knowledgeBase?.find(item => item?.source_path === (fileName + "." + fileType));
-
-        if (_file) {
-            if (fileType === "mp4") {
-                handleVideoLinkClick(e, _file);
-            } else {
-                handlePDFLinkClick(e, _file);
-            }
+        } finally {
+            setIsSavingPending(false);
         }
     };
 
-    function extractFilenameAndType(input) {
-        const trimmed = input.split('|')[0].trim(); // Get part before '|'
-        const parts = trimmed.split('.');
+    useEffect(() => {
+        const handler = e => {
+            const li = e.target.closest(".ref-link");
+            if (!li) return;
 
-        if (parts.length < 2) return null; // Invalid format
 
-        const fileType = parts.pop(); // Get extension
-        const fileName = parts.join('.'); // Join rest in case filename has dots
+            const raw = li.getAttribute("data-source-object");
+            const ref = JSON.parse(
+                decodeURIComponent(escape(atob(raw)))
+            );
 
-        return {
-            fileName,
-            fileType
+            handleSourceLinkClick(null, ref);
         };
+
+        document.addEventListener('click', handler);
+        return () => document.removeEventListener('click', handler);
+    }, []);
+
+    function areRefsEmpty(refs = {}) {
+        Object.keys(refs).every((key) => refs[key]?.length === 0);
     }
 
+    function renderRefs(refs = {}) {
+        if (areRefsEmpty(refs)) return null;
+
+        // return HTML version of refs
+        return `
+            <div class="refs-block" contenteditable="false">
+                <h6 style="margin-top: 5px;">References</h6>
+                <ul>
+                    ${Object.values(refs)
+                .flat()
+                .map(ref => {
+                    return `
+                            <li data-source-object='${btoa(unescape(encodeURIComponent(JSON.stringify(ref))))}' class="ref-link" style="margin-bottom: 0px;">
+                                ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${parseInt(ref.page) + 1}` : `timestamp: ${ref.timestamp}`}
+                            </li>
+                        `;
+                })
+                .join("")}
+                </ul>
+            </div>
+        `;
+    }
+
+    const initialHTML = useMemo(() => {
+        return selectedNote.text.map((item, index) => `
+            <section class="item-group" data-index="${index}">
+                ${item.questionHtml}
+                ${item.answerHtml}
+
+                ${item?.refs && renderRefs(item.refs)}
+            </section>
+        `).join('<br />');
+    }, [selectedNote.note_id, renderRefs]);
+
+    const handleSave = (htmlContent) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        const groups = doc.querySelectorAll('.item-group');
+
+        const updatedTextArray = Array.from(groups).map((group, index) => {
+            const qText = group.querySelector('.question-block')?.textContent || "";
+            const qHtml = group.querySelector('.question-block')?.outerHTML || "";
+            const aText = group.querySelector('.answer-block')?.textContent || "";
+            const aHtml = group.querySelector('.answer-block')?.outerHTML || "";
+
+            return {
+                ...selectedNote.text[index],
+                question: qText.trim(),
+                questionHtml: qHtml,
+                answer: aText.trim(),
+                answerHtml: aHtml
+            };
+        });
+
+        setSelectedNote(prev => ({
+            ...prev,
+            text: updatedTextArray
+        }));
+
+        setNotes(prev => {
+            if (prev.length === 0) {
+                return [{
+                    ...selectedNote,
+                    text: updatedTextArray
+                }];
+            }
+            return prev.map(item => {
+                if (item.note_id === selectedNote.note_id) {
+                    return selectedNote;
+                }
+
+                return item;
+            });
+        });
+    };
+
+    const config = useMemo(() => ({
+        readonly: false,
+        cleanHTML: { fillEmptyParagraph: false },
+        allowTags: 'section,div,p,br,hr,style',
+        extraAllowedAttributes: ['class', 'style', 'data-index'],
+        // Highlighting the "Source" button so you can see the tags being used
+        buttons: 'source,bold,italic,underline,font,fontsize,brush,paragraph,ul,ol,hr'
+    }), []);
+
     return (
-        <div className="flex-1 h-full overflow-y-auto z-10">
-            <div className="h-full max-h-full ml-auto overflow-y-auto !overflow-y-hidden flex flex-col">
+        <div className="flex-1 h-full z-10 overflow-y-hidden">
+            <div className="h-full max-h-full ml-auto overflow-y-hidden flex flex-col">
                 <div className="flex items-center justify-between">
                     <RippleButton
                         cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
-                        onClick={handleSave}
+                        onClick={handleSaveNote}
                     >
-                        <AddIcon />
-                        <span className={` !text-[12px] font-medium`}>
+                        {isSavingPending ? <LoadingSpinner isSmall /> : <AddIcon />}
+                        <span className={`${isSavingPending && 'ml-2'} !text-[12px] font-medium`}>
                             Save insight
                         </span>
                     </RippleButton>
@@ -152,170 +214,26 @@ function InsightEditor({ isNewInsight }) {
                         onChange={(e) => setNoteTitle(e.target.value)}
                     />
                 </div>
-                <div className={`${isNewInsight && 'h-full'}`}>
-                    {!isNewInsight && (
-                        <style>
-                            {`
-                    .ql-toolbar.ql-snow + .ql-container.ql-snow {
-                      display: none !important;
-                    }
-                  `}
-                        </style>
-                    )}
-                    {
-                        theme === "light" ? (
-                            <style>
-                                {`
-                    .custom-quill .ql-editor { color: #333 !important; }
-                        .ql-toolbar {
-                          border-color: #78716C;
-                          background-color: rgba(119, 168, 249, 0.2) !important;
-                          color: red;
-                        }
-                        .ql-snow .ql-stroke {
-                          stroke: #333 !important;
-                        }
+                <div className={`${isNewInsight && 'h-full'} overflow-y-hidden`}>
 
-                        .ql-picker-label {
-                          color: #333 !important;
-                        }
-                    `}
-                            </style>
-                        ) : (
-                            <style>
-                                {`
-                    .custom-quill .ql-editor { color: #FFF !important; }
-                        .ql-toolbar {
-                          border-color: #78716C;
-                          background-color: rgba(119, 168, 249, 0.2) !important;
-                          color: red;
-                        }
-                        .ql-snow .ql-stroke {
-                          stroke: #fff !important;
-                          fill: #fff !important;
-                        }
-
-                        .ql-picker-label {
-                          color: #fff !important;
-                        }
-                    `}
-                            </style>
-                        )
-                    }
-                    <ReactQuill
+                    {/* <ReactQuill
                         ref={editorRef}
                         theme="snow"
-                        value={value}
-                        onChange={setValue}
-                        readOnly={false}
+                        value={editorHTML}
+                        onChange={(html) => setEditorHTML(html)}
                         className="h-full custom-quill"
                         modules={modules}
-                        formats={formats}
-                    />
+                        formats={allowedFormats}
+                    /> */}
+
+                    <div className="single-editor-container">
+                        <JoditEditor
+                            value={initialHTML}
+                            config={config}
+                            onBlur={handleSave} // Saves back to state when you click away
+                        />
+                    </div>
                 </div>
-                {selectedNote?.note_name !== "" ? <div className={`overflow-y-auto h-full max-h-full space-y-6  !z-10 relative !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'}`}>
-                    {selectedNote?.text.map((item, index) => (
-                        <div
-                            key={index}
-                            className="pl-2 mb-4"
-                        >
-                            <h5 className={`z-10 mt-2 font-bold ${theme === "light" ? "text-textColor-300" : "text-textColor-200 text-md"
-                                }`}>{typeof item?.question === "string" ? item?.question : item?.question?.query}</h5>
-                            <p className={`z-10 text-textColor-200 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`} dangerouslySetInnerHTML={{ __html: item?.answer }}></p>
-
-                            {/* PDF Links */}
-                            {(item?.references?.pdfLinks?.length > 0 || item?.refs?.pdfLinks?.length > 0) && (
-                                <div>
-                                    {item[item.refs ? 'refs' : 'references']?.pdfLinks?.map((link, i) => (
-                                        <a
-                                            key={i}
-                                            href="#"
-                                            onClick={(e) => handleReferenceClick(e, extractFilenameAndType(typeof link === "string" ? link : link?.source_path), (typeof link === "string" ? null : link))}
-                                            className="z-10 mr-2 reference-link"
-                                        >
-                                            {typeof link === "string" ? link : (link?.source_path + " | " + parseInt(link?.page) + 1)}
-                                        </a>
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Video Links */}
-                            {(item?.references?.videoLinks?.length > 0 || item?.refs?.videoLinks?.length > 0) && (
-                                <div>
-                                    {item[item.refs ? 'refs' : 'references']?.videoLinks?.map((link, i) => (
-                                        <li
-                                            key={i}
-                                            onClick={(e) => handleReferenceClick(e, extractFilenameAndType(typeof link === "string" ? link : link?.source_path), (typeof link === "string" ? null : link))}
-                                            className="z-10 mr-2 text-blue-600 break-words list-none cursor-pointer reference-link"
-                                        >
-                                            {typeof link === "string" ? link : (link?.source_path + " | " + link?.timestamp)}
-                                        </li>
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Image Links */}
-                            {(item?.references?.imageLinks?.length > 0 || item?.refs?.imageLinks?.length > 0) && (
-                                <div>
-                                    {item[item.refs ? 'refs' : 'references']?.imageLinks?.map((link, i) => (
-                                        <img
-                                            key={i}
-                                            src={typeof link === "string" ? link : link?.source_path}
-                                            alt="image"
-                                            className="z-10 max-w-full mr-2 reference-link"
-                                            onClick={(e) => handleReferenceClick(e, typeof link === "string" ? link : link?.source_path, typeof link === "string" ? null : link)}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-                    :
-                    <>
-                        {selectedStory.story_name !== "" && <div className={`overflow-y-auto h-full max-h-full space-y-6 !z-10 relative !border bg-red-600 !border-textColor-100`}>
-                            <div className={`flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`}>
-                                {
-                                    selectedStory?.text?.map(section => (
-                                        <div key={section.id}>
-                                            <h4>{section.outline.name}</h4>
-                                            {
-                                                section.content?.map((content, index) => (
-                                                    <div key={index}>
-                                                        <p>{content.answer}</p>
-                                                        {/* refs */}
-                                                        <div className="mt-2 mb-4">
-                                                            {
-                                                                content?.videosArr?.map((ref, index) => (
-                                                                    <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                                ))
-                                                            }
-
-                                                            {
-                                                                content?.pdfsArr?.map((ref, index) => (
-                                                                    <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                                ))
-                                                            }
-                                                            {
-                                                                content?.imgsArr?.map((ref, index) => (
-                                                                    <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                                ))
-                                                            }
-
-                                                        </div>
-                                                        {/* ... */}
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                        }</>
-                }
             </div>
         </div>
     );

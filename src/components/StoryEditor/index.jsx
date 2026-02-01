@@ -11,6 +11,7 @@ import useResources from '../../hooks/useResources';
 import LoadingSpinner from '../LoadingSpinner';
 import ReactQuill, { Quill } from 'react-quill';
 import ImageResize from "quill-image-resize-module-react";
+import JoditEditor from 'jodit-react';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -77,296 +78,49 @@ Quill.register(ReferenceLink, true);
 Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 
 function StoryEditor({
-    generatedStory,
     storyTitle,
     setStoryTitle,
 }) {
 
     const {
         theme,
+        selectedStory,
+        setSelectedStory,
         setStories
     } = useContext(MainContext);
     const { notify } = useToast();
 
     const { getStories } = useResources({ setStories });
-    const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+    const { handleSourceLinkClick } = useReferenceLinkClick(true);
 
-    const modules = useMemo(() => ({
-        toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, true] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image', 'video'],
-        ],
-        imageResize: {
-            parchment: Quill.import("parchment"),
-            modules: ["Resize", "DisplaySize", "Toolbar"],
-        }
-    }), []);
+    const [isSavingPending, setIsSavingPending] = useState(false);
 
-    const formats = [
-        'header',
-        'bold',
-        'italic',
-        'underline',
-        'list',
-        'bullet',
-        'link',
-        'image',
-    ];
-
-    const generateStoryHTML = (generatedStory) => {
-        if (!generatedStory) return "";
-
-        // Case 1: raw HTML content
-        if (
-            generatedStory.text.length === 0 &&
-            generatedStory.content !== ""
-        ) {
-            return generatedStory.content;
-        }
-
-        // Case 2: structured sections
-        return generatedStory.text
-            .map(section => `
-      <h4>${section.outline.name}</h4>
-      ${section.content
-                    ?.map(content => `
-          <p>${content.answer}</p>
-
-          <div style="margin: 8px 0 16px 8px;">
-            ${content.videosArr
-                            ?.map(ref => `
-                <li class="ref-link"
-                   data-type="video"
-                   data-source="${ref.source_path}"
-                   data-timestamp="${ref.timestamp}">
-                  ${ref.source_path} | ${ref.timestamp}
-                </li>
-              `)
-                            .join("")}
-
-            ${content.pdfsArr
-                            ?.map(ref => `
-                <li class="ref-link"
-                   data-type="pdf"
-                   data-source="${ref.source_path}"
-                   data-page="${parseInt(ref.page) + 1}">
-                  ${ref.source_path} | Page: ${parseInt(ref.page) + 1}
-                </li>
-              `)
-                            .join("")}
-
-            ${content.imgsArr
-                            ?.map(ref => `
-                <li class="ref-link"
-                   data-type="image"
-                   data-source="${ref.source_path}">
-                  ${ref.source_path}
-                </li>
-              `)
-                            .join("")}
-          </div>
-        `)
-                    .join("")}
-    `)
-            .join("");
-    };
 
     useEffect(() => {
-        const handleClick = (e) => {
-            const el = e.target.closest(".reference-link");
-            if (!el) return;
+        const handler = e => {
+            const li = e.target.closest(".ref-link");
+            if (!li) return;
 
-            e.preventDefault();
 
-            const payload = JSON.parse(
-                decodeURIComponent(el.dataset.refPayload)
+            const raw = li.getAttribute("data-source-object");
+            const ref = JSON.parse(
+                decodeURIComponent(escape(atob(raw)))
             );
 
-            const info = {
-                type: el.dataset.refType,
-                sectionIndex: Number(el.dataset.sectionIndex),
-                blockIndex: Number(el.dataset.blockIndex),
-                refIndex: Number(el.dataset.refIndex),
-                payload,
-            };
-
-            console.log("Reference clicked:", info);
-
-            // Route based on type
-            // if (info.type === "video") handleVideo(info.payload)
-            // if (info.type === "pdf") handlePDF(info.payload)
-            // if (info.type === "image") handleImage(info.payload)
+            handleSourceLinkClick(null, ref);
         };
 
-        document.addEventListener("click", handleClick);
-        return () => document.removeEventListener("click", handleClick);
+        document.addEventListener('click', handler);
+        return () => document.removeEventListener('click', handler);
     }, []);
-
-
-    function escapeHTML(str) {
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-
-    function formatReferenceLabel(ref, type) {
-        if (type === "video") {
-            return `${ref.source_path} | Timestamp: ${ref.timestamp}`;
-        }
-
-        if (type === "pdf") {
-            return `${escapeHTML(ref.source_path)} | Page ${parseInt(ref.page, 10) + 1
-                }`;
-        }
-
-        // image
-        return escapeHTML(ref.source_path || "Image reference");
-    }
-
-
-    function renderReferences(
-        refs = [],
-        type,
-        sectionIndex,
-        blockIndex
-    ) {
-        if (!refs || refs.length === 0) return "";
-
-        return `
-            <h3 style="font-weight: 400; margin-top: 5px;">References: </h3>
-            ${refs
-                .map((ref, refIndex) => {
-                    return `
-        <li
-          
-          class="reference-link ql-reference"
-          data-ref-type="${type}"
-          data-section-index="${sectionIndex}"
-          data-block-index="${blockIndex}"
-          data-ref-index="${refIndex}"
-          data-ref-payload='${encodeURIComponent(
-                        JSON.stringify(ref)
-                    )}'
-          style="
-            color: #2563eb;
-            cursor: pointer;
-            margin: 4px 0;
-            word-break: break-word;
-          "
-        >
-          ${formatReferenceLabel(ref, type)}
-        </li>
-      `;
-                })
-                .join("")
-            }
-        `;
-    }
-
-
-    function storyToHTML(sections = []) {
-        return sections
-            .map((section, sectionIndex) => {
-                return `
-        <h2
-          style="
-            font-weight: 700;
-            font-size: 1.3rem;
-            margin: 20px 0 10px;
-          "
-        >
-          ${escapeHTML(section.outline?.name || "")}
-        </h2>
-
-        ${section.content
-                        .map((block, blockIndex) => {
-                            return `
-              <p style="margin: 6px 0 10px;">
-                ${escapeHTML(block.answer || "")}
-              </p>
-
-              <div style="margin-left: 20px; margin-bottom: 12px;">
-                ${renderReferences(
-                                block.videosArr,
-                                "video",
-                                sectionIndex,
-                                blockIndex
-                            )}
-                ${renderReferences(
-                                block.pdfsArr,
-                                "pdf",
-                                sectionIndex,
-                                blockIndex
-                            )}
-                ${renderReferences(
-                                block.imgsArr,
-                                "image",
-                                sectionIndex,
-                                blockIndex
-                            )}
-              </div>
-            `;
-                        })
-                        .join("")}
-      `;
-            })
-            .join("");
-    }
-
-
 
     const [isPending, setIsPending] = useState(false);
-    const [value, setValue] = useState(generateStoryHTML(generatedStory) || "");
-    const editorRef = useRef(null);
-
-    useEffect(() => {
-        const handler = (e) => {
-            const el = e.target.closest(".ref-link");
-            if (!el) return;
-
-            const type = el.dataset.type;
-
-            if (type === "video") {
-                handleVideoLinkClick(e, {
-                    source_path: el.dataset.source,
-                    timestamp: el.dataset.timestamp,
-                });
-            }
-
-            if (type === "pdf") {
-                handlePDFLinkClick(e, {
-                    source_path: el.dataset.source,
-                    page: el.dataset.page,
-                });
-            }
-
-            if (type === "image") {
-                handlePDFLinkClick(e, {
-                    source_path: el.dataset.source,
-                });
-            }
-        };
-
-        document.addEventListener("click", handler);
-        return () => document.removeEventListener("click", handler);
-    }, []);
-
-    useEffect(() => {
-        if (!generatedStory?.text) return;
-        setValue(storyToHTML(generatedStory?.text));
-    }, [generatedStory?.text]);
 
 
     async function handleSaveStory() {
         try {
             setIsPending(true);
-            await makeApiRequest('/stories', "POST", JSON.stringify({ ...generatedStory, story_name: storyTitle || generatedStory?.story_name }));
+            await makeApiRequest('/stories', "POST", JSON.stringify({ ...selectedStory, story_name: storyTitle || selectedStory?.story_name }));
             notify({
                 variant: "success",
                 heading: "Story saved successfully!",
@@ -392,16 +146,16 @@ function StoryEditor({
             "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
             "xmlns:w='urn:schemas-microsoft-com:office:word' " +
             "xmlns='http://www.w3.org/TR/REC-html40'>" +
-            `<head><meta charset='utf-8'><title>Story:${generatedStory.story_name}</title></head><body>`;
+            `<head><meta charset='utf-8'><title>Story:${selectedStory.story_name}</title></head><body>`;
         var footer = "</body></html>";
         const htmlString = `
         <div>
-            <h1 style='text-align: center; margin-bottom: 30px;'>${generatedStory.story_name
+            <h1 style='text-align: center; margin-bottom: 30px;'>${selectedStory.story_name
             }</h1>
         </div>
         
         <div>
-            ${generatedStory?.content ? `<div>${generatedStory?.content}</div>` : generatedStory.text
+            ${selectedStory?.content ? `<div>${selectedStory?.content}</div>` : selectedStory.text
                 ?.map(
                     (item) => `
                 <div>
@@ -587,11 +341,102 @@ function StoryEditor({
         var fileDownload = document.createElement("a");
         document.body.appendChild(fileDownload);
         fileDownload.href = source;
-        fileDownload.download = generatedStory.story_name + ".doc";
+        fileDownload.download = selectedStory.story_name + ".doc";
         fileDownload.click();
         document.body.removeChild(fileDownload);
     }
 
+    const config = useMemo(() => ({
+        readonly: false,
+        cleanHTML: { fillEmptyParagraph: false },
+        allowTags: 'section,div,p,br,hr,style',
+        extraAllowedAttributes: ['class', 'style', 'data-index'],
+        // Highlighting the "Source" button so you can see the tags being used
+        buttons: 'source,bold,italic,underline,font,fontsize,brush,paragraph,ul,ol,hr'
+    }), []);
+
+    function renderRefs(refs) {
+        return `
+            <div class="refs-block" contenteditable="false">
+                <h6 style="margin-top: 5px;">References</h6>
+                <ul style="display: flex; flex-direction: column; gap: 5px;">
+                    ${refs.map(ref => {
+            return `
+                            <li data-source-object='${btoa(unescape(encodeURIComponent(JSON.stringify(ref))))}' class="ref-link" style="margin-bottom: 0px;">
+                               🔗 ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${parseInt(ref.page) + 1}` : `timestamp: ${ref.timestamp}`}
+                            </li>
+                        `;
+        }).join("")}
+                </ul>
+            </div>
+        `;
+    }
+
+    const initialHTML = useMemo(() => {
+        return selectedStory.text.map((item) => {
+            const flatRefs = [item.content[0].imgsArr, item.content[0].pdfsArr, item.content[0].videosArr].flat();
+
+            return `
+                <section class="item-group" data-id="${item.id}">
+                    ${item.outline.nameHtml}
+                    ${Array.isArray(item.content)
+                    ? item.content?.map(item => item.answerHtml)
+                    : item.content.answerHtml}
+    
+                    ${flatRefs.length > 0 ? renderRefs(flatRefs) : ''}
+                </section>
+            `;
+        }).join('<br />');
+    }, [selectedStory.story_id, renderRefs]);
+
+    const handleSave = (htmlContent) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        const groups = doc.querySelectorAll('.item-group');
+
+        const updatedTextArray = Array.from(groups).map((group, index) => {
+            const oText = group.querySelector('.outline-block')?.textContent || "";
+            const oHtml = group.querySelector('.outline-block')?.outerHTML || "";
+            const aText = group.querySelector('.answer-block')?.textContent || "";
+            const aHtml = group.querySelector('.answer-block')?.outerHTML || "";
+
+            return {
+                ...selectedStory.text[index],
+                content: selectedStory.text[index].content.map(c => ({
+                    ...c,
+                    answer: aText,
+                    answerHtml: aHtml
+                })),
+                outline: {
+                    ...selectedStory.text[index].outline,
+                    name: oText,
+                    nameHtml: oHtml
+                }
+            };
+        });
+
+        setSelectedStory(prev => ({
+            ...prev,
+            text: updatedTextArray
+        }));
+
+        setStories(prev => {
+            if (prev.length === 0) {
+                return [{
+                    ...selectedStory,
+                    text: updatedTextArray,
+                    story_name: storyTitle
+                }];
+            }
+            return prev.map(item => {
+                if (item.story_id === selectedStory.story_id) {
+                    return selectedStory;
+                }
+
+                return item;
+            });
+        });
+    };
 
     return (
         <div className='z-10 flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
@@ -601,7 +446,7 @@ function StoryEditor({
                     onClick={handleSaveStory}
                 >
                     {isPending ? <LoadingSpinner isSmall /> : <AddIcon />}
-                    <span className={` !text-[12px] font-medium`}>
+                    <span className={`${isPending && 'ml-2'}  !text-[12px] font-medium`}>
                         Save story
                     </span>
                 </RippleButton>
@@ -676,56 +521,14 @@ function StoryEditor({
                         </style>
                     )
                 }
-                <ReactQuill
-                    ref={editorRef}
-                    theme="snow"
-                    value={value}
-                    onChange={setValue}
-                    readOnly={false}
-                    className=""
-                    modules={modules}
-                    formats={formats}
-                />
 
-                {/* JSX render of the story (no editor) */}
-                {generatedStory !== null && <div className={`!z-10 flex-1 pl-2 !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} overflow-y-auto h-full ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                    }`}>
-                    {
-                        (generatedStory.text.length === 0 && generatedStory?.content !== "") ? (
-                            <p dangerouslySetInnerHTML={{ __html: generatedStory?.content }}></p>
-                        ) : generatedStory?.text?.map(section => (
-                            <div key={section.id}>
-                                <h4>{section.outline.name}</h4>
-                                {
-                                    section.content?.map((content, index) => (
-                                        <div key={index}>
-                                            <p>{content.answer}</p>
-                                            <div className="mt-2 mb-4">
-                                                {
-                                                    content?.videosArr?.map((ref, index) => (
-                                                        <p onClick={(e) => handleVideoLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref?.source_path} | {ref?.timestamp}</p>
-                                                    ))
-                                                }
-
-                                                {
-                                                    content?.pdfsArr?.map((ref, index) => (
-                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path + " | Page: " + (parseInt(ref?.page) + 1)}</p>
-                                                    ))
-                                                }
-                                                {
-                                                    content?.imgsArr?.map((ref, index) => (
-                                                        <p onClick={(e) => handlePDFLinkClick(e, ref)} className="mb-2 ml-2 break-words cursor-pointer text-primary-300 w-fit" key={index}>{ref.source_path}</p>
-                                                    ))
-                                                }
-
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        ))
-                    }
-                </div>}
+                <div className="single-editor-container">
+                    <JoditEditor
+                        value={initialHTML}
+                        config={config}
+                        onBlur={handleSave}
+                    />
+                </div>
             </div>
         </div>
     );

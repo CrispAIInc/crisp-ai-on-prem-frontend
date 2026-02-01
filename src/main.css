@@ -46,6 +46,45 @@
   text-decoration: underline;
 }
 
+.ql-container .ql-snow {
+  overflow-y: auto;
+}
+
+.jodit-toolbar__box {
+  min-height: fit-content !important;
+}
+.jodit-react-container,
+.single-editor-container {
+  height: 100% !important;
+}
+
+.jodit-container {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  overflow-y: hidden !important;
+}
+
+.jodit-status-bar {
+  display: none !important;
+}
+
+.refs-block {
+  user-select: text; /* allow copy */
+  cursor: default;
+}
+
+.refs-block * {
+  pointer-events: auto;
+}
+
+.ref-link {
+  display: block;
+  margin-left: 1rem;
+  color: #3b82f6;
+  cursor: pointer;
+}
+
 label {
   user-select: none;
 }

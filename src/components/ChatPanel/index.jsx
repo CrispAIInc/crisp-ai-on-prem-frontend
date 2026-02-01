@@ -81,8 +81,6 @@ Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
-  const [generatedStory, setGeneratedStory] = useState(null);
-
   const {
     setSelectedNote,
     reels,
@@ -92,10 +90,13 @@ const ChatPanel = () => {
     isRightSidebarOpen,
     setIsRightSidebarOpen,
     theme,
+    selectedStory,
     setSelectedStory,
   } = useContext(MainContext);
 
   const [isNewInsight, setIsNewInsight] = useState(false);
+
+  const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
 
   const closeEditor = useCallback(() => {
     setIsNewInsight(false);
@@ -124,19 +125,25 @@ const ChatPanel = () => {
   }, [setShowEditor]);
 
 
-
   const handleSidebarToggle = useCallback(() => {
     setSidebarWidth(prev => {
       if (prev !== (maxWidth - (maxWidth * 0.3))) return maxWidth - (maxWidth * 0.3);
-      return window.innerWidth / 4;
+      return window.innerWidth / 3.3333;
     });
     setIsRightSidebarOpen(true);
   }, [setSidebarWidth, maxWidth, setIsRightSidebarOpen]);
 
-
-
-
   const [showStoriesEditor, setShowStoriesEditor] = useState(false);
+
+  useEffect(() => {
+    if (showStoriesEditor === true || showEditor === true) {
+      setSidebarWidth(prev => {
+        if (prev !== (maxWidth - (maxWidth * 0.3))) return maxWidth - (maxWidth * 0.5);
+        return window.innerWidth / 5;
+      });
+      setIsRightSidebarOpen(true);
+    }
+  }, [showStoriesEditor, showEditor]);
 
   const [actualTab, setActualTab] = useState("genMedia"); //genMetadata | genStories | genMedia
 
@@ -152,11 +159,11 @@ const ChatPanel = () => {
   const [reelContext, setReelContext] = useState('');
   const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1min)');
 
-  const [storyTitle, setStoryTitle] = useState(generatedStory?.story_name);
+  const [storyTitle, setStoryTitle] = useState(selectedStory?.story_name);
 
   useEffect(() => {
-    setStoryTitle(generatedStory?.story_name);
-  }, [generatedStory?.story_name]);
+    setStoryTitle(selectedStory?.story_name);
+  }, [selectedStory?.story_name]);
 
   const [reel, setReel] = useState({
     id: "",
@@ -169,7 +176,7 @@ const ChatPanel = () => {
 
   return (
     <aside
-      className={`relative w-1/4 h-full overflow-hidden overflow-y-auto bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2"
+      className={`relative w-1/4 h-full overflow-hidden overflow-y-hidden bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2 pb-[10px]"
         }  ${theme === 'light' && '!border-r !border-textColor-100/50'} flex flex-col max-h-full z-1`}
       style={{ width: rightWidth }}
     >
@@ -229,7 +236,7 @@ const ChatPanel = () => {
       {showEditor ? (
         <InsightEditor isNewInsight={isNewInsight} />
       ) : showStoriesEditor ? (
-        <StoryEditor generatedStory={generatedStory} storyTitle={storyTitle} setStoryTitle={setStoryTitle} />
+        <StoryEditor storyTitle={storyTitle} setStoryTitle={setStoryTitle} />
       ) : (
         <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
@@ -259,7 +266,7 @@ const ChatPanel = () => {
                 <MetadataGen verbosityValue={verbosityValue} setVerbosityValue={setVerbosityValue}
                   context={context} setContext={setContext} isGeneratingMetadata={isGeneratingMetadata} setIsGeneratingMetadata={setIsGeneratingMetadata} />
               ) : actualTab === "genStories" ? (
-                <StoriesInsightsTab setShowStoriesEditor={setShowStoriesEditor} generatedStory={generatedStory} setGeneratedStory={setGeneratedStory} />
+                <StoriesInsightsTab currentTab={currentTab} setCurrentTab={setCurrentTab} setShowStoriesEditor={setShowStoriesEditor} />
               ) : actualTab === "genMedia" ? (
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
