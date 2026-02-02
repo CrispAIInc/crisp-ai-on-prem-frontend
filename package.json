@@ -26,6 +26,7 @@
     "event-source-polyfill": "^1.0.31",
     "file-saver": "^2.0.5",
     "firebase": "^12.1.0",
+    "jodit-react": "^5.3.20",
     "jspdf": "^2.5.1",
     "pdfjs-dist": "^3.11.174",
     "quill-image-resize-module-react": "^3.0.0",
