@@ -11,11 +11,14 @@ import AddIcon from '@mui/icons-material/Add';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { searchByKey, sortArrayOfObjects } from '../../utils';
+import { generateRandomHash, searchByKey, sortArrayOfObjects } from '../../utils';
 import makeApiRequest from '../../api';
 import useResources from '../../hooks/useResources';
 
-function InsightsList() {
+function InsightsList({
+    isNewInsight,
+    setIsNewInsight
+}) {
 
     const {
         theme,
@@ -32,8 +35,6 @@ function InsightsList() {
 
     const { notify } = useToast();
     const { getNotes } = useResources({ setNotes });
-
-    const [isNewInsight, setIsNewInsight] = useState(false);
     const [notesResults, setNotesResults] = useState(notes);
     const [insightSearchValue, setInsightSearchValue] = useState("");
     const [hoveredInsight, setHoveredInsight] = useState(null);
@@ -59,7 +60,21 @@ function InsightsList() {
         setSelectedNote({
             note_id: "",
             text: [{
-                content: "", model: "", color: theme === 'light' ? "#333" : '#fff', question: '', answer: "", references: {
+                id: generateRandomHash(5),
+                content: "",
+                model: "",
+                color: theme === 'light' ? "#333" : '#fff',
+                question: 'Question goes here...',
+                questionHtml: "<div class='question-block' style='font-weight: bold; font-size: 20px;'>Question goes here...</div>",
+                answer: "Write your insight body here...",
+                answerHtml: "<div class='answer-block'>Write your insight body here...</div>",
+                references: {
+                    videoLinks: [],
+                    keyframeLinks: [],
+                    pdfLinks: [],
+                    imageLinks: [],
+                },
+                refs: {
                     videoLinks: [],
                     keyframeLinks: [],
                     pdfLinks: [],

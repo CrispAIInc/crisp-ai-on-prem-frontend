@@ -58,6 +58,10 @@
   height: 100% !important;
 }
 
+.jodit-workplace > span[data-ref="placeholder"] {
+  display: none !important;
+}
+
 .jodit-container {
   display: flex !important;
   flex-direction: column !important;

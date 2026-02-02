@@ -13,7 +13,9 @@ import StoriesList from '../StoriesList/index.jsx';
 function StoriesInsightsTab({
     setShowStoriesEditor,
     currentTab,
-    setCurrentTab
+    setCurrentTab,
+    isNewInsight,
+    setIsNewInsight
 }) {
 
     const {
@@ -190,7 +192,8 @@ function StoriesInsightsTab({
                 {
                     currentTab === "Insights" ?
                         <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
-                            <InsightsList />
+                            <InsightsList isNewInsight={isNewInsight}
+                                setIsNewInsight={setIsNewInsight} />
                         </div>
                         : currentTab === "Stories" ?
                             <>

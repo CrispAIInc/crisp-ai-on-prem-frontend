@@ -43,25 +43,43 @@ function InsightEditor({ isNewInsight }) {
     const handleSaveNote = async (event) => {
         setIsSavingPending(true);
         event?.preventDefault();
-        if ((!isNewInsight && selectedNote.note_name === "") || (isNewInsight && noteTitle === "")) {
+
+        if (noteTitle === "" && selectedNote.note_name === "") {
             notify({
                 variant: "error",
                 heading: "Oops!",
-                subheading: "Note title cannot be empty",
+                subheading: "Note title cannot be empty or duplicated.",
             });
+            setIsSavingPending(false);
             return;
         }
 
-        if ((isNewNote || isNewInsight) && notes.every(n => n.note_name !== selectedNote.note_name)) {
-            const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
-            selectedNote.note_id = dateTimeStr;
-        }
+        // if (isNewInsight && notes.every(n => n.note_name !== selectedNote.note_name)) {
+        //     const dateTimeStr = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
+        //     selectedNote.note_id = dateTimeStr;
+        // }
 
         try {
             const noteId = new Date().toISOString().replace(/:/g, '-').split('.')[0] + Math.random().toString(36).substring(7);
             await makeApiRequest('/save-note', 'post', {
                 noteID: selectedNote.note_id || noteId,
-                selectedNote: isNewInsight ? { ...selectedNote, note_id: noteId, note_name: noteTitle, text: [{ answer: htmlToPlainText(value), content: value, question: "", model: "", id: generateRandomHash(5), references: { videoLinks: [], pdfLinks: [], imageLinks: [] } }] } : { ...selectedNote, note_name: noteTitle },
+                selectedNote: isNewInsight
+                    ? {
+                        ...selectedNote,
+                        note_id: noteId,
+                        note_name: noteTitle,
+                        text: [
+                            {
+                                ...(selectedNote.text?.[0] ?? {}),
+                                content: value,
+                            }
+                        ]
+                    }
+                    : {
+                        ...selectedNote,
+                        note_name: noteTitle,
+                    },
+
                 noteName: noteTitle,
                 noteNumber: parseInt(noteIndex),
                 isNewNote: (isNewNote || isNewInsight)
@@ -107,7 +125,7 @@ function InsightEditor({ isNewInsight }) {
     }
 
     function renderRefs(refs = {}) {
-        if (areRefsEmpty(refs)) return null;
+        if (Object.keys(refs).every((key) => refs[key]?.length === 0)) return '';
 
         // return HTML version of refs
         return `
@@ -130,15 +148,21 @@ function InsightEditor({ isNewInsight }) {
     }
 
     const initialHTML = useMemo(() => {
-        return selectedNote.text.map((item, index) => `
+        return selectedNote.text
+            .map((item, index) => `
             <section class="item-group" data-index="${index}">
                 ${item.questionHtml}
                 ${item.answerHtml}
-
-                ${item?.refs && renderRefs(item.refs)}
+                ${item?.refs ? renderRefs(item.refs) : ''}
             </section>
-        `).join('<br />');
-    }, [selectedNote.note_id, renderRefs]);
+        `)
+            .join('<br />');
+    }, [selectedNote.note_id, selectedNote.text, renderRefs]);
+
+    useEffect(() => {
+        setValue(initialHTML);
+    }, [initialHTML]);
+
 
     const handleSave = (htmlContent) => {
         const parser = new DOMParser();
@@ -228,7 +252,7 @@ function InsightEditor({ isNewInsight }) {
 
                     <div className="single-editor-container">
                         <JoditEditor
-                            value={initialHTML}
+                            value={value}
                             config={config}
                             onBlur={handleSave} // Saves back to state when you click away
                         />
