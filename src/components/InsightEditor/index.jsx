@@ -120,10 +120,6 @@ function InsightEditor({ isNewInsight }) {
         return () => document.removeEventListener('click', handler);
     }, []);
 
-    function areRefsEmpty(refs = {}) {
-        Object.keys(refs).every((key) => refs[key]?.length === 0);
-    }
-
     function renderRefs(refs = {}) {
         if (Object.keys(refs).every((key) => refs[key]?.length === 0)) return '';
 
@@ -142,6 +138,7 @@ function InsightEditor({ isNewInsight }) {
                         `;
                 })
                 .join("")}
+                <li>Add references</li>
                 </ul>
             </div>
         `;
