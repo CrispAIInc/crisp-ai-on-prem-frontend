@@ -74,23 +74,22 @@ export default function ChatInput({
                     className="w-[95%] py-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-40 placeholder:text-neutral-400"
                 />
 
-                <button
-                    disabled={!value.trim()}
-                    onClick={() => {
-                        onSend(value.trim());
-                    }}
-                    onMouseOver={handleMouseOver}
-                    onMouseLeave={handleMouseLeave}
-                    className={`absolute right-2 flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300/80'}`}
-                >
-                    <NorthIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                <div className="absolute right-2 ">
+                    <AppTooltip content={showTooltip && 'Message is empty'}>
+                        <button
+                            disabled={!value.trim()}
+                            onClick={() => {
+                                onSend(value.trim());
+                            }}
+                            onMouseOver={handleMouseOver}
+                            onMouseLeave={handleMouseLeave}
+                            className={`flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300/80'}`}
+                        >
+                            <NorthIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
 
-                    {
-                        showTooltip && (
-                            <AppTooltip content="Message is empty" />
-                        )
-                    }
-                </button>
+                        </button>
+                    </AppTooltip>
+                </div>
             </div>
 
             {/* bottom part of crisp wiz */}

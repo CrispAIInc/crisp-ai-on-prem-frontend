@@ -1,7 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import AppTooltip from "../AppTooltip";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
@@ -12,6 +11,7 @@ import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutline
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { Checkbox } from "@mui/material";
+import Tooltip from "../Tooltip";
 import { useContext, useEffect, useRef, useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import makeApiRequest from "../../api";
@@ -845,31 +845,38 @@ const ContentSection = ({
 
                             <div
                                 id="upload_sources"
-                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                className={`bg-red-600 source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={() => handleAddModal(true)}
                             >
-                                <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Add sources</span>
-
+                                <AppTooltip content="Message is eljhmpty">
+                                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                                        Add sources
+                                    </span>
+                                </AppTooltip>
                             </div>
 
-                            <div
-                                id="source_explorer"
-                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={handleExploreSources}
-                            >
-                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
-                            </div>
+                            {/* <AppTooltip content="Message is empty">
+                                <div
+                                    id="source_explorer"
+                                    className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                    onClick={handleExploreSources}
+                                >
+                                    <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
+                                </div>
+                            </AppTooltip>
 
-                            <div
-                                id="discovery"
-                                className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={() => setIsSearching(!isSearching)}
-                            >
-                                <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
-                            </div>
+                            <AppTooltip content="Message is empty">
+                                <div
+                                    id="discovery"
+                                    className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                    onClick={() => setIsSearching(!isSearching)}
+                                >
+                                    <SearchOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => setIsSearching(false)}>Discovery</span>
+                                </div>
+                            </AppTooltip> */}
                             {
                                 isSearching && (
                                     <div className="flex items-center gap-2">
