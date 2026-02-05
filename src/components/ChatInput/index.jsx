@@ -5,6 +5,7 @@ import AppTooltip from '../AppTooltip';
 import ChatHistory from '../ChatHistory';
 import CrispWizModels from '../CrispWizModels';
 import Chip from '../Chip';
+import { Tooltip } from 'react-tooltip';
 
 export default function ChatInput({
     crispModels,
@@ -74,22 +75,24 @@ export default function ChatInput({
                     className="w-[95%] py-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-40 placeholder:text-neutral-400"
                 />
 
-                <div className="absolute right-2 ">
-                    <AppTooltip content={showTooltip && 'Message is empty'}>
-                        <button
-                            disabled={!value.trim()}
-                            onClick={() => {
-                                onSend(value.trim());
-                            }}
-                            onMouseOver={handleMouseOver}
-                            onMouseLeave={handleMouseLeave}
-                            className={`flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300/80'}`}
-                        >
-                            <NorthIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                <button
+                    data-tooltip-place="top"
+                    data-tooltip-variant={theme}
+                    data-tooltip-class-name={theme === "light" && "border font-semibold"}
+                    data-tooltip-id="crisp-wiz-send-btn-tooltip"
+                    data-tooltip-content="Message is empty."
+                    disabled={!value.trim()}
+                    onClick={() => {
+                        onSend(value.trim());
+                    }}
+                    onMouseOver={handleMouseOver}
+                    onMouseLeave={handleMouseLeave}
+                    className={`absolute right-2 flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300/80'}`}
+                >
+                    <NorthIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
 
-                        </button>
-                    </AppTooltip>
-                </div>
+                    {showTooltip && <Tooltip id="crisp-wiz-send-btn-tooltip" />}
+                </button>
             </div>
 
             {/* bottom part of crisp wiz */}
