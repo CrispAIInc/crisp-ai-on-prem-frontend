@@ -36,7 +36,7 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
 const ChatMessage = ({ text, refs }) => {
-  const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+  const { handleSourceLinkClick } = useReferenceLinkClick(true);
   return (
     <div>
       <div className="coorg-response break-keep">
@@ -59,7 +59,7 @@ const ChatMessage = ({ text, refs }) => {
                   key={video.source_path + '' + index}
                   content={`${video.source_path} | Timestamp: ${video.timestamp}`}
                   data-object={video}
-                  onClick={(e) => handleVideoLinkClick(e, video)}
+                  onClick={(e) => handleSourceLinkClick(e, video)}
                   cssClasses="ml-0 cursor-pointer break-keep text-gradient-x"
                 />
               );
@@ -75,7 +75,7 @@ const ChatMessage = ({ text, refs }) => {
                 key={video.source_path + '' + index}
                 content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
                 data-object={video}
-                onClick={(e) => handleVideoLinkClick(e, video)}
+                onClick={(e) => handleSourceLinkClick(e, video)}
                 cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
               />
             ))}
@@ -90,7 +90,7 @@ const ChatMessage = ({ text, refs }) => {
                 key={pdf.source_path + '' + index}
                 content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
                 data-object={pdf}
-                onClick={(e) => handlePDFLinkClick(e, pdf)}
+                onClick={(e) => handleSourceLinkClick(e, pdf)}
                 cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
               />
             ))}
@@ -105,7 +105,7 @@ const ChatMessage = ({ text, refs }) => {
                 key={img.source_path + '' + index}
                 content={img.source_path}
                 data-object={img}
-                onClick={(e) => handlePDFLinkClick(e, img)}
+                onClick={(e) => handleSourceLinkClick(e, img)}
                 cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
               />
             ))}
@@ -157,7 +157,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   const { maxWidth } = useResizableSidebar(200, false);
 
-  const { handlePDFLinkClick, handleVideoLinkClick } = useReferenceLinkClick(true);
+  const { handleSourceLinkClick } = useReferenceLinkClick(true);
 
   const chatAppRef = useRef();
 
@@ -560,9 +560,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
       refs["videoLinks"].push(video);
       return (
-        <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+        <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         // <li key={video.source_path} className="ml-0" data-object={video}>
-        //   <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+        //   <Link onClick={(event) => handleSourceLinkClick(event, video)}>
         //     {video.source_path + " | Timestamp: " + video.timestamp}
         //   </Link>
         // </li>
@@ -573,9 +573,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
       refs["keyframeLinks"].push(video);
       return (
-        <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleVideoLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+        <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         // <li key={video.source_path} className="ml-0" data-object={video}>
-        //   <Link onClick={(event) => handleVideoLinkClick(event, video)}>
+        //   <Link onClick={(event) => handleSourceLinkClick(event, video)}>
         //     {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
         //   </Link>
         // </li>
@@ -586,9 +586,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
       refs["pdfLinks"].push(pdf);
       return (
-        <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handlePDFLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+        <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handleSourceLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         // <li key={pdf.source_path} className="ml-0" data-object={pdf}>
-        //   <Link onClick={(event) => handlePDFLinkClick(event, pdf)}>
+        //   <Link onClick={(event) => handleSourceLinkClick(event, pdf)}>
         //     {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
         //   </Link>
         // </li>
@@ -599,9 +599,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       noteReferences.imageLinks.push(img.source_path);
       refs["imageLinks"].push(img);
       return (
-        <Chip key={img.source_path} content={img.source_path} data-object={img} onClick={(event) => handlePDFLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
+        <Chip key={img.source_path} content={img.source_path} data-object={img} onClick={(event) => handleSourceLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
         // <li key={img.source_path} className="ml-0" data-object={img}>
-        //   <Link onClick={(event) => handlePDFLinkClick(event, img)}>
+        //   <Link onClick={(event) => handleSourceLinkClick(event, img)}>
         //     {img.source_path}
         //   </Link>
         // </li>
