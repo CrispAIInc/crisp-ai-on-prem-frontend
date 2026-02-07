@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import NorthIcon from '@mui/icons-material/North';
 import { MainContext } from '../../contexts/mainContext';
-import AppTooltip from '../AppTooltip';
+// import AppTooltip from '../AppTooltip';
 import ChatHistory from '../ChatHistory';
 import CrispWizModels from '../CrispWizModels';
 import Chip from '../Chip';
