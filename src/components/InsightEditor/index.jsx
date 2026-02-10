@@ -138,7 +138,6 @@ function InsightEditor({ isNewInsight }) {
                         `;
                 })
                 .join("")}
-                <li>Add references</li>
                 </ul>
             </div>
         `;
