@@ -94,7 +94,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
                     (
                         <div className={`flex items-center pr-[1px] bg-background_workspace ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-300'} rounded-full bg-transparent`}>
 
-                            <input className='flex-1 p-2 bg-transparent border-none rounded-full outline-none' placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={(event) => setSearchQuestion(event.target.value)} onKeyDown={(e) => {
+                            <input className={`flex-1 p-2 bg-transparent border-none rounded-full outline-none ${theme === 'dark' && 'text-textColor-100'}`} placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={(event) => setSearchQuestion(event.target.value)} onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     handleSubmitQuestion(e);
                                 }
