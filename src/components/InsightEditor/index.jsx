@@ -133,7 +133,7 @@ function InsightEditor({ isNewInsight }) {
                 .map(ref => {
                     return `
                             <li data-source-object='${btoa(unescape(encodeURIComponent(JSON.stringify(ref))))}' class="ref-link" style="margin-bottom: 0px;">
-                                ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${parseInt(ref.page) + 1}` : `timestamp: ${ref.timestamp}`}
+                                ${ref.source_path} | ${ref.file_type === 'pdf' ? `Page: ${parseInt(ref.page) + 1}` : ref.file_type === 'video' ? `timestamp: ${ref.timestamp}` : ''}
                             </li>
                         `;
                 })
