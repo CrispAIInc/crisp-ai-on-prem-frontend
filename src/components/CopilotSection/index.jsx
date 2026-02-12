@@ -32,6 +32,7 @@ import SegmentDescription from '../SegmentDescription/index.jsx';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import { useToast } from '../../contexts/toastContext.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -155,6 +156,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   const { addNewChat } = useChat();
 
+  const { notify } = useToast();
+
   const { maxWidth } = useResizableSidebar(200, false);
 
   const { handleSourceLinkClick } = useReferenceLinkClick(true);
@@ -238,46 +241,58 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setInput("Generate a description between timestamps " + formatTime(start) + " and " + formatTime(end));
   }
 
+  async function handleCaptioning(query) {
+    let results = await makeApiRequest('/find-timestamps', 'POST', JSON.stringify({
+      prompt: query,
+      sources: displayedSources.map((item) => ({
+        category: Array.isArray(item.category) ? item.category[0] : item.category,
+        source_path: item.source_path
+      }))
+    }));
+
+    return results;
+  }
+
   const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
+
+    if (message.trim() === "" && input.trim() === "") return;
+
+    if (input.trim() === '' && !isRepeated) return;
+
+    setShowCursor(true);
+
+    let userMessage = "";
+
+    if (selectedLanguage != "en") {
+      const data = await makeApiRequest(
+        `/translate`,
+        "post",
+        JSON.stringify({ text: input || message, language: selectedLanguage })
+      );
+      userMessage = data.translatedText;
+    } else userMessage = input || message;
+
+    userMessage = userMessage?.trim();
+
+    setInput("");
+
+    setOriginalQueries([...originalQueries, userMessage]);
+    setMessages([
+      ...messages,
+      { sender: "user", text: userMessage, models, question: userMessage },
+      { sender: "bot", text: "", models, question: userMessage, botText: "", refs: {} },
+    ]);
+    setResponseIndex((responseIndex) => responseIndex + 2);
+
+    let botMessage = "";
+
+    /******** handle captioning ********** */
     if (selectedModel === "captioning") {
-      console.log("handle captioning");
-      // handleCpationing()
-      return;
+      let timestamps = handleCaptioning(userMessage);
+      fetchReferences(userMessage, models, botMessage, timestamps);
     }
-
-    if (!canGenerateSegmentDescription || isRepeated) {
-      if (message.trim() === "" && input.trim() === "") return;
-
-      if (input.trim() === '' && !isRepeated) return;
-
-      setShowCursor(true);
-
-      let userMessage = "";
-
-      if (selectedLanguage != "en") {
-        const data = await makeApiRequest(
-          `/translate`,
-          "post",
-          JSON.stringify({ text: input || message, language: selectedLanguage })
-        );
-        userMessage = data.translatedText;
-      } else userMessage = input || message;
-
-      userMessage = userMessage?.trim();
-
-      noteQuestion.current = userMessage;
-
-      setInput("");
-
-      setOriginalQueries([...originalQueries, userMessage]);
-      setMessages([
-        ...messages,
-        { sender: "user", text: userMessage, models, question: userMessage },
-        { sender: "bot", text: "", models, question: userMessage, botText: "", refs: {} },
-      ]);
-      setResponseIndex((responseIndex) => responseIndex + 2);
-
-      var botMessage = "";
+    /******** handle crisp wiz messaging (smart search) ********** */
+    else if (!canGenerateSegmentDescription || isRepeated) {
       if (selectedLLMs[0] === "dall-e-3") {
         const data = await makeApiRequest(
           `/image-generation/${encodeURIComponent(
@@ -303,7 +318,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         setShowCursor(false);
       } else {
 
-        // add or remove embeddings from VS
+        // add or remove embeddings from Vector store
         if (!displayedSources?.every(item => item?.is_checked === false)) {
           await makeApiRequest(
             `/handle-embeddings`,
@@ -366,130 +381,77 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           }
         };
       }
-    } else {
-
+    }
+    /******** handle timestamps description ********** */
+    else {
       // check if user sends query before selecting correct timestamo range
       if (toSeconds(end) <= toSeconds(start)) {
-        toast("Your timestamp range is invalid.", { className: `p-2 rounded-full !bg-red-600 text-white`, theme });
+        notify({
+          variant: "error",
+          heading: "Timestamps invalid!",
+          subheading: "Your timestamp range is invalid.",
+        });
         return;
       }
 
-      if (!chatLoaded) return;
+      let url = new URLSearchParams();
 
-      setShowCursor(true);
+      url.append("start_timestamp", formatTime((start)));
+      url.append("end_timestamp", formatTime((end)));
+      url.append("video_filename", displayedSources.find(i => i.is_checked).source_path);
 
-      let userMessage = "";
+      let sessionID = null; // Variable to store the session ID
+      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          SessionId: currentChat?.sessionId,
+          ProjectId: currentProject?.project_id,
+        },
+        heartbeatTimeout: 75000,
+      });
 
-      if (selectedLanguage != "en") {
-        const data = await makeApiRequest(
-          `/translate`,
-          "post",
-          JSON.stringify({ text: input || message, language: selectedLanguage })
-        );
-        userMessage = data.translatedText;
-      } else userMessage = input || message;
+      eventSource.onmessage = async function (event) {
+        const data = JSON.parse(event.data);
 
-      userMessage = userMessage?.trim();
-
-      noteQuestion.current = userMessage;
-
-      setInput("");
-
-      setOriginalQueries([...originalQueries, userMessage]);
-      setMessages([
-        ...messages,
-        { sender: "user", text: userMessage, models, question: userMessage },
-        { sender: "bot", text: "", models, question: userMessage, botText: "", refs: {} },
-      ]);
-      setResponseIndex((responseIndex) => responseIndex + 2);
-
-      botMessage = "";
-      if (selectedLLMs[0] === "dall-e-3") {
-        const data = await makeApiRequest(
-          `/image-generation/${encodeURIComponent(
-            selectedCategory
-          )}/${encodeURIComponent(userMessage)}/${encodeURIComponent(
-            selectedLLMs[0]
-          )}`,
-          "post"
-        );
-        botMessage = data.image_url;
-
-        setMessages((prevMessages) => {
-          const newMessages = [...prevMessages];
-          if (newMessages.length > 0) {
-            const lastMessageIndex = newMessages.length - 1;
-            newMessages[lastMessageIndex] = {
-              ...newMessages[lastMessageIndex],
-              img: botMessage,
-            };
-          }
-          return newMessages;
-        });
-        setShowCursor(false);
-      } else {
-
-        let url = new URLSearchParams();
-
-        url.append("start_timestamp", formatTime((start)));
-        url.append("end_timestamp", formatTime((end)));
-        url.append("video_filename", displayedSources.find(i => i.is_checked).source_path);
-
-        let sessionID = null; // Variable to store the session ID
-        const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            SessionId: currentChat?.sessionId,
-            // ProjectId: currentProject?.project_id,
-          },
-          heartbeatTimeout: 75000,
-        });
-
-        eventSource.onmessage = async function (event) {
-          const data = JSON.parse(event.data);
-
-          if (data.type === "SESSION_ID") {
-            sessionID = data.session_id;
-          } else if (data.text === "") {
-            setIsFetchingRefs(true);
-          } else if (data.type === "MESSAGE") {
-            setShowCursor(false);
-            const newToken = data.text;
-            botMessage += " " + newToken;
-            setMessages((prevMessages) => {
-              const newMessages = [...prevMessages];
-              if (newMessages.length > 0) {
-                const lastMessageIndex = newMessages.length - 1;
-                newMessages[lastMessageIndex] = {
-                  ...newMessages[lastMessageIndex],
-                  text: botMessage,
-                  botText: botMessage,
-                };
-              }
-              return newMessages;
-            });
-          } else if (data.type === "REFERENCES") {
-            // extract the last part of the streaming and call fetchReferences
-            // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
-            fetchReferences(userMessage, models, botMessage, data.data);
-            setIsFetchingRefs(false);
-          }
-        };
-
-        eventSource.onerror = async function () {
+        if (data.type === "SESSION_ID") {
+          sessionID = data.session_id;
+        } else if (data.text === "") {
+          setIsFetchingRefs(true);
+        } else if (data.type === "MESSAGE") {
           setShowCursor(false);
-          eventSource.close();
+          const newToken = data.text;
+          botMessage += " " + newToken;
+          setMessages((prevMessages) => {
+            const newMessages = [...prevMessages];
+            if (newMessages.length > 0) {
+              const lastMessageIndex = newMessages.length - 1;
+              newMessages[lastMessageIndex] = {
+                ...newMessages[lastMessageIndex],
+                text: botMessage,
+                botText: botMessage,
+              };
+            }
+            return newMessages;
+          });
+        } else if (data.type === "REFERENCES") {
+          // extract the last part of the streaming and call fetchReferences
+          // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
+          fetchReferences(userMessage, models, botMessage, data.data);
+          setIsFetchingRefs(false);
+        }
+      };
 
-          if (eventSource.readyState === EventSource.CLOSED) {
-            setOriginalResponses([...originalResponses, botMessage]);
-          } else {
-            console.error("Connection was closed due to an error.");
-          }
-        };
-      }
+      eventSource.onerror = async function () {
+        setShowCursor(false);
+        eventSource.close();
+
+        if (eventSource.readyState === EventSource.CLOSED) {
+          setOriginalResponses([...originalResponses, botMessage]);
+        } else {
+          console.error("Connection was closed due to an error.");
+        }
+      };
     }
-
-
   };
   const fetchReferences = async (userMessage, models, botMessage, data) => {
     // const response = await axios.get(`${API_ENDPOINT}/references`);
