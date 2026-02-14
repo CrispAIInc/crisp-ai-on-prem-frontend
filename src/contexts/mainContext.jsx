@@ -364,6 +364,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
     };
 
+    const [checkedSources, setCheckedSources] = useState(knowledgeBase.filter(item => item.is_checked));
+
     useEffect(() => {
         // add all selected sources from knowledgebase to displayedsources
         setDisplayedSources(knowledgeBase.filter(item => item.is_selected));
@@ -383,6 +385,9 @@ export default function MainProvider({ children, theme, setTheme }) {
 
             return project;
         }));
+
+        // update checked sources
+        setCheckedSources(checkedSources);
     }, [knowledgeBase]);
 
     // const [selectedCategory] = useState("all");
@@ -1223,6 +1228,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // create value object with all the states
     const value = {
+        checkedSources,
         combinedSummary, setCombinedSummary,
         isCombinedSummaryPending, setIsCombinedSummaryPending,
         selectedLanguage, setSelectedLanguage,
