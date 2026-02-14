@@ -276,51 +276,123 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
     let botMessage = "";
 
-    /******** handle captioning ********** */
-    if (selectedModel === "captioning") {
-      let timestamps = handleCaptioning(userMessage);
-      fetchReferences(userMessage, models, botMessage, timestamps);
-    }
-    /******** handle crisp wiz messaging (smart search) ********** */
-    else if (!canGenerateSegmentDescription || isRepeated) {
-      if (selectedLLMs[0] === "dall-e-3") {
-        const data = await makeApiRequest(
-          `/image-generation/${encodeURIComponent(
-            selectedCategory
-          )}/${encodeURIComponent(userMessage)}/${encodeURIComponent(
-            selectedLLMs[0]
-          )}`,
-          "post"
-        );
-        botMessage = data.image_url;
-
-        setMessages((prevMessages) => {
-          const newMessages = [...prevMessages];
-          if (newMessages.length > 0) {
-            const lastMessageIndex = newMessages.length - 1;
-            newMessages[lastMessageIndex] = {
-              ...newMessages[lastMessageIndex],
-              img: botMessage,
-            };
-          }
-          return newMessages;
-        });
-        setShowCursor(false);
-      } else {
-
-        // add or remove embeddings from Vector store
-        if (!displayedSources?.every(item => item?.is_checked === false)) {
-          await makeApiRequest(
-            `/handle-embeddings`,
-            "post",
-            JSON.stringify({
-              sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-            })
+    try {
+      /******** handle captioning ********** */
+      if (selectedModel === "captioning") {
+        let sources = handleCaptioning(userMessage);
+        fetchReferences(userMessage, models, botMessage, sources);
+      }
+      /******** handle crisp wiz messaging (smart search) ********** */
+      else if (selectedModel === "search") {
+        if (selectedLLMs[0] === "dall-e-3") {
+          const data = await makeApiRequest(
+            `/image-generation/${encodeURIComponent(
+              selectedCategory
+            )}/${encodeURIComponent(userMessage)}/${encodeURIComponent(
+              selectedLLMs[0]
+            )}`,
+            "post"
           );
+          botMessage = data.image_url;
+
+          setMessages((prevMessages) => {
+            const newMessages = [...prevMessages];
+            if (newMessages.length > 0) {
+              const lastMessageIndex = newMessages.length - 1;
+              newMessages[lastMessageIndex] = {
+                ...newMessages[lastMessageIndex],
+                img: botMessage,
+              };
+            }
+            return newMessages;
+          });
+          setShowCursor(false);
+        } else {
+
+          // add or remove embeddings from Vector store
+          if (!displayedSources?.every(item => item?.is_checked === false)) {
+            await makeApiRequest(
+              `/handle-embeddings`,
+              "post",
+              JSON.stringify({
+                sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+              })
+            );
+          }
+
+          let sessionID = null; // Variable to store the session ID
+          const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_checked) ? false : true}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              SessionId: currentChat?.sessionId,
+              ProjectId: currentProject?.project_id,
+            },
+            heartbeatTimeout: 75000,
+          });
+
+          eventSource.onmessage = async function (event) {
+            const data = JSON.parse(event.data);
+
+            if (data.type === "SESSION_ID") {
+              sessionID = data.session_id;
+            } else if (data.text === "") {
+              setIsFetchingRefs(true);
+            } else if (data.type === "MESSAGE") {
+              setShowCursor(false);
+              const newToken = data.text;
+              botMessage += " " + newToken;
+              setMessages((prevMessages) => {
+                const newMessages = [...prevMessages];
+                if (newMessages.length > 0) {
+                  const lastMessageIndex = newMessages.length - 1;
+                  newMessages[lastMessageIndex] = {
+                    ...newMessages[lastMessageIndex],
+                    text: botMessage,
+                    botText: botMessage,
+                  };
+                }
+                return newMessages;
+              });
+            } else if (data.type === "REFERENCES") {
+              // extract the last part of the streaming and call fetchReferences
+              // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
+              fetchReferences(userMessage, models, botMessage, data.data);
+              setIsFetchingRefs(false);
+            }
+          };
+
+          eventSource.onerror = async function () {
+            setShowCursor(false);
+            eventSource.close();
+
+            if (eventSource.readyState === EventSource.CLOSED) {
+              setOriginalResponses([...originalResponses, botMessage]);
+            } else {
+              console.error("Connection was closed due to an error.");
+            }
+          };
+        }
+      }
+      /******** handle timestamps description ********** */
+      else if (selectedModel === "timestamps_description") {
+        // check if user sends query before selecting correct timestamo range
+        if (toSeconds(end) <= toSeconds(start)) {
+          notify({
+            variant: "error",
+            heading: "Timestamps invalid!",
+            subheading: "Your timestamp range is invalid.",
+          });
+          throw new Error("Timestamps invalid");
         }
 
+        let url = new URLSearchParams();
+
+        url.append("start_timestamp", formatTime((start)));
+        url.append("end_timestamp", formatTime((end)));
+        url.append("video_filename", displayedSources.find(i => i.is_checked).source_path);
+
         let sessionID = null; // Variable to store the session ID
-        const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${displayedSources?.some(item => item?.is_checked) ? false : true}`, {
+        const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             SessionId: currentChat?.sessionId,
@@ -356,7 +428,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             // extract the last part of the streaming and call fetchReferences
             // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
             fetchReferences(userMessage, models, botMessage, data.data);
-            setIsFetchingRefs(false);
           }
         };
 
@@ -371,76 +442,11 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           }
         };
       }
-    }
-    /******** handle timestamps description ********** */
-    else {
-      // check if user sends query before selecting correct timestamo range
-      if (toSeconds(end) <= toSeconds(start)) {
-        notify({
-          variant: "error",
-          heading: "Timestamps invalid!",
-          subheading: "Your timestamp range is invalid.",
-        });
-        return;
-      }
-
-      let url = new URLSearchParams();
-
-      url.append("start_timestamp", formatTime((start)));
-      url.append("end_timestamp", formatTime((end)));
-      url.append("video_filename", displayedSources.find(i => i.is_checked).source_path);
-
-      let sessionID = null; // Variable to store the session ID
-      const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          SessionId: currentChat?.sessionId,
-          ProjectId: currentProject?.project_id,
-        },
-        heartbeatTimeout: 75000,
-      });
-
-      eventSource.onmessage = async function (event) {
-        const data = JSON.parse(event.data);
-
-        if (data.type === "SESSION_ID") {
-          sessionID = data.session_id;
-        } else if (data.text === "") {
-          setIsFetchingRefs(true);
-        } else if (data.type === "MESSAGE") {
-          setShowCursor(false);
-          const newToken = data.text;
-          botMessage += " " + newToken;
-          setMessages((prevMessages) => {
-            const newMessages = [...prevMessages];
-            if (newMessages.length > 0) {
-              const lastMessageIndex = newMessages.length - 1;
-              newMessages[lastMessageIndex] = {
-                ...newMessages[lastMessageIndex],
-                text: botMessage,
-                botText: botMessage,
-              };
-            }
-            return newMessages;
-          });
-        } else if (data.type === "REFERENCES") {
-          // extract the last part of the streaming and call fetchReferences
-          // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
-          fetchReferences(userMessage, models, botMessage, data.data);
-          setIsFetchingRefs(false);
-        }
-      };
-
-      eventSource.onerror = async function () {
-        setShowCursor(false);
-        eventSource.close();
-
-        if (eventSource.readyState === EventSource.CLOSED) {
-          setOriginalResponses([...originalResponses, botMessage]);
-        } else {
-          console.error("Connection was closed due to an error.");
-        }
-      };
+    } catch (error) {
+      console.log(error);
+      setMessages(prev => prev.slice(0, -2));
+      setShowCursor(false);
+      setIsFetchingRefs(false);
     }
   };
   const fetchReferences = async (userMessage, models, botMessage, data) => {
@@ -471,53 +477,11 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       setCurrentChat(chatHistory[chatIndex]);
     }
 
-    // update currentChat and chatHistory
-    // setCurrentChat(prev => ({
-    //   ...prev,
-    //   messages: prev.messages.map((message, index) => {
-    //     if (index === responseIndex) {
-    //       return {
-    //         ...message,
-    //         botText: botMessage,
-    //         text: botMessage,
-    //         refs,
-    //       };
-    //     }
-    //     return message;
-    //   })
-    // }));
-    // setChatHistory(prevChatHistory => {
-    //   return prevChatHistory.map(chat => {
-    //     if (chat.sessionId === currentChat.sessionId) {
-    //       return {
-    //         ...chat,
-    //         messages: chat.messages.map((message, index) => {
-    //           if (index === responseIndex) {
-    //             return {
-    //               ...message,
-    //               botText: botMessage,
-    //               text: botMessage,
-    //               refs,
-    //             };
-    //           }
-    //           return message;
-    //         })
-    //       };
-    //     }
-    //     return chat;
-    //   });
-    // });
-
     const videoLinks = data.video_references.map((video) => {
       noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
       refs["videoLinks"].push(video);
       return (
         <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
-        // <li key={video.source_path} className="ml-0" data-object={video}>
-        //   <Link onClick={(event) => handleSourceLinkClick(event, video)}>
-        //     {video.source_path + " | Timestamp: " + video.timestamp}
-        //   </Link>
-        // </li>
       );
     });
 
@@ -526,11 +490,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       refs["keyframeLinks"].push(video);
       return (
         <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
-        // <li key={video.source_path} className="ml-0" data-object={video}>
-        //   <Link onClick={(event) => handleSourceLinkClick(event, video)}>
-        //     {video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)}
-        //   </Link>
-        // </li>
       );
     });
 
@@ -539,11 +498,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       refs["pdfLinks"].push(pdf);
       return (
         <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handleSourceLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
-        // <li key={pdf.source_path} className="ml-0" data-object={pdf}>
-        //   <Link onClick={(event) => handleSourceLinkClick(event, pdf)}>
-        //     {pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)}
-        //   </Link>
-        // </li>
       );
     });
 
@@ -552,11 +506,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       refs["imageLinks"].push(img);
       return (
         <Chip key={img.source_path} content={img.source_path} data-object={img} onClick={(event) => handleSourceLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
-        // <li key={img.source_path} className="ml-0" data-object={img}>
-        //   <Link onClick={(event) => handleSourceLinkClick(event, img)}>
-        //     {img.source_path}
-        //   </Link>
-        // </li>
       );
     });
 
