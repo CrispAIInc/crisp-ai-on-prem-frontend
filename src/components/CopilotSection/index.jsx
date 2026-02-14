@@ -140,6 +140,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     currentChat,
     chatHistory,
     setChatHistory,
+    checkedSources
   } = useContext(MainContext);
 
   const { currentProject } = useContext(ProjectContext);
@@ -236,10 +237,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   async function handleCaptioning(query) {
     let results = await makeApiRequest('/find-timestamps', 'POST', JSON.stringify({
       prompt: query,
-      sources: displayedSources.map((item) => ({
-        category: Array.isArray(item.category) ? item.category[0] : item.category,
-        source_path: item.source_path
-      }))
+      sources: checkedSources
     }));
 
     return results;
