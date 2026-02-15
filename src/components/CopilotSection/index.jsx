@@ -50,10 +50,10 @@ const ChatMessage = ({ text, refs }) => {
               return (
                 <Chip
                   key={video.source_path + '' + index}
-                  content={`${video.source_path} | Timestamp: ${video.timestamp}`}
+                  content={`${video.source_path} | Timestamp: ${video.timestamp} ${video.score ? (" | Relevance score: " + (Number.isInteger(video.score * 100) ? video.score * 100 : (video.score * 100).toFixed(2) + "%")) : ''}`}
                   data-object={video}
                   onClick={(e) => handleSourceLinkClick(e, video)}
-                  cssClasses="ml-0 cursor-pointer break-keep text-gradient-x"
+                  cssClasses={`ml-0 cursor-pointer break-keep ${!video.score && 'text-gradient-x'}`}
                 />
               );
             })}
@@ -235,89 +235,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setInput("Generate a description between timestamps " + formatTime(start) + " and " + formatTime(end));
   }
 
-  function formatCaptioningRefs(refs) {
-    const kbMap = new Map(
-      knowledgeBase.map(item => [item.id, item])
-    );
-
-    const referenceConfig = {
-      img_references: "img_id",
-      pdf_references: "pdf_id",
-      video_references: "video_id",
-    };
-
-    const newItem = { ...refs };
-
-    Object.entries(referenceConfig).forEach(([key, idField]) => {
-      if (Array.isArray(refs[key])) {
-        newItem[key] = refs[key].map(ref => ({
-          ...ref,
-          ...(kbMap.get(ref[idField]) || null),
-        }));
-      }
-    });
-
-    return newItem;
-  }
-
-  function sortReferencesByScore(data) {
-    // Helper to sort timestamps descending
-    function sortTimestamps(ref) {
-      if (Array.isArray(ref.timestamps)) {
-        ref.timestamps.sort((a, b) => b.score - a.score);
-      }
-      return ref;
-    }
-
-    // Helper to get highest score from a reference
-    function getTopScore(ref) {
-      if (!ref.timestamps || ref.timestamps.length === 0) return -Infinity;
-      return ref.timestamps[0].score;
-    }
-
-    // Sort each reference group
-    ["img_references", "pdf_references", "video_references"].forEach(key => {
-      if (Array.isArray(data[key])) {
-        // First sort timestamps inside each reference
-        data[key].forEach(sortTimestamps);
-
-        // Then sort references by highest timestamp score
-        data[key].sort((a, b) => getTopScore(b) - getTopScore(a));
-      }
-    });
-
-    return data;
-  }
-
-  function sortByTimestampScore(data) {
-    const result = [];
-
-    Object.keys(data).forEach(key => {
-      const references = data[key];
-
-      if (Array.isArray(references)) {
-        references.forEach(ref => {
-          if (Array.isArray(ref.timestamps)) {
-            ref.timestamps.forEach(ts => {
-              result.push({
-                source_id: ref.source_id,
-                timestamp: ts.timestamp,
-                score: ts.score
-              });
-            });
-          }
-        });
-      }
-    });
-
-    // Sort descending by score (highest first)
-    result.sort((a, b) => b.score - a.score);
-
-    return result;
-  }
-
-
-
   async function handleCaptioning(query) {
     let timestamps = await makeApiRequest('/find-timestamps', 'POST', JSON.stringify({
       prompt: query,
@@ -337,13 +254,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
       if (!source) return null;
 
-      // Remove duplicate source_id from source
-      const { source_id, ...sourceWithoutId } = source;
-
       return {
-        ...sourceWithoutId,
+        ...source,
         score: ref.score,
-        timestamp: ref.timestamp
+        timestamp: ref.timestamp,
       };
     }).filter(Boolean);
 
@@ -387,7 +301,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     try {
       /******** handle captioning ********** */
       if (selectedModel === "captioning") {
-        let timestamps = handleCaptioning(userMessage);
+        setShowCursor(false);
+        setIsFetchingRefs(true);
+        let timestamps = await handleCaptioning(userMessage);
         let fullSourceWithTimestamp = mergeSourceToTimestamps(timestamps);
         fetchReferences(userMessage, models, botMessage, fullSourceWithTimestamp, false);
       }
@@ -554,6 +470,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     } catch (error) {
       console.log(error);
       setMessages(prev => prev.slice(0, -2));
+      setShowCursor(false);
+      setIsFetchingRefs(false);
+    } finally {
       setShowCursor(false);
       setIsFetchingRefs(false);
     }
