@@ -3,7 +3,7 @@ import { MainContext } from "../../contexts/mainContext";
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
 import NoData from "../NoData";
-import AppLogo from "/new-crisp-ai-slogan.png";
+import AppLogo from "/new-crisp-logo-resized.png";
 
 import './workspace.css';
 
@@ -49,8 +49,8 @@ const Workspace = () => {
             <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-80 -z-10 blur-[160px]"></div>
 
             {/* logo */}
-            <section className="flex items-center justify-center gap-1 mt-3">
-                <img src={AppLogo} className="w-48 h-auto" alt="Crisp AI logo" />
+            <section className="flex items-center justify-center gap-1">
+                <img src={AppLogo} className="w-72 h-auto" alt="Crisp AI logo" />
                 {/* <img src="/app-logo.svg" alt="logo" className="w-16 h-16" width="64" height="46" />
                 <p className={`font-sans font-extrabold text-3xl text-center user-select-none ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}>Crisp AI</p> */}
             </section>
