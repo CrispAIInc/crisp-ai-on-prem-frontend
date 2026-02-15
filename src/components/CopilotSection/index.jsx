@@ -129,6 +129,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setSelectedNote,
     showNoteModal,
     setCurrentChat,
+    knowledgeBase,
     setNoteIndex,
     setShowNoteModal,
     displayedSources, setShowEditor,
@@ -234,13 +235,120 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     setInput("Generate a description between timestamps " + formatTime(start) + " and " + formatTime(end));
   }
 
+  function formatCaptioningRefs(refs) {
+    const kbMap = new Map(
+      knowledgeBase.map(item => [item.id, item])
+    );
+
+    const referenceConfig = {
+      img_references: "img_id",
+      pdf_references: "pdf_id",
+      video_references: "video_id",
+    };
+
+    const newItem = { ...refs };
+
+    Object.entries(referenceConfig).forEach(([key, idField]) => {
+      if (Array.isArray(refs[key])) {
+        newItem[key] = refs[key].map(ref => ({
+          ...ref,
+          ...(kbMap.get(ref[idField]) || null),
+        }));
+      }
+    });
+
+    return newItem;
+  }
+
+  function sortReferencesByScore(data) {
+    // Helper to sort timestamps descending
+    function sortTimestamps(ref) {
+      if (Array.isArray(ref.timestamps)) {
+        ref.timestamps.sort((a, b) => b.score - a.score);
+      }
+      return ref;
+    }
+
+    // Helper to get highest score from a reference
+    function getTopScore(ref) {
+      if (!ref.timestamps || ref.timestamps.length === 0) return -Infinity;
+      return ref.timestamps[0].score;
+    }
+
+    // Sort each reference group
+    ["img_references", "pdf_references", "video_references"].forEach(key => {
+      if (Array.isArray(data[key])) {
+        // First sort timestamps inside each reference
+        data[key].forEach(sortTimestamps);
+
+        // Then sort references by highest timestamp score
+        data[key].sort((a, b) => getTopScore(b) - getTopScore(a));
+      }
+    });
+
+    return data;
+  }
+
+  function sortByTimestampScore(data) {
+    const result = [];
+
+    Object.keys(data).forEach(key => {
+      const references = data[key];
+
+      if (Array.isArray(references)) {
+        references.forEach(ref => {
+          if (Array.isArray(ref.timestamps)) {
+            ref.timestamps.forEach(ts => {
+              result.push({
+                source_id: ref.source_id,
+                timestamp: ts.timestamp,
+                score: ts.score
+              });
+            });
+          }
+        });
+      }
+    });
+
+    // Sort descending by score (highest first)
+    result.sort((a, b) => b.score - a.score);
+
+    return result;
+  }
+
+
+
   async function handleCaptioning(query) {
-    let results = await makeApiRequest('/find-timestamps', 'POST', JSON.stringify({
+    let timestamps = await makeApiRequest('/find-timestamps', 'POST', JSON.stringify({
       prompt: query,
       sources: checkedSources
     }));
 
-    return results;
+    return timestamps;
+  }
+
+  function mergeSourceToTimestamps(timestamps) {
+    const knowledgeMap = new Map(
+      knowledgeBase.map(item => [item.source_id, item])
+    );
+
+    const result = timestamps.map(ref => {
+      const source = knowledgeMap.get(ref.source_id);
+
+      if (!source) return null;
+
+      // Remove duplicate source_id from source
+      const { source_id, ...sourceWithoutId } = source;
+
+      return {
+        ...sourceWithoutId,
+        score: ref.score,
+        timestamp: ref.timestamp
+      };
+    }).filter(Boolean);
+
+    return result;
+
   }
 
   const sendMessage = async (message, models = selectedLLMs[0], isRepeated = false) => {
@@ -279,8 +387,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     try {
       /******** handle captioning ********** */
       if (selectedModel === "captioning") {
-        let sources = handleCaptioning(userMessage);
-        fetchReferences(userMessage, models, botMessage, sources);
+        let timestamps = handleCaptioning(userMessage);
+        let fullSourceWithTimestamp = mergeSourceToTimestamps(timestamps);
+        fetchReferences(userMessage, models, botMessage, fullSourceWithTimestamp, false);
       }
       /******** handle crisp wiz messaging (smart search) ********** */
       else if (selectedModel === "search") {
@@ -449,7 +558,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       setIsFetchingRefs(false);
     }
   };
-  const fetchReferences = async (userMessage, models, botMessage, data) => {
+
+
+  // allRefs means that we work with smart search crisp wiz normal refs
+  const fetchReferences = async (userMessage, models, botMessage, data, allRefs = true) => {
     // const response = await axios.get(`${API_ENDPOINT}/references`);
     // const data = response.data;
     noteReferences.videoLinks = [];
@@ -477,37 +589,54 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       setCurrentChat(chatHistory[chatIndex]);
     }
 
-    const videoLinks = data.video_references.map((video) => {
-      noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
-      refs["videoLinks"].push(video);
-      return (
-        <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
-      );
-    });
+    let videoLinks = [];
+    let keyframeLinks = [];
+    let pdfLinks = [];
+    let imageLinks = [];
 
-    const keyframeLinks = data.keyframe_references.map((video) => {
-      noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
-      refs["keyframeLinks"].push(video);
-      return (
-        <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
-      );
-    });
+    if (allRefs) {
+      videoLinks = data.video_references.map((video) => {
+        noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
+        refs["videoLinks"].push(video);
+        return (
+          <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+        );
+      });
 
-    const pdfLinks = data.pdf_references.map((pdf) => {
-      noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
-      refs["pdfLinks"].push(pdf);
-      return (
-        <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handleSourceLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
-      );
-    });
+      keyframeLinks = data.keyframe_references.map((video) => {
+        noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
+        refs["keyframeLinks"].push(video);
+        return (
+          <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+        );
+      });
 
-    const imageLinks = data.img_references.map((img) => {
-      noteReferences.imageLinks.push(img.source_path);
-      refs["imageLinks"].push(img);
-      return (
-        <Chip key={img.source_path} content={img.source_path} data-object={img} onClick={(event) => handleSourceLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
-      );
-    });
+      pdfLinks = data?.pdf_references?.map((pdf) => {
+        noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
+        refs["pdfLinks"].push(pdf);
+        return (
+          <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handleSourceLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+        );
+      });
+
+      imageLinks = data?.img_references?.map((img) => {
+        noteReferences.imageLinks.push(img.source_path);
+        refs["imageLinks"].push(img);
+        return (
+          <Chip key={img.source_path} content={img.source_path} data-object={img} onClick={(event) => handleSourceLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
+        );
+      });
+    } else {
+      videoLinks = data.map((video) => {
+        const timestamps = `${video.source_path} | Timestamp: ${video.timestamp} | ${Number.isInteger(video.score * 100) ? video.score * 100 : (video.score * 100).toFixed(2)}%`;
+
+        noteReferences.videoLinks.push(timestamps);
+        refs["videoLinks"].push(video);
+        return (
+          <Chip key={video.source_path} content={timestamps} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
+        );
+      });
+    }
 
     let newData = null;
 
@@ -589,6 +718,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
 
   };
+
   const [isChatTranslating, setIsChatTranslating] = useState(false);
   const handleLanguageChange = async (chosenLanguage) => {
     try {
