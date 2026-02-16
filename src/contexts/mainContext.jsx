@@ -28,6 +28,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [videoTimestamp, setVideoTimestamp] = useState(null); // The video timestamp coming from search results
     const player = useRef(null); // Video Play in the Workspace Component
     const [isPlayerReady, setIsPlayerReady] = useState(false); // Flag indicating that the video player is rendered. So we can do a timestamp jump properly.
+    const [hasDuration, setHasDuration] = useState(false);
 
 
     // const [isAddingNote, setIsAddingNote] = useState(false);
@@ -1259,6 +1260,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         categoryOptions, setCategoryOptions, showEditor, setShowEditor,
         languageOptions,
         activeView, setActiveView,
+        hasDuration, setHasDuration,
         chatLoaded, setChatLoaded,
         fileFormats,
         displayedSources, setDisplayedSources,

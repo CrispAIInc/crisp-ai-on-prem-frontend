@@ -32,6 +32,8 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     languageOptions,
     isPlayerReady,
     setIsPlayerReady,
+    hasDuration,
+    setHasDuration,
     contentPanelContainerRef,
     jumpToPage,
     committedSources,
@@ -54,17 +56,14 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   const [chosenLanguage, setChosenLanguage] = useState(currentResource?.originalSourceLanguage || "en");
 
   useEffect(() => {
-    if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
-      const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
+    if (isPlayerReady && hasDuration && resourceURL && currentResource?.file_type === "video") {
+      const timestamp = currentResource?.timestamp;
 
       if (timestamp !== undefined && timestamp !== null) {
-        player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-        // setCurrentResource(prev => {
-        //   const { timestamp, ...rest } = prev;
-        //   return rest;
-        // });
+
+        const redirectedTimestamp = typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp);
+        player.current.seekTo(redirectedTimestamp, "seconds");
       }
-      // setFromStory(false);
     }
   }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
@@ -289,6 +288,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                 loop={video_loop}
                 url={sourcePublicUrl || resourceURL}
                 onReady={() => setIsPlayerReady(true)}
+                onDuration={() => setHasDuration(true)}
                 ref={player}
                 controls
               />

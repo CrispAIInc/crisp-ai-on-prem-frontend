@@ -12,8 +12,6 @@ export default function GsFile({ gsUrl, type = "img", alt = "", ...props }) {
             setUrl(gsUrl);
             return;
         }
-        console.log(gsUrl);
-        console.log(props?.isPrivate);
         getPublicUrl(gsUrl).then(setUrl).catch(console.error);
     }, [gsUrl]);
 
