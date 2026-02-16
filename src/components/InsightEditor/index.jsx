@@ -1,31 +1,28 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import RippleButton from '../RippleButton';
 
 import AddIcon from '@mui/icons-material/Add';
+import JoditEditor from 'jodit-react';
+import makeApiRequest from '../../api';
+import { MainContext } from '../../contexts/mainContext';
 import { useToast } from '../../contexts/toastContext';
 import useResources from '../../hooks/useResources';
 import LoadingSpinner from "../LoadingSpinner";
-import { MainContext } from '../../contexts/mainContext';
-import { generateRandomHash, htmlToPlainText } from '../../utils';
-import makeApiRequest from '../../api';
-import JoditEditor from 'jodit-react';
 
 function InsightEditor({ isNewInsight }) {
 
     const {
-        notes,
         isNewNote,
         setNotes,
         selectedNote,
         setSelectedNote,
         noteIndex,
-        knowledgeBase,
         theme,
-        selectedStory,
+        contentPanelContainerRef
     } = useContext(MainContext);
 
-    const { handleSourceLinkClick } = useReferenceLinkClick(true);
+    const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
     const { notify } = useToast();
 

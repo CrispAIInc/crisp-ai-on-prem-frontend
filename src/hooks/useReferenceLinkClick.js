@@ -3,12 +3,13 @@ import { MainContext } from "../contexts/mainContext.jsx";
 import { useResizableSidebar } from './useResizableSidebar';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-export default function useReferenceLinkClick(isFromChat = false) {
+export default function useReferenceLinkClick(isFromChat = false, contentPanelContainerRef) {
 
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
 
     const {
-        setCurrentResource, setFromChat,
+        setCurrentResource,
+        setFromChat,
         setResourceURL,
         setSummary,
         setJumpToPage,
@@ -66,6 +67,13 @@ export default function useReferenceLinkClick(isFromChat = false) {
         if (!source) return;
 
         if (event) event.preventDefault();
+
+        // setTimeout(() => {
+        contentPanelContainerRef?.current?.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+        // }, 0);
 
         if (source.file_type === "video") handleVideoLinkClick(source);
         else handlePDFLinkClick(source);

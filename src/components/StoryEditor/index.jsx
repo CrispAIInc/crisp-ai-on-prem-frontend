@@ -86,15 +86,13 @@ function StoryEditor({
         theme,
         selectedStory,
         setSelectedStory,
-        setStories
+        setStories,
+        contentPanelContainerRef
     } = useContext(MainContext);
     const { notify } = useToast();
 
     const { getStories } = useResources({ setStories });
-    const { handleSourceLinkClick } = useReferenceLinkClick(true);
-
-    const [isSavingPending, setIsSavingPending] = useState(false);
-
+    const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
     useEffect(() => {
         const handler = e => {

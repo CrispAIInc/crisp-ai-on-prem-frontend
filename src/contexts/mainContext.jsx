@@ -1225,9 +1225,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     }, [currentProject.project_id]);
     // }, [displayedSources, selectedLanguage]);
 
+    const metadataPanelContainer = useRef(null);
+
 
     // create value object with all the states
     const value = {
+        metadataPanelContainer,
         checkedSources,
         combinedSummary, setCombinedSummary,
         isCombinedSummaryPending, setIsCombinedSummaryPending,

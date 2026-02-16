@@ -38,6 +38,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
     activeView,
     theme,
     generatedResources,
+    metadataPanelContainer
   } = useContext(MainContext);
 
 
@@ -51,7 +52,6 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   const [numPages, setNumPages] = useState();
   const [isPdfLoaded, setIsPdfLoaded] = useState(false);
   const [chosenLanguage, setChosenLanguage] = useState(currentResource?.originalSourceLanguage || "en");
-  const metadataPanelContainer = useRef(null);
 
   useEffect(() => {
     if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {

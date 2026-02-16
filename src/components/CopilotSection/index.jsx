@@ -29,7 +29,10 @@ import SegmentDescription from '../SegmentDescription/index.jsx';
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
 const ChatMessage = ({ text, refs }) => {
-  const { handleSourceLinkClick } = useReferenceLinkClick(true);
+  const {
+    contentPanelContainerRef
+  } = useContext(MainContext);
+  const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
   return (
     <div>
       <div className="coorg-response break-keep">
@@ -141,7 +144,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     currentChat,
     chatHistory,
     setChatHistory,
-    checkedSources
+    checkedSources,
+    metadataPanelContainer
   } = useContext(MainContext);
 
   const { currentProject } = useContext(ProjectContext);
@@ -154,7 +158,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   const { maxWidth } = useResizableSidebar(200, false);
 
-  const { handleSourceLinkClick } = useReferenceLinkClick(true);
+  const { handleSourceLinkClick } = useReferenceLinkClick(true, metadataPanelContainer);
 
   const chatAppRef = useRef();
 
