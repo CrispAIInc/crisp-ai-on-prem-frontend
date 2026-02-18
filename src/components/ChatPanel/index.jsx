@@ -161,7 +161,7 @@ const ChatPanel = () => {
 
   const [isGeneratingReel, setIsGeneratingReel] = useState(false);
   const [reelContext, setReelContext] = useState('');
-  const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1min)');
+  const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1m)');
 
   const [storyTitle, setStoryTitle] = useState(selectedStory?.story_name);
 
