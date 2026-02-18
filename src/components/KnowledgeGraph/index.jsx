@@ -25,7 +25,7 @@ function KnowledgeGraph() {
         });
     };
 
-    const MAX_SOURCES_COUNT = 15;
+    const MAX_SOURCES_COUNT = 1;
     const handleMouseEnter = () => (checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
