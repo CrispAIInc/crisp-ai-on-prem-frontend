@@ -1227,10 +1227,13 @@ export default function MainProvider({ children, theme, setTheme }) {
     // }, [displayedSources, selectedLanguage]);
 
     const metadataPanelContainer = useRef(null);
+    const [knowledgeGraphs, setKnowledgeGraphs] = useState([]);
 
 
     // create value object with all the states
     const value = {
+        knowledgeGraphs,
+        setKnowledgeGraphs,
         metadataPanelContainer,
         checkedSources,
         combinedSummary, setCombinedSummary,

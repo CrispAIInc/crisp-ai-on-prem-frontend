@@ -11,7 +11,9 @@ function KnowledgeGraph() {
 
     const {
         theme,
-        checkedSourcesCount
+        checkedSourcesCount,
+        knowledgeGraphs,
+        setKnowledgeGraphs
     } = useContext(MainContext);
 
     const [context, setContext] = useState('');
@@ -19,6 +21,7 @@ function KnowledgeGraph() {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
     const [jsonData, setJsonData] = useState(null);
+    const [showGraphModal, setShowGraphModal] = useState(false);
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -36,7 +39,10 @@ function KnowledgeGraph() {
         try {
             setIsGeneratingGraph(true);
             let { entities, title } = await makeApiRequest('/gen-metadata', 'post', { isGraph: true });
+
             setJsonData(entities);
+            setKnowledgeGraphs(prev => [...prev, { title, entities }]);
+            setShowGraphModal(true);
         } catch (error) {
             console.log(error);
         } finally {
@@ -96,49 +102,19 @@ function KnowledgeGraph() {
                         placeholder={"Search..."}
                     />
                     <div className="overflow-y-auto h-full">
-                        <p>first</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
-                        <p>hello</p>
+                        {
+                            knowledgeGraphs.map((graph, index) => (
+                                <div key={index} className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
+                                    <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{graph.title}</p>
+                                </div>
+                            ))
+                        }
                         <p>final</p>
                     </div>
                 </div>
             </div>
 
-            <KnowledgeGraphModal show={jsonData} onHide={setJsonData(null)} jsonData={jsonData} />
+            {showGraphModal && <KnowledgeGraphModal show={showGraphModal} onHide={() => setShowGraphModal(false)} jsonData={jsonData} />}
         </>
     );
 }
