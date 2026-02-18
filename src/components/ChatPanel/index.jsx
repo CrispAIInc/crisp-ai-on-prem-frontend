@@ -13,6 +13,7 @@ import ReelViewer from '../ReelViewer';
 import StoriesInsightsTab from '../StoriesInsightsTab';
 import StoryEditor from '../StoryEditor/index.jsx';
 import './chat-panel.css';
+import KnowledgeGraph from '../KnowledgeGraph/index.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -247,7 +248,8 @@ const ChatPanel = () => {
               {[
                 { id: "genMetadata", title: "Cataloging" },
                 { id: "genStories", title: "Insights & Stories" },
-                { id: "genMedia", title: "Reels" }
+                { id: "genMedia", title: "Reels" },
+                { id: "genGraph", title: "Composer" },
               ].map(item => (
                 <h6
                   id={item.id}
@@ -272,6 +274,8 @@ const ChatPanel = () => {
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
+              ) : actualTab === "genGraph" ? (
+                <KnowledgeGraph />
               ) : null
             }
           </div>}
