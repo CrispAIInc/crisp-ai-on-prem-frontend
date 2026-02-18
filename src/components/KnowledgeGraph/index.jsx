@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import RippleButton from '../RippleButton';
 
@@ -6,6 +6,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import BaseHeading from '../BaseHeading';
 import KnowledgeGraphModal from '../KnowledgeGraphModal';
 import makeApiRequest from '../../api';
+import { searchByKey, sortByKey } from '../../utils';
 
 function KnowledgeGraph() {
 
@@ -23,6 +24,26 @@ function KnowledgeGraph() {
     const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
     const [jsonData, setJsonData] = useState(null);
     const [showGraphModal, setShowGraphModal] = useState(false);
+
+    const [searchValue, setSearchValue] = useState("");
+    const [graphsResults, setGraphsResults] = useState(knowledgeGraphs);
+
+    const handleGraphsSearch = (e) => {
+        const value = e?.target?.value || "";
+        setSearchValue(value);
+
+        if (value.trim() === "") {
+            setGraphsResults(sortByKey(knowledgeGraphs, "title"));
+        } else {
+            const filtered = searchByKey(knowledgeGraphs, "title", value);
+            setGraphsResults(sortByKey(filtered, "title"));
+        }
+    };
+
+    useEffect(() => {
+        setGraphsResults(sortByKey(knowledgeGraphs, "title"));
+        handleGraphsSearch();
+    }, [knowledgeGraphs]);
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -102,21 +123,29 @@ function KnowledgeGraph() {
 
                 {/* list of JSON structures */}
                 <div className="flex flex-col mt-4 mb-2 gap-2 h-full overflow-hidden">
-                    <BaseHeading text="Your composers" />
-                    <input
-                        className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`}
-                        placeholder={"Search..."}
-                    />
-                    <div className="overflow-y-auto h-full">
-                        {
-                            knowledgeGraphs.map((graph, index) => (
-                                <div key={index} className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
-                                    <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{graph.title}</p>
+                    {
+                        (knowledgeGraphs.length > 0 || graphsResults.length > 0) ? (
+                            <>
+                                <BaseHeading text="Your composers" />
+                                <input
+                                    className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`}
+                                    placeholder={"Search..."}
+                                    onChange={handleGraphsSearch}
+                                />
+                                <div className="overflow-y-auto h-full">
+                                    {
+                                        graphsResults.map((graph, index) => (
+                                            <div key={index} className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
+                                                <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{graph.title}</p>
+                                            </div>
+                                        ))
+                                    }
                                 </div>
-                            ))
-                        }
-                        <p>final</p>
-                    </div>
+                            </>
+                        ) : (
+                            <BaseHeading text="No composers found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                        )
+                    }
                 </div>
             </div>
 
