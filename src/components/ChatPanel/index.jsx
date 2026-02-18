@@ -14,6 +14,9 @@ import StoriesInsightsTab from '../StoriesInsightsTab';
 import StoryEditor from '../StoryEditor/index.jsx';
 import './chat-panel.css';
 import KnowledgeGraph from '../KnowledgeGraph/index.jsx';
+import Dropdown from '../Dropdown';
+import SelectDropdown from '../SelectDropdown/index.jsx';
+import GeneratorServicesDropdown from '../GeneratorServicesDropdown/index.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -244,7 +247,7 @@ const ChatPanel = () => {
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
           <div>
             {/* buttons */}
-            <div className="flex justify-around gap-5 mt-2 flex-items">
+            {/* <div className="flex justify-around gap-5 mt-2 flex-items">
               {[
                 { id: "genMetadata", title: "Cataloging" },
                 { id: "genStories", title: "Insights & Stories" },
@@ -260,7 +263,17 @@ const ChatPanel = () => {
                   {item.title}
                 </h6>
               ))}
-            </div>
+            </div> */}
+            <GeneratorServicesDropdown
+              defaultTab={actualTab}
+              tabs={[
+                { id: "genMetadata", title: "Cataloging" },
+                { id: "genStories", title: "Insights & Stories" },
+                { id: "genMedia", title: "Reels" },
+                { id: "genGraph", title: "Composer" },
+              ]}
+              onChange={(id) => handleTabClick(id)}
+            />
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
             {
