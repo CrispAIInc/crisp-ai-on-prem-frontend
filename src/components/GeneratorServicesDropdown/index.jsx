@@ -1,11 +1,15 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { MainContext } from '../../contexts/mainContext';
 
 export default function GeneratorServicesDropdown({
     tabs,
     defaultTab = "genMedia",
     onChange,
 }) {
+
+    const { theme } = useContext(MainContext);
+
     const [isOpen, setIsOpen] = useState(false);
     const [active, setActive] = useState(tabs.find(tab => tab.id === defaultTab)?.title || tabs[0]?.title);
     const dropdownRef = useRef(null);
@@ -33,9 +37,9 @@ export default function GeneratorServicesDropdown({
             {/* Trigger */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition"
+                className={`w-full flex items-center justify-between px-4 py-2 rounded-lg ${theme === "dark" ? "!border !border-textColor-200/60 rounded-md text-textColor-100" : '!border !border-textColor-100 text-textColor-300'}`}
             >
-                <span className="font-medium text-gray-700">{active}</span>
+                <span className="font-medium">{active}</span>
                 <PlayArrowIcon
                     className={`w-4 h-4 transition-transform ${isOpen ? "-rotate-90" : "rotate-90"
                         }`}
