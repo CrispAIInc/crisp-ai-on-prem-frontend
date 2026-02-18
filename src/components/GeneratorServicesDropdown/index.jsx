@@ -5,7 +5,7 @@ import BaseHeading from '../BaseHeading';
 
 export default function GeneratorServicesDropdown({
     tabs,
-    defaultTab = "genMedia",
+    defaultTab = "genGraph",
     onChange,
 }) {
 
