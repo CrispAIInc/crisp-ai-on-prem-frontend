@@ -202,7 +202,7 @@ function MediaEntertainment({
                     <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>When no context or topic is provided, the reel will be based on the existing highlights.</span>
                 </div>
                 <textarea
-                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     rows="1"
                     placeholder='What do you want your reel to be about?'
                     onFocus={() => setContextFocused(true)}
