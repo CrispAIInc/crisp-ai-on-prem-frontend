@@ -4,16 +4,18 @@ import { lightTheme } from '@uiw/react-json-view/light';
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
-
-const JsonViewerStyle = { display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))' };
-
 const JsonViewer = ({ data }) => {
 
     const { theme } = useContext(MainContext);
 
     return (
-        <div style={JsonViewerStyle}>
-            <JsonView value={data} style={theme === 'dark' ? darkTheme : lightTheme} />
+        <div>
+            <JsonView
+                value={data}
+                style={theme === 'dark' ? darkTheme : lightTheme}
+                theme="rjv-default"
+                displayDataTypes={false}
+            />
         </div>
     );
 };
