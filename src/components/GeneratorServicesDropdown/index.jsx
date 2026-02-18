@@ -35,7 +35,7 @@ export default function GeneratorServicesDropdown({
 
     return (
         <div className="relative w-full" ref={dropdownRef}>
-            <BaseHeading text='Panel section' />
+            <BaseHeading text='Panel sections' />
             {/* Trigger */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
