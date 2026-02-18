@@ -56,7 +56,7 @@ export default function GeneratorServicesDropdown({
                             key={id}
                             onClick={() => handleSelect(id)}
                             className={`w-full text-left px-4 py-2 text-sm transition ${active === title
-                                ? "bg-gradient-to-r from-purple-200 to-pink-200 font-medium"
+                                ? "bg-gradient-to-r from-purple-200 to-pink-200 text-textColor-200 font-medium"
                                 : theme === 'light' ? "hover:bg-gray-50" : "hover:bg-[#4c3758]"
                                 }`}
                         >
