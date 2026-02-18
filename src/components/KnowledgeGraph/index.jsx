@@ -3,6 +3,7 @@ import { MainContext } from '../../contexts/mainContext';
 import RippleButton from '../RippleButton';
 
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import BaseHeading from '../BaseHeading';
 
 function KnowledgeGraph() {
 
@@ -33,7 +34,10 @@ function KnowledgeGraph() {
             <div className="relative w-full">
                 <div className="flex flex-col mb-2">
                     <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context prompt</label>
-                    <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>Constrain model behavior through schema-based contextual configuration.</span>
+                    <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>
+                        {/* (Optional) Provide additional context or instructions to guide the JSON generation process. This can include specific themes, styles, or elements you want to see in the generated content. */}
+                        Constrain model behavior through schema-based contextual configuration.
+                    </span>
                 </div>
                 <textarea
                     className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -60,6 +64,55 @@ function KnowledgeGraph() {
                         {`Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
                     </p>
                 )}
+            </div>
+
+            {/* list of JSON structures */}
+            <div className="flex flex-col mt-4 mb-2 gap-2 h-full overflow-hidden">
+                <BaseHeading text="Your JSON structures" />
+                <input
+                    className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`}
+                    placeholder={"Search..."}
+                />
+                <div className="overflow-y-auto h-full">
+                    <p>first</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>hello</p>
+                    <p>final</p>
+                </div>
             </div>
         </div>
     );
