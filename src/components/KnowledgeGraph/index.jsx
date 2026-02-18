@@ -5,6 +5,7 @@ import RippleButton from '../RippleButton';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import BaseHeading from '../BaseHeading';
 import KnowledgeGraphModal from '../KnowledgeGraphModal';
+import makeApiRequest from '../../api';
 
 function KnowledgeGraph() {
 
@@ -16,7 +17,8 @@ function KnowledgeGraph() {
     const [context, setContext] = useState('');
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isGeneratingReel, setIsGeneratingReel] = useState(false);
+    const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
+    const [jsonData, setJsonData] = useState(null);
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -29,6 +31,18 @@ function KnowledgeGraph() {
     const MAX_SOURCES_COUNT = 1;
     const handleMouseEnter = () => (checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
+
+    async function generateGraph() {
+        try {
+            setIsGeneratingGraph(true);
+            let { entities, title } = await makeApiRequest('/gen-metadata', 'post', { isGraph: true });
+            setJsonData(entities);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsGeneratingGraph(false);
+        }
+    }
 
     return (
         <>
@@ -53,10 +67,16 @@ function KnowledgeGraph() {
                 <div className='relative inline-block' onMouseMove={handleMouseMove}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}>
-                    <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                        disabled={isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT}>
-                        {isGeneratingReel ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
+
+                    <RippleButton
+                        onClick={generateGraph}
+                        fullWidth
+                        cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                        disabled={isGeneratingGraph || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT}>
+                        {isGeneratingGraph ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                     </RippleButton>
+
+                    {/* tooltip */}
                     {tooltipVisible && (
                         <p
                             // onMouseEnter={() => setTooltipVisible(false)}
@@ -118,7 +138,7 @@ function KnowledgeGraph() {
                 </div>
             </div>
 
-            <KnowledgeGraphModal show={true} />
+            <KnowledgeGraphModal show={jsonData} onHide={setJsonData(null)} jsonData={jsonData} />
         </>
     );
 }
