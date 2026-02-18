@@ -12,6 +12,7 @@ function KnowledgeGraph() {
     const {
         theme,
         checkedSourcesCount,
+        checkedSources,
         knowledgeGraphs,
         setKnowledgeGraphs
     } = useContext(MainContext);
@@ -38,7 +39,12 @@ function KnowledgeGraph() {
     async function generateGraph() {
         try {
             setIsGeneratingGraph(true);
-            let { entities, title } = await makeApiRequest('/gen-metadata', 'post', { isGraph: true });
+            const payload = {
+                sources: checkedSources.map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
+                selectedOptions: ["graph"],
+                inputContext: context,
+            };
+            let { entities, title } = await makeApiRequest('/gen-metadata', 'post', payload);
 
             setJsonData(entities);
             setKnowledgeGraphs(prev => [...prev, { title, entities }]);
