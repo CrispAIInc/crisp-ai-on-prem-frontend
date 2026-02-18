@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { MainContext } from '../../contexts/mainContext';
+import BaseHeading from '../BaseHeading';
 
 export default function GeneratorServicesDropdown({
     tabs,
@@ -34,6 +35,7 @@ export default function GeneratorServicesDropdown({
 
     return (
         <div className="relative w-full" ref={dropdownRef}>
+            <BaseHeading text='Panel section' />
             {/* Trigger */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -48,14 +50,14 @@ export default function GeneratorServicesDropdown({
 
             {/* Dropdown */}
             {isOpen && (
-                <div className="absolute mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                <div className={`absolute mt-2 w-full ${theme === 'light' ? 'bg-white !border !border-textColor-100 text-textColor-300' : 'bg-[#382746] text-textColor-100 !border !border-textColor-200/60'} rounded-xl shadow-lg z-50 overflow-hidden`}>
                     {tabs.map(({ id, title }) => (
                         <button
                             key={id}
                             onClick={() => handleSelect(id)}
                             className={`w-full text-left px-4 py-2 text-sm transition ${active === title
                                 ? "bg-gradient-to-r from-purple-200 to-pink-200 font-medium"
-                                : "hover:bg-gray-50"
+                                : theme === 'light' ? "hover:bg-gray-50" : "hover:bg-[#4c3758]"
                                 }`}
                         >
                             {active === title ? "✓ " : ""}

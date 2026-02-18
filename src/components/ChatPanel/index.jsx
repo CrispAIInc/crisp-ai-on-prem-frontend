@@ -245,7 +245,7 @@ const ChatPanel = () => {
         <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-          <div>
+          <div className="mb-3">
             {/* buttons */}
             {/* <div className="flex justify-around gap-5 mt-2 flex-items">
               {[
