@@ -189,7 +189,7 @@ const ChatPanel = () => {
         <div className='flex flex-col w-full'>
           <h5 className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
             }  text-center w-full`}>
-            Studio</h5>
+            Generator Services</h5>
         </div>
         {/* <RippleButton>Hello</RippleButton> */}
         {(showEditor || showStoriesEditor) && (
@@ -203,9 +203,9 @@ const ChatPanel = () => {
         )}
       </div>
 
-      <h5 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+      {/* <h5 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
         }  text-center`}>
-        Generator Services</h5>
+        Generator Services</h5> */}
 
       {/* Background blur elements */}
       <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-1 blur-[160px]"></div>
@@ -221,8 +221,6 @@ const ChatPanel = () => {
           onDoubleClick={handleDoubleClick}
         />
       )}
-
-
 
       {/* Toggle button */}
       <div className="absolute left-0 z-10 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md top-1.5 w-fit">
@@ -245,7 +243,8 @@ const ChatPanel = () => {
         <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-          <div className="mb-3">
+          <div className={`${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
+            } mb-3 pb-[10px]`}>
             {/* buttons */}
             {/* <div className="flex justify-around gap-5 mt-2 flex-items">
               {[
