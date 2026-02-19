@@ -1233,7 +1233,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         getJsonEntities();
-    });
+    }, []);
 
     const metadataPanelContainer = useRef(null);
     const [jsonEntities, setJsonEntities] = useState([]);
