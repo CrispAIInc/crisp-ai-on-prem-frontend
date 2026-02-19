@@ -20,11 +20,11 @@ const JsonEntityTitleUpdaterModal = ({ show, onHide, jsonEntity }) => {
         try {
             setIsLoading(true);
 
-            const { success, message } = await makeApiRequest(`/graph`, 'PUT', { title: newJsonEntityName });
+            const { success, message } = await makeApiRequest(`/graph/${jsonEntity.id}`, 'PUT', { title: newJsonEntityName });
 
             if (success) {
                 setKnowledgeGraphs(prev => prev.map(graph => {
-                    if (graph.title === jsonEntity.title) {
+                    if (graph.id === jsonEntity.id) {
                         return { ...graph, title: newJsonEntityName };
                     }
                     return graph;
