@@ -3,6 +3,11 @@ import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import { searchByKey, sortByKey } from '../../utils';
 import KnowledgeGraphModal from '../KnowledgeGraphModal';
+import ActionMenu from '../ActionMenu';
+
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import LoadingSpinner from '../LoadingSpinner';
 
 const KnowledgeGraphsList = () => {
 
@@ -15,6 +20,9 @@ const KnowledgeGraphsList = () => {
     const [searchValue, setSearchValue] = useState("");
     const [graphsResults, setGraphsResults] = useState(knowledgeGraphs);
     const [showGraphModal, setShowGraphModal] = useState(false);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const handleGraphsSearch = (e) => {
         const value = e?.target?.value || "";
@@ -53,7 +61,24 @@ const KnowledgeGraphsList = () => {
                         <div className="overflow-y-auto h-full">
                             {
                                 graphsResults.map((graph, index) => (
-                                    <div key={index} className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
+                                    <div key={index} className={`flex items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
+                                        <ActionMenu
+                                            actions={[
+                                                {
+                                                    label: "Edit Project",
+                                                    icon: <EditOutlinedIcon />,
+                                                    onClick: (e) => {
+                                                        e.stopPropagation();
+                                                        setIsModalOpen(true);
+                                                    },
+                                                },
+                                                {
+                                                    label: "Delete",
+                                                    icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
+                                                    // onClick: () => setIsDeleteConfirmationOpen(true),
+                                                },
+                                            ]}
+                                        />
                                         <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => handleGraphClick(graph)}>{graph.title}</p>
                                     </div>
                                 ))
