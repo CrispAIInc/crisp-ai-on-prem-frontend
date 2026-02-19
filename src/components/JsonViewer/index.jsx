@@ -6,12 +6,12 @@ import { MainContext } from '../../contexts/mainContext';
 
 const JsonViewer = () => {
 
-    const { theme, selectedKnowledgeGraph } = useContext(MainContext);
+    const { theme, selectedJsonEntity } = useContext(MainContext);
 
     return (
         <div>
             <JsonView
-                value={selectedKnowledgeGraph.entities}
+                value={selectedJsonEntity.entities}
                 style={theme === 'dark' ? darkTheme : lightTheme}
                 theme="rjv-default"
                 displayDataTypes={false}

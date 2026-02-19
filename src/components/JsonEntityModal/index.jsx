@@ -10,7 +10,7 @@ const KnowledgeGraphModal = ({ show, onHide }) => {
 
     const {
         theme,
-        selectedKnowledgeGraph
+        selectedJsonEntity
     } = useContext(MainContext);
 
     const [isDownloading, setIsDownloading] = useState(false);
@@ -18,7 +18,7 @@ const KnowledgeGraphModal = ({ show, onHide }) => {
     const handleDownload = () => {
         setIsDownloading(true);
         try {
-            const jsonString = JSON.stringify(selectedKnowledgeGraph, null, 2); // formatted
+            const jsonString = JSON.stringify(selectedJsonEntity, null, 2); // formatted
             const blob = new Blob([jsonString], { type: "application/json" });
             const url = URL.createObjectURL(blob);
 

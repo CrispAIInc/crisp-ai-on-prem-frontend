@@ -1227,16 +1227,16 @@ export default function MainProvider({ children, theme, setTheme }) {
     // }, [displayedSources, selectedLanguage]);
 
     const metadataPanelContainer = useRef(null);
-    const [knowledgeGraphs, setKnowledgeGraphs] = useState([]);
-    const [selectedKnowledgeGraph, setSelectedKnowledgeGraph] = useState(null);
+    const [jsonEntities, setJsonEntities] = useState([]);
+    const [selectedJsonEntity, setSelectedJsonEntity] = useState(null);
 
 
     // create value object with all the states
     const value = {
-        knowledgeGraphs,
-        selectedKnowledgeGraph,
-        setSelectedKnowledgeGraph,
-        setKnowledgeGraphs,
+        jsonEntities,
+        selectedJsonEntity,
+        setSelectedJsonEntity,
+        setJsonEntities,
         metadataPanelContainer,
         checkedSources,
         combinedSummary, setCombinedSummary,

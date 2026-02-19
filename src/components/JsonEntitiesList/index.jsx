@@ -2,59 +2,59 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import { searchByKey, sortByKey } from '../../utils';
-import KnowledgeGraphModal from '../KnowledgeGraphModal';
+import KnowledgeGraphModal from '../JsonEntityModal';
 import JsonEntityItem from '../JsonEntityItem';
 
 const KnowledgeGraphsList = () => {
 
     const {
         theme,
-        knowledgeGraphs,
-        setSelectedKnowledgeGraph
+        jsonEntities,
+        setSelectedJsonEntity
     } = useContext(MainContext);
 
     const [searchValue, setSearchValue] = useState("");
-    const [graphsResults, setGraphsResults] = useState(knowledgeGraphs);
-    const [showGraphModal, setShowGraphModal] = useState(false);
+    const [jsonEntitysResults, setJsonEntitysResults] = useState(jsonEntities);
+    const [showJsonEntityModal, setShowJsonEntityModal] = useState(false);
 
-    const handleGraphsSearch = (e) => {
+    const handleJsonEntitiesSearch = (e) => {
         const value = e?.target?.value || "";
         setSearchValue(value);
 
         if (value.trim() === "") {
-            setGraphsResults(sortByKey(knowledgeGraphs, "title"));
+            setJsonEntitysResults(sortByKey(jsonEntities, "title"));
         } else {
-            const filtered = searchByKey(knowledgeGraphs, "title", value);
-            setGraphsResults(sortByKey(filtered, "title"));
+            const filtered = searchByKey(jsonEntities, "title", value);
+            setJsonEntitysResults(sortByKey(filtered, "title"));
         }
     };
 
     useEffect(() => {
-        setGraphsResults(sortByKey(knowledgeGraphs, "title"));
-        handleGraphsSearch();
-    }, [knowledgeGraphs]);
+        setJsonEntitysResults(sortByKey(jsonEntities, "title"));
+        handleJsonEntitiesSearch();
+    }, [jsonEntities]);
 
-    function handleGraphClick(graph) {
-        setSelectedKnowledgeGraph(graph);
-        setShowGraphModal(true);
+    function handleJsonEntityClick(jsonEntity) {
+        setSelectedJsonEntity(jsonEntity);
+        setShowJsonEntityModal(true);
     }
 
     return (
         <>
             {
-                (knowledgeGraphs.length > 0 || graphsResults.length > 0) ? (
+                (jsonEntities.length > 0 || jsonEntitysResults.length > 0) ? (
                     <>
                         <BaseHeading text="Your composers" />
                         <input
                             className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`}
                             placeholder={"Search..."}
                             value={searchValue}
-                            onChange={handleGraphsSearch}
+                            onChange={handleJsonEntitiesSearch}
                         />
                         <div className="overflow-y-auto h-full">
                             {
-                                graphsResults.map((graph, index) => (
-                                    <JsonEntityItem key={index} graph={graph} onClick={() => handleGraphClick(graph)} />
+                                jsonEntitysResults.map((jsonEntity, index) => (
+                                    <JsonEntityItem key={index} jsonEntity={jsonEntity} onClick={() => handleJsonEntityClick(jsonEntity)} />
                                 ))
                             }
                         </div>
@@ -64,7 +64,7 @@ const KnowledgeGraphsList = () => {
                 )
             }
 
-            {showGraphModal && <KnowledgeGraphModal show={showGraphModal} onHide={() => setShowGraphModal(false)} />}
+            {showJsonEntityModal && <KnowledgeGraphModal show={showJsonEntityModal} onHide={() => setShowJsonEntityModal(false)} />}
         </>
     );
 };

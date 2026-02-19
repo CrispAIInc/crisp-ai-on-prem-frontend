@@ -8,7 +8,7 @@ import { useToast } from "../../contexts/toastContext";
 const JsonEntityTitleUpdaterModal = ({ show, onHide, jsonEntity }) => {
 
     const {
-        setKnowledgeGraphs,
+        setJsonEntities,
     } = useContext(MainContext);
 
     const { notify } = useToast();
@@ -23,7 +23,7 @@ const JsonEntityTitleUpdaterModal = ({ show, onHide, jsonEntity }) => {
             const { success, message } = await makeApiRequest(`/graph/${jsonEntity.id}`, 'PUT', { title: newJsonEntityName });
 
             if (success) {
-                setKnowledgeGraphs(prev => prev.map(graph => {
+                setJsonEntities(prev => prev.map(graph => {
                     if (graph.id === jsonEntity.id) {
                         return { ...graph, title: newJsonEntityName };
                     }

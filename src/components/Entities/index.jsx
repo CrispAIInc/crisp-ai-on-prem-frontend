@@ -4,8 +4,8 @@ import RippleButton from '../RippleButton';
 
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import makeApiRequest from '../../api';
-import KnowledgeGraphModal from '../KnowledgeGraphModal';
-import KnowledgeGraphsList from '../KnowledgeGraphsList';
+import JsonEntityModal from '../JsonEntityModal';
+import JsonEntitiesList from '../JsonEntitiesList';
 
 function KnowledgeGraph() {
 
@@ -13,8 +13,8 @@ function KnowledgeGraph() {
         theme,
         checkedSourcesCount,
         checkedSources,
-        setKnowledgeGraphs,
-        setSelectedKnowledgeGraph
+        setJsonEntities,
+        setSelectedJsonEntity
     } = useContext(MainContext);
 
     const [context, setContext] = useState('');
@@ -48,8 +48,8 @@ function KnowledgeGraph() {
             };
             let { entities, title } = await makeApiRequest('/gen-metadata', 'post', payload);
 
-            setSelectedKnowledgeGraph({ title, entities });
-            setKnowledgeGraphs(prev => [...prev, { title, entities }]);
+            setSelectedJsonEntity({ title, entities });
+            setJsonEntities(prev => [...prev, { title, entities }]);
             setShowGraphModal(true);
         } catch (error) {
             console.log(error);
@@ -114,11 +114,11 @@ function KnowledgeGraph() {
 
                 {/* list of JSON structures */}
                 <div className="flex flex-col mt-4 mb-2 gap-2 h-full overflow-hidden">
-                    <KnowledgeGraphsList />
+                    <JsonEntitiesList />
                 </div>
             </div>
 
-            {showGraphModal && <KnowledgeGraphModal show={showGraphModal} onHide={() => setShowGraphModal(false)} />}
+            {showGraphModal && <JsonEntityModal show={showGraphModal} onHide={() => setShowGraphModal(false)} />}
         </>
     );
 }

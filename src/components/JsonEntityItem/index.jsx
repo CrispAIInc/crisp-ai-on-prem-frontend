@@ -6,19 +6,50 @@ import { MainContext } from '../../contexts/mainContext';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import JsonEntityTitleUpdaterModal from '../JsonEntityTitleUpdaterModal';
+import makeApiRequest from '../../api';
+import { useToast } from '../../contexts/toastContext';
 
-const JsonEntityItem = ({ graph, onClick }) => {
+const JsonEntityItem = ({ jsonEntity, onClick }) => {
 
     const {
-        theme
+        theme,
+        setJsonEntities
     } = useContext(MainContext);
+
+    const { notify } = useToast();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
+    const handleDelete = async () => {
+        setIsDeleting(true);
+        try {
+            const { success, message } = await makeApiRequest(`graph/${jsonEntity.id}`, 'DELETE');
+            if (success) {
+                setJsonEntities(prev => prev.filter(g => g.id !== jsonEntity.id));
+                notify({
+                    variant: 'success',
+                    heading: 'Entity deleted',
+                });
+            }
+            else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            console.error("Error deleting entity:", error.message);
+            notify({
+                variant: 'error',
+                heading: 'Error deleting entity',
+                subheading: error.message || "An error occurred while deleting the entity. Please try again.",
+            });
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     return (
         <>
-            <div key={graph.id} className={`flex items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
+            <div key={jsonEntity.id} className={`flex items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
                 <ActionMenu
                     actions={[
                         {
@@ -32,16 +63,16 @@ const JsonEntityItem = ({ graph, onClick }) => {
                         {
                             label: "Delete",
                             icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
-                            // onClick: () => setIsDeleteConfirmationOpen(true),
+                            onClick: () => handleDelete(),
                         },
                     ]}
                 />
-                <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(graph)}>{graph.title}</p>
+                <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(jsonEntity)}>{jsonEntity.title}</p>
             </div>
 
             {
                 isModalOpen && (
-                    <JsonEntityTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} jsonEntity={graph} />
+                    <JsonEntityTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} jsonEntity={jsonEntity} />
                 )
             }
         </>

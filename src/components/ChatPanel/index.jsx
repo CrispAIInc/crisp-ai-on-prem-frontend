@@ -13,7 +13,7 @@ import ReelViewer from '../ReelViewer';
 import StoriesInsightsTab from '../StoriesInsightsTab';
 import StoryEditor from '../StoryEditor/index.jsx';
 import './chat-panel.css';
-import KnowledgeGraph from '../KnowledgeGraph/index.jsx';
+import KnowledgeGraph from '../Entities/index.jsx';
 import Dropdown from '../Dropdown';
 import SelectDropdown from '../SelectDropdown/index.jsx';
 import GeneratorServicesDropdown from '../GeneratorServicesDropdown/index.jsx';
