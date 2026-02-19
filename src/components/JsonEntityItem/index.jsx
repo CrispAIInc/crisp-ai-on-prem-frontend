@@ -5,6 +5,7 @@ import { MainContext } from '../../contexts/mainContext';
 
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import JsonEntityTitleUpdaterModal from '../JsonEntityTitleUpdaterModal';
 
 const JsonEntityItem = ({ graph, onClick }) => {
 
@@ -16,26 +17,34 @@ const JsonEntityItem = ({ graph, onClick }) => {
     const [isDeleting, setIsDeleting] = useState(false);
 
     return (
-        <div key={graph.id} className={`flex items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
-            <ActionMenu
-                actions={[
-                    {
-                        label: "Edit Project",
-                        icon: <EditOutlinedIcon />,
-                        onClick: (e) => {
-                            e.stopPropagation();
-                            setIsModalOpen(true);
+        <>
+            <div key={graph.id} className={`flex items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
+                <ActionMenu
+                    actions={[
+                        {
+                            label: "Edit Project",
+                            icon: <EditOutlinedIcon />,
+                            onClick: (e) => {
+                                e.stopPropagation();
+                                setIsModalOpen(true);
+                            },
                         },
-                    },
-                    {
-                        label: "Delete",
-                        icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
-                        // onClick: () => setIsDeleteConfirmationOpen(true),
-                    },
-                ]}
-            />
-            <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(graph)}>{graph.title}</p>
-        </div>
+                        {
+                            label: "Delete",
+                            icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
+                            // onClick: () => setIsDeleteConfirmationOpen(true),
+                        },
+                    ]}
+                />
+                <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(graph)}>{graph.title}</p>
+            </div>
+
+            {
+                isModalOpen && (
+                    <JsonEntityTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} jsonEntity={graph} />
+                )
+            }
+        </>
     );
 };
 
