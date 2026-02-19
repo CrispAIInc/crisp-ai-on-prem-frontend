@@ -20,11 +20,11 @@ const JsonEntityTitleUpdaterModal = ({ show, onHide, jsonEntity }) => {
         try {
             setIsLoading(true);
 
-            const { success, message } = await makeApiRequest(`/graph/${jsonEntity.id}`, 'PUT', { title: newJsonEntityName });
+            const { success, message } = await makeApiRequest(`/graph/${jsonEntity.graph_id}`, 'PUT', { title: newJsonEntityName });
 
             if (success) {
                 setJsonEntities(prev => prev.map(graph => {
-                    if (graph.id === jsonEntity.id) {
+                    if (graph.graph_id === jsonEntity.graph_id) {
                         return { ...graph, title: newJsonEntityName };
                     }
                     return graph;

@@ -44,7 +44,7 @@ const KnowledgeGraphsList = () => {
             {
                 (jsonEntities.length > 0 || jsonEntitysResults.length > 0) ? (
                     <>
-                        <BaseHeading text="Your composers" />
+                        <BaseHeading text="Your entities" />
                         <input
                             className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`}
                             placeholder={"Search..."}
@@ -53,8 +53,8 @@ const KnowledgeGraphsList = () => {
                         />
                         <div className="overflow-y-auto h-full">
                             {
-                                jsonEntitysResults.map((jsonEntity, index) => (
-                                    <JsonEntityItem key={index} jsonEntity={jsonEntity} onClick={() => handleJsonEntityClick(jsonEntity)} />
+                                jsonEntitysResults.map((jsonEntity) => (
+                                    <JsonEntityItem key={jsonEntity.graph_id} jsonEntity={jsonEntity} onClick={() => handleJsonEntityClick(jsonEntity)} />
                                 ))
                             }
                         </div>

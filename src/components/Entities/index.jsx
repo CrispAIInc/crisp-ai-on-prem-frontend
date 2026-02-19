@@ -46,10 +46,10 @@ function KnowledgeGraph() {
                 inputContext: context,
                 title
             };
-            let { entities, title } = await makeApiRequest('/gen-metadata', 'post', payload);
+            let response = await makeApiRequest('/gen-metadata', 'post', payload);
 
-            setSelectedJsonEntity({ title, entities });
-            setJsonEntities(prev => [...prev, { title, entities }]);
+            setSelectedJsonEntity(response);
+            setJsonEntities(prev => [...prev, response]);
             setShowGraphModal(true);
         } catch (error) {
             console.log(error);
