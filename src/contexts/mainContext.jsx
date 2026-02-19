@@ -1228,11 +1228,14 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const metadataPanelContainer = useRef(null);
     const [knowledgeGraphs, setKnowledgeGraphs] = useState([]);
+    const [selectedKnowledgeGraph, setSelectedKnowledgeGraph] = useState(null);
 
 
     // create value object with all the states
     const value = {
         knowledgeGraphs,
+        selectedKnowledgeGraph,
+        setSelectedKnowledgeGraph,
         setKnowledgeGraphs,
         metadataPanelContainer,
         checkedSources,

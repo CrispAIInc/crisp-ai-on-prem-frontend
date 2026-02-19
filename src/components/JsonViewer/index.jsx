@@ -4,14 +4,14 @@ import { lightTheme } from '@uiw/react-json-view/light';
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
-const JsonViewer = ({ data }) => {
+const JsonViewer = () => {
 
-    const { theme } = useContext(MainContext);
+    const { theme, selectedKnowledgeGraph } = useContext(MainContext);
 
     return (
         <div>
             <JsonView
-                value={data}
+                value={selectedKnowledgeGraph}
                 style={theme === 'dark' ? darkTheme : lightTheme}
                 theme="rjv-default"
                 displayDataTypes={false}

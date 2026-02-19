@@ -13,14 +13,14 @@ function KnowledgeGraph() {
         theme,
         checkedSourcesCount,
         checkedSources,
-        setKnowledgeGraphs
+        setKnowledgeGraphs,
+        setSelectedKnowledgeGraph
     } = useContext(MainContext);
 
     const [context, setContext] = useState('');
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
-    const [jsonData, setJsonData] = useState(null);
     const [showGraphModal, setShowGraphModal] = useState(false);
 
 
@@ -46,7 +46,7 @@ function KnowledgeGraph() {
             };
             let { entities, title } = await makeApiRequest('/gen-metadata', 'post', payload);
 
-            setJsonData(entities);
+            setSelectedKnowledgeGraph({ title, entities });
             setKnowledgeGraphs(prev => [...prev, { title, entities }]);
             setShowGraphModal(true);
         } catch (error) {
@@ -106,7 +106,7 @@ function KnowledgeGraph() {
                 </div>
             </div>
 
-            {showGraphModal && <KnowledgeGraphModal show={showGraphModal} onHide={() => setShowGraphModal(false)} jsonData={jsonData} />}
+            {showGraphModal && <KnowledgeGraphModal show={showGraphModal} onHide={() => setShowGraphModal(false)} />}
         </>
     );
 }
