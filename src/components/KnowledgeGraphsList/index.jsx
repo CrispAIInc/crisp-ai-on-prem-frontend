@@ -2,16 +2,19 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import { searchByKey, sortByKey } from '../../utils';
+import KnowledgeGraphModal from '../KnowledgeGraphModal';
 
 const KnowledgeGraphsList = () => {
 
     const {
         theme,
-        knowledgeGraphs
+        knowledgeGraphs,
+        setSelectedKnowledgeGraph
     } = useContext(MainContext);
 
     const [searchValue, setSearchValue] = useState("");
     const [graphsResults, setGraphsResults] = useState(knowledgeGraphs);
+    const [showGraphModal, setShowGraphModal] = useState(false);
 
     const handleGraphsSearch = (e) => {
         const value = e?.target?.value || "";
@@ -30,6 +33,11 @@ const KnowledgeGraphsList = () => {
         handleGraphsSearch();
     }, [knowledgeGraphs]);
 
+    function handleGraphClick(graph) {
+        setSelectedKnowledgeGraph(graph);
+        setShowGraphModal(true);
+    }
+
     return (
         <>
             {
@@ -46,7 +54,7 @@ const KnowledgeGraphsList = () => {
                             {
                                 graphsResults.map((graph, index) => (
                                     <div key={index} className={`p-2 rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
-                                        <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>{graph.title}</p>
+                                        <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => handleGraphClick(graph)}>{graph.title}</p>
                                     </div>
                                 ))
                             }
@@ -56,6 +64,8 @@ const KnowledgeGraphsList = () => {
                     <BaseHeading text="No composers found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                 )
             }
+
+            {showGraphModal && <KnowledgeGraphModal show={showGraphModal} onHide={() => setShowGraphModal(false)} />}
         </>
     );
 };

@@ -11,7 +11,7 @@ const JsonViewer = () => {
     return (
         <div>
             <JsonView
-                value={selectedKnowledgeGraph}
+                value={selectedKnowledgeGraph.entities}
                 style={theme === 'dark' ? darkTheme : lightTheme}
                 theme="rjv-default"
                 displayDataTypes={false}
