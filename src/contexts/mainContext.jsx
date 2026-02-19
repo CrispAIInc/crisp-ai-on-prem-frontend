@@ -1226,6 +1226,15 @@ export default function MainProvider({ children, theme, setTheme }) {
     }, [currentProject.project_id]);
     // }, [displayedSources, selectedLanguage]);
 
+    useEffect(() => {
+        async function getJsonEntities() {
+            const entities = await makeApiRequest('/graph');
+            setJsonEntities(entities);
+        }
+
+        getJsonEntities();
+    });
+
     const metadataPanelContainer = useRef(null);
     const [jsonEntities, setJsonEntities] = useState([]);
     const [selectedJsonEntity, setSelectedJsonEntity] = useState(null);
