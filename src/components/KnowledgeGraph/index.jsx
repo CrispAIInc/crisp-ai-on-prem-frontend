@@ -18,6 +18,7 @@ function KnowledgeGraph() {
     } = useContext(MainContext);
 
     const [context, setContext] = useState('');
+    const [title, setTitle] = useState('');
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
@@ -43,6 +44,7 @@ function KnowledgeGraph() {
                 sources: checkedSources.map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
                 selectedOptions: ["graph"],
                 inputContext: context,
+                title
             };
             let { entities, title } = await makeApiRequest('/gen-metadata', 'post', payload);
 
@@ -73,6 +75,16 @@ function KnowledgeGraph() {
                         placeholder='Customize your JSON structure'
                         value={context}
                         onChange={(e) => setContext(e.target.value)}
+                    />
+                </div>
+                <div className="relative w-full mb-2">
+                    <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Your entities title (optional)</label>
+                    <input
+                        className={`${theme === 'dark' && 'text-textColor-100'
+                            } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
+                        placeholder="Write a title for the entities"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                     />
                 </div>
                 {/* generate button */}
