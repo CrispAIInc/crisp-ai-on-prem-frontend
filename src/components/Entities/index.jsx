@@ -46,7 +46,7 @@ function KnowledgeGraph() {
                 inputContext: context,
                 title
             };
-            let response = await makeApiRequest('/gen-metadata', 'post', payload);
+            let response = await makeApiRequest('/graph', 'POST', payload);
 
             setSelectedJsonEntity(response);
             setJsonEntities(prev => [...prev, response]);
