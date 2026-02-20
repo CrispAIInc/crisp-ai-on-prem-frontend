@@ -24,7 +24,7 @@ const KnowledgeGraphModal = ({ show, onHide }) => {
 
             const link = document.createElement("a");
             link.href = url;
-            link.download = "json-structure.json";
+            link.download = `${selectedJsonEntity.title}.json`;
             document.body.appendChild(link);
             link.click();
 
