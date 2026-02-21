@@ -260,25 +260,26 @@ function MediaEntertainment({
                     </label>
                     <MetadataVerbosity isFromReel={true} verbosityValue={verbosityValue} setVerbosityValue={handleChange} disabilityLevel={2} />
                 </div>
-            </div>
 
-            {/* generate button */}
-            <div className={`relative inline-block ${!isDropdownMenuOpen && 'mt-3'}`} onMouseMove={handleMouseMove}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}>
-                <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    disabled={isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT} onClick={generateMedia}>
-                    {isGeneratingReel ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
-                </RippleButton>
-                {tooltipVisible && (
-                    <p
-                        // onMouseEnter={() => setTooltipVisible(false)}
-                        className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
-                        style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
-                    >
-                        {`Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
-                    </p>
-                )}
+                {/* generate button */}
+                <div className={`relative inline-block`} onMouseMove={handleMouseMove}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}>
+                    <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                        disabled={isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT} onClick={generateMedia}>
+                        {isGeneratingReel ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
+                    </RippleButton>
+                    {tooltipVisible && (
+                        <p
+                            // onMouseEnter={() => setTooltipVisible(false)}
+                            className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
+                            style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
+                        >
+                            {`Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
+                        </p>
+                    )}
+                </div>
+
             </div>
 
             {/* ============= list of reels ============= */}
