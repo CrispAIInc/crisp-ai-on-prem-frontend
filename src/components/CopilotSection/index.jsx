@@ -412,7 +412,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       }
       /******** handle timestamps description ********** */
       else if (selectedModel === "timestamps_description") {
-        setShowCursor(true);
+        // setShowCursor(true);
         // check if user sends query before selecting correct timestamo range
         if (toSeconds(end) <= toSeconds(start)) {
           notify({
@@ -447,7 +447,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           } else if (data.text === "") {
             setIsFetchingRefs(true);
           } else if (data.type === "MESSAGE") {
-            // setShowCursor(false);
+            setShowCursor(false);
             const newToken = data.text;
             botMessage += " " + newToken;
             setMessages((prevMessages) => {
@@ -470,7 +470,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         };
 
         eventSource.onerror = async function () {
-          // setShowCursor(false);
+          setShowCursor(false);
           eventSource.close();
 
           if (eventSource.readyState === EventSource.CLOSED) {
