@@ -193,67 +193,94 @@ function MediaEntertainment({
         setIsReelOpen(true);
     };
 
+    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
+
     return (
         <div className='z-20 flex flex-col gap-1 h-full'>
-            {/* context */}
-            <div className="relative w-full">
-                <div className="flex flex-col mb-2">
-                    <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel topic</label>
-                    <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>When no context or topic is provided, the reel will be based on the existing highlights.</span>
+
+            {/* collapser */}
+            <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsDropdownMenuOpen(!isDropdownMenuOpen)}>
+                <p className={`select-none font-bold ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>
+                    {isDropdownMenuOpen ? "Minimize" : "Expand"} settings
+                </p>
+                <svg
+                    className={`w-4 mx-2 transform ${isDropdownMenuOpen ? "rotate-180" : "rotate-0"
+                        }`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke={`${theme === 'light' ? 'currentColor' : 'white'}`}
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                    />
+                </svg>
+            </div>
+
+            <div className={`flex flex-col gap-2 ${isDropdownMenuOpen ? 'block' : 'hidden'}`}>
+                {/* context */}
+                <div className="relative w-full">
+                    <div className="flex flex-col mb-2">
+                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel topic</label>
+                        <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>When no context or topic is provided, the reel will be based on the existing highlights.</span>
+                    </div>
+                    <textarea
+                        className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        rows="3"
+                        placeholder='What do you want your reel to be about?'
+                        onFocus={() => setContextFocused(true)}
+                        onBlur={() => setContextFocused(false)}
+                        value={context}
+                        onChange={(e) => setContext(e.target.value)}
+                    />
                 </div>
-                <textarea
-                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    rows="3"
-                    placeholder='What do you want your reel to be about?'
-                    onFocus={() => setContextFocused(true)}
-                    onBlur={() => setContextFocused(false)}
-                    value={context}
-                    onChange={(e) => setContext(e.target.value)}
-                />
-            </div>
 
-            {/* title */}
-            <div className=''>
-                <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel title</label>
-                <input
-                    className={`${theme === 'dark' && 'text-textColor-100'
-                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
-                    placeholder="Write a title for the reel"
-                    value={reel.title}
-                    onChange={(e) => setReel(prev => ({ ...prev, title: e.target.value }))}
-                />
-            </div>
+                {/* title */}
+                <div className=''>
+                    <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel title</label>
+                    <input
+                        className={`${theme === 'dark' && 'text-textColor-100'
+                            } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
+                        placeholder="Write a title for the reel"
+                        value={reel.title}
+                        onChange={(e) => setReel(prev => ({ ...prev, title: e.target.value }))}
+                    />
+                </div>
 
-            {/* Source to generate reel */}
-            {/* <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={knowledgeBase} /> */}
+                {/* Source to generate reel */}
+                {/* <SelectedSourcesDropdown selectedOptions={selectedSourcesToGen} setSelectedOptions={setSelectedSourcesToGen} options={knowledgeBase} /> */}
 
-            {/* verbosity */}
-            <div>
-                <label className={` w-fit !relative ${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium flex items-center gap-1`}>
-                    Reel duration
-                    {/* <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className='!relative !w-5' style={{ color: `${theme === 'light' ? '#777' : '#ABAEB4'}` }} /> */}
-                    {/* {isInfoTooltipOpen && <div className="absolute right-0 p-2 bg-background_workspace shadow-[0px_0px_30px_-2px_rgba(82,79,79,0.6)] rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full">Choose the desired <span className="text-primary">quality</span> and <span className="text-primary">complexity</span> for your generated video reel. Higher quality may increase generation time.</div>} */}
-                </label>
-                <MetadataVerbosity isFromReel={true} verbosityValue={verbosityValue} setVerbosityValue={handleChange} disabilityLevel={2} />
-            </div>
+                {/* verbosity */}
+                <div>
+                    <label className={` w-fit !relative ${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium flex items-center gap-1`}>
+                        Reel duration
+                        {/* <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className='!relative !w-5' style={{ color: `${theme === 'light' ? '#777' : '#ABAEB4'}` }} /> */}
+                        {/* {isInfoTooltipOpen && <div className="absolute right-0 p-2 bg-background_workspace shadow-[0px_0px_30px_-2px_rgba(82,79,79,0.6)] rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full">Choose the desired <span className="text-primary">quality</span> and <span className="text-primary">complexity</span> for your generated video reel. Higher quality may increase generation time.</div>} */}
+                    </label>
+                    <MetadataVerbosity isFromReel={true} verbosityValue={verbosityValue} setVerbosityValue={handleChange} disabilityLevel={2} />
+                </div>
 
-            {/* generate button */}
-            <div className='relative inline-block' onMouseMove={handleMouseMove}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}>
-                <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    disabled={isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT} onClick={generateMedia}>
-                    {isGeneratingReel ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
-                </RippleButton>
-                {tooltipVisible && (
-                    <p
-                        // onMouseEnter={() => setTooltipVisible(false)}
-                        className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
-                        style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
-                    >
-                        {`Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
-                    </p>
-                )}
+                {/* generate button */}
+                <div className='relative inline-block' onMouseMove={handleMouseMove}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}>
+                    <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                        disabled={isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT} onClick={generateMedia}>
+                        {isGeneratingReel ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
+                    </RippleButton>
+                    {tooltipVisible && (
+                        <p
+                            // onMouseEnter={() => setTooltipVisible(false)}
+                            className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
+                            style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
+                        >
+                            {`Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
+                        </p>
+                    )}
+                </div>
             </div>
 
             {/* ============= list of reels ============= */}
