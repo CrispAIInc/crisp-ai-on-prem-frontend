@@ -344,7 +344,6 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             }
             return newMessages;
           });
-          setShowCursor(false);
         } else {
 
           // add or remove embeddings from Vector store
@@ -413,6 +412,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       }
       /******** handle timestamps description ********** */
       else if (selectedModel === "timestamps_description") {
+        setShowCursor(true);
         // check if user sends query before selecting correct timestamo range
         if (toSeconds(end) <= toSeconds(start)) {
           notify({
@@ -447,7 +447,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           } else if (data.text === "") {
             setIsFetchingRefs(true);
           } else if (data.type === "MESSAGE") {
-            setShowCursor(false);
+            // setShowCursor(false);
             const newToken = data.text;
             botMessage += " " + newToken;
             setMessages((prevMessages) => {
@@ -470,7 +470,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         };
 
         eventSource.onerror = async function () {
-          setShowCursor(false);
+          // setShowCursor(false);
           eventSource.close();
 
           if (eventSource.readyState === EventSource.CLOSED) {
@@ -480,14 +480,16 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           }
         };
       }
+      // setShowCursor(false);
+      // setIsFetchingRefs(false);
     } catch (error) {
       console.log(error);
       setMessages(prev => prev.slice(0, -2));
-      setShowCursor(false);
-      setIsFetchingRefs(false);
+      // setShowCursor(false);
+      // setIsFetchingRefs(false);
     } finally {
-      setShowCursor(false);
-      setIsFetchingRefs(false);
+      // setShowCursor(false);
+      // setIsFetchingRefs(false);
     }
   };
 
