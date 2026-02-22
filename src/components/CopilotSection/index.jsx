@@ -325,6 +325,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         }
         let timestamps = await handleCaptioning(userMessage);
         let fullSourceWithTimestamp = mergeSourceToTimestamps(timestamps);
+        setIsFetchingRefs(false);
         fetchReferences(userMessage, models, botMessage, fullSourceWithTimestamp, null, false);
       }
       /******** handle crisp wiz messaging (smart search) ********** */
