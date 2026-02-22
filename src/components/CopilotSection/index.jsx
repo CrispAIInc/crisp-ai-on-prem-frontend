@@ -28,13 +28,18 @@ import SegmentDescription from '../SegmentDescription/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-const ChatMessage = ({ text, refs }) => {
+const ChatMessage = ({ text, refs, timestamps }) => {
   const {
     contentPanelContainerRef
   } = useContext(MainContext);
   const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
   return (
     <div>
+      {timestamps && timestamps.length > 0 && (
+        <div className="text-xs font-medium text-neutral-500 mb-1">
+          {timestamps[0]} → {timestamps[1]}
+        </div>
+      )}
       <div className="coorg-response break-keep">
         {text}
       </div>
@@ -455,6 +460,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             setMessages((prevMessages) => {
               const newMessages = [...prevMessages];
               if (newMessages.length > 0) {
+
                 const lastMessageIndex = newMessages.length - 1;
                 newMessages[lastMessageIndex] = {
                   ...newMessages[lastMessageIndex],
@@ -468,7 +474,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             // extract the last part of the streaming and call fetchReferences
             // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
             setIsFetchingRefs(true);
-            fetchReferences(userMessage, models, botMessage, data.data);
+            fetchReferences(userMessage, models, botMessage, data.data, [formatTime(start), formatTime(end)]);
           }
         };
 
@@ -500,7 +506,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
 
   // allRefs means that we work with smart search crisp wiz normal refs
-  const fetchReferences = async (userMessage, models, botMessage, data, allRefs = true) => {
+  const fetchReferences = async (userMessage, models, botMessage, data, timestamps = [], allRefs = true) => {
     // const response = await axios.get(`${API_ENDPOINT}/references`);
     // const data = response.data;
     noteReferences.videoLinks = [];
@@ -516,11 +522,11 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     };
     const chatIndex = chatHistory.findIndex(chat => chat.sessionId === currentChat?.sessionId);
     if (chatIndex === -1) {
-      addNewChat("New Chat " + (chatHistory.length + 1), [{ sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }]);
+      addNewChat("New Chat " + (chatHistory.length + 1), [{ sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs, timestamps }]);
     } else {
       setChatHistory(prev => {
         const chatToUpdate = prev[chatIndex];
-        chatToUpdate.messages = [...chatToUpdate.messages, { sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs }];
+        chatToUpdate.messages = [...chatToUpdate.messages, { sender: "user", text: userMessage, question: userMessage, models }, { sender: "bot", text: botMessage, botText: botMessage, question: userMessage, models, refs, timestamps }];
         const { isTemp, ...rest } = chatToUpdate;
         prev[chatIndex] = rest;
         return prev;
@@ -590,6 +596,9 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
     botMessage = (
       <div>
+        {timestamps.length > 0 && (
+          <p className="text-xs text-gray-500 mb-1">{timestamps[0]} - {timestamps[1]}</p>
+        )}
         <div className="coorg-response">
           {selectedLanguage == "en" ? data.bot_message : newData.translatedText}
         </div>
@@ -650,6 +659,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           refs,
           // botText: selectedLanguage == "en" ? data.bot_message : newData.translatedText,
           text: botMessage,
+          timestamps: timestamps.length > 0 ? [timestamps[0], timestamps[1]] : [],
         };
       }
       return newMessages;
@@ -1109,7 +1119,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                               : "text-textColor-100"
                               } break-words`}
                           >
-                            <ChatMessage text={message?.botText} refs={message?.refs} />
+                            <ChatMessage text={message?.botText} refs={message?.refs} timestamps={message?.timestamps} />
                           </div>
                           {showCursor && index == responseIndex ? (
                             <div className={`${theme === 'light' ? ' text-textColor-200' : 'text-textColor-100'} rounded-full p-1 w-fit flex items-center gap-1`}>
