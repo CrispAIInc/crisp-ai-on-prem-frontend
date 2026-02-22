@@ -1171,8 +1171,12 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 {selectedModel === "timestamps_description" && (
-                  <SegmentDescription start={start} setStart={setStart} end={end} setEnd={setEnd} canGenerateSegmentDescription={canGenerateSegmentDescription}
-                    setCanGenerateSegmentDescription={setCanGenerateSegmentDescription} handleGenerate={handleGenerateSegmentDescription} />
+                  <SegmentDescription
+                    start={start}
+                    setStart={setStart}
+                    end={end}
+                    setEnd={setEnd}
+                    handleGenerate={handleGenerateSegmentDescription} />
                 )}
 
                 {(combinedSummary !== "" || messages.length > 0) && <div className={`flex flex-wrap rounded-full items-center !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"}`}>

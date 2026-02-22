@@ -5,7 +5,7 @@ import toast from 'react-simple-toasts';
 import TimestampPicker from '../TimestampPicker';
 import ToggleSwitch from '../ToggleSwitch';
 
-const SegmentDescription = ({ start, setStart, end, setEnd, canGenerateSegmentDescription, setCanGenerateSegmentDescription, handleGenerate }) => {
+const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) => {
 
     const {
         displayedSources,
@@ -16,9 +16,11 @@ const SegmentDescription = ({ start, setStart, end, setEnd, canGenerateSegmentDe
 
     const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
 
+    const canGenerate = checkedSourcesCount === 1 && checkedSources.every(item => item.file_type === "video");
+
     useEffect(() => {
-        setIsTimestampPickerOpen(canGenerateSegmentDescription);
-    }, [canGenerateSegmentDescription]);
+        setIsTimestampPickerOpen(canGenerate);
+    }, [canGenerate]);
 
     const confirmFn = () => {
         setIsTimestampPickerOpen(false);
@@ -32,19 +34,19 @@ const SegmentDescription = ({ start, setStart, end, setEnd, canGenerateSegmentDe
     };
 
     const handleToggleTimestampPicker = () => {
-        if (canGenerateSegmentDescription) {
+        if (canGenerate) {
             setIsTimestampPickerOpen(prev => !prev);
         }
     };
 
     return (
-        <div className={`relative flex flex-col ${(checkedSourcesCount !== 1 || checkedSources.every(item => item.file_type !== "video"))
+        <div className={`relative flex flex-col ${!canGenerate
             ? 'pointer-events-none opacity-50 select-none'
             : 'pointer-events-auto opacity-100 select-all'
             } ml-4`}>
             <div className="relative flex flex-col">
                 <div className="flex items-center gap-1">
-                    <div className={`flex flex-col select-none ${canGenerateSegmentDescription && `rounded-md cursor-pointer `}`} onClick={handleToggleTimestampPicker}>
+                    <div className={`flex flex-col select-none ${canGenerate && `cursor-pointer `}`} onClick={handleToggleTimestampPicker}>
                         <BaseHeading
                             text="Segment description"
                         />
