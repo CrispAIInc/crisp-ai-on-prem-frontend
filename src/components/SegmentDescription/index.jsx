@@ -43,9 +43,13 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
         <div className={`relative flex flex-col ${!canGenerate
             ? 'pointer-events-none opacity-50 select-none'
             : 'pointer-events-auto opacity-100 select-all'
-            } ml-4`}>
+            }`}>
             <div className="relative flex flex-col">
-                <div className="flex items-center gap-1">
+                <BaseHeading
+                    text="Only one checked source (video)"
+                />
+                <TimestampPicker sourceDuration={Math.ceil(displayedSources.find(s => s.is_checked)?.source_duration || 0)} start={start} setStart={setStart} end={end} setEnd={setEnd} confirmFn={confirmFn} rejectFn={rejectFn} />
+                {/* <div className="flex items-center gap-1">
                     <div className={`flex flex-col select-none ${canGenerate && `cursor-pointer `}`} onClick={handleToggleTimestampPicker}>
                         <BaseHeading
                             text="Segment description"
@@ -61,7 +65,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
-                    {/* <ToggleSwitch value={canGenerateSegmentDescription} onChange={val => setCanGenerateSegmentDescription(val)} /> */}
+                    <ToggleSwitch value={canGenerateSegmentDescription} onChange={val => setCanGenerateSegmentDescription(val)} />
                 </div>
                 {
                     isTimestampPickerOpen && (
@@ -69,7 +73,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
                             <TimestampPicker sourceDuration={Math.ceil(displayedSources.find(s => s.is_checked)?.source_duration || 0)} start={start} setStart={setStart} end={end} setEnd={setEnd} confirmFn={confirmFn} rejectFn={rejectFn} />
                         </div>
                     )
-                }
+                } */}
             </div>
         </div>
     );

@@ -81,7 +81,7 @@ const TimeInput = ({ initVal, max, onChange }) => {
         className={`py-2 text-xs font-semibold text-center rounded-lg w-9 h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400 ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}
       />
 
-      <div ref={timeOptionsRef} className={`absolute top-full left-0 w-full h-[100px] overflow-y-auto rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'} ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}>
+      <div ref={timeOptionsRef} className={`absolute z-20 top-full left-0 w-full h-[100px] overflow-y-auto rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'} ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}>
         {/* <div className="flex flex-col items-center gap-1 p-2"> */}
         {options.map((opt) => (
           <button
@@ -153,7 +153,7 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
   }
 
   return (
-    <div className={`flex items-center p-2 shadow-xl w-fit rounded-2xl ${theme === 'light' ? 'bg-white !border' : 'bg-textColor-300  !border !border-textColor-200/40'} select-none`}>
+    <div className={`flex items-center p-2 w-fit rounded-2xl ${theme === 'light' ? 'bg-white !border' : 'bg-textColor-300  !border !border-textColor-200/40'} select-none`}>
 
       {/* Start */}
       <div className="flex items-center justify-center gap-2">
