@@ -48,7 +48,15 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
                 <BaseHeading
                     text="Only one checked source (video)"
                 />
-                <TimestampPicker sourceDuration={Math.ceil(displayedSources.find(s => s.is_checked)?.source_duration || 0)} start={start} setStart={setStart} end={end} setEnd={setEnd} confirmFn={confirmFn} rejectFn={rejectFn} />
+                <TimestampPicker
+                    // sourceDuration={Math.ceil(displayedSources.find(s => s.is_checked)?.source_duration || 0)}
+                    start={start}
+                    setStart={setStart}
+                    end={end}
+                    setEnd={setEnd}
+                    confirmFn={confirmFn}
+                    rejectFn={rejectFn}
+                />
                 {/* <div className="flex items-center gap-1">
                     <div className={`flex flex-col select-none ${canGenerate && `cursor-pointer `}`} onClick={handleToggleTimestampPicker}>
                         <BaseHeading
