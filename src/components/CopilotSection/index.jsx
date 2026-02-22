@@ -437,7 +437,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         url.append("video_filename", displayedSources.find(i => i.is_checked).source_path);
 
         let sessionID = null; // Variable to store the session ID
-        const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}`, {
+        const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}/${userMessage}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             SessionId: currentChat?.sessionId,
