@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import NorthIcon from '@mui/icons-material/North';
+import StopIcon from '@mui/icons-material/Stop';
 import { MainContext } from '../../contexts/mainContext';
 // import AppTooltip from '../AppTooltip';
 import ChatHistory from '../ChatHistory';
@@ -16,11 +17,15 @@ export default function ChatInput({
     onChange,
     crispWizInputRef,
     handleKeyDown,
-    crispWizInputContainerRef
+    crispWizInputContainerRef,
+    showCursor,
+    isFetchingRefs
 }) {
     const { theme } = useContext(MainContext);
     const [isMultiline, setIsMultiline] = useState(false);
     const textareaRef = useRef(null);
+
+    const canSendMessage = (showCursor === false && isFetchingRefs === false);
 
     const [showTooltip, setShowTooltip] = useState(false);
 
@@ -81,15 +86,20 @@ export default function ChatInput({
                     data-tooltip-class-name={theme === "light" && "border font-semibold"}
                     data-tooltip-id="crisp-wiz-send-btn-tooltip"
                     data-tooltip-content="Message is empty."
-                    disabled={!value.trim()}
+                    disabled={!canSendMessage || !value.trim()}
                     onClick={() => {
-                        onSend(value.trim());
+                        canSendMessage && onSend(value.trim());
                     }}
                     onMouseOver={handleMouseOver}
                     onMouseLeave={handleMouseLeave}
                     className={`absolute right-2 flex items-center justify-center transition rounded-full h-10 w-10   disabled:cursor-not-allowed ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300/80'}`}
                 >
-                    <NorthIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                    {
+                        canSendMessage ?
+                            <NorthIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                            :
+                            <StopIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                    }
 
                     {showTooltip && <Tooltip id="crisp-wiz-send-btn-tooltip" />}
                 </button>

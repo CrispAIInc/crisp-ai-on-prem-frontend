@@ -275,6 +275,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
     if (input.trim() === '' && !isRepeated) return;
 
+    if (showCursor === true || isFetchingRefs === true) return;
+
     setShowCursor(true);
 
     let userMessage = "";
@@ -1184,6 +1186,8 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                   crispWizInputRef={crispWizInputRef}
                   crispWizInputContainerRef={crispWizInputContainerRef}
                   onChange={value => setInput(value)}
+                  showCursor={showCursor}
+                  isFetchingRefs={isFetchingRefs}
                 />
               </div>
             </div>
