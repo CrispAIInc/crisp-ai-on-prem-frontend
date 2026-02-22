@@ -43,14 +43,23 @@ const SegmentDescription = ({ start, setStart, end, setEnd, canGenerateSegmentDe
             : 'pointer-events-auto opacity-100 select-all'
             } ml-4`}>
             <div className="relative flex flex-col">
-                <div className="flex gap-1">
-                    <div className={`flex flex-col select-none ${canGenerateSegmentDescription && `rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300'} `}`} onClick={handleToggleTimestampPicker}>
+                <div className="flex items-center gap-1">
+                    <div className={`flex flex-col select-none ${canGenerateSegmentDescription && `rounded-md cursor-pointer `}`} onClick={handleToggleTimestampPicker}>
                         <BaseHeading
                             text="Segment description"
                         />
                         <span className={`text-xs ${theme === 'dark' && 'text-textColor-100'}`}>Only one checked source.</span>
                     </div>
-                    <ToggleSwitch value={canGenerateSegmentDescription} onChange={val => setCanGenerateSegmentDescription(val)} />
+                    <svg
+                        className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white/80'} transition-transform ${isTimestampPickerOpen && "rotate-180"
+                            }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                    {/* <ToggleSwitch value={canGenerateSegmentDescription} onChange={val => setCanGenerateSegmentDescription(val)} /> */}
                 </div>
                 {
                     isTimestampPickerOpen && (
