@@ -465,12 +465,15 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           } else if (data.type === "REFERENCES") {
             // extract the last part of the streaming and call fetchReferences
             // await delay(Math.floor(Math.random() * (4000 - 2500 + 1)) + 2500); // artificial delay to ensure botMessage is updated
+            setIsFetchingRefs(true);
             fetchReferences(userMessage, models, botMessage, data.data);
           }
         };
 
+
         eventSource.onerror = async function () {
           setShowCursor(false);
+          setIsFetchingRefs(false);
           eventSource.close();
 
           if (eventSource.readyState === EventSource.CLOSED) {
