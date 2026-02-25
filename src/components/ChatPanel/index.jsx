@@ -243,16 +243,23 @@ const ChatPanel = () => {
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
           <div>
             {/* buttons */}
-            <div className="flex justify-around gap-5 mt-2 flex-items">
+            <div className={`flex justify-around gap-5 mt-2 flex-items overflow-x-auto [&::-webkit-scrollbar]:h-[6px]
+    [&::-webkit-scrollbar-track]:bg-transparent
+    [&::-webkit-scrollbar-thumb]:bg-gray-400
+    [&::-webkit-scrollbar-thumb]:rounded-full
+    [&::-webkit-scrollbar-thumb]:border-2
+    [&::-webkit-scrollbar-thumb]:border-transparent
+    [&::-webkit-scrollbar-thumb]:bg-clip-padding`}>
               {[
                 { id: "genMetadata", title: "Cataloging" },
                 { id: "genStories", title: "Insights & Stories" },
-                { id: "genMedia", title: "Reels" }
+                { id: "genMedia", title: "Reels" },
+                { id: "genTimeSegment", title: "Time Segment Description" },
               ].map(item => (
                 <h6
                   id={item.id}
                   onClick={() => handleTabClick(item.id)}
-                  className={`text-[14px] select-none text-md cursor-pointer ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`}
+                  className={`text-[14px] select-none text-md cursor-pointer min-w-fit ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`}
                   key={item.id}
                 >
                   {item.title}
