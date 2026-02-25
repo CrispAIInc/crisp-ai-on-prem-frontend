@@ -255,7 +255,7 @@ const ChatPanel = () => {
                 { id: "genMetadata", title: "Cataloging" },
                 { id: "genStories", title: "Insights & Stories" },
                 { id: "genMedia", title: "Reels" },
-                { id: "genTimeSegment", title: "Time Segment Description" },
+                { id: "genTimeSegment", title: "Video Time Segment" },
               ].map(item => (
                 <h6
                   id={item.id}
