@@ -328,7 +328,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         setIsFetchingRefs(false);
         fetchReferences(userMessage, models, botMessage, fullSourceWithTimestamp, null, false);
       }
-      /******** handle crisp wiz messaging (smart search) ********** */
+      /******** handle crisp wiz messaging (Contextual Interaction) ********** */
       else if (selectedModel === "search") {
         if (selectedLLMs[0] === "dall-e-3") {
           const data = await makeApiRequest(
@@ -507,7 +507,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   };
 
 
-  // allRefs means that we work with smart search crisp wiz normal refs
+  // allRefs means that we work with Contextual Interaction crisp wiz normal refs
   const fetchReferences = async (userMessage, models, botMessage, data, timestamps = [], allRefs = true) => {
     // const response = await axios.get(`${API_ENDPOINT}/references`);
     // const data = response.data;
@@ -938,7 +938,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
   // crisp wiz models
   const MODELS = [
-    { name: 'Smart Search', icon: <SearchOutlinedIcon />, value: 'search', placeholder: "Ask Crisp Wiz anything..." },
+    { name: 'Contextual Interaction', icon: <SearchOutlinedIcon />, value: 'search', placeholder: "Ask Crisp Wiz anything..." },
     { name: 'Video Segment Description', icon: <NotesOutlinedIcon />, value: 'timestamps_description', placeholder: "Tell Crisp Wiz what to extract from the selected timeframe" },
     { name: 'Find Moments in Video', icon: <AccessTimeOutlinedIcon />, value: 'captioning', placeholder: "What do you want to find in the video? (e.g. Q1 statistics)" },
   ];
