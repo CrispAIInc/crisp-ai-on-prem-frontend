@@ -13,7 +13,7 @@ import ReelViewer from '../ReelViewer';
 import StoriesInsightsTab from '../StoriesInsightsTab';
 import StoryEditor from '../StoryEditor/index.jsx';
 import './chat-panel.css';
-import TimeSegmentDescription from '../TimeSegmentDescription/index.jsx';
+import VideoSegmentDescription from '../VideoSegmentDescription/index.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -281,7 +281,7 @@ const ChatPanel = () => {
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : actualTab === "genTimeSegment" && (
-                <TimeSegmentDescription />
+                <VideoSegmentDescription />
               )
             }
           </div>}

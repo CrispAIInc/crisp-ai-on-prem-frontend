@@ -5,7 +5,7 @@ import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
 import BaseHeading from '../BaseHeading';
 import { MainContext } from '../../contexts/mainContext';
 
-const TimeSegmentDescription = () => {
+const VideoSegmentDescription = () => {
 
     const { theme } = useContext(MainContext);
 
@@ -42,4 +42,4 @@ const TimeSegmentDescription = () => {
     );
 };
 
-export default TimeSegmentDescription;
+export default VideoSegmentDescription;
