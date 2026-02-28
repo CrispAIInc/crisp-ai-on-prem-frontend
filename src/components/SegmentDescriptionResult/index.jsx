@@ -3,19 +3,28 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import BaseHeading from '../BaseHeading';
 import RippleButton from "../RippleButton";
 import { MainContext } from '../../contexts/mainContext';
+import { useToast } from "../../contexts/toastContext";
 
 const SegmentDescriptionResult = ({ exportFn, start = "00:00:00", end = "00:10:00", description = "" }) => {
 
     const { theme } = useContext(MainContext);
+    const { notify } = useToast();
 
     function copyToClipboard() {
         const textToCopy = `Segment: ${start} - ${end}\nDescription: ${description}`;
         navigator.clipboard.writeText(textToCopy)
             .then(() => {
-                alert("Segment description copied to clipboard!");
+                notify({
+                    variant: "info",
+                    heading: "Description copied to clipboard!"
+                });
             })
             .catch(err => {
-                console.error("Failed to copy: ", err);
+                notify({
+                    variant: "error",
+                    heading: "Failed to copy description to clipboard!",
+                    subheading: err?.message || ""
+                });
             });
     }
 
