@@ -3,8 +3,14 @@ import RippleButton from '../RippleButton';
 import { MainContext } from '../../contexts/mainContext';
 
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import FindMomentsResult from '../FindMomentsResult';
 
-const FindMoments = () => {
+const FindMoments = ({
+    captionRefs,
+    setCaptionRefs,
+    captionPrompt,
+    setCaptionPrompt,
+}) => {
 
     const {
         theme,
@@ -13,7 +19,7 @@ const FindMoments = () => {
 
     const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
 
-    const [prompt, setPrompt] = useState("");
+    // const [prompt, setPrompt] = useState("");
     const textareaRef = useRef(null);
 
     useEffect(() => {
@@ -29,7 +35,7 @@ const FindMoments = () => {
             window.getComputedStyle(el).lineHeight
         );
         const maxSingleHeight = lineHeight * 1;
-    }, [prompt]);
+    }, [captionPrompt]);
 
     // =========== CONSTREINT TOOLTIP LOGIC =============
     const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -51,10 +57,10 @@ const FindMoments = () => {
                 <textarea
                     ref={textareaRef}
                     rows={1}
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
+                    value={captionPrompt}
+                    onChange={(e) => setCaptionPrompt(e.target.value)}
                     placeholder="What do you want to find in the video? (e.g. Q1 statistics)"
-                    className={`w-full p-2 bg-transparent resize-none focus:outline-none overflow-y-auto max-h-40`}
+                    className={`w-full p-2 bg-transparent resize-none focus:outline-none overflow-y-auto max-h-28`}
                 />
                 <div
                     className="relative inline-block self-end mt-2"
@@ -73,8 +79,7 @@ const FindMoments = () => {
 
                     {tooltipVisible && (
                         <p
-                            // onMouseEnter={() => setTooltipVisible(false)}
-                            className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
+                            className={`absolute z-10 p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                             style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                         >
                             check at least one video source to enable
@@ -82,6 +87,14 @@ const FindMoments = () => {
                     )}
                 </div>
             </div>
+
+            {/* results */}
+            <FindMomentsResult
+                prompt={captionPrompt}
+                refs={captionRefs}
+                isPending={false}
+                exportFn={() => { }}
+            />
         </div>
     );
 };
