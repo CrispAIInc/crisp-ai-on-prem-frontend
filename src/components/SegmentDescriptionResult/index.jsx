@@ -32,7 +32,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results }) => {
     }, [results.description, isContentEmpty]);
 
     function copyToClipboard() {
-        const textToCopy = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description}`;
+        const textToCopy = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description} \nReferences: ${results.refs && results.refs.length > 0 ? results.refs.map(ref => ref.displayText).join("\n") : "None"}`;
         navigator.clipboard.writeText(textToCopy)
             .then(() => {
                 notify({
