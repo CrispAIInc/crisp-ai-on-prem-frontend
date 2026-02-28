@@ -81,7 +81,7 @@ const TimeInput = ({ initVal, max, onChange }) => {
         className={`py-2 text-xs font-semibold text-center rounded-lg w-9 h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400 ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}
       />
 
-      <div ref={timeOptionsRef} className={`absolute z-20 top-full left-0 w-full h-[100px] overflow-y-auto rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'} ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}>
+      <div ref={timeOptionsRef} className={`absolute z-[9999] top-full left-0 w-full h-[100px] min-h-[100px] overflow-y-auto rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'} ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}>
         {/* <div className="flex flex-col items-center gap-1 p-2"> */}
         {options.map((opt) => (
           <button
@@ -99,7 +99,7 @@ const TimeInput = ({ initVal, max, onChange }) => {
 };
 
 
-export default function TimestampPicker({ start, setStart, end, setEnd, confirmFn, rejectFn, sourceDuration = 86_399 }) {
+export default function TimestampPicker({ start, setStart, end, setEnd, confirmFn, rejectFn, sourceDuration = 86_399, fromCrispWiz = true }) {
   const { theme } = useContext(MainContext);
 
 
@@ -153,68 +153,78 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
   }
 
   return (
-    <div className={`flex items-center p-2 w-fit rounded-2xl ${theme === 'light' ? 'bg-white !border' : 'bg-textColor-300  !border !border-textColor-200/40'} select-none`}>
+    <div
+      className={`
+    mx-auto p-3 rounded-2xl select-none
+    flex gap-1
+    w-fit
+    ${theme === 'light'
+          ? 'bg-white !border'
+          : 'bg-textColor-300 !border !border-textColor-200/40'}
+  `}
+    >
+      {/* FROM */}
+      <div className="flex items-center">
+        <span className="w-10 text-xs font-medium opacity-70">
+          From
+        </span>
 
-      {/* Start */}
-      <div className="flex items-center justify-center gap-2">
-        <TimeInput
-          sourceDuration={sourceDuration}
-          initVal={start.h}
-          value={start.h}
-          max={Number(fromSeconds(sourceDuration).h)}
-          onChange={(v) => setStart({ ...start, h: v })}
-        />
-        :
-        <TimeInput
-          sourceDuration={sourceDuration}
-          initVal={start.m}
-          value={start.m}
-          max={Number(fromSeconds(sourceDuration).m)}
-          onChange={(v) => setStart({ ...start, m: v })}
-        />
-        :
-        <TimeInput
-          sourceDuration={sourceDuration}
-          initVal={start.s}
-          value={start.s}
-          max={Number(fromSeconds(sourceDuration).s)}
-          onChange={(v) => setStart({ ...start, s: v })}
-        />
+        <div className="flex items-center gap-1">
+          <TimeInput
+            initVal={start.h}
+            max={Number(fromSeconds(sourceDuration).h)}
+            onChange={(v) => setStart({ ...start, h: v })}
+          />
+          <span className="opacity-50">:</span>
+          <TimeInput
+            initVal={start.m}
+            max={Number(fromSeconds(sourceDuration).m)}
+            onChange={(v) => setStart({ ...start, m: v })}
+          />
+          <span className="opacity-50">:</span>
+          <TimeInput
+            initVal={start.s}
+            max={Number(fromSeconds(sourceDuration).s)}
+            onChange={(v) => setStart({ ...start, s: v })}
+          />
+        </div>
       </div>
 
-      {/* separator */}
-      <div className="mx-2 select-none">to</div>
+      {/* TO */}
+      <div className="flex items-center">
+        <span className="text-xs font-medium opacity-70 mr-1">
+          To
+        </span>
 
-      {/* End */}
-      <div className="flex items-center justify-center gap-2">
-        <TimeInput
-          sourceDuration={sourceDuration}
-          initVal={end.h}
-          value={end.h}
-          max={Number(fromSeconds(sourceDuration).h)}
-          onChange={(v) => setEnd({ ...end, h: v })}
-        />
-        :
-        <TimeInput
-          sourceDuration={sourceDuration}
-          initVal={end.m}
-          value={end.m}
-          max={Number(fromSeconds(sourceDuration).m)}
-          onChange={(v) => setEnd({ ...end, m: v })}
-        />
-        :
-        <TimeInput
-          sourceDuration={sourceDuration}
-          initVal={end.s}
-          value={end.s}
-          max={Number(fromSeconds(sourceDuration).s)}
-          onChange={(v) => setEnd({ ...end, s: v })}
-        />
+        <div className="flex items-center gap-1">
+          <TimeInput
+            initVal={end.h}
+            max={Number(fromSeconds(sourceDuration).h)}
+            onChange={(v) => setEnd({ ...end, h: v })}
+          />
+          <span className="opacity-50">:</span>
+          <TimeInput
+            initVal={end.m}
+            max={Number(fromSeconds(sourceDuration).m)}
+            onChange={(v) => setEnd({ ...end, m: v })}
+          />
+          <span className="opacity-50">:</span>
+          <TimeInput
+            initVal={end.s}
+            max={Number(fromSeconds(sourceDuration).s)}
+            onChange={(v) => setEnd({ ...end, s: v })}
+          />
+        </div>
       </div>
 
-      <div className="flex justify-center gap-2 ml-5">
-        <CheckIcon className={'cursor-pointer'} onClick={handleConfirm} />
-      </div>
+      {fromCrispWiz && (
+        <div className="flex justify-end pt-1">
+          <CheckIcon
+            className="cursor-pointer hover:scale-105 transition"
+            onClick={handleConfirm}
+          />
+        </div>
+      )}
     </div>
   );
 }

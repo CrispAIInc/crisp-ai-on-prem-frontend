@@ -4,6 +4,7 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
 import BaseHeading from '../BaseHeading';
 import { MainContext } from '../../contexts/mainContext';
+import TimeSegmentDescription from '../TimeSegmentDescription';
 
 const VideoSegmentDescription = () => {
 
@@ -12,7 +13,7 @@ const VideoSegmentDescription = () => {
     const [currentTab, setCurrentTab] = useState("Time segment description");
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="">
             <div className="relative z-10 flex flex-col gap-1 mt-2 mb-3">
                 {
                     [
@@ -38,6 +39,15 @@ const VideoSegmentDescription = () => {
                     })
                 }
             </div>
+
+            <TimeSegmentDescription
+                start={0}
+                setStart={() => { }}
+                end={0}
+                setEnd={() => { }}
+                confirmFn={() => { }}
+                rejectFn={() => { }}
+            />
         </div>
     );
 };

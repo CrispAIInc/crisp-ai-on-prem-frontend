@@ -268,7 +268,7 @@ const ChatPanel = () => {
               ))}
             </div>
           </div>
-          {actualTab !== null && <div className='h-full overflow-y-hidden'>
+          {actualTab !== null && <div className='h-full overflow-hidden'>
             {
               actualTab === "genMetadata" ? (
                 <MetadataGen verbosityValue={verbosityValue} setVerbosityValue={setVerbosityValue}
