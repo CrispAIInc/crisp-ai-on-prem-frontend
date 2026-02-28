@@ -6,6 +6,9 @@ import BaseHeading from '../BaseHeading';
 import { MainContext } from '../../contexts/mainContext';
 import TimeSegmentDescription from '../TimeSegmentDescription';
 import SegmentDescription from '../SegmentDescription';
+import SegmentDescriptionResult from "../SegmentDescriptionResult";
+
+import { formatTime } from "../../utils.js";
 
 const VideoSegmentDescription = ({ start, setStart, end, setEnd, generateDescription }) => {
 
@@ -14,7 +17,7 @@ const VideoSegmentDescription = ({ start, setStart, end, setEnd, generateDescrip
     const [currentTab, setCurrentTab] = useState("Time segment description");
 
     return (
-        <div className="">
+        <div className="h-full flex flex-col">
             <div className="relative z-10 flex flex-col gap-1 mt-2 mb-3">
                 {
                     [
@@ -46,14 +49,25 @@ const VideoSegmentDescription = ({ start, setStart, end, setEnd, generateDescrip
                 end={end}
                 setEnd={setEnd}
                 handleGenerate={generateDescription} />
-            {/* <TimeSegmentDescription
-                start={0}
-                setStart={() => { }}
-                end={0}
-                setEnd={() => { }}
-                confirmFn={() => { }}
-                rejectFn={() => { }}
-            /> */}
+
+            <SegmentDescriptionResult
+                start={formatTime(start)}
+                end={formatTime(end)}
+                // description={generateDescription ? generateDescription(start, end) : "this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment."}
+                description={"this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment. this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segmentthis is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment FINAL"}
+                exportFn={() => {
+                    const textToExport = `Segment: ${start} - ${end}\nDescription: ${generateDescription ? generateDescription(start, end) : ""}`;
+                    const blob = new Blob([textToExport], { type: "text/plain" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "segment-description.txt";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }}
+            />
         </div>
     );
 };
