@@ -165,7 +165,7 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
     >
       {/* FROM */}
       <div className="flex items-center">
-        <span className="w-10 text-xs font-medium opacity-70">
+        <span className={`w-10 text-xs font-medium ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}>
           From
         </span>
 
@@ -192,7 +192,7 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
 
       {/* TO */}
       <div className="flex items-center">
-        <span className="text-xs font-medium opacity-70 mr-1">
+        <span className={`text-xs font-medium ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}  mr-1`}>
           To
         </span>
 
@@ -220,7 +220,7 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
       {fromCrispWiz && (
         <div className="flex justify-end pt-1">
           <CheckIcon
-            className="cursor-pointer hover:scale-105 transition"
+            className={`cursor-pointer hover:scale-105 transition ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}
             onClick={handleConfirm}
           />
         </div>
