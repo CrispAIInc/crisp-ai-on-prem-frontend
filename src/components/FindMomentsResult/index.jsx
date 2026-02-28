@@ -32,7 +32,7 @@ const FindMomentsResult = ({ exportFn, isPending, prompt, refs }) => {
     }, [isContentEmpty]);
 
     function copyToClipboard() {
-        const textToCopy = `Prompt: ${prompt} \nReferences: ${!isContentEmpty ? refs.map(ref => ref.displayText).join("\n") : "None"}`;
+        const textToCopy = `Prompt: \n${prompt} \n\nReferences: ${!isContentEmpty ? '\n' + refs.map(ref => ref.displayText).join("\n") : "None"}`;
         navigator.clipboard.writeText(textToCopy)
             .then(() => {
                 notify({
@@ -72,18 +72,21 @@ const FindMomentsResult = ({ exportFn, isPending, prompt, refs }) => {
                 <></>
             ) : (
                 <>
-                    <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{prompt}</p>
+                    <div>
+                        <BaseHeading text="Prompt" className="text-sm text-gradient-x" />
+                        <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{prompt}</p>
+                    </div>
 
                     {refs && refs.length > 0 && (
-                        <div className="mt-4">
-                            <BaseHeading text="References" className="text-sm mb-2" />
-                            <ul className="list-disc list-inside text-sm/6 text-textColor-300">
+                        <div className="mt-2">
+                            <BaseHeading text="References" className="text-sm mb-2 text-gradient-x" />
+                            <div className="flex flex-col gap-1">
                                 {refs.map((ref, index) => {
                                     return (
-                                        <Chip key={index} content={ref.displayText} data-object={ref} onClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer text-gradient-x" />
+                                        <Chip key={index} content={ref.displayText} data-object={ref} onClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer " />
                                     );
                                 })}
-                            </ul>
+                            </div>
                         </div>
                     )}
 
