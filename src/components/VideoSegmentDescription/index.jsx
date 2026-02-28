@@ -9,6 +9,7 @@ import SegmentDescription from '../SegmentDescription';
 import SegmentDescriptionResult from "../SegmentDescriptionResult";
 
 import { formatTime } from "../../utils.js";
+import FindMoments from '../FindMoments/index.jsx';
 
 const VideoSegmentDescription = () => {
 
@@ -99,7 +100,9 @@ const VideoSegmentDescription = () => {
                             setResults={setResultsSummary}
                         />
                     </>
-                ) : null
+                ) : (
+                    <FindMoments />
+                )
             }
         </div>
     );
