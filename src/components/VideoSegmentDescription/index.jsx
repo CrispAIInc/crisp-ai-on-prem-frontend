@@ -10,7 +10,7 @@ import SegmentDescriptionResult from "../SegmentDescriptionResult";
 
 import { formatTime } from "../../utils.js";
 
-const VideoSegmentDescription = ({ start, setStart, end, setEnd, generateDescription }) => {
+const VideoSegmentDescription = () => {
 
     const { theme } = useContext(MainContext);
 
@@ -47,32 +47,7 @@ const VideoSegmentDescription = ({ start, setStart, end, setEnd, generateDescrip
             {
                 currentTab === "Time segment description" && (
                     <>
-                        <SegmentDescription
-                            start={start}
-                            setStart={setStart}
-                            end={end}
-                            setEnd={setEnd}
-                            handleGenerate={generateDescription} />
-
-                        <SegmentDescriptionResult
-                            start={formatTime(start)}
-                            end={formatTime(end)}
-                            // description={generateDescription ? generateDescription(start, end) : "this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment."}
-                            description={""}
-                            isPending={true}
-                            exportFn={() => {
-                                const textToExport = `Segment: ${formatTime(start)} - ${formatTime(end)}\nDescription: ${generateDescription ? generateDescription(formatTime(start), formatTime(end)) : ""}`;
-                                const blob = new Blob([textToExport], { type: "text/plain" });
-                                const url = URL.createObjectURL(blob);
-                                const a = document.createElement("a");
-                                a.href = url;
-                                a.download = "segment-description.txt";
-                                document.body.appendChild(a);
-                                a.click();
-                                document.body.removeChild(a);
-                                URL.revokeObjectURL(url);
-                            }}
-                        />
+                        <TimeSegmentDescription />
                     </>
                 )
             }

@@ -4,6 +4,7 @@ import BaseHeading from '../BaseHeading';
 import toast from 'react-simple-toasts';
 import TimestampPicker from '../TimestampPicker';
 import ToggleSwitch from '../ToggleSwitch';
+import { useToast } from '../../contexts/toastContext';
 
 const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) => {
 
@@ -13,6 +14,8 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
         checkedSourcesCount,
         checkedSources
     } = useContext(MainContext);
+
+    const { notify } = useToast();
 
     const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
 
@@ -29,7 +32,11 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
 
     const rejectFn = (isError, errorMessage) => {
         if (isError) {
-            toast(errorMessage, { className: `p-2 rounded-full !bg-red-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Timestamps invalid!",
+                subheading: "Your timestamp range is invalid.",
+            });
         }
     };
 
