@@ -42,21 +42,6 @@ const TimeSegmentDescription = () => {
         refs: []
     });
 
-    function getVideoReferencesJsx(videoRefsObjArray) {
-        return videoRefsObjArray.map((video) => {
-            const timestamps = `${video.source_path} | Timestamp: ${video.timestamp}`;
-
-            setResults(prev => ({
-                ...prev,
-                refs: [...prev.refs, { ...video, displayText: timestamps }]
-            }));
-
-            return (
-                <Chip key={video.source_path} content={timestamps} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
-            );
-        });
-    }
-
     async function generateDescription() {
         if (toSeconds(end) <= toSeconds(start)) {
             notify({
@@ -73,6 +58,7 @@ const TimeSegmentDescription = () => {
                 ...prev,
                 start: formatTime(start),
                 end: formatTime(end),
+                refs: []
             }));
 
             let url = new URLSearchParams();
@@ -113,9 +99,8 @@ const TimeSegmentDescription = () => {
                     setIsFetchingRefs(true);
                     setResults(prev => ({
                         ...prev,
-                        refs: data.data.video_references,
+                        refs: data.data.video_references.map(video => ({ ...video, displayText: `${video.source_path} | Timestamp: ${video.timestamp}` })),
                     }));
-                    // getVideoReferencesJsx(data.data.video_references);
                 }
             };
 
