@@ -5,8 +5,9 @@ import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
 import BaseHeading from '../BaseHeading';
 import { MainContext } from '../../contexts/mainContext';
 import TimeSegmentDescription from '../TimeSegmentDescription';
+import SegmentDescription from '../SegmentDescription';
 
-const VideoSegmentDescription = () => {
+const VideoSegmentDescription = ({ start, setStart, end, setEnd, generateDescription }) => {
 
     const { theme } = useContext(MainContext);
 
@@ -39,15 +40,20 @@ const VideoSegmentDescription = () => {
                     })
                 }
             </div>
-
-            <TimeSegmentDescription
+            <SegmentDescription
+                start={start}
+                setStart={setStart}
+                end={end}
+                setEnd={setEnd}
+                handleGenerate={generateDescription} />
+            {/* <TimeSegmentDescription
                 start={0}
                 setStart={() => { }}
                 end={0}
                 setEnd={() => { }}
                 confirmFn={() => { }}
                 rejectFn={() => { }}
-            />
+            /> */}
         </div>
     );
 };

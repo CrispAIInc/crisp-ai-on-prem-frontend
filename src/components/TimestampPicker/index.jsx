@@ -224,7 +224,8 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
             onClick={handleConfirm}
           />
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }

@@ -14,6 +14,7 @@ import StoriesInsightsTab from '../StoriesInsightsTab';
 import StoryEditor from '../StoryEditor/index.jsx';
 import './chat-panel.css';
 import VideoSegmentDescription from '../VideoSegmentDescription/index.jsx';
+import { formatTime } from '../../utils.js';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -175,6 +176,16 @@ const ChatPanel = () => {
   const [isReelOpen, setIsReelOpen] = useState(false);
 
 
+  //=================== VIDEO SEGMENT DESCRIPTION ======================
+  // Segment description
+  const [start, setStart] = useState({ h: "00", m: "10", s: "00" });
+  const [end, setEnd] = useState({ h: "00", m: "22", s: "10" });
+
+  function generateDescription() {
+    console.log("generatin desc...", formatTime(start), formatTime(end));
+  }
+
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-hidden bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2 pb-[10px]"
@@ -281,7 +292,13 @@ const ChatPanel = () => {
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : actualTab === "genTimeSegment" && (
-                <VideoSegmentDescription />
+                <VideoSegmentDescription
+                  start={start}
+                  setStart={setStart}
+                  end={end}
+                  setEnd={setEnd}
+                  generateDescription={generateDescription}
+                />
               )
             }
           </div>}

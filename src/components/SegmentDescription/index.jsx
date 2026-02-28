@@ -40,10 +40,9 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
     };
 
     return (
-        <div className={`relative flex flex-col ${!canGenerate
-            ? 'pointer-events-none opacity-50 select-none'
-            : 'pointer-events-auto opacity-100 select-all'
-            }`}>
+        <div className={`relative flex flex-col 
+            
+            `}>
             <div className="relative flex flex-col">
                 <BaseHeading
                     text="Only one checked source (video)"
