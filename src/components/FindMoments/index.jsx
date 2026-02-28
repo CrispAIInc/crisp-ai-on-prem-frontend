@@ -53,11 +53,11 @@ const FindMoments = () => {
                     rows={1}
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Add more instructions for better results (optional)"
+                    placeholder="What do you want to find in the video? (e.g. Q1 statistics)"
                     className={`w-full p-2 bg-transparent resize-none focus:outline-none overflow-y-auto max-h-40`}
                 />
                 <div
-                    className="relative inline-block self-end"
+                    className="relative inline-block self-end mt-2"
                     onMouseMove={handleMouseMove}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
