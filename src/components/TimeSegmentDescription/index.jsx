@@ -1,12 +1,9 @@
 import React, { useContext, useState } from 'react';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
-import BaseHeading from '../BaseHeading';
 import { MainContext } from '../../contexts/mainContext';
 import SegmentDescription from '../SegmentDescription';
 import SegmentDescriptionResult from "../SegmentDescriptionResult";
-
+import Chip from "../Chip";
+import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
 import { delay, formatTime, toSeconds } from "../../utils.js";
 import { useToast } from '../../contexts/toastContext';
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -20,6 +17,7 @@ const TimeSegmentDescription = () => {
         checkedSources,
         theme,
         currentChat,
+        contentPanelContainerRef,
     } = useContext(MainContext);
 
     const { currentProject } = useContext(ProjectContext);
@@ -27,6 +25,8 @@ const TimeSegmentDescription = () => {
     const { token } = useAuth();
 
     const { notify } = useToast();
+
+    const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
     const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
     const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
@@ -38,8 +38,24 @@ const TimeSegmentDescription = () => {
     const [results, setResults] = useState({
         start: formatTime(start),
         end: formatTime(end),
-        description: ""
+        description: "",
+        refs: []
     });
+
+    function getVideoReferencesJsx(videoRefsObjArray) {
+        return videoRefsObjArray.map((video) => {
+            const timestamps = `${video.source_path} | Timestamp: ${video.timestamp}`;
+
+            setResults(prev => ({
+                ...prev,
+                refs: [...prev.refs, { ...video, displayText: timestamps }]
+            }));
+
+            return (
+                <Chip key={video.source_path} content={timestamps} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
+            );
+        });
+    }
 
     async function generateDescription() {
         if (toSeconds(end) <= toSeconds(start)) {
@@ -93,6 +109,13 @@ const TimeSegmentDescription = () => {
                         ...prev,
                         description: botMessage
                     }));
+                } else if (data.type === "REFERENCES") {
+                    setIsFetchingRefs(true);
+                    setResults(prev => ({
+                        ...prev,
+                        refs: data.data.video_references,
+                    }));
+                    // getVideoReferencesJsx(data.data.video_references);
                 }
             };
 
@@ -126,12 +149,10 @@ const TimeSegmentDescription = () => {
                 handleGenerate={generateDescription} />
 
             <SegmentDescriptionResult
-                start={results.start}
-                end={results.end}
-                description={results.description}
+                results={results}
                 isPending={isPending}
                 exportFn={() => {
-                    const textToExport = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description}`;
+                    const textToExport = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description}\nReferences: ${results.refs.map(ref => ref.displayText).join('\n')}`;
                     const blob = new Blob([textToExport], { type: "text/plain" });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");

@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import BaseHeading from '../BaseHeading';
 import RippleButton from "../RippleButton";
@@ -7,25 +7,32 @@ import { useToast } from "../../contexts/toastContext";
 import AnimatedText from '../AnimatedText';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import { Skeleton } from '@mui/material';
+import Chip from '../Chip';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
-const SegmentDescriptionResult = ({ exportFn, isPending, start = "00:00:00", end = "00:10:00", description = "" }) => {
+const SegmentDescriptionResult = ({ exportFn, isPending, results }) => {
 
-    const { theme } = useContext(MainContext);
+    const {
+        theme,
+        contentPanelContainerRef,
+    } = useContext(MainContext);
     const { notify } = useToast();
+
+    const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
     const containerRef = useRef(null);
 
-    const isContentEmpty = !description || description.trim() === "";
+    const isContentEmpty = !results.description || results.description.trim() === "";
 
     // auto scroll down whenever description changes
-    React.useEffect(() => {
+    useEffect(() => {
         if (!isContentEmpty && containerRef.current) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
         }
-    }, [description, isContentEmpty]);
+    }, [results.description, isContentEmpty]);
 
     function copyToClipboard() {
-        const textToCopy = `Segment: ${start} - ${end}\nDescription: ${description}`;
+        const textToCopy = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description}`;
         navigator.clipboard.writeText(textToCopy)
             .then(() => {
                 notify({
@@ -66,10 +73,23 @@ const SegmentDescriptionResult = ({ exportFn, isPending, start = "00:00:00", end
             ) : (
                 <>
                     <div className="flex items-center gap-2">
-                        <AccessTimeOutlinedIcon className="text-gray-500" />
-                        <BaseHeading text={`${start} - ${end}`} className="text-sm " />
+                        <AccessTimeOutlinedIcon className="text-purple-400" />
+                        <BaseHeading text={`${results.start} - ${results.end}`} className="text-sm text-gradient-x" />
                     </div>
-                    <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{description}</p>
+                    <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{results.description}</p>
+
+                    {results.refs && results.refs.length > 0 && (
+                        <div className="mt-4">
+                            <BaseHeading text="References" className="text-sm mb-2" />
+                            <ul className="list-disc list-inside text-sm/6 text-textColor-300">
+                                {results.refs.map((ref, index) => {
+                                    return (
+                                        <Chip key={index} content={ref.displayText} data-object={ref} onClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer text-gradient-x" />
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    )}
 
                     {/* action buttons */}
                     <div className="flex items-center gap-2 mt-4">
