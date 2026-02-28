@@ -43,31 +43,39 @@ const VideoSegmentDescription = ({ start, setStart, end, setEnd, generateDescrip
                     })
                 }
             </div>
-            <SegmentDescription
-                start={start}
-                setStart={setStart}
-                end={end}
-                setEnd={setEnd}
-                handleGenerate={generateDescription} />
 
-            <SegmentDescriptionResult
-                start={formatTime(start)}
-                end={formatTime(end)}
-                // description={generateDescription ? generateDescription(start, end) : "this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment."}
-                description={"this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment. this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segmentthis is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment FINAL"}
-                exportFn={() => {
-                    const textToExport = `Segment: ${start} - ${end}\nDescription: ${generateDescription ? generateDescription(start, end) : ""}`;
-                    const blob = new Blob([textToExport], { type: "text/plain" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "segment-description.txt";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }}
-            />
+            {
+                currentTab === "Time segment description" && (
+                    <>
+                        <SegmentDescription
+                            start={start}
+                            setStart={setStart}
+                            end={end}
+                            setEnd={setEnd}
+                            handleGenerate={generateDescription} />
+
+                        <SegmentDescriptionResult
+                            start={formatTime(start)}
+                            end={formatTime(end)}
+                            // description={generateDescription ? generateDescription(start, end) : "this is a random by deafult description generated manually for testing purposes. It should be replaced by the actual generated description based on the selected time segment."}
+                            description={""}
+                            isPending={true}
+                            exportFn={() => {
+                                const textToExport = `Segment: ${formatTime(start)} - ${formatTime(end)}\nDescription: ${generateDescription ? generateDescription(formatTime(start), formatTime(end)) : ""}`;
+                                const blob = new Blob([textToExport], { type: "text/plain" });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement("a");
+                                a.href = url;
+                                a.download = "segment-description.txt";
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                            }}
+                        />
+                    </>
+                )
+            }
         </div>
     );
 };
