@@ -154,8 +154,7 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
 
   return (
     <div
-      className={`
-    mx-auto p-3 rounded-2xl select-none
+      className={` p-3 rounded-2xl select-none
     flex gap-1
     w-fit
     ${theme === 'light'

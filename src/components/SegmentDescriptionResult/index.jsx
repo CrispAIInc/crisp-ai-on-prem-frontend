@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import BaseHeading from '../BaseHeading';
 import RippleButton from "../RippleButton";
@@ -13,7 +13,16 @@ const SegmentDescriptionResult = ({ exportFn, isPending, start = "00:00:00", end
     const { theme } = useContext(MainContext);
     const { notify } = useToast();
 
+    const containerRef = useRef(null);
+
     const isContentEmpty = !description || description.trim() === "";
+
+    // auto scroll down whenever description changes
+    React.useEffect(() => {
+        if (!isContentEmpty && containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    }, [description, isContentEmpty]);
 
     function copyToClipboard() {
         const textToCopy = `Segment: ${start} - ${end}\nDescription: ${description}`;
@@ -34,7 +43,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, start = "00:00:00", end
     }
 
     return (
-        <div className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
+        <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
   backdrop-blur-sm`}>
             {isPending ? (
                 <div className="flex flex-col gap-2">
