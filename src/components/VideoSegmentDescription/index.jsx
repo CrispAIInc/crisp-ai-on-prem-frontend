@@ -16,6 +16,32 @@ const VideoSegmentDescription = () => {
 
     const [currentTab, setCurrentTab] = useState("Time segment description");
 
+    // ========== time segment description ==============
+    const [startSegmentDescription, setStartSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
+    const [endSegmentDescription, setEndSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
+
+    const [promptSegmentDescription, setPromptSegmentDescription] = useState("");
+
+    const [resultsDescription, setResultsDescription] = useState({
+        start: formatTime(startSegmentDescription),
+        end: formatTime(endSegmentDescription),
+        description: "",
+        refs: []
+    });
+
+    // ========== time segment summary ==============
+    const [startSegmentSummary, setStartSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
+    const [endSegmentSummary, setEndSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
+
+    const [promptSegmentSummary, setPromptSegmentSummary] = useState("");
+
+    const [resultsSummary, setResultsSummary] = useState({
+        start: formatTime(startSegmentSummary),
+        end: formatTime(endSegmentSummary),
+        description: "",
+        refs: []
+    });
+
     return (
         <div className="h-full flex flex-col">
             <div className="relative z-10 flex flex-col gap-1 mt-2 mb-3">
@@ -45,11 +71,35 @@ const VideoSegmentDescription = () => {
             </div>
 
             {
-                currentTab === "Time segment description" && (
+                currentTab === "Time segment description" ? (
                     <>
-                        <TimeSegmentDescription />
+                        <TimeSegmentDescription
+                            key="description"
+                            start={startSegmentDescription}
+                            setStart={setStartSegmentDescription}
+                            end={endSegmentDescription}
+                            setEnd={setEndSegmentDescription}
+                            prompt={promptSegmentDescription}
+                            setPrompt={setPromptSegmentDescription}
+                            results={resultsDescription}
+                            setResults={setResultsDescription}
+                        />
                     </>
-                )
+                ) : currentTab === "Time segment summary" ? (
+                    <>
+                        <TimeSegmentDescription
+                            key="summary"
+                            start={startSegmentSummary}
+                            setStart={setStartSegmentSummary}
+                            end={endSegmentSummary}
+                            setEnd={setEndSegmentSummary}
+                            prompt={promptSegmentSummary}
+                            setPrompt={setPromptSegmentSummary}
+                            results={resultsSummary}
+                            setResults={setResultsSummary}
+                        />
+                    </>
+                ) : null
             }
         </div>
     );

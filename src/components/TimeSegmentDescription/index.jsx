@@ -11,7 +11,16 @@ import useAuth from '../../hooks/useAuth.js';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-const TimeSegmentDescription = () => {
+const TimeSegmentDescription = ({
+    start,
+    setStart,
+    end,
+    setEnd,
+    prompt,
+    setPrompt,
+    results,
+    setResults
+}) => {
 
     const {
         checkedSources,
@@ -26,21 +35,13 @@ const TimeSegmentDescription = () => {
 
     const { notify } = useToast();
 
-    const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
+    // const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
+    // const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
 
-    const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
-    const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
-
-    const [prompt, setPrompt] = useState("");
+    // const [prompt, setPrompt] = useState("");
 
     const [isPending, setIsPending] = useState(false);
     const [isFetchingRefs, setIsFetchingRefs] = useState(false);
-    const [results, setResults] = useState({
-        start: formatTime(start),
-        end: formatTime(end),
-        description: "",
-        refs: []
-    });
 
     async function generateDescription() {
         if (toSeconds(end) <= toSeconds(start)) {
