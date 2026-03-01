@@ -7,6 +7,7 @@ import { MainContext } from '../../contexts/mainContext';
 import TimeSegmentDescription from '../TimeSegmentDescription';
 import SegmentDescription from '../SegmentDescription';
 import SegmentDescriptionResult from "../SegmentDescriptionResult";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { formatTime } from "../../utils.js";
 import FindMoments from '../FindMoments/index.jsx';
@@ -22,6 +23,8 @@ const VideoSegmentDescription = () => {
     const [endSegmentDescription, setEndSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
 
     const [promptSegmentDescription, setPromptSegmentDescription] = useState("");
+
+    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
     const [resultsDescription, setResultsDescription] = useState({
         start: formatTime(startSegmentDescription),
@@ -66,9 +69,23 @@ const VideoSegmentDescription = () => {
                         },
                     ].map(({ icon: Icon, title }, index) => {
                         return (
-                            <div className={`cursor-pointer flex items-center gap-1 pb-1 w-fit ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
+                            <div className={`relative cursor-pointer flex items-center gap-1 pb-1 w-fit ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
                                 <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
                                 <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
+                                {
+                                    title === "Time segment description" && (
+                                        <>
+                                            <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+
+                                            {
+                                                isInfoTooltipOpen && (
+                                                    <div className={`absolute right-0 p-2 bg-background_workspace shadow-md rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} text-sm`}>If you do not specify query, you get frame-by-frame descriptions of the segment.
+                                                        If you specify query, the summary is tailored to that question.</div>
+                                                )
+                                            }
+                                        </>
+                                    )
+                                }
                             </div>
                         );
                     })
