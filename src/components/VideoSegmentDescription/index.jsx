@@ -31,17 +31,17 @@ const VideoSegmentDescription = () => {
     });
 
     // ========== time segment summary ==============
-    const [startSegmentSummary, setStartSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
-    const [endSegmentSummary, setEndSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
+    // const [startSegmentSummary, setStartSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
+    // const [endSegmentSummary, setEndSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
 
-    const [promptSegmentSummary, setPromptSegmentSummary] = useState("");
+    // const [promptSegmentSummary, setPromptSegmentSummary] = useState("");
 
-    const [resultsSummary, setResultsSummary] = useState({
-        start: formatTime(startSegmentSummary),
-        end: formatTime(endSegmentSummary),
-        description: "",
-        refs: []
-    });
+    // const [resultsSummary, setResultsSummary] = useState({
+    //     start: formatTime(startSegmentSummary),
+    //     end: formatTime(endSegmentSummary),
+    //     description: "",
+    //     refs: []
+    // });
 
     // ========= Find moments in videos ===========
     const [captionPrompt, setCaptionPrompt] = useState("");
@@ -53,20 +53,20 @@ const VideoSegmentDescription = () => {
                 {
                     [
                         {
-                            icon: NotesOutlinedIcon,
+                            icon: AutoAwesomeIcon,
                             title: "Time segment description"
                         },
-                        {
-                            icon: AutoAwesomeIcon,
-                            title: "Time segment summary"
-                        },
+                        // {
+                        //     icon: AutoAwesomeIcon,
+                        //     title: "Time segment summary"
+                        // },
                         {
                             icon: AccessTimeOutlinedIcon,
                             title: "Find moments"
                         },
                     ].map(({ icon: Icon, title }, index) => {
                         return (
-                            <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
+                            <div className={`cursor-pointer flex items-center gap-1 pb-1 w-fit ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
                                 <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
                                 <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
                             </div>
@@ -88,20 +88,6 @@ const VideoSegmentDescription = () => {
                             setPrompt={setPromptSegmentDescription}
                             results={resultsDescription}
                             setResults={setResultsDescription}
-                        />
-                    </>
-                ) : currentTab === "Time segment summary" ? (
-                    <>
-                        <TimeSegmentDescription
-                            key="summary"
-                            start={startSegmentSummary}
-                            setStart={setStartSegmentSummary}
-                            end={endSegmentSummary}
-                            setEnd={setEndSegmentSummary}
-                            prompt={promptSegmentSummary}
-                            setPrompt={setPromptSegmentSummary}
-                            results={resultsSummary}
-                            setResults={setResultsSummary}
                         />
                     </>
                 ) : (
