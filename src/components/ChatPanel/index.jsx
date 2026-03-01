@@ -246,7 +246,7 @@ const ChatPanel = () => {
           <div className={`${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
             } mb-3 pb-[10px]`}>
             {/* buttons */}
-            {/* <div className="flex justify-around gap-5 mt-2 flex-items">
+            <div className="flex justify-around gap-5 mt-2 flex-items">
               {[
                 { id: "genMetadata", title: "Cataloging" },
                 { id: "genStories", title: "Insights & Stories" },
@@ -262,8 +262,8 @@ const ChatPanel = () => {
                   {item.title}
                 </h6>
               ))}
-            </div> */}
-            <GeneratorServicesDropdown
+            </div>
+            {/* <GeneratorServicesDropdown
               defaultTab={actualTab}
               tabs={[
                 { id: "genMetadata", title: "Cataloging" },
@@ -272,7 +272,7 @@ const ChatPanel = () => {
                 { id: "genGraph", title: "Composer" },
               ]}
               onChange={(id) => handleTabClick(id)}
-            />
+            /> */}
           </div>
           {actualTab !== null && <div className='h-full overflow-y-hidden'>
             {
