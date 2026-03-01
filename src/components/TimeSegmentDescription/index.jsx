@@ -91,7 +91,7 @@ const TimeSegmentDescription = ({
                 } else if (data.type === "MESSAGE") {
                     setIsPending(false);
                     const newToken = data.text;
-                    botMessage += " " + newToken;
+                    botMessage += " " + newToken + "\n\n";
                     setResults(prev => ({
                         ...prev,
                         description: botMessage
