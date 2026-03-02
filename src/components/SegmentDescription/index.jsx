@@ -4,8 +4,9 @@ import BaseHeading from '../BaseHeading';
 import toast from 'react-simple-toasts';
 import TimestampPicker from '../TimestampPicker';
 import ToggleSwitch from '../ToggleSwitch';
+import { useToast } from '../../contexts/toastContext';
 
-const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) => {
+const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPending }) => {
 
     const {
         displayedSources,
@@ -14,9 +15,11 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
         checkedSources
     } = useContext(MainContext);
 
+    const { notify } = useToast();
+
     const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
 
-    const canGenerate = checkedSourcesCount === 1 && checkedSources.every(item => item.file_type === "video");
+    const canGenerate = checkedSourcesCount === 1 && checkedSources.every(item => item.file_type === "video"); //&& !isPending
 
     useEffect(() => {
         setIsTimestampPickerOpen(canGenerate);
@@ -29,7 +32,11 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
 
     const rejectFn = (isError, errorMessage) => {
         if (isError) {
-            toast(errorMessage, { className: `p-2 rounded-full !bg-red-600 text-white`, theme });
+            notify({
+                variant: "error",
+                heading: "Timestamps invalid!",
+                subheading: "Your timestamp range is invalid.",
+            });
         }
     };
 
@@ -43,7 +50,8 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
         <div className={`relative flex flex-col ${!canGenerate
             ? 'pointer-events-none opacity-50 select-none'
             : 'pointer-events-auto opacity-100 select-all'
-            }`}>
+            }            
+            `}>
             <div className="relative flex flex-col">
                 <BaseHeading
                     text="Only one checked source (video)"
@@ -56,6 +64,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate }) =>
                     setEnd={setEnd}
                     confirmFn={confirmFn}
                     rejectFn={rejectFn}
+                    isPending={isPending}
                 />
                 {/* <div className="flex items-center gap-1">
                     <div className={`flex flex-col select-none ${canGenerate && `cursor-pointer `}`} onClick={handleToggleTimestampPicker}>

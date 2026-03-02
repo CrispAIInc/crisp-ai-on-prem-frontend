@@ -58,7 +58,7 @@ const ChatMessage = ({ text, refs, timestamps }) => {
               return (
                 <Chip
                   key={video.source_path + '' + index}
-                  content={`${video.source_path} | Timestamp: ${video.timestamp} ${video.score ? (" | Relevance score: " + (Number.isInteger(video.score * 100) ? video.score * 100 : (video.score * 100).toFixed(2) + "%")) : ''}`}
+                  content={`${video.source_path} | Timestamp: ${video.timestamp}`}
                   data-object={video}
                   onClick={(e) => handleSourceLinkClick(e, video)}
                   cssClasses={`ml-0 cursor-pointer break-keep ${!video.score && 'text-gradient-x'}`}
