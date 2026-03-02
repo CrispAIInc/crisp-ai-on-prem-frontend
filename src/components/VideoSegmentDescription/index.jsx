@@ -49,6 +49,10 @@ const VideoSegmentDescription = () => {
     // ========= Find moments in videos ===========
     const [captionPrompt, setCaptionPrompt] = useState("");
     const [captionRefs, setCaptionRefs] = useState([]);
+    const [captionResults, setCaptionResults] = useState({
+        prompt: "",
+        refs: [],
+    });
 
     return (
         <div className="h-full flex flex-col">
@@ -108,10 +112,8 @@ const VideoSegmentDescription = () => {
                     </>
                 ) : (
                     <FindMoments
-                        captionRefs={captionRefs}
-                        setCaptionRefs={setCaptionRefs}
-                        captionPrompt={captionPrompt}
-                        setCaptionPrompt={setCaptionPrompt}
+                        captionResults={captionResults}
+                        setCaptionResults={setCaptionResults}
                     />
                 )
             }

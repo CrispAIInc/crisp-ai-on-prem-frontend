@@ -10,7 +10,7 @@ import { Skeleton } from '@mui/material';
 import Chip from '../Chip';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
-const FindMomentsResult = ({ exportFn, isPending, prompt, refs }) => {
+const FindMomentsResult = ({ exportFn, isPending, captionResults }) => {
 
     const {
         theme,
@@ -18,11 +18,12 @@ const FindMomentsResult = ({ exportFn, isPending, prompt, refs }) => {
     } = useContext(MainContext);
     const { notify } = useToast();
 
+    console.log("rerener");
     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
     const containerRef = useRef(null);
 
-    const isContentEmpty = !refs || refs.length === 0;
+    const isContentEmpty = !captionResults.refs || captionResults.refs.length === 0;
 
     // auto scroll down whenever description changes
     useEffect(() => {
@@ -32,7 +33,7 @@ const FindMomentsResult = ({ exportFn, isPending, prompt, refs }) => {
     }, [isContentEmpty]);
 
     function copyToClipboard() {
-        const textToCopy = `Prompt: \n${prompt} \n\nReferences: ${!isContentEmpty ? '\n' + refs.map(ref => ref.displayText).join("\n") : "None"}`;
+        const textToCopy = `Prompt: \n${captionResults.prompt} \n\nReferences: ${!isContentEmpty ? '\n' + captionResults.refs.map(ref => ref.displayText).join("\n") : "None"}`;
         navigator.clipboard.writeText(textToCopy)
             .then(() => {
                 notify({
@@ -54,14 +55,18 @@ const FindMomentsResult = ({ exportFn, isPending, prompt, refs }) => {
   backdrop-blur-sm`}>
             {isPending ? (
                 <div className="flex flex-col gap-2">
-                    <Skeleton width={'50%'} />
                     <div>
                         <Skeleton />
                         <Skeleton />
                         <Skeleton />
-                        <Skeleton />
-                        <Skeleton />
-                        <Skeleton />
+                    </div>
+                    <div>
+                        <Skeleton width={'50%'} />
+                        <Skeleton width={'50%'} />
+                        <Skeleton width={'50%'} />
+                        <Skeleton width={'50%'} />
+                        <Skeleton width={'50%'} />
+                        <Skeleton width={'50%'} />
                     </div>
                     <div className="flex items-center gap-2">
                         <Skeleton width={'20%'} height={40} />
@@ -74,14 +79,14 @@ const FindMomentsResult = ({ exportFn, isPending, prompt, refs }) => {
                 <>
                     <div>
                         <BaseHeading text="Prompt" className="text-sm text-gradient-x" />
-                        <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{prompt}</p>
+                        <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{captionResults.prompt}</p>
                     </div>
 
-                    {refs && refs.length > 0 && (
+                    {captionResults.refs && captionResults.refs.length > 0 && (
                         <div className="mt-2">
                             <BaseHeading text="References" className="text-sm mb-2 text-gradient-x" />
                             <div className="flex flex-col gap-1">
-                                {refs.map((ref, index) => {
+                                {captionResults.refs.map((ref, index) => {
                                     return (
                                         <Chip key={index} content={ref.displayText} data-object={ref} onClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer " />
                                     );

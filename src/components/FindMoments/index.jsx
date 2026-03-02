@@ -8,10 +8,8 @@ import makeApiRequest from '../../api';
 import LoadingSpinner from '../LoadingSpinner';
 
 const FindMoments = ({
-    captionRefs,
-    setCaptionRefs,
-    captionPrompt,
-    setCaptionPrompt,
+    captionResults,
+    setCaptionResults,
 }) => {
 
     const {
@@ -23,7 +21,7 @@ const FindMoments = ({
 
     const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
 
-    // const [prompt, setPrompt] = useState("");
+    const [prompt, setPrompt] = useState("");
     const textareaRef = useRef(null);
 
     useEffect(() => {
@@ -39,7 +37,7 @@ const FindMoments = ({
             window.getComputedStyle(el).lineHeight
         );
         const maxSingleHeight = lineHeight * 1;
-    }, [captionPrompt]);
+    }, [captionResults.prompt]);
 
     // =========== CONSTREINT TOOLTIP LOGIC =============
     const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -102,11 +100,15 @@ const FindMoments = ({
                 })
             );
         }
-        let timestamps = await handleCaptioning(captionPrompt);
+        let timestamps = await handleCaptioning(prompt);
         let fullSourceWithTimestamp = mergeSourceToTimestamps(timestamps);
-        setCaptionRefs(fullSourceWithTimestamp);
+        setCaptionResults(prev => ({
+            ...prev,
+            prompt,
+            refs: fullSourceWithTimestamp,
+        }));
+        setPrompt("");
         setIsFetchingRefs(false);
-        setCaptionPrompt("");
     }
 
     return (
@@ -115,8 +117,8 @@ const FindMoments = ({
                 <textarea
                     ref={textareaRef}
                     rows={1}
-                    value={captionPrompt}
-                    onChange={(e) => setCaptionPrompt(e.target.value)}
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
                     placeholder="What do you want to find in the video? (e.g. Q1 statistics)"
                     className={`w-full p-2 bg-transparent resize-none focus:outline-none overflow-y-auto max-h-28`}
                 />
@@ -130,7 +132,7 @@ const FindMoments = ({
 
                     <RippleButton
                         cssClasses="rounded-md !py-2 !px-3 !pr-4  flex items-center gap-1"
-                        disabled={checkedVideosCount === 0 || isFetchingRefs}
+                        disabled={checkedVideosCount === 0 || isFetchingRefs || prompt.trim() === ""}
                     >
                         {isFetchingRefs ? <LoadingSpinner cssClasses="mr-2" /> : <SearchOutlinedIcon className={`text-white text-sm`} />}
                         <span className="text-sm">Find</span>
@@ -149,9 +151,8 @@ const FindMoments = ({
 
             {/* results */}
             <FindMomentsResult
-                prompt={captionPrompt}
-                refs={captionRefs}
-                isPending={isPending}
+                captionResults={captionResults}
+                isPending={isFetchingRefs}
                 exportFn={() => { }}
             />
         </div>
