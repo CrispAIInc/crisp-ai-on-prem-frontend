@@ -79,7 +79,7 @@ const VideoSegmentDescription = () => {
                                 {
                                     title === "Time segment description" && (
                                         <>
-                                            <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                                            <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5`} />
 
                                             {
                                                 isInfoTooltipOpen && (
