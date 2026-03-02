@@ -9,7 +9,14 @@ import { useToast } from '../../contexts/toastContext';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import useAuth from '../../hooks/useAuth.js';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import {
+    Document,
+    Packer,
+    Paragraph,
+    TextRun,
+    AlignmentType,
+    BorderStyle,
+} from "docx";
 import { saveAs } from "file-saver";
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -155,84 +162,120 @@ const TimeSegmentDescription = ({
     };
 
     const exportToDocx = async (results) => {
-        // 1️⃣ Replace ALL types of <br> with \n
+        const brandColor = "2E74B5"; // Change this to your brand color
+
+        // Replace all <br> variations
         const cleanedDescription = results.description.replace(
             /<br[^>]*>/gi,
             "\n"
         );
 
-        // 2️⃣ Split into real lines
         const descriptionLines = cleanedDescription.split("\n");
 
-        // 3️⃣ Convert each line into a Word paragraph
         const descriptionParagraphs = descriptionLines.map(
             (line) =>
                 new Paragraph({
-                    spacing: { after: 200 },
-                    children: [new TextRun(line)],
+                    spacing: { line: 360, after: 120 }, // 1.5 line spacing
+                    children: [
+                        new TextRun({
+                            text: line,
+                            size: 24, // 12pt
+                        }),
+                    ],
                 })
         );
 
-        // 4️⃣ Create reference paragraphs
         const referenceParagraphs = results.refs.map(
             (ref) =>
                 new Paragraph({
-                    spacing: { after: 150 },
-                    children: [new TextRun(ref.displayText)],
+                    spacing: { after: 100 },
+                    children: [
+                        new TextRun({
+                            text: ref.displayText,
+                            size: 22,
+                        }),
+                    ],
                 })
         );
 
-        // 5️⃣ Build document
         const doc = new Document({
+            styles: {
+                default: {
+                    document: {
+                        run: {
+                            font: "Calibri",
+                            size: 24,
+                        },
+                    },
+                },
+            },
             sections: [
                 {
                     children: [
-                        // TITLE
+                        // ===== TITLE =====
                         new Paragraph({
+                            alignment: AlignmentType.CENTER,
                             spacing: { after: 300 },
                             children: [
                                 new TextRun({
-                                    text: "Segment Report",
+                                    text: "Crisp AI Segment Report",
                                     bold: true,
-                                    size: 36, // 18pt
+                                    size: 42, // 21pt
+                                    color: brandColor,
                                 }),
                             ],
                         }),
 
-                        // SEGMENT RANGE
+                        // ===== SUBTITLE / SEGMENT =====
                         new Paragraph({
+                            alignment: AlignmentType.CENTER,
                             spacing: { after: 300 },
                             children: [
-                                new TextRun("Segment: "),
                                 new TextRun({
-                                    text: `${results.start} - ${results.end}`,
+                                    text: `${results.start} — ${results.end}`,
+                                    size: 24,
                                     bold: true,
                                 }),
                             ],
                         }),
 
-                        // DESCRIPTION HEADER
+                        // ===== SEPARATOR LINE =====
                         new Paragraph({
-                            spacing: { before: 200, after: 200 },
+                            border: {
+                                bottom: {
+                                    color: "E0E0E0",
+                                    space: 1,
+                                    value: BorderStyle.SINGLE,
+                                    size: 6,
+                                },
+                            },
+                            spacing: { after: 300 },
+                        }),
+
+                        // ===== DESCRIPTION HEADER =====
+                        new Paragraph({
+                            spacing: { before: 200, after: 150 },
                             children: [
                                 new TextRun({
                                     text: "Description",
                                     bold: true,
-                                    size: 28,
+                                    size: 30,
+                                    color: brandColor,
                                 }),
                             ],
                         }),
 
                         ...descriptionParagraphs,
 
-                        // REFERENCES HEADER
+                        // ===== REFERENCES HEADER =====
                         new Paragraph({
-                            spacing: { before: 300, after: 200 },
+                            spacing: { before: 400, after: 150 },
                             children: [
                                 new TextRun({
                                     text: "References",
                                     bold: true,
-                                    size: 28,
+                                    size: 30,
+                                    color: brandColor,
                                 }),
                             ],
                         }),
@@ -243,7 +286,6 @@ const TimeSegmentDescription = ({
             ],
         });
 
-        // 6️⃣ Generate file
         const blob = await Packer.toBlob(doc);
         saveAs(blob, "segment-description.docx");
     };
