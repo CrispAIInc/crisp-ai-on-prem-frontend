@@ -128,16 +128,18 @@ const TimeSegmentDescription = ({
                 {
                     children: [
                         new Paragraph({
+                            spacing: { after: 300 },
                             children: [
                                 new TextRun({
                                     text: `Segment: ${results.start} - ${results.end}`,
                                     bold: true,
+                                    size: 40,
                                 }),
                             ],
                         }),
                         new Paragraph(""),
                         new Paragraph("Description:"),
-                        new Paragraph(descriptionText),
+                        new Paragraph(descriptionText.replace(/<br\s*\/?>/g, '\n')),
                         new Paragraph(""),
                         new Paragraph("References:"),
                         ...results.refs.map(
@@ -173,7 +175,43 @@ const TimeSegmentDescription = ({
             <SegmentDescriptionResult
                 results={results}
                 isPending={isPending}
-                exportFn={exportDocx}
+                exportFn={() => {
+                    const htmlContent = `
+                        <html>
+                        <head>
+                            <meta charset="UTF-8">
+                        </head>
+                        <body style="font-family: Calibri; padding:40px;">
+                            <h1 style="color:#2E74B5;">Segment Report</h1>
+
+                            <p><strong>Segment:</strong> ${results.start} - ${results.end}</p>
+
+                            <h2>Description</h2>
+                            <p>
+                            ${results.description.replace(/<br\s*\/?>/g, "<br>")}
+                            </p>
+
+                            <h2>References</h2>
+                            <ul>
+                            ${results.refs.map(ref => `<li>${ref.displayText}</li>`).join("")}
+                            </ul>
+                        </body>
+                        </html>
+                    `;
+
+                    const blob = new Blob([htmlContent], {
+                        type: "application/msword",
+                    });
+
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "segment-description.doc";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }}
             />
         </div>
     );
