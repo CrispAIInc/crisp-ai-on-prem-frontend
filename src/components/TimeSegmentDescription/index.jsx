@@ -9,6 +9,8 @@ import { useToast } from '../../contexts/toastContext';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import useAuth from '../../hooks/useAuth.js';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
+import { Document, Packer, Paragraph, TextRun } from "docx";
+import { saveAs } from "file-saver";
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const TimeSegmentDescription = ({
@@ -118,6 +120,38 @@ const TimeSegmentDescription = ({
         }
     }
 
+    const exportDocx = async () => {
+        const descriptionText = results.description.replace(/<br\s*\/?>/g, "\n");
+
+        const doc = new Document({
+            sections: [
+                {
+                    children: [
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: `Segment: ${results.start} - ${results.end}`,
+                                    bold: true,
+                                }),
+                            ],
+                        }),
+                        new Paragraph(""),
+                        new Paragraph("Description:"),
+                        new Paragraph(descriptionText),
+                        new Paragraph(""),
+                        new Paragraph("References:"),
+                        ...results.refs.map(
+                            (ref) => new Paragraph(ref.displayText)
+                        ),
+                    ],
+                },
+            ],
+        });
+
+        const blob = await Packer.toBlob(doc);
+        saveAs(blob, "segment-description.docx");
+    };
+
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
             <textarea
@@ -139,18 +173,7 @@ const TimeSegmentDescription = ({
             <SegmentDescriptionResult
                 results={results}
                 isPending={isPending}
-                exportFn={() => {
-                    const textToExport = `Segment: ${results.start} - ${results.end}\n\n\nDescription: \n\n${results.description.replace(/<br\s*\/?>/g, '\n')}\nReferences:\n ${results.refs.map(ref => ref.displayText).join('\n')}`;
-                    const blob = new Blob([textToExport], { type: "text/plain" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "segment-description.doc";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }}
+                exportFn={exportDocx}
             />
         </div>
     );
