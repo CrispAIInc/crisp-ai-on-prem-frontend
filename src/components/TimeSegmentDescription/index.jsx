@@ -132,7 +132,9 @@ const TimeSegmentDescription = ({
                 setStart={setStart}
                 end={end}
                 setEnd={setEnd}
-                handleGenerate={generateDescription} />
+                handleGenerate={generateDescription}
+                isPending={isPending}
+            />
 
             <SegmentDescriptionResult
                 results={results}

@@ -1,6 +1,7 @@
 import CheckIcon from '@mui/icons-material/Check';
 import { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from "../../contexts/mainContext";
+import LoadingSpinner from "../LoadingSpinner";
 
 const generateOptions = (max) =>
   Array.from({ length: max + 1 }, (_, i) =>
@@ -99,7 +100,7 @@ const TimeInput = ({ initVal, max, onChange }) => {
 };
 
 
-export default function TimestampPicker({ start, setStart, end, setEnd, confirmFn, rejectFn, sourceDuration = 86_399, fromCrispWiz = true }) {
+export default function TimestampPicker({ isPending, start, setStart, end, setEnd, confirmFn, rejectFn, sourceDuration = 86_399, fromCrispWiz = true }) {
   const { theme } = useContext(MainContext);
 
 
@@ -155,7 +156,7 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
   return (
     <div
       className={` p-3 rounded-2xl select-none
-    flex gap-1
+    flex items-center gap-1
     w-fit
     ${theme === 'light'
           ? 'bg-white !border'
@@ -218,10 +219,12 @@ export default function TimestampPicker({ start, setStart, end, setEnd, confirmF
 
       {fromCrispWiz && (
         <div className="flex justify-end pt-1">
-          <CheckIcon
-            className={`cursor-pointer hover:scale-105 transition ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}
-            onClick={handleConfirm}
-          />
+          {
+            isPending ? <LoadingSpinner isSmall cssClasses="ml-2" /> : <CheckIcon
+              className={`cursor-pointer hover:scale-105 transition ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}
+              onClick={handleConfirm}
+            />
+          }
         </div>
       )
       }
