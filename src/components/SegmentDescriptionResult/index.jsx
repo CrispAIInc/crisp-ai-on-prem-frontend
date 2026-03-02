@@ -76,7 +76,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results }) => {
                         <AccessTimeOutlinedIcon className="text-purple-400" />
                         <BaseHeading text={`${results.start} - ${results.end}`} className="text-sm text-gradient-x" />
                     </div>
-                    <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{results.description}</p>
+                    <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: results.description }} />
 
                     {results.refs && results.refs.length > 0 && (
                         <div className="mt-4">
