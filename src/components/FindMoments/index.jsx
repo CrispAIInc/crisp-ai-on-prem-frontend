@@ -106,6 +106,7 @@ const FindMoments = ({
         let fullSourceWithTimestamp = mergeSourceToTimestamps(timestamps);
         setCaptionRefs(fullSourceWithTimestamp);
         setIsFetchingRefs(false);
+        setCaptionPrompt("");
     }
 
     return (
