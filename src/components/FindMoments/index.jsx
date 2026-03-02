@@ -7,6 +7,16 @@ import FindMomentsResult from '../FindMomentsResult';
 import makeApiRequest from '../../api';
 import LoadingSpinner from '../LoadingSpinner';
 
+import {
+    Document,
+    Packer,
+    Paragraph,
+    TextRun,
+    AlignmentType,
+    BorderStyle,
+} from "docx";
+import { saveAs } from "file-saver";
+
 const FindMoments = ({
     captionResults,
     setCaptionResults,
@@ -111,6 +121,122 @@ const FindMoments = ({
         setIsFetchingRefs(false);
     }
 
+    const exportToDocx = async (results) => {
+        const brandColor = "2E74B5"; // Change this to your brand color
+
+        // Replace all <br> variations
+        const cleanedDescription = results.prompt.replace(
+            /<br[^>]*>/gi,
+            "\n"
+        );
+
+        const descriptionLines = cleanedDescription.split("\n");
+
+        const descriptionParagraphs = descriptionLines.map(
+            (line) =>
+                new Paragraph({
+                    spacing: { line: 360, after: 120 }, // 1.5 line spacing
+                    children: [
+                        new TextRun({
+                            text: line,
+                            size: 24, // 12pt
+                        }),
+                    ],
+                })
+        );
+
+        const referenceParagraphs = results.refs.map(
+            (ref) =>
+                new Paragraph({
+                    spacing: { after: 100 },
+                    children: [
+                        new TextRun({
+                            text: ref.displayText,
+                            size: 22,
+                        }),
+                    ],
+                })
+        );
+
+        const doc = new Document({
+            styles: {
+                default: {
+                    document: {
+                        run: {
+                            font: "Calibri",
+                            size: 24,
+                        },
+                    },
+                },
+            },
+            sections: [
+                {
+                    children: [
+                        // ===== TITLE =====
+                        new Paragraph({
+                            alignment: AlignmentType.CENTER,
+                            spacing: { after: 300 },
+                            children: [
+                                new TextRun({
+                                    text: "Crisp AI Caption Report",
+                                    bold: true,
+                                    size: 42, // 21pt
+                                    color: brandColor,
+                                }),
+                            ],
+                        }),
+
+                        // ===== SEPARATOR LINE =====
+                        new Paragraph({
+                            border: {
+                                bottom: {
+                                    color: "E0E0E0",
+                                    space: 1,
+                                    value: BorderStyle.SINGLE,
+                                    size: 6,
+                                },
+                            },
+                            spacing: { after: 300 },
+                        }),
+
+                        // ===== DESCRIPTION HEADER =====
+                        new Paragraph({
+                            spacing: { before: 200, after: 150 },
+                            children: [
+                                new TextRun({
+                                    text: "Prompt",
+                                    bold: true,
+                                    size: 30,
+                                    color: brandColor,
+                                }),
+                            ],
+                        }),
+
+                        ...descriptionParagraphs,
+
+                        // ===== REFERENCES HEADER =====
+                        new Paragraph({
+                            spacing: { before: 400, after: 150 },
+                            children: [
+                                new TextRun({
+                                    text: "References",
+                                    bold: true,
+                                    size: 30,
+                                    color: brandColor,
+                                }),
+                            ],
+                        }),
+
+                        ...referenceParagraphs,
+                    ],
+                },
+            ],
+        });
+
+        const blob = await Packer.toBlob(doc);
+        saveAs(blob, "segment-description.docx");
+    };
+
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
             <div className={`flex items-center gap-2 w-full pr-2 pb-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-100" : '!border !border-textColor-100 text-textColor-300'} rounded-md focus-within:ring-1 focus-within:ring-primaryColor/50`}>
@@ -153,7 +279,7 @@ const FindMoments = ({
             <FindMomentsResult
                 captionResults={captionResults}
                 isPending={isFetchingRefs}
-                exportFn={() => { }}
+                exportFn={() => exportToDocx(captionResults)}
             />
         </div>
     );

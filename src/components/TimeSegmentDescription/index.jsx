@@ -127,40 +127,6 @@ const TimeSegmentDescription = ({
         }
     }
 
-    const exportDocx = async () => {
-        const descriptionText = results.description.replace(/<br\s*\/?>/g, "\n");
-
-        const doc = new Document({
-            sections: [
-                {
-                    children: [
-                        new Paragraph({
-                            spacing: { after: 300 },
-                            children: [
-                                new TextRun({
-                                    text: `Segment: ${results.start} - ${results.end}`,
-                                    bold: true,
-                                    size: 40,
-                                }),
-                            ],
-                        }),
-                        new Paragraph(""),
-                        new Paragraph("Description:"),
-                        new Paragraph(descriptionText.replace(/<br\s*\/?>/g, '\n')),
-                        new Paragraph(""),
-                        new Paragraph("References:"),
-                        ...results.refs.map(
-                            (ref) => new Paragraph(ref.displayText)
-                        ),
-                    ],
-                },
-            ],
-        });
-
-        const blob = await Packer.toBlob(doc);
-        saveAs(blob, "segment-description.docx");
-    };
-
     const exportToDocx = async (results) => {
         const brandColor = "2E74B5"; // Change this to your brand color
 
