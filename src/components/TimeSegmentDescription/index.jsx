@@ -154,6 +154,100 @@ const TimeSegmentDescription = ({
         saveAs(blob, "segment-description.docx");
     };
 
+    const exportToDocx = async (results) => {
+        // 1️⃣ Replace ALL types of <br> with \n
+        const cleanedDescription = results.description.replace(
+            /<br[^>]*>/gi,
+            "\n"
+        );
+
+        // 2️⃣ Split into real lines
+        const descriptionLines = cleanedDescription.split("\n");
+
+        // 3️⃣ Convert each line into a Word paragraph
+        const descriptionParagraphs = descriptionLines.map(
+            (line) =>
+                new Paragraph({
+                    spacing: { after: 200 },
+                    children: [new TextRun(line)],
+                })
+        );
+
+        // 4️⃣ Create reference paragraphs
+        const referenceParagraphs = results.refs.map(
+            (ref) =>
+                new Paragraph({
+                    spacing: { after: 150 },
+                    children: [new TextRun(ref.displayText)],
+                })
+        );
+
+        // 5️⃣ Build document
+        const doc = new Document({
+            sections: [
+                {
+                    children: [
+                        // TITLE
+                        new Paragraph({
+                            spacing: { after: 300 },
+                            children: [
+                                new TextRun({
+                                    text: "Segment Report",
+                                    bold: true,
+                                    size: 36, // 18pt
+                                }),
+                            ],
+                        }),
+
+                        // SEGMENT RANGE
+                        new Paragraph({
+                            spacing: { after: 300 },
+                            children: [
+                                new TextRun("Segment: "),
+                                new TextRun({
+                                    text: `${results.start} - ${results.end}`,
+                                    bold: true,
+                                }),
+                            ],
+                        }),
+
+                        // DESCRIPTION HEADER
+                        new Paragraph({
+                            spacing: { before: 200, after: 200 },
+                            children: [
+                                new TextRun({
+                                    text: "Description",
+                                    bold: true,
+                                    size: 28,
+                                }),
+                            ],
+                        }),
+
+                        ...descriptionParagraphs,
+
+                        // REFERENCES HEADER
+                        new Paragraph({
+                            spacing: { before: 300, after: 200 },
+                            children: [
+                                new TextRun({
+                                    text: "References",
+                                    bold: true,
+                                    size: 28,
+                                }),
+                            ],
+                        }),
+
+                        ...referenceParagraphs,
+                    ],
+                },
+            ],
+        });
+
+        // 6️⃣ Generate file
+        const blob = await Packer.toBlob(doc);
+        saveAs(blob, "segment-description.docx");
+    };
+
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
             <textarea
@@ -175,43 +269,7 @@ const TimeSegmentDescription = ({
             <SegmentDescriptionResult
                 results={results}
                 isPending={isPending}
-                exportFn={() => {
-                    const htmlContent = `
-                        <html>
-                        <head>
-                            <meta charset="UTF-8">
-                        </head>
-                        <body style="font-family: Calibri; padding:40px;">
-                            <h1 style="color:#2E74B5;">Segment Report</h1>
-
-                            <p><strong>Segment:</strong> ${results.start} - ${results.end}</p>
-
-                            <h2>Description</h2>
-                            <p>
-                            ${results.description.replace(/<br\s*\/?>/g, "<br>")}
-                            </p>
-
-                            <h2>References</h2>
-                            <ul>
-                            ${results.refs.map(ref => `<li>${ref.displayText}</li>`).join("")}
-                            </ul>
-                        </body>
-                        </html>
-                    `;
-
-                    const blob = new Blob([htmlContent], {
-                        type: "application/msword",
-                    });
-
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "segment-description.doc";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }}
+                exportFn={() => exportToDocx(results)}
             />
         </div>
     );
