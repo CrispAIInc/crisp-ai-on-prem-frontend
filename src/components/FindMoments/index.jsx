@@ -5,6 +5,7 @@ import { MainContext } from '../../contexts/mainContext';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import FindMomentsResult from '../FindMomentsResult';
 import makeApiRequest from '../../api';
+import LoadingSpinner from '../LoadingSpinner';
 
 const FindMoments = ({
     captionRefs,
@@ -103,8 +104,8 @@ const FindMoments = ({
         }
         let timestamps = await handleCaptioning(captionPrompt);
         let fullSourceWithTimestamp = mergeSourceToTimestamps(timestamps);
-        setIsFetchingRefs(false);
         setCaptionRefs(fullSourceWithTimestamp);
+        setIsFetchingRefs(false);
     }
 
     return (
@@ -128,9 +129,9 @@ const FindMoments = ({
 
                     <RippleButton
                         cssClasses="rounded-md !py-2 !px-3 !pr-4  flex items-center gap-1"
-                        disabled={checkedVideosCount === 0 || isPending}
+                        disabled={checkedVideosCount === 0 || isFetchingRefs}
                     >
-                        <SearchOutlinedIcon className={`text-white text-sm`} />
+                        {isFetchingRefs ? <LoadingSpinner cssClasses="mr-2" /> : <SearchOutlinedIcon className={`text-white text-sm`} />}
                         <span className="text-sm">Find</span>
                     </RippleButton>
 
