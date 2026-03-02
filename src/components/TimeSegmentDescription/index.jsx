@@ -138,12 +138,12 @@ const TimeSegmentDescription = ({
                 results={results}
                 isPending={isPending}
                 exportFn={() => {
-                    const textToExport = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description}\nReferences: ${results.refs.map(ref => ref.displayText).join('\n')}`;
+                    const textToExport = `Segment: ${results.start} - ${results.end}\n\n\nDescription: \n\n${results.description.replace(/<br\s*\/?>/g, '\n')}\nReferences:\n ${results.refs.map(ref => ref.displayText).join('\n')}`;
                     const blob = new Blob([textToExport], { type: "text/plain" });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
                     a.href = url;
-                    a.download = "segment-description.txt";
+                    a.download = "segment-description.doc";
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
