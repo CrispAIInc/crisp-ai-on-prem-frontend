@@ -1016,14 +1016,14 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                           <>
                             <div className="flex items-center justify-between">
                               <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} user-select-none`}>You: </b>
-                              <div
+                              {!isSharedProject && <div
                                 className="cursor-pointer"
                                 onClick={() => {
                                   handleRepeatQuestion(message?.text, message?.model, true);
                                 }}
                               >
                                 <ReplayOutlinedIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
-                              </div>
+                              </div>}
                             </div>
                             <div>{message?.text?.startsWith('blob') ? (<img src={message?.text} alt='uploaded image' className='flex-1' />) : (<p className={`m-0 break-keep ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}
 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerouslySetInnerHTML={{ __html: message?.text?.replace(/\n/g, '<br>') }}></p>)}</div>
