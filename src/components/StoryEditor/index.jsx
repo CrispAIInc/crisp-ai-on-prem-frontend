@@ -12,6 +12,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import ReactQuill, { Quill } from 'react-quill';
 import ImageResize from "quill-image-resize-module-react";
 import JoditEditor from 'jodit-react';
+import { ProjectContext } from '../../contexts/projectContext';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -81,6 +82,8 @@ function StoryEditor({
     storyTitle,
     setStoryTitle,
 }) {
+
+    const { isSharedProject } = useContext(ProjectContext);
 
     const {
         theme,
@@ -345,7 +348,7 @@ function StoryEditor({
     }
 
     const config = useMemo(() => ({
-        readonly: false,
+        readonly: isSharedProject,
         cleanHTML: { fillEmptyParagraph: false },
         allowTags: 'section,div,p,br,hr,style',
         extraAllowedAttributes: ['class', 'style', 'data-index'],
@@ -388,6 +391,7 @@ function StoryEditor({
     }, [selectedStory.story_id, renderRefs]);
 
     const handleSave = (htmlContent) => {
+        if (isSharedProject) return;
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         const groups = doc.querySelectorAll('.item-group');
@@ -438,7 +442,7 @@ function StoryEditor({
 
     return (
         <div className='z-10 flex flex-col flex-1 h-full max-h-full overflow-y-hidden'>
-            <div className="flex gap-2">
+            {!isSharedProject && <div className="flex gap-2">
                 <RippleButton
                     cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
                     onClick={handleSaveStory}
@@ -457,12 +461,13 @@ function StoryEditor({
                         Export story
                     </span>
                 </RippleButton>
-            </div>
+            </div>}
             {/* story title */}
             <input
                 className={`${theme === 'dark' && 'text-textColor-100'
                     } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} !outline-none w-full`}
                 placeholder="New title..."
+                disabled={isSharedProject}
                 value={storyTitle}
                 onChange={(e) => setStoryTitle(e.target.value)}
             />
