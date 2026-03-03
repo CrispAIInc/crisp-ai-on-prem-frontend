@@ -9,6 +9,7 @@ import BaseHeading from '../BaseHeading/index.jsx';
 import InsightsList from "../InsightsList/index.jsx";
 import RippleButton from '../RippleButton/index.jsx';
 import StoriesList from '../StoriesList/index.jsx';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 function StoriesInsightsTab({
     setShowStoriesEditor,
@@ -17,6 +18,8 @@ function StoriesInsightsTab({
     isNewInsight,
     setIsNewInsight
 }) {
+
+    const { isSharedProject } = useContext(ProjectContext);
 
     const {
         selectedStory,
@@ -36,6 +39,7 @@ function StoriesInsightsTab({
     }, [selectedStory?.story_name]);
 
     async function autoGenerateStory() {
+        if (isSharedProject) return;
         setIsLoading(true);
         const httpPayload = {
             storyContext: context,
@@ -99,7 +103,7 @@ function StoriesInsightsTab({
         });
     };
 
-    const handleMouseEnter = () => context === "" && setTooltipVisible(true);
+    const handleMouseEnter = () => [context === "" || isSharedProject] && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     return (
@@ -148,7 +152,8 @@ function StoriesInsightsTab({
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed  p-2'
-                    disabled={context === "" || isLoading} onClick={autoGenerateStory}>
+                    disabled={context === "" || isLoading || isSharedProject}
+                    onClick={!isSharedProject && autoGenerateStory}>
                     {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate story'}
                 </RippleButton>
                 {tooltipVisible && (
@@ -157,7 +162,7 @@ function StoriesInsightsTab({
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} z-20`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        Please provide the context
+                        {isSharedProject ? "Cannot edit an example project." : "Please provide the context."}
                     </p>
                 )}
             </div>
