@@ -153,7 +153,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     metadataPanelContainer
   } = useContext(MainContext);
 
-  const { currentProject } = useContext(ProjectContext);
+  const { currentProject, isSharedProject } = useContext(ProjectContext);
 
   const { token } = useAuth();
 
@@ -630,7 +630,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             )}
           </div>
         )}
-        <AddOptionsModal
+        {!isSharedProject && <AddOptionsModal
           text={
             selectedLanguage == "en" ? data.bot_message : newData.translatedText
           }
@@ -647,7 +647,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           showNoteModal={showNoteModal}
           selectedNote={selectedNote}
           notes={notes}
-        />
+        />}
       </div>
     );
 
@@ -866,7 +866,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       const botMessage = (
         <div>
           <p>{caption}</p>
-          <AddOptionsModal
+          {!isSharedProject && <AddOptionsModal
             text={caption}
             models={["gpt-4-vision"]}
             addToNewNote={addToNewNote}
@@ -882,6 +882,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             selectedNote={selectedNote}
             notes={notes}
           />
+          }
         </div>
       );
       setMessages((prevMessages) => {
@@ -1066,7 +1067,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                                   : "text-textColor-200"
                                   }`}
                               >
-                                <AddOptionsModal
+                                {!isSharedProject && <AddOptionsModal
                                   models={["dall-e-3"]}
                                   text={message?.img}
                                   addToNewNote={addToNewNote}
@@ -1081,6 +1082,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                                   showNoteModal={showNoteModal}
                                   selectedNote={selectedNote}
                                   notes={notes} />
+                                }
                               </span>
                             </div>
                             <div className="flex flex-wrap items-center gap-1 mt-3">
@@ -1133,7 +1135,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                             (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                           }
 
-                          <AddOptionsModal
+                          {!isSharedProject && <AddOptionsModal
                             text={
                               message?.botText
                             }
@@ -1151,6 +1153,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                             selectedNote={selectedNote}
                             notes={notes}
                           />
+                          }
                         </>
                       )}
                     </div>
