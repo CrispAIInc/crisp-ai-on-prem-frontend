@@ -18,11 +18,13 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 import Moveable from "react-moveable";
 import PictureInPictureAltIcon from '@mui/icons-material/PictureInPictureAlt';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 function ReelViewer({
     closeReel,
     reel, }) {
 
+    const { isSharedProject } = useContext(ProjectContext);
     const { theme } = useContext(MainContext);
     const { getPublicUrl, getDownloadableUrl } = useFirebase();
 
@@ -48,6 +50,8 @@ function ReelViewer({
     };
 
     const handleDownload = async (e, _url, urlFileExtension) => {
+        if (isSharedProject) return;
+
         e.stopPropagation();
         e.preventDefault();
 
@@ -276,12 +280,25 @@ function ReelViewer({
                             </CSSTransition>
                         </SwitchTransition>}
                         <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
-                            {areReelControlsVisible ? <div title="Collapse"><PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} /></div> : <div title="Expand"><AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} /></div>}
-                            <div title="Reel properties"><InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} /></div>
-                            <div className="" onClick={() => setShowDownloadOption(prev => !prev)} >
+                            {areReelControlsVisible ? (
+                                <div title="Collapse">
+                                    <PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} />
+                                </div>
+                            ) : (
+                                <div title="Expand">
+                                    <AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} />
+                                </div>
+                            )}
+
+                            <div title="Reel properties">
+                                <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
+                            </div>
+                            {!isSharedProject && <div onClick={() => setShowDownloadOption(prev => !prev)} >
                                 {isDownloading ? <LoadingSpinner isSmall /> : (
                                     <>
-                                        <div title="Download"><FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" /></div>
+                                        <div title="Download">
+                                            <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
+                                        </div>
                                         {
                                             showDownloadOption && (
                                                 <>
@@ -291,7 +308,7 @@ function ReelViewer({
                                         }
                                     </>
                                 )}
-                            </div>
+                            </div>}
                             <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                         </div>
                     </div>
