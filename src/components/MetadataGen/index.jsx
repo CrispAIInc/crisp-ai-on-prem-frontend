@@ -7,9 +7,12 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 import makeApiRequest from '../../api';
 import RippleButton from '../RippleButton';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 
 function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityValue, setVerbosityValue, context, setContext }) {
+
+    const { isSharedProject } = useContext(ProjectContext);
 
     const { knowledgeBase, theme, checkedSourcesCount, setKnowledgeBase, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
 
@@ -45,10 +48,11 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         });
     };
 
-    const handleMouseEnter = () => checkedSourcesCount === 0 && setTooltipVisible(true);
+    const handleMouseEnter = () => (checkedSourcesCount === 0 || isSharedProject) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMetadata() {
+        if (isSharedProject) return;
         setIsGeneratingMetadata(true);
 
         if (checkedSourcesCount === 0) {
@@ -109,8 +113,6 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         }
     }
 
-
-
     return (
         <div className='z-20 flex flex-col gap-2'>
 
@@ -143,11 +145,13 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                 handleChange={handleChange} />
 
             {/* generate button */}
-            <div className='relative inline-block' onMouseMove={handleMouseMove}
+            <div className='relative inline-block'
+                onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    disabled={isGeneratingMetadata || checkedSourcesCount === 0} onClick={generateMetadata}>
+                    disabled={isGeneratingMetadata || checkedSourcesCount === 0 || isSharedProject}
+                    onClick={!isSharedProject && generateMetadata}>
                     {isGeneratingMetadata ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </RippleButton>
                 {tooltipVisible && (
@@ -156,7 +160,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        No source is checked
+                        {isSharedProject ? "Cannot edit an example project." : "No source is checked"}
                     </p>
                 )}
             </div>
