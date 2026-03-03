@@ -5,6 +5,8 @@ export default function useFirebase() {
 
     async function getPublicUrl(gsUrl) {
 
+        if (gsUrl.startsWith('blob')) return gsUrl;
+
         // Extract everything after the bucket name
         const bucket = "gs://crispai-app-462614.firebasestorage.app/";
         const path = gsUrl.replace(bucket, ""); // "video_uploads/videos/generic/bill gates.mp4"
