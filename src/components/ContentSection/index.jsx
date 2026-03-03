@@ -968,10 +968,13 @@ const ContentSection = ({
                                                 </div>
                                             </div>}
                                             {
-                                                !('progress' in option) ?
-                                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} /> : <CircularProgressWithLabel value={option.progress} variant="determinate" isUploadFiled={false} />
-
-                                                // )
+                                                !isSharedProject && (
+                                                    !('progress' in option) ? (
+                                                        <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                    ) : (
+                                                        <CircularProgressWithLabel value={option.progress} variant="determinate" isUploadFiled={false} />
+                                                    )
+                                                )
                                             }
                                             {
                                                 option.file_type === "video" ? (
