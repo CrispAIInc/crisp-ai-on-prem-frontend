@@ -7,6 +7,7 @@ import ChatHistory from '../ChatHistory';
 import CrispWizModels from '../CrispWizModels';
 import Chip from '../Chip';
 import { Tooltip } from 'react-tooltip';
+import { ProjectContext } from '../../contexts/projectContext';
 
 export default function ChatInput({
     crispModels,
@@ -21,7 +22,12 @@ export default function ChatInput({
     showCursor,
     isFetchingRefs
 }) {
+
+    const { isSharedProject } = useContext(ProjectContext);
+
     const { theme } = useContext(MainContext);
+
+
     const [isMultiline, setIsMultiline] = useState(false);
     const textareaRef = useRef(null);
 
@@ -47,7 +53,7 @@ export default function ChatInput({
     }, [value]);
 
     function handleMouseOver() {
-        setShowTooltip(Boolean(value.trim()) === false);
+        setShowTooltip(Boolean(value.trim()) === false || isSharedProject);
     }
 
     function handleMouseLeave() {
@@ -85,10 +91,10 @@ export default function ChatInput({
                     data-tooltip-variant={theme}
                     data-tooltip-class-name={theme === "light" && "border font-semibold"}
                     data-tooltip-id="crisp-wiz-send-btn-tooltip"
-                    data-tooltip-content="Message is empty."
-                    disabled={!canSendMessage || !value.trim()}
+                    data-tooltip-content={isSharedProject ? "Cannot edit an example project." : `Message is empty.`}
+                    disabled={!canSendMessage || !value.trim() || isSharedProject}
                     onClick={() => {
-                        canSendMessage && onSend(value.trim());
+                        (canSendMessage && !isSharedProject) && onSend(value.trim());
                     }}
                     onMouseOver={handleMouseOver}
                     onMouseLeave={handleMouseLeave}
