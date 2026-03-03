@@ -23,7 +23,7 @@ const FindMoments = ({
     setCaptionResults,
 }) => {
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
     const {
         theme,
         checkedSources,
@@ -62,7 +62,7 @@ const FindMoments = ({
         });
     };
 
-    const handleMouseEnter = () => (checkedVideosCount === 0 || prompt.trim() === "" || isSharedProject) && setTooltipVisible(true);
+    const handleMouseEnter = () => (checkedVideosCount === 0 || prompt.trim() === "" || isProjectReadOnly) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     // ============= API ===============
@@ -260,7 +260,7 @@ const FindMoments = ({
 
                     <RippleButton
                         cssClasses="rounded-md !py-2 !px-3 !pr-4  flex items-center gap-1"
-                        disabled={checkedVideosCount === 0 || isFetchingRefs || prompt.trim() === "" || isSharedProject}
+                        disabled={checkedVideosCount === 0 || isFetchingRefs || prompt.trim() === "" || isProjectReadOnly}
                     >
                         {isFetchingRefs ? <LoadingSpinner cssClasses="mr-2" /> : <SearchOutlinedIcon className={`text-white text-sm`} />}
                         <span className="text-sm">Find</span>
@@ -271,7 +271,7 @@ const FindMoments = ({
                             className={`absolute z-10 p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                             style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                         >
-                            {isSharedProject ? "Cannot edit an example project." : prompt.trim() === "" ? "No prompt provided." : "check at least one video source to enable."}
+                            {isProjectReadOnly ? "Cannot edit an example project." : prompt.trim() === "" ? "No prompt provided." : "check at least one video source to enable."}
                         </p>
                     )}
                 </div>

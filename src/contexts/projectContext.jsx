@@ -7,7 +7,7 @@ export const ProjectContext = createContext();
 
 export default function ProjectProvider({ theme, setTheme, children }) {
 
-    const { setUser } = useContext(AuthContext);
+    const { user, setUser } = useContext(AuthContext);
     const [projects, setProjects] = useState([]);
     const [currentProject, setCurrentProject] = useState(JSON.parse(localStorage.getItem('current_project')));
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -60,9 +60,13 @@ export default function ProjectProvider({ theme, setTheme, children }) {
     // INDICATE IF CURRENT PROJECT IS A PROJECT EXAMPLE
     const isSharedProject = currentProject?.is_shared || Boolean(currentProject?.isProjectExample);
 
+    // INDICATE ID CURRENT PROJECT IS SHARED PROJECT (EXAMPLE PROJECT) AND THE OWNER OF THE EXAMPLE PROJECT (TO EDIT IT)
+    const isProjectReadOnly = isSharedProject && user.userId !== "uCWw2cICQzb2qyqWkwSPqPTzBkV2";
+
 
     const value = {
         isSharedProject,
+        isProjectReadOnly,
         projects, setProjects,
         currentProject, setCurrentProject,
         isSettingsModalOpen, setIsSettingsModalOpen,

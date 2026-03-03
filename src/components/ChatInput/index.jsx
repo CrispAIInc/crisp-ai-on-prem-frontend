@@ -23,7 +23,7 @@ export default function ChatInput({
     isFetchingRefs
 }) {
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const { theme } = useContext(MainContext);
 
@@ -53,7 +53,7 @@ export default function ChatInput({
     }, [value]);
 
     function handleMouseOver() {
-        setShowTooltip(Boolean(value.trim()) === false || isSharedProject);
+        setShowTooltip(Boolean(value.trim()) === false || isProjectReadOnly);
     }
 
     function handleMouseLeave() {
@@ -91,10 +91,10 @@ export default function ChatInput({
                     data-tooltip-variant={theme}
                     data-tooltip-class-name={theme === "light" && "border font-semibold"}
                     data-tooltip-id="crisp-wiz-send-btn-tooltip"
-                    data-tooltip-content={isSharedProject ? "Cannot edit an example project." : `Message is empty.`}
-                    disabled={!canSendMessage || !value.trim() || isSharedProject}
+                    data-tooltip-content={isProjectReadOnly ? "Cannot edit an example project." : `Message is empty.`}
+                    disabled={!canSendMessage || !value.trim() || isProjectReadOnly}
                     onClick={() => {
-                        (canSendMessage && !isSharedProject) && onSend(value.trim());
+                        (canSendMessage && !isProjectReadOnly) && onSend(value.trim());
                     }}
                     onMouseOver={handleMouseOver}
                     onMouseLeave={handleMouseLeave}

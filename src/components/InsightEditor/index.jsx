@@ -13,7 +13,7 @@ import { ProjectContext } from '../../contexts/projectContext';
 
 function InsightEditor({ isNewInsight }) {
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
         isNewNote,
@@ -203,7 +203,7 @@ function InsightEditor({ isNewInsight }) {
     };
 
     const config = useMemo(() => ({
-        readonly: isSharedProject,
+        readonly: isProjectReadOnly,
         cleanHTML: { fillEmptyParagraph: false },
         allowTags: 'section,div,p,br,hr,style',
         extraAllowedAttributes: ['class', 'style', 'data-index'],
@@ -214,7 +214,7 @@ function InsightEditor({ isNewInsight }) {
     return (
         <div className="flex-1 h-full z-10 overflow-y-hidden">
             <div className="h-full max-h-full ml-auto overflow-y-hidden flex flex-col">
-                {!isSharedProject && <div className="flex items-center justify-between">
+                {!isProjectReadOnly && <div className="flex items-center justify-between">
                     <RippleButton
                         cssClasses="py-1 pl-2 !pr-3 mb-3 mt-4"
                         onClick={handleSaveNote}
@@ -229,7 +229,7 @@ function InsightEditor({ isNewInsight }) {
                     <input
                         className={`${theme === 'dark' && 'text-textColor-100'
                             } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-300" : '!border !border-textColor-100'} !outline-none w-full !z-[999999]`}
-                        disabled={isSharedProject}
+                        disabled={isProjectReadOnly}
                         placeholder="New title..."
                         value={noteTitle}
                         onChange={(e) => setNoteTitle(e.target.value)}

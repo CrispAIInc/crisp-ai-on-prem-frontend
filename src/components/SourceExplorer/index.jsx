@@ -34,7 +34,7 @@ export function SourceExplorer(props) {
         categoryOptions
     } = useContext(MainContext);
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const { notify } = useToast();
 
@@ -209,7 +209,7 @@ export function SourceExplorer(props) {
                     onMouseOver={() => { setHoveredItemToRemove(item.value); setItemToRemove(item.value); }}
                     onMouseLeave={() => { setHoveredItemToRemove(""); }}
                 >
-                    {(hoveredItemToRemove === item.value && viewModes[viewModes.length - 1] === "categories" && item.value !== "all" && !isSharedProject) && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
+                    {(hoveredItemToRemove === item.value && viewModes[viewModes.length - 1] === "categories" && item.value !== "all" && !isProjectReadOnly) && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
                     {
                         (itemToRemove === item.value && viewModes[viewModes.length - 1] === "categories" && isIndexDeleting) && <LoadingSpinner isSmall />
                     }
@@ -291,7 +291,7 @@ export function SourceExplorer(props) {
                                     }
 
                                     {
-                                        !isSharedProject && <DeleteIcon
+                                        !isProjectReadOnly && <DeleteIcon
                                             style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
                                             onClick={(event) => props.deleteResource(event, [file])}
                                             className="delete-icon"
@@ -357,7 +357,7 @@ export function SourceExplorer(props) {
                                         ) : null
                                     }
 
-                                    {!isSharedProject && <DeleteIcon
+                                    {!isProjectReadOnly && <DeleteIcon
                                         style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
                                         onClick={(event) => props.deleteResource(event, [file])}
                                         className="delete-icon"

@@ -16,7 +16,7 @@ import { ProjectContext } from '../../contexts/projectContext';
 
 function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, createNewChat, crispWizInputContainerRef, crispWizInputRef }) {
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const { theme, chatHistory, setChatHistory, setCurrentChat } = useContext(MainContext);
 
@@ -219,7 +219,7 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
                                             <span>Delete</span>
                                         </div>
                                     </div>}
-                                    {!isSharedProject && (
+                                    {!isProjectReadOnly && (
                                         <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer text-xs`} onClick={e => handleContextMenuOpen(e, chat?.sessionId)} />
                                     )
                                     }

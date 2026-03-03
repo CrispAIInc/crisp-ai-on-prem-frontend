@@ -32,7 +32,7 @@ function MediaEntertainment({
     isGeneratingReel,
     setIsGeneratingReel }) {
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const { getPublicUrl } = useFirebase();
 
@@ -63,11 +63,11 @@ function MediaEntertainment({
     };
 
     const MAX_SOURCES_COUNT = 15;
-    const handleMouseEnter = () => (checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT || isSharedProject) && setTooltipVisible(true);
+    const handleMouseEnter = () => (checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT || isProjectReadOnly) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMedia() {
-        if (isSharedProject) return;
+        if (isProjectReadOnly) return;
         if (reel.title === "") {
             notify({
                 variant: "error",
@@ -164,7 +164,7 @@ function MediaEntertainment({
 
     const [isReelDeleting, setIsReelDeleting] = useState(false);
     async function deleteReel(event, reel) {
-        if (isSharedProject) return;
+        if (isProjectReadOnly) return;
         event.preventDefault();
         setIsReelDeleting(true);
         try {
@@ -274,7 +274,7 @@ function MediaEntertainment({
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}>
                     <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                        disabled={isSharedProject || isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT} onClick={!isSharedProject && generateMedia}>
+                        disabled={isProjectReadOnly || isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT} onClick={!isProjectReadOnly && generateMedia}>
                         {isGeneratingReel ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                     </RippleButton>
                     {tooltipVisible && (
@@ -284,7 +284,7 @@ function MediaEntertainment({
                             style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                         >
                             {
-                                isSharedProject ? "Cannot edit example projects." :
+                                isProjectReadOnly ? "Cannot edit example projects." :
                                     `Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`
                             }
                         </p>
@@ -319,7 +319,7 @@ function MediaEntertainment({
                                         }`}>{reel.title}</p>
 
                                     {
-                                        !isSharedProject && (
+                                        !isProjectReadOnly && (
                                             hoveredReel === reel?.id && (
                                                 <>
                                                     <EditOutlinedIcon
