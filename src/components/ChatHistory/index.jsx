@@ -13,7 +13,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
 
     const { theme, currentChat, setCurrentChat, chatHistory, setChatHistory, workspaceContainer } = useContext(MainContext);
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const triggerGlow = useGlowingBorder(crispWizInputContainerRef);
 
@@ -91,7 +91,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
 
             {/* add new chat icon */}
             {
-                !isSharedProject && (
+                !isProjectReadOnly && (
                     <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
                 )
             }

@@ -153,7 +153,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
     metadataPanelContainer
   } = useContext(MainContext);
 
-  const { currentProject, isSharedProject } = useContext(ProjectContext);
+  const { currentProject, isProjectReadOnly } = useContext(ProjectContext);
 
   const { token } = useAuth();
 
@@ -630,7 +630,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             )}
           </div>
         )}
-        {!isSharedProject && <AddOptionsModal
+        {!isProjectReadOnly && <AddOptionsModal
           text={
             selectedLanguage == "en" ? data.bot_message : newData.translatedText
           }
@@ -866,7 +866,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       const botMessage = (
         <div>
           <p>{caption}</p>
-          {!isSharedProject && <AddOptionsModal
+          {!isProjectReadOnly && <AddOptionsModal
             text={caption}
             models={["gpt-4-vision"]}
             addToNewNote={addToNewNote}
@@ -1016,7 +1016,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
                           <>
                             <div className="flex items-center justify-between">
                               <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} user-select-none`}>You: </b>
-                              {!isSharedProject && <div
+                              {!isProjectReadOnly && <div
                                 className="cursor-pointer"
                                 onClick={() => {
                                   handleRepeatQuestion(message?.text, message?.model, true);
@@ -1067,7 +1067,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                                   : "text-textColor-200"
                                   }`}
                               >
-                                {!isSharedProject && <AddOptionsModal
+                                {!isProjectReadOnly && <AddOptionsModal
                                   models={["dall-e-3"]}
                                   text={message?.img}
                                   addToNewNote={addToNewNote}
@@ -1135,7 +1135,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                             (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                           }
 
-                          {!isSharedProject && <AddOptionsModal
+                          {!isProjectReadOnly && <AddOptionsModal
                             text={
                               message?.botText
                             }

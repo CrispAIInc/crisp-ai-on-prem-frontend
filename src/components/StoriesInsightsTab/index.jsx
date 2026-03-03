@@ -19,7 +19,7 @@ function StoriesInsightsTab({
     setIsNewInsight
 }) {
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
         selectedStory,
@@ -39,7 +39,7 @@ function StoriesInsightsTab({
     }, [selectedStory?.story_name]);
 
     async function autoGenerateStory() {
-        if (isSharedProject) return;
+        if (isProjectReadOnly) return;
         setIsLoading(true);
         const httpPayload = {
             storyContext: context,
@@ -103,7 +103,7 @@ function StoriesInsightsTab({
         });
     };
 
-    const handleMouseEnter = () => [context === "" || isSharedProject] && setTooltipVisible(true);
+    const handleMouseEnter = () => [context === "" || isProjectReadOnly] && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     return (
@@ -152,8 +152,8 @@ function StoriesInsightsTab({
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed  p-2'
-                    disabled={context === "" || isLoading || isSharedProject}
-                    onClick={!isSharedProject && autoGenerateStory}>
+                    disabled={context === "" || isLoading || isProjectReadOnly}
+                    onClick={!isProjectReadOnly && autoGenerateStory}>
                     {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate story'}
                 </RippleButton>
                 {tooltipVisible && (
@@ -162,7 +162,7 @@ function StoriesInsightsTab({
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} z-20`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        {isSharedProject ? "Cannot edit an example project." : "Please provide the context."}
+                        {isProjectReadOnly ? "Cannot edit an example project." : "Please provide the context."}
                     </p>
                 )}
             </div>

@@ -21,7 +21,7 @@ function InsightsList({
     setIsNewInsight
 }) {
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
         theme,
@@ -139,7 +139,7 @@ function InsightsList({
 
     return (
         <div>
-            {!isSharedProject && (
+            {!isProjectReadOnly && (
                 <RippleButton
                     onClick={createNewInsight}
                     cssClasses='!py-1 !px-2 !pr-4'
@@ -166,7 +166,7 @@ function InsightsList({
                                         <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                             }`}>{note.note_name}</p>
                                         {
-                                            !isSharedProject && (
+                                            !isProjectReadOnly && (
                                                 hoveredInsight === note?.note_id && (
                                                     isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
                                                         onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}

@@ -103,7 +103,7 @@ const TimeInput = ({ initVal, max, onChange }) => {
 
 export default function TimestampPicker({ isPending, start, setStart, end, setEnd, confirmFn, rejectFn, sourceDuration = 86_399, fromCrispWiz = true }) {
 
-  const { isSharedProject } = useContext(ProjectContext);
+  const { isProjectReadOnly } = useContext(ProjectContext);
 
   const { theme } = useContext(MainContext);
 
@@ -147,7 +147,7 @@ export default function TimestampPicker({ isPending, start, setStart, end, setEn
   };
 
   function handleConfirm() {
-    if (isSharedProject) return;
+    if (isProjectReadOnly) return;
 
     if (validate()) {
       confirmFn({
@@ -223,7 +223,7 @@ export default function TimestampPicker({ isPending, start, setStart, end, setEn
         </div>
       </div>
 
-      {(!isSharedProject) && (
+      {(!isProjectReadOnly) && (
         <div className="flex justify-end pt-1">
           {
             isPending ? <LoadingSpinner isSmall cssClasses="ml-2" /> : <CheckIcon

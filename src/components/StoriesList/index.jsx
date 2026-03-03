@@ -12,7 +12,7 @@ import { ProjectContext } from '../../contexts/projectContext';
 
 function StoriesList({ setShowStoriesEditor }) {
 
-    const { isSharedProject } = useContext(ProjectContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
         stories,
@@ -126,7 +126,7 @@ function StoriesList({ setShowStoriesEditor }) {
                             <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                 }`}>{story.story_name}</p>
                             {
-                                !isSharedProject && (
+                                !isProjectReadOnly && (
                                     hoveredStory === story?.story_id && (
                                         isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
                                             onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
