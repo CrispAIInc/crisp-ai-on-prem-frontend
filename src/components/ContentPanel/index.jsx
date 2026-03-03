@@ -196,7 +196,7 @@ const ContentPanel = ({ setCurrentProject }) => {
                     <button className={`cursor-pointer ${theme === 'dark' && 'text-textColor-100'}`} onClick={() => {
                         setSidebarWidth(prev => {
                             if (prev !== (maxWidth - (maxWidth * 0.3))) return maxWidth - (maxWidth * 0.3);
-                            return window.innerWidth / 4;
+                            return window.innerWidth / 3.5;
                         });
                         setIsLeftSidebarOpen(true);
                     }}>
