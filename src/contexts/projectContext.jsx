@@ -58,11 +58,11 @@ export default function ProjectProvider({ theme, setTheme, children }) {
     }, [currentProject]);
 
     // INDICATE IF CURRENT PROJECT IS A PROJECT EXAMPLE
-    const isProjectExample = Boolean(currentProject?.isProjectExample);
+    const isSharedProject = currentProject?.is_shared || Boolean(currentProject?.isProjectExample);
 
 
     const value = {
-        isProjectExample,
+        isSharedProject,
         projects, setProjects,
         currentProject, setCurrentProject,
         isSettingsModalOpen, setIsSettingsModalOpen,
