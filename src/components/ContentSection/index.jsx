@@ -184,7 +184,7 @@ const ContentSection = ({
 
     const { notify } = useToast();
 
-    const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
+    const { isSettingsModalOpen, setIsSettingsModalOpen, isSharedProject } = useContext(ProjectContext);
 
     const { user } = useContext(AuthContext);
 
@@ -847,13 +847,15 @@ const ContentSection = ({
                                 data-tooltip-id="add-sources-tooltip"
                                 data-tooltip-content="Upload sources or create new indexes."
                                 id="upload_sources"
-                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                                onClick={() => handleAddModal(true)}
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'} `}
+                                onClick={() => !isSharedProject && handleAddModal(true)}
                             >
-                                <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                                    Add sources
-                                </span>
+                                <div className={`${isSharedProject ? "cursor-default opacity-50" : "cursor-pointer opacity-100"}`}>
+                                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                                        Add sources
+                                    </span>
+                                </div>
 
                                 <Tooltip id="add-sources-tooltip" />
                             </div>
