@@ -18,6 +18,7 @@ import makeApiRequest from '../../api/index.js';
 import useResources from '../../hooks/useResources.js';
 import { useToast } from "../../contexts/toastContext";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 export function SourceExplorer(props) {
     const {
@@ -32,6 +33,8 @@ export function SourceExplorer(props) {
         setCategoryOptions,
         categoryOptions
     } = useContext(MainContext);
+
+    const { isSharedProject } = useContext(ProjectContext);
 
     const { notify } = useToast();
 
@@ -287,11 +290,13 @@ export function SourceExplorer(props) {
                                         ) : null
                                     }
 
-                                    <DeleteIcon
-                                        style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                        onClick={(event) => props.deleteResource(event, [file])}
-                                        className="delete-icon"
-                                    />
+                                    {
+                                        !isSharedProject && <DeleteIcon
+                                            style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                            onClick={(event) => props.deleteResource(event, [file])}
+                                            className="delete-icon"
+                                        />
+                                    }
                                 </div>
                                 <div onClick={(event) => props.onThumbnailClick(event, file)}>
                                     {file.file_type === "video" && <StagedVideoThumbnail item={file} />}
