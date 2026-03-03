@@ -337,7 +337,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                                 <div>
                                   <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                                     setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
-                                    contentPanelContainerRef?.current.scrollTo({
+                                    metadataPanelContainer?.current.scrollTo({
                                       top: 0,
                                       behavior: "smooth", // Enables smooth scrolling
                                     });
