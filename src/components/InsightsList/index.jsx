@@ -14,11 +14,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { generateRandomHash, searchByKey, sortArrayOfObjects } from '../../utils';
 import makeApiRequest from '../../api';
 import useResources from '../../hooks/useResources';
+import { ProjectContext } from '../../contexts/projectContext';
 
 function InsightsList({
     isNewInsight,
     setIsNewInsight
 }) {
+
+    const { isSharedProject } = useContext(ProjectContext);
 
     const {
         theme,
@@ -136,13 +139,15 @@ function InsightsList({
 
     return (
         <div>
-            <RippleButton
-                onClick={createNewInsight}
-                cssClasses='!py-1 !px-2 !pr-4'
-            >
-                <AddIcon className="!w-fit !p-0" />
-                <span className={` !text-[12px]`}>New Insight</span>
-            </RippleButton>
+            {!isSharedProject && (
+                <RippleButton
+                    onClick={createNewInsight}
+                    cssClasses='!py-1 !px-2 !pr-4'
+                >
+                    <AddIcon className="!w-fit !p-0" />
+                    <span className={` !text-[12px]`}>New Insight</span>
+                </RippleButton>
+            )}
             <div className="flex flex-col overflow-y-auto">
                 {/* search input */}
                 {(notes?.length > 0 || notesResults?.length > 0) && <input className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."} value={insightSearchValue} onChange={handleInsightSearch} />}
@@ -161,11 +166,13 @@ function InsightsList({
                                         <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                             }`}>{note.note_name}</p>
                                         {
-                                            hoveredInsight === note?.note_id && (
-                                                isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                                    onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
-                                                    className="text-red-400 cursor-pointer"
-                                                />
+                                            !isSharedProject && (
+                                                hoveredInsight === note?.note_id && (
+                                                    isInsightDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                                        onClick={(event) => { event.stopPropagation(); deleteInsight(note?.note_id, note?.note_name); }}
+                                                        className="text-red-400 cursor-pointer"
+                                                    />
+                                                )
                                             )
                                         }
                                     </div>
