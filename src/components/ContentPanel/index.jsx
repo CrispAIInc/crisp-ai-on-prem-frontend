@@ -168,6 +168,16 @@ const ContentPanel = ({ setCurrentProject }) => {
         }}>
 
             <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="left" variant="persistent" open={showProjectDrawer} onClose={() => setShowProjectDrawer(false)} >
+
+                <style>
+                    {`
+                    .css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
+
+                        overflow-x: hidden !important;
+                    }
+                `}
+                </style>
+
                 <ProjectDrawer contentPanelContainerRef={contentPanelContainerRef} onHide={() => setShowProjectDrawer(false)} />
             </Drawer>
 

@@ -83,6 +83,8 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
         }
     }
 
+
+
     return (
         <div style={{ width: contentPanelContainerRef?.current?.offsetWidth || 0 }} className={`z-50 p-4 ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
