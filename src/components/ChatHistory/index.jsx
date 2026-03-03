@@ -7,9 +7,13 @@ import useChat from '../../hooks/useChat';
 import { useGlowingBorder } from '../../hooks/useGlowingBorder';
 import ChatHistoryPopup from '../ChatHistoryPopup';
 import Chip from '../Chip';
+import { ProjectContext } from '../../contexts/projectContext';
 
 function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
+
     const { theme, currentChat, setCurrentChat, chatHistory, setChatHistory, workspaceContainer } = useContext(MainContext);
+
+    const { isSharedProject } = useContext(ProjectContext);
 
     const triggerGlow = useGlowingBorder(crispWizInputContainerRef);
 
@@ -86,7 +90,11 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
             )}
 
             {/* add new chat icon */}
-            <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
+            {
+                !isSharedProject && (
+                    <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
+                )
+            }
 
             {/* Chat istory popup */}
             <div className="relative">
