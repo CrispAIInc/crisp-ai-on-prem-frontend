@@ -12,8 +12,12 @@ import { useFilter } from '../../hooks/useFilter';
 import useChat from '../../hooks/useChat';
 import { useGlowingBorder } from '../../hooks/useGlowingBorder';
 import { useToast } from '../../contexts/toastContext';
+import { ProjectContext } from '../../contexts/projectContext';
 
 function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, createNewChat, crispWizInputContainerRef, crispWizInputRef }) {
+
+    const { isSharedProject } = useContext(ProjectContext);
+
     const { theme, chatHistory, setChatHistory, setCurrentChat } = useContext(MainContext);
 
     const { notify } = useToast();
@@ -215,7 +219,10 @@ function ChatHistoryPopup({ close, twClasses = '', chatTitleUpdaterModalRef, cre
                                             <span>Delete</span>
                                         </div>
                                     </div>}
-                                    <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer text-xs`} onClick={e => handleContextMenuOpen(e, chat?.sessionId)} />
+                                    {!isSharedProject && (
+                                        <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer text-xs`} onClick={e => handleContextMenuOpen(e, chat?.sessionId)} />
+                                    )
+                                    }
                                     <h6 className='font-semibold text-xs !mb-0 fex-1 truncate ' title={chat.title}>{chat.title}</h6>
                                 </div>
                             ))
