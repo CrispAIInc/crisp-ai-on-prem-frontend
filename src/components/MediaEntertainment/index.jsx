@@ -15,6 +15,7 @@ import BaseHeading from '../BaseHeading/index.jsx';
 import { searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils.js';
 import FilenameUpdateModal from "../AppSingleValueModal";
 import useFirebase from '../../hooks/useFirebase.js';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 // const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function MediaEntertainment({
@@ -30,6 +31,8 @@ function MediaEntertainment({
     setVerbosityValue,
     isGeneratingReel,
     setIsGeneratingReel }) {
+
+    const { isSharedProject } = useContext(ProjectContext);
 
     const { getPublicUrl } = useFirebase();
 
@@ -60,10 +63,11 @@ function MediaEntertainment({
     };
 
     const MAX_SOURCES_COUNT = 15;
-    const handleMouseEnter = () => (checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT) && setTooltipVisible(true);
+    const handleMouseEnter = () => (checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT || isSharedProject) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMedia() {
+        if (isSharedProject) return;
         if (reel.title === "") {
             notify({
                 variant: "error",
@@ -160,6 +164,7 @@ function MediaEntertainment({
 
     const [isReelDeleting, setIsReelDeleting] = useState(false);
     async function deleteReel(event, reel) {
+        if (isSharedProject) return;
         event.preventDefault();
         setIsReelDeleting(true);
         try {
@@ -264,11 +269,12 @@ function MediaEntertainment({
                 </div>
 
                 {/* generate button */}
-                <div className='relative inline-block' onMouseMove={handleMouseMove}
+                <div className='relative inline-block'
+                    onMouseMove={handleMouseMove}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}>
                     <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                        disabled={isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT} onClick={generateMedia}>
+                        disabled={isSharedProject || isGeneratingReel || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT} onClick={!isSharedProject && generateMedia}>
                         {isGeneratingReel ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                     </RippleButton>
                     {tooltipVisible && (
@@ -277,7 +283,10 @@ function MediaEntertainment({
                             className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                             style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                         >
-                            {`Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
+                            {
+                                isSharedProject ? "Cannot edit example projects." :
+                                    `Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`
+                            }
                         </p>
                     )}
                 </div>
