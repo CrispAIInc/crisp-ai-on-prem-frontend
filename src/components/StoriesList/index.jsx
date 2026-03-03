@@ -8,8 +8,11 @@ import { searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
 import makeApiRequest from '../../api';
 import useResources from '../../hooks/useResources';
 import { useToast } from '../../contexts/toastContext';
+import { ProjectContext } from '../../contexts/projectContext';
 
 function StoriesList({ setShowStoriesEditor }) {
+
+    const { isSharedProject } = useContext(ProjectContext);
 
     const {
         stories,
@@ -123,11 +126,13 @@ function StoriesList({ setShowStoriesEditor }) {
                             <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
                                 }`}>{story.story_name}</p>
                             {
-                                hoveredStory === story?.story_id && (
-                                    isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                        onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
-                                        className="text-red-400 cursor-pointer"
-                                    />
+                                !isSharedProject && (
+                                    hoveredStory === story?.story_id && (
+                                        isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
+                                            onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
+                                            className="text-red-400 cursor-pointer"
+                                        />
+                                    )
                                 )
                             }
                         </div>
