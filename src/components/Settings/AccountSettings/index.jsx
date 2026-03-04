@@ -23,7 +23,7 @@ function AccountSettings() {
     const handleDeleteAccount = async () => {
         setIsDeleting(true);
         try {
-            await makeApiRequest(`/account/${user.userId}`, 'DELETE');
+            await makeApiRequest(`/account`, 'DELETE');
             notify({
                 variant: "success",
                 heading: "Account deleted successfully",
