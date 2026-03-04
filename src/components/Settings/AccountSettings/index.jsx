@@ -18,9 +18,9 @@ function AccountSettings() {
             {
                 !isProd && (
                     <>
-                        <div className={`flex flex-col gap-3 ${theme === 'dark' && 'text-textColor-100'}`}>
-                            <h5 className={`mb-0 pb-0font-semibold`}>Delete my account</h5>
-                            <p className={`w-full lg:w-1/2 max-w-[90%]`}>Deleting your account will remove all of your assets (e.g. sources, metadata, media, etc.)</p>
+                        <div className={`flex flex-col gap-2 ${theme === 'dark' && 'text-textColor-100'}`}>
+                            <h6 className={`mb-0 pb-0`}>Delete my account</h6>
+                            <p className={`mb-1  text-md w-full lg:w-1/2 max-w-[90%]`}>Deleting your account will remove all of your assets (e.g. sources, metadata, media, etc.)</p>
 
                             <RippleButton cssClasses='rounded-md py-2 px-3' onClick={handleDeleteAccount}>Delete account</RippleButton>
                         </div>
