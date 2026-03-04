@@ -25,6 +25,7 @@ import AnimatedText from '../AnimatedText/index.jsx';
 import ChatInput from '../ChatInput/index.jsx';
 import Chip from '../Chip/index.jsx';
 import SegmentDescription from '../SegmentDescription/index.jsx';
+import BaseHeading from '../BaseHeading/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -956,6 +957,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           })
         }
       </section>
+
+      {
+        messages.length > 0 && (
+          <BaseHeading text="Crisp Wiz interaction" className="mb-3" />
+        )
+      }
 
       {messages?.length > 0 && <section
         className={`rounded-3xl overflow-hidden ${theme === "light" ? "!border" : "!border !border-textColor-300"
