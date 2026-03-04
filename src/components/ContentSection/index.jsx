@@ -985,7 +985,7 @@ const ContentSection = ({
                                                     <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                                 ) : null
                                             }
-                                            <div className="relative flex-shrink-0 w-10 h-10">
+                                            <div className="relative flex-shrink-0 w-14 h-14">
                                                 {(isDeleting && clickedIndex?.source_path === option?.source_path) && (
                                                     <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[5] translate-x-[-50%] translate-y-[-50%] transform">
                                                         <LoadingSpinner isSmall />
@@ -1000,14 +1000,16 @@ const ContentSection = ({
                                                     />
                                                 )
                                                     : <GsFile
-                                                        className="object-cover w-full h-full rounded-md"
+                                                        className="object-cover w-full h-full rounded-2xl"
                                                         gsUrl={option.thumbnail}
                                                         alt="Video Thumbnail"
                                                         isPrivate
                                                     />}
                                             </div>
                                             <div className="flex flex-col ">
-                                                {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-keep' text={option?.step} />}
+                                                {
+                                                    (option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-keep' text={option?.step} />
+                                                }
                                                 <span className={`text-md font-medium break-keep ${theme === 'dark' && 'text-textColor-100'}`} style={{ overflowWrap: 'anywhere' }}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>
