@@ -182,20 +182,13 @@ const ContentPanel = ({ setCurrentProject }) => {
             </Drawer>
 
             <div className="flex items-center justify-between">
-                {/* return button */}
                 <h5
-                    onClick={showMetadata ? closeEditor : openProjectsDrawer}
+                    onClick={openProjectsDrawer}
                     className={`return-icon absolute left-1 top-2 cursor-pointer ${theme === "light" ? "text-textColor-300" : "text-[#ABAEB4]"
                         } text-[22px]`}
-                    title={showMetadata ? "Close Metadata Panel" : "Open Projects Drawer"}
+                    title={"Open Projects Drawer"}
                 >
-                    {
-                        showMetadata ? (
-                            <KeyboardReturnIcon />
-                        ) : (
-                            <AccountTreeOutlinedIcon />
-                        )
-                    }
+                    <AccountTreeOutlinedIcon />
                 </h5>
 
                 <h5 className={`flex-1 mb-0 select-none p-[10px] text-center  ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
