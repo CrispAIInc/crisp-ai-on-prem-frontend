@@ -28,10 +28,14 @@ export default function useAuth() {
         isAuthenticated: token !== null,
         loading,
         login: () => { },
-        logout: async () => {
+        logout: async (redirectUrl = "/login", redirectOptions = {}) => {
             await signOut(auth);
             setToken(null);
-            navigate("/login");
+            navigate(redirectUrl, {
+                state: {
+                    ...redirectOptions
+                }
+            });
         },
     };
 }

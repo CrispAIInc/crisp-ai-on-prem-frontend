@@ -1,19 +1,18 @@
-import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
 
-import { MainContext } from "../../../contexts/mainContext";
-import RippleButton from "../../RippleButton";
-import { AuthContext } from '../../../contexts/authContext';
-import { useToast } from "../../../contexts/toastContext";
 import makeApiRequest from '../../../api';
+import { MainContext } from "../../../contexts/mainContext";
+import { useToast } from "../../../contexts/toastContext";
+import RippleButton from "../../RippleButton";
 
+import useAuth from '../../../hooks/useAuth';
 import LoadingSpinner from "../../LoadingSpinner";
 
 function AccountSettings() {
     const isProd = import.meta.env.VITE_APP_ENV === "production";
 
-    const navigate = useNavigate();
-    const { user, reinitializeUser } = useContext(AuthContext);
+    const { logout } = useAuth();
+
     const { theme } = useContext(MainContext);
 
     const { notify } = useToast();
@@ -29,13 +28,9 @@ function AccountSettings() {
                 heading: "Account deleted successfully",
             });
 
-            setTimeout(() => {
-                navigate('/sign-up', {
-                    state: {
-                        accountDeleted: true
-                    }
-                });
-            }, 2000);
+            await logout('/sign-up', {
+                accountDeleted: true
+            });
         } catch (error) {
             console.log(error);
             notify({
