@@ -4,6 +4,8 @@ import GeneralSettings from '../GeneralSettings';
 import AccountSettings from "../AccountSettings";
 import { ProjectContext } from '../../../contexts/projectContext.jsx';
 
+import CloseIcon from '@mui/icons-material/Close';
+
 export function SettingsModal(props) {
 
     const { theme } = useContext(ProjectContext);
@@ -36,32 +38,28 @@ export function SettingsModal(props) {
             className="note-modal rounded-3xl"
             dialogClassName="custom-rounded"
         >
-            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
-                <Modal.Title id="contained-modal-title-vcenter" className="flex items-center justify-between py-3">
-                    <h3 className="mb-0 text-xl">Settings</h3>
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
-                <div className="flex items-center gap-3 text-xl">
-                    {
-                        ["General", "Account"].map((setting, index) => (
-                            <div key={index} className={`py-2 px-3 rounded-md mb-2 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}>
-                                <h3 onClick={() => setActiveTab(setting)} className={`text-xl cursor-pointer hover:font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${setting === activeTab && 'text-gradient-x'}`}>{setting}</h3>
-                            </div>
-                        ))
-                    }
-                </div>
 
+            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'} pb-5`}>
+                <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-3 text-xl">
+                        {
+                            ["General", "Account"].map((setting, index) => (
+                                <div key={index} className={`py-2 px-3 rounded-md mb-2 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}>
+                                    <p onClick={() => setActiveTab(setting)} className={` cursor-pointer hover:font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${setting === activeTab && 'text-gradient-x'}`}>{setting}</p>
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <div
+                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        onClick={props.onHide}
+                    >
+                        <CloseIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                    </div>
+                </div>
                 <div className="mt-4 text-gray-700">{renderActiveSettingsTab()}</div>
             </Modal.Body>
-            <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
-                <div
-                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                    onClick={props.onHide}
-                >
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Ok</span>
-                </div>
-            </Modal.Footer>
         </Modal>
     );
 }
