@@ -279,7 +279,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       {currentResource?.file_type === "video" && (
         <>
           <div className="relative ">
-            <div className="h-full shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+            <div className="h-full rounded-md overflow-hidden">
               <ReactPlayer
                 id="react-player"
                 width={"100%"}
