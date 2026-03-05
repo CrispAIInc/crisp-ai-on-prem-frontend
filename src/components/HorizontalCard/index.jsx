@@ -29,7 +29,7 @@ function HorizontalCard({ item, workspaceContainer }) {
                     item.timestamp ? <div className='flex items-center gap-1 mb-0 cursor-pointer select-none text-primary-300 w-fit' onClick={() => {
 
                         setCurrentResource(prev => ({ ...prev, timestamp: item.timestamp[0] }));
-                        contentPanelContainerRef.current.scrollTo({
+                        workspaceContainer.current.scrollTo({
                             top: 0,
                             behavior: "smooth",
                         });
@@ -39,7 +39,7 @@ function HorizontalCard({ item, workspaceContainer }) {
                     </div> : <div className='flex items-center gap-2 mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
 
                         setJumpToPage({ page: parseInt(item.page) });
-                        contentPanelContainerRef.current.scrollTo({
+                        workspaceContainer.current.scrollTo({
                             top: 0,
                             behavior: "smooth", // Enables smooth scrolling
                         });
