@@ -179,7 +179,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                         </div >}
                     </div>
 
-                    <RippleButton cssClasses="py-2 px-3 rounded-md mt-3">
+                    <RippleButton onClick={() => setIsModalOpen(true)} cssClasses="py-2 px-3 rounded-md mt-3">
                         <AddIcon className="text-white" />
                         New project
                     </RippleButton>
@@ -189,6 +189,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                         onHide={() => setIsModalOpen(false)}
                         setProjects={setProjects}
                         setCurrentProject={setCurrentProject}
+                        hideProjectDrawer={onHide}
                     />}
                 </div>
                 <div>

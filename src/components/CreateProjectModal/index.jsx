@@ -6,7 +6,12 @@ import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import LoadingSpinner from '../LoadingSpinner';
 
-const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) => {
+import { useToast } from "../../contexts/toastContext";
+
+const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hideProjectDrawer }) => {
+
+    const { notify } = useToast();
+
     const [newProjectName, setNewProjectName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(null);
@@ -23,6 +28,11 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
             formData.append("project_thumbnail", projectThumbnail);
             const { success, message, project } = await makeApiRequest(`/projects`, 'POST', formData, { 'Content-type': "multipart/form-data" });
             if (success) {
+                notify({
+                    variant: "success",
+                    heading: "Project created successfully."
+                });
+                hideProjectDrawer?.();
                 // TODO: add the newly created project to the projects list
                 setProjects((prevProjects) => [project, ...prevProjects]);
                 // TODO: set current project value and redirect to dashboard
@@ -33,6 +43,11 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject }) =>
             }
         } catch (error) {
             console.log(error?.message);
+            notify({
+                variant: "error",
+                heading: "Something went wrong.",
+                subheading: error?.message,
+            });
             console.error("Error updating project name:", error);
         } finally {
             setIsLoading(false);
