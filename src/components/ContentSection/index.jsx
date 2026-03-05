@@ -165,7 +165,7 @@ const ContentSection = ({
         resourceURL,
         isFileUploading, setIsFileUploading,
         setDisplayedSources,
-        showMetadata,
+        setShowMetadata,
         categoryOptions,
         currentResource,
         setCurrentResource,
@@ -420,6 +420,19 @@ const ContentSection = ({
         setCheckedAll(allSelected);
     }, [knowledgeBase]);
 
+    function removeSourceFromMetadataPanel(sources) {
+        // 1: retrieve all source paths from sources
+        const removedSourcePaths = sources.map(source => source.source_path);
+
+        // 2: check if source's filename exists in the array
+        const sourceExists = removedSourcePaths.includes(currentResource.source_path);
+
+        // 3: clear currentResource if exist
+        if (sourceExists) {
+            setCurrentResource(null);
+        }
+    }
+
     const deleteResource = async (event, items) => {
         try {
             setIsDeleting(true);
@@ -435,10 +448,15 @@ const ContentSection = ({
 
             await makeApiRequest(`/delete`, "post", { sources: payload });
             setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
-            notify({
-                variant: "success",
-                heading: "Source deleted successfully!",
-            });
+
+
+            // remove source from metadata panel if it's active
+            const
+
+                notify({
+                    variant: "success",
+                    heading: "Source deleted successfully!",
+                });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
             }
