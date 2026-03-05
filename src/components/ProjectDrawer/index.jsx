@@ -14,16 +14,17 @@ import { AuthContext } from '../../contexts/authContext';
 import useAuth from '../../hooks/useAuth';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import CreateProjectModal from "../CreateProjectModal";
 
 const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
 
     const navigate = useNavigate();
-    const { user } = useContext(AuthContext);
 
     const { logout } = useAuth();
 
+    const { user } = useContext(AuthContext);
     const { theme, displayedSources, currentChat } = useContext(MainContext);
-    const { currentProject, setCurrentProject, projects } = useContext(ProjectContext);
+    const { currentProject, setCurrentProject, projects, setProjects } = useContext(ProjectContext);
 
     // Format and group the chats by date using the util
     const grouped = useMemo(() => {
@@ -35,6 +36,8 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
 
     const projectsDropdownRef = useRef(null);
     const [showProjects, setShowProjects] = useState(false);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -173,6 +176,14 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                             }
                         </div >}
                     </div>
+
+                    {/* add new project */}
+                    {isModalOpen && <CreateProjectModal
+                        show={isModalOpen}
+                        onHide={() => setIsModalOpen(false)}
+                        setProjects={setProjects}
+                        setCurrentProject={setCurrentProject}
+                    />}
                 </div>
                 <div>
                     <BaseHeading text="Projects settings" className="mb-2" />
