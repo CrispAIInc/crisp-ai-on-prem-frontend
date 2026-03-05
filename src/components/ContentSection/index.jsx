@@ -1120,21 +1120,6 @@ const ContentSection = ({
                                     <span>Settings</span>
                                 </div>
 
-                                {/* <div
-                                    className={`flex  px-3 items-center cursor-pointer gap-2 py-2 pl-1
-                                            ${theme === "light"
-                                            ? "hover:bg-textColor-100/20"
-                                            : "text-textColor-100 hover:bg-slate-800/50"
-                                        }`}
-                                    onClick={handleExitProject}
-                                >
-                                    {isExitPending ? <LoadingSpinner isSmall /> : <CloseOutlinedIcon
-                                        className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
-                                            }`}
-                                    />}
-                                    <span>Exit project</span>
-                                </div> */}
-
                                 <div
                                     className={`flex  px-3 text-red-600 items-center cursor-pointer gap-2 py-2 pl-1
  ${theme === "light"

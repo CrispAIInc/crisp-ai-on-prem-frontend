@@ -11,6 +11,8 @@ import RippleButton from '../RippleButton/index.jsx';
 import TextSkeleton from '../Skeletons/Base/TextSkeleton.jsx';
 import MetadataPanel from '../MetadataPanel/index.jsx';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar.js';
+import BaseHeading from '../BaseHeading/index.jsx';
+import CloseIcon from '@mui/icons-material/Close';
 
 const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombinedSummaryPending, selectedLanguage }) => {
     const {
@@ -28,6 +30,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
         setShowNoteDetails,
         getCombinedSum,
         showMetadata,
+        setShowMetadata,
         workspaceContainer,
     } = useContext(MainContext);
 
@@ -75,7 +78,9 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
 
     const textDirection = isRtlLanguage(selectedLanguage) ? "rtl" : "ltr";
 
-    // const isRtlLanguage = (langCode) => ["ar", "iw", "fa", "ur", "ps", "sd"].includes(langCode);
+    function closeMetadataPanel() {
+        setShowMetadata(false);
+    }
 
     return (
         <div
@@ -84,6 +89,10 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
 
             {showMetadata && (
                 <div className="w-full max-w-full">
+                    <div className="flex items-center gap-2 cursor-pointer mb-3" onClick={closeMetadataPanel} >
+                        <CloseIcon className={`text-[10px] ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                        <BaseHeading text="Close metadata" />
+                    </div>
                     <MetadataPanel leftWidth={leftWidth}
                         maxWidth={maxWidth} workspaceContainer={workspaceContainer} />
 

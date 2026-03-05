@@ -274,12 +274,12 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   }, [currentResource]);
 
   return (
-    <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
+    <div className="max-w-4xl mx-auto overflow-y-auto" ref={metadataPanelContainer}>
 
       {currentResource?.file_type === "video" && (
         <>
           <div className="relative ">
-            <div className="h-full rounded-md overflow-hidden">
+            <div className={`h-full rounded-md ${theme === "light" ? "!border" : "!border !border-textColor-300"} overflow-hidden`}>
               <ReactPlayer
                 id="react-player"
                 width={"100%"}
@@ -420,7 +420,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
         currentResource?.file_type === "pdf" && (
           <>
             <div
-              className="relative w-[90%] h-[430px] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
+              className={`relative w-[90%] h-[430px] mx-auto  overflow-y-auto ${theme === " light" ? "!border" : "!border !border-textColor-300"}  overflow-auto rounded-md overflow-x-auto`}
               ref={contentPanelContainerRef}
               style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             >
@@ -532,7 +532,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       {
         currentResource?.file_type === "img" && (
           <div className="pb-10">
-            <div className="relative pt-[56.25%] w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+            <div className={`relative pt-[56.25%] w-full max-w-lg mx-auto h-80 ${theme === " light" ? "!border" : "!border !border-textColor-300"} rounded-md overflow-hidden`}>
               <GsFile
                 className="absolute top-0 left-0 object-contain w-full h-full"
                 gsUrl={currentResource?.thumbnail || resourceURL}
