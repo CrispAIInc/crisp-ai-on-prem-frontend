@@ -15,6 +15,8 @@ import useAuth from '../../hooks/useAuth';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import CreateProjectModal from "../CreateProjectModal";
+import RippleButton from '../RippleButton';
+import AddIcon from '@mui/icons-material/Add';
 
 const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
 
@@ -177,6 +179,10 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                         </div >}
                     </div>
 
+                    <RippleButton cssClasses="py-2 px-3 rounded-md mt-3">
+                        <AddIcon className="text-white" />
+                        New project
+                    </RippleButton>
                     {/* add new project */}
                     {isModalOpen && <CreateProjectModal
                         show={isModalOpen}
