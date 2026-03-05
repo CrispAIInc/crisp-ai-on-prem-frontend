@@ -446,17 +446,17 @@ const ContentSection = ({
                 };
             });
 
-            await makeApiRequest(`/delete`, "post", { sources: payload });
+            // await makeApiRequest(`/delete`, "post", { sources: payload });
             setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
 
 
             // remove source from metadata panel if it's active
-            const
+            removeSourceFromMetadataPanel(items);
 
-                notify({
-                    variant: "success",
-                    heading: "Source deleted successfully!",
-                });
+            notify({
+                variant: "success",
+                heading: "Source deleted successfully!",
+            });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
             }
