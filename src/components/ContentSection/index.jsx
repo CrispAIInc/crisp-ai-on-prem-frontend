@@ -430,6 +430,7 @@ const ContentSection = ({
         // 3: clear currentResource if exist
         if (sourceExists) {
             setCurrentResource(null);
+            setShowMetadata(false);
         }
     }
 
@@ -446,12 +447,11 @@ const ContentSection = ({
                 };
             });
 
-            // await makeApiRequest(`/delete`, "post", { sources: payload });
-            setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
-
-
             // remove source from metadata panel if it's active
             removeSourceFromMetadataPanel(items);
+
+            await makeApiRequest(`/delete`, "post", { sources: payload });
+            setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
 
             notify({
                 variant: "success",
@@ -480,7 +480,7 @@ const ContentSection = ({
             // );
             // setChatLoaded(chat_is_initialized);
 
-            setCurrentResource(null);
+            // setCurrentResource(null);
             setActiveView(null);
         } catch (error) {
             setIsDeleting(false);
