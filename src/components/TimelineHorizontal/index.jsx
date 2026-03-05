@@ -56,7 +56,7 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                                     chapter.timestamp ? <h5 className="mb-0 text-[9px] cursor-pointer text-primary-300 w-fit" onClick={() => {
 
                                         setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
-                                        contentPanelContainerRef.current.scrollTo({
+                                        workspaceContainer.current.scrollTo({
                                             top: 0,
                                             behavior: "smooth", // Enables smooth scrolling
                                         });
@@ -66,7 +66,7 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                                     </h5> : <div className='flex items-center gap-2 mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
 
                                         setJumpToPage({ page: parseInt(chapter.page) });
-                                        contentPanelContainerRef.current.scrollTo({
+                                        workspaceContainer.current.scrollTo({
                                             top: 0,
                                             behavior: "smooth", // Enables smooth scrolling
                                         });

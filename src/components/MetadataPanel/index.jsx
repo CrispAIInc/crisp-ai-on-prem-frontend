@@ -20,7 +20,7 @@ import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
+const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth }) => {
   const {
     currentResource,
     setCurrentResource,
@@ -337,7 +337,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                                 <div>
                                   <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                                     setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
-                                    contentPanelContainerRef?.current.scrollTo({
+                                    workspaceContainer?.current.scrollTo({
                                       top: 0,
                                       behavior: "smooth", // Enables smooth scrolling
                                     });
@@ -421,7 +421,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
           <>
             <div
               className={`relative w-[90%] h-[430px] mx-auto  overflow-y-auto ${theme === " light" ? "!border" : "!border !border-textColor-300"}  overflow-auto rounded-md overflow-x-auto`}
-              ref={contentPanelContainerRef}
+              ref={workspaceContainer}
               style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             >
               <Document

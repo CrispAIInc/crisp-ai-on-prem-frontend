@@ -82,10 +82,14 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
         setShowMetadata(false);
     }
 
+    const centerPanelRef = useRef(null);
+
     return (
         <div
             id="combined_summary"
-            className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto">
+            className="relative flex flex-col max-w-4xl pt-10 mx-auto overflow-y-auto"
+            ref={centerPanelRef}
+        >
 
             {showMetadata && (
                 <div className="w-full max-w-full">
@@ -93,8 +97,12 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
                         <CloseIcon className={`text-[10px] ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                         <BaseHeading text="Close metadata" />
                     </div>
-                    <MetadataPanel leftWidth={leftWidth}
-                        maxWidth={maxWidth} workspaceContainer={workspaceContainer} />
+                    <MetadataPanel
+                        leftWidth={leftWidth}
+                        maxWidth={maxWidth}
+                        workspaceContainer={workspaceContainer}
+                        centerPanelRef={centerPanelRef}
+                    />
 
                 </div>
             )}
