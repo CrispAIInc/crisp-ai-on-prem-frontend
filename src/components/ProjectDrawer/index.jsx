@@ -10,10 +10,17 @@ import BaseHeading from "../BaseHeading";
 import makeApiRequest from '../../api';
 import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
 import LoadingSpinner from "../LoadingSpinner";
+import { AuthContext } from '../../contexts/authContext';
+import useAuth from '../../hooks/useAuth';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
 
     const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
+
+    const { logout } = useAuth();
 
     const { theme, displayedSources, currentChat } = useContext(MainContext);
     const { currentProject, setCurrentProject, projects } = useContext(ProjectContext);
@@ -83,10 +90,34 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
         }
     }
 
+    const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+    const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
 
+    function handleToggleSettingsMenu() {
+        setIsSettingsMenuOpen((prev) => !prev);
+    }
+
+    const settingsMenuRef = useRef(null);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target)) {
+                setIsSettingsMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    async function log() {
+        localStorage.setItem('current_project', null);
+        await logout();
+    }
 
     return (
-        <div style={{ width: contentPanelContainerRef?.current?.offsetWidth || 0 }} className={`z-50 p-4 ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
+        <div style={{ width: contentPanelContainerRef?.current?.offsetWidth || 0 }} className={`p-4 ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3 overflow-hidden`}>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
 
@@ -95,7 +126,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                 <KeyboardDoubleArrowLeftIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={onHide} />
             </div>
 
-            <div className="flex flex-col gap-7 z-50">
+            <div className="flex flex-col flex-1 gap-7 z-50">
                 <div>
                     <BaseHeading text="Select Project" className="mb-2" />
                     {/* switch project */}
@@ -154,7 +185,96 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                     </div>
                 </div>
             </div>
-        </div >
+            {/* Profile dropdown */}
+            <div className="z-30 relative" ref={settingsMenuRef}>
+                <button
+                    onClick={handleToggleSettingsMenu}
+                    className={`flex items-center gap-2
+                                        px-3 py-1.5
+                                        rounded-full
+                                        ${theme === 'light' ? 'bg-gray-100/70 hover:bg-gray-200/70' : 'bg-gray-800/70 hover:bg-gray-700/70 '}
+                                        transition`}
+                >
+                    {/* Avatar */}
+                    <div className="flex items-center justify-center text-sm font-semibold text-white rounded-full w-7 h-7 bg-gradient-to-br from-indigo-500 to-cyan-400">
+                        {user?.firstName[0]?.toUpperCase()}{user?.lastName[0]?.toUpperCase()}
+                    </div>
+
+                    {/* Name */}
+                    <span className={`text-sm font-medium ${theme === 'light' ? 'text-gray-800' : 'text-white/80'}`}>
+                        {user?.firstName} {user?.lastName}
+                    </span>
+
+                    {/* Caret */}
+                    <svg
+                        className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white/80'} transition-transform ${!isSettingsMenuOpen && "rotate-180"
+                            }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                {/* Dropdown */}
+                {
+                    isSettingsMenuOpen && (
+                        <div
+                            className={`absolute left-0 bottom-full flex flex-col py-1 rounded-md shadow-lg ${theme === "dark" ? "bg-gray-900" : "bg-white"
+                                }`}
+                        >
+                            <div
+                                className={`flex  px-3 items-center cursor-pointer gap-2 py-2 pl-1
+                 ${theme === "light"
+                                        ? "hover:bg-textColor-100/20"
+                                        : "text-textColor-100 hover:bg-slate-800/50"
+                                    }`}
+                                onClick={() => {
+                                    setIsSettingsModalOpen(true);
+                                    setIsSettingsMenuOpen(false);
+                                }}
+                            >
+                                <SettingsOutlinedIcon
+                                    className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
+                                        }`}
+                                />
+                                <span>Settings</span>
+                            </div>
+
+                            {/* <div
+                                                    className={`flex  px-3 items-center cursor-pointer gap-2 py-2 pl-1
+                                                            ${theme === "light"
+                                                            ? "hover:bg-textColor-100/20"
+                                                            : "text-textColor-100 hover:bg-slate-800/50"
+                                                        }`}
+                                                    onClick={handleExitProject}
+                                                >
+                                                    {isExitPending ? <LoadingSpinner isSmall /> : <CloseOutlinedIcon
+                                                        className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
+                                                            }`}
+                                                    />}
+                                                    <span>Exit project</span>
+                                                </div> */}
+
+                            <div
+                                className={`flex  px-3 text-red-600 items-center cursor-pointer gap-2 py-2 pl-1
+                 ${theme === "light"
+                                        ? "hover:bg-textColor-100/20"
+                                        : "hover:bg-slate-800/50"
+                                    }`}
+                                onClick={log}
+                            >
+                                <LogoutOutlinedIcon
+                                    className="cursor-pointer"
+                                />
+                                <span>Log out</span>
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
+        </div>
     );
 };
 

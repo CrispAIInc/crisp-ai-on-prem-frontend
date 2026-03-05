@@ -172,7 +172,7 @@ const ContentPanel = ({ setCurrentProject }) => {
                 <style>
                     {`
                     .css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
-
+                        z-index: 20;
                         overflow-x: hidden !important;
                     }
                 `}
