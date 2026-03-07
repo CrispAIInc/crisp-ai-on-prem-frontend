@@ -252,10 +252,10 @@ const ChatPanel = () => {
     [&::-webkit-scrollbar-thumb]:border-transparent
     [&::-webkit-scrollbar-thumb]:bg-clip-padding`}>
               {[
-                { id: "genMetadata", title: "Cataloging" },
+                { id: "genMetadata", title: "Catalog" },
                 { id: "genStories", title: "Stories & Blogs" },
                 { id: "genMedia", title: "Reels" },
-                { id: "genTimeSegment", title: "Video Time Segment" },
+                { id: "genTimeSegment", title: "Video Segment" },
               ].map(item => (
                 <h6
                   id={item.id}
