@@ -253,7 +253,7 @@ const ChatPanel = () => {
     [&::-webkit-scrollbar-thumb]:bg-clip-padding`}>
               {[
                 { id: "genMetadata", title: "Cataloging" },
-                { id: "genStories", title: "Insights & Stories" },
+                { id: "genStories", title: "Stories & Blogs" },
                 { id: "genMedia", title: "Reels" },
                 { id: "genTimeSegment", title: "Video Time Segment" },
               ].map(item => (
