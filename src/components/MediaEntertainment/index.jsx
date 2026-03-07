@@ -41,6 +41,7 @@ function MediaEntertainment({
     const { theme, displayedSources } = useContext(MainContext);
 
     const [, setContextFocused] = useState(false);
+    // const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
 
     const { notify } = useToast();
 

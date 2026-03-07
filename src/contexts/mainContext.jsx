@@ -1226,11 +1226,26 @@ export default function MainProvider({ children, theme, setTheme }) {
     }, [currentProject.project_id]);
     // }, [displayedSources, selectedLanguage]);
 
+    useEffect(() => {
+        async function getJsonEntities() {
+            const { graphs } = await makeApiRequest('/graph');
+            setJsonEntities(graphs);
+        }
+
+        getJsonEntities();
+    }, []);
+
     const metadataPanelContainer = useRef(null);
+    const [jsonEntities, setJsonEntities] = useState([]);
+    const [selectedJsonEntity, setSelectedJsonEntity] = useState(null);
 
 
     // create value object with all the states
     const value = {
+        jsonEntities,
+        selectedJsonEntity,
+        setSelectedJsonEntity,
+        setJsonEntities,
         metadataPanelContainer,
         checkedSources,
         combinedSummary, setCombinedSummary,

@@ -244,6 +244,18 @@ export function searchByKey(data, key, query) {
     });
 }
 
+// sort an object by key
+export function sortByKey(data, key) {
+    return [...data].sort((a, b) => {
+        const keyA = a[key] || "";
+        const keyB = b[key] || "";
+        return keyA.localeCompare(keyB, undefined, {
+            numeric: true,
+            sensitivity: "base",
+        });
+    });
+}
+
 export function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

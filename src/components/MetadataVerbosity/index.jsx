@@ -32,9 +32,10 @@ export default function MetadataVerbosity({ isFromReel = false, verbosityValue, 
                     name="row-radio-buttons-group"
                     value={verbosityValue}
                     onChange={setVerbosityValue}
+                    className={`!flex !flex-wrap !gap-0`}
                 >
-                    {(isFromReel ? ["Short (1min)", "Medium (1.5min)", "Long (2min)"] : ["Low", "Medium", "High"]).map((level, index) => (
-                        <FormControlLabel key={index} value={level} control={<Radio />} label={level} className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} ${isFromReel && "!text-xs"}`} />
+                    {(isFromReel ? ["Short (1m)", "Medium (1.5m)", "Long (2m)"] : ["Low", "Medium", "High"]).map((level, index) => (
+                        <FormControlLabel key={index} value={level} control={<Radio />} label={level} className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} ${isFromReel && "!mr-3"}`} />
                     ))}
                 </RadioGroup>
             </FormControl>

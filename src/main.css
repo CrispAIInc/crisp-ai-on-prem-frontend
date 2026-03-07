@@ -11,6 +11,10 @@
     color: transparent;
   }
 
+  .graph-modal {
+    height: 70vh;
+  }
+
   .app-scroll {
     scrollbar-width: thin;
     scrollbar-color: #77a8f9 transparent;
