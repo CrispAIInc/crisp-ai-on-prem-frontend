@@ -57,11 +57,11 @@ export default function FakeProgress({ isLoading, setIsProgressStarted, isUpload
             />
             <div className="flex flex-col gap-0">
                 <h5 className="text-[1rem] font-medium mb-1">
-                    {progress < 100 ? "Uploading..." : "Upload done!"}
+                    {progress < 100 ? "Ingesting..." : "Ingest done!"}
                 </h5>
                 <span className="text-sm">
                     {progress < 100
-                        ? "Please wait while we upload your files securely."
+                        ? "Please wait while we ingest your files securely."
                         : "Files uploaded successfully."}
                 </span>
             </div>

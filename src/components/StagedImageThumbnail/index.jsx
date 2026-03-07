@@ -3,9 +3,6 @@ import Tooltip from "react-bootstrap/Tooltip";
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import GsFile from '../GsFile';
-// import ImageIcon from '@mui/icons-material/Image';
-
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
 function StagedImageThumbnail({ item }) {
 

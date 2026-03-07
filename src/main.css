@@ -34,6 +34,65 @@
   }
 }
 
+.ql-editor .ql-reference {
+  color: #2563eb; /* blue */
+  cursor: pointer;
+  margin: 4px 0;
+  margin-left: 16px; /* indent */
+  word-break: break-word;
+}
+
+.ql-editor .ql-reference:hover {
+  text-decoration: underline;
+}
+
+.ql-container .ql-snow {
+  overflow-y: auto;
+}
+
+.jodit-toolbar__box {
+  min-height: fit-content !important;
+}
+.jodit-react-container,
+.single-editor-container {
+  height: 100% !important;
+}
+
+.jodit-workplace > span[data-ref="placeholder"] {
+  display: none !important;
+}
+
+.jodit-container {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  overflow-y: hidden !important;
+}
+
+.jodit-status-bar {
+  display: none !important;
+}
+
+.refs-block {
+  user-select: text; /* allow copy */
+  cursor: default;
+}
+
+.refs-block * {
+  pointer-events: auto;
+}
+
+.ref-link {
+  display: block;
+  margin-left: 1rem;
+  color: #3b82f6;
+  cursor: pointer;
+}
+
+label {
+  user-select: none;
+}
+
 :root {
   --color-primary-200: #77a8f9;
 }
@@ -124,8 +183,8 @@ p {
 } */
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 input {
@@ -138,4 +197,61 @@ input {
 
 .custom-rounded .modal-content {
   border-radius: 2rem; /* Or whatever you like */
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-left {
+  from {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-right {
+  from {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.25s ease-out;
+}
+.animate-slide-up {
+  animation: slide-up 0.25s ease-out;
+}
+.animate-slide-left {
+  animation: slide-left 0.25s ease-out;
+}
+.animate-slide-right {
+  animation: slide-right 0.25s ease-out;
 }

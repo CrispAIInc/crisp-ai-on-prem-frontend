@@ -5,15 +5,17 @@ export default function useFirebase() {
 
     async function getPublicUrl(gsUrl) {
 
+        if (gsUrl.startsWith('blob') || gsUrl.includes('PDF-file-thumbnail.png')) return gsUrl;
+
         // Extract everything after the bucket name
         const bucket = "gs://crispai-app-462614.firebasestorage.app/";
-        const path = gsUrl.replace(bucket, ""); // "img_uploads/imgs/finance/59343.jpg"
+        const path = gsUrl.replace(bucket, ""); // "video_uploads/videos/generic/bill gates.mp4"
 
         try {
             const fileRef = ref(storage, path);
             return await getDownloadURL(fileRef);
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
         }
     }
 

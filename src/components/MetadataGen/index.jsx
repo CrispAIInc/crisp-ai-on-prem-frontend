@@ -2,22 +2,21 @@ import { useContext, useEffect, useState } from 'react';
 import MetadataAdvancedParams from '../MetadataAdvancedParams';
 import MetadataOptions from "../MetadataOptions";
 import { MainContext } from '../../contexts/mainContext.jsx';
-import toast from 'react-simple-toasts';
-import LoadingSpinner from '../LoadingSpinner';
+import { useToast } from "../../contexts/toastContext";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AddToKnowledgeBaseModal from '../AddToKnowledgeBaseModal';
 import makeApiRequest from '../../api';
 import RippleButton from '../RippleButton';
-import useResources from '../../hooks/useResources.js';
-
-
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 
 function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityValue, setVerbosityValue, context, setContext }) {
 
-    const { knowledgeBase, theme, selectedCategory, setKnowledgeBase, categoryOptions, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
-    const { categoryValuesWithoutAll } = useResources();
+    const { knowledgeBase, theme, checkedSourcesCount, setKnowledgeBase, selectedOptions, setSelectedOptions, setGeneratedResources, sourcesTobeCommited, setSourcesTobeCommited, displayedSources, metadataOptions } = useContext(MainContext);
+
+    const { notify } = useToast();
 
     const [selectedSourcesToGen, setSelectedSourcesToGen] = useState(sourcesTobeCommited?.length > 0 ? [sourcesTobeCommited[0]] : []);
 
@@ -28,18 +27,11 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         });
     }, [sourcesTobeCommited]);
 
-    // const [temperatureValue, setTemperatureValue] = useState(0.2);
-    // function handleTemperatureChange(e) {
-    //     setTemperatureValue(e.target.value);
-    // }
-
 
 
     function handleChange(event) {
         setVerbosityValue(event.target.value);
     }
-
-    // const [isKnowledgeBaseEmpty, setIsKnowledgeBaseEmpty] = useState(knowledgeBase.every(kb => kb.is_selected === false));
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -47,8 +39,6 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
     const [contextFocused, setContextFocused] = useState(false);
-
-    const isActive = contextFocused || context.length > 0;
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -58,72 +48,63 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         });
     };
 
-    const handleMouseEnter = () => displayedSources.filter(item => item.is_selected).length === 0 && setTooltipVisible(true);
+    const handleMouseEnter = () => (checkedSourcesCount === 0 || isProjectReadOnly) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateMetadata() {
+        if (isProjectReadOnly) return;
         setIsGeneratingMetadata(true);
-        // if (isKnowledgeBaseEmpty) {
-        //     toast('You must select some sources to generate metadata');
-        // }
-        // if (selectedOptions.length === 0) {
-        //     toast('You must select at least one metadata option');
-        // }
 
-        if (displayedSources.filter(item => item.is_selected).length === 0) {
-            toast('You must check at least one source');
-        }
-
-        const categoryValues = categoryOptions.map((option) => option.value);
-
-        function getCategories(items) {
-            const categories = new Set();
-
-            items.forEach(item => {
-                item.category.forEach(cat => {
-                    if (cat.toLowerCase() !== "all") {
-                        categories.add(cat);
-                    }
-                });
+        if (checkedSourcesCount === 0) {
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "You must check at least one source",
             });
-
-            return Array.from(categories);
         }
 
         try {
-            // const payload = {
-            //     category: selectedCategory, sources: knowledgeBase.filter(kb => kb.is_selected).map(kb => ({ file_type: kb.file_type, source_path: kb.source_path })), selectedOptions: selectedOptions.map(op => op.id), verbosityValue, temperatureValue
-            // };
             const payload = {
-                sources: displayedSources.filter(item => item.is_selected).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: source.category.filter(cat => cat !== "all")[0] })), selectedOptions: selectedOptions.map(op => op.id), inputContext: context, verbosityValue: verbosityValue
+                sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
+                selectedOptions: selectedOptions.map(op => op.id),
+                inputContext: context,
+                verbosityValue: verbosityValue
             };
-            setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_selected));
+            setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_checked));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
-            // update content in /content
-            // ... /content
-            const data = await makeApiRequest(
-                "/content",
-                "post",
-                JSON.stringify(categoryValuesWithoutAll)
-            );
-            //TODO: whenever you see `sourcesTobeCommited`, change that with selectedSourcesToGen, because we now only work with the selected sources and not all sources in the selected sources section
-            let updatedKnowledgeBase = data.map(item => {
-                let selected = sourcesTobeCommited.find(s => s.source_path === item.source_path);
 
-                if (selected) {
-                    return { ...item, is_selected: true };
-                } else {
+            setKnowledgeBase(prev => {
+                // Build a lookup map from results
+                const resultsMap = new Map(
+                    results.map(r => [r.source_path, r.metadata])
+                );
+
+                return prev.map(item => {
+                    // If this item exists in results, update metadata
+                    if (resultsMap.has(item.source_path)) {
+                        return {
+                            ...item,
+                            metadata: resultsMap.get(item.source_path),
+                        };
+                    }
+
+                    // Otherwise, leave it unchanged
                     return item;
-                }
+                });
             });
 
-            setKnowledgeBase(updatedKnowledgeBase);
+
             setGeneratedResources(results);
             setVerbosityValue('Medium');
             setContext('');
         } catch (error) {
             console.error(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error.message || "You must check at least one metadata option",
+            });
         } finally {
             setIsGeneratingMetadata(false);
             if (selectedOptions.find(op => op.id === 'embeddings') && selectedSourcesToGen.length !== 0) {
@@ -131,8 +112,6 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
             }
         }
     }
-
-
 
     return (
         <div className='z-20 flex flex-col gap-2'>
@@ -166,11 +145,13 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                 handleChange={handleChange} />
 
             {/* generate button */}
-            <div className='relative inline-block' onMouseMove={handleMouseMove}
+            <div className='relative inline-block'
+                onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    disabled={isGeneratingMetadata || displayedSources.filter(item => item.is_selected).length === 0} onClick={generateMetadata}>
+                    disabled={isGeneratingMetadata || checkedSourcesCount === 0 || isProjectReadOnly}
+                    onClick={!isProjectReadOnly && generateMetadata}>
                     {isGeneratingMetadata ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                 </RippleButton>
                 {tooltipVisible && (
@@ -179,7 +160,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                         className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                         style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                     >
-                        No source is checked
+                        {isProjectReadOnly ? "Cannot edit an example project." : "No source is checked"}
                     </p>
                 )}
             </div>

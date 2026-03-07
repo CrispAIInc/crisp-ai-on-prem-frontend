@@ -40,7 +40,7 @@ export default function AddSourceModal(props) {
         >
             <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <h5 className="!text-md">Upload new source or index</h5>
+                    <h5 className="!text-md">Ingest new source or index</h5>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
@@ -57,7 +57,7 @@ export default function AddSourceModal(props) {
                     onClick={handleAddNewResource}
                 >
                     {props?.isUploading ? (<LoadingSpinner isSmall />) : (<UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />)}
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Upload</span>
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Ingest</span>
                 </div>}
                 <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={props?.handleUpload} />
                 <CategoriesModal

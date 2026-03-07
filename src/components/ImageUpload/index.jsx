@@ -7,6 +7,7 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 import CustomInput from '../CustomInput';
 import PreviewModal from '../PreviewModal';
 import toast from 'react-simple-toasts';
+import { useToast } from '../../contexts/toastContext.jsx';
 
 const ImageUpload = ({ handleUpload }) => {
     const { theme } = useContext(MainContext);
@@ -14,6 +15,8 @@ const ImageUpload = ({ handleUpload }) => {
     const [selectedImageInModal, setselectedImageInModal] = useState('');
     const [query, setQuery] = useState('');
     const [isLightboxOpen, setisLightboxOpen] = useState(false);
+
+    const { notify } = useToast();
 
     const imageGenRefInput = useRef(null);
 
@@ -44,11 +47,19 @@ const ImageUpload = ({ handleUpload }) => {
 
     function sendQuery() {
         if (query.trim() === '') {
-            toast('Query cannot be empty', { className: `p-2 rounded-md`, theme });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Query cannot be empty",
+            });
             return;
         }
         if (selectedImages.length === 0) {
-            toast('Please upload an image', { className: `p-2 rounded-md`, theme });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Please upload an image",
+            });
             return;
         }
         handleUpload(selectedImages, query);

@@ -3,12 +3,13 @@ import { MainContext } from "../contexts/mainContext.jsx";
 import { useResizableSidebar } from './useResizableSidebar';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-export default function useReferenceLinkClick(isFromChat = false) {
+export default function useReferenceLinkClick(isFromChat = false, contentPanelContainerRef) {
 
     const { sidebarWidth: leftWidth, handleMouseDown: handleLeftMouseDown, handleDoubleClick, setSidebarWidth, maxWidth } = useResizableSidebar(200, true);
 
     const {
-        setCurrentResource, setFromChat,
+        setCurrentResource,
+        setFromChat,
         setResourceURL,
         setSummary,
         setJumpToPage,
@@ -18,12 +19,10 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setActiveView
     } = useContext(MainContext);
 
-    const handleVideoLinkClick = (event, video) => {
-        if (event) event.preventDefault();
+    const handleVideoLinkClick = (video) => {
         setFromChat(isFromChat);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
             }/all/${encodeURIComponent(video.source_path)}`;
-        console.log(video);
         setCurrentResource({ ...video });
         setResourceURL(resourceURL);
         setSummary(video.summary);
@@ -31,7 +30,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setActiveView('resource');
         setSidebarWidth(prev => {
             if (prev !== maxWidth) return maxWidth;
-            return window.innerWidth / 3.3333;
+            return window.innerWidth / 3.5;
         });
         setIsLeftSidebarOpen(true);
         // workspaceContainer.current.scrollTo({
@@ -42,8 +41,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         // setShowNoteDetails(false);
     };
 
-    const handlePDFLinkClick = (event, pdf) => {
-        if (event) event.preventDefault();
+    const handlePDFLinkClick = (pdf) => {
         const resourceURL = `${API_ENDPOINT}/${pdf.file_type
             }/all/${encodeURIComponent(pdf.source_path)}`;
         setCurrentResource({ ...pdf });
@@ -54,7 +52,7 @@ export default function useReferenceLinkClick(isFromChat = false) {
         setJumpToPage({ page: parseInt(pdf?.page) + 1 });
         setSidebarWidth(prev => {
             if (prev !== maxWidth) return maxWidth;
-            return window.innerWidth / 3.3333;
+            return window.innerWidth / 3.5;
         });
         setIsLeftSidebarOpen(true);
         // workspaceContainer.current.scrollTo({
@@ -65,8 +63,25 @@ export default function useReferenceLinkClick(isFromChat = false) {
         // setShowNoteDetails(false);
     };
 
+    const handleSourceLinkClick = (event, source) => {
+        if (!source) return;
+
+        if (event) event.preventDefault();
+
+        // setTimeout(() => {
+        contentPanelContainerRef?.current?.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+        // }, 0);
+
+        if (source.file_type === "video") handleVideoLinkClick(source);
+        else handlePDFLinkClick(source);
+    };
+
     return {
         handleVideoLinkClick,
-        handlePDFLinkClick
+        handlePDFLinkClick,
+        handleSourceLinkClick
     };
 }

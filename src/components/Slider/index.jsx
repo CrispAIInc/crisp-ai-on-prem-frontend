@@ -1,6 +1,5 @@
-import { ThemeContext } from '@emotion/react';
+
 import { Box, Slider } from '@mui/material';
-import { useContext } from "react";
 
 const marks = [
     {

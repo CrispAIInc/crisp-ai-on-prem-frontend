@@ -5,13 +5,12 @@ import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
 import InfoIcon from '@mui/icons-material/Info';
 import useFirebase from '../../hooks/useFirebase.js';
-import toast from 'react-simple-toasts';
+import { useToast } from "../../contexts/toastContext";
 import { useContext, useState, useEffect } from 'react';
 import { timeToSeconds } from "../../utils.js";
 import LoadingSpinner from "../LoadingSpinner";
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
-import useResources from '../../hooks/useResources';
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
 import { Drawer } from '@mui/material';
 import ReelProps from '../ReelProps/index.jsx';
@@ -19,18 +18,19 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 import Moveable from "react-moveable";
 import PictureInPictureAltIcon from '@mui/icons-material/PictureInPictureAlt';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 function ReelViewer({
     closeReel,
-    reel,
-    setReels }) {
+    reel, }) {
 
+    const { isProjectReadOnly } = useContext(ProjectContext);
     const { theme } = useContext(MainContext);
     const { getPublicUrl, getDownloadableUrl } = useFirebase();
 
     const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
-    const { getReels } = useResources({ setReels });
+    const { notify } = useToast();
 
     const [isDownloading, setIsDownloading] = useState(false);
     const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
@@ -50,20 +50,20 @@ function ReelViewer({
     };
 
     const handleDownload = async (e, _url, urlFileExtension) => {
+        if (isProjectReadOnly) return;
+
         e.stopPropagation();
         e.preventDefault();
 
         try {
             setIsDownloading(true);
             const downloadableUrl = await getDownloadableUrl(_url);
-            console.log(downloadableUrl);
 
             const response = await fetch(downloadableUrl);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const blob = await response.blob();
-            console.log(blob);
 
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -75,10 +75,17 @@ function ReelViewer({
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
 
-            // toast('Reel downloaded successfully!', { className: 'p-2 rounded-md bg-primary-200 text-white', theme });
+            notify({
+                variant: "success",
+                heading: `${urlFileExtension === 'mp4' ? 'Reel' : "Edl"} downloaded successfully!`,
+            });
         } catch (err) {
             console.error("Download failed", err);
-            toast('Download failed. Please try again.', { className: 'p-2 rounded-md', theme });
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "Download failed. Plase try again.",
+            });
         } finally {
             setIsDownloading(false);
         }
@@ -273,29 +280,35 @@ function ReelViewer({
                             </CSSTransition>
                         </SwitchTransition>}
                         <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
-                            {/* <div className="z-50 p-2 w-[30px] h-[30px] flex flex-col items-center justify-center rounded-full cursor-pointer bg-slate-500/80 right-5 top-10">
-                        {isPending ? <LoadingSpinner isSmall /> : <DeleteIcon
-                            onClick={(event) => handleRemoveReel(event)}
-                            className="!text-[15px] w-full h-full text-white rounded-full" />}
-                    </div> */}
-                            {areReelControlsVisible ? <PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} /> : <AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} />}
-                            <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
-                            <span className="p-2 z-50 !text-[7px] relative text-white rounded-full cursor-pointer bg-slate-500/80" onClick={() => setShowDownloadOption(prev => !prev)} >
+                            {areReelControlsVisible ? (
+                                <div title="Collapse">
+                                    <PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} />
+                                </div>
+                            ) : (
+                                <div title="Expand">
+                                    <AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} />
+                                </div>
+                            )}
+
+                            <div title="Reel properties">
+                                <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
+                            </div>
+                            {!isProjectReadOnly && <div onClick={() => setShowDownloadOption(prev => !prev)} >
                                 {isDownloading ? <LoadingSpinner isSmall /> : (
                                     <>
-                                        <FileDownloadIcon />
+                                        <div title="Download">
+                                            <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
+                                        </div>
                                         {
                                             showDownloadOption && (
-                                                // <div onClick={(e) => e.stopPropagation()}>
                                                 <>
                                                     {downloadOptions()}
                                                 </>
-                                                // </div>
                                             )
                                         }
                                     </>
                                 )}
-                            </span>
+                            </div>}
                             <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
                         </div>
                     </div>
@@ -309,8 +322,6 @@ function ReelViewer({
                         loop={video_loop}
                         onProgress={handleProgress}
                         onDuration={handleDuration}
-                        // onReady={() => setIsPlayerReady(true)}
-                        // ref={player}
                         controls
                     />
                 </div>
@@ -333,17 +344,8 @@ function ReelViewer({
                 throttleDrag={0}
                 onDrag={({
                     target,
-                    beforeDelta, beforeDist,
-                    left, top,
-                    right, bottom,
-                    delta, dist,
                     transform,
-                    clientX, clientY,
                 }) => {
-                    console.log("onDrag left, top", left, top);
-                    // target!.style.left = `${left}px`;
-                    // target!.style.top = `${top}px`;
-                    console.log("onDrag translate", dist);
                     target.style.transform = transform;
                 }}
 
@@ -355,17 +357,6 @@ function ReelViewer({
                 resizable={false}
                 throttleResize={0}
                 onResize={({ target, width, height, drag }) => {
-                    // Clamp width/height to min/max values
-                    // const newWidth = Math.min(Math.max(width, MIN_W), MAX_W);
-                    // const newHeight = Math.min(Math.max(height, MIN_H), MAX_H);
-
-                    // Show or hide reel controls based on size
-                    // if (newWidth <= 350 || newHeight <= 350) {
-                    //     setAreReelControlsVisible(false);
-                    // } else {
-                    //     setAreReelControlsVisible(true);
-                    // }
-
                     // Apply size to target
                     // const el = target.current;
                     target.style.width = `${width}px`;

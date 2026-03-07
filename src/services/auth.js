@@ -3,23 +3,6 @@ import { TOKEN_NAME } from '../globals';
 import { auth, provider } from '../config/firebase';
 import makeApiRequest, { axiosInstance } from '../api';
 
-// onAuthStateChanged(auth, async (user) => {
-//     if (user) {
-//         console.log("User is signed in:", user);
-//         const token = await user.getIdToken();
-//         localStorage.setItem(TOKEN_NAME, token);
-//         // now safe to redirect
-//     }
-// });
-
-// onIdTokenChanged(auth, (user) => {
-//     if (user) {
-//         user.getIdToken().then((idToken) => {
-//             localStorage.setItem(TOKEN_NAME, idToken);
-//         });
-//     }
-// });
-
 onIdTokenChanged(auth, async (user) => {
     if (user) {
         const token = await user.getIdToken(); // Firebase will refresh when ready
@@ -77,8 +60,7 @@ export async function loginWithAccessAndRefreshToken(email, password) {
 
 export async function logOut(navigate) {
     try {
-        const res = await signOut(auth);
-        console.log("logged out with: ", res);
+        await signOut(auth);
         navigate("/login");
     } catch (error) {
         console.log(error);

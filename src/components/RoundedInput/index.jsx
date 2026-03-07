@@ -6,7 +6,6 @@ const RoundedInput = ({
     name,
     value,
     onChange,
-    placeholder = '',
     required = false,
 }) => {
     const [isFocused, setIsFocused] = useState(false);

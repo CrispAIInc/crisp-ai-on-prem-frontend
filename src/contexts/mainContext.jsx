@@ -1,18 +1,25 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import makeApiRequest from "../api";
+import makeApiRequest, { axiosInstance } from "../api";
 
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import useResources from '../hooks/useResources';
+import { AuthContext } from './authContext';
+import { generateRandomId, pick } from '../utils';
+import { ProjectContext } from './projectContext';
 
 export const MainContext = createContext({});
 
 export default function MainProvider({ children, theme, setTheme }) {
-
+    const { user, setUser } = useContext(AuthContext);
+    const { currentProject, setProjects } = useContext(ProjectContext);
     const [categoryOptions, setCategoryOptions] = useState([]);
-    const { getIndexes } = useResources({ setCategoryOptions });
+    const [reels, setReels] = useState([]);
+    const [stories, setStories] = useState([]);
+    const [notes, setNotes] = useState([]);
+    const { getReels, getStories, getNotes, getIndexes } = useResources({ setReels, setStories, setNotes, setCategoryOptions });
 
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
     const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace
@@ -21,20 +28,23 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [videoTimestamp, setVideoTimestamp] = useState(null); // The video timestamp coming from search results
     const player = useRef(null); // Video Play in the Workspace Component
     const [isPlayerReady, setIsPlayerReady] = useState(false); // Flag indicating that the video player is rendered. So we can do a timestamp jump properly.
+    const [hasDuration, setHasDuration] = useState(false);
 
-    const [notes, setNotes] = useState([]);
+
     // const [isAddingNote, setIsAddingNote] = useState(false);
     const [showNoteModal, setShowNoteModal] = useState(false); // Flag indicating whether or not to show the Note Modal
     const [showNoteDetails, setShowNoteDetails] = useState(false);
 
     const [selectedSources, setSelectedSources] = useState([]); // Selected Sources to stage before commiting into the current Knowledge Base
-    const [selectedAll, setSelectedAll] = useState(false); // Flag to handle selecting all sources (all categories, all formats)
+    const [selectedAll, setCheckedAll] = useState(false); // Flag to handle selecting all sources (all categories, all formats)
     const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
     // From Content Panel
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [selectedFormat, setSelectedFormat] = useState("all");
 
     const [sourcesTobeCommited, setSourcesTobeCommited] = useState([]); // Sources to be commited to the Knowledge Base
+
+
 
     // const categoryOptions = [
     //   { value: "all", label: "All" },
@@ -74,13 +84,99 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [persistedUploadedFiles, setPersistedUploadedFiles] = useState([]);
 
+    useLayoutEffect(() => {
+        const makeRequest = async () => {
+            try {
+                axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+                const data = await makeApiRequest(
+                    "/content",
+                    "GET"
+                );
+                setKnowledgeBase(data);
+            } catch (error) {
+                console.warn(error);
+            }
+        };
+
+        makeRequest();
+    }, [currentProject.project_id]);
+
+    useEffect(() => {
+        async function intializeContent() {
+            const { chat_is_initialized } = await makeApiRequest(
+                `/chat/all`,
+                "post",
+                JSON.stringify({
+                    sources: [],
+                    category: "all",
+                    selectedAll: false,
+                    is_exclusive: false
+                })
+            );
+            setChatLoaded(chat_is_initialized);
+        }
+
+        intializeContent();
+    }, [currentProject.project_id]);
 
     useEffect(() => {
         getIndexes();
-    }, []);
+    }, [currentProject.project_id]);
+
+    useEffect(() => {
+        const getAllNotes = async () => {
+            try {
+                setIsNotesLoading(true);
+                getNotes();
+                setSelectedNote({
+                    note_id: "",
+                    text: [{
+                        content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
+                            videoLinks: [],
+                            keyframeLinks: [],
+                            pdfLinks: [],
+                            imageLinks: [],
+                        }
+                    }],
+                    images: [],
+                    note_name: "",
+                });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsNotesLoading(false);
+            }
+        };
+
+        getAllNotes();
+    }, [currentProject.project_id]);
+
+    useEffect(() => {
+        const getAllStories = async () => {
+            try {
+                setIsStoriesLoading(true);
+                getStories();
+                setSelectedStory({
+                    story_id: "",
+                    text: [],
+                    story_name: "",
+                    models: [],
+                });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsStoriesLoading(false);
+            }
+        };
+
+        getAllStories();
+    }, [currentProject.project_id]);
+
+    useEffect(() => {
+        getReels();
+    }, [currentProject.project_id]);
 
     const contentPanelContainerRef = useRef(null);
-
 
     // can either be 'resource', 'note' or null
     // indicates wether the user is viewing a resource or a note in workspace
@@ -113,7 +209,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         imageLinks: [],
     });
 
-    const [stories, setStories] = useState([]);
     const [selectedStory, setSelectedStory] = useState({
         story_id: "",
         text: [],
@@ -198,11 +293,10 @@ export default function MainProvider({ children, theme, setTheme }) {
     // }, [sourcesTobeCommited]);
 
     const commitSelectedSources = (items) => {
-        console.log(items);
         if (items?.length === 0) {
             // setSelectedSources(sourcesTobeCommited);
             knowledgeBase.map((item) => {
-                if (item.is_selected) {
+                if (item.is_checked) {
                     setSelectedSources((prev) => {
                         const itemExist = prev.find(i => i.source_path === item.source_path);
                         if (!itemExist) {
@@ -229,14 +323,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
     };
 
-    useEffect(() => {
-        // add all selected sources from knowledgebase to displayedsources
-        setDisplayedSources(prev => {
-            const newSources = knowledgeBase.filter(item => item.is_selected && !prev.some(i => i.source_path === item.source_path));
-            return [...prev, ...newSources];
-        });
-    }, [knowledgeBase]);
-
     const [, setTranscription] = useState("");
 
     const onThumbnailClick = (event, file, isFromCheckbox = false) => {
@@ -261,97 +347,71 @@ export default function MainProvider({ children, theme, setTheme }) {
     };
 
     const handleCheckboxChange = (isChecked, file) => {
-        // Create a new array with updated items
-        const updatedKnowledgeBase = knowledgeBase.map((item) => {
+
+        let updatedKnowledgeBase = knowledgeBase.map(item => {
             if (item.source_path === file.source_path) {
-                return { ...item, is_selected: !item.is_selected };
+                return { ...item, is_selected: true, is_checked: !item.is_checked };
             }
-            if (item.is_selected) setSelectedAll(false);
+
             return item;
         });
+
         setKnowledgeBase(updatedKnowledgeBase);
 
-        // update displayedsources such that if file.is_source is true, add it to displayedsources otherwise if it is already in displayedsources, just make its property "is_selected" to false without removing it from displayedsources
-        console.log("handleToggleCheckSources from main context");
-        setDisplayedSources((prev) => {
-            const exists = prev.find((item) => item.source_path === file.source_path);
-            // const fileFromKb = knowledgeBase.find((item) => item.source_path === file.source_path);
-            if (!file.is_selected) {
-                if (!exists) {
-                    return [...prev, { ...file, is_selected: true }];
-                } else if (exists) {
-                    return prev.map((item) => {
-                        if (item.source_path === file.source_path) {
-                            return { ...item, is_selected: true };
-                        }
-                        return item;
-                    });
-                    // return [...prev, {...file, is_selected: false}]
-                }
-            } else {
-                if (exists) {
-                    return prev.map((item) => {
-                        if (item.source_path === file.source_path) {
-                            return { ...item, is_selected: false };
-                        }
-                        return item;
-                    });
-                }
-            }
-
-            return prev;
-        });
-
-        // item should exist in selectedSources and isSelected is true => remove it from selectedSources
-        if (file.is_selected && selectedSources.some((item) => item.source_path === file.source_path)) {
-            setSelectedSources((prev) => prev.filter((item) => item.source_path !== file.source_path));
-            // setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-            // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-        }
-
-        // updated sourcesTobeCommiter
-        // if (!file.is_selected) {
-        //   setSourcesTobeCommited((prev) => [...prev, { ...file, is_selected: true }]);
-        //   // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-        // }
-        // else {
-        //   setSourcesTobeCommited((prev) => prev.filter((item) => item.source_path !== file.source_path));
-        //   // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-        // }
+        if (!isChecked) setCheckedAll(false);
 
         if (isChecked === true) {
             onThumbnailClick(undefined, file, true);
-            // setShowMetadata(false);
         }
     };
 
-    // const [selectedCategory] = useState("all");
+    const [checkedSources, setCheckedSources] = useState(knowledgeBase.filter(item => item.is_checked));
 
     useEffect(() => {
-        setChatLoaded(false);
-        if (sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length > 0) {
-            // checked
-        } else {
-            // unchecked
-        }
-        // setCommittedSources(selectedSources);
-        async function fetchChat() {
-            console.log('here: ', selectedCategory);
-            const data = await makeApiRequest(
-                `/chat/${selectedCategory}`,
-                "post",
-                JSON.stringify({
-                    sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
-                    category: selectedCategory,
-                    selectedAll,
-                    is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
-                })
-            );
-            setChatLoaded(data?.chat_is_initialized);
-        }
+        // add all selected sources from knowledgebase to displayedsources
+        setDisplayedSources(knowledgeBase.filter(item => item.is_selected));
 
-        fetchChat();
-    }, [selectedCategory, selectedSources]);
+        // update current project 'checked_sources' and 'unchecked_sources'
+        const checkedSources = knowledgeBase.filter(item => (item.is_selected && item.is_checked));
+        const uncheckedSources = knowledgeBase.filter(item => (item.is_selected && !item.is_checked));
+
+        setProjects(prev => prev.map(project => {
+            if (project.project_id === currentProject.project_id) {
+                return {
+                    ...project,
+                    checked_sources: checkedSources,
+                    unchecked_sources: uncheckedSources
+                };
+            }
+
+            return project;
+        }));
+
+        // update checked sources
+        setCheckedSources(checkedSources);
+    }, [knowledgeBase]);
+
+    // const [selectedCategory] = useState("all");
+
+    // useEffect(() => {
+    //     setChatLoaded(false);
+    //     // setCommittedSources(selectedSources);
+    //     async function fetchChat() {
+    //         const data = await makeApiRequest(
+    //             `/chat/${selectedCategory}`,
+    //             "post",
+    //             JSON.stringify({
+    //                 sources: selectedSources?.filter(item => item?.metadata?.embeddings_generated),
+    //                 category: selectedCategory,
+    //                 selectedAll,
+    //                 is_exclusive: Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length)
+    //             })
+    //         );
+    //         setChatLoaded(data?.chat_is_initialized);
+    //     }
+
+    //     fetchChat();
+    // }, [selectedCategory, selectedSources]);
 
     const [fromChat, setFromChat] = useState(false);
     const [isManualNote, setIsManualNote] = useState(false);
@@ -376,14 +436,14 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [isExclusiveChecked, setIsExclusiveChecked] = useState(false);
     useEffect(() => {
         // set isFoundationLlm to true if there is no selectedSources, otherwise false
-        setIsFoundationLlm(selectedSources.length === 0 || (displayedSources?.some(item => item?.is_selected) ? false : true));
+        setIsFoundationLlm(selectedSources.length === 0 || (displayedSources?.some(item => item?.is_checked) ? false : true));
         if (!isExclusiveChecked) {
             setCommittedSources(selectedSources);
         }
     }, [selectedSources]);
 
     useEffect(() => {
-        setIsFoundationLlm(displayedSources?.some(item => item?.is_selected) ? false : true);
+        setIsFoundationLlm(displayedSources?.some(item => item?.is_checked) ? false : true);
     }, [displayedSources]);
 
     const languageOptions = [
@@ -1061,11 +1121,11 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [showEditor, setShowEditor] = useState(false);
 
     // useEffect(() => {
-    //   if (knowledgeBase.every((item) => item.is_selected === false)) {
-    //     console.log("disabled");
+    //   if (knowledgeBase.every((item) => item.is_checked === false)) {
+
     //     setIsIngestionEnabled(false);
     //   } else {
-    //     console.log("enable");
+
     //     setIsIngestionEnabled(true);
     //   }
     // }, [knowledgeBase]);
@@ -1075,7 +1135,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
 
     const metadataOptions = [
-        // { id: "summary", name: "Summary", description: "Generate concise overview" },
+        { id: "summary", name: "Summary", description: "Generate concise overview" },
         // { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
         { id: "highlights", name: "Highlights", description: "Capture key moments" },
         { id: "chapters", name: "Chapters", description: "Divide source into meaningful sections" },
@@ -1092,11 +1152,95 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [uploadedSources, setUploadedSources] = useState([]);
     const [isFileUploading, setIsFileUploading] = useState(false);
-
-    const [reels, setReels] = useState([]);
     // const [user, setUser] = useState(null);
+
+    const [chatHistory, setChatHistory] = useState([]);
+    const [currentChat, setCurrentChat] = useState([]);
+
+    const checkedSourcesCount = useMemo(() => displayedSources.filter(source => source.is_checked).length, [displayedSources]);
+
+    // useEffect(() => {
+    //     let now = new Date();
+    //     setCurrentChat({ sessionId: generateRandomId(), title: `New Chat ${chatHistory.length + 1}`, userId: user?.userId, messages: [], created_at: now, updated_at: now });
+    // }, []);
+
+    useEffect(() => {
+        async function getChatHistory() {
+            try {
+                const { chat_history } = await makeApiRequest("/chat-history", "GET");
+                setChatHistory(chat_history);
+                setCurrentChat(chat_history.find(item => item.is_current_chat) ?? null);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getChatHistory();
+    }, [currentProject.project_id]);
+
+    useEffect(() => {
+        // if (Array.isArray(currentChat)) {
+        workspaceContainer?.current?.scrollTo({
+            top: 0,
+            behavior: "smooth", // Enables smooth scrolling
+        });
+        // }
+    }, [currentChat]);
+
+    const [combinedSummary, setCombinedSummary] = useState("");
+    const [isCombinedSummaryPending, setIsCombinedSummaryPending] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
+
+    const getCombinedSum = async () => {
+        try {
+            setIsCombinedSummaryPending(true);
+            setActiveView('resource');
+
+            const sources = displayedSources
+                .filter(s => s.is_checked)
+                .map(({ source_path, category }) => ({ source_path, category }));
+
+            if (!sources.length) {
+                setCombinedSummary("");
+                return;
+            }
+
+            const summary = await makeApiRequest(
+                '/combine-summaries',
+                'POST',
+                JSON.stringify({
+                    sources,
+                    lang: selectedLanguage,
+                })
+            );
+
+            setCombinedSummary(summary?.combined_summary || "");
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsCombinedSummaryPending(false);
+        }
+    };
+    useEffect(() => {
+        getCombinedSum();
+    }, [currentProject.project_id]);
+    // }, [displayedSources, selectedLanguage]);
+
+    const metadataPanelContainer = useRef(null);
+
+
     // create value object with all the states
     const value = {
+        metadataPanelContainer,
+        checkedSources,
+        combinedSummary, setCombinedSummary,
+        isCombinedSummaryPending, setIsCombinedSummaryPending,
+        selectedLanguage, setSelectedLanguage,
+        getCombinedSum,
+        theme, setTheme,
+        checkedSourcesCount,
+        chatHistory, setChatHistory,
+        currentChat, setCurrentChat,
         reels, setReels,
         persistedUploadedFiles, setPersistedUploadedFiles,
         // user, setUser,
@@ -1115,7 +1259,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         generatedResources, setGeneratedResources,
         categoryOptions, setCategoryOptions, showEditor, setShowEditor,
         languageOptions,
-        theme, activeView, setActiveView,
+        activeView, setActiveView,
+        hasDuration, setHasDuration,
         chatLoaded, setChatLoaded,
         fileFormats,
         displayedSources, setDisplayedSources,
@@ -1136,7 +1281,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         resourceURL,
         setResourceURL,
         jumpToPage, setJumpToPage,
-        setTheme,
         isNewStory, setIsNewStory,
         selectedGenStoriesModels, setSelectedGenStoriesModels,
         summaries, setSummaries,
@@ -1158,7 +1302,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         selectedSources,
         setSelectedSources,
         selectedAll,
-        setSelectedAll,
+        setCheckedAll,
         setSelectedCategory,
         selectedFormat,
         setSelectedFormat,

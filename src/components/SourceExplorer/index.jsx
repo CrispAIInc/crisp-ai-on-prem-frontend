@@ -4,7 +4,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-// import FolderIcon from "@mui/icons-material/Folder";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import PDFThumbnail from "../PDFThumbnail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -14,10 +13,12 @@ import { MainContext } from "../../contexts/mainContext.jsx";
 import "./source_explorer.css";
 import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import RemoveIndexModal from '../RemoveIndexModal';
 import { searchByKey, sortBySourcePath } from '../../utils';
-import { IndexModal } from '../IndexModal/index.jsx';
+import makeApiRequest from '../../api/index.js';
+import useResources from '../../hooks/useResources.js';
+import { useToast } from "../../contexts/toastContext";
+import ConfirmationModal from '../ConfirmationModal/index.jsx';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 export function SourceExplorer(props) {
     const {
@@ -29,9 +30,13 @@ export function SourceExplorer(props) {
         sourcesTobeCommited,
         selectedFormat,
         knowledgeBase,
-        setKnowledgeBase,
+        setCategoryOptions,
         categoryOptions
     } = useContext(MainContext);
+
+    const { isProjectReadOnly } = useContext(ProjectContext);
+
+    const { notify } = useToast();
 
     // const [currentPath, setCurrentPath] = useState('/');
     const [viewModes, setViewModes] = useState(["categories"]); // 'categories' or 'formats'
@@ -58,14 +63,14 @@ export function SourceExplorer(props) {
             ); // Category + Format
         }
 
-        return filteredItems.length > 0 && filteredItems.every(item => item.is_selected);
+        return filteredItems.length > 0 && filteredItems.every(item => item.is_checked);
     }
 
 
-    const [isSelectAll, setIsSelectAll] = useState(false);
+    const [isCheckedAll, setisCheckedAll] = useState(false);
 
     useEffect(() => {
-        setIsSelectAll(ge());
+        setisCheckedAll(ge());
     }, [currentPath, selectedCategory, selectedFormat, sourcesTobeCommited]);
 
 
@@ -150,6 +155,31 @@ export function SourceExplorer(props) {
     const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
 
     const [isIndexDeleting, setIsIndexDeleting] = useState(false);
+    const { getIndexes } = useResources({ setCategoryOptions });
+    async function deleteIndex() {
+        try {
+            // remove sources before index
+            setIsIndexDeleting(true);
+            const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(itemToRemove));
+            if (itemsToBeDeleted.length > 0) await props.deleteResource(null, itemsToBeDeleted);
+            await makeApiRequest(`/remove-index`, 'post', { index: itemToRemove });
+            getIndexes();
+            notify({
+                variant: "success",
+                heading: "Index deleted!",
+            });
+            setShowRemoveIndexModal(false);
+        } catch (error) {
+            console.log(error.response.data.error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error?.response?.data?.error || 'Error deleting index',
+            });
+        } finally {
+            setIsIndexDeleting(false);
+        }
+    }
 
     const renderFolders = () => {
         if (viewModes[viewModes.length - 1] === "categories" && categoryOptions?.filter(cat => cat.value !== "all").length === 0) {
@@ -164,7 +194,14 @@ export function SourceExplorer(props) {
             );
         }
         return <>
-            {props[viewModes[viewModes.length - 1]].map((item, index) => (
+            <div
+                className="relative select-none transition-transform folder group hover:scale-110 hover:font-medium hover:bg-gradient-to-r hover:from-[#755bea] hover:to-[#b76894] hover:bg-clip-text hover:text-transparent"
+                onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder('all') : openFormatFolder('all'))}
+            >
+                <FolderOpenIcon sx={{ fontSize: 50 }} className={`${theme === 'light' ? 'text-textColor-300' : "text-[#ABAEB4]"} `} />
+                <p>All</p>
+            </div>
+            {props[viewModes[viewModes.length - 1]].filter(item => item.value !== "all").map((item, index) => (
                 <div
                     className="relative select-none transition-transform folder group hover:scale-110 hover:font-medium hover:bg-gradient-to-r hover:from-[#755bea] hover:to-[#b76894] hover:bg-clip-text hover:text-transparent"
                     onClick={() => (viewModes[viewModes.length - 1] === "categories" ? openCategoryFolder(item.value) : openFormatFolder(item.value))}
@@ -172,7 +209,7 @@ export function SourceExplorer(props) {
                     onMouseOver={() => { setHoveredItemToRemove(item.value); setItemToRemove(item.value); }}
                     onMouseLeave={() => { setHoveredItemToRemove(""); }}
                 >
-                    {(hoveredItemToRemove === item.value && viewModes[viewModes.length - 1] === "categories" && item.value !== "all") && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
+                    {(hoveredItemToRemove === item.value && viewModes[viewModes.length - 1] === "categories" && item.value !== "all" && !isProjectReadOnly) && <DeleteIcon color='error' onClick={(e) => removeIndex(e)} className='absolute top-0 right-3' />}
                     {
                         (itemToRemove === item.value && viewModes[viewModes.length - 1] === "categories" && isIndexDeleting) && <LoadingSpinner isSmall />
                     }
@@ -181,17 +218,9 @@ export function SourceExplorer(props) {
                     <p>{item.label}</p>
                 </div>
             ))}
-            <RemoveIndexModal setIsIndexDeleting={setIsIndexDeleting} deleteResource={props.deleteResource} index={itemToRemove} show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} />
+            <ConfirmationModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} heading="Are you sure you want to delete this index?" subheading="CAUTION: all sources from this category will be permanently deleted." confirmedFn={deleteIndex} isDeleting={isIndexDeleting} />
         </>;
     };
-
-    // useEffect(() => {
-    //     console.log(currentPath);
-    // }, [currentPath]);
-
-    // function test() {
-    //     setItemsFoundInsideCategoryOrFormat(false);
-    // }
 
     useEffect(() => {
         if (viewModes[viewModes.length - 1] === "files") {
@@ -246,7 +275,7 @@ export function SourceExplorer(props) {
                                     <Checkbox
                                         className={`select-all-checkbox ${theme === "dark" && "border-white text-white"
                                             } p-0`}
-                                        checked={file.is_selected}
+                                        checked={file.is_checked}
                                         onChange={(e) => props.handleCheckboxChange(e.target?.checked, file)}
                                         inputProps={{ "aria-label": "Select source" }}
                                     />
@@ -261,11 +290,13 @@ export function SourceExplorer(props) {
                                         ) : null
                                     }
 
-                                    <DeleteIcon
-                                        style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                        onClick={(event) => props.deleteResource(event, [file])}
-                                        className="delete-icon"
-                                    />
+                                    {
+                                        !isProjectReadOnly && <DeleteIcon
+                                            style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                            onClick={(event) => props.deleteResource(event, [file])}
+                                            className="delete-icon"
+                                        />
+                                    }
                                 </div>
                                 <div onClick={(event) => props.onThumbnailClick(event, file)}>
                                     {file.file_type === "video" && <StagedVideoThumbnail item={file} />}
@@ -311,7 +342,7 @@ export function SourceExplorer(props) {
                                     <Checkbox
                                         className={`select-all-checkbox ${theme === "dark" && "border-white text-white"
                                             } absolute p-0`}
-                                        checked={file.is_selected}
+                                        checked={file.is_checked}
                                         onChange={(e) => props.handleCheckboxChange(e.target?.checked, file)}
                                         inputProps={{ "aria-label": "Select source" }}
                                     />
@@ -326,11 +357,11 @@ export function SourceExplorer(props) {
                                         ) : null
                                     }
 
-                                    <DeleteIcon
+                                    {!isProjectReadOnly && <DeleteIcon
                                         style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
                                         onClick={(event) => props.deleteResource(event, [file])}
                                         className="delete-icon"
-                                    />
+                                    />}
                                 </div>
                                 <div onClick={(event) => props.onThumbnailClick(event, file)}>
                                     {file.file_type === "video" && <StagedVideoThumbnail item={file} />}
@@ -418,7 +449,6 @@ export function SourceExplorer(props) {
                     {viewModes[viewModes.length - 1] !== "files"
                         ? renderFolders()
                         : renderFiles()}
-                    {/* <RemoveIndexModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} /> */}
                 </div>
             </Modal.Body>
             <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"} z-20`}>
@@ -426,7 +456,7 @@ export function SourceExplorer(props) {
                     <Checkbox
                         className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
                             }`}
-                        checked={selectedAll || isSelectAll}
+                        checked={selectedAll || isCheckedAll}
                         onChange={(e) => props.handleSelectAllCheckboxChange(currentPath, e.target.checked)}
                         inputProps={{ "aria-label": "Select All Sources" }}
                         label="Select All Sources"

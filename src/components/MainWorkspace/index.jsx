@@ -1,130 +1,122 @@
-import { useEffect, useContext } from "react";
+import { useState } from "react";
 
-// import { MainContext } from "../../contexts/mainContext.jsx";
-
-import makeApiRequest from "../../api";
-
+import ChatPanel from "../ChatPanel";
 import ContentPanel from "../ContentPanel";
 import Workspace from "../Workspace";
-import ChatPanel from "../ChatPanel";
+
+import { Helmet } from 'react-helmet';
+import Joyride from 'react-joyride';
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import { MainContext } from '../../contexts/mainContext.jsx';
-import useResources from '../../hooks/useResources.js';
-import { AuthContext } from '../../contexts/authContext.jsx';
-import { pick } from '../../utils.js';
+import "./MainWorkspace.css";
 
-const MainWorkspace = () => {
-  const {
-    theme,
-    setSourcesTobeCommited,
-    knowledgeBase,
-    setIsNotesLoading,
-    setNotes,
-    setSelectedNote,
-    setIsStoriesLoading,
-    setStories,
-    setSelectedStory,
-    setCategoryOptions,
-    setReels,
-  } = useContext(MainContext);
 
-  const { setUser } = useContext(AuthContext);
+export const JOYRIDE_STEPS = [
+  {
+    target: "#left_panel",
+    title: "Ingestion section",
+    content: "This is where all your ingested (uploaded) sources live.",
+    placement: "right",
+  },
+  {
+    target: "#upload_sources",
+    title: "Ingest",
+    content: "Create indexes or Upload videos, files or any other documents to start building your knowledge base.",
+    placement: "right",
+  },
+  {
+    target: "#source_explorer",
+    title: "Source Explorer",
+    content: "Browse, manage, and organize all your ingested sources in one place.",
+    placement: "right",
+  },
+  {
+    target: "#discovery",
+    title: "Discovery",
+    content: "Explore moments extracted from your sources automatically.",
+    placement: "right",
+  },
+  {
+    target: "#interaction",
+    title: "Interaction",
+    content: "Ask questions and interact with your content conversationally.",
+  },
+  {
+    target: "#combined_summary",
+    title: "Combined Summary",
+    content: "Get a unified summary generated from one or multiple sources.",
+  },
+  {
+    target: "#copilot",
+    title: "AI Copilot",
+    content: "Your Crisp Wiz assistant that helps you reason, analyze, and generate insights.",
+  },
+  {
+    target: "#genMetadata",
+    title: "Generate Metadata",
+    content: "Automatically extract structured metadata from your content (e.g. Chapters, Highlights, Keywords, etc.).",
+    placement: "left",
+  },
+  {
+    target: "#genStories",
+    title: "Generate Stories",
+    content: "Turn raw information into clear, engaging stories and reports.",
+    placement: "left",
+  },
+  {
+    target: "#genMedia",
+    title: "Generate Media",
+    content: "Create visual or multimedia outputs based on your content.",
+    placement: "left",
+  },
+];
 
-  const { getReels, getStories, getNotes, getIndexes } = useResources({ setReels, setStories, setNotes, setCategoryOptions });
-  useEffect(() => {
-    getIndexes();
-  }, []);
+const MainWorkspace = ({ currentProject, setCurrentProject }) => {
 
-  // update sourcesTobeCommited depending on knowledgeBase change
-  useEffect(() => {
-    setSourcesTobeCommited(knowledgeBase.filter((item) => item.is_selected));
-  }, [knowledgeBase]);
+  // ================== joyride =================
+  const [run, setRun] = useState(JSON.parse(localStorage.getItem("app_guide_completed")) !== true);
 
-  useEffect(() => {
-    const getAllNotes = async () => {
-      try {
-        setIsNotesLoading(true);
-        getNotes();
-        setSelectedNote({
-          note_id: "",
-          text: [{
-            content: "", model: null, color: theme === 'light' ? "#333" : '#fff', question: '', references: {
-              videoLinks: [],
-              keyframeLinks: [],
-              pdfLinks: [],
-              imageLinks: [],
-            }
-          }],
-          images: [],
-          note_name: "",
-        });
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsNotesLoading(false);
-      }
-    };
-
-    getAllNotes();
-  }, []);
-
-  useEffect(() => {
-    const getAllStories = async () => {
-      try {
-        setIsStoriesLoading(true);
-        getStories();
-        setSelectedStory({
-          story_id: "",
-          text: [],
-          story_name: "",
-          models: [],
-        });
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsStoriesLoading(false);
-      }
-    };
-
-    getAllStories();
-  }, []);
-
-  useEffect(() => {
-    getReels();
-  }, []);
-
-  // get user info
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const data = await makeApiRequest("/me", "get");
-        const userWithSpecificProperties = pick(data, ["firstName", "lastName", "email", "username"]);
-        setUser({
-          firstName: data?.display_name.split(" ")[0] ?? data.firstName,
-          lastName: data?.display_name.split(" ").slice(1).join(" ") ?? data.lastName,
-          ...userWithSpecificProperties,
-          emailVerified: data.email_verified,
-        });
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
-
-    getUserInfo();
-  }, []);
 
   return (
-    // <MainContext.Provider value={value}>
-    <div className="flex relative !h-full divide-x divide-separator main-workspace-container">
-      {/* <div className="absolute z-40 w-full h-12">
-          <ProgressBar />
-        </div> */}
-      <ContentPanel />
-      <Workspace />
-      <ChatPanel />
-    </div>
-    // </MainContext.Provider>
+    <>
+      <Helmet>
+        <title>Crisp AI - {currentProject?.name}</title>
+      </Helmet>
+      <div className="flex relative !h-full divide-x divide-separator main-workspace-container">
+        {/* ================ joyride ================= */}
+        <Joyride
+          steps={JOYRIDE_STEPS}
+          run={run}
+          continuous
+          scrollToFirstStep
+          showProgress={true}
+          showSkipButton={true}
+          disableOverlayClose
+          spotlightPadding={6}
+          styles={{
+            options: {
+              zIndex: 10000,
+              overlayColor: "rgba(0,0,0,0.55)",
+              primaryColor: "#333",
+            },
+            spotlight: {
+              borderRadius: 12,
+              boxShadow: "0 0 0 9999px rgba(0,0,0,0.55)",
+            },
+          }}
+          callback={({ status }) => {
+            if (status === "finished" || status === "skipped") {
+              setRun(false);
+              localStorage.setItem("app_guide_completed", true);
+            }
+          }}
+        />
+
+        <ContentPanel setCurrentProject={setCurrentProject} />
+        <Workspace />
+        <ChatPanel />
+      </div>
+    </>
   );
 };
 

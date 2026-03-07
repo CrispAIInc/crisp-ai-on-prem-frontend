@@ -4,8 +4,6 @@ import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import GsFile from '../GsFile';
 
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-
 function StagedVideoThumbnail({ item }) {
 
     const { theme } = useContext(MainContext);
