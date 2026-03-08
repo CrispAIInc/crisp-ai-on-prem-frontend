@@ -131,7 +131,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                 <KeyboardDoubleArrowLeftIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={onHide} />
             </div>
 
-            <div className="flex flex-col flex-1 gap-7 z-50">
+            <div className="flex flex-col flex-1 gap-7 z-10">
                 <div>
                     <BaseHeading text="Select Project" className="mb-2" />
                     {/* switch project */}
