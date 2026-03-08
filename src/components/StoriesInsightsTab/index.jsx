@@ -103,7 +103,7 @@ function StoriesInsightsTab({
         });
     };
 
-    const handleMouseEnter = () => (context === "" || isProjectReadOnly) && setTooltipVisible(true);
+    const handleMouseEnter = () => ((context === "" || isProjectReadOnly) && !isLoading) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     return (
