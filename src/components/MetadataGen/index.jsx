@@ -98,6 +98,12 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
             setGeneratedResources(results);
             setVerbosityValue('Medium');
             setContext('');
+
+            notify({
+                variant: "success",
+                heading: "Metadata generated",
+                subheading: "See generated results under the source."
+            });
         } catch (error) {
             console.error(error);
             notify({
