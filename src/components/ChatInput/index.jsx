@@ -115,10 +115,10 @@ export default function ChatInput({
             <div className="flex items-center justify-between px-2">
                 {/* crisp wiz models */}
                 <div className="flex items-center gap-2">
-                    <CrispWizModels crispModels={crispModels} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+                    {/* <CrispWizModels crispModels={crispModels} selectedModel={selectedModel} setSelectedModel={setSelectedModel} /> */}
 
                     {/* selected crisp wiz model */}
-                    <Chip content={crispModels.find(model => model.value === selectedModel)?.name || crispModels[0].name} cssClasses="text-gradient-x" />
+                    {/* <Chip content={crispModels.find(model => model.value === selectedModel)?.name || crispModels[0].name} cssClasses="text-gradient-x" /> */}
                 </div>
 
                 {/* chat history */}
