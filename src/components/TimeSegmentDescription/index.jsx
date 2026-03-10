@@ -15,7 +15,12 @@ import {
     Paragraph,
     TextRun,
     AlignmentType,
+    Table,
+    TableRow,
+    TableCell,
+    WidthType,
     BorderStyle,
+    ImageRun
 } from "docx";
 import { saveAs } from "file-saver";
 
@@ -127,134 +132,276 @@ const TimeSegmentDescription = ({
         }
     }
 
-    const exportToDocx = async (results) => {
-        const brandColor = "2E74B5"; // Change this to your brand color
+    /* -------------------------------- */
+    /* Heading with purple/pink accent  */
+    /* -------------------------------- */
 
-        // Replace all <br> variations
-        const cleanedDescription = results.description.replace(
-            /<br[^>]*>/gi,
-            "\n"
-        );
+    function createHeading(text) {
+        return [
 
-        const descriptionLines = cleanedDescription.split("\n");
+            new Paragraph({
+                spacing: { before: 400, after: 80 },
+                border: {
+                    left: {
+                        style: BorderStyle.SINGLE,
+                        size: 18,
+                        color: "C2185B" // pink accent bar
+                    }
+                },
+                children: [
+                    new TextRun({
+                        text: "   " + text,
+                        bold: true,
+                        size: 20,
+                        color: "8E24AA", // purple
+                        font: "Calibri"
+                    }),
+                ],
+            }),
+        ];
+    }
 
-        const descriptionParagraphs = descriptionLines.map(
-            (line) =>
+
+    /* -------------------------------- */
+    /* Table Cell with padding          */
+    /* -------------------------------- */
+
+    function paddedCell(text) {
+        return new TableCell({
+            margins: {
+                top: 120,
+                bottom: 120,
+                left: 200,
+                right: 200
+            },
+            children: [
                 new Paragraph({
-                    spacing: { line: 360, after: 120 }, // 1.5 line spacing
                     children: [
                         new TextRun({
-                            text: line,
-                            size: 24, // 12pt
-                        }),
-                    ],
+                            text,
+                            font: "Calibri",
+                            size: 24
+                        })
+                    ]
                 })
-        );
+            ]
+        });
+    }
 
-        const referenceParagraphs = results.refs.map(
-            (ref) =>
-                new Paragraph({
-                    spacing: { after: 100 },
-                    children: [
-                        new TextRun({
-                            text: ref.displayText,
-                            size: 22,
-                        }),
-                    ],
-                })
-        );
+
+    /* -------------------------------- */
+    /* Timestamp timeline formatter     */
+    /* -------------------------------- */
+
+    function formatDescription(description) {
+
+        const parts = description
+            .split(/<br\s*\/?>/i)
+            .map(p => p.trim())
+            .filter(Boolean);
+
+        const regex = /^\[(\d{2}:\d{2}:\d{2})\]\s*/;
+
+        return parts.map(part => {
+
+            const match = part.match(regex);
+
+            if (!match) return null;
+
+            const timestamp = match[1];
+            const text = part.replace(regex, "");
+
+            return new Paragraph({
+
+                spacing: {
+                    before: 120,
+                    after: 320
+                },
+
+                children: [
+
+                    new TextRun({
+                        text: `⏱ ${timestamp}`,
+                        bold: true,
+                        color: "000000",
+                        size: 20,
+                        font: "Calibri"
+                    }),
+
+                    new TextRun({
+                        break: 1
+                    }),
+
+                    new TextRun({
+                        text: text,
+                        size: 20,
+                        font: "Calibri"
+                    })
+                ]
+            });
+
+        }).filter(Boolean);
+    }
+
+
+    async function loadLogo() {
+        const res = await fetch("http://localhost:3000/new-crisp-logo-resized.png"); // URL relative to public folder
+        return await res.arrayBuffer();
+    }
+
+    /* -------------------------------- */
+    /* Main Export Function             */
+    /* -------------------------------- */
+
+    async function exportVideoReportToDocx(data) {
+
+        /* ---------- LOAD LOGO ---------- */
+        // If in browser, you can use File/URL to get ArrayBuffer instead
+        const logoBuffer = await loadLogo();
+
+        const ref = data.refs?.[0];
 
         const doc = new Document({
-            styles: {
-                default: {
-                    document: {
-                        run: {
-                            font: "Calibri",
-                            size: 24,
-                        },
-                    },
-                },
-            },
+
             sections: [
                 {
                     children: [
-                        // ===== TITLE =====
+
+                        // new Paragraph({
+                        //     children: [
+                        //         // LOGO IMAGE
+                        // new ImageRun({
+                        //     data: logoBuffer,
+                        //     transformation: {
+                        //         width: 60,
+                        //         height: 60
+                        //     }
+                        // }),
+                        //     ]
+                        // }),
+
+                        /* ---------- COVER TITLE ---------- */
+
                         new Paragraph({
                             alignment: AlignmentType.CENTER,
-                            spacing: { after: 300 },
+                            spacing: { after: 50 },
                             children: [
+                                // new ImageRun({
+                                //     data: logoBuffer,
+                                //     transformation: {
+                                //         width: 60,
+                                //         height: 60
+                                //     }
+                                // }),
                                 new TextRun({
-                                    text: "Crisp AI Segment Report",
+                                    text: "CRISP AI",
+                                    size: 56,
                                     bold: true,
-                                    size: 42, // 21pt
-                                    color: brandColor,
-                                }),
-                            ],
+                                    color: "000000",
+                                    font: "Calibri"
+                                })
+                            ]
                         }),
 
-                        // ===== SUBTITLE / SEGMENT =====
+                        new Paragraph({
+                            alignment: AlignmentType.CENTER,
+                            spacing: { after: 50 },
+                            children: [
+                                new TextRun({
+                                    text: "Video Analysis Report",
+                                    size: 36,
+                                    color: "000000",
+                                    font: "Calibri"
+                                })
+                            ]
+                        }),
+
                         new Paragraph({
                             alignment: AlignmentType.CENTER,
                             spacing: { after: 300 },
                             children: [
                                 new TextRun({
-                                    text: `${results.start} — ${results.end}`,
+                                    text: "Automatically generated by Crisp AI",
+                                    italics: true,
                                     size: 24,
-                                    bold: true,
-                                }),
-                            ],
+                                    color: "666666",
+                                    font: "Calibri"
+                                })
+                            ]
                         }),
 
-                        // ===== SEPARATOR LINE =====
                         new Paragraph({
                             border: {
                                 bottom: {
-                                    color: "E0E0E0",
-                                    space: 1,
-                                    value: BorderStyle.SINGLE,
-                                    size: 6,
-                                },
+                                    style: BorderStyle.SINGLE,
+                                    size: 12,
+                                    color: "000000"
+                                }
                             },
-                            spacing: { after: 300 },
+                            spacing: { after: 500 }
                         }),
 
-                        // ===== DESCRIPTION HEADER =====
-                        new Paragraph({
-                            spacing: { before: 200, after: 150 },
-                            children: [
-                                new TextRun({
-                                    text: "Description",
-                                    bold: true,
-                                    size: 30,
-                                    color: brandColor,
+                        /* ---------- VIDEO INFORMATION ---------- */
+
+                        ...createHeading("Video Information"),
+
+
+
+                        new Table({
+                            width: {
+                                size: 100,
+                                type: WidthType.PERCENTAGE
+                            },
+                            rows: [
+
+                                new TableRow({
+                                    children: [
+                                        paddedCell("File Name"),
+                                        paddedCell(ref.source_path)
+                                    ]
                                 }),
-                            ],
-                        }),
 
-                        ...descriptionParagraphs,
-
-                        // ===== REFERENCES HEADER =====
-                        new Paragraph({
-                            spacing: { before: 400, after: 150 },
-                            children: [
-                                new TextRun({
-                                    text: "References",
-                                    bold: true,
-                                    size: 30,
-                                    color: brandColor,
+                                new TableRow({
+                                    children: [
+                                        paddedCell("Start Time"),
+                                        paddedCell(data.start)
+                                    ]
                                 }),
-                            ],
+
+                                new TableRow({
+                                    children: [
+                                        paddedCell("End Time"),
+                                        paddedCell(data.end)
+                                    ]
+                                }),
+
+                                new TableRow({
+                                    children: [
+                                        paddedCell("Category"),
+                                        paddedCell(ref.category)
+                                    ]
+                                })
+
+                            ]
                         }),
 
-                        ...referenceParagraphs,
-                    ],
-                },
-            ],
+                        new Paragraph({ spacing: { after: 400 } }),
+
+                        /* ---------- SCENE DESCRIPTION ---------- */
+
+                        ...createHeading("Scene Timeline"),
+
+                        ...formatDescription(data.description)
+
+                    ]
+                }
+            ]
         });
 
         const blob = await Packer.toBlob(doc);
-        saveAs(blob, "segment-description.docx");
-    };
+
+        saveAs(blob, "crisp-ai-video-report.docx");
+    }
 
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
@@ -277,7 +424,7 @@ const TimeSegmentDescription = ({
             <SegmentDescriptionResult
                 results={results}
                 isPending={isPending}
-                exportFn={() => exportToDocx(results)}
+                exportFn={() => exportVideoReportToDocx(results)}
             />
         </div>
     );
