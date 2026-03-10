@@ -994,7 +994,9 @@ const ContentSection = ({
                                             {
                                                 !isProjectReadOnly && (
                                                     !('progress' in option) ? (
-                                                        <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                        (option?.source_path === hoveredSource || showSourceContextMenu === option?.source_path) && (
+                                                            <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                        )
                                                     ) : (
                                                         <CircularProgressWithLabel value={option.progress} variant="determinate" isUploadFiled={false} />
                                                     )
