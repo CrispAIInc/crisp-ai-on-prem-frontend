@@ -96,10 +96,10 @@ const FindMomentsResult = ({ exportFn, isPending, captionResults }) => {
                     )}
 
                     {/* action buttons */}
-                    <div className="flex items-center gap-2 mt-4">
+                    {/* <div className="flex items-center gap-2 mt-4">
                         <RippleButton cssClasses="px-3 py-1 text-sm  rounded" onClick={exportFn}>Export</RippleButton>
                         <RippleButton cssClasses="px-3 py-1 text-sm  rounded" noBg onClick={copyToClipboard}>Copy</RippleButton>
-                    </div>
+                    </div> */}
                 </>
             )
             }
