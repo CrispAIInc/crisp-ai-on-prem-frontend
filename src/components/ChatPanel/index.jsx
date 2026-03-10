@@ -244,8 +244,8 @@ const ChatPanel = () => {
         <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-          <div className={`${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
-            } mb-3 pb-[10px]`}>
+          <div className={`${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+            } pb-[10px]`}>
             {/* buttons */}
             <div className={`flex justify-around gap-5 mt-2 flex-items overflow-x-auto [&::-webkit-scrollbar]:h-[6px]
     [&::-webkit-scrollbar-track]:bg-transparent
