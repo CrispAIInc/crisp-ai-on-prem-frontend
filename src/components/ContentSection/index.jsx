@@ -983,6 +983,8 @@ const ContentSection = ({
                                                             <span>Rename</span>
                                                         </div>
 
+                                                        <hr className="m-0" />
+
                                                         <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
                                                             <DeleteOutlineOutlinedIcon
                                                                 className={`cursor-pointer`}
