@@ -102,7 +102,7 @@ const ChatPanel = () => {
 
   const [isNewInsight, setIsNewInsight] = useState(false);
 
-  const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
+  const [currentTab, setCurrentTab] = useState("Stories");  // insights | stories | Blogs
 
   const closeEditor = useCallback(() => {
     setIsNewInsight(false);

@@ -174,10 +174,10 @@ function StoriesInsightsTab({
                     <div className="relative z-10 flex items-center gap-3 mt-4 mb-3">
                         {
                             [
-                                {
-                                    icon: ArticleOutlinedIcon,
-                                    title: "Insights"
-                                },
+                                // {
+                                //     icon: ArticleOutlinedIcon,
+                                //     title: "Insights"
+                                // },
                                 {
                                     icon: AutoStoriesOutlinedIcon,
                                     title: "Stories"
