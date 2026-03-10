@@ -94,8 +94,14 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                 });
             });
 
-
             setGeneratedResources(results);
+
+            notify({
+                variant: "success",
+                heading: "Metadata generated.",
+                subheading: "Click on the source the see the generated metadata..",
+            });
+
             setVerbosityValue('Medium');
             setContext('');
         } catch (error) {
