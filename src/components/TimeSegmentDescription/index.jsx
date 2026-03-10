@@ -4,7 +4,7 @@ import SegmentDescription from '../SegmentDescription';
 import SegmentDescriptionResult from "../SegmentDescriptionResult";
 import Chip from "../Chip";
 import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
-import { delay, formatTime, toSeconds } from "../../utils.js";
+import { delay, formatTime, toSeconds, urlToBase64 } from "../../utils.js";
 import { useToast } from '../../contexts/toastContext';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import useAuth from '../../hooks/useAuth.js';
@@ -20,6 +20,7 @@ import {
     TableCell,
     WidthType,
     BorderStyle,
+    HeadingLevel,
     ImageRun
 } from "docx";
 import { saveAs } from "file-saver";
@@ -132,9 +133,17 @@ const TimeSegmentDescription = ({
         }
     }
 
-    /* -------------------------------- */
-    /* Heading with purple/pink accent  */
-    /* -------------------------------- */
+    // Helper function to convert a Base64 string to a Uint8Array
+    function base64ToUint8Array(base64) {
+        const binaryString = window.atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes;
+    }
+
 
     function createHeading(text) {
         return [
@@ -162,10 +171,6 @@ const TimeSegmentDescription = ({
     }
 
 
-    /* -------------------------------- */
-    /* Table Cell with padding          */
-    /* -------------------------------- */
-
     function paddedCell(text) {
         return new TableCell({
             margins: {
@@ -187,11 +192,6 @@ const TimeSegmentDescription = ({
             ]
         });
     }
-
-
-    /* -------------------------------- */
-    /* Timestamp timeline formatter     */
-    /* -------------------------------- */
 
     function formatDescription(description) {
 
@@ -244,20 +244,12 @@ const TimeSegmentDescription = ({
     }
 
 
-    async function loadLogo() {
-        const res = await fetch("http://localhost:3000/new-crisp-logo-resized.png"); // URL relative to public folder
-        return await res.arrayBuffer();
-    }
-
-    /* -------------------------------- */
-    /* Main Export Function             */
-    /* -------------------------------- */
-
     async function exportVideoReportToDocx(data) {
 
         /* ---------- LOAD LOGO ---------- */
         // If in browser, you can use File/URL to get ArrayBuffer instead
-        const logoBuffer = await loadLogo();
+        const logoBase64 = await urlToBase64("/new-crisp-logo-resized.png");
+        const logoBuffer = base64ToUint8Array(logoBase64.split(",")[1]);
 
         const ref = data.refs?.[0];
 
@@ -265,43 +257,35 @@ const TimeSegmentDescription = ({
 
             sections: [
                 {
+                    // -------- REDUCE PAGE MARGINS --------
+                    properties: {
+                        page: {
+                            margin: {
+                                top: 720,    // 0.5 inch
+                                right: 720,  // 0.5 inch
+                                bottom: 720, // 0.5 inch
+                                left: 720    // 0.5 inch
+                            }
+                        }
+                    },
                     children: [
 
-                        // new Paragraph({
-                        //     children: [
-                        //         // LOGO IMAGE
-                        // new ImageRun({
-                        //     data: logoBuffer,
-                        //     transformation: {
-                        //         width: 60,
-                        //         height: 60
-                        //     }
-                        // }),
-                        //     ]
-                        // }),
+                        new Paragraph({
+                            alignment: AlignmentType.LEFT,
+                            spacing: { after: 200 },
+                            children: [
+                                new ImageRun({
+                                    data: logoBuffer,
+                                    transformation: {
+                                        width: 160,  // Adjust to your real logo's proportions
+                                        height: 50,
+                                    },
+                                    type: "png", // Explicitly telling Word it's a PNG prevents corruption
+                                }),
+                            ],
+                        }),
 
                         /* ---------- COVER TITLE ---------- */
-
-                        new Paragraph({
-                            alignment: AlignmentType.CENTER,
-                            spacing: { after: 50 },
-                            children: [
-                                // new ImageRun({
-                                //     data: logoBuffer,
-                                //     transformation: {
-                                //         width: 60,
-                                //         height: 60
-                                //     }
-                                // }),
-                                new TextRun({
-                                    text: "CRISP AI",
-                                    size: 56,
-                                    bold: true,
-                                    color: "000000",
-                                    font: "Calibri"
-                                })
-                            ]
-                        }),
 
                         new Paragraph({
                             alignment: AlignmentType.CENTER,
@@ -334,7 +318,7 @@ const TimeSegmentDescription = ({
                             border: {
                                 bottom: {
                                     style: BorderStyle.SINGLE,
-                                    size: 12,
+                                    size: 8,
                                     color: "000000"
                                 }
                             },
@@ -402,6 +386,8 @@ const TimeSegmentDescription = ({
 
         saveAs(blob, "crisp-ai-video-report.docx");
     }
+
+
 
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
