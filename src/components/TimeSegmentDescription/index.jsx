@@ -194,6 +194,7 @@ const TimeSegmentDescription = ({
     }
 
     function formatDescription(description) {
+        if (!description) return [];
 
         const parts = description
             .split(/<br\s*\/?>/i)
@@ -203,44 +204,45 @@ const TimeSegmentDescription = ({
         const regex = /^\[(\d{2}:\d{2}:\d{2})\]\s*/;
 
         return parts.map(part => {
-
             const match = part.match(regex);
 
-            if (!match) return null;
+            if (match) {
+                // Line has timestamp
+                const timestamp = match[1];
+                const text = part.replace(regex, "");
 
-            const timestamp = match[1];
-            const text = part.replace(regex, "");
-
-            return new Paragraph({
-
-                spacing: {
-                    before: 120,
-                    after: 320
-                },
-
-                children: [
-
-                    new TextRun({
-                        text: `⏱ ${timestamp}`,
-                        bold: true,
-                        color: "000000",
-                        size: 20,
-                        font: "Calibri"
-                    }),
-
-                    new TextRun({
-                        break: 1
-                    }),
-
-                    new TextRun({
-                        text: text,
-                        size: 20,
-                        font: "Calibri"
-                    })
-                ]
-            });
-
-        }).filter(Boolean);
+                return new Paragraph({
+                    spacing: { before: 120, after: 320 },
+                    children: [
+                        new TextRun({
+                            text: `⏱ ${timestamp}`,
+                            bold: true,
+                            color: "000000",
+                            size: 20,
+                            font: "Calibri"
+                        }),
+                        new TextRun({ break: 1 }),
+                        new TextRun({
+                            text: text,
+                            size: 20,
+                            font: "Calibri"
+                        })
+                    ]
+                });
+            } else {
+                // Line without timestamp
+                return new Paragraph({
+                    spacing: { before: 120, after: 320 },
+                    children: [
+                        new TextRun({
+                            text: part,
+                            size: 20,
+                            font: "Calibri"
+                        })
+                    ]
+                });
+            }
+        });
     }
 
 
@@ -328,8 +330,6 @@ const TimeSegmentDescription = ({
                         /* ---------- VIDEO INFORMATION ---------- */
 
                         ...createHeading("Video Information"),
-
-
 
                         new Table({
                             width: {
