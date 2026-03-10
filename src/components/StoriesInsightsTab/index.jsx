@@ -171,7 +171,7 @@ function StoriesInsightsTab({
             <div className='relative z-10 flex flex-col flex-1 h-full overflow-hidden'>
                 <div>
                     {/* <MetadataGen key={0} name="genMetadata" /> */}
-                    <div className="relative z-10 flex items-center gap-3 mt-4 mb-3">
+                    <div className="relative z-10 flex items-center gap-3 mt-4">
                         {
                             [
                                 // {
