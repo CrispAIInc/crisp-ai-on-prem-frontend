@@ -106,7 +106,7 @@ function KnowledgeGraph() {
                         <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Your entities title (optional)</label>
                         <input
                             className={`${theme === 'dark' && 'text-textColor-100'
-                                } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
+                                } font-medium p-2 bg-transparent !border rounded-md ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
                             placeholder="Write a title for the entities"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
