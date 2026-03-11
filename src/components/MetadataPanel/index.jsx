@@ -279,11 +279,12 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
       {currentResource?.file_type === "video" && (
         <>
           <div className="relative ">
-            <div className={`h-full rounded-md ${theme === "light" ? "!border" : "!border !border-textColor-300"} overflow-hidden`}>
+            <div className="relative aspect-video w-full overflow-hidden rounded-md !border">
               <ReactPlayer
                 id="react-player"
-                width={"100%"}
-                height='500px'
+                className="absolute top-0 left-0" // <-- 1. ADD THIS
+                width="100%"
+                height="100%"                     // <-- 2. CHANGE THIS to 100%
                 playing={video_autoplay}
                 loop={video_loop}
                 url={sourcePublicUrl || resourceURL}
