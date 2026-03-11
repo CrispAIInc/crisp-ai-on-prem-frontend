@@ -476,7 +476,11 @@ const TimeSegmentDescription = ({
   backdrop-blur-sm`}>
                 {
                     showList ? (
-                        <TimeSegmentDescriptionList timeSegmentDescriptions={timeSegmentDescriptions} />
+                        <TimeSegmentDescriptionList
+                            setShowList={setShowList}
+                            timeSegmentDescriptions={timeSegmentDescriptions}
+                            setResults={setResults}
+                        />
                     ) : (
                         <SegmentDescriptionResult
                             setShowList={setShowList}
