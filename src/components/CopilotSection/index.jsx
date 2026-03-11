@@ -436,9 +436,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
         url.append("start_timestamp", formatTime((start)));
         url.append("end_timestamp", formatTime((end)));
-        url.append("video_filename", displayedSources.find(i => i.is_checked).source_path);
+        url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0]?.source_path);
         url.append("prompt", userMessage);
-
         let sessionID = null; // Variable to store the session ID
         const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}`, {
           headers: {
