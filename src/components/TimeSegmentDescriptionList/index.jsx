@@ -1,8 +1,14 @@
 import React from 'react';
 
-function TimeSegmentDescriptionList() {
+function TimeSegmentDescriptionList({ timeSegmentDescriptions }) {
     return (
-        <div>TimeSegmentDescriptionList</div>
+        <div className="flex flex-col overflow-y-auto">
+            {
+                timeSegmentDescriptions.map(item => (
+                    <p key={item.description}>{item.start}</p>
+                ))
+            }
+        </div>
     );
 }
 

@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import SegmentDescription from '../SegmentDescription';
 import SegmentDescriptionResult from "../SegmentDescriptionResult";
+import TimeSegmentDescriptionList from "../TimeSegmentDescriptionList";
 import Chip from "../Chip";
 import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
 import { delay, formatTime, toSeconds, urlToBase64 } from "../../utils.js";
@@ -37,6 +38,67 @@ const TimeSegmentDescription = ({
     setResults
 }) => {
 
+    /**
+     * *MOCKUP DATA ONLY*
+     */
+
+    const [timeSegmentDescriptions, setTimeSegmentDescriptions] = useState([
+        {
+            start: "00:00:00",
+            end: "00:00:09",
+            description: " [00:00:00] Two people sit on a light pink couch in a bright studio with a blue sky and palm trees backdrop. The person on the left wears a red sweater and glasses, looking down at something in their hands. The person on the right, dressed in black, leans slightly forward, engaging in conversation.<br /><br /> [00:00:03] The same two individuals remain seated on the pink couch. The person in red looks up, smiling gently, while the person in black gestures with their right hand, appearing to explain or emphasize a point. A small green plant in a white pot sits on the table in front of them.<br /><br /> [00:00:06] Both individuals continue their conversation on the pink couch. The person in red now looks directly at the other, who is leaning forward with hands clasped. The background remains consistent with palm trees and a bright blue sky, creating a relaxed, outdoor atmosphere indoors.<br /><br /> [00:00:09] The person in red gestures with their right hand while speaking, eyes focused on the person in black. The person in black listens attentively, hands resting on their knees. The pink couch and small green plant remain central, with the vivid blue sky and palm trees backdrop visible.<br /><br />",
+            refs: [
+                {
+                    file_type: "video",
+                    source_path: "bill gates.mp4",
+                    video_url: "gs://crispai-app-462614.firebasestorage.app/video_uploads/videos/oussama-i1/bill gates.mp4",
+                    timestamp: "00:00:00",
+                    thumbnail: "bill gates.mp4.jpg",
+                    category: "oussama-i1",
+                    duration: null,
+                    metadata: {
+                        transcription: {
+                            content: [
+                                {
+                                    content: "So it's a hot debate, you know, in terms of is it good for America to be generous and.\nAnd help the rest of the world live a healthy life?\nWell, I mean, the fact that you're helping so many people all around the world, that you have this.\nBecause that, to me, is what money.\nWhen you have that kind of money, it's for.\nIt's like that's the best thing you can do is actually you're making such a huge difference.\nSo I'm glad you're a billionaire.\nAll right.\nAll right.\nYou can learn more about the Bill and Melinda Gates foundation on the website and@gatesletter.com.",
+                                    start_time: "00:06:00",
+                                    end_time: "00:06:30"
+                                },
+                                {
+                                    content: "You can learn more about the Bill and Melinda Gates foundation on the website and@gatesletter.com.",
+                                    start_time: "00:06:30",
+                                    end_time: "00:07:00"
+                                }
+                            ],
+                            title: "Transcription"
+                        },
+                        summary: {
+                            content: " best teaching practices nationwide. When Ellen asks what everyday people can do to make a difference, Gates leans in with a focused, animated expression. He encourages viewers to volunteer and mentor students at their.",
+                            title: "Bill Gates on The Ellen DeGeneres Show: Wealth, Philanthropy, and Making a Difference",
+                            temperature: 0.2,
+                            verbosity: "Low"
+                        },
+                        embeddings_generated: false,
+                        chapters: {
+                            content: []
+                        },
+                        highlights: {
+                            content: []
+                        },
+                        faqs: {
+                            content: []
+                        },
+                        keywords: {
+                            content: []
+                        }
+                    },
+                    displayText: "bill gates.mp4 | Timestamp: 00:00:00"
+                }
+            ]
+        }
+    ]);
+
+
     const {
         checkedSources,
         theme,
@@ -50,13 +112,9 @@ const TimeSegmentDescription = ({
 
     const { notify } = useToast();
 
-    // const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
-    // const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
-
-    // const [prompt, setPrompt] = useState("");
-
     const [isPending, setIsPending] = useState(false);
     const [isFetchingRefs, setIsFetchingRefs] = useState(false);
+    const [showList, setShowList] = useState(true);
 
     async function generateDescription() {
         if (toSeconds(end) <= toSeconds(start)) {
@@ -117,6 +175,7 @@ const TimeSegmentDescription = ({
                         ...prev,
                         refs: data.data.video_references.map(video => ({ ...video, displayText: `${video.source_path} | Timestamp: ${video.timestamp}` })),
                     }));
+                    setShowList(false);
                 }
             };
 
@@ -169,7 +228,6 @@ const TimeSegmentDescription = ({
             }),
         ];
     }
-
 
     function paddedCell(text) {
         return new TableCell({
@@ -256,7 +314,6 @@ const TimeSegmentDescription = ({
         const ref = data.refs?.[0];
 
         const doc = new Document({
-
             sections: [
                 {
                     // -------- REDUCE PAGE MARGINS --------
@@ -387,7 +444,15 @@ const TimeSegmentDescription = ({
         saveAs(blob, "crisp-ai-video-report.docx");
     }
 
+    const containerRef = useRef(null);
+    const isContentEmpty = !results.description || results.description.trim() === "";
 
+    // auto scroll down whenever description changes
+    useEffect(() => {
+        if (!isContentEmpty && containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    }, [results.description, isContentEmpty]);
 
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
@@ -407,11 +472,24 @@ const TimeSegmentDescription = ({
                 isPending={isPending}
             />
 
-            <SegmentDescriptionResult
-                results={results}
-                isPending={isPending}
-                exportFn={() => exportVideoReportToDocx(results)}
-            />
+            <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
+  backdrop-blur-sm`}>
+                {
+                    showList ? (
+                        <TimeSegmentDescriptionList timeSegmentDescriptions={timeSegmentDescriptions} />
+                    ) : (
+                        <SegmentDescriptionResult
+                            setShowList={setShowList}
+                            results={results}
+                            isPending={isPending}
+                            exportFn={() => exportVideoReportToDocx(results)}
+                            setTimeSegmentDescriptions={setTimeSegmentDescriptions}
+                        />
+                    )
+                }
+            </div>
+
+
         </div>
     );
 };
