@@ -19,7 +19,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPe
 
     const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
 
-    const canGenerate = checkedSourcesCount === 1 && checkedSources.every(item => item.file_type === "video"); //&& !isPending
+    const canGenerate = checkedSources.filter(item => item.file_type === "video").length === 1;
 
     useEffect(() => {
         setIsTimestampPickerOpen(canGenerate);
