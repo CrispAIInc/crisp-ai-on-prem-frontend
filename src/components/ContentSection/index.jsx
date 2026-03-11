@@ -1013,7 +1013,7 @@ const ContentSection = ({
                                                     <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                                 ) : null
                                             }
-                                            <div className="relative flex-shrink-0 w-14 h-14">
+                                            <div className="relative flex-shrink-0 w-12 h-12">
                                                 {(isDeleting && clickedIndex?.source_path === option?.source_path) && (
                                                     <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[5] translate-x-[-50%] translate-y-[-50%] transform">
                                                         <LoadingSpinner isSmall />
@@ -1029,7 +1029,7 @@ const ContentSection = ({
                                                     />
                                                 )
                                                     : <GsFile
-                                                        className="object-cover w-full h-full rounded-2xl"
+                                                        className="object-cover w-full h-full rounded-xl"
                                                         gsUrl={option.thumbnail}
                                                         alt="Video Thumbnail"
                                                         isPrivate
