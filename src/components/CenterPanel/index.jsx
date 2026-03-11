@@ -111,7 +111,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
             )}
 
             {
-                (activeView === 'resource') && (
+                (activeView === 'resource' && displayedSources.length > 0) && (
 
 
                     <Accordion isFirstOpen={Boolean(messages.length === 0)} chosenLanguage={"en"} heading={`Sources Summary ${selectedSources > 0 ? `(${selectedSources} Source${selectedSources > 1 ? "s" : ""})` : ""}`} >
@@ -133,7 +133,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
 
                             {!isCombinedSummaryPending ? <div>
                                 <p
-                                    className={`text-md ${theme === "light"
+                                    className={`text-sm leading-7 ${theme === "light"
                                         ? "text-textColor-300"
                                         : "text-textColor-100"
                                         }`}
@@ -141,19 +141,23 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
                                     dangerouslySetInnerHTML={{ __html: `<p>${combinedSummary !== "" ? combinedSummary?.replace(/\n/gi, '<br />') : (currentResource?.metadata?.summary?.content !== undefined) ? currentResource?.metadata?.summary?.content : ""}</p>` }}
                                 ></p>
                                 {
-                                    combinedSummary === "" && currentResource?.metadata?.summary?.content === undefined &&
+                                    (combinedSummary === "" && currentResource?.metadata?.summary?.content === undefined && displayedSources.length > 0) &&
                                     <div className="flex items-center gap-2 mt-3">
                                         <WarningAmberOutlinedIcon style={{ color: theme === 'light' ? '#FBBF24' : '#F59E0B' }} />
                                         <span className={`text-sm ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Summary not available.</span>
                                     </div>
                                 }
-                                {combinedSummary !== "" && <RippleButton
+                                {/* {
+                                    combinedSummary !== "" && (
+                                        <RippleButton
                                     cssClasses={`mt-3 flex items-center justify-center py-1 pl-1 !pr-4`}
                                     onClick={() => addToInsight(combinedSummary !== "" ? combinedSummary?.replace(/\n/gi, '<br />') : currentResource?.metadata?.summary?.content)}
                                 >
                                     <AddIcon />
                                     <span className={`!text-[12px]`}>Add to insight</span>
-                                </RippleButton>}
+                                        </RippleButton>
+                                        )
+                                } */}
                             </div> : (
                                 <div className="animate-pulse">
                                     {new Array(10).fill(null).map((_, index) => (
