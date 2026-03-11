@@ -259,7 +259,7 @@ const FindMoments = ({
                 >
 
                     <RippleButton
-                        cssClasses="rounded-md !py-2 !px-3 !pr-4  flex items-center gap-1"
+                        cssClasses={`rounded-md !py-2 !px-3 !pr-4  flex items-center gap-1 ${tooltipVisible ? 'cursor-not-allowed' : ''}`}
                         disabled={checkedVideosCount === 0 || isFetchingRefs || prompt.trim() === "" || isProjectReadOnly}
                     >
                         {isFetchingRefs ? <LoadingSpinner cssClasses="mr-2" /> : <SearchOutlinedIcon className={`text-white text-sm`} />}
