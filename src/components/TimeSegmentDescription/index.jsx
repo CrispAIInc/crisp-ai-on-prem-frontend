@@ -95,7 +95,7 @@ const TimeSegmentDescription = ({
                     displayText: "bill gates.mp4 | Timestamp: 00:00:00"
                 }
             ]
-        }
+        },
     ]);
 
 
