@@ -72,9 +72,12 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results }) => {
                 <></>
             ) : (
                 <>
-                    <div className="flex items-center gap-2">
-                        <AccessTimeOutlinedIcon className="text-purple-400" />
-                        <BaseHeading text={`${results.start} - ${results.end}`} className="text-sm text-gradient-x" />
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                            <AccessTimeOutlinedIcon className="text-purple-400" />
+                            <BaseHeading text={`${results.start} - ${results.end}`} className="text-sm text-gradient-x" />
+                        </div>
+                        <BaseHeading text="close" className="text-sm cursor-pointer" />
                     </div>
                     <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: results.description }} />
 
