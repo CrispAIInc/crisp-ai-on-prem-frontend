@@ -1025,7 +1025,6 @@ const ContentSection = ({
                                                         className="object-cover w-full h-full rounded-md"
                                                         alt="video thumbnail"
                                                         controls={false}
-                                                        poster={option.thumbnail}
                                                     />
                                                 )
                                                     : <GsFile
