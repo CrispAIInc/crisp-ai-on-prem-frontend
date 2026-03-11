@@ -360,7 +360,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
         if (!isChecked) setCheckedAll(false);
 
-        if (isChecked === true) {
+        if (isChecked === true && !currentResource) {
             onThumbnailClick(undefined, file, true);
         }
     };
