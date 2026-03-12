@@ -9,6 +9,7 @@ import useResources from '../hooks/useResources';
 import { AuthContext } from './authContext';
 import { generateRandomId, pick } from '../utils';
 import { ProjectContext } from './projectContext';
+import useChat from '../hooks/useChat';
 
 export const MainContext = createContext({});
 
@@ -1154,8 +1155,20 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [isFileUploading, setIsFileUploading] = useState(false);
     // const [user, setUser] = useState(null);
 
+    const { addNewChat } = useChat();
     const [chatHistory, setChatHistory] = useState([]);
-    const [currentChat, setCurrentChat] = useState([]);
+    const [currentChat, setCurrentChat] = useState(() => {
+        const now = new Date();
+        return {
+            sessionId: generateRandomId(),
+            isTemp: true,
+            title: "New Chat " + (chatHistory.length + 1),
+            userId: user.userId,
+            messages: [],
+            created_at: now,
+            updated_at: now
+        };
+    });
 
     const checkedSourcesCount = useMemo(() => displayedSources.filter(source => source.is_checked).length, [displayedSources]);
 
@@ -1169,7 +1182,17 @@ export default function MainProvider({ children, theme, setTheme }) {
             try {
                 const { chat_history } = await makeApiRequest("/chat-history", "GET");
                 setChatHistory(chat_history);
-                setCurrentChat(chat_history.find(item => item.is_current_chat) ?? null);
+
+                const _currentChat = chat_history.find(item => item.is_current_chat);
+                console.log(_currentChat);
+                if (_currentChat) {
+                    setCurrentChat(_currentChat);
+                } else {
+                    setCurrentChat(prev => ({
+                        ...prev,
+                        title: "New Chat " + (chatHistory.length + 1),
+                    }));
+                }
             } catch (error) {
                 console.log(error);
             }
