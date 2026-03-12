@@ -70,6 +70,10 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
         setIsChatHistoryPopupOpen(false);
     }
 
+    function closeCurrentChat() {
+        addNewChat(`New Chat ${chatHistory.length + 1}`);
+    }
+
     return (
         <div className={`flex gap-1 p-2 ${currentChat ? 'w-full' : 'ml-auto'}`}>
             {/* current chat name */}
@@ -78,7 +82,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
                     <Chip
                         content={(
                             <>
-                                <CloseIcon className='font-bold cursor-pointer !text-[16px]' onClick={() => setCurrentChat(null)} />
+                                <CloseIcon className='font-bold cursor-pointer !text-[16px]' onClick={closeCurrentChat} />
                                 <p className={`font-bold !text-[11px]`}>{currentChat.title}</p>
                             </>
                         )}
