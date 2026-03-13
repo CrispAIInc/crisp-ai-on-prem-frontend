@@ -76,6 +76,7 @@ const FindMoments = ({
         let timestamps = await makeApiRequest('/find-timestamps', 'POST', JSON.stringify({
             prompt: query,
             sources: checkedSources.filter(items => items.file_type === "video"),
+            fromCrispWiz: false
         }));
 
         return timestamps;
