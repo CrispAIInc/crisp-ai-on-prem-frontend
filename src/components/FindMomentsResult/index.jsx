@@ -10,7 +10,7 @@ import { Skeleton } from '@mui/material';
 import Chip from '../Chip';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
-const FindMomentsResult = ({ exportFn, isPending, captionResults }) => {
+const FindMomentsResult = ({ exportFn, isPending, captionResults, currentMoment, setShowList }) => {
 
     const {
         theme,
@@ -18,7 +18,7 @@ const FindMomentsResult = ({ exportFn, isPending, captionResults }) => {
     } = useContext(MainContext);
     const { notify } = useToast();
 
-    console.log("rerener");
+
     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
     const containerRef = useRef(null);
@@ -50,9 +50,12 @@ const FindMomentsResult = ({ exportFn, isPending, captionResults }) => {
             });
     }
 
+    function closeResultsTab() {
+        setShowList(true);
+    }
+
     return (
-        <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
-  backdrop-blur-sm`}>
+        <div>
             {isPending ? (
                 <div className="flex flex-col gap-2">
                     <div>
@@ -73,16 +76,30 @@ const FindMomentsResult = ({ exportFn, isPending, captionResults }) => {
                         <Skeleton width={'20%'} height={40} />
                     </div>
                 </div>
-            ) : isContentEmpty ? (
-                <></>
             ) : (
                 <>
-                    <div>
-                        <BaseHeading text="Prompt" className="text-sm text-gradient-x" />
-                        <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{captionResults.prompt}</p>
+                    <div className="flex items-start justify-between gap-2">
+                        <div>
+                            <BaseHeading text="Prompt" className="text-sm text-gradient-x" />
+                            <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{currentMoment.prompt}</p>
+                        </div>
+                        <BaseHeading text="close" className="text-sm cursor-pointer" onClick={closeResultsTab} />
                     </div>
 
-                    {captionResults.refs && captionResults.refs.length > 0 && (
+                    <div>
+                        <BaseHeading text="Result" className="text-sm text-gradient-x mt-3 mb-1" />
+                        {
+                            currentMoment.results.map((segment, index) => (
+                                <div key={index} className="mb-4">
+                                    <p className={`text-sm/6 mb-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{segment.context}</p>
+
+                                    <Chip content={segment.timestampText} data-object={segment.source} onClick={(event) => handleSourceLinkClick(event, segment.source)} cssClasses="ml-0 cursor-pointer " />
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    {/* {captionResults.refs && captionResults.refs.length > 0 && (
                         <div className="mt-2">
                             <BaseHeading text="References" className="text-sm mb-2 text-gradient-x" />
                             <div className="flex flex-col gap-1">
@@ -93,7 +110,7 @@ const FindMomentsResult = ({ exportFn, isPending, captionResults }) => {
                                 })}
                             </div>
                         </div>
-                    )}
+                    )} */}
 
                     {/* action buttons */}
                     {/* <div className="flex items-center gap-2 mt-4">

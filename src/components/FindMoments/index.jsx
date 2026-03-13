@@ -17,8 +17,11 @@ import {
 } from "docx";
 import { saveAs } from "file-saver";
 import { ProjectContext } from '../../contexts/projectContext';
+import FindMomentsList from '../FindMomentsList';
 
 const FindMoments = ({
+    moments,
+    FindMoments,
     captionResults,
     setCaptionResults,
 }) => {
@@ -239,6 +242,10 @@ const FindMoments = ({
         saveAs(blob, "segment-description.docx");
     };
 
+    const containerRef = useRef(null);
+    const [showList, setShowList] = useState(true);
+    const [currentMoment, setCurrentMoment] = useState(null);
+
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
             <div className={`flex items-center gap-2 w-full pr-2 pb-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-100" : '!border !border-textColor-100 text-textColor-300'} rounded-md focus-within:ring-1 focus-within:ring-primaryColor/50`}>
@@ -277,12 +284,27 @@ const FindMoments = ({
                 </div>
             </div>
 
-            {/* results */}
-            <FindMomentsResult
-                captionResults={captionResults}
-                isPending={isFetchingRefs}
-                exportFn={() => exportToDocx(captionResults)}
-            />
+            <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
+              backdrop-blur-sm`}>
+                {
+                    showList ? (
+                        <FindMomentsList
+                            moments={moments}
+                            setShowList={setShowList}
+                            setCurrentMoment={setCurrentMoment}
+                        />
+                    ) : (
+                        <FindMomentsResult
+                            currentMoment={currentMoment}
+                            setCurrentMoment={setCurrentMoment}
+                            captionResults={captionResults}
+                            isPending={isFetchingRefs}
+                            exportFn={() => exportToDocx(captionResults)}
+                            setShowList={setShowList}
+                        />
+                    )
+                }
+            </div>
         </div>
     );
 };
