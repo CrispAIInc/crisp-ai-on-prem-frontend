@@ -37,12 +37,51 @@ const VideoSegmentDescription = () => {
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
+    const [segmentDescriptions, setSegmentDescriptions] = useState([]);
+
     const [resultsDescription, setResultsDescription] = useState({
         start: formatTime(startSegmentDescription),
         end: formatTime(endSegmentDescription),
         description: "",
         refs: []
     });
+
+    useEffect(() => {
+
+        async function fetchTimeSegments() {
+            try {
+                // axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+                // const { data, success } = await makeApiRequest("/chat/sgmt2rspns-history", 'GET', null, {
+                //     ProjectId: currentProject.project_id,
+                // });
+                const data = [
+                    {
+                        id: 1,
+                        start: "00:00:00",
+                        end: "00:00:10",
+                        description: "desc1",
+                        source_id: "FrDvSojllaJZaM5njTEI",
+                        title: "desc1"
+                    },
+                    {
+                        id: 2,
+                        start: "00:00:22",
+                        end: "00:00:41",
+                        description: "desc2",
+                        source_id: "FrDvSojllaJZaM5njTEI",
+                        title: "descé"
+                    },
+                ];
+                // if (success) {
+                setSegmentDescriptions(data);
+                // }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchTimeSegments();
+    }, []);
 
     // ========== time segment summary ==============
     // const [startSegmentSummary, setStartSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
@@ -127,7 +166,8 @@ const VideoSegmentDescription = () => {
                 currentTab === "Time segment description" ? (
                     <>
                         <TimeSegmentDescription
-                            key="description"
+                            segmentDescriptions={segmentDescriptions}
+                            setSegmentDescriptions={setSegmentDescriptions}
                             start={startSegmentDescription}
                             setStart={setStartSegmentDescription}
                             end={endSegmentDescription}
