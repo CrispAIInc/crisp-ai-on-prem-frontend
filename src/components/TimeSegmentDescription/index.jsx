@@ -141,6 +141,7 @@ const TimeSegmentDescription = ({
             url.append("end_timestamp", formatTime((end)));
             url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
             url.append("prompt", prompt);
+            url.append("fromCrispWiz", false);
 
             let sessionID = null; // Variable to store the session ID
             const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}`, {
