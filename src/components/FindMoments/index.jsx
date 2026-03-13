@@ -18,6 +18,7 @@ import {
 import { saveAs } from "file-saver";
 import { ProjectContext } from '../../contexts/projectContext';
 import FindMomentsList from '../FindMomentsList';
+import { Skeleton } from '@mui/material';
 
 const FindMoments = ({
     moments,
@@ -307,21 +308,50 @@ const FindMoments = ({
             <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
               backdrop-blur-sm`}>
                 {
-                    showList ? (
-                        <FindMomentsList
-                            moments={moments}
-                            setShowList={setShowList}
-                            setCurrentMoment={setCurrentMoment}
-                        />
+                    isFetchingRefs ? (
+
+                        <div className="flex flex-col gap-2">
+                            <div>
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                            </div>
+                            <div>
+                                <Skeleton width={'50%'} />
+                                <Skeleton width={'50%'} />
+                                <Skeleton width={'50%'} />
+                                <Skeleton width={'50%'} />
+                                <Skeleton width={'50%'} />
+                            </div>
+                            <br />
+                            <div>
+                                <Skeleton width={'50%'} />
+                                <Skeleton width={'50%'} />
+                                <Skeleton width={'50%'} />
+                                <Skeleton width={'50%'} />
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Skeleton width={'20%'} height={40} />
+                                <Skeleton width={'20%'} height={40} />
+                            </div>
+                        </div>
                     ) : (
-                        <FindMomentsResult
-                            currentMoment={currentMoment}
-                            setCurrentMoment={setCurrentMoment}
-                            captionResults={captionResults}
-                            isPending={isFetchingRefs}
-                            exportFn={() => exportToDocx(captionResults)}
-                            setShowList={setShowList}
-                        />
+                        showList ? (
+                            <FindMomentsList
+                                moments={moments}
+                                setShowList={setShowList}
+                                setCurrentMoment={setCurrentMoment}
+                            />
+                        ) : (
+                            <FindMomentsResult
+                                currentMoment={currentMoment}
+                                setCurrentMoment={setCurrentMoment}
+                                captionResults={captionResults}
+                                isPending={isFetchingRefs}
+                                exportFn={() => exportToDocx(captionResults)}
+                                setShowList={setShowList}
+                            />
+                        )
                     )
                 }
             </div>
