@@ -96,13 +96,17 @@ const FindMoments = ({
                 ...source,
                 score: ref.score,
                 timestamp: ref.timestamp,
-                displayText: `${source.source_path} | Timestamp: ${ref.timestamp}`
+                timestampText: `${source.source_path} | Timestamp: ${ref.timestamp}`
             };
         }).filter(Boolean);
 
         return result;
 
     }
+
+    const containerRef = useRef(null);
+    const [showList, setShowList] = useState(true);
+    const [currentMoment, setCurrentMoment] = useState(null);
 
     async function handleCaptionSubmit() {
         setIsPending(false);
@@ -118,13 +122,30 @@ const FindMoments = ({
         }
         let timestamps = await handleCaptioning(prompt);
         let fullSourceWithTimestamp = mergeSourceToTimestamps(timestamps);
-        setCaptionResults(prev => ({
-            ...prev,
+
+        const finalResults = timestamps.map((segment) => {
+            const source = knowledgeBase.find(item => item.source_id === segment.source_id);
+
+            if (source) {
+                return {
+                    ...segment,
+                    timestampText: `${source.source_path} | ${segment.timestamp}`,
+                    source: {
+                        ...source,
+                        timestamp: segment.timestamp
+                    }
+                };
+            }
+        });
+
+        setCurrentMoment({
             prompt,
-            refs: fullSourceWithTimestamp,
-        }));
+            results: finalResults
+        });
+
         setPrompt("");
         setIsFetchingRefs(false);
+        setShowList(false);
     }
 
     const exportToDocx = async (results) => {
@@ -243,9 +264,7 @@ const FindMoments = ({
         saveAs(blob, "segment-description.docx");
     };
 
-    const containerRef = useRef(null);
-    const [showList, setShowList] = useState(true);
-    const [currentMoment, setCurrentMoment] = useState(null);
+
 
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
