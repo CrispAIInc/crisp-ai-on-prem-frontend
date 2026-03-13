@@ -25,6 +25,8 @@ import {
     ImageRun
 } from "docx";
 import { saveAs } from "file-saver";
+import { Skeleton } from '@mui/material';
+import makeApiRequest, { axiosInstance } from '../../api/index.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const TimeSegmentDescription = ({
@@ -146,53 +148,42 @@ const TimeSegmentDescription = ({
             url.append("prompt", prompt);
             url.append("fromCrispWiz", false);
 
-            let sessionID = null; // Variable to store the session ID
-            const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    SessionId: currentChat?.sessionId,
-                    ProjectId: currentProject?.project_id,
-                },
-                heartbeatTimeout: 75000,
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
+            axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+            const { data, success, message } = await makeApiRequest(`/timestamp-summary?${url.toString()}`, 'GET', null, {
+                Authorization: `Bearer ${token}`,
+                SessionId: currentChat?.sessionId,
+                ProjectId: currentProject?.project_id,
             });
 
-            let botMessage = '';
-            eventSource.onmessage = async function (event) {
+            if (success) {
 
-                const data = JSON.parse(event.data);
+                notify({
+                    variant: "success",
+                    heading: "Description generated successfully",
+                });
 
-                if (data.type === "SESSION_ID") {
-                    sessionID = data.session_id;
-                } else if (data.text === "") {
-                    setIsFetchingRefs(true);
-                } else if (data.type === "MESSAGE") {
-                    setIsPending(false);
-                    const newToken = data.text;
-                    botMessage += " " + newToken + (prompt.trim().length === 0 ? "<br /><br />" : "");
-                    setResults(prev => ({
-                        ...prev,
-                        description: botMessage
-                    }));
-                } else if (data.type === "REFERENCES") {
-                    setIsFetchingRefs(true);
-                    setResults(prev => ({
-                        ...prev,
-                        refs: data.data.video_references.map(video => ({ ...video, displayText: `${video.source_path} | Timestamp: ${video.timestamp}` })),
-                    }));
-                    setShowList(false);
-                }
-            };
-
-            eventSource.onerror = async function () {
-                setIsPending(false);
-                setIsFetchingRefs(false);
-                eventSource.close();
-            };
+                setSegmentDescriptions(prev => [
+                    ...prev,
+                    data
+                ]);
+                setCurrentSegment(data);
+                setShowList(false);
+            } else {
+                throw new Error(message);
+            }
 
         } catch (error) {
             console.log(error);
+            notify({
+                variant: "error",
+                heading: "Could't generate description",
+                subheading: error?.message
+            });
         } finally {
-            // setIsPending(false);
+            setIsPending(false);
+            setIsFetchingRefs(false);
         }
     }
 
@@ -479,7 +470,23 @@ const TimeSegmentDescription = ({
             <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
   backdrop-blur-sm`}>
                 {
-                    showList ? (
+                    isPending ? (
+                        <div className="flex flex-col gap-2">
+                            <Skeleton width={'50%'} />
+                            <div>
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Skeleton width={'20%'} height={40} />
+                                <Skeleton width={'20%'} height={40} />
+                            </div>
+                        </div>
+                    ) : showList ? (
                         <TimeSegmentDescriptionList
                             setShowList={setShowList}
                             timeSegmentDescriptions={timeSegmentDescriptions}
