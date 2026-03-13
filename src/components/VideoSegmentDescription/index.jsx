@@ -11,11 +11,21 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { formatTime } from "../../utils.js";
 import FindMoments from '../FindMoments/index.jsx';
-import makeApiRequest from '../../api/index.js';
+import makeApiRequest, { axiosInstance } from '../../api/index.js';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
+import { AuthContext } from '../../contexts/authContext.jsx';
 
 const VideoSegmentDescription = () => {
 
-    const { theme } = useContext(MainContext);
+    const { currentProject } = useContext(ProjectContext);
+    const {
+        theme,
+        currentChat
+    } = useContext(MainContext);
+
+    const {
+        user
+    } = useContext(AuthContext);
 
     const [currentTab, setCurrentTab] = useState("Time segment description");
 
@@ -58,9 +68,13 @@ const VideoSegmentDescription = () => {
     });
 
     useEffect(() => {
+        console.log("feetchiiinnnggg.......");
         async function fetchFindMoments() {
             try {
-                const { data, success } = makeApiRequest("/chat/timestamp-lookups");
+                axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+                const { data, success } = await makeApiRequest("/chat/timestamp-lookups", 'GET', null, {
+                    ProjectId: currentProject.project_id,
+                });
                 setMoments([
                     {
                         created_at: 'Fri, 13 Mar 2026 11:57:24 GMT',
