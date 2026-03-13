@@ -59,17 +59,19 @@ const VideoSegmentDescription = () => {
                         id: 1,
                         start: "00:00:00",
                         end: "00:00:10",
-                        description: "desc1",
+                        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged",
                         source_id: "FrDvSojllaJZaM5njTEI",
-                        title: "desc1"
+                        title: "desc1",
+                        prompt: "Lorem Ipsum is simply dummy text of the printing"
                     },
                     {
                         id: 2,
                         start: "00:00:22",
                         end: "00:00:41",
-                        description: "desc2",
+                        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged",
                         source_id: "FrDvSojllaJZaM5njTEI",
-                        title: "descé"
+                        title: "descé",
+                        prompt: "Lorem Ipsum is simply dummy text of the printing"
                     },
                 ];
                 // if (success) {

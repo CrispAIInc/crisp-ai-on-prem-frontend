@@ -10,7 +10,7 @@ import { Skeleton } from '@mui/material';
 import Chip from '../Chip';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
-const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegmentDescriptions, setShowList }) => {
+const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegmentDescriptions, setShowList, currentSegment, setCurrentSegment }) => {
 
     const {
         theme,
@@ -21,6 +21,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
     function closeResultsTab() {
+        setCurrentSegment(null);
         setShowList(true);
     }
 
@@ -69,23 +70,36 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                     </div>
                 </div>
             ) : (
-                <>
-                    <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between gap-2 ">
                         <div className="flex items-center gap-2">
                             <AccessTimeOutlinedIcon className="text-purple-400" />
-                            <BaseHeading text={`${results.start} - ${results.end}`} className="text-sm text-gradient-x" />
+                            <BaseHeading text={`${currentSegment.start} - ${currentSegment.end}`} className="text-sm text-gradient-x" />
                         </div>
                         <BaseHeading text="close" className="text-sm cursor-pointer" onClick={closeResultsTab} />
                     </div>
-                    <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: results.description }} />
 
-                    {results.refs && results.refs.length > 0 && (
-                        <div className="mt-4">
-                            <BaseHeading text="References" className="text-sm mb-2" />
+                    <div className="flex flex-col ">
+                        <BaseHeading text="Prompt" className="font-bold text-sm" />
+                        <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{currentSegment.prompt}</p>
+                    </div>
+
+                    {/* <hr className="p-0 m-0 space-x-0" /> */}
+
+                    <div className="flex flex-col ">
+                        <BaseHeading text="Description" className="font-bold text-sm" />
+                        <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: currentSegment.description }} />
+                    </div>
+
+                    {/* <hr className="p-0 m-0 space-x-0" /> */}
+
+                    {currentSegment.refs && currentSegment.refs.length > 0 && (
+                        <div className="">
+                            <BaseHeading text="References" className="font-bold text-sm mb-2" />
                             <ul className="list-disc list-inside text-sm/6 text-textColor-300">
-                                {results.refs.map((ref, index) => {
+                                {currentSegment.refs.map((ref, index) => {
                                     return (
-                                        <Chip key={index} content={ref.displayText} data-object={ref} onClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer text-gradient-x" />
+                                        <Chip key={index} content={currentSegment.timestampText} data-object={ref} onClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer text-gradient-x" />
                                     );
                                 })}
                             </ul>
@@ -93,11 +107,11 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                     )}
 
                     {/* action buttons */}
-                    <div className="flex items-center gap-2 mt-4">
+                    <div className="flex items-center gap-2">
                         <RippleButton cssClasses="px-3 py-1 text-sm  rounded" onClick={exportFn}>Export</RippleButton>
                         <RippleButton cssClasses="px-3 py-1 text-sm  rounded" noBg onClick={saveSegmentDescription}>Save</RippleButton>
                     </div>
-                </>
+                </div>
             )
             }
         </div>

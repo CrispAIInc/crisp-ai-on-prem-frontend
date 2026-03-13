@@ -35,7 +35,9 @@ const TimeSegmentDescription = ({
     prompt,
     setPrompt,
     results,
-    setResults
+    setResults,
+    segmentDescriptions,
+    setSegmentDescriptions,
 }) => {
 
     /**
@@ -115,6 +117,7 @@ const TimeSegmentDescription = ({
     const [isPending, setIsPending] = useState(false);
     const [isFetchingRefs, setIsFetchingRefs] = useState(false);
     const [showList, setShowList] = useState(true);
+    const [currentSegment, setCurrentSegment] = useState(null);
 
     async function generateDescription() {
         if (toSeconds(end) <= toSeconds(start)) {
@@ -481,11 +484,15 @@ const TimeSegmentDescription = ({
                             setShowList={setShowList}
                             timeSegmentDescriptions={timeSegmentDescriptions}
                             setResults={setResults}
+                            segmentDescriptions={segmentDescriptions}
+                            setCurrentSegment={setCurrentSegment}
                         />
                     ) : (
                         <SegmentDescriptionResult
                             setShowList={setShowList}
                             results={results}
+                            currentSegment={currentSegment}
+                            setCurrentSegment={setCurrentSegment}
                             isPending={isPending}
                             exportFn={() => exportVideoReportToDocx(results)}
                             setTimeSegmentDescriptions={setTimeSegmentDescriptions}
