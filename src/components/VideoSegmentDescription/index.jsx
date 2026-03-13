@@ -75,7 +75,9 @@ const VideoSegmentDescription = () => {
                 const { data, success } = await makeApiRequest("/chat/timestamp-lookups", 'GET', null, {
                     ProjectId: currentProject.project_id,
                 });
-                setMoments(data);
+                if (success) {
+                    setMoments(data);
+                }
             } catch (error) {
                 console.log(error);
             }

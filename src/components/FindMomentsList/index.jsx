@@ -1,9 +1,13 @@
 import React, { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import BaseHeading from '../BaseHeading';
 
 function FindMomentsList({ setCurrentMoment, setShowList, moments }) {
 
-    const { knowledgeBase } = useContext(MainContext);
+    const {
+        theme,
+        knowledgeBase
+    } = useContext(MainContext);
 
     function handleSelectResult(item) {
         const fullShapeResult = item.results.map(result => {
@@ -20,10 +24,6 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments }) {
                 };
             }
         });
-        console.log({
-            ...item,
-            results: fullShapeResult
-        });
         setCurrentMoment({
             ...item,
             results: fullShapeResult
@@ -32,12 +32,15 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments }) {
     }
 
     return (
-        <div className="flex flex-col overflow-y-auto">
-            {
-                moments.map(item => (
-                    <p onClick={() => handleSelectResult(item)} key={item.id}>{item.prompt}</p>
-                ))
-            }
+        <div className="flex flex-col gap-2 overflow-y-auto">
+            <BaseHeading text="All moments" />
+            <div className='flex flex-col gap-1'>
+                {
+                    moments.map(item => (
+                        <p onClick={() => handleSelectResult(item)} key={item.id} className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`}>{item.prompt}</p>
+                    ))
+                }
+            </div>
         </div>
     );
 }
