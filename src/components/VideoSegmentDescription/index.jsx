@@ -68,119 +68,14 @@ const VideoSegmentDescription = () => {
     });
 
     useEffect(() => {
-        console.log("feetchiiinnnggg.......");
+
         async function fetchFindMoments() {
             try {
                 axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
                 const { data, success } = await makeApiRequest("/chat/timestamp-lookups", 'GET', null, {
                     ProjectId: currentProject.project_id,
                 });
-                setMoments([
-                    {
-                        created_at: 'Fri, 13 Mar 2026 11:57:24 GMT',
-                        id: 'Yp2r0dj7hnfb28pub0Ir',
-                        project_id: 'd203f9dc-5fa1-4a84-b5a0-76f08220cc71',
-                        prompt: 'celebrating',
-                        results: [
-                            {
-                                context:
-                                    'The athlete is captured from behind, raising his right arm in a celebratory gesture. Other competitors are partially visible, and the crowd in the stands is lively. The stadium roof and lighting fixtu',
-                                score: 0.6254,
-                                source_id: 'FrDvSojllaJZaM5njTEI',
-                                timestamp: '00:01:18',
-                                timestamp_seconds: 78,
-                                video_filename: 'Usain Bolt.mp4',
-                            },
-                        ],
-                        results_count: 1,
-                        sessionId: null,
-                        timestamp_iso: '2026-03-13T11:57:24.706859',
-                        user_id: 'kwtnB1dxLsSOCQ5KQEiVTT6m6hI2',
-                    },
-                    {
-                        created_at: 'Fri, 13 Mar 2026 12:05:50 GMT',
-                        id: 'ng06aYLKg4zyN0G7eCEI',
-                        project_id: 'd203f9dc-5fa1-4a84-b5a0-76f08220cc71',
-                        prompt: 'usain bolt',
-                        results: [
-                            {
-                                context:
-                                    'But Usain Bolt, such a good start, such a good corner, such a good straight.',
-                                score: 0.7254,
-                                source_id: 'FrDvSojllaJZaM5njTEI',
-                                timestamp: '00:01:31',
-                                timestamp_seconds: 91,
-                                video_filename: 'Usain Bolt.mp4',
-                            },
-                            {
-                                context:
-                                    'On paper, the only man who could conceivably live with Usain Bolt at his best.',
-                                score: 0.7205,
-                                source_id: 'FrDvSojllaJZaM5njTEI',
-                                timestamp: '00:00:29',
-                                timestamp_seconds: 29,
-                                video_filename: 'Usain Bolt.mp4',
-                            },
-                            {
-                                context: "Bolt's going to win this one.",
-                                score: 0.7006,
-                                source_id: 'FrDvSojllaJZaM5njTEI',
-                                timestamp: '00:01:05',
-                                timestamp_seconds: 65,
-                                video_filename: 'Usain Bolt.mp4',
-                            },
-                            {
-                                context:
-                                    'Athletes are seen sprinting from the starting blocks, captured mid-motion. The blue track lanes and white markings are clear. The Jamaican athlete is among them, wearing his yellow and green uniform. ',
-                                score: 0.6915,
-                                source_id: 'FrDvSojllaJZaM5njTEI',
-                                timestamp: '00:00:54',
-                                timestamp_seconds: 54,
-                                video_filename: 'Usain Bolt.mp4',
-                            },
-                            {
-                                context:
-                                    'The Jamaican athlete is seen from the side, looking upward with a neutral expression. A man in a white shirt with a red logo stands behind him. The background includes a white banner with the IAAF log',
-                                score: 0.6841,
-                                source_id: 'FrDvSojllaJZaM5njTEI',
-                                timestamp: '00:00:18',
-                                timestamp_seconds: 18,
-                                video_filename: 'Usain Bolt.mp4',
-                            },
-                            {
-                                context:
-                                    'A wider shot of the race in progress, showing multiple athletes sprinting on the blue track lanes. The Jamaican athlete is visible among them. The stadium crowd is large and animated, with some fans s',
-                                score: 0.6675,
-                                source_id: 'FrDvSojllaJZaM5njTEI',
-                                timestamp: '00:01:00',
-                                timestamp_seconds: 60,
-                                video_filename: 'Usain Bolt.mp4',
-                            },
-                            {
-                                context:
-                                    'The Jamaican athlete is bent over on the track, hands touching the ground near the starting blocks. He is preparing for a race. The blue track lanes and white lane markings are visible. The background',
-                                score: 0.6665,
-                                source_id: 'FrDvSojllaJZaM5njTEI',
-                                timestamp: '00:00:21',
-                                timestamp_seconds: 21,
-                                video_filename: 'Usain Bolt.mp4',
-                            },
-                            {
-                                context:
-                                    'Final frame shows athletes nearing the finish line on the blue track. The Jamaican athlete is visible in the pack, wearing his yellow and green uniform. The stadium is packed with cheering spectators.',
-                                score: 0.6649,
-                                source_id: 'FrDvSojllaJZaM5njTEI',
-                                timestamp: '00:01:09',
-                                timestamp_seconds: 69,
-                                video_filename: 'Usain Bolt.mp4',
-                            },
-                        ],
-                        results_count: 8,
-                        sessionId: null,
-                        timestamp_iso: '2026-03-13T12:05:49.873039',
-                        user_id: 'kwtnB1dxLsSOCQ5KQEiVTT6m6hI2',
-                    },
-                ]);
+                setMoments(data);
             } catch (error) {
                 console.log(error);
             }
