@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import BaseHeading from '../BaseHeading';
 
 function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDescriptions }) {
 
     const {
+        theme,
         knowledgeBase
     } = useContext(MainContext);
 
@@ -24,12 +26,15 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
     }
 
     return (
-        <div className="flex flex-col overflow-y-auto">
-            {
-                segmentDescriptions.map(segment => (
-                    <p onClick={() => handleSelectResult(segment)} key={segment.id}>{segment.title}</p>
-                ))
-            }
+        <div className="flex flex-col gap-2 overflow-y-auto">
+            <BaseHeading text="All segment descriptions" />
+            <div className='flex flex-col gap-1'>
+                {
+                    segmentDescriptions.map(segment => (
+                        <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`} onClick={() => handleSelectResult(segment)} key={segment.id}>{segment.title}</p>
+                    ))
+                }
+            </div>
         </div>
     );
 }
