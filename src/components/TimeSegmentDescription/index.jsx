@@ -288,6 +288,10 @@ const TimeSegmentDescription = ({
             const moods = schema.mood ? schema.mood.join(", ") : "N/A";
             const shotTypes = schema.shot_type ? schema.shot_type.join(", ") : "N/A";
 
+            // 1. Handle Newline formatting in description
+            const descriptionParagraphs = actionDesc.split('\n').filter(p => p.trim() !== "");
+            console.log("dfdfdf: ", actionDesc);
+
             // Process On-Screen Text into an array for chips
             const ocrText = schema.onscreen_text?.detected ? schema.onscreen_text.text_content : "";
             const ocrArray = ocrText.split(',').map(item => item.trim()).filter(i => i !== "");
@@ -401,14 +405,13 @@ const TimeSegmentDescription = ({
                         bottom: { color: primaryColor, space: 1, value: BorderStyle.SINGLE, size: 12 },
                     },
                 }),
-                new Paragraph({
-                    children: [new TextRun({ text: actionDesc, size: 22 })],
-                    spacing: { after: 400 },
-                    alignment: AlignmentType.JUSTIFIED,
-                    border: {
-                        left: { color: accentColor, space: 10, value: BorderStyle.THICK, size: 24 },
-                    },
-                }),
+                ...descriptionParagraphs.map(text =>
+                    new Paragraph({
+                        spacing: { after: 200 },
+                        alignment: AlignmentType.JUSTIFIED,
+                        children: [new TextRun({ text, size: 22, color: colors.textMain, font: fontFamily })],
+                    })
+                ),
 
                 // --- CINEMATIC DETAILS SECTION ---
                 new Paragraph({

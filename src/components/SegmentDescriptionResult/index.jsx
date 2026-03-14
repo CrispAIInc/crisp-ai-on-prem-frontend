@@ -249,8 +249,8 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
             {/* Scene Description */}
             <div>
-                <BaseHeading text="generated response" />
-                <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: schema.action_description }} />
+                <BaseHeading text="generated response" className="mb-1" />
+                <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: schema.action_description.replace(/\r?\n/g, '<br />') }} />
             </div>
 
             {/* Onscreen Text */}
