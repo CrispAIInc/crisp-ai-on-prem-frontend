@@ -140,7 +140,7 @@ const TimeSegmentDescription = ({
     const handleMouseEnter = () => (checkedVideosCount === 0 || prompt.trim() === "" || isProjectReadOnly) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
-    const canGenerate = checkedVideosCount > 0 && !isFetchingRefs && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
+    const canGenerate = checkedVideosCount > 0 && !isPending && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
 
     async function generateDescription() {
         try {
