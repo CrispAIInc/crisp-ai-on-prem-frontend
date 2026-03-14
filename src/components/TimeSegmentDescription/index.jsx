@@ -142,18 +142,15 @@ const TimeSegmentDescription = ({
 
     const canGenerate = checkedVideosCount > 0 && !isFetchingRefs && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
     async function generateDescription() {
-        if (!canGenerate) return;
-
-        if (toSeconds(end) <= toSeconds(start)) {
-            notify({
-                variant: "error",
-                heading: "Timestamps invalid!",
-                subheading: "Your timestamp range is invalid.",
-            });
-            throw new Error("Timestamps invalid");
-        }
-
         try {
+            if (!canGenerate) {
+                throw new Error('Make sure you provided video sources and prompt');
+            }
+
+            if (toSeconds(end) <= toSeconds(start)) {
+                throw new Error("Your timestamp range is invalid.");
+            }
+
             setIsPending(true);
             setResults(prev => ({
                 ...prev,
