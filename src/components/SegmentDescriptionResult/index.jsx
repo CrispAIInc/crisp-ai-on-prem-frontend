@@ -249,7 +249,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
             {/* Scene Description */}
             <div>
-                <BaseHeading text="Scene Description" />
+                <BaseHeading text="generated response" />
                 <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: schema.action_description }} />
             </div>
 
@@ -289,7 +289,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
             {/* action buttons */}
             <div className="flex items-center gap-2">
-                <RippleButton cssClasses="px-3 py-1 text-sm  rounded" onClick={exportFn}>Export</RippleButton>
+                <RippleButton cssClasses="px-3 py-1 text-sm  rounded" onClick={() => exportFn(currentSegment)}>Export</RippleButton>
                 <RippleButton cssClasses="px-3 py-1 text-sm  rounded" noBg onClick={saveSegmentDescription}>Save</RippleButton>
             </div>
         </div>

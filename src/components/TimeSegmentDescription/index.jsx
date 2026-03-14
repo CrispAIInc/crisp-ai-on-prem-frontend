@@ -1,17 +1,17 @@
 import { Skeleton } from '@mui/material';
 import {
-    AlignmentType,
-    BorderStyle,
     Document,
-    ImageRun,
     Packer,
     Paragraph,
-    Table,
-    TableCell,
-    TableRow,
     TextRun,
+    Table,
+    TableRow,
+    TableCell,
+    HeadingLevel,
+    AlignmentType,
     WidthType
 } from "docx";
+
 import { saveAs } from "file-saver";
 import { useContext, useEffect, useRef, useState } from 'react';
 import makeApiRequest, { axiosInstance } from '../../api/index.js';
@@ -219,244 +219,140 @@ const TimeSegmentDescription = ({
     }
 
 
-    function createHeading(text) {
-        return [
+    async function exportSceneDoc(data) {
 
-            new Paragraph({
-                spacing: { before: 400, after: 80 },
-                border: {
-                    left: {
-                        style: BorderStyle.SINGLE,
-                        size: 18,
-                        color: "C2185B" // pink accent bar
-                    }
-                },
-                children: [
-                    new TextRun({
-                        text: "   " + text,
-                        bold: true,
-                        size: 20,
-                        color: "8E24AA", // purple
-                        font: "Calibri"
-                    }),
-                ],
-            }),
-        ];
-    }
-
-    function paddedCell(text) {
-        return new TableCell({
-            margins: {
-                top: 120,
-                bottom: 120,
-                left: 200,
-                right: 200
+        const table = new Table({
+            width: {
+                size: 100,
+                type: WidthType.PERCENTAGE
             },
-            children: [
-                new Paragraph({
+            rows: [
+                new TableRow({
                     children: [
-                        new TextRun({
-                            text,
-                            font: "Calibri",
-                            size: 24
-                        })
-                    ]
-                })
-            ]
-        });
-    }
-
-    function formatDescription(description) {
-        if (!description) return [];
-
-        const parts = description
-            .split(/<br\s*\/?>/i)
-            .map(p => p.trim())
-            .filter(Boolean);
-
-        const regex = /^\[(\d{2}:\d{2}:\d{2})\]\s*/;
-
-        return parts.map(part => {
-            const match = part.match(regex);
-
-            if (match) {
-                // Line has timestamp
-                const timestamp = match[1];
-                const text = part.replace(regex, "");
-
-                return new Paragraph({
-                    spacing: { before: 120, after: 320 },
-                    children: [
-                        new TextRun({
-                            text: `⏱ ${timestamp}`,
-                            bold: true,
-                            color: "000000",
-                            size: 20,
-                            font: "Calibri"
+                        new TableCell({
+                            children: [new Paragraph("Mood Options")],
                         }),
-                        new TextRun({ break: 1 }),
-                        new TextRun({
-                            text: text,
-                            size: 20,
-                            font: "Calibri"
-                        })
-                    ]
-                });
-            } else {
-                // Line without timestamp
-                return new Paragraph({
-                    spacing: { before: 120, after: 320 },
+                        new TableCell({
+                            children: [
+                                new Paragraph(data.response_format.schema.mood.join(", "))
+                            ],
+                        }),
+                    ],
+                }),
+
+                new TableRow({
                     children: [
-                        new TextRun({
-                            text: part,
-                            size: 20,
-                            font: "Calibri"
-                        })
-                    ]
-                });
-            }
+                        new TableCell({
+                            children: [new Paragraph("Shot Types")],
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph(data.response_format.schema.shot_type.join(", "))
+                            ],
+                        }),
+                    ],
+                }),
+
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            children: [new Paragraph("Action Description")],
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph(data.response_format.schema.action_description)
+                            ],
+                        }),
+                    ],
+                }),
+
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            children: [new Paragraph("Onscreen Text Detected")],
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph(
+                                    data.response_format.schema.onscreen_text.detected
+                                        ? "Yes"
+                                        : "No"
+                                ),
+                            ],
+                        }),
+                    ],
+                }),
+
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            children: [new Paragraph("Onscreen Text Content")],
+                        }),
+                        new TableCell({
+                            children: [
+                                new Paragraph(
+                                    data.response_format.schema.onscreen_text.text_content
+                                )
+                            ],
+                        }),
+                    ],
+                }),
+            ],
         });
-    }
-
-
-    async function exportVideoReportToDocx(data) {
-
-        /* ---------- LOAD LOGO ---------- */
-        // If in browser, you can use File/URL to get ArrayBuffer instead
-        const logoBase64 = await urlToBase64("/new-crisp-logo-resized.png");
-        const logoBuffer = base64ToUint8Array(logoBase64.split(",")[1]);
-
-        const ref = data.refs?.[0];
 
         const doc = new Document({
             sections: [
                 {
-                    // -------- REDUCE PAGE MARGINS --------
-                    properties: {
-                        page: {
-                            margin: {
-                                top: 720,    // 0.5 inch
-                                right: 720,  // 0.5 inch
-                                bottom: 720, // 0.5 inch
-                                left: 720    // 0.5 inch
-                            }
-                        }
-                    },
                     children: [
 
                         new Paragraph({
-                            alignment: AlignmentType.LEFT,
-                            spacing: { after: 200 },
+                            text: "Video Scene Analysis",
+                            heading: HeadingLevel.TITLE,
+                            alignment: AlignmentType.CENTER
+                        }),
+
+                        new Paragraph({
                             children: [
-                                new ImageRun({
-                                    data: logoBuffer,
-                                    transformation: {
-                                        width: 160,  // Adjust to your real logo's proportions
-                                        height: 50,
-                                    },
-                                    type: "png", // Explicitly telling Word it's a PNG prevents corruption
+                                new TextRun({
+                                    text: "Video: ",
+                                    bold: true
                                 }),
+                                new TextRun(data.video)
                             ],
                         }),
 
-                        /* ---------- COVER TITLE ---------- */
+                        new Paragraph({
+                            children: [
+                                new TextRun({ text: "Start: ", bold: true }),
+                                new TextRun(data.start),
+                                new TextRun({ text: "    End: ", bold: true }),
+                                new TextRun(data.end)
+                            ],
+                        }),
 
                         new Paragraph({
-                            alignment: AlignmentType.CENTER,
-                            spacing: { after: 50 },
                             children: [
                                 new TextRun({
-                                    text: "Video Analysis Report",
-                                    size: 36,
-                                    color: "000000",
-                                    font: "Calibri"
-                                })
-                            ]
+                                    text: "Query: ",
+                                    bold: true
+                                }),
+                                new TextRun(data.query)
+                            ],
                         }),
 
                         new Paragraph({
-                            alignment: AlignmentType.CENTER,
-                            spacing: { after: 300 },
-                            children: [
-                                new TextRun({
-                                    text: "Automatically generated by Crisp AI",
-                                    italics: true,
-                                    size: 24,
-                                    color: "666666",
-                                    font: "Calibri"
-                                })
-                            ]
+                            text: "Scene Details",
+                            heading: HeadingLevel.HEADING_1
                         }),
 
-                        new Paragraph({
-                            border: {
-                                bottom: {
-                                    style: BorderStyle.SINGLE,
-                                    size: 8,
-                                    color: "000000"
-                                }
-                            },
-                            spacing: { after: 500 }
-                        }),
-
-                        /* ---------- VIDEO INFORMATION ---------- */
-
-                        ...createHeading("Video Information"),
-
-                        new Table({
-                            width: {
-                                size: 100,
-                                type: WidthType.PERCENTAGE
-                            },
-                            rows: [
-
-                                new TableRow({
-                                    children: [
-                                        paddedCell("File Name"),
-                                        paddedCell(ref.source_path)
-                                    ]
-                                }),
-
-                                new TableRow({
-                                    children: [
-                                        paddedCell("Start Time"),
-                                        paddedCell(data.start)
-                                    ]
-                                }),
-
-                                new TableRow({
-                                    children: [
-                                        paddedCell("End Time"),
-                                        paddedCell(data.end)
-                                    ]
-                                }),
-
-                                new TableRow({
-                                    children: [
-                                        paddedCell("Category"),
-                                        paddedCell(ref.category)
-                                    ]
-                                })
-
-                            ]
-                        }),
-
-                        new Paragraph({ spacing: { after: 400 } }),
-
-                        /* ---------- SCENE DESCRIPTION ---------- */
-
-                        ...createHeading("Scene Timeline"),
-
-                        ...formatDescription(data.description)
-
-                    ]
-                }
-            ]
+                        table
+                    ],
+                },
+            ],
         });
 
         const blob = await Packer.toBlob(doc);
-
-        saveAs(blob, "crisp-ai-video-report.docx");
+        saveAs(blob, "scene-analysis.docx");
     }
 
     const containerRef = useRef(null);
@@ -576,7 +472,7 @@ const TimeSegmentDescription = ({
                             currentSegment={currentSegment}
                             setCurrentSegment={setCurrentSegment}
                             isPending={isPending}
-                            exportFn={() => exportVideoReportToDocx(results)}
+                            exportFn={(result) => exportSceneDoc(result)}
                             setTimeSegmentDescriptions={setTimeSegmentDescriptions}
                         />
                     )

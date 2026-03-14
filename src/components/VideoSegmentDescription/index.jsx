@@ -50,54 +50,56 @@ const VideoSegmentDescription = () => {
 
         async function fetchTimeSegments() {
             try {
-                // axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-                // const { data, success } = await makeApiRequest("/chat/sgmt2rspns-history", 'GET', null, {
-                //     ProjectId: currentProject.project_id,
-                // });
-                const data = [
-                    {
-                        id: 1,
-                        video: 'bill gates.mp4',
-                        start: '00:00:00.5',
-                        end: '00:09:10.0',
-                        query: 'give name of the character in this scene',
-                        response_format: {
-                            type: 'json_schema',
-                            schema: {
-                                mood: ['serious', 'focused', 'admiring', 'energetic'],
-                                shot_type: ['close-up', 'medium shot'],
-                                action_description:
-                                    "Marty McFly stands in the town square with Jennifer Parker standing closely behind him. Marty wears a denim jacket and gray shirt, while Jennifer is in a pink outfit. Marty looks forward with a serious, determined expression that shifts to admiration as he spots a black truck. The camera cuts to the vehicle, a black pickup with a 'Statler Toyota' sign and red decorations. Marty comments, 'Check out that Four by four,' and the truck is described as 'hot'.",
-                                onscreen_text: {
-                                    detected: true,
-                                    text_content: "Statler Toyota, Lou's Cafe",
-                                },
-                            },
-                        },
-                    },
-                    {
-                        id: 2,
-                        video: 'bill gates.mp4',
-                        start: '00:00:22.5',
-                        end: '00:09:45.12',
-                        query: 'give name of the character in this scene',
-                        response_format: {
-                            type: 'json_schema',
-                            schema: {
-                                mood: ['serious', 'focused', 'admiring', 'energetic'],
-                                shot_type: ['close-up', 'medium shot'],
-                                action_description:
-                                    "Marty McFly stands in the town square with Jennifer Parker standing closely behind him. Marty wears a denim jacket and gray shirt, while Jennifer is in a pink outfit. Marty looks forward with a serious, determined expression that shifts to admiration as he spots a black truck. The camera cuts to the vehicle, a black pickup with a 'Statler Toyota' sign and red decorations. Marty comments, 'Check out that Four by four,' and the truck is described as 'hot'.",
-                                onscreen_text: {
-                                    detected: true,
-                                    text_content: "Statler Toyota, Lou's Cafe",
-                                },
-                            },
-                        },
-                    },
-                ];
+                axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+                const { data, success } = await makeApiRequest("/chat/sgmt2rspns-history", 'GET', null, {
+                    ProjectId: currentProject.project_id,
+                });
+                // const data = [
+                //     {
+                //         id: 1,
+                //         video: 'bill gates.mp4',
+                //         start: '00:00:00.5',
+                //         end: '00:09:10.0',
+                //         query: 'give name of the character in this scene',
+                //         response_format: {
+                //             type: 'json_schema',
+                //             schema: {
+                //                 mood: ['serious', 'focused', 'admiring', 'energetic'],
+                //                 shot_type: ['close-up', 'medium shot'],
+                //                 action_description:
+                //                     "Marty McFly stands in the town square with Jennifer Parker standing closely behind him. Marty wears a denim jacket and gray shirt, while Jennifer is in a pink outfit. Marty looks forward with a serious, determined expression that shifts to admiration as he spots a black truck. The camera cuts to the vehicle, a black pickup with a 'Statler Toyota' sign and red decorations. Marty comments, 'Check out that Four by four,' and the truck is described as 'hot'.",
+                //                 onscreen_text: {
+                //                     detected: true,
+                //                     text_content: "Statler Toyota, Lou's Cafe",
+                //                 },
+                //             },
+                //         },
+                //     },
+                //     {
+                //         id: 2,
+                //         video: 'bill gates.mp4',
+                //         start: '00:00:22.5',
+                //         end: '00:09:45.12',
+                //         query: 'give name of the character in this scene',
+                //         response_format: {
+                //             type: 'json_schema',
+                //             schema: {
+                //                 mood: ['serious', 'focused', 'admiring', 'energetic'],
+                //                 shot_type: ['close-up', 'medium shot'],
+                //                 action_description:
+                //                     "Marty McFly stands in the town square with Jennifer Parker standing closely behind him. Marty wears a denim jacket and gray shirt, while Jennifer is in a pink outfit. Marty looks forward with a serious, determined expression that shifts to admiration as he spots a black truck. The camera cuts to the vehicle, a black pickup with a 'Statler Toyota' sign and red decorations. Marty comments, 'Check out that Four by four,' and the truck is described as 'hot'.",
+                //                 onscreen_text: {
+                //                     detected: true,
+                //                     text_content: "Statler Toyota, Lou's Cafe",
+                //                 },
+                //             },
+                //         },
+                //     },
+                // ];
                 // if (success) {
-                setSegmentDescriptions(data);
+                if (success) {
+                    setSegmentDescriptions(data);
+                }
                 // }
             } catch (error) {
                 console.log(error);
