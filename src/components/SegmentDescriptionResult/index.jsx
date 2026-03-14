@@ -142,6 +142,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
         end,
         refs,
         timestampText,
+        query,
         response_format: { schema }
     } = currentSegment;
 
@@ -187,7 +188,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
 
             {/* header */}
             <div className="flex flex-col gap-1">
@@ -205,6 +206,12 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                     <AccessTimeOutlinedIcon />
                     <p className={`text-sm/6 font-semibold`}>{start} - {end}</p>
                 </div>
+            </div>
+
+            {/* query prompt */}
+            <div>
+                <BaseHeading text="Prompt" />
+                <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: query }} />
             </div>
 
             {/* Tags */}
@@ -242,7 +249,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
             {/* Scene Description */}
             <div>
-                <BaseHeading text="Scene Description" className="mb-2" />
+                <BaseHeading text="Scene Description" />
                 <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: schema.action_description }} />
             </div>
 

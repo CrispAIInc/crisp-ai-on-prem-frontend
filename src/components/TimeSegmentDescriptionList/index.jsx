@@ -18,7 +18,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
                 timestampText: `${segmentSource.source_path} | ${segment.start}`,
                 refs: [{
                     ...segmentSource,
-                    timestamp: segment.start.split(".")[0]
+                    timestamp: segment.start
                 }]
             });
             setShowList(false);
