@@ -490,38 +490,6 @@ const TimeSegmentDescription = ({
 
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
-            {/* <textarea
-                rows={2}
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Add more instructions for better results"
-                className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none`}
-            />
-            <div
-                className="relative inline-block self-end mt-2"
-                onMouseMove={handleMouseMove}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onClick={generateDescription}
-            >
-
-                <RippleButton
-                    cssClasses={`rounded-md !py-2 !px-3 !pr-4  flex items-center gap-1 ${tooltipVisible ? 'cursor-not-allowed' : ''}`}
-                    disabled={checkedVideosCount === 0 || isFetchingRefs || prompt.trim() === "" || isProjectReadOnly}
-                >
-                    {isFetchingRefs ? <LoadingSpinner cssClasses="mr-2" /> : <AutoAwesomeIcon className={`text-white text-sm`} />}
-                    <span className="text-sm">Find</span>
-                </RippleButton>
-
-                {tooltipVisible && (
-                    <p
-                        className={`absolute z-10 p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
-                        style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
-                    >
-                        {isProjectReadOnly ? "Cannot edit an example project." : prompt.trim() === "" ? "No prompt provided." : "check at least one video source to enable."}
-                    </p>
-                )}
-            </div> */}
             <div className={`flex items-end gap-2 px-2 rounded-2xl pb-2 ${theme === " dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'}`}>
                 <textarea
                     ref={el => {

@@ -10,7 +10,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
     } = useContext(MainContext);
 
     function handleSelectResult(segment) {
-        const segmentSource = knowledgeBase.find(item => item.source_id === segment.source_id);
+        const segmentSource = knowledgeBase.find(item => item.source_path === segment.video);
 
         if (segmentSource) {
             setCurrentSegment({
@@ -18,7 +18,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
                 timestampText: `${segmentSource.source_path} | ${segment.start}`,
                 refs: [{
                     ...segmentSource,
-                    timestamp: segment.start
+                    timestamp: segment.start.split(".")[0]
                 }]
             });
             setShowList(false);
@@ -31,7 +31,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
             <div className='flex flex-col gap-1'>
                 {
                     segmentDescriptions.map(segment => (
-                        <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`} onClick={() => handleSelectResult(segment)} key={segment.id}>{segment.title}</p>
+                        <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`} onClick={() => handleSelectResult(segment)} key={segment.id}>{segment.query}</p>
                     ))
                 }
             </div>
