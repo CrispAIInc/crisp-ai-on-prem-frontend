@@ -141,6 +141,7 @@ const TimeSegmentDescription = ({
     const handleMouseLeave = () => setTooltipVisible(false);
 
     const canGenerate = checkedVideosCount > 0 && !isFetchingRefs && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
+
     async function generateDescription() {
         try {
             if (!canGenerate) {
@@ -169,6 +170,7 @@ const TimeSegmentDescription = ({
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
             axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+
             const { data, success, message } = await makeApiRequest(`/timestamp-summary?${url.toString()}`, 'GET', null, {
                 Authorization: `Bearer ${token}`,
                 SessionId: currentChat?.sessionId,
