@@ -51,30 +51,10 @@ const VideoSegmentDescription = () => {
         async function fetchTimeSegments() {
             try {
                 axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-                const { data, success } = await makeApiRequest("/chat/sgmt2rspns-history", 'GET', null, {
+                const { data, success } = await makeApiRequest("/chat/segment-response", 'GET', null, {
                     ProjectId: currentProject.project_id,
                 });
                 // const data = [
-                //     {
-                //         id: 1,
-                //         video: 'bill gates.mp4',
-                //         start: '00:00:00.5',
-                //         end: '00:09:10.0',
-                //         query: 'give name of the character in this scene',
-                //         response_format: {
-                //             type: 'json_schema',
-                //             schema: {
-                //                 mood: ['serious', 'focused', 'admiring', 'energetic'],
-                //                 shot_type: ['close-up', 'medium shot'],
-                //                 action_description:
-                //                     "Marty McFly stands in the town square with Jennifer Parker standing closely behind him. Marty wears a denim jacket and gray shirt, while Jennifer is in a pink outfit. Marty looks forward with a serious, determined expression that shifts to admiration as he spots a black truck. The camera cuts to the vehicle, a black pickup with a 'Statler Toyota' sign and red decorations. Marty comments, 'Check out that Four by four,' and the truck is described as 'hot'.",
-                //                 onscreen_text: {
-                //                     detected: true,
-                //                     text_content: "Statler Toyota, Lou's Cafe",
-                //                 },
-                //             },
-                //         },
-                //     },
                 //     {
                 //         id: 2,
                 //         video: 'bill gates.mp4',
@@ -87,7 +67,7 @@ const VideoSegmentDescription = () => {
                 //                 mood: ['serious', 'focused', 'admiring', 'energetic'],
                 //                 shot_type: ['close-up', 'medium shot'],
                 //                 action_description:
-                //                     "Marty McFly stands in the town square with Jennifer Parker standing closely behind him. Marty wears a denim jacket and gray shirt, while Jennifer is in a pink outfit. Marty looks forward with a serious, determined expression that shifts to admiration as he spots a black truck. The camera cuts to the vehicle, a black pickup with a 'Statler Toyota' sign and red decorations. Marty comments, 'Check out that Four by four,' and the truck is described as 'hot'.",
+                //                     "Marty McFly stands in the town square with Jennifer Parker standing closely behind him.\nMarty wears a denim jacket and gray shirt, while Jennifer is in a pink outfit. Marty looks forward with a serious, determined expression that shifts to admiration as he spots a black truck.\n\n\n\nThe camera cuts to the vehicle, a black pickup with a 'Statler Toyota' sign and red decorations. Marty comments, 'Check out that Four by four,' and the truck is described as 'hot'.",
                 //                 onscreen_text: {
                 //                     detected: true,
                 //                     text_content: "Statler Toyota, Lou's Cafe",
@@ -137,7 +117,7 @@ const VideoSegmentDescription = () => {
         async function fetchFindMoments() {
             try {
                 axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-                const { data, success } = await makeApiRequest("/chat/timestamp-lookups", 'GET', null, {
+                const { data, success } = await makeApiRequest("/chat/moment-fetch", 'GET', null, {
                     ProjectId: currentProject.project_id,
                 });
                 if (success) {

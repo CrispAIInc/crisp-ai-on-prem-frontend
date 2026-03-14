@@ -74,7 +74,7 @@ const FindMoments = ({
     const [isFetchingRefs, setIsFetchingRefs] = useState(false);
 
     async function handleCaptioning(query) {
-        let timestamps = await makeApiRequest('/find-timestamps', 'POST', JSON.stringify({
+        let timestamps = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
             prompt: query,
             sources: checkedSources.filter(items => items.file_type === "video"),
             fromCrispWiz: false

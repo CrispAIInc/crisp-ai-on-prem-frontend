@@ -169,7 +169,7 @@ const TimeSegmentDescription = ({
             axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
             axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
 
-            const { data, success, message } = await makeApiRequest(`/timestamp-summary?${url.toString()}`, 'GET', null, {
+            const { data, success, message } = await makeApiRequest(`/segment-response?${url.toString()}`, 'GET', null, {
                 Authorization: `Bearer ${token}`,
                 SessionId: currentChat?.sessionId,
                 ProjectId: currentProject?.project_id,
