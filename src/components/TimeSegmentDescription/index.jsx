@@ -8,6 +8,7 @@ import {
     AlignmentType,
     BorderStyle,
     ImageRun,
+    ShadingType
 } from "docx";
 import { saveAs } from "file-saver";
 import { useContext, useEffect, useRef, useState } from 'react';
@@ -207,6 +208,69 @@ const TimeSegmentDescription = ({
     // Helper function to convert a Base64 string to a Uint8Array (Prevents Word corruption)
     function base64ToUint8Array(base64) { const binaryString = window.atob(base64); const len = binaryString.length; const bytes = new Uint8Array(len); for (let i = 0; i < len; i++) { bytes[i] = binaryString.charCodeAt(i); } return bytes; }
 
+    // Helper: Generate inline chips with "Fake Padding" using borders
+    function createChipSection(title, tagsArray, bgColor, textColor, fontFamily) {
+        const paragraphs = [
+            new Paragraph({
+                spacing: { before: 300, after: 150 },
+                children: [
+                    new TextRun({
+                        text: title.toUpperCase(),
+                        bold: true,
+                        size: 18,
+                        color: "64748B",
+                        font: fontFamily,
+                        characterSpacing: 1.5
+                    })
+                ]
+            })
+        ];
+
+        if (!tagsArray || tagsArray.length === 0 || (tagsArray.length === 1 && !tagsArray[0])) {
+            paragraphs.push(new Paragraph({
+                children: [new TextRun({ text: "None detected", color: "A0AEC0", font: fontFamily, size: 20 })]
+            }));
+            return paragraphs;
+        }
+
+        const chipRuns = [];
+        tagsArray.forEach((tag, index) => {
+            const cleanTag = tag.trim();
+            if (!cleanTag) return;
+
+            chipRuns.push(
+                new TextRun({
+                    text: `\u00A0${cleanTag.toLowerCase()}\u00A0`,
+                    shading: { type: ShadingType.CLEAR, fill: bgColor },
+                    color: textColor,
+                    font: fontFamily,
+                    size: 20,
+                    bold: true,
+                    // The "Secret Sauce" for padding: 
+                    // Adding a border the same color as the background expands the chip area
+                    border: {
+                        color: bgColor,
+                        space: 4, // This acts like CSS padding (in points)
+                        value: BorderStyle.SINGLE,
+                        size: 6,
+                    },
+                })
+            );
+
+            // Gap between chips (using non-breaking spaces for stability)
+            if (index < tagsArray.length - 1) {
+                chipRuns.push(new TextRun({ text: "\u00A0\u00A0\u00A0" }));
+            }
+        });
+
+        paragraphs.push(new Paragraph({
+            lineSpacing: { before: 150, line: 360 }, // More vertical room for the thicker chips
+            spacing: { after: 200 },
+            children: chipRuns
+        }));
+
+        return paragraphs;
+    }
     async function exportSceneAnalysisToDocx(data) {
         try {
             /* ---------- LOAD LOGO ---------- */
@@ -224,6 +288,10 @@ const TimeSegmentDescription = ({
             const moods = schema.mood ? schema.mood.join(", ") : "N/A";
             const shotTypes = schema.shot_type ? schema.shot_type.join(", ") : "N/A";
 
+            // Process On-Screen Text into an array for chips
+            const ocrText = schema.onscreen_text?.detected ? schema.onscreen_text.text_content : "";
+            const ocrArray = ocrText.split(',').map(item => item.trim()).filter(i => i !== "");
+
             let onscreenText = "None detected";
             if (schema.onscreen_text?.detected) {
                 onscreenText = schema.onscreen_text.text_content;
@@ -233,6 +301,22 @@ const TimeSegmentDescription = ({
             const primaryColor = "8E44AD"; // A nice Purple for a cinematic theme
             const secondaryColor = "595959"; // Dark Gray
             const accentColor = "E8DAEF"; // Light purple for borders
+            const colors = {
+                primary: "4338CA",    // Deep Indigo
+                accent: "8B5CF6",     // Vibrant Violet
+                textMain: "1E293B",   // Slate 800 (Soft Black)
+                textMuted: "64748B",  // Slate 500 (Gray)
+                bgShade: "F8FAFC",    // Slate 50 (Very light cool gray for boxes)
+                highlight: "0EA5E9",  // Sky Blue
+                // Chip Colors mapped from your screenshot
+                moodBg: "D6E4FF",     // Soft Blue background
+                moodText: "2F6BFF",   // Vibrant Blue text
+                shotBg: "E8D5FA",     // Soft Purple background
+                shotText: "9B51E0",   // Vibrant Purple text
+                ocrBg: "DCFCE7",
+                ocrText: "166534",
+            };
+            const fontFamily = "Inter, Helvetica Neue, Arial";
 
             // 4. Build Document Elements
             const docChildren = [
@@ -287,7 +371,7 @@ const TimeSegmentDescription = ({
 
                 // --- QUERY SECTION ---
                 new Paragraph({
-                    text: "User Query",
+                    text: "Prompt",
                     heading: HeadingLevel.HEADING_1,
                     spacing: { before: 400, after: 200 },
                     border: {
@@ -295,10 +379,17 @@ const TimeSegmentDescription = ({
                     },
                 }),
                 new Paragraph({
+                    spacing: { before: 100, after: 400 },
+                    shading: { type: ShadingType.CLEAR, fill: colors.bgShade },
+                    border: {
+                        left: { color: colors.primary, space: 10, value: BorderStyle.SINGLE, size: 18 },
+                        top: { color: colors.bgShade, space: 10, value: BorderStyle.SINGLE, size: 18 },
+                        bottom: { color: colors.bgShade, space: 10, value: BorderStyle.SINGLE, size: 18 },
+                        right: { color: colors.bgShade, space: 10, value: BorderStyle.SINGLE, size: 18 },
+                    },
                     children: [
-                        new TextRun({ text: `"${query}"`, size: 24, italics: true, color: secondaryColor }),
+                        new TextRun({ text: query, size: 24, italics: true, color: colors.textMain, font: fontFamily }),
                     ],
-                    spacing: { after: 400 },
                 }),
 
                 // --- ACTION DESCRIPTION SECTION ---
@@ -329,40 +420,14 @@ const TimeSegmentDescription = ({
                     },
                 }),
 
-                // Mood Bullet
-                new Paragraph({
-                    spacing: { before: 100, after: 100 },
-                    bullet: { level: 0 },
-                    children: [
-                        new TextRun({ text: "Mood / Atmosphere: ", bold: true, size: 22 }),
-                        new TextRun({ text: moods, size: 22, color: secondaryColor }),
-                    ],
-                }),
-
-                // Shot Type Bullet
-                new Paragraph({
-                    spacing: { before: 100, after: 100 },
-                    bullet: { level: 0 },
-                    children: [
-                        new TextRun({ text: "Shot Types: ", bold: true, size: 22 }),
-                        new TextRun({ text: shotTypes, size: 22, color: secondaryColor }),
-                    ],
-                }),
-
-                // Onscreen Text Bullet
-                new Paragraph({
-                    spacing: { before: 100, after: 400 },
-                    bullet: { level: 0 },
-                    children: [
-                        new TextRun({ text: "Detected On-Screen Text: ", bold: true, size: 22 }),
-                        new TextRun({ text: onscreenText, size: 22, color: secondaryColor }),
-                    ],
-                }),
+                ...createChipSection("Mood", schema.mood, colors.moodBg, colors.moodText, fontFamily),
+                ...createChipSection("Shot Type", schema.shot_type, colors.shotBg, colors.shotText, fontFamily),
+                ...createChipSection("On-Screen Text", ocrArray, colors.ocrBg, colors.ocrText, fontFamily),
             ];
 
             // 5. Initialize Document Configuration
             const doc = new Document({
-                creator: "Scene Analysis Exporter",
+                creator: "Crisp AI Scene Analysis Exporter",
                 styles: {
                     paragraphStyles: [
                         {
