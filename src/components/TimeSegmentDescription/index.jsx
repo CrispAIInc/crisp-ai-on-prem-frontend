@@ -165,7 +165,6 @@ const TimeSegmentDescription = ({
             url.append("end_timestamp", formatTime((end)));
             url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
             url.append("prompt", prompt);
-            url.append("fromCrispWiz", false);
 
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
