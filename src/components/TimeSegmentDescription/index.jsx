@@ -124,6 +124,8 @@ const TimeSegmentDescription = ({
     const [currentSegment, setCurrentSegment] = useState(null);
 
 
+
+
     // =========== CONSTREINT TOOLTIP LOGIC =============
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -138,7 +140,10 @@ const TimeSegmentDescription = ({
     const handleMouseEnter = () => (checkedVideosCount === 0 || prompt.trim() === "" || isProjectReadOnly) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
+    const canGenerate = checkedVideosCount > 0 && !isFetchingRefs && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
     async function generateDescription() {
+        if (!canGenerate) return;
+
         if (toSeconds(end) <= toSeconds(start)) {
             notify({
                 variant: "error",
@@ -195,7 +200,7 @@ const TimeSegmentDescription = ({
             console.log(error);
             notify({
                 variant: "error",
-                heading: "Could't generate description",
+                heading: "Couldn't generate description",
                 subheading: error?.message
             });
         } finally {
@@ -543,7 +548,7 @@ const TimeSegmentDescription = ({
 
                     <RippleButton
                         cssClasses={`rounded-xl !py-2 !px-3 !pr-4  flex items-center gap-1 ${tooltipVisible ? 'cursor-not-allowed' : ''}`}
-                        disabled={checkedVideosCount === 0 || isFetchingRefs || prompt.trim() === "" || isProjectReadOnly}
+                        disabled={!canGenerate}
                     >
                         {isFetchingRefs ? <LoadingSpinner cssClasses="mr-2" /> : <AutoAwesomeIcon className={`text-white !text-[16px]`} />}
                         {/* <span className="text-sm">Find</span> */}
@@ -554,7 +559,7 @@ const TimeSegmentDescription = ({
                             className={`absolute z-10 p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                             style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                         >
-                            {isProjectReadOnly ? "Cannot edit an example project." : prompt.trim() === "" ? "No prompt provided." : "check at least one video source to enable."}
+                            {isProjectReadOnly ? "Cannot edit an example project." : checkedVideosCount === 0 ? "check at least one video source to enable." : "No prompt provided."}
                         </p>
                     )}
                 </div>
