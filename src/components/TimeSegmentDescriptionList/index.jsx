@@ -1,13 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
+import LoadingSpinner from '../LoadingSpinner';
+import DeleteIcon from "@mui/icons-material/Delete";
+import makeApiRequest from '../../api';
+import { ToastContext } from '../../contexts/toastContext';
+import { ProjectContext } from '../../contexts/projectContext';
 
 function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDescriptions }) {
+
+    const {
+        isProjectReadOnly
+    } = useContext(ProjectContext);
 
     const {
         theme,
         knowledgeBase
     } = useContext(MainContext);
+
+    const {
+        notify
+    } = useContext(ToastContext);
 
     function handleSelectResult(segment) {
         const segmentSource = knowledgeBase.find(item => item.source_path === segment.video);
@@ -25,13 +38,79 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
         }
     }
 
+    const [isSegmentDeleting, setIsSegmentDeleting] = useState(false);
+
+    const [hoveredSegment, setHoveredSegment] = useState(null);
+
+    const handleMouseEnterSegment = (id) => {
+        setHoveredSegment(id);
+    };
+    const handleMouseLeaveSegment = () => {
+        setHoveredSegment(null);
+    };
+
+    async function deleteSegment(segmentId) {
+        try {
+            setIsSegmentDeleting(true);
+            const { success, message } = await makeApiRequest(`/segment-response/${segmentId}`);
+
+            if (success) {
+                notify({
+                    variant: "success",
+                    heading: "Video segment deleted!"
+                });
+            } else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Couldn't delete video segment",
+                subheading: error.message || "",
+            });
+        } finally {
+            setIsSegmentDeleting(false);
+        }
+    }
+
     return (
         <div className="flex flex-col gap-2 overflow-y-auto">
             <BaseHeading text="All segment descriptions" />
             <div className='flex flex-col gap-1'>
                 {
                     segmentDescriptions.map(segment => (
-                        <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`} onClick={() => handleSelectResult(segment)} key={segment.id}>{segment?.title || segment?.query}</p>
+                        <div key={segment.id}
+                            className={`flex items-center justify-between gap-2 ${theme === 'light'
+                                ? 'hover:bg-textColor-100/10'
+                                : 'hover:bg-light-hover-200/20'
+                                } cursor-pointer p-2 rounded-md select-none`}
+                            onClick={() => handleSelectResult(segment)}
+                            onMouseEnter={() => handleMouseEnterSegment(segment.id)}
+                            onMouseLeave={handleMouseLeaveSegment}
+                        >
+
+                            <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit truncate`} key={segment.id}>{segment?.title || segment?.query}</p>
+
+                            {
+                                !isProjectReadOnly && (
+                                    hoveredSegment === segment?.id && (
+                                        <>
+                                            {
+                                                isSegmentDeleting ? (
+                                                    <LoadingSpinner isSmall />
+                                                ) : (
+                                                    <DeleteIcon
+                                                        onClick={(event) => { event.stopPropagation(); deleteSegment(event, segment.id); }}
+                                                        className=" cursor-pointer"
+                                                    />
+                                                )
+                                            }
+                                        </>
+                                    )
+                                )
+                            }
+                        </div>
                     ))
                 }
             </div>
