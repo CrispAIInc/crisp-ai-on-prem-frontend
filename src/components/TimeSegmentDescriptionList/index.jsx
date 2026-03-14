@@ -31,7 +31,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
             <div className='flex flex-col gap-1'>
                 {
                     segmentDescriptions.map(segment => (
-                        <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`} onClick={() => handleSelectResult(segment)} key={segment.id}>{segment.query}</p>
+                        <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`} onClick={() => handleSelectResult(segment)} key={segment.id}>{segment?.title || segment?.query}</p>
                     ))
                 }
             </div>

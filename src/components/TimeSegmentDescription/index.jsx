@@ -290,7 +290,6 @@ const TimeSegmentDescription = ({
 
             // 1. Handle Newline formatting in description
             const descriptionParagraphs = actionDesc.split('\n').filter(p => p.trim() !== "");
-            console.log("dfdfdf: ", actionDesc);
 
             // Process On-Screen Text into an array for chips
             const ocrText = schema.onscreen_text?.detected ? schema.onscreen_text.text_content : "";
