@@ -1,32 +1,31 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Skeleton } from '@mui/material';
+import {
+    AlignmentType,
+    BorderStyle,
+    Document,
+    ImageRun,
+    Packer,
+    Paragraph,
+    Table,
+    TableCell,
+    TableRow,
+    TextRun,
+    WidthType
+} from "docx";
+import { saveAs } from "file-saver";
+import { useContext, useEffect, useRef, useState } from 'react';
+import makeApiRequest, { axiosInstance } from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
+import { useToast } from '../../contexts/toastContext';
+import useAuth from '../../hooks/useAuth.js';
+import { formatTime, toSeconds, urlToBase64 } from "../../utils.js";
+import LoadingSpinner from '../LoadingSpinner/index.jsx';
+import RippleButton from '../RippleButton/index.jsx';
 import SegmentDescription from '../SegmentDescription';
 import SegmentDescriptionResult from "../SegmentDescriptionResult";
 import TimeSegmentDescriptionList from "../TimeSegmentDescriptionList";
-import Chip from "../Chip";
-import useReferenceLinkClick from "../../hooks/useReferenceLinkClick.js";
-import { delay, formatTime, toSeconds, urlToBase64 } from "../../utils.js";
-import { useToast } from '../../contexts/toastContext';
-import { EventSourcePolyfill } from 'event-source-polyfill';
-import useAuth from '../../hooks/useAuth.js';
-import { ProjectContext } from '../../contexts/projectContext.jsx';
-import {
-    Document,
-    Packer,
-    Paragraph,
-    TextRun,
-    AlignmentType,
-    Table,
-    TableRow,
-    TableCell,
-    WidthType,
-    BorderStyle,
-    HeadingLevel,
-    ImageRun
-} from "docx";
-import { saveAs } from "file-saver";
-import { Skeleton } from '@mui/material';
-import makeApiRequest, { axiosInstance } from '../../api/index.js';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 const TimeSegmentDescription = ({
@@ -101,6 +100,7 @@ const TimeSegmentDescription = ({
             ]
         },
     ]);
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
 
     const {
@@ -109,6 +109,8 @@ const TimeSegmentDescription = ({
         currentChat,
         contentPanelContainerRef,
     } = useContext(MainContext);
+
+    const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
 
     const { currentProject } = useContext(ProjectContext);
 
@@ -120,6 +122,21 @@ const TimeSegmentDescription = ({
     const [isFetchingRefs, setIsFetchingRefs] = useState(false);
     const [showList, setShowList] = useState(true);
     const [currentSegment, setCurrentSegment] = useState(null);
+
+
+    // =========== CONSTREINT TOOLTIP LOGIC =============
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        setPosition({
+            x: e.clientX - rect.left - 60,
+            y: e.clientY - rect.top + 10,
+        });
+    };
+
+    const handleMouseEnter = () => (checkedVideosCount === 0 || prompt.trim() === "" || isProjectReadOnly) && setTooltipVisible(true);
+    const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateDescription() {
         if (toSeconds(end) <= toSeconds(start)) {
@@ -455,9 +472,35 @@ const TimeSegmentDescription = ({
                 rows={2}
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Add more instructions for better results (optional)"
+                placeholder="Add more instructions for better results"
                 className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none`}
             />
+            <div
+                className="relative inline-block self-end mt-2"
+                onMouseMove={handleMouseMove}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onClick={generateDescription}
+            >
+
+                <RippleButton
+                    cssClasses={`rounded-md !py-2 !px-3 !pr-4  flex items-center gap-1 ${tooltipVisible ? 'cursor-not-allowed' : ''}`}
+                    disabled={checkedVideosCount === 0 || isFetchingRefs || prompt.trim() === "" || isProjectReadOnly}
+                >
+                    {isFetchingRefs ? <LoadingSpinner cssClasses="mr-2" /> : <AutoAwesomeIcon className={`text-white text-sm`} />}
+                    <span className="text-sm">Find</span>
+                </RippleButton>
+
+                {tooltipVisible && (
+                    <p
+                        className={`absolute z-10 p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
+                        style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
+                    >
+                        {isProjectReadOnly ? "Cannot edit an example project." : prompt.trim() === "" ? "No prompt provided." : "check at least one video source to enable."}
+                    </p>
+                )}
+            </div>
+
             <SegmentDescription
                 start={start}
                 setStart={setStart}
