@@ -4,14 +4,11 @@ import {
     Packer,
     Paragraph,
     TextRun,
-    Table,
-    TableRow,
-    TableCell,
     HeadingLevel,
     AlignmentType,
-    WidthType
+    BorderStyle,
+    ImageRun,
 } from "docx";
-
 import { saveAs } from "file-saver";
 import { useContext, useEffect, useRef, useState } from 'react';
 import makeApiRequest, { axiosInstance } from '../../api/index.js';
@@ -207,152 +204,207 @@ const TimeSegmentDescription = ({
         }
     }
 
-    // Helper function to convert a Base64 string to a Uint8Array
-    function base64ToUint8Array(base64) {
-        const binaryString = window.atob(base64);
-        const len = binaryString.length;
-        const bytes = new Uint8Array(len);
-        for (let i = 0; i < len; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-        return bytes;
-    }
+    // Helper function to convert a Base64 string to a Uint8Array (Prevents Word corruption)
+    function base64ToUint8Array(base64) { const binaryString = window.atob(base64); const len = binaryString.length; const bytes = new Uint8Array(len); for (let i = 0; i < len; i++) { bytes[i] = binaryString.charCodeAt(i); } return bytes; }
 
+    async function exportSceneAnalysisToDocx(data) {
+        try {
+            /* ---------- LOAD LOGO ---------- */
+            const logoBase64 = await urlToBase64("/new-crisp-logo-resized.png");
+            const logoBuffer = base64ToUint8Array(logoBase64.split(",")[1]);
 
-    async function exportSceneDoc(data) {
+            // 1. Extract and map data from your new JSON structure
+            const videoName = data.video || "Unknown Video";
+            const startTime = data.start || "00:00:00";
+            const endTime = data.end || "00:00:00";
+            const query = data.query || "No query provided.";
 
-        const table = new Table({
-            width: {
-                size: 100,
-                type: WidthType.PERCENTAGE
-            },
-            rows: [
-                new TableRow({
+            const schema = data.response_format?.schema || {};
+            const actionDesc = schema.action_description || "No description available.";
+            const moods = schema.mood ? schema.mood.join(", ") : "N/A";
+            const shotTypes = schema.shot_type ? schema.shot_type.join(", ") : "N/A";
+
+            let onscreenText = "None detected";
+            if (schema.onscreen_text?.detected) {
+                onscreenText = schema.onscreen_text.text_content;
+            }
+
+            // 3. Define Theme Colors
+            const primaryColor = "8E44AD"; // A nice Purple for a cinematic theme
+            const secondaryColor = "595959"; // Dark Gray
+            const accentColor = "E8DAEF"; // Light purple for borders
+
+            // 4. Build Document Elements
+            const docChildren = [
+                // --- LOGO SECTION ---
+                new Paragraph({
+                    alignment: AlignmentType.LEFT,
+                    spacing: { after: 200 },
                     children: [
-                        new TableCell({
-                            children: [new Paragraph("Mood Options")],
-                        }),
-                        new TableCell({
-                            children: [
-                                new Paragraph(data.response_format.schema.mood.join(", "))
-                            ],
+                        new ImageRun({
+                            data: logoBuffer,
+                            transformation: { width: 170, height: 55 },
+                            type: "png",
                         }),
                     ],
                 }),
 
-                new TableRow({
+                // --- DOCUMENT TITLE ---
+                new Paragraph({
+                    text: "Scene Analysis Report",
+                    heading: HeadingLevel.TITLE,
+                    alignment: AlignmentType.CENTER,
+                    spacing: { after: 250 },
+                }),
+
+                // --- METADATA SUBTITLE ---
+                new Paragraph({
+                    alignment: AlignmentType.CENTER,
+                    spacing: { after: 100 },
                     children: [
-                        new TableCell({
-                            children: [new Paragraph("Shot Types")],
+                        new TextRun({
+                            text: `File: ${videoName}`,
+                            color: secondaryColor,
+                            italics: true,
+                            bold: true,
+                            size: 24, // 12pt
                         }),
-                        new TableCell({
-                            children: [
-                                new Paragraph(data.response_format.schema.shot_type.join(", "))
-                            ],
+                    ],
+                }),
+                new Paragraph({
+                    alignment: AlignmentType.CENTER,
+                    spacing: { after: 600 },
+                    children: [
+                        new TextRun({
+                            text: `Segment: [${startTime} - ${endTime}]`,
+                            color: secondaryColor,
+                            italics: true,
+                            bold: true,
+                            size: 24, // 12pt
                         }),
                     ],
                 }),
 
-                new TableRow({
+                // --- QUERY SECTION ---
+                new Paragraph({
+                    text: "User Query",
+                    heading: HeadingLevel.HEADING_1,
+                    spacing: { before: 400, after: 200 },
+                    border: {
+                        bottom: { color: primaryColor, space: 1, value: BorderStyle.SINGLE, size: 12 },
+                    },
+                }),
+                new Paragraph({
                     children: [
-                        new TableCell({
-                            children: [new Paragraph("Action Description")],
-                        }),
-                        new TableCell({
-                            children: [
-                                new Paragraph(data.response_format.schema.action_description)
-                            ],
-                        }),
+                        new TextRun({ text: `"${query}"`, size: 24, italics: true, color: secondaryColor }),
+                    ],
+                    spacing: { after: 400 },
+                }),
+
+                // --- ACTION DESCRIPTION SECTION ---
+                new Paragraph({
+                    text: "Action Description",
+                    heading: HeadingLevel.HEADING_1,
+                    spacing: { before: 200, after: 200 },
+                    border: {
+                        bottom: { color: primaryColor, space: 1, value: BorderStyle.SINGLE, size: 12 },
+                    },
+                }),
+                new Paragraph({
+                    children: [new TextRun({ text: actionDesc, size: 22 })],
+                    spacing: { after: 400 },
+                    alignment: AlignmentType.JUSTIFIED,
+                    border: {
+                        left: { color: accentColor, space: 10, value: BorderStyle.THICK, size: 24 },
+                    },
+                }),
+
+                // --- CINEMATIC DETAILS SECTION ---
+                new Paragraph({
+                    text: "Cinematic Details",
+                    heading: HeadingLevel.HEADING_1,
+                    spacing: { before: 200, after: 200 },
+                    border: {
+                        bottom: { color: primaryColor, space: 1, value: BorderStyle.SINGLE, size: 12 },
+                    },
+                }),
+
+                // Mood Bullet
+                new Paragraph({
+                    spacing: { before: 100, after: 100 },
+                    bullet: { level: 0 },
+                    children: [
+                        new TextRun({ text: "Mood / Atmosphere: ", bold: true, size: 22 }),
+                        new TextRun({ text: moods, size: 22, color: secondaryColor }),
                     ],
                 }),
 
-                new TableRow({
+                // Shot Type Bullet
+                new Paragraph({
+                    spacing: { before: 100, after: 100 },
+                    bullet: { level: 0 },
                     children: [
-                        new TableCell({
-                            children: [new Paragraph("Onscreen Text Detected")],
-                        }),
-                        new TableCell({
-                            children: [
-                                new Paragraph(
-                                    data.response_format.schema.onscreen_text.detected
-                                        ? "Yes"
-                                        : "No"
-                                ),
-                            ],
-                        }),
+                        new TextRun({ text: "Shot Types: ", bold: true, size: 22 }),
+                        new TextRun({ text: shotTypes, size: 22, color: secondaryColor }),
                     ],
                 }),
 
-                new TableRow({
+                // Onscreen Text Bullet
+                new Paragraph({
+                    spacing: { before: 100, after: 400 },
+                    bullet: { level: 0 },
                     children: [
-                        new TableCell({
-                            children: [new Paragraph("Onscreen Text Content")],
-                        }),
-                        new TableCell({
-                            children: [
-                                new Paragraph(
-                                    data.response_format.schema.onscreen_text.text_content
-                                )
-                            ],
-                        }),
+                        new TextRun({ text: "Detected On-Screen Text: ", bold: true, size: 22 }),
+                        new TextRun({ text: onscreenText, size: 22, color: secondaryColor }),
                     ],
                 }),
-            ],
-        });
+            ];
 
-        const doc = new Document({
-            sections: [
-                {
-                    children: [
-
-                        new Paragraph({
-                            text: "Video Scene Analysis",
-                            heading: HeadingLevel.TITLE,
-                            alignment: AlignmentType.CENTER
-                        }),
-
-                        new Paragraph({
-                            children: [
-                                new TextRun({
-                                    text: "Video: ",
-                                    bold: true
-                                }),
-                                new TextRun(data.video)
-                            ],
-                        }),
-
-                        new Paragraph({
-                            children: [
-                                new TextRun({ text: "Start: ", bold: true }),
-                                new TextRun(data.start),
-                                new TextRun({ text: "    End: ", bold: true }),
-                                new TextRun(data.end)
-                            ],
-                        }),
-
-                        new Paragraph({
-                            children: [
-                                new TextRun({
-                                    text: "Query: ",
-                                    bold: true
-                                }),
-                                new TextRun(data.query)
-                            ],
-                        }),
-
-                        new Paragraph({
-                            text: "Scene Details",
-                            heading: HeadingLevel.HEADING_1
-                        }),
-
-                        table
+            // 5. Initialize Document Configuration
+            const doc = new Document({
+                creator: "Scene Analysis Exporter",
+                styles: {
+                    paragraphStyles: [
+                        {
+                            id: "Title",
+                            name: "Title",
+                            basedOn: "Normal",
+                            next: "Normal",
+                            run: { color: primaryColor, size: 52, bold: true, font: "Helvetica Neue" },
+                        },
+                        {
+                            id: "Heading1",
+                            name: "Heading 1",
+                            basedOn: "Normal",
+                            next: "Normal",
+                            run: { color: primaryColor, size: 30, bold: true, font: "Helvetica Neue" },
+                        },
                     ],
                 },
-            ],
-        });
+                sections: [{
+                    properties: {
+                        page: {
+                            margin: {
+                                top: 720,
+                                right: 720,
+                                bottom: 720,
+                                left: 720
+                            }
+                        }
+                    }, children: docChildren
+                }],
+            });
 
-        const blob = await Packer.toBlob(doc);
-        saveAs(blob, "scene-analysis.docx");
+            // 6. Generate and Download
+            const blob = await Packer.toBlob(doc);
+            const safeFilename = videoName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            saveAs(blob, `scene_analysis_${safeFilename}.docx`);
+
+            console.log("Scene Analysis document successfully generated!");
+
+        } catch (error) {
+            console.error("Error generating the Word document:", error);
+        }
     }
 
     const containerRef = useRef(null);
@@ -472,7 +524,7 @@ const TimeSegmentDescription = ({
                             currentSegment={currentSegment}
                             setCurrentSegment={setCurrentSegment}
                             isPending={isPending}
-                            exportFn={(result) => exportSceneDoc(result)}
+                            exportFn={(result) => exportSceneAnalysisToDocx(result)}
                             setTimeSegmentDescriptions={setTimeSegmentDescriptions}
                         />
                     )
