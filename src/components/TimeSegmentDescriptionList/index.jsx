@@ -7,7 +7,7 @@ import makeApiRequest from '../../api';
 import { ToastContext } from '../../contexts/toastContext';
 import { ProjectContext } from '../../contexts/projectContext';
 
-function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDescriptions }) {
+function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDescriptions, setSegmentDescriptions }) {
 
     const {
         isProjectReadOnly
@@ -55,6 +55,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
             const { success, message } = await makeApiRequest(`/segment-response/${segmentId}`, 'DELETE');
 
             if (success) {
+                setSegmentDescriptions(prev => prev.filter(item => item.id !== segmentId));
                 notify({
                     variant: "success",
                     heading: "Video segment deleted!"

@@ -583,6 +583,7 @@ const TimeSegmentDescription = ({
                             setResults={setResults}
                             segmentDescriptions={segmentDescriptions}
                             setCurrentSegment={setCurrentSegment}
+                            setSegmentDescriptions={setSegmentDescriptions}
                         />
                     ) : (
                         <SegmentDescriptionResult
