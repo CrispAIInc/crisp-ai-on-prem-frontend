@@ -52,6 +52,7 @@ ${theme === 'light' ? 'hover:bg-textColor-100/20' : 'hover:bg-textColor-300/80'}
                                     key={model.value}
                                     onClick={() => handleModelChange(model.value)}
                                     className={`
+                                        ${model.value !== "search" ? 'opacity-40 cursor-default pointer-events-none' : 'cursor-pointer'}
                                  cursor-pointer transition
                                  px-3 py-2
                                  text-nowrap
