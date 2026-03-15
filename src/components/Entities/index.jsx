@@ -6,8 +6,11 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import makeApiRequest from '../../api';
 import JsonEntityModal from '../JsonEntityModal';
 import JsonEntitiesList from '../JsonEntitiesList';
+import { ProjectContext } from '../../contexts/projectContext';
 
 function KnowledgeGraph() {
+
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
         theme,
@@ -34,12 +37,17 @@ function KnowledgeGraph() {
         });
     };
 
+
     const MAX_SOURCES_COUNT = 1;
-    const handleMouseEnter = () => (checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT) && setTooltipVisible(true);
+    const canGenerate = checkedSourcesCount > 0 && checkedSourcesCount <= MAX_SOURCES_COUNT && !isProjectReadOnly;
+
+    const handleMouseEnter = () => !canGenerate && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     async function generateGraph() {
         try {
+            if (!canGenerate) return;
+
             setIsGeneratingGraph(true);
             const payload = {
                 sources: checkedSources.map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
@@ -121,7 +129,7 @@ function KnowledgeGraph() {
                             onClick={generateGraph}
                             fullWidth
                             cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                            disabled={isGeneratingGraph || checkedSourcesCount === 0 || checkedSourcesCount > MAX_SOURCES_COUNT}>
+                            disabled={isGeneratingGraph || !canGenerate}>
                             {isGeneratingGraph ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
                         </RippleButton>
 
@@ -132,7 +140,7 @@ function KnowledgeGraph() {
                                 className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                                 style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                             >
-                                {`Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
+                                {isProjectReadOnly ? "Cannot edit an example project." : `Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
                             </p>
                         )}
                     </div>
