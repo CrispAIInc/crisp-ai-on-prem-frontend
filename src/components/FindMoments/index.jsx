@@ -102,24 +102,14 @@ const FindMoments = ({
                 );
             }
             let { results, success, message, ...rest } = await handleCaptioning(prompt);
-            // const { results, success, message, ...rest } = {
-            //     created_at: "Sun, 15 Mar 2026 12:27:18 GMT",
-            //     id: "vRRCmLFSx19sklDE6yjjn3",
-            //     prompt: "bill gates dancing",
-            //     results: [
-            //         {
-            //             context: "The athlete is captured from behind, raising his right arm in a celebratory gesture. Other competitors are partially visible, and the crowd in the stands is lively. The stadium roof and lighting fixtures are visible, emphasizing the large scale of the event.",
-            //             source_id: "FrDvSojllaJZaM5njTEI",
-            //             timestamp: "00:01:18"
-            //         },
-            //     ]
-            // };
 
             if (success) {
-                const finalResults = results.map((segment) => {
-                    const source = knowledgeBase.find(item => item.source_id === segment.source_id);
+                if (results.length > 0) {
+                    const finalResults = results.map((segment) => {
+                        const source = knowledgeBase.find(item => item.source_id === segment.source_id);
 
-                    if (source) {
+                        if (!source) return null;
+
                         return {
                             ...segment,
                             timestampText: `${source.source_path} | ${segment.timestamp}`,
@@ -128,32 +118,32 @@ const FindMoments = ({
                                 timestamp: segment.timestamp
                             }
                         };
-                    }
-                });
+                    }).filter(Boolean);
+                    const moment = {
+                        ...rest,
+                        results: finalResults
+                    };
 
-                console.log({
-                    ...rest,
-                    results: finalResults
-                });
+                    setMoments(prev => {
+                        return [
+                            moment,
+                            ...prev,
+                        ];
+                    });
 
-                setMoments(prev => {
-                    return [
-                        {
-                            ...rest,
-                            results: finalResults
-                        },
-                        ...prev,
-                    ];
-                });
+                    setCurrentMoment(moment);
 
-                setCurrentMoment({
-                    ...rest,
-                    results: finalResults
-                });
-
-                setPrompt("");
-                setIsPending(false);
-                setShowList(true);
+                    setPrompt("");
+                    setIsPending(false);
+                    setShowList(false);
+                } else {
+                    setIsPending(false);
+                    notify({
+                        variant: "info",
+                        heading: "No moments found with the prompt you provided",
+                        subheading: "Try providing another prompt for better results"
+                    });
+                }
             }
             else {
                 throw new Error(message);
@@ -309,9 +299,9 @@ const FindMoments = ({
 
                     <RippleButton
                         cssClasses={`rounded-md !py-2 !px-3 !pr-4  flex items-center gap-1 ${tooltipVisible ? 'cursor-not-allowed' : ''}`}
-                        disabled={checkedVideosCount === 0 || isFetchingRefs || prompt.trim() === "" || isProjectReadOnly}
+                        disabled={checkedVideosCount === 0 || isPending || prompt.trim() === "" || isProjectReadOnly}
                     >
-                        {isFetchingRefs ? <LoadingSpinner cssClasses="mr-2" /> : <SearchOutlinedIcon className={`text-white text-sm`} />}
+                        {isPending ? <LoadingSpinner cssClasses="mr-2" /> : <SearchOutlinedIcon className={`text-white text-sm`} />}
                         <span className="text-sm">Find</span>
                     </RippleButton>
 
@@ -333,27 +323,30 @@ const FindMoments = ({
 
                         <div className="flex flex-col gap-2">
                             <div>
+                                <Skeleton width={'20%'} />
+                            </div>
+                            <div>
                                 <Skeleton />
                                 <Skeleton />
                                 <Skeleton />
                             </div>
                             <div className="mb-2">
-                                <Skeleton width={'50%'} />
-                                <Skeleton width={'50%'} />
-                                <Skeleton width={'50%'} />
-                                <Skeleton width={'50%'} />
-                                <Skeleton width={'50%'} />
+                                <Skeleton width={'65%'} />
+                                <Skeleton width={'65%'} />
+                                <Skeleton width={'65%'} />
+                                <Skeleton width={'65%'} />
+                                <Skeleton width={'65%'} />
                             </div>
                             <div>
-                                <Skeleton width={'50%'} />
-                                <Skeleton width={'50%'} />
-                                <Skeleton width={'50%'} />
-                                <Skeleton width={'50%'} />
+                                <Skeleton width={'65%'} />
+                                <Skeleton width={'65%'} />
+                                <Skeleton width={'65%'} />
+                                <Skeleton width={'65%'} />
                             </div>
-                            <div className="flex items-center gap-2">
+                            {/* <div className="flex items-center gap-2">
                                 <Skeleton width={'20%'} height={40} />
                                 <Skeleton width={'20%'} height={40} />
-                            </div>
+                            </div> */}
                         </div>
                     ) : (
                         showList ? (
@@ -368,7 +361,7 @@ const FindMoments = ({
                                 currentMoment={currentMoment}
                                 setCurrentMoment={setCurrentMoment}
                                 captionResults={captionResults}
-                                isPending={isFetchingRefs}
+                                isPending={isPending}
                                 exportFn={() => exportToDocx(captionResults)}
                                 setShowList={setShowList}
                             />
