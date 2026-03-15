@@ -1,8 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
+import { ProjectContext } from '../../contexts/projectContext';
+import { ToastContext } from '../../contexts/toastContext';
+import makeApiRequest from '../../api';
+import LoadingSpinner from '../LoadingSpinner';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function FindMomentsList({ setCurrentMoment, setShowList, moments }) {
+
+    const {
+        isProjectReadOnly
+    } = useContext(ProjectContext);
+
+    const {
+        notify
+    } = useContext(ToastContext);
 
     const {
         theme,
@@ -31,13 +44,79 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments }) {
         setShowList(false);
     }
 
+    const [isSegmentDeleting, setIsSegmentDeleting] = useState(false);
+
+    const [hoveredSegment, setHoveredSegment] = useState(null);
+
+    const handleMouseEnterSegment = (id) => {
+        setHoveredSegment(id);
+    };
+    const handleMouseLeaveSegment = () => {
+        setHoveredSegment(null);
+    };
+
+    async function deleteSegment(momentId) {
+        try {
+            setIsSegmentDeleting(true);
+            const { success, message } = await makeApiRequest(`/moment-fetch/${momentId}`);
+
+            if (success) {
+                notify({
+                    variant: "success",
+                    heading: "Video segment deleted!"
+                });
+            } else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Couldn't delete video segment",
+                subheading: error.message || "",
+            });
+        } finally {
+            setIsSegmentDeleting(false);
+        }
+    }
+
     return (
         <div className="flex flex-col gap-2 overflow-y-auto">
             <BaseHeading text="All moments" />
             <div className='flex flex-col gap-1'>
                 {
                     moments.map(item => (
-                        <p onClick={() => handleSelectResult(item)} key={item.id} className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`}>{item.prompt}</p>
+                        <div key={item.id}
+                            className={`flex items-center justify-between gap-2 ${theme === 'light'
+                                ? 'hover:bg-textColor-100/10'
+                                : 'hover:bg-light-hover-200/20'
+                                } cursor-pointer p-2 rounded-md select-none`}
+                            onClick={() => handleSelectResult(item)}
+                            onMouseEnter={() => handleMouseEnterSegment(item.id)}
+                            onMouseLeave={handleMouseLeaveSegment}
+                        >
+
+                            <p onClick={() => handleSelectResult(item)} key={item.id} className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`}>{item.prompt}</p>
+
+                            {
+                                !isProjectReadOnly && (
+                                    hoveredSegment === item?.id && (
+                                        <>
+                                            {
+                                                isSegmentDeleting ? (
+                                                    <LoadingSpinner isSmall />
+                                                ) : (
+                                                    <DeleteIcon
+                                                        onClick={(event) => { event.stopPropagation(); deleteSegment(item.id); }}
+                                                        className=" cursor-pointer"
+                                                    />
+                                                )
+                                            }
+                                        </>
+                                    )
+                                )
+                            }
+                        </div>
                     ))
                 }
             </div>
