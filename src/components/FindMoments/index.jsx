@@ -50,12 +50,7 @@ const FindMoments = ({
         el.style.height = "auto";
         el.style.height = el.scrollHeight + "px";
 
-        // Calculate 4 lines height
-        const lineHeight = parseFloat(
-            window.getComputedStyle(el).lineHeight
-        );
-        const maxSingleHeight = lineHeight * 1;
-    }, [captionResults.prompt]);
+    }, [prompt]);
 
     // =========== CONSTREINT TOOLTIP LOGIC =============
     const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -280,15 +275,21 @@ const FindMoments = ({
 
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
-            <div className={`flex items-center gap-2 w-full pr-2 pb-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-100" : '!border !border-textColor-100 text-textColor-300'} rounded-md focus-within:ring-1 focus-within:ring-primaryColor/50`}>
+
+            {/* ==================================== */}
+            <div className={`flex items-end gap-2 px-2 rounded-2xl pb-2 ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'}`}>
                 <textarea
-                    ref={textareaRef}
-                    rows={1}
+                    ref={el => {
+                        textareaRef.current = el;
+                    }}
+                    rows={2}
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="What do you want to find in the video? (e.g. Q1 statistics)"
-                    className={`w-full p-2 bg-transparent resize-none focus:outline-none overflow-y-auto max-h-28`}
+                    placeholder="Add more instructions for better results"
+
+                    className={`w-full py-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-28 placeholder:text-neutral-400 `}
                 />
+
                 <div
                     className="relative inline-block self-end mt-2"
                     onMouseMove={handleMouseMove}
@@ -298,11 +299,10 @@ const FindMoments = ({
                 >
 
                     <RippleButton
-                        cssClasses={`rounded-md !py-2 !px-3 !pr-4  flex items-center gap-1 ${tooltipVisible ? 'cursor-not-allowed' : ''}`}
+                        cssClasses={`rounded-xl !py-2 !px-3 !pr-4  flex items-center gap-1 ${tooltipVisible ? 'cursor-not-allowed' : ''}`}
                         disabled={checkedVideosCount === 0 || isPending || prompt.trim() === "" || isProjectReadOnly}
                     >
-                        {isPending ? <LoadingSpinner cssClasses="mr-2" /> : <SearchOutlinedIcon className={`text-white text-sm`} />}
-                        <span className="text-sm">Find</span>
+                        {isPending ? <LoadingSpinner /> : <SearchOutlinedIcon className={`text-white !text-[16px]`} />}
                     </RippleButton>
 
                     {tooltipVisible && (
@@ -310,11 +310,12 @@ const FindMoments = ({
                             className={`absolute z-10 p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                             style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                         >
-                            {isProjectReadOnly ? "Cannot edit an example project." : prompt.trim() === "" ? "No prompt provided." : "check at least one video source to enable."}
+                            {isProjectReadOnly ? "Cannot edit an example project." : checkedVideosCount === 0 ? "check at least one video source to enable." : "No prompt provided."}
                         </p>
                     )}
                 </div>
             </div>
+            {/* ==================================== */}
 
             <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
               backdrop-blur-sm`}>
