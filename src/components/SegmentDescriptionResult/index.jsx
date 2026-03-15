@@ -121,18 +121,14 @@
 // export default SegmentDescriptionResult;
 
 
-import React, { useContext, useEffect, useRef } from 'react';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import BaseHeading from '../BaseHeading';
-import RippleButton from "../RippleButton";
-import { MainContext } from '../../contexts/mainContext';
-import { useToast } from "../../contexts/toastContext";
-import AnimatedText from '../AnimatedText';
-import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
-import { Skeleton } from '@mui/material';
-import Chip from '../Chip';
-import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import { useContext } from 'react';
+import { MainContext } from '../../contexts/mainContext';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
+import BaseHeading from '../BaseHeading';
+import Chip from '../Chip';
+import RippleButton from "../RippleButton";
 
 const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegmentDescriptions, setShowList, currentSegment, setCurrentSegment }) => {
 
@@ -150,7 +146,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
         theme,
         contentPanelContainerRef,
     } = useContext(MainContext);
-    const { notify } = useToast();
+    // const { notify } = useToast();
 
     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
@@ -159,31 +155,31 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
         setShowList(true);
     }
 
-    async function saveSegmentDescription() {
-        // TODO: call save endpoint...
+    // async function saveSegmentDescription() {
+    //     // TODO: call save endpoint...
 
-        setTimeSegmentDescriptions(prev => [...prev, results]);
-        setShowList(true);
-        console.log(results);
-    }
+    //     setTimeSegmentDescriptions(prev => [...prev, results]);
+    //     setShowList(true);
+    //     console.log(results);
+    // }
 
-    function copyToClipboard() {
-        const textToCopy = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description} \nReferences: ${results.refs && results.refs.length > 0 ? results.refs.map(ref => ref.displayText).join("\n") : "None"}`;
-        navigator.clipboard.writeText(textToCopy)
-            .then(() => {
-                notify({
-                    variant: "info",
-                    heading: "Description copied to clipboard!"
-                });
-            })
-            .catch(err => {
-                notify({
-                    variant: "error",
-                    heading: "Failed to copy description to clipboard!",
-                    subheading: err?.message || ""
-                });
-            });
-    }
+    // function copyToClipboard() {
+    //     const textToCopy = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description} \nReferences: ${results.refs && results.refs.length > 0 ? results.refs.map(ref => ref.displayText).join("\n") : "None"}`;
+    //     navigator.clipboard.writeText(textToCopy)
+    //         .then(() => {
+    //             notify({
+    //                 variant: "info",
+    //                 heading: "Description copied to clipboard!"
+    //             });
+    //         })
+    //         .catch(err => {
+    //             notify({
+    //                 variant: "error",
+    //                 heading: "Failed to copy description to clipboard!",
+    //                 subheading: err?.message || ""
+    //             });
+    //         });
+    // }
 
 
 
@@ -290,7 +286,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
             {/* action buttons */}
             <div className="flex items-center gap-2">
                 <RippleButton cssClasses="px-3 py-1 text-sm  rounded" onClick={() => exportFn(currentSegment)}>Export</RippleButton>
-                <RippleButton cssClasses="px-3 py-1 text-sm  rounded" noBg onClick={saveSegmentDescription}>Save</RippleButton>
+                {/* <RippleButton cssClasses="px-3 py-1 text-sm  rounded" noBg onClick={saveSegmentDescription}>Save</RippleButton> */}
             </div>
         </div>
     );
