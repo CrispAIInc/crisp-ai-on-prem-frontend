@@ -7,7 +7,7 @@ import makeApiRequest from '../../api';
 import LoadingSpinner from '../LoadingSpinner';
 import DeleteIcon from "@mui/icons-material/Delete";
 
-function FindMomentsList({ setCurrentMoment, setShowList, moments }) {
+function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments }) {
 
     const {
         isProjectReadOnly
@@ -61,6 +61,7 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments }) {
             const { success, message } = await makeApiRequest(`/moment-fetch/${momentId}`, 'DELETE');
 
             if (success) {
+                setMoments(prev => prev.filter(item => item.id !== momentId));
                 notify({
                     variant: "success",
                     heading: "Video segment deleted!"

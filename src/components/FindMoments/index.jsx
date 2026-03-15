@@ -22,6 +22,7 @@ import { Skeleton } from '@mui/material';
 
 const FindMoments = ({
     moments,
+    setMoments,
     FindMoments,
     captionResults,
     setCaptionResults,
@@ -341,6 +342,7 @@ const FindMoments = ({
                                 moments={moments}
                                 setShowList={setShowList}
                                 setCurrentMoment={setCurrentMoment}
+                                setMoments={setMoments}
                             />
                         ) : (
                             <FindMomentsResult
