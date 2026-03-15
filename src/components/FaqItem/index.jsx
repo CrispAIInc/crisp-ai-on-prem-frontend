@@ -7,7 +7,7 @@ import { isRtlLanguage } from '../../utils';
 function FaqItem({ item, isBoxed = false, isFirstOpen = false, chosenLanguage }) {
 
     const [isOpen, setIsOpen] = useState(isFirstOpen);
-    const { theme, setCurrentResource, workspaceContainer, contentPanelContainerRef, setJumpToPage } = useContext(MainContext);
+    const { theme, setCurrentResource, workspaceContainer, setJumpToPage } = useContext(MainContext);
 
 
     const toggleFAQ = () => {
@@ -52,7 +52,7 @@ function FaqItem({ item, isBoxed = false, isFirstOpen = false, chosenLanguage })
                 {item.timestamp ? (
                     <div className="flex items-center gap-1 mt-2 text-sm cursor-pointer text-primary-300 w-fit" onClick={() => {
                         setCurrentResource(prev => ({ ...prev, timestamp: item.timestamp[0] }));
-                        contentPanelContainerRef.current.scrollTo({
+                        workspaceContainer.current.scrollTo({
                             top: 0,
                             behavior: "smooth", // Enables smooth scrolling
                         });
@@ -64,7 +64,7 @@ function FaqItem({ item, isBoxed = false, isFirstOpen = false, chosenLanguage })
                     <div className='flex items-center gap-2 mt-2 mb-0 text-[9px] cursor-pointer font-bold text-primary-300 w-fit' onClick={() => {
 
                         setJumpToPage({ page: parseInt(item.page) });
-                        contentPanelContainerRef.current.scrollTo({
+                        workspaceContainer.current.scrollTo({
                             top: 0,
                             behavior: "smooth", // Enables smooth scrolling
                         });
