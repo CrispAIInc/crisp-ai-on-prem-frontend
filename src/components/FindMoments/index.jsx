@@ -19,13 +19,12 @@ import { saveAs } from "file-saver";
 import { ProjectContext } from '../../contexts/projectContext';
 import FindMomentsList from '../FindMomentsList';
 import { Skeleton } from '@mui/material';
+import { ToastContext } from '../../contexts/toastContext';
 
 const FindMoments = ({
     moments,
     setMoments,
-    FindMoments,
     captionResults,
-    setCaptionResults,
 }) => {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -35,6 +34,8 @@ const FindMoments = ({
         knowledgeBase,
         displayedSources,
     } = useContext(MainContext);
+
+    const { notify } = useContext(ToastContext);
 
     const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
 
@@ -75,35 +76,13 @@ const FindMoments = ({
     const [isFetchingRefs, setIsFetchingRefs] = useState(false);
 
     async function handleCaptioning(query) {
-        let timestamps = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
+        let response = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
             prompt: query,
             sources: checkedSources.filter(items => items.file_type === "video"),
             fromCrispWiz: false
         }));
 
-        return timestamps;
-    }
-
-    function mergeSourceToTimestamps(timestamps) {
-        const knowledgeMap = new Map(
-            knowledgeBase.map(item => [item.source_id, item])
-        );
-
-        const result = timestamps.map(ref => {
-            const source = knowledgeMap.get(ref.source_id);
-
-            if (!source) return null;
-
-            return {
-                ...source,
-                score: ref.score,
-                timestamp: ref.timestamp,
-                timestampText: `${source.source_path} | Timestamp: ${ref.timestamp}`
-            };
-        }).filter(Boolean);
-
-        return result;
-
+        return response;
     }
 
     const containerRef = useRef(null);
@@ -111,43 +90,84 @@ const FindMoments = ({
     const [currentMoment, setCurrentMoment] = useState(null);
 
     async function handleCaptionSubmit() {
-        setIsPending(false);
-        setIsFetchingRefs(true);
-        if (!displayedSources?.every(item => item?.is_checked === false)) {
-            await makeApiRequest(
-                `/handle-embeddings`,
-                "post",
-                JSON.stringify({
-                    sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-                })
-            );
-        }
-        let timestamps = await handleCaptioning(prompt);
-        let fullSourceWithTimestamp = mergeSourceToTimestamps(timestamps);
-
-        const finalResults = timestamps.map((segment) => {
-            const source = knowledgeBase.find(item => item.source_id === segment.source_id);
-
-            if (source) {
-                return {
-                    ...segment,
-                    timestampText: `${source.source_path} | ${segment.timestamp}`,
-                    source: {
-                        ...source,
-                        timestamp: segment.timestamp
-                    }
-                };
+        try {
+            setIsPending(true);
+            if (!displayedSources?.every(item => item?.is_checked === false)) {
+                await makeApiRequest(
+                    `/handle-embeddings`,
+                    "post",
+                    JSON.stringify({
+                        sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                    })
+                );
             }
-        });
+            let { results, success, message, ...rest } = await handleCaptioning(prompt);
+            // const { results, success, message, ...rest } = {
+            //     created_at: "Sun, 15 Mar 2026 12:27:18 GMT",
+            //     id: "vRRCmLFSx19sklDE6yjjn3",
+            //     prompt: "bill gates dancing",
+            //     results: [
+            //         {
+            //             context: "The athlete is captured from behind, raising his right arm in a celebratory gesture. Other competitors are partially visible, and the crowd in the stands is lively. The stadium roof and lighting fixtures are visible, emphasizing the large scale of the event.",
+            //             source_id: "FrDvSojllaJZaM5njTEI",
+            //             timestamp: "00:01:18"
+            //         },
+            //     ]
+            // };
 
-        setCurrentMoment({
-            prompt,
-            results: finalResults
-        });
+            if (success) {
+                const finalResults = results.map((segment) => {
+                    const source = knowledgeBase.find(item => item.source_id === segment.source_id);
 
-        setPrompt("");
-        setIsFetchingRefs(false);
-        setShowList(false);
+                    if (source) {
+                        return {
+                            ...segment,
+                            timestampText: `${source.source_path} | ${segment.timestamp}`,
+                            source: {
+                                ...source,
+                                timestamp: segment.timestamp
+                            }
+                        };
+                    }
+                });
+
+                console.log({
+                    ...rest,
+                    results: finalResults
+                });
+
+                setMoments(prev => {
+                    return [
+                        {
+                            ...rest,
+                            results: finalResults
+                        },
+                        ...prev,
+                    ];
+                });
+
+                setCurrentMoment({
+                    ...rest,
+                    results: finalResults
+                });
+
+                setPrompt("");
+                setIsPending(false);
+                setShowList(true);
+            }
+            else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            notify({
+                variant: "error",
+                heading: "Couldn't generate moment",
+                subheading: error?.message || ""
+            });
+            console.log(error);
+            setIsPending(false);
+            setShowList(false);
+        }
     }
 
     const exportToDocx = async (results) => {
@@ -309,7 +329,7 @@ const FindMoments = ({
             <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
               backdrop-blur-sm`}>
                 {
-                    isFetchingRefs ? (
+                    isPending ? (
 
                         <div className="flex flex-col gap-2">
                             <div>
@@ -317,14 +337,13 @@ const FindMoments = ({
                                 <Skeleton />
                                 <Skeleton />
                             </div>
-                            <div>
+                            <div className="mb-2">
                                 <Skeleton width={'50%'} />
                                 <Skeleton width={'50%'} />
                                 <Skeleton width={'50%'} />
                                 <Skeleton width={'50%'} />
                                 <Skeleton width={'50%'} />
                             </div>
-                            <br />
                             <div>
                                 <Skeleton width={'50%'} />
                                 <Skeleton width={'50%'} />
