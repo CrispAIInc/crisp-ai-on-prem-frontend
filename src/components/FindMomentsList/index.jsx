@@ -58,7 +58,7 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments }) {
     async function deleteSegment(momentId) {
         try {
             setIsSegmentDeleting(true);
-            const { success, message } = await makeApiRequest(`/moment-fetch/${momentId}`);
+            const { success, message } = await makeApiRequest(`/moment-fetch/${momentId}`, 'DELETE');
 
             if (success) {
                 notify({
