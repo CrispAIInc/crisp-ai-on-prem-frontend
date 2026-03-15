@@ -52,7 +52,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
     async function deleteSegment(segmentId) {
         try {
             setIsSegmentDeleting(true);
-            const { success, message } = await makeApiRequest(`/segment-response/${segmentId}`);
+            const { success, message } = await makeApiRequest(`/segment-response/${segmentId}`, 'DELETE');
 
             if (success) {
                 notify({
