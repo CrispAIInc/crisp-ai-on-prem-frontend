@@ -101,7 +101,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
                                                     <LoadingSpinner isSmall />
                                                 ) : (
                                                     <DeleteIcon
-                                                        onClick={(event) => { event.stopPropagation(); deleteSegment(event, segment.id); }}
+                                                        onClick={(event) => { event.stopPropagation(); deleteSegment(segment.id); }}
                                                         className=" cursor-pointer"
                                                     />
                                                 )
