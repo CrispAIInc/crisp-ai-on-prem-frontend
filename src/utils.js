@@ -244,6 +244,18 @@ export function searchByKey(data, key, query) {
     });
 }
 
+// sort an object by key
+export function sortByKey(data, key) {
+    return [...data].sort((a, b) => {
+        const keyA = a[key] || "";
+        const keyB = b[key] || "";
+        return keyA.localeCompare(keyB, undefined, {
+            numeric: true,
+            sensitivity: "base",
+        });
+    });
+}
+
 export function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -426,3 +438,29 @@ export const fromSeconds = (total) => {
 
 export const formatTime = ({ h, m, s }) =>
     `${h}:${m}:${s}`;
+
+/**
+ * Converts an image URL to a Base64 string
+ * @param {string} url - The URL of the image
+ * @returns {Promise<string>} - Base64 encoded string (data URL)
+ */
+export async function urlToBase64(url) {
+    try {
+        // Fetch the image as a blob
+        const response = await fetch(url, { mode: "cors" }); // mode cors for external images
+        if (!response.ok) throw new Error("Failed to fetch image");
+
+        const blob = await response.blob();
+
+        // Convert blob to Base64 using FileReader
+        return await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result); // returns data:image/png;base64,...
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (err) {
+        console.error("Error converting URL to Base64:", err);
+        return null;
+    }
+}

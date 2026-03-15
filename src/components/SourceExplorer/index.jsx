@@ -349,11 +349,11 @@ export function SourceExplorer(props) {
 
                                     {
                                         file.file_type === "video" ? (
-                                            <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <PlayCircleOutlineOutlinedIcon className={`text-[20px] ${theme === 'light' ? 'text-[#333' : 'text-[#ABAEB4'}`} />
                                         ) : file.file_type === "pdf" ? (
-                                            <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <ArticleOutlinedIcon className={`text-[20px] ${theme === 'light' ? 'text-[#333' : 'text-[#ABAEB4'}`} />
                                         ) : file.file_type === "img" ? (
-                                            <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <ImageOutlinedIcon className={`text-[20px] ${theme === 'light' ? 'text-[#333' : 'text-[#ABAEB4'}`} />
                                         ) : null
                                     }
 

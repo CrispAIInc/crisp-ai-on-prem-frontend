@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { MainContext } from "../../contexts/mainContext";
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 
@@ -39,7 +39,8 @@ const Workspace = () => {
     return (
         <main
             id="interaction"
-            className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`} ref={workspaceContainer}>
+            className={`relative flex-1 h-full px-10 overflow-y-auto overflow-x-hidden media-container bg-background_workspace ${theme === 'dark' ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-slate-100 to-background_workspace'}`}
+            ref={workspaceContainer}>
 
             <h5 className={`select-none text-center ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
                 } py-[10px]`}>Interaction</h5>

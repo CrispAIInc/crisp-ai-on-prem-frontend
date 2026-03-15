@@ -94,8 +94,14 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                 });
             });
 
-
             setGeneratedResources(results);
+
+            notify({
+                variant: "success",
+                heading: "Metadata generated.",
+                subheading: "Click on the source the see the generated metadata..",
+            });
+
             setVerbosityValue('Medium');
             setContext('');
         } catch (error) {
@@ -117,7 +123,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         <div className='z-20 flex flex-col gap-2'>
 
             {/* context */}
-            <div className="relative w-full mt-6">
+            <div className="relative w-full">
                 {/* <label
                     className={`absolute left-2 top-2 text-gray-500 px-1 pointer-events-none`}
                 >

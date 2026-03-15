@@ -19,7 +19,11 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPe
 
     const [isTimestampPickerOpen, setIsTimestampPickerOpen] = useState(false);
 
-    const canGenerate = checkedSourcesCount === 1 && checkedSources.every(item => item.file_type === "video"); //&& !isPending
+    const checkedVideos = checkedSources.filter(item => item.file_type === "video");
+
+    const canGenerate = checkedVideos.length === 1;
+
+    const currentVideo = checkedVideos[0];
 
     useEffect(() => {
         setIsTimestampPickerOpen(canGenerate);
@@ -54,7 +58,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPe
             `}>
             <div className="relative flex flex-col">
                 <BaseHeading
-                    text="Only one checked source (video)"
+                    text={canGenerate ? `Video: ${currentVideo?.source_path}` : "Only one checked source (video)"}
                 />
                 <TimestampPicker
                     // sourceDuration={Math.ceil(displayedSources.find(s => s.is_checked)?.source_duration || 0)}

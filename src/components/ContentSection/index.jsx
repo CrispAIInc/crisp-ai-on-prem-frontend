@@ -165,7 +165,7 @@ const ContentSection = ({
         resourceURL,
         isFileUploading, setIsFileUploading,
         setDisplayedSources,
-        showMetadata,
+        setShowMetadata,
         categoryOptions,
         currentResource,
         setCurrentResource,
@@ -420,6 +420,20 @@ const ContentSection = ({
         setCheckedAll(allSelected);
     }, [knowledgeBase]);
 
+    function removeSourceFromMetadataPanel(sources) {
+        // 1: retrieve all source paths from sources
+        const removedSourcePaths = sources.map(source => source.source_path);
+
+        // 2: check if source's filename exists in the array
+        const sourceExists = removedSourcePaths.includes(currentResource.source_path);
+
+        // 3: clear currentResource if exist
+        if (sourceExists) {
+            setCurrentResource(null);
+            setShowMetadata(false);
+        }
+    }
+
     const deleteResource = async (event, items) => {
         try {
             setIsDeleting(true);
@@ -433,8 +447,12 @@ const ContentSection = ({
                 };
             });
 
+            // remove source from metadata panel if it's active
+            removeSourceFromMetadataPanel(items);
+
             await makeApiRequest(`/delete`, "post", { sources: payload });
             setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
+
             notify({
                 variant: "success",
                 heading: "Source deleted successfully!",
@@ -462,7 +480,7 @@ const ContentSection = ({
             // );
             // setChatLoaded(chat_is_initialized);
 
-            setCurrentResource(null);
+            // setCurrentResource(null);
             setActiveView(null);
         } catch (error) {
             setIsDeleting(false);
@@ -836,7 +854,7 @@ const ContentSection = ({
     return (
         <>
             {/* this is where i show the list of displayedSources */}
-            {!showMetadata && <section className={`relative flex flex-col items-start h-full`}>
+            <section className={`relative flex flex-col items-start h-full`}>
                 <div className="w-full">
                     <div className="w-full max-w-4xl pr-3">
                         <div className="flex flex-col gap-0">
@@ -952,25 +970,35 @@ const ContentSection = ({
                                     results?.map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
                                         <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
-                                            {(showSourceContextMenu === option?.source_path && !('progress' in option)) && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
-                                                <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
-                                                    onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
-                                                    <EditOutlinedIcon
-                                                        className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
-                                                    />
-                                                    <span>Rename</span>
-                                                </div>
-                                                <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
-                                                    <DeleteOutlineOutlinedIcon
-                                                        className={`cursor-pointer`}
-                                                    />
-                                                    <span>Delete</span>
-                                                </div>
-                                            </div>}
+                                            {
+                                                (showSourceContextMenu === option?.source_path && !('progress' in option)) && (
+
+                                                    <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+
+                                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
+                                                            onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
+                                                            <EditOutlinedIcon
+                                                                className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                                            />
+                                                            <span>Rename</span>
+                                                        </div>
+
+                                                        <hr className="m-0" />
+
+                                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
+                                                            <DeleteOutlineOutlinedIcon
+                                                                className={`cursor-pointer`}
+                                                            />
+                                                            <span>Delete</span>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             {
                                                 !isProjectReadOnly && (
                                                     !('progress' in option) ? (
-                                                        <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                        (option?.source_path === hoveredSource || showSourceContextMenu === option?.source_path) && (
+                                                            <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                        )
                                                     ) : (
                                                         <CircularProgressWithLabel value={option.progress} variant="determinate" isUploadFiled={false} />
                                                     )
@@ -985,7 +1013,7 @@ const ContentSection = ({
                                                     <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                                 ) : null
                                             }
-                                            <div className="relative flex-shrink-0 w-10 h-10">
+                                            <div className="relative flex-shrink-0 w-12 h-12">
                                                 {(isDeleting && clickedIndex?.source_path === option?.source_path) && (
                                                     <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[5] translate-x-[-50%] translate-y-[-50%] transform">
                                                         <LoadingSpinner isSmall />
@@ -1000,14 +1028,16 @@ const ContentSection = ({
                                                     />
                                                 )
                                                     : <GsFile
-                                                        className="object-cover w-full h-full rounded-md"
+                                                        className="object-cover w-full h-full rounded-xl"
                                                         gsUrl={option.thumbnail}
                                                         alt="Video Thumbnail"
                                                         isPrivate
                                                     />}
                                             </div>
                                             <div className="flex flex-col ">
-                                                {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-keep' text={option?.step} />}
+                                                {
+                                                    (option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-keep' text={option?.step} />
+                                                }
                                                 <span className={`text-md font-medium break-keep ${theme === 'dark' && 'text-textColor-100'}`} style={{ overflowWrap: 'anywhere' }}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>
@@ -1112,21 +1142,6 @@ const ContentSection = ({
                                     <span>Settings</span>
                                 </div>
 
-                                {/* <div
-                                    className={`flex  px-3 items-center cursor-pointer gap-2 py-2 pl-1
-                                            ${theme === "light"
-                                            ? "hover:bg-textColor-100/20"
-                                            : "text-textColor-100 hover:bg-slate-800/50"
-                                        }`}
-                                    onClick={handleExitProject}
-                                >
-                                    {isExitPending ? <LoadingSpinner isSmall /> : <CloseOutlinedIcon
-                                        className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
-                                            }`}
-                                    />}
-                                    <span>Exit project</span>
-                                </div> */}
-
                                 <div
                                     className={`flex  px-3 text-red-600 items-center cursor-pointer gap-2 py-2 pl-1
  ${theme === "light"
@@ -1151,13 +1166,7 @@ const ContentSection = ({
                         onHide={() => setIsSettingsModalOpen(false)}
                     />
                 )}
-            </section>}
-
-            {/* metadata and source section */}
-            {showMetadata && (
-                <MetadataPanel leftWidth={leftWidth}
-                    maxWidth={maxWidth} workspaceContainer={workspaceContainer} />
-            )}
+            </section>
         </>
     );
 };

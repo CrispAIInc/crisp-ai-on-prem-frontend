@@ -20,7 +20,7 @@ import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
+const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth }) => {
   const {
     currentResource,
     setCurrentResource,
@@ -274,16 +274,17 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
   }, [currentResource]);
 
   return (
-    <div className="max-w-4xl pt-10 mx-auto overflow-y-auto" ref={metadataPanelContainer}>
+    <div className="max-w-4xl mx-auto overflow-y-auto" ref={metadataPanelContainer}>
 
       {currentResource?.file_type === "video" && (
         <>
           <div className="relative ">
-            <div className="h-full shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+            <div className="relative aspect-video w-full overflow-hidden rounded-md !border">
               <ReactPlayer
                 id="react-player"
-                width={"100%"}
-                height='500px'
+                className="absolute top-0 left-0" // <-- 1. ADD THIS
+                width="100%"
+                height="100%"                     // <-- 2. CHANGE THIS to 100%
                 playing={video_autoplay}
                 loop={video_loop}
                 url={sourcePublicUrl || resourceURL}
@@ -337,7 +338,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
                                 <div>
                                   <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                                     setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
-                                    contentPanelContainerRef?.current.scrollTo({
+                                    workspaceContainer?.current.scrollTo({
                                       top: 0,
                                       behavior: "smooth", // Enables smooth scrolling
                                     });
@@ -420,8 +421,8 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
         currentResource?.file_type === "pdf" && (
           <>
             <div
-              className="relative w-[90%] h-[430px] mx-auto  overflow-y-auto shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)]  overflow-auto rounded-md overflow-x-auto"
-              ref={contentPanelContainerRef}
+              className={`relative w-[90%] h-[430px] mx-auto  overflow-y-auto ${theme === " light" ? "!border" : "!border !border-textColor-300"}  overflow-auto rounded-md overflow-x-auto`}
+              ref={workspaceContainer}
               style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             >
               <Document
@@ -532,7 +533,7 @@ const MetadataPanel = ({ workspaceContainer, leftWidth, maxWidth }) => {
       {
         currentResource?.file_type === "img" && (
           <div className="pb-10">
-            <div className="relative pt-[56.25%] w-full max-w-lg mx-auto h-80 shadow-[0px_0px_38px_-2px_rgba(82,79,79,0.6)] rounded-md overflow-hidden">
+            <div className={`relative pt-[56.25%] w-full max-w-lg mx-auto h-80 ${theme === " light" ? "!border" : "!border !border-textColor-300"} rounded-md overflow-hidden`}>
               <GsFile
                 className="absolute top-0 left-0 object-contain w-full h-full"
                 gsUrl={currentResource?.thumbnail || resourceURL}

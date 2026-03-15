@@ -16,7 +16,8 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         setShowMetadata,
         setSummaries,
         setIsLeftSidebarOpen,
-        setActiveView
+        setActiveView,
+        workspaceContainer,
     } = useContext(MainContext);
 
     const handleVideoLinkClick = (video) => {
@@ -28,15 +29,15 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         setSummary(video.summary);
         setSummaries(video.topic_summaries);
         setActiveView('resource');
-        setSidebarWidth(prev => {
-            if (prev !== maxWidth) return maxWidth;
-            return window.innerWidth / 3.5;
-        });
-        setIsLeftSidebarOpen(true);
-        // workspaceContainer.current.scrollTo({
-        //     top: 0,
-        //     behavior: "smooth", // Enables smooth scrolling
+        // setSidebarWidth(prev => {
+        //     if (prev !== maxWidth) return maxWidth;
+        //     return window.innerWidth / 3.5;
         // });
+        // setIsLeftSidebarOpen(true);
+        workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
         setShowMetadata(true);
         // setShowNoteDetails(false);
     };
@@ -50,15 +51,15 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         setSummaries(pdf.topic_summaries);
         setActiveView('resource');
         setJumpToPage({ page: parseInt(pdf?.page) + 1 });
-        setSidebarWidth(prev => {
-            if (prev !== maxWidth) return maxWidth;
-            return window.innerWidth / 3.5;
-        });
-        setIsLeftSidebarOpen(true);
-        // workspaceContainer.current.scrollTo({
-        //     top: 0,
-        //     behavior: "smooth", // Enables smooth scrolling
+        // setSidebarWidth(prev => {
+        //     if (prev !== maxWidth) return maxWidth;
+        //     return window.innerWidth / 3.5;
         // });
+        // setIsLeftSidebarOpen(true);
+        workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
         setShowMetadata(true);
         // setShowNoteDetails(false);
     };
@@ -67,13 +68,6 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         if (!source) return;
 
         if (event) event.preventDefault();
-
-        // setTimeout(() => {
-        contentPanelContainerRef?.current?.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-        // }, 0);
 
         if (source.file_type === "video") handleVideoLinkClick(source);
         else handlePDFLinkClick(source);

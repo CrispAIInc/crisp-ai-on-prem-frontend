@@ -109,7 +109,7 @@ function StoriesList({ setShowStoriesEditor }) {
         <div className="flex flex-col overflow-y-auto">
             {(stories?.length > 0 || storiesResults?.length > 0) && (
                 <input
-                    className={`mt-4 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."}
+                    className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`} placeholder={"Search..."}
                     value={storiesSearchValue}
                     onChange={handleStoriesSearch}
                 />

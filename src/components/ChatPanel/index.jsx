@@ -15,6 +15,10 @@ import StoryEditor from '../StoryEditor/index.jsx';
 import './chat-panel.css';
 import VideoSegmentDescription from '../VideoSegmentDescription/index.jsx';
 import { formatTime } from '../../utils.js';
+import KnowledgeGraph from '../Entities/index.jsx';
+import Dropdown from '../Dropdown';
+import SelectDropdown from '../SelectDropdown/index.jsx';
+import GeneratorServicesDropdown from '../GeneratorServicesDropdown/index.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -98,7 +102,7 @@ const ChatPanel = () => {
 
   const [isNewInsight, setIsNewInsight] = useState(false);
 
-  const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
+  const [currentTab, setCurrentTab] = useState("Stories");  // insights | stories | Blogs
 
   const closeEditor = useCallback(() => {
     setIsNewInsight(false);
@@ -147,7 +151,7 @@ const ChatPanel = () => {
     }
   }, [showStoriesEditor, showEditor]);
 
-  const [actualTab, setActualTab] = useState("genMedia"); //genMetadata | genStories | genMedia
+  const [actualTab, setActualTab] = useState("genMedia"); //genMetadata | genStories | genMedia | genGraph
 
   function handleTabClick(item) {
     setActualTab(item);
@@ -159,7 +163,7 @@ const ChatPanel = () => {
 
   const [isGeneratingReel, setIsGeneratingReel] = useState(false);
   const [reelContext, setReelContext] = useState('');
-  const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1min)');
+  const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1m)');
 
   const [storyTitle, setStoryTitle] = useState(selectedStory?.story_name);
 
@@ -186,7 +190,7 @@ const ChatPanel = () => {
         <div className='flex flex-col w-full'>
           <h5 className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
             }  text-center w-full`}>
-            Studio</h5>
+            Generator Services</h5>
         </div>
         {/* <RippleButton>Hello</RippleButton> */}
         {(showEditor || showStoriesEditor) && (
@@ -200,9 +204,9 @@ const ChatPanel = () => {
         )}
       </div>
 
-      <h5 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+      {/* <h5 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
         }  text-center`}>
-        Generator Services</h5>
+        Generator Services</h5> */}
 
       {/* Background blur elements */}
       <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-1 blur-[160px]"></div>
@@ -218,8 +222,6 @@ const ChatPanel = () => {
           onDoubleClick={handleDoubleClick}
         />
       )}
-
-
 
       {/* Toggle button */}
       <div className="absolute left-0 z-10 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md top-1.5 w-fit">
@@ -242,7 +244,8 @@ const ChatPanel = () => {
         <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-          <div>
+          <div className={`${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+            } pb-[10px]`}>
             {/* buttons */}
             <div className={`flex justify-around gap-5 mt-2 flex-items overflow-x-auto [&::-webkit-scrollbar]:h-[6px]
     [&::-webkit-scrollbar-track]:bg-transparent
@@ -252,10 +255,11 @@ const ChatPanel = () => {
     [&::-webkit-scrollbar-thumb]:border-transparent
     [&::-webkit-scrollbar-thumb]:bg-clip-padding`}>
               {[
-                { id: "genMetadata", title: "Cataloging" },
-                { id: "genStories", title: "Insights & Stories" },
+                { id: "genMetadata", title: "Catalog" },
+                { id: "genStories", title: "Stories & Blogs" },
                 { id: "genMedia", title: "Reels" },
-                { id: "genTimeSegment", title: "Video Time Segment" },
+                { id: "genTimeSegment", title: "Video Segment" },
+                { id: "genGraph", title: "Structure" },
               ].map(item => (
                 <h6
                   id={item.id}
@@ -267,6 +271,16 @@ const ChatPanel = () => {
                 </h6>
               ))}
             </div>
+            {/* <GeneratorServicesDropdown
+              defaultTab={actualTab}
+              tabs={[
+                { id: "genMetadata", title: "Cataloging" },
+                { id: "genStories", title: "Insights & Stories" },
+                { id: "genMedia", title: "Reels" },
+                { id: "genGraph", title: "Composer" },
+              ]}
+              onChange={(id) => handleTabClick(id)}
+            /> */}
           </div>
           {actualTab !== null && <div className='h-full overflow-hidden'>
             {
@@ -280,9 +294,11 @@ const ChatPanel = () => {
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
-              ) : actualTab === "genTimeSegment" && (
+              ) : actualTab === "genTimeSegment" ? (
                 <VideoSegmentDescription />
-              )
+              ) : actualTab === "genGraph" ? (
+                <KnowledgeGraph />
+              ) : null
             }
           </div>}
         </div>
