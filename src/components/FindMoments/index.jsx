@@ -25,6 +25,15 @@ const FindMoments = ({
     moments,
     setMoments,
     captionResults,
+    prompt,
+    setPrompt,
+    showList,
+    setShowList,
+    currentMoment,
+    setCurrentMoment,
+    isPending,
+    setIsPending,
+    handleCaptionSubmit,
 }) => {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -35,11 +44,11 @@ const FindMoments = ({
         displayedSources,
     } = useContext(MainContext);
 
-    const { notify } = useContext(ToastContext);
+    // const { notify } = useContext(ToastContext);
 
     const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
 
-    const [prompt, setPrompt] = useState("");
+    // const [prompt, setPrompt] = useState("");
     const textareaRef = useRef(null);
 
     useEffect(() => {
@@ -67,93 +76,93 @@ const FindMoments = ({
     const handleMouseLeave = () => setTooltipVisible(false);
 
     // ============= API ===============
-    const [isPending, setIsPending] = useState(false);
-    const [isFetchingRefs, setIsFetchingRefs] = useState(false);
+    // const [isPending, setIsPending] = useState(false);
+    // const [isFetchingRefs, setIsFetchingRefs] = useState(false);
 
-    async function handleCaptioning(query) {
-        let response = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
-            prompt: query,
-            sources: checkedSources.filter(items => items.file_type === "video"),
-            fromCrispWiz: false
-        }));
+    // async function handleCaptioning(query) {
+    //     let response = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
+    //         prompt: query,
+    //         sources: checkedSources.filter(items => items.file_type === "video"),
+    //         fromCrispWiz: false
+    //     }));
 
-        return response;
-    }
+    //     return response;
+    // }
 
     const containerRef = useRef(null);
-    const [showList, setShowList] = useState(true);
-    const [currentMoment, setCurrentMoment] = useState(null);
+    // const [showList, setShowList] = useState(true);
+    // const [currentMoment, setCurrentMoment] = useState(null);
 
-    async function handleCaptionSubmit() {
-        try {
-            setIsPending(true);
-            if (!displayedSources?.every(item => item?.is_checked === false)) {
-                await makeApiRequest(
-                    `/handle-embeddings`,
-                    "post",
-                    JSON.stringify({
-                        sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_path: item?.source_path, category: item?.category })),
-                    })
-                );
-            }
-            let { results, success, message, ...rest } = await handleCaptioning(prompt);
+    // async function handleCaptionSubmit() {
+    //     try {
+    //         setIsPending(true);
+    //         if (!displayedSources?.every(item => item?.is_checked === false)) {
+    //             await makeApiRequest(
+    //                 `/handle-embeddings`,
+    //                 "post",
+    //                 JSON.stringify({
+    //                     sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+    //                 })
+    //             );
+    //         }
+    //         let { results, success, message, ...rest } = await handleCaptioning(prompt);
 
-            if (success) {
-                if (results.length > 0) {
-                    const finalResults = results.map((segment) => {
-                        const source = knowledgeBase.find(item => item.source_id === segment.source_id);
+    //         if (success) {
+    //             if (results.length > 0) {
+    //                 const finalResults = results.map((segment) => {
+    //                     const source = knowledgeBase.find(item => item.source_id === segment.source_id);
 
-                        if (!source) return null;
+    //                     if (!source) return null;
 
-                        return {
-                            ...segment,
-                            timestampText: `${source.source_path} | ${segment.timestamp}`,
-                            source: {
-                                ...source,
-                                timestamp: segment.timestamp
-                            }
-                        };
-                    }).filter(Boolean);
-                    const moment = {
-                        ...rest,
-                        results: finalResults
-                    };
+    //                     return {
+    //                         ...segment,
+    //                         timestampText: `${source.source_path} | ${segment.timestamp}`,
+    //                         source: {
+    //                             ...source,
+    //                             timestamp: segment.timestamp
+    //                         }
+    //                     };
+    //                 }).filter(Boolean);
+    //                 const moment = {
+    //                     ...rest,
+    //                     results: finalResults
+    //                 };
 
-                    setMoments(prev => {
-                        return [
-                            moment,
-                            ...prev,
-                        ];
-                    });
+    //                 setMoments(prev => {
+    //                     return [
+    //                         moment,
+    //                         ...prev,
+    //                     ];
+    //                 });
 
-                    setCurrentMoment(moment);
+    //                 setCurrentMoment(moment);
 
-                    setPrompt("");
-                    setIsPending(false);
-                    setShowList(false);
-                } else {
-                    setIsPending(false);
-                    notify({
-                        variant: "info",
-                        heading: "No moments found with the prompt you provided",
-                        subheading: "Try providing another prompt for better results"
-                    });
-                }
-            }
-            else {
-                throw new Error(message);
-            }
-        } catch (error) {
-            notify({
-                variant: "error",
-                heading: "Couldn't generate moment",
-                subheading: error?.message || ""
-            });
-            console.log(error);
-            setIsPending(false);
-            setShowList(false);
-        }
-    }
+    //                 setPrompt("");
+    //                 setIsPending(false);
+    //                 setShowList(false);
+    //             } else {
+    //                 setIsPending(false);
+    //                 notify({
+    //                     variant: "info",
+    //                     heading: "No moments found with the prompt you provided",
+    //                     subheading: "Try providing another prompt for better results"
+    //                 });
+    //             }
+    //         }
+    //         else {
+    //             throw new Error(message);
+    //         }
+    //     } catch (error) {
+    //         notify({
+    //             variant: "error",
+    //             heading: "Couldn't generate moment",
+    //             subheading: error?.message || ""
+    //         });
+    //         console.log(error);
+    //         setIsPending(false);
+    //         setShowList(false);
+    //     }
+    // }
 
     const exportToDocx = async (results) => {
         const brandColor = "2E74B5"; // Change this to your brand color

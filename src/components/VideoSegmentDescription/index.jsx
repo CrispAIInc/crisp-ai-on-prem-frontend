@@ -14,18 +14,19 @@ import FindMoments from '../FindMoments/index.jsx';
 import makeApiRequest, { axiosInstance } from '../../api/index.js';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 import { AuthContext } from '../../contexts/authContext.jsx';
+import { ToastContext } from '../../contexts/toastContext.jsx';
 
 const VideoSegmentDescription = () => {
 
     const { currentProject } = useContext(ProjectContext);
     const {
         theme,
-        currentChat
+        checkedSources,
+        displayedSources,
+        knowledgeBase,
     } = useContext(MainContext);
 
-    const {
-        user
-    } = useContext(AuthContext);
+    const { notify } = useContext(ToastContext);
 
     const [currentTab, setCurrentTab] = useState("Time segment description");
 
@@ -80,8 +81,10 @@ const VideoSegmentDescription = () => {
     // });
 
     // ========= Find moments in videos ===========
-    const [captionPrompt, setCaptionPrompt] = useState("");
-    const [captionRefs, setCaptionRefs] = useState([]);
+
+    const [prompt, setPrompt] = useState("");
+    const [showList, setShowList] = useState(true);
+    const [currentMoment, setCurrentMoment] = useState(null);
     const [moments, setMoments] = useState([]);
     const [captionResults, setCaptionResults] = useState({
         prompt: "",
@@ -107,6 +110,88 @@ const VideoSegmentDescription = () => {
 
         fetchFindMoments();
     }, []);
+
+    const [isPending, setIsPending] = useState(false);
+
+    async function handleCaptioning(query) {
+        let response = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
+            prompt: query,
+            sources: checkedSources.filter(items => items.file_type === "video"),
+            fromCrispWiz: false
+        }));
+
+        return response;
+    }
+    async function handleCaptionSubmit() {
+        try {
+            setIsPending(true);
+            if (!displayedSources?.every(item => item?.is_checked === false)) {
+                await makeApiRequest(
+                    `/handle-embeddings`,
+                    "post",
+                    JSON.stringify({
+                        sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                    })
+                );
+            }
+            let { results, success, message, ...rest } = await handleCaptioning(prompt);
+
+            if (success) {
+                if (results.length > 0) {
+                    const finalResults = results.map((segment) => {
+                        const source = knowledgeBase.find(item => item.source_id === segment.source_id);
+
+                        if (!source) return null;
+
+                        return {
+                            ...segment,
+                            timestampText: `${source.source_path} | ${segment.timestamp}`,
+                            source: {
+                                ...source,
+                                timestamp: segment.timestamp
+                            }
+                        };
+                    }).filter(Boolean);
+                    const moment = {
+                        ...rest,
+                        results: finalResults
+                    };
+
+                    setMoments(prev => {
+                        return [
+                            moment,
+                            ...prev,
+                        ];
+                    });
+
+                    setCurrentMoment(moment);
+
+                    setPrompt("");
+                    setIsPending(false);
+                    setShowList(false);
+                } else {
+                    setIsPending(false);
+                    notify({
+                        variant: "info",
+                        heading: "No moments found with the prompt you provided",
+                        subheading: "Try providing another prompt for better results"
+                    });
+                }
+            }
+            else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            notify({
+                variant: "error",
+                heading: "Couldn't generate moment",
+                subheading: error?.message || ""
+            });
+            console.log(error);
+            setIsPending(false);
+            setShowList(false);
+        }
+    }
 
     return (
         <div className="h-full flex flex-col">
@@ -167,6 +252,15 @@ const VideoSegmentDescription = () => {
                         setMoments={setMoments}
                         captionResults={captionResults}
                         setCaptionResults={setCaptionResults}
+                        prompt={prompt}
+                        setPrompt={setPrompt}
+                        showList={showList}
+                        setShowList={setShowList}
+                        currentMoment={currentMoment}
+                        setCurrentMoment={setCurrentMoment}
+                        isPending={isPending}
+                        setIsPending={setIsPending}
+                        handleCaptionSubmit={handleCaptionSubmit}
                     />
                 )
             }
