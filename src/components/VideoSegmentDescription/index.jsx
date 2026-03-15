@@ -9,28 +9,43 @@ import SegmentDescription from '../SegmentDescription';
 import SegmentDescriptionResult from "../SegmentDescriptionResult";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
-import { formatTime } from "../../utils.js";
+import { formatTime, toSeconds } from "../../utils.js";
 import FindMoments from '../FindMoments/index.jsx';
 import makeApiRequest, { axiosInstance } from '../../api/index.js';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 import { AuthContext } from '../../contexts/authContext.jsx';
-import { ToastContext } from '../../contexts/toastContext.jsx';
+import { ToastContext, useToast } from '../../contexts/toastContext.jsx';
+import useAuth from '../../hooks/useAuth.js';
 
 const VideoSegmentDescription = () => {
 
-    const { currentProject } = useContext(ProjectContext);
+    const {
+        currentProject,
+        isProjectReadOnly
+    } = useContext(ProjectContext);
+
     const {
         theme,
         checkedSources,
         displayedSources,
         knowledgeBase,
+        currentChat,
     } = useContext(MainContext);
 
-    const { notify } = useContext(ToastContext);
+    const { token } = useAuth();
+
 
     const [currentTab, setCurrentTab] = useState("Time segment description");
 
     // ========== time segment description ==============
+    const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
+
+
+    const { notify } = useToast();
+
+    const [isSegmentPending, setIsSegmentPending] = useState(false);
+    const [showSegmentList, setShowSegmentList] = useState(true);
+    const [currentSegment, setCurrentSegment] = useState(null);
     const [startSegmentDescription, setStartSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
     const [endSegmentDescription, setEndSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
 
@@ -46,6 +61,71 @@ const VideoSegmentDescription = () => {
         description: "",
         refs: []
     });
+
+    const canGenerate = checkedVideosCount > 0 && !isSegmentPending && promptSegmentDescription && promptSegmentDescription.trim().length > 0 && !isProjectReadOnly;
+    async function generateDescription() {
+        try {
+            if (!canGenerate) {
+                throw new Error('Make sure you provided video sources and prompt');
+            }
+
+            if (toSeconds(endSegmentDescription) <= toSeconds(startSegmentDescription)) {
+                throw new Error("Your timestamp range is invalid.");
+            }
+
+            setIsSegmentPending(true);
+            setResultsDescription(prev => ({
+                ...prev,
+                start: formatTime(startSegmentDescription),
+                end: formatTime(endSegmentDescription),
+                refs: []
+            }));
+
+            let url = new URLSearchParams();
+
+            url.append("start_timestamp", formatTime((startSegmentDescription)));
+            url.append("end_timestamp", formatTime((endSegmentDescription)));
+            url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
+            url.append("prompt", promptSegmentDescription);
+
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
+            axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+
+            const { data, success, message } = await makeApiRequest(`/segment-response?${url.toString()}`, 'GET', null, {
+                Authorization: `Bearer ${token}`,
+                SessionId: currentChat?.sessionId,
+                ProjectId: currentProject?.project_id,
+            });
+
+            if (success) {
+
+                notify({
+                    variant: "success",
+                    heading: "Description generated successfully",
+                });
+
+                setSegmentDescriptions(prev => [
+                    ...prev,
+                    data
+                ]);
+                setCurrentSegment(data);
+                setShowSegmentList(false);
+            } else {
+                throw new Error(message);
+            }
+
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Couldn't generate description",
+                subheading: error?.message
+            });
+        } finally {
+            setIsSegmentPending(false);
+        }
+    }
 
     useEffect(() => {
 
@@ -244,6 +324,13 @@ const VideoSegmentDescription = () => {
                             setPrompt={setPromptSegmentDescription}
                             results={resultsDescription}
                             setResults={setResultsDescription}
+                            isSegmentPending={isSegmentPending}
+                            setIsSegmentPending={setIsSegmentPending}
+                            showSegmentList={showSegmentList}
+                            setShowSegmentList={setShowSegmentList}
+                            currentSegment={currentSegment}
+                            setCurrentSegment={setCurrentSegment}
+                            generateDescription={generateDescription}
                         />
                     </>
                 ) : (

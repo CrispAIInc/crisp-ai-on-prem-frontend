@@ -37,6 +37,10 @@ const TimeSegmentDescription = ({
     setResults,
     segmentDescriptions,
     setSegmentDescriptions,
+    isSegmentPending, setIsSegmentPending,
+    showSegmentList, setShowSegmentList,
+    currentSegment, setCurrentSegment,
+    generateDescription,
 }) => {
 
     /**
@@ -110,16 +114,16 @@ const TimeSegmentDescription = ({
 
     const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
 
-    const { currentProject } = useContext(ProjectContext);
+    // const { currentProject } = useContext(ProjectContext);
 
     const { token } = useAuth();
 
-    const { notify } = useToast();
+    // const { notify } = useToast();
 
-    const [isPending, setIsPending] = useState(false);
-    const [isFetchingRefs, setIsFetchingRefs] = useState(false);
-    const [showList, setShowList] = useState(true);
-    const [currentSegment, setCurrentSegment] = useState(null);
+    // const [isPending, setIsPending] = useState(false);
+    // const [isFetchingRefs, setIsFetchingRefs] = useState(false);
+    // const [showList, setShowList] = useState(true);
+    // const [currentSegment, setCurrentSegment] = useState(null);
 
 
 
@@ -138,72 +142,72 @@ const TimeSegmentDescription = ({
     const handleMouseEnter = () => (checkedVideosCount === 0 || prompt.trim() === "" || isProjectReadOnly) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
-    const canGenerate = checkedVideosCount > 0 && !isPending && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
+    const canGenerate = checkedVideosCount > 0 && !isSegmentPending && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
 
-    async function generateDescription() {
-        try {
-            if (!canGenerate) {
-                throw new Error('Make sure you provided video sources and prompt');
-            }
+    // async function generateDescription() {
+    //     try {
+    //         if (!canGenerate) {
+    //             throw new Error('Make sure you provided video sources and prompt');
+    //         }
 
-            if (toSeconds(end) <= toSeconds(start)) {
-                throw new Error("Your timestamp range is invalid.");
-            }
+    //         if (toSeconds(end) <= toSeconds(start)) {
+    //             throw new Error("Your timestamp range is invalid.");
+    //         }
 
-            setIsPending(true);
-            setResults(prev => ({
-                ...prev,
-                start: formatTime(start),
-                end: formatTime(end),
-                refs: []
-            }));
+    //         setIsPending(true);
+    //         setResults(prev => ({
+    //             ...prev,
+    //             start: formatTime(start),
+    //             end: formatTime(end),
+    //             refs: []
+    //         }));
 
-            let url = new URLSearchParams();
+    //         let url = new URLSearchParams();
 
-            url.append("start_timestamp", formatTime((start)));
-            url.append("end_timestamp", formatTime((end)));
-            url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
-            url.append("prompt", prompt);
+    //         url.append("start_timestamp", formatTime((start)));
+    //         url.append("end_timestamp", formatTime((end)));
+    //         url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
+    //         url.append("prompt", prompt);
 
-            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
-            axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+    //         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    //         axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
+    //         axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
 
-            const { data, success, message } = await makeApiRequest(`/segment-response?${url.toString()}`, 'GET', null, {
-                Authorization: `Bearer ${token}`,
-                SessionId: currentChat?.sessionId,
-                ProjectId: currentProject?.project_id,
-            });
+    //         const { data, success, message } = await makeApiRequest(`/segment-response?${url.toString()}`, 'GET', null, {
+    //             Authorization: `Bearer ${token}`,
+    //             SessionId: currentChat?.sessionId,
+    //             ProjectId: currentProject?.project_id,
+    //         });
 
-            if (success) {
+    //         if (success) {
 
-                notify({
-                    variant: "success",
-                    heading: "Description generated successfully",
-                });
+    //             notify({
+    //                 variant: "success",
+    //                 heading: "Description generated successfully",
+    //             });
 
-                setSegmentDescriptions(prev => [
-                    ...prev,
-                    data
-                ]);
-                setCurrentSegment(data);
-                setShowList(false);
-            } else {
-                throw new Error(message);
-            }
+    //             setSegmentDescriptions(prev => [
+    //                 ...prev,
+    //                 data
+    //             ]);
+    //             setCurrentSegment(data);
+    //             setShowList(false);
+    //         } else {
+    //             throw new Error(message);
+    //         }
 
-        } catch (error) {
-            console.log(error);
-            notify({
-                variant: "error",
-                heading: "Couldn't generate description",
-                subheading: error?.message
-            });
-        } finally {
-            setIsPending(false);
-            setIsFetchingRefs(false);
-        }
-    }
+    //     } catch (error) {
+    //         console.log(error);
+    //         notify({
+    //             variant: "error",
+    //             heading: "Couldn't generate description",
+    //             subheading: error?.message
+    //         });
+    //     } finally {
+    //         setIsPending(false);
+    //         setIsFetchingRefs(false);
+    //     }
+    // }
 
     // Helper function to convert a Base64 string to a Uint8Array (Prevents Word corruption)
     function base64ToUint8Array(base64) { const binaryString = window.atob(base64); const len = binaryString.length; const bytes = new Uint8Array(len); for (let i = 0; i < len; i++) { bytes[i] = binaryString.charCodeAt(i); } return bytes; }
@@ -531,7 +535,7 @@ const TimeSegmentDescription = ({
                         cssClasses={`rounded-xl !py-2 !px-3 !pr-4  flex items-center gap-1 ${tooltipVisible ? 'cursor-not-allowed' : ''}`}
                         disabled={!canGenerate}
                     >
-                        {isFetchingRefs ? <LoadingSpinner /> : <AutoAwesomeIcon className={`text-white !text-[16px]`} />}
+                        {isSegmentPending ? <LoadingSpinner /> : <AutoAwesomeIcon className={`text-white !text-[16px]`} />}
                         {/* <span className="text-sm">Find</span> */}
                     </RippleButton>
 
@@ -554,13 +558,13 @@ const TimeSegmentDescription = ({
                 end={end}
                 setEnd={setEnd}
                 handleGenerate={generateDescription}
-                isPending={isPending}
+                isPending={isSegmentPending}
             />
 
             <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
   backdrop-blur-sm`}>
                 {
-                    isPending ? (
+                    isSegmentPending ? (
                         <div className="flex flex-col gap-2">
                             <Skeleton width={'50%'} />
                             <div>
@@ -576,9 +580,9 @@ const TimeSegmentDescription = ({
                                 <Skeleton width={'20%'} height={40} />
                             </div>
                         </div>
-                    ) : showList ? (
+                    ) : showSegmentList ? (
                         <TimeSegmentDescriptionList
-                            setShowList={setShowList}
+                            setShowList={setShowSegmentList}
                             timeSegmentDescriptions={timeSegmentDescriptions}
                             setResults={setResults}
                             segmentDescriptions={segmentDescriptions}
@@ -587,11 +591,11 @@ const TimeSegmentDescription = ({
                         />
                     ) : (
                         <SegmentDescriptionResult
-                            setShowList={setShowList}
+                            setShowList={setShowSegmentList}
                             results={results}
                             currentSegment={currentSegment}
                             setCurrentSegment={setCurrentSegment}
-                            isPending={isPending}
+                            isPending={isSegmentPending}
                             exportFn={(result) => exportSceneAnalysisToDocx(result)}
                             setTimeSegmentDescriptions={setTimeSegmentDescriptions}
                         />
