@@ -25,7 +25,7 @@ import SegmentDescriptionResult from "../SegmentDescriptionResult";
 import TimeSegmentDescriptionList from "../TimeSegmentDescriptionList";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+
 const TimeSegmentDescription = ({
     start,
     setStart,
@@ -37,9 +37,11 @@ const TimeSegmentDescription = ({
     setResults,
     segmentDescriptions,
     setSegmentDescriptions,
-    isSegmentPending, setIsSegmentPending,
-    showSegmentList, setShowSegmentList,
-    currentSegment, setCurrentSegment,
+    isSegmentPending,
+    showSegmentList,
+    setShowSegmentList,
+    currentSegment,
+    setCurrentSegment,
     generateDescription,
 }) => {
 
