@@ -25,17 +25,17 @@ function CharacterCard({ character, source }) {
     return (
         <div className={`shadow-md ${theme === "light"
             ? "!border !border-textColor-100/30 text-textColor-200"
-            : "!border !border-textColor-200/30 text-textColor-100"} rounded-xl p-4`}>
+            : "!border !border-textColor-200/30 text-textColor-100"} rounded-xl p-3`}>
 
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
 
                 <div className="flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-full ${theme === "light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} text-white flex items-center justify-center text-sm font-semibold`}>
+                    <div className={`w-7 h-7 rounded-full ${theme === "light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} text-white flex items-center justify-center text-sm font-semibold`}>
                         {character.character_name.charAt(0)}{character.character_name.split(' ')[1]?.charAt(0)}
                     </div>
 
-                    <span className={`${theme === "light" ? 'text-textColor-300' : 'text-white'} font-medium`}>
+                    <span className={`${theme === "light" ? 'text-textColor-300' : 'text-white'} font-medium text-sm`}>
                         {character.character_name}
                     </span>
                 </div>
@@ -79,7 +79,7 @@ function CharacterCard({ character, source }) {
                         >
 
                             {seg.time && (
-                                <div className="cursor-pointer text-xs text-indigo-500 mb-1">
+                                <div className="cursor-pointer w-fit text-xs text-indigo-500 mb-1">
                                     {seg.time}
                                 </div>
                             )}
