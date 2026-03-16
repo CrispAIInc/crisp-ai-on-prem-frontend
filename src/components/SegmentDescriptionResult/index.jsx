@@ -123,7 +123,7 @@
 
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import BaseHeading from '../BaseHeading';
@@ -137,7 +137,6 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
         video,
         start,
         end,
-        refs,
         timestampText,
         query,
         response_format: { schema }
@@ -150,6 +149,8 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
     } = useContext(MainContext);
 
     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
+
+    let source = knowledgeBase.find(item => item.source_path === video) || {};
 
     function closeResultsTab() {
         setCurrentSegment(null);
@@ -265,7 +266,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
             <TalkingHeadPanel
                 talkingHeads={orderTalkingHeadByTimestamp(schema.talking_head)}
-                source={refs[0] || knowledgeBase.find(item => item.source_path === video) || {}}
+                source={source}
             />
 
             {/* Onscreen Text */}
@@ -289,11 +290,11 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
             )}
 
             {/* refs */}
-            {refs && refs.length > 0 && (
+            {source && source.length > 0 && (
                 <div className="">
                     <BaseHeading text="References" className="font-bold text-sm mb-2" />
                     <ul className="list-disc list-inside text-sm/6 text-textColor-300">
-                        {refs.map((ref, index) => {
+                        {source.map((ref, index) => {
                             return (
                                 <Chip key={index} content={timestampText} data-object={ref} onClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer text-gradient-x" />
                             );
