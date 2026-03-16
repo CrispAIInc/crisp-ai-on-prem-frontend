@@ -249,7 +249,6 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                     }
                 ]
                 }
-                source={ }
                 source={refs[0]}
             />
 

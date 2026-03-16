@@ -79,7 +79,7 @@ function CharacterCard({ character, source }) {
                         >
 
                             {seg.time && (
-                                <div className="text-xs text-indigo-400 mb-1">
+                                <div className="cursor-pointer text-xs text-indigo-500 mb-1">
                                     {seg.time}
                                 </div>
                             )}
