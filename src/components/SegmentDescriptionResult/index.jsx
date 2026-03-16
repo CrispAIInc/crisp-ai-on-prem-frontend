@@ -222,33 +222,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
             </div>
 
             <TalkingHeadPanel
-                talkingHeads={[
-                    {
-                        character_name: "Mr. Ullman",
-                        detected: true,
-                        talking: true,
-                        text_content: "[00:03:24-00:03:34] When the place was built in 1907, there was very little interest in winter sports and this site was chosen for its seclusion and scenic beauty.\n[00:03:38-00:03:38] That's right.\n[00:03:40-00:03:44] Did they give you any idea in Denver about what the job entails?\n[00:03:47-00:04:09] Well, the winners can be fantastically cruel. The basic idea is to cope with the very costly damage and depreciation which can occur. And this consists mainly of running the boiler, heating different parts of the hotel on a daily rotating basis, repairing damage as it occurs and doing repairs so the elements can't get a foothold."
-                    },
-                    {
-                        character_name: "Jack Torrance",
-                        detected: true,
-                        talking: true,
-                        text_content: "[00:03:35-00:03:37] Well, it's certainly got plenty of that.\n[00:03:44-00:03:46] Only in a very general way."
-                    },
-                    {
-                        character_name: "Blond man",
-                        detected: true,
-                        talking: false,
-                        text_content: ""
-                    },
-                    {
-                        character_name: "Bill Watson",
-                        detected: true,
-                        talking: false,
-                        text_content: ""
-                    }
-                ]
-                }
+                talkingHeads={schema.talking_head}
                 source={refs[0]}
             />
 
