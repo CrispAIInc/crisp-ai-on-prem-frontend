@@ -168,7 +168,7 @@ const ChatPanel = () => {
     }
   }, [showStoriesEditor, showEditor]);
 
-  const [actualTab, setActualTab] = useState("genMedia"); //genMetadata | genStories | genMedia | genGraph
+  const [actualTab, setActualTab] = useState("genMetadata"); //genMetadata | genStories | genMedia | genGraph
 
   function handleTabClick(item) {
     setActualTab(item);
