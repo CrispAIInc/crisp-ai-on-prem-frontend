@@ -146,6 +146,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
     const {
         theme,
         contentPanelContainerRef,
+        knowledgeBase,
     } = useContext(MainContext);
 
     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
@@ -223,7 +224,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
             <TalkingHeadPanel
                 talkingHeads={schema.talking_head}
-                source={refs[0]}
+                source={refs[0] || knowledgeBase.find(item => item.source_path === video)}
             />
 
             {/* Onscreen Text */}
