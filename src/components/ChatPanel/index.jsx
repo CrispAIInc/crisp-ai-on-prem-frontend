@@ -14,11 +14,15 @@ import StoriesInsightsTab from '../StoriesInsightsTab';
 import StoryEditor from '../StoryEditor/index.jsx';
 import './chat-panel.css';
 import VideoSegmentDescription from '../VideoSegmentDescription/index.jsx';
-import { formatTime } from '../../utils.js';
+import { formatTime, toSeconds } from '../../utils.js';
 import KnowledgeGraph from '../Entities/index.jsx';
 import Dropdown from '../Dropdown';
 import SelectDropdown from '../SelectDropdown/index.jsx';
 import GeneratorServicesDropdown from '../GeneratorServicesDropdown/index.jsx';
+import makeApiRequest, { axiosInstance } from '../../api/index.js';
+import useAuth from '../../hooks/useAuth.js';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
+import { useToast } from '../../contexts/toastContext.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -87,6 +91,13 @@ Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
+  const { token } = useAuth();
+
+  const {
+    currentProject,
+    isProjectReadOnly
+  } = useContext(ProjectContext);
+
   const {
     setSelectedNote,
     reels,
@@ -98,7 +109,13 @@ const ChatPanel = () => {
     theme,
     selectedStory,
     setSelectedStory,
+    checkedSources,
+    currentChat,
+    displayedSources,
+    knowledgeBase,
   } = useContext(MainContext);
+
+  const { notify } = useToast();
 
   const [isNewInsight, setIsNewInsight] = useState(false);
 
@@ -178,6 +195,252 @@ const ChatPanel = () => {
     thumbnail: ""
   });
   const [isReelOpen, setIsReelOpen] = useState(false);
+
+  /**
+   * ============== VIDEO SEGMENT FEAT ==================
+   */
+
+  const [currentSegmentTab, setCurrentSegmentTab] = useState("Time segment description");
+
+  // ========== time segment description ==============
+  const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
+
+
+
+
+  const [isSegmentPending, setIsSegmentPending] = useState(false);
+  const [showSegmentList, setShowSegmentList] = useState(true);
+  const [currentSegment, setCurrentSegment] = useState(null);
+  const [startSegmentDescription, setStartSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
+  const [endSegmentDescription, setEndSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
+
+  const [promptSegmentDescription, setPromptSegmentDescription] = useState("");
+
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+
+  const [segmentDescriptions, setSegmentDescriptions] = useState([]);
+
+  const [resultsDescription, setResultsDescription] = useState({
+    start: formatTime(startSegmentDescription),
+    end: formatTime(endSegmentDescription),
+    description: "",
+    refs: []
+  });
+
+  const canGenerate = checkedVideosCount > 0 && !isSegmentPending && promptSegmentDescription && promptSegmentDescription.trim().length > 0 && !isProjectReadOnly;
+  async function generateDescription() {
+    try {
+      if (!canGenerate) {
+        throw new Error('Make sure you provided video sources and prompt');
+      }
+
+      if (toSeconds(endSegmentDescription) <= toSeconds(startSegmentDescription)) {
+        throw new Error("Your timestamp range is invalid.");
+      }
+
+      setIsSegmentPending(true);
+      setResultsDescription(prev => ({
+        ...prev,
+        start: formatTime(startSegmentDescription),
+        end: formatTime(endSegmentDescription),
+        refs: []
+      }));
+
+      let url = new URLSearchParams();
+
+      url.append("start_timestamp", formatTime((startSegmentDescription)));
+      url.append("end_timestamp", formatTime((endSegmentDescription)));
+      url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
+      url.append("prompt", promptSegmentDescription);
+
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
+      axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+
+      const { data, success, message } = await makeApiRequest(`/segment-response?${url.toString()}`, 'GET', null, {
+        Authorization: `Bearer ${token}`,
+        SessionId: currentChat?.sessionId,
+        ProjectId: currentProject?.project_id,
+      });
+
+      if (success) {
+
+        notify({
+          variant: "success",
+          heading: "Description generated successfully",
+        });
+
+        setSegmentDescriptions(prev => [
+          ...prev,
+          data
+        ]);
+        setCurrentSegment(data);
+        setShowSegmentList(false);
+      } else {
+        throw new Error(message);
+      }
+
+    } catch (error) {
+      console.log(error);
+      notify({
+        variant: "error",
+        heading: "Couldn't generate description",
+        subheading: error?.message
+      });
+    } finally {
+      setIsSegmentPending(false);
+    }
+  }
+
+  useEffect(() => {
+
+    async function fetchTimeSegments() {
+      try {
+        axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+        const { data, success } = await makeApiRequest("/chat/segment-response", 'GET', null, {
+          ProjectId: currentProject.project_id,
+        });
+
+        if (success) {
+          setSegmentDescriptions(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchTimeSegments();
+  }, []);
+
+  // ========== time segment summary ==============
+  // const [startSegmentSummary, setStartSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
+  // const [endSegmentSummary, setEndSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
+
+  // const [promptSegmentSummary, setPromptSegmentSummary] = useState("");
+
+  // const [resultsSummary, setResultsSummary] = useState({
+  //     start: formatTime(startSegmentSummary),
+  //     end: formatTime(endSegmentSummary),
+  //     description: "",
+  //     refs: []
+  // });
+
+  // ========= Find moments in videos ===========
+
+  const [prompt, setPrompt] = useState("");
+  const [showList, setShowList] = useState(true);
+  const [currentMoment, setCurrentMoment] = useState(null);
+  const [moments, setMoments] = useState([]);
+  const [captionResults, setCaptionResults] = useState({
+    prompt: "",
+    context: "",
+    refs: [],
+  });
+
+  useEffect(() => {
+
+    async function fetchFindMoments() {
+      try {
+        axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+        const { data, success } = await makeApiRequest("/chat/moment-fetch", 'GET', null, {
+          ProjectId: currentProject.project_id,
+        });
+        if (success) {
+          setMoments(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchFindMoments();
+  }, []);
+
+  const [isPending, setIsPending] = useState(false);
+
+  async function handleCaptioning(query) {
+    let response = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
+      prompt: query,
+      sources: checkedSources.filter(items => items.file_type === "video"),
+      fromCrispWiz: false
+    }));
+
+    return response;
+  }
+  async function handleCaptionSubmit() {
+    try {
+      setIsPending(true);
+      if (!displayedSources?.every(item => item?.is_checked === false)) {
+        await makeApiRequest(
+          `/handle-embeddings`,
+          "post",
+          JSON.stringify({
+            sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+          })
+        );
+      }
+      let { results, success, message, ...rest } = await handleCaptioning(prompt);
+
+      if (success) {
+        if (results.length > 0) {
+          const finalResults = results.map((segment) => {
+            const source = knowledgeBase.find(item => item.source_id === segment.source_id);
+
+            if (!source) return null;
+
+            return {
+              ...segment,
+              timestampText: `${source.source_path} | ${segment.timestamp}`,
+              source: {
+                ...source,
+                timestamp: segment.timestamp
+              }
+            };
+          }).filter(Boolean);
+          const moment = {
+            ...rest,
+            results: finalResults
+          };
+
+          setMoments(prev => {
+            return [
+              moment,
+              ...prev,
+            ];
+          });
+
+          setCurrentMoment(moment);
+
+          setPrompt("");
+          setIsPending(false);
+          setShowList(false);
+        } else {
+          setIsPending(false);
+          notify({
+            variant: "info",
+            heading: "No moments found with the prompt you provided",
+            subheading: "Try providing another prompt for better results"
+          });
+        }
+      }
+      else {
+        throw new Error(message);
+      }
+    } catch (error) {
+      notify({
+        variant: "error",
+        heading: "Couldn't generate moment",
+        subheading: error?.message || ""
+      });
+      console.log(error);
+      setIsPending(false);
+      setShowList(false);
+    }
+  }
+
+  /**
+   * ============== VIDEO SEGMENT FEAT ==================
+   */
 
   return (
     <aside
@@ -295,7 +558,43 @@ const ChatPanel = () => {
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : actualTab === "genTimeSegment" ? (
-                <VideoSegmentDescription />
+                <VideoSegmentDescription
+                  currentSegmentTab={currentSegmentTab}
+                  setCurrentSegmentTab={setCurrentSegmentTab}
+                  isSegmentPending={isSegmentPending}
+                  setIsSegmentPending={setIsSegmentPending}
+                  showSegmentList={showSegmentList}
+                  setShowSegmentList={setShowSegmentList}
+                  currentSegment={currentSegment}
+                  setCurrentSegment={setCurrentSegment}
+                  startSegmentDescription={startSegmentDescription}
+                  setStartSegmentDescription={setStartSegmentDescription}
+                  endSegmentDescription={endSegmentDescription}
+                  setEndSegmentDescription={setEndSegmentDescription}
+                  promptSegmentDescription={promptSegmentDescription}
+                  setPromptSegmentDescription={setPromptSegmentDescription}
+                  isInfoTooltipOpen={isInfoTooltipOpen}
+                  setIsInfoTooltipOpen={setIsInfoTooltipOpen}
+                  segmentDescriptions={segmentDescriptions}
+                  setSegmentDescriptions={setSegmentDescriptions}
+                  resultsDescription={resultsDescription}
+                  setResultsDescription={setResultsDescription}
+                  canGenerate={canGenerate}
+                  generateDescription={generateDescription}
+                  prompt={prompt}
+                  setPrompt={setPrompt}
+                  showList={showList}
+                  setShowList={setShowList}
+                  currentMoment={currentMoment}
+                  setCurrentMoment={setCurrentMoment}
+                  moments={moments}
+                  setMoments={setMoments}
+                  captionResults={captionResults}
+                  setCaptionResults={setCaptionResults}
+                  isPending={isPending}
+                  setIsPending={setIsPending}
+                  handleCaptionSubmit={handleCaptionSubmit}
+                />
               ) : actualTab === "genGraph" ? (
                 <KnowledgeGraph />
               ) : null
