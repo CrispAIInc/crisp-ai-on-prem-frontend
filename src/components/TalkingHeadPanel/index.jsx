@@ -2,7 +2,7 @@ import react from 'react';
 import CharacterCard from '../CharacterCard';
 import BaseHeading from '../BaseHeading';
 
-function TalkingHeadPanel({ talkingHeads }) {
+function TalkingHeadPanel({ talkingHeads, source }) {
 
     return (
         <div className={``}>
@@ -10,7 +10,7 @@ function TalkingHeadPanel({ talkingHeads }) {
 
             <div className="flex flex-col gap-4">
                 {talkingHeads.map((char, i) => (
-                    <CharacterCard key={i} character={char} />
+                    <CharacterCard key={i} character={char} source={source} />
                 ))}
             </div>
 

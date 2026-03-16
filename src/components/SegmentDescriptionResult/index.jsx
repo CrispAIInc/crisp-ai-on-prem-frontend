@@ -147,7 +147,6 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
         theme,
         contentPanelContainerRef,
     } = useContext(MainContext);
-    // const { notify } = useToast();
 
     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
@@ -155,34 +154,6 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
         setCurrentSegment(null);
         setShowList(true);
     }
-
-    // async function saveSegmentDescription() {
-    //     // TODO: call save endpoint...
-
-    //     setTimeSegmentDescriptions(prev => [...prev, results]);
-    //     setShowList(true);
-    //     console.log(results);
-    // }
-
-    // function copyToClipboard() {
-    //     const textToCopy = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description} \nReferences: ${results.refs && results.refs.length > 0 ? results.refs.map(ref => ref.displayText).join("\n") : "None"}`;
-    //     navigator.clipboard.writeText(textToCopy)
-    //         .then(() => {
-    //             notify({
-    //                 variant: "info",
-    //                 heading: "Description copied to clipboard!"
-    //             });
-    //         })
-    //         .catch(err => {
-    //             notify({
-    //                 variant: "error",
-    //                 heading: "Failed to copy description to clipboard!",
-    //                 subheading: err?.message || ""
-    //             });
-    //         });
-    // }
-
-
 
     return (
         <div className="flex flex-col gap-4">
@@ -278,6 +249,8 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                     }
                 ]
                 }
+                source={ }
+                source={refs[0]}
             />
 
             {/* Onscreen Text */}

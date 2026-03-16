@@ -1,11 +1,15 @@
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
-function CharacterCard({ character }) {
+function CharacterCard({ character, source }) {
 
     const {
-        theme
+        theme,
+        contentPanelContainerRef
     } = useContext(MainContext);
+
+    const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
     const segments =
         character.text_content
@@ -71,6 +75,7 @@ function CharacterCard({ character }) {
                             className={`rounded-xl p-3 ${theme === "light"
                                 ? "!border !border-textColor-100/30 text-textColor-200"
                                 : "!border !border-textColor-200/30 text-textColor-100"}`}
+                            onClick={(event) => handleSourceLinkClick(event, { ...source, timestamp: seg.time?.split('-')[0] || source?.timestamp || "00:00:00" })}
                         >
 
                             {seg.time && (
