@@ -25,7 +25,7 @@ function CharacterCard({ character, source }) {
     return (
         <div className={`shadow-md ${theme === "light"
             ? "!border !border-textColor-100/30 text-textColor-200"
-            : "!border !border-textColor-200/30 text-textColor-100"} rounded-xl p-3`}>
+            : "!border !border-textColor-200/30 text-textColor-100"} rounded-xl p-1`}>
 
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
