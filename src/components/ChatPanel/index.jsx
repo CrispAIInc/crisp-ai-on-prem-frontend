@@ -519,9 +519,9 @@ const ChatPanel = () => {
     [&::-webkit-scrollbar-thumb]:bg-clip-padding`}>
               {[
                 { id: "genMetadata", title: "Catalog" },
-                { id: "genStories", title: "Stories & Blogs" },
                 { id: "genMedia", title: "Reels" },
                 { id: "genTimeSegment", title: "Video Segment" },
+                { id: "genStories", title: "Stories & Blogs" },
                 { id: "genGraph", title: "Structure" },
               ].map(item => (
                 <h6
