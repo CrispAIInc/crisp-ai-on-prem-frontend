@@ -418,6 +418,8 @@ const TimeSegmentDescription = ({
                     })
                 ),
 
+
+
                 // --- CINEMATIC DETAILS SECTION ---
                 new Paragraph({
                     text: "Cinematic Details",
@@ -432,6 +434,86 @@ const TimeSegmentDescription = ({
                 ...createChipSection("Shot Type", schema.shot_type, colors.shotBg, colors.shotText, fontFamily),
                 ...createChipSection("On-Screen Text", ocrArray, colors.ocrBg, colors.ocrText, fontFamily),
             ];
+
+            /* ---------- CHARACTER DIALOGUE ---------- */
+
+            if (schema.talking_head && schema.talking_head.length > 0) {
+
+                docChildren.push(
+
+                    new Paragraph({
+                        spacing: { before: 400, after: 200 },
+                        border: {
+                            bottom: {
+                                color: "E2E8F0",
+                                value: BorderStyle.SINGLE,
+                                size: 6
+                            }
+                        },
+                        children: [
+                            new TextRun({
+                                text: "CHARACTER DIALOGUE",
+                                bold: true,
+                                size: 22,
+                                color: colors.primary,
+                                font: fontFamily
+                            })
+                        ]
+                    })
+
+                );
+
+                schema.talking_head.forEach(segment => {
+
+                    const match = segment.text_content.match(/\[(.*?)\]\s*(.*)/);
+
+                    const time = match ? match[1] : "";
+                    const text = match ? match[2] : segment.text_content;
+
+                    docChildren.push(
+
+                        new Paragraph({
+                            spacing: { before: 200, after: 50 },
+                            children: [
+                                new TextRun({
+                                    text: segment.character_name,
+                                    bold: true,
+                                    size: 22,
+                                    color: colors.accent,
+                                    font: fontFamily
+                                })
+                            ]
+                        }),
+
+                        new Paragraph({
+                            spacing: { after: 50 },
+                            children: [
+                                new TextRun({
+                                    text: `[${time}]`,
+                                    italics: true,
+                                    size: 18,
+                                    color: colors.textMuted,
+                                    font: fontFamily
+                                })
+                            ]
+                        }),
+
+                        new Paragraph({
+                            spacing: { after: 200 },
+                            children: [
+                                new TextRun({
+                                    text: text,
+                                    size: 22,
+                                    color: colors.textMain,
+                                    font: fontFamily
+                                })
+                            ]
+                        })
+
+                    );
+
+                });
+            }
 
             // 5. Initialize Document Configuration
             const doc = new Document({
