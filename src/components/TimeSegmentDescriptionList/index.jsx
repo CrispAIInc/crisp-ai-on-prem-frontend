@@ -88,7 +88,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
             <BaseHeading text="Saved segment responses" />
             <div className='flex flex-col gap-1'>
                 {
-                    sortByDate(segmentDescriptions).map(segment => (
+                    sortByDate(segmentDescriptions, "created_at", "desc").map(segment => (
                         <div key={segment.id}
                             className={`flex items-center  gap-2 ${theme === 'light'
                                 ? 'hover:bg-textColor-100/10'
