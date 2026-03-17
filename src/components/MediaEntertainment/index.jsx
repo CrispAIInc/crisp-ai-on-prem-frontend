@@ -298,7 +298,7 @@ function MediaEntertainment({
                 <BaseHeading text="Your reels" className="mt-2" />
                 {(reels?.length > 0 || reelsResults?.length > 0) && (
                     <input
-                        className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`}
+                        className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full rounded-xl !pl-[10px]`}
                         placeholder={"Search..."}
                         value={reelsSearchValue}
                         onChange={handleReelsSearch}

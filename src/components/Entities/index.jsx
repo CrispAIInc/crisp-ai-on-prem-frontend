@@ -103,7 +103,7 @@ function KnowledgeGraph() {
                             </span>
                         </div>
                         <textarea
-                            className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             rows="3"
                             placeholder='Customize your JSON structure'
                             value={context}
