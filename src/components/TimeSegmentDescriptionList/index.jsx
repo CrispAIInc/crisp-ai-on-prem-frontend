@@ -6,6 +6,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import makeApiRequest from '../../api';
 import { ToastContext } from '../../contexts/toastContext';
 import { ProjectContext } from '../../contexts/projectContext';
+import ActionMenu from "../ActionMenu";
+import AnimatedText from "../AnimatedText";
 
 function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDescriptions, setSegmentDescriptions }) {
 
@@ -82,12 +84,12 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
 
     return (
         <div className="flex flex-col gap-2 overflow-y-auto">
-            <BaseHeading text="All segment descriptions" />
+            <BaseHeading text="Saved segment responses" />
             <div className='flex flex-col gap-1'>
                 {
                     segmentDescriptions.map(segment => (
                         <div key={segment.id}
-                            className={`flex items-center justify-between gap-2 ${theme === 'light'
+                            className={`flex items-center  gap-2 ${theme === 'light'
                                 ? 'hover:bg-textColor-100/10'
                                 : 'hover:bg-light-hover-200/20'
                                 } cursor-pointer p-2 rounded-md select-none`}
@@ -96,26 +98,23 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
                             onMouseLeave={handleMouseLeaveSegment}
                         >
 
-                            <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit truncate`} key={segment.id}>{segment?.title || segment?.query}</p>
-
                             {
                                 !isProjectReadOnly && (
-                                    hoveredSegment === segment?.id && (
-                                        <>
+                                    <ActionMenu
+                                        actions={[
                                             {
-                                                isSegmentDeleting ? (
-                                                    <LoadingSpinner isSmall />
-                                                ) : (
-                                                    <DeleteIcon
-                                                        onClick={(event) => { event.stopPropagation(); deleteSegment(segment.id); }}
-                                                        className=" cursor-pointer"
-                                                    />
-                                                )
-                                            }
-                                        </>
-                                    )
-                                )
-                            }
+                                                label: isSegmentDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
+                                                icon: isSegmentDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon />,
+                                                onClick: () => deleteSegment(segment.id),
+                                            },
+                                        ]}
+                                    />
+                                )}
+
+                            <div>
+                                <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema.talking_head.length > 0 ? `${segment.response_format.schema.talking_head.length} ${segment.response_format.schema.talking_head.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs" />
+                                <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit truncate`} key={segment.id}>{segment?.title || segment?.query}</p>
+                            </div>
                         </div>
                     ))
                 }

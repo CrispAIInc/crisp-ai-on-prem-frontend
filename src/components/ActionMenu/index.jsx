@@ -19,7 +19,7 @@ export default function ActionMenu({ actions }) {
   }, []);
 
   return (
-    <div ref={ref} className={` relative flex flex-col cursor-pointer rounded-full p-2 hover:bg-white/20`} onClick={(e) => {
+    <div ref={ref} className={` relative flex flex-col cursor-pointer rounded-full hover:bg-white/20`} onClick={(e) => {
       e.stopPropagation();
       setOpen((p) => !p);
     }}>
