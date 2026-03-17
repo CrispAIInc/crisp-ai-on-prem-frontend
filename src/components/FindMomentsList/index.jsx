@@ -89,7 +89,7 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
             <BaseHeading text="All moments" />
             <div className='flex flex-col gap-1'>
                 {
-                    sortByDate(moments).map(item => (
+                    sortByDate(moments, "created_at", "desc").map(item => (
                         <div key={item.id}
                             className={`flex items-center gap-2 ${theme === 'light'
                                 ? 'hover:bg-textColor-100/10'
