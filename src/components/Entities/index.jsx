@@ -103,7 +103,7 @@ function KnowledgeGraph() {
                             </span>
                         </div>
                         <textarea
-                            className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             rows="3"
                             placeholder='Customize your JSON structure'
                             value={context}
@@ -113,8 +113,7 @@ function KnowledgeGraph() {
                     <div className="relative w-full mb-2">
                         <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Your entities title (optional)</label>
                         <input
-                            className={`${theme === 'dark' && 'text-textColor-100'
-                                } font-medium p-2 bg-transparent !border rounded-md ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
+                            className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
                             placeholder="Write a title for the entities"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
