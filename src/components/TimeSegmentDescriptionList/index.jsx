@@ -8,6 +8,7 @@ import { ToastContext } from '../../contexts/toastContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import ActionMenu from "../ActionMenu";
 import AnimatedText from "../AnimatedText";
+import { sortByDate } from '../../utils';
 
 function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDescriptions, setSegmentDescriptions }) {
 
@@ -87,7 +88,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
             <BaseHeading text="Saved segment responses" />
             <div className='flex flex-col gap-1'>
                 {
-                    segmentDescriptions.map(segment => (
+                    sortByDate(segmentDescriptions).map(segment => (
                         <div key={segment.id}
                             className={`flex items-center  gap-2 ${theme === 'light'
                                 ? 'hover:bg-textColor-100/10'
