@@ -52,14 +52,14 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
             <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Metadata output</label>
             <div className="relative inline-block w-full" ref={dropdownRef}>
                 {/* upper section */}
-                <div onClick={handleOpenDropdownMenu} className={`rounded-md flex items-center justify-between h-10 py-4 pl-1 !border !border-slate-400 cursor-pointer relative`}>
+                <div onClick={handleOpenDropdownMenu} className={`rounded-xl flex items-center justify-between h-10 py-4 pl-1 !border !border-slate-400 cursor-pointer relative`}>
                     {/* <div className="absolute inset-y-0 left-0 w-8 pointer-events-none z-3 bg-gradient-to-r from-white to-transparent"></div> */}
                     <div className="relative flex items-center flex-1 gap-1 overflow-x-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                         {
                             selectedOptions.length === 0 && <p className="text-slate-400">Select metadata options</p>
                         }
                         {
-                            selectedOptions.map((option) => <Chip key={option.id} content={option.name} />)
+                            selectedOptions.map((option) => <Chip cssClasses="rounded-xl" key={option.id} content={option.name} />)
                         }
                     </div>
                     {/* <div className="absolute inset-y-0 right-0 w-8 pointer-events-none z-3 bg-gradient-to-l from-white to-transparent"></div> */}
