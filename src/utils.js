@@ -394,7 +394,7 @@ export function generateRandomId(length = 10) {
     return result;
 }
 
-export function sortByDate(array, dateKey, order = "asc") {
+export function sortByDate(array, dateKey = "created_at", order = "asc") {
     if (!Array.isArray(array)) return [];
 
     return [...array].sort((a, b) => {
