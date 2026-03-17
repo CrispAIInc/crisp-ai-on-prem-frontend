@@ -44,7 +44,7 @@ function CharacterCard({ character, source }) {
                 <div className="flex gap-2">
 
                     <span className={`px-2 py-1 text-xs rounded ${!character.detected ? "bg-emerald-500/20 text-emerald-500" : "bg-neutral-600/40 text-neutral-500"}`}>
-                        {character.detected && "Not"} detected
+                        {!character.detected && "Not"} detected
                     </span>
 
                     {character.talking ? (
