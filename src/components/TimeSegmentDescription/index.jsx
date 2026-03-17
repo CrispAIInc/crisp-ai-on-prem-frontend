@@ -299,7 +299,7 @@ const TimeSegmentDescription = ({
 
             // Process On-Screen Text into an array for chips
             const ocrText = schema.onscreen_text?.detected ? schema.onscreen_text.text_content : "";
-            const ocrArray = ocrText.split(',').map(item => item.trim()).filter(i => i !== "");
+            const ocrArray = ocrText.map(item => item.trim()).filter(i => i !== "");
 
             let onscreenText = "None detected";
             if (schema.onscreen_text?.detected) {
