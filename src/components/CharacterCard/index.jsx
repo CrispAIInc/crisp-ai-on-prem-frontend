@@ -25,17 +25,17 @@ function CharacterCard({ character, source }) {
     return (
         <div className={`shadow-md ${theme === "light"
             ? "!border !border-textColor-100/30 text-textColor-200"
-            : "!border !border-textColor-200/30 text-textColor-100"} rounded-xl p-1`}>
+            : "!border !border-textColor-200/30 text-textColor-100"} rounded-xl p-2`}>
 
             {/* Header */}
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-1">
 
                 <div className="flex items-center gap-2">
-                    <div className={`w-7 h-7 rounded-full ${theme === "light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} text-white flex items-center justify-center text-sm font-semibold`}>
-                        {character.character_name.charAt(0)}{character.character_name.split(' ')[1]?.charAt(0)}
+                    <div className={`w-6 h-6 rounded-full text-xs p-2 text-white flex items-center justify-center font-semibold ${theme === "light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"}`}>
+                        {character.character_name.charAt(0).toLowerCase()}{character.character_name.split(' ')[1]?.charAt(0).toLowerCase()}
                     </div>
 
-                    <span className={`${theme === "light" ? 'text-textColor-300' : 'text-white'} font-medium text-sm`}>
+                    <span className={`${theme === "light" ? 'text-textColor-300' : 'text-white'} font-medium text-[11px]`}>
                         {character.character_name}
                     </span>
                 </div>
@@ -67,12 +67,12 @@ function CharacterCard({ character, source }) {
 
             {character.talking && segments.length > 0 ? (
 
-                <div className="space-y-3">
+                <div className="">
 
                     {segments.map((seg, idx) => (
                         <div
                             key={idx}
-                            className={`rounded-xl p-3 ${theme === "light"
+                            className={`rounded-xl p-2 ${theme === "light"
                                 ? "!border !border-textColor-100/30 text-textColor-200"
                                 : "!border !border-textColor-200/30 text-textColor-100"}`}
                             onClick={(event) => handleSourceLinkClick(event, { ...source, timestamp: seg.time?.split('-')[0] || source?.timestamp || "00:00:00" })}
