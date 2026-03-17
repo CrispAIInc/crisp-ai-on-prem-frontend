@@ -441,7 +441,7 @@ export function SourceExplorer(props) {
                         <h3 className="current-path">{currentPath}</h3>
                     </div>}
 
-                    {viewModes[viewModes.length - 1] === "files" && <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
+                    {viewModes[viewModes.length - 1] === "files" && <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-lg !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
 
 
                 </div>
