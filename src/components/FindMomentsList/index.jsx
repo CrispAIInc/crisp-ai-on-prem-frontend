@@ -8,6 +8,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import DeleteIcon from "@mui/icons-material/Delete";
 import ActionMenu from '../ActionMenu';
 import AnimatedText from '../AnimatedText';
+import { sortByDate } from '../../utils';
 
 function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments }) {
 
@@ -88,7 +89,7 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
             <BaseHeading text="All moments" />
             <div className='flex flex-col gap-1'>
                 {
-                    moments.map(item => (
+                    sortByDate(moments).map(item => (
                         <div key={item.id}
                             className={`flex items-center gap-2 ${theme === 'light'
                                 ? 'hover:bg-textColor-100/10'
