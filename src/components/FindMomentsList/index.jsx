@@ -6,6 +6,8 @@ import { ToastContext } from '../../contexts/toastContext';
 import makeApiRequest from '../../api';
 import LoadingSpinner from '../LoadingSpinner';
 import DeleteIcon from "@mui/icons-material/Delete";
+import ActionMenu from '../ActionMenu';
+import AnimatedText from '../AnimatedText';
 
 function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments }) {
 
@@ -88,7 +90,7 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
                 {
                     moments.map(item => (
                         <div key={item.id}
-                            className={`flex items-center justify-between gap-2 ${theme === 'light'
+                            className={`flex items-center gap-2 ${theme === 'light'
                                 ? 'hover:bg-textColor-100/10'
                                 : 'hover:bg-light-hover-200/20'
                                 } cursor-pointer p-2 rounded-md select-none`}
@@ -97,26 +99,21 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
                             onMouseLeave={handleMouseLeaveSegment}
                         >
 
-                            <p onClick={() => handleSelectResult(item)} key={item.id} className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium`}>{item.prompt}</p>
-
                             {
                                 !isProjectReadOnly && (
-                                    hoveredSegment === item?.id && (
-                                        <>
+                                    <ActionMenu
+                                        actions={[
                                             {
-                                                isSegmentDeleting ? (
-                                                    <LoadingSpinner isSmall />
-                                                ) : (
-                                                    <DeleteIcon
-                                                        onClick={(event) => { event.stopPropagation(); deleteSegment(item.id); }}
-                                                        className=" cursor-pointer"
-                                                    />
-                                                )
-                                            }
-                                        </>
-                                    )
+                                                label: isSegmentDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
+                                                icon: isSegmentDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon />,
+                                                onClick: () => deleteSegment(item.id),
+                                            },
+                                        ]}
+                                    />
                                 )
                             }
+
+                            <p onClick={() => handleSelectResult(item)} key={item.id} className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium truncate`}>{item.prompt}</p>
                         </div>
                     ))
                 }
