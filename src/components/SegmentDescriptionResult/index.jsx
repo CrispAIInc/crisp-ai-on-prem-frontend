@@ -161,7 +161,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
         const segments = [];
 
         talkingHead.forEach(character => {
-            if (!character.text_content) return;
+            // if (!character.text_content) return;
 
             const lines = character.text_content
                 .split("\n")
