@@ -43,11 +43,9 @@ function CharacterCard({ character, source }) {
                 {/* Status badges */}
                 <div className="flex gap-2">
 
-                    {character.detected && (
-                        <span className="px-2 py-1 text-xs rounded bg-emerald-500/20 text-emerald-500">
-                            detected
-                        </span>
-                    )}
+                    <span className={`px-2 py-1 text-xs rounded ${character.detected ? "bg-emerald-500/20 text-emerald-500" : "bg-neutral-600/40 text-neutral-500"}`}>
+                        {character.detected && "Not"} detected
+                    </span>
 
                     {character.talking ? (
                         <span className="px-2 py-1 text-xs rounded bg-blue-500/20 text-blue-500">
