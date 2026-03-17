@@ -36,7 +36,7 @@ export default function AddSourceModal(props) {
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
-            className="rounded-lg note-modal"
+            className="!rounded-xl note-modal"
         >
             <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                 <Modal.Title id="contained-modal-title-vcenter">
