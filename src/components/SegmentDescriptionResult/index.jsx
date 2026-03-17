@@ -275,16 +275,14 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                     <BaseHeading text="Detected On-screen Text" className="mb-2" />
 
                     <div className="rounded-lg text-sm">
-                        {schema.onscreen_text.text_content
-                            .split(",")
-                            .map((text) => (
-                                <div
-                                    key={text}
-                                    className="inline-block mr-2 mb-2 px-3 py-1 rounded bg-emerald-500/20 text-emerald-500"
-                                >
-                                    {text.trim()}
-                                </div>
-                            ))}
+                        {schema.onscreen_text.text_content.map((text) => (
+                            <div
+                                key={text}
+                                className="inline-block mr-2 mb-2 px-3 py-1 rounded bg-emerald-500/20 text-emerald-500"
+                            >
+                                {text.trim()}
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}
