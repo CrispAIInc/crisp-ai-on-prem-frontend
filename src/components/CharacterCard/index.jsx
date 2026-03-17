@@ -65,7 +65,7 @@ function CharacterCard({ character, source }) {
 
             {/* Dialogue */}
 
-            {character.talking && segments.length > 0 ? (
+            {segments.length > 0 ? (
 
                 <div className="">
 
