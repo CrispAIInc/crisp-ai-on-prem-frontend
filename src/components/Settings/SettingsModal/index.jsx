@@ -44,8 +44,8 @@ export function SettingsModal(props) {
                     <div className="flex items-center gap-3 text-xl">
                         {
                             ["General", "Account"].map((setting, index) => (
-                                <div key={index} className={`py-2 px-3 rounded-md mb-2 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}>
-                                    <p onClick={() => setActiveTab(setting)} className={` cursor-pointer hover:font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${setting === activeTab && 'text-gradient-x'}`}>{setting}</p>
+                                <div key={index} onClick={() => setActiveTab(setting)} className={`cursor-pointer py-2 px-3 rounded-md mb-2 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}>
+                                    <p className={` ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${setting === activeTab && 'text-gradient-x'}`}>{setting}</p>
                                 </div>
                             ))
                         }
