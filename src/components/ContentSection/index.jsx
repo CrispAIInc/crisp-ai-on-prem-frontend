@@ -882,15 +882,13 @@ const ContentSection = ({
                                 data-tooltip-id="add-sources-tooltip"
                                 data-tooltip-content="Upload sources or create new indexes."
                                 id="upload_sources"
-                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'} `}
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'} ${isProjectReadOnly ? "cursor-default opacity-50" : "cursor-pointer opacity-100"}`}
                                 onClick={() => !isProjectReadOnly && handleAddModal(true)}
                             >
-                                <div className={`${isProjectReadOnly ? "cursor-default opacity-50" : "cursor-pointer opacity-100"}`}>
-                                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                                        Add sources
-                                    </span>
-                                </div>
+                                <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                                    Add sources
+                                </span>
 
                                 <Tooltip id="add-sources-tooltip" />
                             </div>
