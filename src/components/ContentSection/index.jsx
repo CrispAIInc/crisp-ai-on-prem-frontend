@@ -683,7 +683,19 @@ const ContentSection = ({
         return localStorage.getItem("sessionId");
     };
 
+    function addHashToFilename(filename, hash) {
+        const lastDotIndex = filename.lastIndexOf(".");
 
+        // If no extension
+        if (lastDotIndex === -1) {
+            return `${filename}_${hash}`;
+        }
+
+        const name = filename.slice(0, lastDotIndex);
+        const extension = filename.slice(lastDotIndex);
+
+        return `${name}_${hash}${extension}`;
+    }
 
     const handleUpload = async (event, fileFormat, _files) => {
         let rejoinInterval;
@@ -734,13 +746,17 @@ const ContentSection = ({
 
             //TODO: loop throught files and populate the "initialSources" with the initial properties
 
+
             const fileSources = files.map((file, index) => {
                 const totalSourcesWithSameFilename = knowledgeBase.filter(item => item.source_path === file.name).length;
 
                 return {
                     category: [selectedCategory],
                     file_type: getFileType(file.type),
-                    source_path: totalSourcesWithSameFilename > 0 ? file.name + "_" + generateRandomHash(3) : file.name,
+                    source_path:
+                        totalSourcesWithSameFilename > 0
+                            ? addHashToFilename(file.name, generateRandomHash(3))
+                            : file.name,
                     thumbnail: extractThumbnail(file) || null,
                     is_checked: false,
                     is_selected: true,
