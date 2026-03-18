@@ -763,6 +763,13 @@ const ContentSection = ({
 
             setPersistedUploadedFiles(fileSources);
 
+            const existingPaths = new Set(knowledgeBase.map(item => item.source_path));
+            const newSources = fileSources.filter(item => !existingPaths.has(item.source_path));
+
+            console.log([
+                ...newSources,
+                ...knowledgeBase
+            ]);
             setKnowledgeBase((prev) => {
                 // Merge existing knowledgeBase with new fileSources, avoiding duplicates
                 const existingPaths = new Set(prev.map(item => item.source_path));
@@ -774,7 +781,7 @@ const ContentSection = ({
             setTimeout(() => {
                 setKnowledgeBase(prev => prev.map(item => {
                     if (item.progress === 0) {
-                        return { ...item, progress: 3, step: "Video pre-processing..." };
+                        return { ...item, progress: 3, step: "Source pre-processing..." };
                     }
                     return item;
                 }));
