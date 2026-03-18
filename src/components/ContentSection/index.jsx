@@ -20,7 +20,7 @@ import { MainContext } from "../../contexts/mainContext";
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from "../../contexts/toastContext";
 import useAuth from '../../hooks/useAuth';
-import { getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
+import { generateRandomHash, getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
 import AddSourceModal from "../AddSourceModal";
 import AnimatedText from '../AnimatedText';
 import BaseHeading from '../BaseHeading';
@@ -735,10 +735,12 @@ const ContentSection = ({
             //TODO: loop throught files and populate the "initialSources" with the initial properties
 
             const fileSources = files.map((file, index) => {
+                const totalSourcesWithSameFilename = knowledgeBase.filter(item => item.source_path === file.name).length;
+
                 return {
                     category: [selectedCategory],
                     file_type: getFileType(file.type),
-                    source_path: file.name,
+                    source_path: totalSourcesWithSameFilename > 0 ? file.name + "_" + generateRandomHash(3) : file.name,
                     thumbnail: extractThumbnail(file) || null,
                     is_checked: false,
                     is_selected: true,
@@ -762,14 +764,6 @@ const ContentSection = ({
             const totalFiles = files.length;
 
             setPersistedUploadedFiles(fileSources);
-
-            const existingPaths = new Set(knowledgeBase.map(item => item.source_path));
-            const newSources = fileSources.filter(item => !existingPaths.has(item.source_path));
-
-            console.log([
-                ...newSources,
-                ...knowledgeBase
-            ]);
             setKnowledgeBase((prev) => {
                 // Merge existing knowledgeBase with new fileSources, avoiding duplicates
                 const existingPaths = new Set(prev.map(item => item.source_path));
