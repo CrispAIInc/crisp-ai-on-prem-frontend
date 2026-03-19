@@ -425,7 +425,7 @@ const ContentSection = ({
         const removedSourcePaths = sources.map(source => source.source_path);
 
         // 2: check if source's filename exists in the array
-        const sourceExists = removedSourcePaths.includes(currentResource.source_path);
+        const sourceExists = removedSourcePaths.includes(currentResource?.source_path);
 
         // 3: clear currentResource if exist
         if (sourceExists) {
@@ -435,6 +435,7 @@ const ContentSection = ({
     }
 
     const deleteResource = async (event, items) => {
+        // console.log("deleting source...", items);
         try {
             setIsDeleting(true);
             setClickedIndex(items[0]);
