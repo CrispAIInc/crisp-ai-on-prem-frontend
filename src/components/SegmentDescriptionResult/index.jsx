@@ -290,7 +290,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
             {/* refs */}
             {source && source.length > 0 && (
-                <div className="">
+                <div>
                     <BaseHeading text="References" className="font-bold text-sm mb-2" />
                     <ul className="list-disc list-inside text-sm/6 text-textColor-300">
                         {source.map((ref, index) => {

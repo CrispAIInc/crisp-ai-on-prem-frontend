@@ -98,6 +98,9 @@ function MediaEntertainment({
 
             setIsReelGenerated(true);
 
+            reel.title = "";
+            setContext('');
+
             // setTimeout(() => {
             //     setIsReelOpen(true);
             // }, 0);
