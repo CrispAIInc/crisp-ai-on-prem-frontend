@@ -20,7 +20,7 @@ import { MainContext } from "../../contexts/mainContext";
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from "../../contexts/toastContext";
 import useAuth from '../../hooks/useAuth';
-import { getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
+import { generateRandomHash, getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
 import AddSourceModal from "../AddSourceModal";
 import AnimatedText from '../AnimatedText';
 import BaseHeading from '../BaseHeading';
@@ -665,6 +665,19 @@ const ContentSection = ({
         return localStorage.getItem("sessionId");
     };
 
+    function addHashToFilename(filename, hash) {
+        const lastDotIndex = filename.lastIndexOf(".");
+
+        // If no extension
+        if (lastDotIndex === -1) {
+            return `${filename}_${hash}`;
+        }
+
+        const name = filename.slice(0, lastDotIndex);
+        const extension = filename.slice(lastDotIndex);
+
+        return `${name}_${hash}${extension}`;
+    }
 
 
     const handleUpload = async (event, fileFormat, _files) => {
@@ -716,11 +729,18 @@ const ContentSection = ({
 
             //TODO: loop throught files and populate the "initialSources" with the initial properties
 
+
+
             const fileSources = files.map((file, index) => {
+                const totalSourcesWithSameFilename = knowledgeBase.filter(item => item.source_path === file.name).length;
+
                 return {
                     category: [selectedCategory],
                     file_type: getFileType(file.type),
-                    source_path: file.name,
+                    source_path:
+                        totalSourcesWithSameFilename > 0
+                            ? addHashToFilename(file.name, generateRandomHash(3))
+                            : file.name,
                     thumbnail: extractThumbnail(file) || null,
                     is_checked: false,
                     is_selected: true,
@@ -756,7 +776,7 @@ const ContentSection = ({
             setTimeout(() => {
                 setKnowledgeBase(prev => prev.map(item => {
                     if (item.progress === 0) {
-                        return { ...item, progress: 3, step: "Video pre-processing..." };
+                        return { ...item, progress: 3, step: "Source pre-processing..." };
                     }
                     return item;
                 }));
