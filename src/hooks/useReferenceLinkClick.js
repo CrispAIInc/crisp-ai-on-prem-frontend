@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { MainContext } from "../contexts/mainContext.jsx";
 import { useResizableSidebar } from './useResizableSidebar';
+import { useToast } from "../contexts/toastContext.jsx";
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 export default function useReferenceLinkClick(isFromChat = false, contentPanelContainerRef) {
@@ -15,10 +16,14 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         setJumpToPage,
         setShowMetadata,
         setSummaries,
-        setIsLeftSidebarOpen,
+        knowledgeBase,
         setActiveView,
         workspaceContainer,
     } = useContext(MainContext);
+
+    const {
+        notify
+    } = useToast();
 
     const handleVideoLinkClick = (video) => {
         setFromChat(isFromChat);
@@ -66,6 +71,16 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
 
     const handleSourceLinkClick = (event, source) => {
         if (!source) return;
+
+        const sourceExist = knowledgeBase.find(item => item.source_path === source?.source_path);
+
+        if (!sourceExist) {
+            notify({
+                variant: 'info',
+                heading: 'The source may have been deleted',
+            });
+            return;
+        }
 
         if (event) event.preventDefault();
 

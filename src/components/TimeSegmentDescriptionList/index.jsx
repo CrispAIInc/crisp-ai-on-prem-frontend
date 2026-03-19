@@ -28,22 +28,23 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
     function handleSelectResult(segment) {
         const segmentSource = knowledgeBase.find(item => item.source_path === segment.video);
 
-        if (segmentSource) {
-            setCurrentSegment({
-                ...segment,
-                timestampText: `${segmentSource.source_path} | ${segment.start}`,
-                refs: [{
-                    ...segmentSource,
-                    timestamp: segment.start
-                }]
-            });
-            setShowList(false);
-        } else {
-            notify({
-                variant: "info",
-                heading: "The source for this segment doesn not exist."
-            });
-        }
+        // if (segmentSource) {
+        setCurrentSegment({
+            ...segment,
+            timestampText: segmentSource ? `${segmentSource.source_path} | ${segment.start}` : null,
+            refs: segmentSource ? [{
+                ...segmentSource,
+                timestamp: segment.start
+            }] : []
+        });
+        setShowList(false);
+        // }
+        // else {
+        //     notify({
+        //         variant: "info",
+        //         heading: "The source for this segment doesn not exist."
+        //     });
+        // }
     }
 
     const [isSegmentDeleting, setIsSegmentDeleting] = useState(false);
