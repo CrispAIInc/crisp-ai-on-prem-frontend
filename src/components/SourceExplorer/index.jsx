@@ -267,7 +267,7 @@ export function SourceExplorer(props) {
                             )} */}
                             <div className="relative">
                                 {(props.isDeleting && props.clickedIndex.source_path === file.source_path) && (
-                                    <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[2] translate-x-[-50%] translate-y-[-50%] transform">
+                                    <div className="thumbnail-loader absolute z-[2] pointer-events-none flex w-full h-full flex-col items-center justify-center bg-white/40">
                                         <LoadingSpinner />
                                     </div>
                                 )}
@@ -293,7 +293,7 @@ export function SourceExplorer(props) {
                                     {
                                         !isProjectReadOnly && <DeleteIcon
                                             style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                            onClick={(event) => props.deleteResource(event, [file])}
+                                            onClick={(event) => (!props.isDeleting || props.clickedIndex.source_path !== file.source_path) && props.deleteResource(event, [file])}
                                             className="delete-icon"
                                         />
                                     }
