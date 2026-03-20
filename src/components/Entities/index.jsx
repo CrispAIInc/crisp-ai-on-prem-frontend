@@ -96,7 +96,7 @@ function KnowledgeGraph() {
                 <div className={`flex flex-col gap-2 ${isDropdownMenuOpen ? 'block' : 'hidden'}`}>
                     <div className="relative w-full">
                         <div className="flex flex-col mb-2">
-                            <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context prompt</label>
+                            <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context prompt (anthology or schema)</label>
                             <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>
                                 {/* (Optional) Provide additional context or instructions to guide the JSON generation process. This can include specific themes, styles, or elements you want to see in the generated content. */}
                                 Constrain model behavior through schema-based contextual configuration.
