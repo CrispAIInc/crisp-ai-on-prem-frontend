@@ -29,16 +29,14 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
         const fullShapeResult = item.results.map(result => {
             let source = knowledgeBase.find(item => item.source_id === result.source_id);
 
-            if (source) {
-                return {
-                    ...result,
-                    timestampText: `${source.source_path} | ${result.timestamp}`,
-                    source: {
-                        ...source,
-                        timestamp: result.timestamp,
-                    },
-                };
-            }
+            return {
+                ...result,
+                timestampText: `${result.video} | ${result.timestamp}`,
+                source: {
+                    ...source,
+                    timestamp: source ? result.timestamp : null,
+                },
+            };
         });
         setCurrentMoment({
             ...item,

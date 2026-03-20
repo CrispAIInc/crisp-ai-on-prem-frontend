@@ -93,7 +93,7 @@ const FindMomentsResult = ({ exportFn, isPending, captionResults, currentMoment,
                                 <div key={index} className="mb-4">
                                     <p className={`text-sm/6 mb-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{segment.context}</p>
 
-                                    <Chip content={segment.timestampText} data-object={segment.source} onClick={(event) => handleSourceLinkClick(event, segment.source)} cssClasses="ml-0 cursor-pointer " />
+                                    <Chip content={segment.timestampText} data-object={segment?.source} onClick={(event) => handleSourceLinkClick(event, segment?.source)} cssClasses="ml-0 cursor-pointer " />
                                 </div>
                             ))
                         }

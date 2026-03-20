@@ -73,11 +73,12 @@ function CharacterCard({ character, source }) {
                             className={`rounded-xl p-2 ${theme === "light"
                                 ? "!border !border-textColor-100/30 text-textColor-200"
                                 : "!border !border-textColor-200/30 text-textColor-100"}`}
-                            onClick={(event) => handleSourceLinkClick(event, { ...source, timestamp: seg.time?.split('-')[0] || source?.timestamp || "00:00:00" })}
                         >
 
                             {seg.time && (
-                                <div className="cursor-pointer w-fit text-xs text-indigo-500 mb-1">
+                                <div
+                                    className="cursor-pointer w-fit text-xs text-indigo-500 mb-1"
+                                    onClick={(event) => handleSourceLinkClick(event, { ...source, timestamp: seg.time?.split('-')[0] || source?.timestamp || "00:00:00" })}>
                                     {seg.time}
                                 </div>
                             )}

@@ -31,7 +31,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
         // if (segmentSource) {
         setCurrentSegment({
             ...segment,
-            timestampText: segmentSource ? `${segmentSource.source_path} | ${segment.start}` : null,
+            timestampText: `${segment.video} | ${segment.start}`,
             refs: segmentSource ? [{
                 ...segmentSource,
                 timestamp: segment.start
