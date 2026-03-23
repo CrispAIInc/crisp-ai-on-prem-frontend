@@ -422,7 +422,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
           <>
             <div
               className={`relative w-[90%] h-[430px] mx-auto  overflow-y-auto ${theme === " light" ? "!border" : "!border !border-textColor-300"}  overflow-auto rounded-md overflow-x-auto`}
-              ref={workspaceContainer}
+              // ref={workspaceContainer}
               style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             >
               <Document
