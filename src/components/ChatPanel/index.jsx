@@ -524,10 +524,13 @@ const ChatPanel = () => {
                 { id: "genStories", title: "Stories & Blogs" },
                 { id: "genGraph", title: "Structure" },
               ].map(item => (
+                // ${item.id === "genGraph" ? 'pointer-events-none opacity-30' : ''}
                 <h6
                   id={item.id}
                   onClick={() => handleTabClick(item.id)}
-                  className={`text-[14px] select-none text-md cursor-pointer min-w-fit ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"} ${item.id === "genGraph" ? 'pointer-events-none opacity-30' : ''}`}
+                  className={`text-[14px] select-none text-md cursor-pointer min-w-fit ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}
+                   
+                   `}
                   key={item.id}
                 >
                   {item.title}

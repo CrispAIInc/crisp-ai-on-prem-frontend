@@ -21,6 +21,7 @@ function KnowledgeGraph() {
     } = useContext(MainContext);
 
     const [context, setContext] = useState('');
+    const [anthology, setAnthology] = useState('');
     const [title, setTitle] = useState('');
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -53,6 +54,7 @@ function KnowledgeGraph() {
                 sources: checkedSources.map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
                 selectedOptions: ["graph"],
                 inputContext: context,
+                anthology,
                 title
             };
             let response = await makeApiRequest('/graph', 'POST', payload);
@@ -96,24 +98,33 @@ function KnowledgeGraph() {
                 <div className={`flex flex-col gap-2 ${isDropdownMenuOpen ? 'block' : 'hidden'}`}>
                     <div className="relative w-full">
                         <div className="flex flex-col mb-2">
-                            <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context prompt (e.g. anthology or schema)</label>
+                            <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context prompt</label>
                             <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>
                                 {/* (Optional) Provide additional context or instructions to guide the JSON generation process. This can include specific themes, styles, or elements you want to see in the generated content. */}
                                 Constrain model behavior through schema-based contextual configuration.
                             </span>
                         </div>
                         <textarea
-                            className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
                             rows="3"
-                            placeholder='Customize your JSON structure'
+                            placeholder='e.g. Travel, finance.'
                             value={context}
                             onChange={(e) => setContext(e.target.value)}
                         />
                     </div>
                     <div className="relative w-full mb-2">
+                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Anthology (optional)</label>
+                        <input
+                            className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
+                            placeholder="provide more instructions for more accurate results"
+                            value={anthology}
+                            onChange={(e) => setAnthology(e.target.value)}
+                        />
+                    </div>
+                    <div className="relative w-full mb-2">
                         <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Your entities title (optional)</label>
                         <input
-                            className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
+                            className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
                             placeholder="Write a title for the entities"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
