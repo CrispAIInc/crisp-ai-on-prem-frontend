@@ -1184,7 +1184,6 @@ export default function MainProvider({ children, theme, setTheme }) {
                 setChatHistory(chat_history);
 
                 const _currentChat = chat_history.find(item => item.is_current_chat);
-                console.log(_currentChat);
                 if (_currentChat) {
                     setCurrentChat(_currentChat);
                 } else {
