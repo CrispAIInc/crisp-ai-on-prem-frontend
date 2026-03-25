@@ -21,7 +21,7 @@ function KnowledgeGraph() {
     } = useContext(MainContext);
 
     const [context, setContext] = useState('');
-    const [anthology, setAnthology] = useState('');
+    const [ontology, setOntology] = useState('');
     const [title, setTitle] = useState('');
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -54,7 +54,7 @@ function KnowledgeGraph() {
                 sources: checkedSources.map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
                 selectedOptions: ["graph"],
                 inputContext: context,
-                anthology,
+                ontology,
                 title
             };
             let response = await makeApiRequest('/graph', 'POST', payload);
@@ -113,12 +113,12 @@ function KnowledgeGraph() {
                         />
                     </div>
                     <div className="relative w-full mb-2">
-                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Anthology (optional)</label>
+                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Ontology (optional)</label>
                         <input
                             className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
                             placeholder="provide more instructions for more accurate results"
-                            value={anthology}
-                            onChange={(e) => setAnthology(e.target.value)}
+                            value={ontology}
+                            onChange={(e) => setOntology(e.target.value)}
                         />
                     </div>
                     <div className="relative w-full mb-2">
