@@ -104,9 +104,8 @@ function KnowledgeGraph() {
                                 Constrain model behavior through schema-based contextual configuration.
                             </span>
                         </div>
-                        <textarea
+                        <input
                             className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
-                            rows="3"
                             placeholder='e.g. Travel, finance.'
                             value={context}
                             onChange={(e) => setContext(e.target.value)}
@@ -114,7 +113,8 @@ function KnowledgeGraph() {
                     </div>
                     <div className="relative w-full mb-2">
                         <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Ontology (optional)</label>
-                        <input
+                        <textarea
+                            rows="3"
                             className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
                             placeholder="provide more instructions for more accurate results"
                             value={ontology}
