@@ -112,11 +112,11 @@ function KnowledgeGraph() {
                         />
                     </div>
                     <div className="relative w-full mb-2">
-                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Ontology (optional)</label>
+                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Business Schema (optional)</label>
                         <textarea
                             rows="3"
                             className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
-                            placeholder="provide more instructions for more accurate results"
+                            placeholder="provide a business schema for more accurate results"
                             value={ontology}
                             onChange={(e) => setOntology(e.target.value)}
                         />
