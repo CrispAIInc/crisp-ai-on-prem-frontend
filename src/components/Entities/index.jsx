@@ -56,6 +56,12 @@ function KnowledgeGraph() {
     const [chosenLanguage, setChosenLanguage] = useState(checkedVideoSource?.originalSourceLanguage || "en");
 
     const { generateMetadata } = useMetadata();
+    const STEPS = [
+        "Generating metadata...",
+        "Generating precise structure...",
+        "Almost there..."
+    ];
+    const [step, setStep] = useState(""); // This state displays the current process description during the generation phase.
 
     async function generateGraph() {
         try {
@@ -63,10 +69,11 @@ function KnowledgeGraph() {
             setIsGeneratingGraph(true);
 
             if (!sourceHasMetadata) {
+                setStep(STEPS[0]);
                 await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoSource]);
-                return;
             }
 
+            setStep(STEPS[1]);
             const payload = {
                 sources: { file_type: checkedVideoSource.file_type, source_path: checkedVideoSource.source_path, category: Array.isArray(checkedVideoSource.category) ? checkedVideoSource.category.filter(cat => cat !== "all")[0] : checkedVideoSource.category },
                 selectedOptions: ["graph"],
@@ -76,6 +83,7 @@ function KnowledgeGraph() {
             };
             let response = await makeApiRequest('/graph', 'POST', payload);
 
+            setStep(STEPS[2]);
             setSelectedJsonEntity(response);
             setJsonEntities(prev => [...prev, response]);
             setShowGraphModal(true);
@@ -168,7 +176,7 @@ function KnowledgeGraph() {
                             fullWidth
                             cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
                             disabled={isGeneratingGraph || !canGenerate}>
-                            {isGeneratingGraph ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate'}
+                            {isGeneratingGraph ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">{step}</span></> : 'Generate'}
                         </RippleButton>
 
                         {/* tooltip */}
