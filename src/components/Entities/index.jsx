@@ -46,9 +46,9 @@ function KnowledgeGraph() {
 
     const checkedVideoSource = checkedSources.filter(source => source.file_type === 'video')[0];
 
-    const sourceHasMetadata = Boolean(checkedVideoSource.metadata?.summary?.content?.length > 0 && checkedVideoSource.metadata?.highlights?.content?.length > 0 && checkedVideoSource.metadata?.chapters?.content?.length > 0);
+    const sourceHasMetadata = Boolean(checkedVideoSource?.metadata?.summary?.content?.length > 0 && checkedVideoSource?.metadata?.highlights?.content?.length > 0 && checkedVideoSource?.metadata?.chapters?.content?.length > 0);
 
-    const canGenerate = checkedSourcesCount > 0 && checkedSourcesCount <= MAX_SOURCES_COUNT && !isProjectReadOnly;
+    const canGenerate = checkedSourcesCount > 0 && checkedSourcesCount <= MAX_SOURCES_COUNT && context?.trim() !== "" && !isProjectReadOnly;
 
     const handleMouseEnter = () => !canGenerate && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
@@ -186,7 +186,7 @@ function KnowledgeGraph() {
                                 className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                                 style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                             >
-                                {isProjectReadOnly ? "Cannot edit an example project." : `Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
+                                {isProjectReadOnly ? "Cannot edit an example project." : context?.trim() === "" ? "Context must be provided." : `Select at least one source. (max: ${MAX_SOURCES_COUNT} sources)`}
                             </p>
                         )}
                     </div>
