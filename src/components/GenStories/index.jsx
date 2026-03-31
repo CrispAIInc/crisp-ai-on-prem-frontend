@@ -1,296 +1,214 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
+import { useContext, useEffect, useState } from 'react';
+import "react-quill/dist/quill.snow.css";
+import makeApiRequest from '../../api/index.js';
+import { MainContext } from '../../contexts/mainContext.jsx';
+import BaseHeading from '../BaseHeading/index.jsx';
+import InsightsList from "../InsightsList/index.jsx";
+import RippleButton from '../RippleButton/index.jsx';
+import StoriesList from '../StoriesList/index.jsx';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
+function StoriesInsightsTab({
+    setShowStoriesEditor,
+    currentTab,
+    setCurrentTab,
+    isNewInsight,
+    setIsNewInsight
+}) {
 
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
-import SendIcon from "@mui/icons-material/Send";
-import Button from '@mui/material/Button';
-
-import CustomButton from "../CustomButton";
-import CustomInput from "../CustomInput";
-import GenStoriesLLMModal from "../GenStoriesLLMModal";
-
-import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-import makeApiRequest from "../../api";
-import { MainContext } from "../../contexts/mainContext.jsx";
-import { extractSections, extractTitle, generateRandomHash, getLevelOfSectionInGenStories } from '../../utils';
-
-const GenStories = ({ sidebarWidth }) => {
-    const [showLLMModal, setShowLLMModal] = useState(false);
-    const [input, setInput] = useState("");
-    const [outlinesAnswers, setOutlinesAnswers] = useState([]);
-    const [showCursor, setShowCursor] = useState(false);
-    const [currentOutlineCursorId, setCurrentOutlineCursorId] = useState("");
-    const { maxWidth } = useResizableSidebar(200, false);
-
-    const chatAppRef = useRef();
+    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
-        theme,
-        selectedGenStoriesModels,
-        setSelectedGenStoriesModels,
-        llmModels,
+        selectedStory,
         setSelectedStory,
-        setActiveView,
+        displayedSources, theme,
     } = useContext(MainContext);
 
+    const [context, setContext] = useState('');
+    const [storyline, setStoryline] = useState('');
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [storyTitle, setStoryTitle] = useState(selectedStory?.story_name);
     useEffect(() => {
-        chatAppRef.current.scrollTop = chatAppRef.current?.scrollHeight;
-    }, [outlinesAnswers, outlinesAnswers.length]);
+        selectedStory?.story_name?.replace(/#/g, "").trim();
+        setStoryTitle(selectedStory?.story_name);
+    }, [selectedStory?.story_name]);
 
-    const onHideLLMModal = () => {
-        setShowLLMModal(false);
-    };
-
-    useEffect(() => {
-        setCurrentOutlineCursorId(outlinesAnswers.at(-1)?.id);
-    }, [outlinesAnswers]);
-
-    const sendQuery = async (query, _models = []) => {
+    async function autoGenerateStory() {
+        if (isProjectReadOnly) return;
+        setIsLoading(true);
+        const httpPayload = {
+            storyContext: context,
+            storyline,
+            with_checked_sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, category: item?.category }))
+        };
         try {
-            if (!query && !input) return;
-            setShowCursor(true);
-            let selectedModels = _models.length > 0 ? _models : selectedGenStoriesModels;
-            setOutlinesAnswers((prev) => [
-                ...prev,
-                { query: input || query, models: selectedModels },
-                { id: generateRandomHash(10), answer: '', models: selectedModels },
-            ]);
-            setInput("");
-            const { answer } = await makeApiRequest(
-                `/llm-chat/${selectedModels}`,
+
+            if (!displayedSources?.every(item => item?.is_checked === false)) {
+                await makeApiRequest(
+                    `/handle-embeddings`,
+                    "post",
+                    JSON.stringify({
+                        sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+                    })
+                );
+            }
+
+            const res = await makeApiRequest(
+                "/auto-generate-story",
                 "post",
-                { query }
+                httpPayload
             );
 
-            // make answer to be well formatted with correct HTML headings and paragraphs
-            const sections = extractSections(answer);
-            const htmlContent = sections.map((section, index) => {
-                const headingLevel = getLevelOfSectionInGenStories(section, true);
-                if (headingLevel === -1) return `<span key="${index}" style='font-style: italic; font-size: 14px; display: block;'>${section}</h${headingLevel}>`;
-                return `<h${headingLevel} key="${index}" style="font-style: italic; font-weight: ${headingLevel > 4 ? '900' : '500'};">${section}</h${headingLevel}>`;
-            });
+            // setSelectedStory({ ...res, story_name: storyTitle || res?.story_name });
+            setSelectedStory(prev => ({
+                ...prev,
+                ...res,
+                story_name: storyTitle || res?.story_name,
+                text: res.text.map(section => ({
+                    ...section,
 
+                    outline: {
+                        ...section.outline,
+                        nameHtml: `<h3 class="outline-block">${section.outline.name}</h3>`
+                    },
 
-            setOutlinesAnswers((prev) => {
-                const updatedOutlines = [...prev];
-                updatedOutlines[prev.length - 1].answer = answer;
-                updatedOutlines[prev.length - 1].htmlContent = htmlContent.join('');
-                return updatedOutlines;
-            });
+                    content: section.content.map(item => ({
+                        ...item,
+                        answerHtml: `<p class="answer-block">${item.answer}</p>`
+                    }))
+                }))
+            }));
+
+            setShowStoriesEditor(true);
         } catch (error) {
             console.log(error);
         } finally {
-            setShowCursor(false);
+            // setIsGeneratingIntroConlusion(false);
+            setIsLoading(false);
         }
+    }
+
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        setPosition({
+            x: e.clientX - rect.left - 60,
+            y: e.clientY - rect.top + 10,
+        });
     };
 
-    function addOutlineToStory(outline, models = selectedGenStoriesModels) {
-        const sections = extractSections(outline);
-        const text = sections.map((section) => {
-            return {
-                outline: {
-                    id: generateRandomHash(10),
-                    name: section
-                },
-                content: '',
-                id: generateRandomHash(5),
-            };
-        });
-        const newStory = {
-            story_id: new Date().getTime().toString() + Math.random().toString(36).substr(2, 9),
-            story_name: extractTitle(outline),
-            text,
-            models,
-        };
-        displayStory(newStory);
-    }
-
-    function displayStory(story) {
-        setSelectedStory(story);
-        setActiveView('story');
-    }
+    const handleMouseEnter = () => ((context === "" || isProjectReadOnly) && !isLoading) && setTooltipVisible(true);
+    const handleMouseLeave = () => setTooltipVisible(false);
 
     return (
-        <article className="relative flex flex-col flex-1 h-full overflow-y-auto">
-            {/* models button */}
-            <section className="flex flex-wrap items-center justify-center gap-3 ">
-                <CustomButton
-                    className={` my-0 ${theme === "light"
-                        ? "bg-light-hover-100/30 !text-dark border border-textColor-100"
-                        : " !text-textColor-100 !border !border-textColor-300 bg-light-hover-200/20"
-                        } genstory-models-list-button`}
-                    onClick={() => setShowLLMModal(true)}
-                    style={{ width: "100%" }}
+        <div className="relative z-10 flex flex-col h-full gap-1">
+            {/* context */}
+            <div className="relative w-full">
+                {/* <label
+                    className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
+                    ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base'}`}
                 >
-                    Models
-                </CustomButton>
-                <GenStoriesLLMModal
-                    show={showLLMModal}
-                    onHide={onHideLLMModal}
-                    selectedGenStoriesModels={selectedGenStoriesModels}
-                    setSelectedGenStoriesModels={setSelectedGenStoriesModels}
-                    llmModels={llmModels}
-                    className="modal"
+                    Write your story outline
+                </label> */}
+                <textarea
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
+                    rows="1"
+                    placeholder="Provide story context"
+                    value={context}
+                    onChange={(e) => setContext(e.target.value)}
                 />
-            </section>
+            </div>
 
-            {/* selected models */}
-            <section className="flex items-center gap-1 mx-2 my-3">
-                <span
-                    className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                        }`}
+            {/* storyline */}
+            <div className="relative w-full">
+                {/* <label
+                    className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
+                    ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base'}`}
                 >
-                    Selected models:{" "}
-                </span>
-                <div
-                    className={`flex items-center divide-x  ${theme === "light" ? "divide-textColor-100" : "divide-textColor-300"
-                        }`}
-                >
-                    {selectedGenStoriesModels.length === 0 ? (
-                        <span
-                            className={`text-xs ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
-                                }`}
-                        >
-                            none
-                        </span>
-                    ) : (
-                        selectedGenStoriesModels.map((model, index) => (
-                            <span
-                                key={index}
-                                className={`text-xs ${theme === "light"
-                                    ? "text-textColor-300"
-                                    : "text-textColor-200"
-                                    }`}
-                            >
-                                {model.toUpperCase()}{" "}
-                            </span>
-                        ))
-                    )}
-                </div>
-            </section>
+                    Write your story outline
+                </label> */}
+                <textarea
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
+                    rows="1"
+                    placeholder="Storyline"
+                    value={storyline}
+                    onChange={(e) => setStoryline(e.target.value)}
+                />
+            </div>
 
-            {/* chat container */}
-            <section
-                className={`genstory-chat-container flex flex-col flex-1 flex-grow h-full gap-3 py-3 overflow-y-auto ${theme === "light" ? "!border" : "!border !border-textColor-300"
-                    }`}
-                ref={chatAppRef}
-            >
-                {/* list all outline answers here as a chat */}
-                {outlinesAnswers.length > 0 ? (
-                    outlinesAnswers.map((outline, index) =>
-                        outline.query ? (
-                            <>
-                                <div key={index} className="my-2 break-all w-fit">
-                                    <div
-                                        className={`message user-message h-full flex flex-col m-2 p-2  bg-primary-300 text-white rounded-md`}
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <b className="">You: </b>
-                                            <div
-                                                className="cursor-pointer"
-                                                onClick={() => {
-                                                    sendQuery(outline.query, selectedGenStoriesModels);
-                                                }}
-                                            >
-                                                <ReplayOutlinedIcon />
-                                            </div>
-                                        </div>
-                                        {<p className="m-0">{outline.query}</p>}
-                                    </div>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <div key={index}>
-                                    <div className={`message bot-message h-full`}>
-                                        <div
-                                            className={`flex flex-col h-full p-2 m-2 rounded-md break-words ${theme === "light"
-                                                ? "bg-light-hover-100/40 text-textColor-200"
-                                                : "bg-textColor-300"
-                                                } ${sidebarWidth === maxWidth && '!w-2/3 mx-auto'}`}
-                                        >
-                                            <>
-                                                <b
-                                                    className={`${theme === "light"
-                                                        ? "text-textColor-300"
-                                                        : "text-textColor-100"
-                                                        }`}
-                                                >
-                                                    Crisp Wiz:{" "}
-                                                </b>
-                                                <div
-                                                    className={`${theme === "light"
-                                                        ? "text-textColor-300"
-                                                        : "text-textColor-100"
-                                                        }`}
-                                                >
-                                                    {/* {outline.answer} */}
-                                                    <div dangerouslySetInnerHTML={{ __html: outline.htmlContent }}></div>
-                                                </div>
-                                                {showCursor && outline.id === currentOutlineCursorId ? (
-                                                    <div className="inline-block w-1 h-5 bg-textColor-300 animate-blink"></div>
-                                                ) : null}
-
-                                                {/* add to report => show in editor */}
-                                                <Button onClick={() => addOutlineToStory(outline.answer, outline.models)}><AddCircleIcon /></Button>
-
-                                                <div className="flex flex-wrap items-center gap-1">
-                                                    <span
-                                                        className={`text-xs ${theme === "light"
-                                                            ? "text-textColor-300"
-                                                            : "text-textColor-200"
-                                                            }`}
-                                                    >
-                                                        Models:{" "}
-                                                    </span>
-                                                    {outline.models.map((item, index) => (
-                                                        <span
-                                                            key={index}
-                                                            className={`text-xs divide-x ${theme === "light"
-                                                                ? "text-textColor-300"
-                                                                : "text-textColor-200"
-                                                                }`}
-                                                        >
-                                                            {item.toUpperCase()}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </>
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
-                        )
-                    )
-                ) : (
-                    null
+            {/* generate outline button */}
+            {/* <button onClick={autoGenerateStory} className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
+                disabled={isLoading}>
+                {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate outline'}
+            </button> */}
+            {/* generate button */}
+            <div className='relative inline-block' onMouseMove={handleMouseMove}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}>
+                <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed  p-2'
+                    disabled={context === "" || isLoading || isProjectReadOnly}
+                    onClick={!isProjectReadOnly && autoGenerateStory}>
+                    {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate story'}
+                </RippleButton>
+                {tooltipVisible && (
+                    <p
+                        // onMouseEnter={() => setTooltipVisible(false)}
+                        className={`absolute p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} z-20`}
+                        style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
+                    >
+                        {isProjectReadOnly ? "Cannot edit an example project." : "Please provide the context."}
+                    </p>
                 )}
-            </section>
+            </div>
 
-            {/* message input container */}
-            <section className="flex items-center gap-2 input-area">
-                <CustomInput
-                    placeholder="Message model..."
-                    value={input}
-                    disabled={showCursor}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            sendQuery(input);
+            {/* list of insights and stories */}
+            <div className='relative z-10 flex flex-col flex-1 h-full overflow-hidden'>
+                {/* <div>
+                    <div className="relative z-10 flex items-center gap-3 mt-4">
+                        {
+                            [
+                                {
+                                    icon: AutoStoriesOutlinedIcon,
+                                    title: "Stories"
+                                },
+                            ].map(({ icon: Icon, title }, index) => {
+                                return (
+                                    <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
+                                        <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
+                                        <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
+                                    </div>
+                                );
+                            })
                         }
-                    }}
-                />
-                <div
-                    className={`p-2 rounded-md cursor-pointer z-[41] ${theme === "light" ? "border" : "!border !border-textColor-300"
-                        } ${showCursor ? "cursor-not-allowed pointer-events-none" : ""}`}
-                    onClick={() => sendQuery(input)}
-                >
-                    <SendIcon color="primary" />
+                    </div>
+                </div> */}
+                {/* notes */}
+                {/* {
+                    currentTab === "Insights" ?
+                        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
+                            <InsightsList isNewInsight={isNewInsight}
+                                setIsNewInsight={setIsNewInsight} />
+                        </div>
+                        : currentTab === "Stories" ?
+                            <>
+                                <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
+                                    <StoriesList setShowStoriesEditor={setShowStoriesEditor} />
+                                </div>
+                            </>
+                            :
+                            null
+                } */}
+                <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
+                    <StoriesList setShowStoriesEditor={setShowStoriesEditor} />
                 </div>
-            </section>
-        </article>
+            </div>
+        </div>
     );
-};
+}
 
-export default GenStories;
+export default StoriesInsightsTab;
