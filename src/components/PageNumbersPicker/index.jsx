@@ -1,9 +1,9 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 const generateOptions = (max) =>
     Array.from({ length: max + 1 }, (_, i) =>
-        String(i).padStart(2, "0")
+        String(i)
     );
 
 const PageNumberInput = ({ initVal, max, onChange }) => {
@@ -14,6 +14,19 @@ const PageNumberInput = ({ initVal, max, onChange }) => {
     const options = generateOptions(max);
     const [isOpen, setIsOpen] = useState(false);
     const pageOptionsRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (pageOptionsRef.current && !pageOptionsRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [pageOptionsRef]);
 
     const handlePageNumberClick = (e) => {
         onChange(e.target.innerText);
@@ -32,7 +45,7 @@ const PageNumberInput = ({ initVal, max, onChange }) => {
         }
 
         // Max 2 characters
-        val = val.slice(0, 2);
+        // val = val.slice(0, 2);
 
         // Clamp to max
         if (Number(val) > max) {
@@ -51,7 +64,7 @@ const PageNumberInput = ({ initVal, max, onChange }) => {
             return;
         }
 
-        const padded = value.padStart(2, "0");
+        const padded = value.padStart(2, "");
         setValue(padded);
         onChange(padded);
     };
