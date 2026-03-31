@@ -76,7 +76,7 @@ const PageNumberInput = ({ initVal, max, onChange }) => {
                 onChange={handleInput}
                 onBlur={handleBlur}
                 onClick={() => setIsOpen(!isOpen)}
-                className={`py-2 text-xs font-semibold text-center rounded-lg w-9 h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400 ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}
+                className={`py-2 text-xs font-semibold text-center rounded-lg w-9 h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400 ${theme === 'light' ? 'bg-white !border !border-textColor-100/60 text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}
             />
 
             <div ref={pageOptionsRef} className={`absolute z-[9999] top-full left-0 w-full h-[100px] min-h-[100px] overflow-y-auto rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'} ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}>
@@ -123,7 +123,7 @@ const PageNumbersPicker = ({ totalPages, setStart, setEnd }) => {
             </div>
 
             {/* TO */}
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center">
                 <span className={`w-10 text-xs font-medium ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}>
                     To
                 </span>
