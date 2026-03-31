@@ -4,8 +4,20 @@ import { ProjectContext } from '../../contexts/projectContext';
 import RippleButton from '../RippleButton';
 import LoadingSpinner from '../LoadingSpinner';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import PageNumbersPicker from '../PageNumbersPicker';
+import SegmentDescription from '../SegmentDescription';
+import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals';
 
-function GenBlogs() {
+function GenBlogs({
+    videoStart,
+    setVideoStart,
+    videoEnd,
+    setVideoEnd,
+    pageFrom,
+    pageTo,
+    setPageFrom,
+    setPageTo,
+}) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
@@ -20,6 +32,7 @@ function GenBlogs() {
 
     const checkedVideos = checkedSources.filter(source => source.file_type === "video");
     const checkedPdfs = checkedSources.filter(source => source.file_type === "pdf");
+    const sourceType = checkedVideos.length === 1 ? "video" : checkedPdfs.length === 1 ? "pdf" : null;
     // =========== CONSTREINT TOOLTIP LOGIC =============
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -90,6 +103,24 @@ function GenBlogs() {
                     </div>
                 </div>
             </div>
+
+            {
+                sourceType === "video" ? (
+                    <SegmentDescription
+                        start={videoStart}
+                        setStart={setVideoStart}
+                        end={videoEnd}
+                        setEnd={setVideoEnd}
+                    // handleGenerate={handleGenerateSegmentDescription}
+                    />
+                ) : (
+                    <PageNumbersPicker
+                        totalPages={checkedPdfs[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
+                        setStart={setPageFrom}
+                        setEnd={setPageTo}
+                    />
+                )
+            }
         </div>
     );
 }

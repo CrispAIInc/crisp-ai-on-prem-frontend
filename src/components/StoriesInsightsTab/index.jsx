@@ -19,7 +19,14 @@ import GenBlogs from '../GenBlogs/index.jsx';
 function StoriesInsightsTab({
     currentTab,
     setCurrentTab,
-    setShowStoriesEditor,
+    videoStart,
+    setVideoStart,
+    videoEnd,
+    setVideoEnd,
+    setPageFrom,
+    setPageTo,
+    pageFrom,
+    pageTo,
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -43,8 +50,8 @@ function StoriesInsightsTab({
 
     // ==================== blog feature =====================
 
-    const [pageFrom, setPageFrom] = useState("1");
-    const [pageTo, setPageTo] = useState("22");
+    // const [pageFrom, setPageFrom] = useState("1");
+    // const [pageTo, setPageTo] = useState("22");
 
 
     // ==================== blog feature =====================
@@ -67,7 +74,16 @@ function StoriesInsightsTab({
                 currentTab === "Stories" ? (
                     <GenStories />
                 ) : (
-                    <GenBlogs />
+                    <GenBlogs
+                        videoStart={videoStart}
+                        setVideoStart={setVideoStart}
+                        videoEnd={videoEnd}
+                        setVideoEnd={setVideoEnd}
+                        setPageFrom={setPageFrom}
+                        setPageTo={setPageTo}
+                        pageFrom={pageFrom}
+                        pageTo={pageTo}
+                    />
                 )
             }
         </div>

@@ -23,6 +23,7 @@ import makeApiRequest, { axiosInstance } from '../../api/index.js';
 import useAuth from '../../hooks/useAuth.js';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 import { useToast } from '../../contexts/toastContext.jsx';
+import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals.js';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -442,6 +443,17 @@ const ChatPanel = () => {
    * ============== VIDEO SEGMENT FEAT ==================
    */
 
+
+  /**
+   * ============== BLOGS FEAT ===================
+   */
+  const checkedPdfSources = checkedSources.filter(source => source.file_type === "pdf");
+  const [videoStart, setVideoStart] = useState({ h: "00", m: "00", s: "00" });
+  const [videoEnd, setVideoEnd] = useState({ h: "00", m: "00", s: "00" });
+  const [pageFrom, setPageFrom] = useState("1");
+  const [pageTo, setPageTo] = useState(checkedPdfSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
+
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-hidden bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2 pb-[10px]"
@@ -554,8 +566,21 @@ const ChatPanel = () => {
                 <MetadataGen verbosityValue={verbosityValue} setVerbosityValue={setVerbosityValue}
                   context={context} setContext={setContext} isGeneratingMetadata={isGeneratingMetadata} setIsGeneratingMetadata={setIsGeneratingMetadata} />
               ) : actualTab === "genStories" ? (
-                <StoriesInsightsTab isNewInsight={isNewInsight}
-                  setIsNewInsight={setIsNewInsight} currentTab={currentTab} setCurrentTab={setCurrentTab} setShowStoriesEditor={setShowStoriesEditor} />
+                <StoriesInsightsTab
+                  isNewInsight={isNewInsight}
+                  setIsNewInsight={setIsNewInsight}
+                  currentTab={currentTab}
+                  setCurrentTab={setCurrentTab}
+                  setShowStoriesEditor={setShowStoriesEditor}
+                  videoStart={videoStart}
+                  setVideoStart={setVideoStart}
+                  videoEnd={videoEnd}
+                  setVideoEnd={setVideoEnd}
+                  pageFrom={pageFrom}
+                  setPageFrom={setPageFrom}
+                  pageTo={pageTo}
+                  setPageTo={setPageTo}
+                />
               ) : actualTab === "genMedia" ? (
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
