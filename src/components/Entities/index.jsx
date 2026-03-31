@@ -116,7 +116,7 @@ function KnowledgeGraph({
                             <button className={`font-medium text-sm p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none`}
                                 onClick={() => document.getElementById('jsonFileInput').click()}
                             >
-                                Upload JSON
+                                Upload
                             </button>
                             <input type="file" id="jsonFileInput" accept=".json" style={{ display: 'none' }} onChange={(e) => {
                                 const file = e.target.files[0];
