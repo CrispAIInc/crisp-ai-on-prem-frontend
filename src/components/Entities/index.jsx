@@ -101,16 +101,36 @@ function KnowledgeGraph({
                             onChange={(e) => setContext(e.target.value)}
                         />
                     </div>
-                    <div className="relative w-full mb-2">
-                        <div className="relative flex items-center gap-1">
-                            <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Business Schema (optional)</label>
-                            <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5`} />
+                    <div className="relative w-full">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="relative flex items-center gap-1 flex-1">
+                                <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Business Schema (optional)</label>
+                                <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5`} />
 
-                            {
-                                isInfoTooltipOpen && (
-                                    <div className={`absolute right-0 p-2 bg-background_workspace shadow-md rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
-                                )
-                            }
+                                {
+                                    isInfoTooltipOpen && (
+                                        <div className={`absolute right-0 p-2 bg-background_workspace shadow-md rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
+                                    )
+                                }
+                            </div>
+                            <button className={`font-medium text-sm p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none`}
+                                onClick={() => document.getElementById('jsonFileInput').click()}
+                            >
+                                Upload JSON
+                            </button>
+                            <input type="file" id="jsonFileInput" accept=".json" style={{ display: 'none' }} onChange={(e) => {
+                                const file = e.target.files[0];
+                                const reader = new FileReader();
+                                reader.onload = (event) => {
+                                    try {
+                                        const jsonContent = JSON.parse(event.target.result);
+                                        setOntology(JSON.stringify(jsonContent));
+                                    } catch (error) {
+                                        console.error('Invalid JSON file:', error);
+                                    }
+                                };
+                                reader.readAsText(file);
+                            }} />
                         </div>
                         <textarea
                             rows="3"
