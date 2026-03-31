@@ -14,6 +14,7 @@ import PageNumbersPicker from '../PageNumbersPicker/index.jsx';
 import TimestampPicker from '../TimestampPicker/index.jsx';
 
 import GenStories from "../GenStories";
+import GenBlogs from '../GenBlogs/index.jsx';
 
 function StoriesInsightsTab({
     currentTab,
@@ -63,8 +64,10 @@ function StoriesInsightsTab({
                 }
             </div>
             {
-                currentTab === "Stories" && (
+                currentTab === "Stories" ? (
                     <GenStories />
+                ) : (
+                    <GenBlogs />
                 )
             }
         </div>
