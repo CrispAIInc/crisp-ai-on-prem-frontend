@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 
 const generateOptions = (max) =>
-    Array.from({ length: max + 1 }, (_, i) =>
-        String(i)
+    Array.from({ length: max }, (_, i) =>
+        String(i + 1)
     );
 
 const PageNumberInput = ({ initVal, max, onChange }) => {
