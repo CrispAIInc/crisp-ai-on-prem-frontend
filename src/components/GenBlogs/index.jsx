@@ -7,6 +7,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import PageNumbersPicker from '../PageNumbersPicker';
 import SegmentDescription from '../SegmentDescription';
 import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals';
+import BaseHeading from '../BaseHeading';
 
 function GenBlogs({
     videoStart,
@@ -114,11 +115,14 @@ function GenBlogs({
                     // handleGenerate={handleGenerateSegmentDescription}
                     />
                 ) : sourceType === "pdf" ? (
-                    <PageNumbersPicker
-                        totalPages={checkedPdfs[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
-                        setStart={setPageFrom}
-                        setEnd={setPageTo}
-                    />
+                    <div>
+                        <BaseHeading text={`Source: ${checkedPdfs[0]?.source_path}`} />
+                        <PageNumbersPicker
+                            totalPages={checkedPdfs[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
+                            setStart={setPageFrom}
+                            setEnd={setPageTo}
+                        />
+                    </div>
                 ) : null
             }
         </div>
