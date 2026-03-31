@@ -456,11 +456,13 @@ const ChatPanel = () => {
 
   const checkedVideoSource = checkedSources.filter(source => source.file_type === 'video')[0];
 
-  const sourceHasMetadata = Boolean(checkedVideoSource?.metadata?.summary?.content?.length > 0 && checkedVideoSource?.metadata?.highlights?.content?.length > 0 && checkedVideoSource?.metadata?.chapters?.content?.length > 0);
+
 
   const checkedPdfSources = checkedSources.filter(source => source.file_type === 'pdf');
   const checkedVideoSources = checkedSources.filter(source => source.file_type === 'video');
   const checkedVideoOrPdfSources = checkedSources.filter(source => source.file_type === 'video' || source.file_type === 'pdf');
+
+  const sourceHasMetadata = Boolean(checkedVideoOrPdfSources[0]?.metadata?.summary?.content?.length > 0 && checkedVideoOrPdfSources[0]?.metadata?.highlights?.content?.length > 0 && checkedVideoOrPdfSources[0]?.metadata?.chapters?.content?.length > 0);
 
   const canGenerateEntity = checkedVideoOrPdfSources.length === 1 && entityContext?.trim() !== "" && !isProjectReadOnly;
 
