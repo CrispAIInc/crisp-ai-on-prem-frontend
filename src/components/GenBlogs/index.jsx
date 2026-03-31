@@ -113,13 +113,13 @@ function GenBlogs({
                         setEnd={setVideoEnd}
                     // handleGenerate={handleGenerateSegmentDescription}
                     />
-                ) : (
+                ) : sourceType === "pdf" ? (
                     <PageNumbersPicker
                         totalPages={checkedPdfs[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
                         setStart={setPageFrom}
                         setEnd={setPageTo}
                     />
-                )
+                ) : null
             }
         </div>
     );
