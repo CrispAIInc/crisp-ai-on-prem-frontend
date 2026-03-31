@@ -13,17 +13,17 @@ export default function useMetadata() {
     const { notify } = useToast();
 
 
-    const generateMetadata = useCallback(async (context, verbosityValue, selectedOptions) => {
-
+    const generateMetadata = useCallback(async (context, verbosityValue, selectedOptions, sources) => {
         try {
             const payload = {
-                sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
+                sources: sources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
                 selectedOptions: selectedOptions.map(op => op.id),
                 inputContext: context,
                 verbosityValue: verbosityValue
             };
 
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
+            console.log(results);
 
             setKnowledgeBase(prev => {
                 // Build a lookup map from results
@@ -52,7 +52,7 @@ export default function useMetadata() {
                 subheading: error.message || "You must check at least one metadata option",
             });
         }
-    }, []);
+    }, [displayedSources, setKnowledgeBase, notify]);
 
     return {
         generateMetadata

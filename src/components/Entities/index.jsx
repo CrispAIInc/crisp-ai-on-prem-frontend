@@ -2,11 +2,13 @@ import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import RippleButton from '../RippleButton';
 
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import makeApiRequest from '../../api';
 import JsonEntityModal from '../JsonEntityModal';
 import JsonEntitiesList from '../JsonEntitiesList';
 import { ProjectContext } from '../../contexts/projectContext';
+import useMetadata from '../../hooks/useMetadata';
 
 function KnowledgeGraph() {
 
@@ -39,19 +41,34 @@ function KnowledgeGraph() {
     };
 
 
+
     const MAX_SOURCES_COUNT = 1;
+
+    const checkedVideoSource = checkedSources.filter(source => source.file_type === 'video')[0];
+
+    const sourceHasMetadata = Boolean(checkedVideoSource.metadata?.summary?.content?.length > 0 && checkedVideoSource.metadata?.highlights?.content?.length > 0 && checkedVideoSource.metadata?.chapters?.content?.length > 0);
+
     const canGenerate = checkedSourcesCount > 0 && checkedSourcesCount <= MAX_SOURCES_COUNT && !isProjectReadOnly;
 
     const handleMouseEnter = () => !canGenerate && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
+    const [chosenLanguage, setChosenLanguage] = useState(checkedVideoSource?.originalSourceLanguage || "en");
+
+    const { generateMetadata } = useMetadata();
+
     async function generateGraph() {
         try {
             if (!canGenerate) return;
-
             setIsGeneratingGraph(true);
+
+            if (!sourceHasMetadata) {
+                await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoSource]);
+                return;
+            }
+
             const payload = {
-                sources: checkedSources.map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
+                sources: { file_type: checkedVideoSource.file_type, source_path: checkedVideoSource.source_path, category: Array.isArray(checkedVideoSource.category) ? checkedVideoSource.category.filter(cat => cat !== "all")[0] : checkedVideoSource.category },
                 selectedOptions: ["graph"],
                 inputContext: context,
                 ontology,
@@ -68,6 +85,8 @@ function KnowledgeGraph() {
             setIsGeneratingGraph(false);
         }
     }
+
+    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
     return (
         <>
@@ -112,7 +131,16 @@ function KnowledgeGraph() {
                         />
                     </div>
                     <div className="relative w-full mb-2">
-                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Business Schema (optional)</label>
+                        <div className="relative flex items-center gap-1">
+                            <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Business Schema (optional)</label>
+                            <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5`} />
+
+                            {
+                                isInfoTooltipOpen && (
+                                    <div className={`absolute right-0 p-2 bg-background_workspace shadow-md rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
+                                )
+                            }
+                        </div>
                         <textarea
                             rows="3"
                             className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
