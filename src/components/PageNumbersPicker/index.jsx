@@ -89,13 +89,13 @@ const PageNumbersPicker = ({ totalPages, setStart, setEnd }) => {
 
     return (
         <div
-            className={` p-3 rounded-2xl select-none flex items-center gap-1 w-fit ${theme === 'light'
+            className={`p-3 rounded-2xl select-none flex items-center gap-4 w-fit ${theme === 'light'
                 ? 'bg-white !border'
                 : 'bg-textColor-300 !border !border-textColor-200/40'}`}
         >
 
             {/* FROM */}
-            <div className="flex items-center">
+            <div className="flex items-center justify-center gap-2">
                 <span className={`w-10 text-xs font-medium ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}>
                     From
                 </span>
@@ -110,14 +110,14 @@ const PageNumbersPicker = ({ totalPages, setStart, setEnd }) => {
             </div>
 
             {/* TO */}
-            <div className="flex items-center">
+            <div className="flex items-center justify-center gap-3">
                 <span className={`w-10 text-xs font-medium ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}>
                     To
                 </span>
 
                 <div className="flex items-center gap-1">
                     <PageNumberInput
-                        initVal="1"
+                        initVal={String(totalPages)}
                         max={Number(totalPages)}
                         onChange={(v) => setEnd(v)}
                     />
