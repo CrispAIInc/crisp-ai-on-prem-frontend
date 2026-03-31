@@ -23,6 +23,7 @@ import makeApiRequest, { axiosInstance } from '../../api/index.js';
 import useAuth from '../../hooks/useAuth.js';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 import { useToast } from '../../contexts/toastContext.jsx';
+import useMetadata from '../../hooks/useMetadata.js';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -113,6 +114,9 @@ const ChatPanel = () => {
     currentChat,
     displayedSources,
     knowledgeBase,
+    checkedSourcesCount,
+    setJsonEntities,
+    setSelectedJsonEntity,
   } = useContext(MainContext);
 
   const { notify } = useToast();
@@ -442,6 +446,62 @@ const ChatPanel = () => {
    * ============== VIDEO SEGMENT FEAT ==================
    */
 
+  // =================== structure ====================
+  const MAX_SOURCES_COUNT = 1;
+  const [entityContext, setEntityContext] = useState('');
+  const [ontology, setOntology] = useState('');
+  const [title, setTitle] = useState('');
+  const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
+  const [showGraphModal, setShowGraphModal] = useState(false);
+
+  const checkedVideoSource = checkedSources.filter(source => source.file_type === 'video')[0];
+
+  const sourceHasMetadata = Boolean(checkedVideoSource?.metadata?.summary?.content?.length > 0 && checkedVideoSource?.metadata?.highlights?.content?.length > 0 && checkedVideoSource?.metadata?.chapters?.content?.length > 0);
+
+  const canGenerateEntity = checkedSourcesCount > 0 && checkedSourcesCount <= MAX_SOURCES_COUNT && entityContext?.trim() !== "" && !isProjectReadOnly;
+
+  const { generateMetadata } = useMetadata();
+  const STEPS = [
+    "Generating metadata...",
+    "Generating precise structure...",
+    "Almost there..."
+  ];
+  const [step, setStep] = useState(""); // This state displays the current process description during the generation phase.
+
+  async function generateGraph() {
+    try {
+      if (!canGenerateEntity) return;
+      setIsGeneratingGraph(true);
+
+      if (!sourceHasMetadata) {
+        setStep(STEPS[0]);
+        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoSource]);
+      }
+
+      setStep(STEPS[1]);
+      const payload = {
+        sources: { file_type: checkedVideoSource.file_type, source_path: checkedVideoSource.source_path, category: Array.isArray(checkedVideoSource.category) ? checkedVideoSource.category.filter(cat => cat !== "all")[0] : checkedVideoSource.category },
+        selectedOptions: ["graph"],
+        inputContext: context,
+        ontology,
+        title
+      };
+      let response = await makeApiRequest('/graph', 'POST', payload);
+
+      setStep(STEPS[2]);
+      setSelectedJsonEntity(response);
+      setJsonEntities(prev => [...prev, response]);
+      setShowGraphModal(true);
+      setEntityContext("");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsGeneratingGraph(false);
+      setStep("");
+    }
+  }
+  // =================== structure ====================
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-hidden bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2 pb-[10px]"
@@ -599,7 +659,25 @@ const ChatPanel = () => {
                   handleCaptionSubmit={handleCaptionSubmit}
                 />
               ) : actualTab === "genGraph" ? (
-                <KnowledgeGraph />
+                <KnowledgeGraph
+                  context={entityContext}
+                  setContext={setEntityContext}
+                  ontology={ontology}
+                  setOntology={setOntology}
+                  title={title}
+                  setTitle={setTitle}
+                  isGeneratingGraph={isGeneratingGraph}
+                  setIsGeneratingGraph={setIsGeneratingGraph}
+                  showGraphModal={showGraphModal}
+                  setShowGraphModal={setShowGraphModal}
+                  checkedVideoSource={checkedVideoSource}
+                  sourceHasMetadata={sourceHasMetadata}
+                  canGenerate={canGenerateEntity}
+                  STEPS={STEPS}
+                  step={step}
+                  setStep={setStep}
+                  generateGraph={generateGraph}
+                />
               ) : null
             }
           </div>}

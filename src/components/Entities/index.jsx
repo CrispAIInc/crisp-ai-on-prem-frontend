@@ -10,25 +10,31 @@ import JsonEntitiesList from '../JsonEntitiesList';
 import { ProjectContext } from '../../contexts/projectContext';
 import useMetadata from '../../hooks/useMetadata';
 
-function KnowledgeGraph() {
+function KnowledgeGraph({
+    context,
+    setContext,
+    ontology,
+    setOntology,
+    title,
+    setTitle,
+    isGeneratingGraph,
+    showGraphModal,
+    setShowGraphModal,
+    canGenerate,
+    step,
+    generateGraph,
+}) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
         theme,
-        checkedSourcesCount,
-        checkedSources,
-        setJsonEntities,
-        setSelectedJsonEntity
     } = useContext(MainContext);
 
-    const [context, setContext] = useState('');
-    const [ontology, setOntology] = useState('');
-    const [title, setTitle] = useState('');
+
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
-    const [showGraphModal, setShowGraphModal] = useState(false);
+
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
 
 
@@ -44,55 +50,12 @@ function KnowledgeGraph() {
 
     const MAX_SOURCES_COUNT = 1;
 
-    const checkedVideoSource = checkedSources.filter(source => source.file_type === 'video')[0];
 
-    const sourceHasMetadata = Boolean(checkedVideoSource?.metadata?.summary?.content?.length > 0 && checkedVideoSource?.metadata?.highlights?.content?.length > 0 && checkedVideoSource?.metadata?.chapters?.content?.length > 0);
-
-    const canGenerate = checkedSourcesCount > 0 && checkedSourcesCount <= MAX_SOURCES_COUNT && context?.trim() !== "" && !isProjectReadOnly;
 
     const handleMouseEnter = () => !canGenerate && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
-    const [chosenLanguage, setChosenLanguage] = useState(checkedVideoSource?.originalSourceLanguage || "en");
 
-    const { generateMetadata } = useMetadata();
-    const STEPS = [
-        "Generating metadata...",
-        "Generating precise structure...",
-        "Almost there..."
-    ];
-    const [step, setStep] = useState(""); // This state displays the current process description during the generation phase.
-
-    async function generateGraph() {
-        try {
-            if (!canGenerate) return;
-            setIsGeneratingGraph(true);
-
-            if (!sourceHasMetadata) {
-                setStep(STEPS[0]);
-                await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoSource]);
-            }
-
-            setStep(STEPS[1]);
-            const payload = {
-                sources: { file_type: checkedVideoSource.file_type, source_path: checkedVideoSource.source_path, category: Array.isArray(checkedVideoSource.category) ? checkedVideoSource.category.filter(cat => cat !== "all")[0] : checkedVideoSource.category },
-                selectedOptions: ["graph"],
-                inputContext: context,
-                ontology,
-                title
-            };
-            let response = await makeApiRequest('/graph', 'POST', payload);
-
-            setStep(STEPS[2]);
-            setSelectedJsonEntity(response);
-            setJsonEntities(prev => [...prev, response]);
-            setShowGraphModal(true);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsGeneratingGraph(false);
-        }
-    }
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
