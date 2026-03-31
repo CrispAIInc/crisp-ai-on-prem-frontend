@@ -458,7 +458,11 @@ const ChatPanel = () => {
 
   const sourceHasMetadata = Boolean(checkedVideoSource?.metadata?.summary?.content?.length > 0 && checkedVideoSource?.metadata?.highlights?.content?.length > 0 && checkedVideoSource?.metadata?.chapters?.content?.length > 0);
 
-  const canGenerateEntity = checkedSourcesCount > 0 && checkedSourcesCount <= MAX_SOURCES_COUNT && entityContext?.trim() !== "" && !isProjectReadOnly;
+  const checkedPdfSources = checkedSources.filter(source => source.file_type === 'pdf');
+  const checkedVideoSources = checkedSources.filter(source => source.file_type === 'video');
+  const checkedVideoOrPdfSources = checkedSources.filter(source => source.file_type === 'video' || source.file_type === 'pdf');
+
+  const canGenerateEntity = checkedVideoOrPdfSources.length === 1 && entityContext?.trim() !== "" && !isProjectReadOnly;
 
   const { generateMetadata } = useMetadata();
   const STEPS = [
@@ -475,12 +479,12 @@ const ChatPanel = () => {
 
       if (!sourceHasMetadata) {
         setStep(STEPS[0]);
-        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoSource]);
+        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoOrPdfSources[0]]);
       }
 
       setStep(STEPS[1]);
       const payload = {
-        sources: { file_type: checkedVideoSource.file_type, source_path: checkedVideoSource.source_path, category: Array.isArray(checkedVideoSource.category) ? checkedVideoSource.category.filter(cat => cat !== "all")[0] : checkedVideoSource.category },
+        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
         selectedOptions: ["graph"],
         inputContext: context,
         ontology,
