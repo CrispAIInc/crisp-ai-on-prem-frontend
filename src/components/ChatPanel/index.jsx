@@ -175,7 +175,7 @@ const ChatPanel = () => {
   }
 
   const [isGeneratingMetadata, setIsGeneratingMetadata] = useState(false);
-  const [verbosityValue, setVerbosityValue] = useState('Medium');
+  const [verbosityValue, setVerbosityValue] = useState('Low');
   const [context, setContext] = useState('');
 
   const [isGeneratingReel, setIsGeneratingReel] = useState(false);

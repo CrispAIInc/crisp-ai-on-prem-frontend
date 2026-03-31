@@ -102,7 +102,7 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                 subheading: "Click on the source the see the generated metadata..",
             });
 
-            setVerbosityValue('Medium');
+            setVerbosityValue('Low');
             setContext('');
         } catch (error) {
             console.error(error);
