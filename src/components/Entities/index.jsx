@@ -10,11 +10,13 @@ import JsonEntitiesList from '../JsonEntitiesList';
 import { ProjectContext } from '../../contexts/projectContext';
 import useMetadata from '../../hooks/useMetadata';
 import BaseHeading from '../BaseHeading';
+import SegmentDescription from '../SegmentDescription';
+import PageNumbersPicker from '../PageNumbersPicker';
+import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals';
 
 function KnowledgeGraph({
     context,
     setContext,
-    ontology,
     setOntology,
     title,
     setTitle,
@@ -24,12 +26,21 @@ function KnowledgeGraph({
     canGenerate,
     step,
     generateGraph,
+    entityVideoStart,
+    setEntityVideoStart,
+    entityVideoEnd,
+    setEntityVideoEnd,
+    entityPageFrom,
+    setEntityPageFrom,
+    entityPageTo,
+    setEntityPageTo,
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
         theme,
+        checkedSources,
     } = useContext(MainContext);
 
 
@@ -142,6 +153,10 @@ function KnowledgeGraph({
         setOntology(input);
     }, [input]);
 
+    const checkedVideos = checkedSources?.filter(source => source.file_type === "video");
+    const checkedPdfs = checkedSources?.filter(source => source.file_type === "pdf");
+    const sourceType = checkedVideos?.length === 1 ? "video" : checkedPdfs?.length === 1 ? "pdf" : null;
+
     return (
         <>
             <div className='flex flex-col gap-1 h-full'>
@@ -191,7 +206,7 @@ function KnowledgeGraph({
 
                                 {
                                     isInfoTooltipOpen && (
-                                        <div className={`absolute right-0 p-2 bg-background_workspace shadow-md rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
+                                        <div className={`absolute  right-0 p-2 bg-background_workspace shadow-lg rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200 !border !border-textColor-100/50' : '!border !border-textColor-300 text-textColor-100'} text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
                                     )
                                 }
                             </div>
@@ -206,7 +221,7 @@ function KnowledgeGraph({
                             value={input}
                             onChange={handleChange}
                             placeholder="Paste or type business schema here..."
-                            className={`w-full h-48 p-3 rounded-2xl font-mono  text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white !border !border-textColor-100/80'} outline-none resize-none`}
+                            className={`w-full h-32 p-3 rounded-2xl font-mono  text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white !border !border-textColor-100/80'} outline-none resize-none`}
                             onKeyDown={handleTabClick}
                         />
 
@@ -215,6 +230,26 @@ function KnowledgeGraph({
                             <BaseHeading className="!text-red-500 font-medium" text={error} />
                         )}
                     </div>
+                    {
+                        sourceType === "video" ? (
+                            <SegmentDescription
+                                start={entityVideoStart}
+                                setStart={setEntityVideoStart}
+                                end={entityVideoEnd}
+                                setEnd={setEntityVideoEnd}
+                            // handleGenerate={handleGenerateSegmentDescription}
+                            />
+                        ) : sourceType === "pdf" ? (
+                            <div>
+                                <BaseHeading text={`Source: ${checkedPdfs[0]?.source_path}`} />
+                                <PageNumbersPicker
+                                    totalPages={checkedPdfs[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
+                                    setStart={setEntityPageFrom}
+                                    setEnd={setEntityPageTo}
+                                />
+                            </div>
+                        ) : null
+                    }
                     <div className="relative w-full mb-2">
                         <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Your entities title (optional)</label>
                         <input

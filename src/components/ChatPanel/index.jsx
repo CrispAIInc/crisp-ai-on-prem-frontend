@@ -445,19 +445,27 @@ const ChatPanel = () => {
    */
 
   // =================== structure ====================
-  const MAX_SOURCES_COUNT = 1;
+  // const MAX_SOURCES_COUNT = 1;
   const [entityContext, setEntityContext] = useState('');
   const [ontology, setOntology] = useState('');
   const [title, setTitle] = useState('');
   const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
   const [showGraphModal, setShowGraphModal] = useState(false);
 
+
+  const checkedPdfSourcesEntity = checkedSources.filter(source => source.file_type === 'pdf');
+
+  const [entityVideoStart, setEntityVideoStart] = useState({ h: "00", m: "00", s: "00" });
+  const [entityVideoEnd, setEntityVideoEnd] = useState({ h: "00", m: "00", s: "00" });
+  const [entityPageFrom, setEntityPageFrom] = useState("1");
+  const [entityPageTo, setEntityPageTo] = useState(checkedPdfSourcesEntity[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
+
   const checkedVideoSource = checkedSources.filter(source => source.file_type === 'video')[0];
 
 
 
-  // const checkedPdfSources = checkedSources.filter(source => source.file_type === 'pdf');
-  const checkedVideoSources = checkedSources.filter(source => source.file_type === 'video');
+
+  // const checkedVideoSources = checkedSources.filter(source => source.file_type === 'video');
   const checkedVideoOrPdfSources = checkedSources.filter(source => source.file_type === 'video' || source.file_type === 'pdf');
 
   const sourceHasMetadata = Boolean(checkedVideoOrPdfSources[0]?.metadata?.summary?.content?.length > 0 && checkedVideoOrPdfSources[0]?.metadata?.highlights?.content?.length > 0 && checkedVideoOrPdfSources[0]?.metadata?.chapters?.content?.length > 0);
@@ -705,6 +713,14 @@ const ChatPanel = () => {
                   step={step}
                   setStep={setStep}
                   generateGraph={generateGraph}
+                  entityVideoStart={entityVideoStart}
+                  setEntityVideoStart={setEntityVideoStart}
+                  entityVideoEnd={entityVideoEnd}
+                  setEntityVideoEnd={setEntityVideoEnd}
+                  entityPageFrom={entityPageFrom}
+                  setEntityPageFrom={setEntityPageFrom}
+                  entityPageTo={entityPageTo}
+                  setEntityPageTo={setEntityPageTo}
                 />
               ) : null
             }
