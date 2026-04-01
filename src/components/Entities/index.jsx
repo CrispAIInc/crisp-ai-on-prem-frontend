@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import RippleButton from '../RippleButton';
 
@@ -9,6 +9,7 @@ import JsonEntityModal from '../JsonEntityModal';
 import JsonEntitiesList from '../JsonEntitiesList';
 import { ProjectContext } from '../../contexts/projectContext';
 import useMetadata from '../../hooks/useMetadata';
+import BaseHeading from '../BaseHeading';
 
 function KnowledgeGraph({
     context,
@@ -59,6 +60,86 @@ function KnowledgeGraph({
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
+    const [showJsonEditor, setShowJsonEditor] = useState(false);
+    const fileInputRef = useRef(null);
+    const [input, setInput] = useState("");
+    const [formatted, setFormatted] = useState("");
+
+    const [error, setError] = useState("");
+
+    const formatJSON = (json) => {
+        try {
+            const parsed = JSON.parse(json);
+            const pretty = JSON.stringify(parsed, null, 2);
+            setFormatted(pretty);
+            setError("");
+        } catch (err) {
+            setError("Invalid business schema!");
+            setFormatted("");
+        }
+    };
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setInput(value);
+        formatJSON(value);
+    };
+
+    const handleFileUpload = (e) => {
+
+        const file = e.target.files[0];
+        if (!file) return;
+
+        console.log("sd");
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const text = event.target.result;
+            setInput(text);
+            formatJSON(text);
+        };
+        reader.readAsText(file);
+    };
+
+    const handleTabClick = (e) => {
+        if (e.key === "Tab") {
+            e.preventDefault();
+
+            const start = e.target.selectionStart;
+            const end = e.target.selectionEnd;
+
+            if (e.shiftKey) {
+                // Remove tab
+                const before = input.substring(0, start);
+                if (before.endsWith("\t")) {
+                    const newValue =
+                        input.substring(0, start - 1) +
+                        input.substring(end);
+                    setInput(newValue);
+
+                    setTimeout(() => {
+                        e.target.selectionStart = e.target.selectionEnd = start - 1;
+                    }, 0);
+                }
+            } else {
+                // Add tab
+                const newValue =
+                    input.substring(0, start) +
+                    "\t" +
+                    input.substring(end);
+
+                setInput(newValue);
+
+                setTimeout(() => {
+                    e.target.selectionStart = e.target.selectionEnd = start + 1;
+                }, 0);
+            }
+        }
+    };
+
+    useEffect(() => {
+        setOntology(input);
+    }, [input]);
+
     return (
         <>
             <div className='flex flex-col gap-1 h-full'>
@@ -89,10 +170,9 @@ function KnowledgeGraph({
                     <div className="relative w-full">
                         <div className="flex flex-col mb-2">
                             <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context prompt</label>
-                            <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>
-                                {/* (Optional) Provide additional context or instructions to guide the JSON generation process. This can include specific themes, styles, or elements you want to see in the generated content. */}
+                            {/* <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>
                                 Constrain model behavior through schema-based contextual configuration.
-                            </span>
+                            </span> */}
                         </div>
                         <input
                             className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
@@ -101,24 +181,37 @@ function KnowledgeGraph({
                             onChange={(e) => setContext(e.target.value)}
                         />
                     </div>
-                    <div className="relative w-full mb-2">
-                        <div className="relative flex items-center gap-1">
-                            <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Business Schema (optional)</label>
-                            <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5`} />
+                    <div className="relative w-full">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="relative flex items-center gap-1 flex-1">
+                                <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Business Schema (optional)</label>
+                                <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5 ${theme === 'dark' && 'text-textColor-100'}`} />
 
-                            {
-                                isInfoTooltipOpen && (
-                                    <div className={`absolute right-0 p-2 bg-background_workspace shadow-md rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
-                                )
-                            }
+                                {
+                                    isInfoTooltipOpen && (
+                                        <div className={`absolute right-0 p-2 bg-background_workspace shadow-md rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
+                                    )
+                                }
+                            </div>
+                            <button className={`font-medium text-sm p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none`}
+                                onClick={() => fileInputRef.current.click()}
+                            >
+                                Upload
+                            </button>
+                            <input type="file" ref={fileInputRef} accept=".json" style={{ display: 'none' }} onChange={handleFileUpload} />
                         </div>
                         <textarea
-                            rows="3"
-                            className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
-                            placeholder="provide a business schema for more accurate results"
-                            value={ontology}
-                            onChange={(e) => setOntology(e.target.value)}
+                            value={input}
+                            onChange={handleChange}
+                            placeholder="Paste or type business schema here..."
+                            className={`w-full h-48 p-3 rounded-2xl font-mono  text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white !border !border-textColor-100/80'} outline-none resize-none`}
+                            onKeyDown={handleTabClick}
                         />
+
+                        {/* Error */}
+                        {(error && input.trim().length > 0) && (
+                            <BaseHeading className="!text-red-500 font-medium" text={error} />
+                        )}
                     </div>
                     <div className="relative w-full mb-2">
                         <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Your entities title (optional)</label>
@@ -162,6 +255,7 @@ function KnowledgeGraph({
             </div>
 
             {showGraphModal && <JsonEntityModal show={showGraphModal} onHide={() => setShowGraphModal(false)} />}
+            {showJsonEditor && <JsonEditorModal show={showJsonEditor} onHide={() => setShowJsonEditor(false)} />}
         </>
     );
 }
