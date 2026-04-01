@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import RippleButton from '../RippleButton';
 
@@ -9,6 +9,9 @@ import JsonEntityModal from '../JsonEntityModal';
 import JsonEntitiesList from '../JsonEntitiesList';
 import { ProjectContext } from '../../contexts/projectContext';
 import useMetadata from '../../hooks/useMetadata';
+import JsonEditorModal from '../JsonEditorModal';
+import JsonEditor from '../JsonEditor';
+import BaseHeading from '../BaseHeading';
 
 function KnowledgeGraph({
     context,
@@ -58,6 +61,46 @@ function KnowledgeGraph({
 
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+
+    const [showJsonEditor, setShowJsonEditor] = useState(false);
+    const fileInputRef = useRef(null);
+    const [input, setInput] = useState("");
+    const [formatted, setFormatted] = useState("");
+
+    const [error, setError] = useState("");
+
+    const formatJSON = (json) => {
+        try {
+            const parsed = JSON.parse(json);
+            const pretty = JSON.stringify(parsed, null, 2);
+            setFormatted(pretty);
+            setError("");
+        } catch (err) {
+            setError("Invalid business schema!");
+            setFormatted("");
+        }
+    };
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setInput(value);
+        formatJSON(value);
+    };
+
+    const handleFileUpload = (e) => {
+
+        const file = e.target.files[0];
+        if (!file) return;
+
+        console.log("sd");
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const text = event.target.result;
+            setInput(text);
+            formatJSON(text);
+        };
+        reader.readAsText(file);
+    };
 
     return (
         <>
@@ -114,31 +157,58 @@ function KnowledgeGraph({
                                 }
                             </div>
                             <button className={`font-medium text-sm p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none`}
-                                onClick={() => document.getElementById('jsonFileInput').click()}
+                                onClick={() => fileInputRef.current.click()}
                             >
                                 Upload
                             </button>
-                            <input type="file" id="jsonFileInput" accept=".json" style={{ display: 'none' }} onChange={(e) => {
-                                const file = e.target.files[0];
-                                const reader = new FileReader();
-                                reader.onload = (event) => {
-                                    try {
-                                        const jsonContent = JSON.parse(event.target.result);
-                                        setOntology(JSON.stringify(jsonContent));
-                                    } catch (error) {
-                                        console.error('Invalid JSON file:', error);
-                                    }
-                                };
-                                reader.readAsText(file);
-                            }} />
+                            <input type="file" ref={fileInputRef} accept=".json" style={{ display: 'none' }} onChange={handleFileUpload} />
                         </div>
                         <textarea
-                            rows="3"
-                            className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
-                            placeholder="provide a business schema for more accurate results"
-                            value={ontology}
-                            onChange={(e) => setOntology(e.target.value)}
+                            value={input}
+                            onChange={handleChange}
+                            placeholder="Paste or type business schema here..."
+                            className={`w-full h-48 p-4 border rounded-2xl font-mono text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white'} outline-none resize-none`}
+                            onKeyDown={(e) => {
+                                if (e.key === "Tab") {
+                                    e.preventDefault();
+
+                                    const start = e.target.selectionStart;
+                                    const end = e.target.selectionEnd;
+
+                                    if (e.shiftKey) {
+                                        // Remove tab
+                                        const before = input.substring(0, start);
+                                        if (before.endsWith("\t")) {
+                                            const newValue =
+                                                input.substring(0, start - 1) +
+                                                input.substring(end);
+                                            setInput(newValue);
+
+                                            setTimeout(() => {
+                                                e.target.selectionStart = e.target.selectionEnd = start - 1;
+                                            }, 0);
+                                        }
+                                    } else {
+                                        // Add tab
+                                        const newValue =
+                                            input.substring(0, start) +
+                                            "\t" +
+                                            input.substring(end);
+
+                                        setInput(newValue);
+
+                                        setTimeout(() => {
+                                            e.target.selectionStart = e.target.selectionEnd = start + 1;
+                                        }, 0);
+                                    }
+                                }
+                            }}
                         />
+
+                        {/* Error */}
+                        {(error && input.trim().length > 0) && (
+                            <BaseHeading className="!text-red-500 font-medium" text={error} />
+                        )}
                     </div>
                     <div className="relative w-full mb-2">
                         <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Your entities title (optional)</label>
@@ -182,6 +252,7 @@ function KnowledgeGraph({
             </div>
 
             {showGraphModal && <JsonEntityModal show={showGraphModal} onHide={() => setShowGraphModal(false)} />}
+            {showJsonEditor && <JsonEditorModal show={showJsonEditor} onHide={() => setShowJsonEditor(false)} />}
         </>
     );
 }
