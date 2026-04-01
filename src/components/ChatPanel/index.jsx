@@ -496,7 +496,9 @@ const ChatPanel = () => {
         selectedOptions: ["graph"],
         inputContext: entityContext,
         ontology,
-        title
+        title,
+        from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoStart) : entityPageFrom,
+        to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoEnd) : entityPageTo,
       };
       let response = await makeApiRequest('/graph', 'POST', payload);
 
