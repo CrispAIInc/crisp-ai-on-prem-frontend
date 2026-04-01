@@ -1,20 +1,13 @@
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import "react-quill/dist/quill.snow.css";
-import makeApiRequest from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import BaseHeading from '../BaseHeading/index.jsx';
-import InsightsList from "../InsightsList/index.jsx";
-import RippleButton from '../RippleButton/index.jsx';
-import StoriesList from '../StoriesList/index.jsx';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
-import PageNumbersPicker from '../PageNumbersPicker/index.jsx';
-import TimestampPicker from '../TimestampPicker/index.jsx';
+import BaseHeading from '../BaseHeading/index.jsx';
 
-import GenStories from "../GenStories";
 import GenBlogs from '../GenBlogs/index.jsx';
+import GenStories from "../GenStories";
 
 function StoriesInsightsTab({
     currentTab,
@@ -29,9 +22,10 @@ function StoriesInsightsTab({
     pageTo,
     isFullSourceDurationBlog,
     setIsFullSourceDurationBlog,
+    handleGenerateBlog,
+    context,
+    setContext
 }) {
-
-    const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
         selectedStory,
@@ -87,6 +81,9 @@ function StoriesInsightsTab({
                         pageTo={pageTo}
                         isFullSourceDurationBlog={isFullSourceDurationBlog}
                         setIsFullSourceDurationBlog={setIsFullSourceDurationBlog}
+                        handleGenerateBlog={handleGenerateBlog}
+                        context={context}
+                        setContext={setContext}
                     />
                 )
             }

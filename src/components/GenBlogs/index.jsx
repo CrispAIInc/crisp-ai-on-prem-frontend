@@ -19,6 +19,8 @@ function GenBlogs({
     setPageTo,
     isFullSourceDurationBlog,
     setIsFullSourceDurationBlog,
+    handleGenerateBlog,
+    context, setContext
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -28,8 +30,6 @@ function GenBlogs({
         checkedSources,
         theme,
     } = useContext(MainContext);
-
-    const [context, setContext] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
 
     const checkedVideos = checkedSources.filter(source => source.file_type === "video");
@@ -89,6 +89,10 @@ function GenBlogs({
                         <RippleButton
                             cssClasses={`rounded-xl !py-2 !px-3 !pr-4  flex items-center gap-1 ${tooltipVisible ? 'cursor-not-allowed' : ''}`}
                             disabled={!canGenerate}
+                            onClick={() => {
+                                if (!canGenerate) return;
+                                handleGenerateBlog();
+                            }}
                         >
                             {isGenerating ? <LoadingSpinner /> : <AutoAwesomeIcon className={`text-white !text-[16px]`} />}
                             {/* <span className="text-sm">Find</span> */}
