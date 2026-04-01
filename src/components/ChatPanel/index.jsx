@@ -482,7 +482,7 @@ const ChatPanel = () => {
       const payload = {
         sources: { file_type: checkedVideoSource.file_type, source_path: checkedVideoSource.source_path, category: Array.isArray(checkedVideoSource.category) ? checkedVideoSource.category.filter(cat => cat !== "all")[0] : checkedVideoSource.category },
         selectedOptions: ["graph"],
-        inputContext: context,
+        inputContext: entityContext,
         ontology,
         title
       };

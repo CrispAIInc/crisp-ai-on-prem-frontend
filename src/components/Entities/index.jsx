@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import RippleButton from '../RippleButton';
 
@@ -138,6 +138,10 @@ function KnowledgeGraph({
         }
     };
 
+    useEffect(() => {
+        setOntology(input);
+    }, [input]);
+
     return (
         <>
             <div className='flex flex-col gap-1 h-full'>
@@ -203,7 +207,7 @@ function KnowledgeGraph({
                             value={input}
                             onChange={handleChange}
                             placeholder="Paste or type business schema here..."
-                            className={`w-full h-48 p-4 border rounded-2xl font-mono text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white'} outline-none resize-none`}
+                            className={`w-full h-48 p-3 rounded-2xl font-mono  text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white !border !border-textColor-100/80'} outline-none resize-none`}
                             onKeyDown={handleTabClick}
                         />
 
