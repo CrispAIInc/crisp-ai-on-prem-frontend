@@ -102,6 +102,42 @@ function KnowledgeGraph({
         reader.readAsText(file);
     };
 
+    const handleTabClick = (e) => {
+        if (e.key === "Tab") {
+            e.preventDefault();
+
+            const start = e.target.selectionStart;
+            const end = e.target.selectionEnd;
+
+            if (e.shiftKey) {
+                // Remove tab
+                const before = input.substring(0, start);
+                if (before.endsWith("\t")) {
+                    const newValue =
+                        input.substring(0, start - 1) +
+                        input.substring(end);
+                    setInput(newValue);
+
+                    setTimeout(() => {
+                        e.target.selectionStart = e.target.selectionEnd = start - 1;
+                    }, 0);
+                }
+            } else {
+                // Add tab
+                const newValue =
+                    input.substring(0, start) +
+                    "\t" +
+                    input.substring(end);
+
+                setInput(newValue);
+
+                setTimeout(() => {
+                    e.target.selectionStart = e.target.selectionEnd = start + 1;
+                }, 0);
+            }
+        }
+    };
+
     return (
         <>
             <div className='flex flex-col gap-1 h-full'>
@@ -168,41 +204,7 @@ function KnowledgeGraph({
                             onChange={handleChange}
                             placeholder="Paste or type business schema here..."
                             className={`w-full h-48 p-4 border rounded-2xl font-mono text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white'} outline-none resize-none`}
-                            onKeyDown={(e) => {
-                                if (e.key === "Tab") {
-                                    e.preventDefault();
-
-                                    const start = e.target.selectionStart;
-                                    const end = e.target.selectionEnd;
-
-                                    if (e.shiftKey) {
-                                        // Remove tab
-                                        const before = input.substring(0, start);
-                                        if (before.endsWith("\t")) {
-                                            const newValue =
-                                                input.substring(0, start - 1) +
-                                                input.substring(end);
-                                            setInput(newValue);
-
-                                            setTimeout(() => {
-                                                e.target.selectionStart = e.target.selectionEnd = start - 1;
-                                            }, 0);
-                                        }
-                                    } else {
-                                        // Add tab
-                                        const newValue =
-                                            input.substring(0, start) +
-                                            "\t" +
-                                            input.substring(end);
-
-                                        setInput(newValue);
-
-                                        setTimeout(() => {
-                                            e.target.selectionStart = e.target.selectionEnd = start + 1;
-                                        }, 0);
-                                    }
-                                }
-                            }}
+                            onKeyDown={handleTabClick}
                         />
 
                         {/* Error */}
