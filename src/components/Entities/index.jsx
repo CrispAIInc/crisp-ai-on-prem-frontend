@@ -9,8 +9,6 @@ import JsonEntityModal from '../JsonEntityModal';
 import JsonEntitiesList from '../JsonEntitiesList';
 import { ProjectContext } from '../../contexts/projectContext';
 import useMetadata from '../../hooks/useMetadata';
-import JsonEditorModal from '../JsonEditorModal';
-import JsonEditor from '../JsonEditor';
 import BaseHeading from '../BaseHeading';
 
 function KnowledgeGraph({
@@ -172,10 +170,9 @@ function KnowledgeGraph({
                     <div className="relative w-full">
                         <div className="flex flex-col mb-2">
                             <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context prompt</label>
-                            <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>
-                                {/* (Optional) Provide additional context or instructions to guide the JSON generation process. This can include specific themes, styles, or elements you want to see in the generated content. */}
+                            {/* <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>
                                 Constrain model behavior through schema-based contextual configuration.
-                            </span>
+                            </span> */}
                         </div>
                         <input
                             className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
@@ -188,7 +185,7 @@ function KnowledgeGraph({
                         <div className="flex items-center gap-2 mb-2">
                             <div className="relative flex items-center gap-1 flex-1">
                                 <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Business Schema (optional)</label>
-                                <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5`} />
+                                <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5 ${theme === 'dark' && 'text-textColor-100'}`} />
 
                                 {
                                     isInfoTooltipOpen && (
