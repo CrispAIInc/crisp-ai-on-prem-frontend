@@ -6,7 +6,7 @@ import TimestampPicker from '../TimestampPicker';
 import ToggleSwitch from '../ToggleSwitch';
 import { useToast } from '../../contexts/toastContext';
 
-const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPending }) => {
+const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPending, isDisabled = false }) => {
 
     const {
         displayedSources,
@@ -51,11 +51,10 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPe
     };
 
     return (
-        <div className={`relative flex flex-col ${!canGenerate
+        <div className={`relative flex flex-col ${(!canGenerate || isDisabled)
             ? 'pointer-events-none opacity-50 select-none'
             : 'pointer-events-auto opacity-100 select-all'
-            }            
-            `}>
+            }`}>
             <div className="relative flex flex-col">
                 <BaseHeading
                     text={canGenerate ? `Video: ${currentVideo?.source_path}` : "Only one checked source (video)"}

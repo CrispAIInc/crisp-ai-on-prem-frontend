@@ -96,7 +96,7 @@ const PageNumberInput = ({ initVal, max, onChange }) => {
     );
 };
 
-const PageNumbersPicker = ({ totalPages, setStart, setEnd }) => {
+const PageNumbersPicker = ({ totalPages, setStart, setEnd, isDisabled }) => {
 
     const { theme } = useContext(MainContext);
 
@@ -104,7 +104,10 @@ const PageNumbersPicker = ({ totalPages, setStart, setEnd }) => {
         <div
             className={`p-3 rounded-2xl select-none flex items-center gap-4 w-fit ${theme === 'light'
                 ? 'bg-white !border'
-                : 'bg-textColor-300 !border !border-textColor-200/40'}`}
+                : 'bg-textColor-300 !border !border-textColor-200/40'} ${isDisabled
+                    ? 'pointer-events-none opacity-50 select-none'
+                    : 'pointer-events-auto opacity-100 select-all'
+                }`}
         >
 
             {/* FROM */}

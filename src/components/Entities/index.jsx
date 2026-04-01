@@ -13,6 +13,7 @@ import BaseHeading from '../BaseHeading';
 import SegmentDescription from '../SegmentDescription';
 import PageNumbersPicker from '../PageNumbersPicker';
 import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals';
+import { Checkbox } from '@mui/material';
 
 function KnowledgeGraph({
     context,
@@ -30,9 +31,9 @@ function KnowledgeGraph({
     setEntityVideoStart,
     entityVideoEnd,
     setEntityVideoEnd,
-    entityPageFrom,
     setEntityPageFrom,
-    entityPageTo,
+    isFullSourceDuration,
+    setIsFullSourceDuration,
     setEntityPageTo,
 }) {
 
@@ -157,6 +158,8 @@ function KnowledgeGraph({
     const checkedPdfs = checkedSources?.filter(source => source.file_type === "pdf");
     const sourceType = checkedVideos?.length === 1 ? "video" : checkedPdfs?.length === 1 ? "pdf" : null;
 
+
+
     return (
         <>
             <div className='flex flex-col gap-1 h-full'>
@@ -199,14 +202,14 @@ function KnowledgeGraph({
                         />
                     </div>
                     <div className="relative w-full">
-                        <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-2 mb-1">
                             <div className="relative flex items-center gap-1 flex-1">
                                 <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Business Schema (optional)</label>
                                 <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5 ${theme === 'dark' && 'text-textColor-100'}`} />
 
                                 {
                                     isInfoTooltipOpen && (
-                                        <div className={`absolute  right-0 p-2 bg-background_workspace shadow-lg rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200 !border !border-textColor-100/50' : '!border !border-textColor-300 text-textColor-100'} text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
+                                        <div className={`absolute right-0 p-2 bg-background_workspace shadow-lg rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200 !border !border-textColor-100/50' : '!border !border-textColor-300 text-textColor-100'} text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
                                     )
                                 }
                             </div>
@@ -230,26 +233,49 @@ function KnowledgeGraph({
                             <BaseHeading className="!text-red-500 font-medium" text={error} />
                         )}
                     </div>
+                    <div className="flex items-center">
+                        <Checkbox
+                            sx={{ p: 0 }}
+                            onChange={(e) => setIsFullSourceDuration(e.target.checked)}
+                            inputProps={{ "aria-label": "Select All Sources" }}
+                            label="Include full source"
+                        />
+
+                        <BaseHeading
+                            text="Include full source length"
+                            className={`${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                                }`}
+                        />
+                    </div>
                     {
-                        sourceType === "video" ? (
-                            <SegmentDescription
-                                start={entityVideoStart}
-                                setStart={setEntityVideoStart}
-                                end={entityVideoEnd}
-                                setEnd={setEntityVideoEnd}
-                            // handleGenerate={handleGenerateSegmentDescription}
-                            />
-                        ) : sourceType === "pdf" ? (
-                            <div>
-                                <BaseHeading text={`Source: ${checkedPdfs[0]?.source_path}`} />
-                                <PageNumbersPicker
-                                    totalPages={checkedPdfs[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
-                                    setStart={setEntityPageFrom}
-                                    setEnd={setEntityPageTo}
-                                />
-                            </div>
-                        ) : null
+                        !isFullSourceDuration && (
+                            <>
+                                {
+                                    sourceType === "video" ? (
+                                        <SegmentDescription
+                                            start={entityVideoStart}
+                                            setStart={setEntityVideoStart}
+                                            end={entityVideoEnd}
+                                            setEnd={setEntityVideoEnd}
+                                            isDisabled={isFullSourceDuration}
+                                        // handleGenerate={handleGenerateSegmentDescription}
+                                        />
+                                    ) : sourceType === "pdf" ? (
+                                        <div>
+                                            <BaseHeading text={`Source: ${checkedPdfs[0]?.source_path}`} />
+                                            <PageNumbersPicker
+                                                totalPages={checkedPdfs[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
+                                                setStart={setEntityPageFrom}
+                                                setEnd={setEntityPageTo}
+                                                isDisabled={isFullSourceDuration}
+                                            />
+                                        </div>
+                                    ) : null
+                                }
+                            </>
+                        )
                     }
+
                     <div className="relative w-full mb-2">
                         <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Your entities title (optional)</label>
                         <input

@@ -452,6 +452,8 @@ const ChatPanel = () => {
   const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
   const [showGraphModal, setShowGraphModal] = useState(false);
 
+  const [isFullSourceDuration, setIsFullSourceDuration] = useState(false);
+
 
   const checkedPdfSourcesEntity = checkedSources.filter(source => source.file_type === 'pdf');
 
@@ -497,6 +499,7 @@ const ChatPanel = () => {
         inputContext: entityContext,
         ontology,
         title,
+        isFullSource: isFullSourceDuration,
         from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoStart) : entityPageFrom,
         to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoEnd) : entityPageTo,
       };
@@ -723,6 +726,8 @@ const ChatPanel = () => {
                   setEntityPageFrom={setEntityPageFrom}
                   entityPageTo={entityPageTo}
                   setEntityPageTo={setEntityPageTo}
+                  isFullSourceDuration={isFullSourceDuration}
+                  setIsFullSourceDuration={setIsFullSourceDuration}
                 />
               ) : null
             }
