@@ -528,7 +528,7 @@ const ChatPanel = () => {
   const [videoEnd, setVideoEnd] = useState({ h: "00", m: "00", s: "00" });
   const [pageFrom, setPageFrom] = useState("1");
   const [pageTo, setPageTo] = useState(checkedPdfSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
-
+  const [isFullSourceDurationBlog, setIsFullSourceDurationBlog] = useState(false);
 
   return (
     <aside
@@ -656,6 +656,8 @@ const ChatPanel = () => {
                   setPageFrom={setPageFrom}
                   pageTo={pageTo}
                   setPageTo={setPageTo}
+                  isFullSourceDurationBlog={isFullSourceDurationBlog}
+                  setIsFullSourceDurationBlog={setIsFullSourceDurationBlog}
                 />
               ) : actualTab === "genMedia" ? (
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}

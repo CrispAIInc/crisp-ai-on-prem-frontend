@@ -27,6 +27,8 @@ function StoriesInsightsTab({
     setPageTo,
     pageFrom,
     pageTo,
+    isFullSourceDurationBlog,
+    setIsFullSourceDurationBlog,
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -83,6 +85,8 @@ function StoriesInsightsTab({
                         setPageTo={setPageTo}
                         pageFrom={pageFrom}
                         pageTo={pageTo}
+                        isFullSourceDurationBlog={isFullSourceDurationBlog}
+                        setIsFullSourceDurationBlog={setIsFullSourceDurationBlog}
                     />
                 )
             }

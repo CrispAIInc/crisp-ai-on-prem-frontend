@@ -8,16 +8,17 @@ import PageNumbersPicker from '../PageNumbersPicker';
 import SegmentDescription from '../SegmentDescription';
 import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals';
 import BaseHeading from '../BaseHeading';
+import { Checkbox } from '@mui/material';
 
 function GenBlogs({
     videoStart,
     setVideoStart,
     videoEnd,
     setVideoEnd,
-    pageFrom,
-    pageTo,
     setPageFrom,
     setPageTo,
+    isFullSourceDurationBlog,
+    setIsFullSourceDurationBlog,
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -104,27 +105,48 @@ function GenBlogs({
                     </div>
                 </div>
             </div>
+            <div className="flex items-center">
+                <Checkbox
+                    sx={{ p: 0 }}
+                    onChange={(e) => setIsFullSourceDurationBlog(e.target.checked)}
+                    inputProps={{ "aria-label": "Select All Sources" }}
+                    label="Include full source"
+                />
+
+                <BaseHeading
+                    text="Include full source length"
+                    className={`${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                        }`}
+                />
+            </div>
 
             {
-                sourceType === "video" ? (
-                    <SegmentDescription
-                        start={videoStart}
-                        setStart={setVideoStart}
-                        end={videoEnd}
-                        setEnd={setVideoEnd}
-                    // handleGenerate={handleGenerateSegmentDescription}
-                    />
-                ) : sourceType === "pdf" ? (
-                    <div>
-                        <BaseHeading text={`Source: ${checkedPdfs[0]?.source_path}`} />
-                        <PageNumbersPicker
-                            totalPages={checkedPdfs[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
-                            setStart={setPageFrom}
-                            setEnd={setPageTo}
-                        />
-                    </div>
-                ) : null
-            }
+                !isFullSourceDurationBlog && (
+                    <>
+                        {
+                            sourceType === "video" ? (
+                                <SegmentDescription
+                                    start={videoStart}
+                                    setStart={setVideoStart}
+                                    end={videoEnd}
+                                    setEnd={setVideoEnd}
+                                    isDisabled={isFullSourceDurationBlog}
+                                // handleGenerate={handleGenerateSegmentDescription}
+                                />
+                            ) : sourceType === "pdf" ? (
+                                <div>
+                                    <BaseHeading text={`Source: ${checkedPdfs[0]?.source_path}`} />
+                                    <PageNumbersPicker
+                                        totalPages={checkedPdfs[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
+                                        setStart={setPageFrom}
+                                        setEnd={setPageTo}
+                                        isDisabled={isFullSourceDurationBlog}
+                                    />
+                                </div>
+                            ) : null
+                        }
+                    </>
+                )}
         </div>
     );
 }
