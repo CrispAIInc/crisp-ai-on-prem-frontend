@@ -4,26 +4,24 @@ import ImageResize from "quill-image-resize-module-react";
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import makeApiRequest, { axiosInstance } from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext.jsx';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
+import { useToast } from '../../contexts/toastContext.jsx';
+import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals.js';
+import useAuth from '../../hooks/useAuth.js';
+import useMetadata from '../../hooks/useMetadata.js';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
+import { formatTime, toSeconds } from '../../utils.js';
+import KnowledgeGraph from '../Entities/index.jsx';
 import InsightEditor from '../InsightEditor/index.jsx';
 import MediaEntertainment from '../MediaEntertainment';
 import MetadataGen from '../MetadataGen';
 import ReelViewer from '../ReelViewer';
 import StoriesInsightsTab from '../StoriesInsightsTab';
 import StoryEditor from '../StoryEditor/index.jsx';
-import './chat-panel.css';
 import VideoSegmentDescription from '../VideoSegmentDescription/index.jsx';
-import { formatTime, toSeconds } from '../../utils.js';
-import KnowledgeGraph from '../Entities/index.jsx';
-import Dropdown from '../Dropdown';
-import SelectDropdown from '../SelectDropdown/index.jsx';
-import GeneratorServicesDropdown from '../GeneratorServicesDropdown/index.jsx';
-import makeApiRequest, { axiosInstance } from '../../api/index.js';
-import useAuth from '../../hooks/useAuth.js';
-import { ProjectContext } from '../../contexts/projectContext.jsx';
-import { useToast } from '../../contexts/toastContext.jsx';
-import useMetadata from '../../hooks/useMetadata.js';
+import './chat-panel.css';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -458,7 +456,7 @@ const ChatPanel = () => {
 
 
 
-  const checkedPdfSources = checkedSources.filter(source => source.file_type === 'pdf');
+  // const checkedPdfSources = checkedSources.filter(source => source.file_type === 'pdf');
   const checkedVideoSources = checkedSources.filter(source => source.file_type === 'video');
   const checkedVideoOrPdfSources = checkedSources.filter(source => source.file_type === 'video' || source.file_type === 'pdf');
 
@@ -507,6 +505,17 @@ const ChatPanel = () => {
     }
   }
   // =================== structure ====================
+
+
+  /**
+   * ============== BLOGS FEAT ===================
+   */
+  const checkedPdfSources = checkedSources.filter(source => source.file_type === "pdf");
+  const [videoStart, setVideoStart] = useState({ h: "00", m: "00", s: "00" });
+  const [videoEnd, setVideoEnd] = useState({ h: "00", m: "00", s: "00" });
+  const [pageFrom, setPageFrom] = useState("1");
+  const [pageTo, setPageTo] = useState(checkedPdfSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
+
 
   return (
     <aside
@@ -620,8 +629,21 @@ const ChatPanel = () => {
                 <MetadataGen verbosityValue={verbosityValue} setVerbosityValue={setVerbosityValue}
                   context={context} setContext={setContext} isGeneratingMetadata={isGeneratingMetadata} setIsGeneratingMetadata={setIsGeneratingMetadata} />
               ) : actualTab === "genStories" ? (
-                <StoriesInsightsTab isNewInsight={isNewInsight}
-                  setIsNewInsight={setIsNewInsight} currentTab={currentTab} setCurrentTab={setCurrentTab} setShowStoriesEditor={setShowStoriesEditor} />
+                <StoriesInsightsTab
+                  isNewInsight={isNewInsight}
+                  setIsNewInsight={setIsNewInsight}
+                  currentTab={currentTab}
+                  setCurrentTab={setCurrentTab}
+                  setShowStoriesEditor={setShowStoriesEditor}
+                  videoStart={videoStart}
+                  setVideoStart={setVideoStart}
+                  videoEnd={videoEnd}
+                  setVideoEnd={setVideoEnd}
+                  pageFrom={pageFrom}
+                  setPageFrom={setPageFrom}
+                  pageTo={pageTo}
+                  setPageTo={setPageTo}
+                />
               ) : actualTab === "genMedia" ? (
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}

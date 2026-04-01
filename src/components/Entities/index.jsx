@@ -52,6 +52,9 @@ function KnowledgeGraph({
     const MAX_SOURCES_COUNT = 1;
 
 
+    // const sourceHasMetadata = Boolean(checkedVideoSource?.metadata?.summary?.content?.length > 0 && checkedVideoSource?.metadata?.highlights?.content?.length > 0 && checkedVideoSource?.metadata?.chapters?.content?.length > 0);
+
+    // const canGenerate = checkedSourcesCount > 0 && checkedSourcesCount <= MAX_SOURCES_COUNT && context?.trim() !== "" && !isProjectReadOnly;
 
     const handleMouseEnter = () => !canGenerate && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
@@ -60,7 +63,6 @@ function KnowledgeGraph({
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
-    const [showJsonEditor, setShowJsonEditor] = useState(false);
     const fileInputRef = useRef(null);
     const [input, setInput] = useState("");
     const [formatted, setFormatted] = useState("");
@@ -255,7 +257,6 @@ function KnowledgeGraph({
             </div>
 
             {showGraphModal && <JsonEntityModal show={showGraphModal} onHide={() => setShowGraphModal(false)} />}
-            {showJsonEditor && <JsonEditorModal show={showJsonEditor} onHide={() => setShowJsonEditor(false)} />}
         </>
     );
 }
