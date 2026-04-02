@@ -24,7 +24,9 @@ function StoriesInsightsTab({
     setIsFullSourceDurationBlog,
     handleGenerateBlog,
     context,
-    setContext
+    setContext,
+    isGeneratinBlog,
+    setIsGeneratingBlog,
 }) {
 
     const {
@@ -84,6 +86,8 @@ function StoriesInsightsTab({
                         handleGenerateBlog={handleGenerateBlog}
                         context={context}
                         setContext={setContext}
+                        isGeneratinBlog={isGeneratinBlog}
+                        setIsGeneratingBlog={setIsGeneratingBlog}
                     />
                 )
             }

@@ -20,7 +20,9 @@ function GenBlogs({
     isFullSourceDurationBlog,
     setIsFullSourceDurationBlog,
     handleGenerateBlog,
-    context, setContext
+    context, setContext,
+    isGeneratinBlog,
+    setIsGeneratingBlog,
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -94,8 +96,7 @@ function GenBlogs({
                                 handleGenerateBlog();
                             }}
                         >
-                            {isGenerating ? <LoadingSpinner /> : <AutoAwesomeIcon className={`text-white !text-[16px]`} />}
-                            {/* <span className="text-sm">Find</span> */}
+                            {isGeneratinBlog ? <LoadingSpinner /> : <AutoAwesomeIcon className={`text-white !text-[16px]`} />}
                         </RippleButton>
 
                         {tooltipVisible && (

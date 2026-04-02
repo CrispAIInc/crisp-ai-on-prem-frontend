@@ -472,20 +472,23 @@ const ChatPanel = () => {
 
   const sourceHasMetadata = Boolean(checkedVideoOrPdfSources[0]?.metadata?.summary?.content?.length > 0 && checkedVideoOrPdfSources[0]?.metadata?.highlights?.content?.length > 0 && checkedVideoOrPdfSources[0]?.metadata?.chapters?.content?.length > 0);
 
-  const canGenerateEntity = checkedVideoOrPdfSources.length === 1 && entityContext?.trim() !== "" && !isProjectReadOnly;
+  const canGenerateEntity = checkedVideoOrPdfSources.length === 1 && !isProjectReadOnly;
 
   const { generateMetadata } = useMetadata();
   const STEPS = [
     "Generating metadata...",
     "Generating precise structure...",
+    "Generating blog content...",
     "Almost there..."
   ];
   const [step, setStep] = useState(""); // This state displays the current process description during the generation phase.
 
-  async function generateGraph() {
+  async function generateGraph(isContextRequired = true) {
     try {
-      if (!canGenerateEntity) return;
+      if (!canGenerateEntity || (isContextRequired && !entityContext?.trim())) return;
       setIsGeneratingGraph(true);
+
+      setStep("");
 
       if (!sourceHasMetadata) {
         setStep(STEPS[0]);
@@ -505,7 +508,7 @@ const ChatPanel = () => {
       };
       let response = await makeApiRequest('/graph', 'POST', payload);
 
-      setStep(STEPS[2]);
+      setStep(STEPS.at(-1));
       setSelectedJsonEntity(response);
       setJsonEntities(prev => [...prev, response]);
       setShowGraphModal(true);
@@ -530,15 +533,46 @@ const ChatPanel = () => {
   const [pageTo, setPageTo] = useState(checkedPdfSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
   const [isFullSourceDurationBlog, setIsFullSourceDurationBlog] = useState(false);
   const [blogContext, setBlogContext] = useState("");
+  const [isGeneratinBlog, setIsGeneratingBlog] = useState(false);
+  const canGenerateBlog = checkedVideoOrPdfSources.length === 1 && blogContext?.trim() !== "" && !isProjectReadOnly;
 
-  function generateBlog() {
-    console.log({
-      sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
-      context: blogContext,
-      isFullSource: isFullSourceDuration,
-      from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoStart) : Number(pageFrom),
-      to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
-    });
+  async function generateBlog() {
+    try {
+      if (!canGenerateBlog) return;
+      setIsGeneratingBlog(true);
+
+      setStep("");
+
+      // ============== generating metadata =====================
+      if (!sourceHasMetadata) {
+        setStep(STEPS[0]);
+        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoOrPdfSources[0]]);
+      }
+
+      // ============= generating json structure ==================
+      setStep(STEPS[1]);
+      const payload = {
+        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+        selectedOptions: ["graph"],
+        inputContext: "",
+        ontology: "",
+        title: "",
+        isFullSource: isFullSourceDurationBlog,
+        from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoStart) : Number(pageFrom),
+        to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
+      };
+      let response = await makeApiRequest('/graph', 'POST', payload);
+
+      // =============== generating blog ===================
+      const res = await makeApiRequest('/blog', 'POST', response);
+      console.log(res);
+
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsGeneratingBlog(false);
+      setStep("");
+    }
   }
 
   return (
@@ -672,6 +706,8 @@ const ChatPanel = () => {
                   handleGenerateBlog={generateBlog}
                   context={blogContext}
                   setContext={setBlogContext}
+                  isGeneratinBlog={isGeneratinBlog}
+                  setIsGeneratingBlog={setIsGeneratingBlog}
                 />
               ) : actualTab === "genMedia" ? (
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
