@@ -564,7 +564,7 @@ const ChatPanel = () => {
       let response = await makeApiRequest('/graph', 'POST', payload);
 
       // =============== generating blog ===================
-      const res = await makeApiRequest('/blog', 'POST', response);
+      const res = await makeApiRequest('/blog', 'POST', { response, context: blogContext });
       console.log(res);
 
     } catch (error) {
