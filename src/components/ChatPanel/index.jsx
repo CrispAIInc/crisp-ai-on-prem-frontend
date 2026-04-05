@@ -565,8 +565,18 @@ const ChatPanel = () => {
       let response = await makeApiRequest('/graph', 'POST', payload);
 
       // =============== generating blog ===================
-      const res = await makeApiRequest('/blog', 'POST', { response, context: blogContext });
-      console.log(res);
+      const { success, title, url, message } = await makeApiRequest('/blog', 'POST', { response, context: blogContext });
+
+      if (success) {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = title + ".docx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        throw new Error(message || "couldn't donwload the blog");
+      }
 
     } catch (error) {
       console.log(error);
