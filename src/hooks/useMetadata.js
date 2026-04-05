@@ -13,13 +13,14 @@ export default function useMetadata() {
     const { notify } = useToast();
 
 
-    const generateMetadata = useCallback(async (context, verbosityValue, selectedOptions, sources) => {
+    const generateMetadata = useCallback(async (context, verbosityValue, selectedOptions, sources, ...restPayload) => {
         try {
             const payload = {
                 sources: sources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
                 selectedOptions: selectedOptions.map(op => op.id),
                 inputContext: context,
-                verbosityValue: verbosityValue
+                verbosityValue: verbosityValue,
+                ...restPayload,
             };
 
             let { results } = await makeApiRequest('/gen-metadata', 'post', payload);

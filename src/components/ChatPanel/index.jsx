@@ -492,7 +492,7 @@ const ChatPanel = () => {
 
       if (!sourceHasMetadata) {
         setStep(STEPS[0]);
-        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoOrPdfSources[0]]);
+        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoOrPdfSources[0]], { isGraph: true });
       }
 
       setStep(STEPS[1]);
@@ -546,7 +546,7 @@ const ChatPanel = () => {
       // ============== generating metadata =====================
       if (!sourceHasMetadata) {
         setStep(STEPS[0]);
-        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoOrPdfSources[0]]);
+        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoOrPdfSources[0]], { isGraph: true });
       }
 
       // ============= generating json structure ==================
