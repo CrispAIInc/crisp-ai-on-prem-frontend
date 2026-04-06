@@ -53,7 +53,7 @@ const JsonEntityItem = ({ jsonEntity, onClick }) => {
                 <ActionMenu
                     actions={[
                         {
-                            label: "Edit Project",
+                            label: "Edit title",
                             icon: <EditOutlinedIcon />,
                             onClick: (e) => {
                                 e.stopPropagation();
