@@ -189,7 +189,7 @@ function KnowledgeGraph({
                 <div className={`flex flex-col gap-2 ${isDropdownMenuOpen ? 'block' : 'hidden'}`}>
                     <div className="relative w-full">
                         <div className="flex flex-col mb-2">
-                            <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context prompt</label>
+                            <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context</label>
                             {/* <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>
                                 Constrain model behavior through schema-based contextual configuration.
                             </span> */}
@@ -223,7 +223,7 @@ function KnowledgeGraph({
                         <textarea
                             value={input}
                             onChange={handleChange}
-                            placeholder="Paste or type business schema here..."
+                            placeholder="Paste or type business schema here (in JSON format)..."
                             className={`w-full h-32 p-3 rounded-2xl font-mono  text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white !border !border-textColor-100/80'} outline-none resize-none`}
                             onKeyDown={handleTabClick}
                         />
@@ -277,7 +277,7 @@ function KnowledgeGraph({
                     }
 
                     <div className="relative w-full mb-2">
-                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Your entities title (optional)</label>
+                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Title (optional)</label>
                         <input
                             className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
                             placeholder="Write a title for the entities"
