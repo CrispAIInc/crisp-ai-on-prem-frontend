@@ -553,20 +553,27 @@ const ChatPanel = () => {
       // setStep(STEPS[1]);
       // const payload = {
       //   isBlog: true,
-      //   sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+      // sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
       //   selectedOptions: ["graph"],
       //   inputContext: "",
       //   ontology: "",
       //   title: "",
-      //   isFullSource: isFullSourceDurationBlog,
-      //   from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoStart) : Number(pageFrom),
-      //   to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
+      // isFullSource: isFullSourceDurationBlog,
+      // from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoStart) : Number(pageFrom),
+      // to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
       // };
       // let response = await makeApiRequest('/graph', 'POST', payload);
 
       // =============== generating blog ===================
       setStep(STEPS[2]);
-      const { success, title, url, message } = await makeApiRequest('/blog', 'POST', { context: blogContext });
+      const payload = {
+        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+        isFullSource: isFullSourceDurationBlog,
+        from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoStart) : Number(pageFrom),
+        to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
+        context: blogContext
+      };
+      const { success, title, url, message } = await makeApiRequest('/blog', 'POST', payload);
 
       if (success) {
         setStep(STEPS[3]);
