@@ -67,7 +67,6 @@ function GenBlogs({
     return (
         <div className="flex flex-col h-full  gap-2 overflow-y-hidden">
             <div>
-                <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context</label>
                 <div className={`flex items-end gap-2 px-2 rounded-2xl pb-2 ${theme === "dark" ? "!border !border-textColor-200/50  text-textColor-200" : '!border !border-textColor-100 text-textColor-300'}`}>
                     <textarea
                         ref={el => {

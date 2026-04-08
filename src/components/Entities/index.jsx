@@ -190,9 +190,6 @@ function KnowledgeGraph({
                     <div className="relative w-full">
                         <div className="flex flex-col mb-2">
                             <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context</label>
-                            {/* <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>
-                                Constrain model behavior through schema-based contextual configuration.
-                            </span> */}
                         </div>
                         <input
                             className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
