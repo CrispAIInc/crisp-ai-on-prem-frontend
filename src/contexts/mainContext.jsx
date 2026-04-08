@@ -1257,6 +1257,16 @@ export default function MainProvider({ children, theme, setTheme }) {
         getJsonEntities();
     }, []);
 
+    const [blogs, setBlogs] = useState([]);
+    useEffect(() => {
+        async function fetchBlogs() {
+            const { blogs } = await makeApiRequest('/blogs');
+            setBlogs(blogs);
+        }
+
+        fetchBlogs();
+    }, []);
+
     const metadataPanelContainer = useRef(null);
     const [jsonEntities, setJsonEntities] = useState([]);
     const [selectedJsonEntity, setSelectedJsonEntity] = useState(null);
@@ -1264,6 +1274,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // create value object with all the states
     const value = {
+        blogs, setBlogs,
         jsonEntities,
         selectedJsonEntity,
         setSelectedJsonEntity,
