@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import { searchByKey, sortByKey } from '../../utils';
+import BlogItem from '../BlogItem';
 
 const BlogsList = () => {
 
@@ -59,8 +60,6 @@ const BlogsList = () => {
                     <BaseHeading text="No composers found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                 )
             }
-
-            {showJsonEntityModal && <KnowledgeGraphModal show={showJsonEntityModal} onHide={() => setShowJsonEntityModal(false)} />}
         </>
     );
 };

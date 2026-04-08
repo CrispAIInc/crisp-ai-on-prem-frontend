@@ -8,6 +8,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import JsonEntityTitleUpdaterModal from '../JsonEntityTitleUpdaterModal';
 import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
+import BlogTitleUpdaterModal from '../BlogTitleUpdaterModal';
 
 const BlogItem = ({ blog, onClick }) => {
 

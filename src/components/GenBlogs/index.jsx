@@ -9,6 +9,7 @@ import SegmentDescription from '../SegmentDescription';
 import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals';
 import BaseHeading from '../BaseHeading';
 import { Checkbox } from '@mui/material';
+import BlogsList from '../BlogsList';
 
 function GenBlogs({
     videoStart,
@@ -151,6 +152,10 @@ function GenBlogs({
                         }
                     </>
                 )}
+
+            <div className="flex-1 flex flex-col overflow-y-scroll gap-2 px-1 rounded-lg border border-textColor-200/50">
+                <BlogsList />
+            </div>
         </div>
     );
 }
