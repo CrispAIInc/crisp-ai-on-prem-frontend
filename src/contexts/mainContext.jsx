@@ -1258,6 +1258,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     }, []);
 
     const [blogs, setBlogs] = useState([]);
+    const [selectedBlog, setSelectedBlog] = useState(null);
     useEffect(() => {
         async function fetchBlogs() {
             const { blogs } = await makeApiRequest('/blogs');
@@ -1275,6 +1276,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     // create value object with all the states
     const value = {
         blogs, setBlogs,
+        selectedBlog, setSelectedBlog,
         jsonEntities,
         selectedJsonEntity,
         setSelectedJsonEntity,
