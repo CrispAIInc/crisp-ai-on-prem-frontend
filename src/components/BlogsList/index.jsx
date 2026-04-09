@@ -3,6 +3,7 @@ import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import { searchByKey, sortByKey } from '../../utils';
 import BlogItem from '../BlogItem';
+import BlogViewerModal from '../BlogViewerModal';
 
 const BlogsList = () => {
 
@@ -14,7 +15,7 @@ const BlogsList = () => {
 
     const [searchValue, setSearchValue] = useState("");
     const [blogsResults, setBlogsResults] = useState(blogs);
-    const handleJsonEntitiesSearch = (e) => {
+    const handleBlogsSearch = (e) => {
         const value = e?.target?.value || "";
         setSearchValue(value);
 
@@ -28,12 +29,14 @@ const BlogsList = () => {
 
     useEffect(() => {
         setBlogsResults(sortByKey(blogs, "title"));
-        handleJsonEntitiesSearch();
+        handleBlogsSearch();
     }, [blogs]);
+
+    const [showBlogModal, setShowBlogModal] = useState(false);
 
     function handleBlogClick(blog) {
         setSelectedBlog(blog);
-        // setShowJsonEntityModal(true);
+        setShowBlogModal(true);
     }
 
     return (
@@ -46,7 +49,7 @@ const BlogsList = () => {
                             className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full rounded-xl !pl-[10px]`}
                             placeholder={"Search..."}
                             value={searchValue}
-                            onChange={handleJsonEntitiesSearch}
+                            onChange={handleBlogsSearch}
                         />
                         <div className="overflow-y-auto h-full">
                             {
@@ -58,6 +61,12 @@ const BlogsList = () => {
                     </>
                 ) : (
                     <BaseHeading text="No composers found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                )
+            }
+
+            {
+                showBlogModal && (
+                    <BlogViewerModal show={showBlogModal} onHide={() => setShowBlogModal(false)} />
                 )
             }
         </>

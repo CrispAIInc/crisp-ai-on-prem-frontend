@@ -574,11 +574,11 @@ const ChatPanel = () => {
         to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
         context: blogContext
       };
-      const { success, title, url, message } = await makeApiRequest('/blog', 'POST', payload);
+      const { success, message, ...newBlog } = await makeApiRequest('/blog', 'POST', payload);
 
       if (success) {
         setStep(STEPS[3]);
-        setBlogs(prev => [...prev, { title, url }]);
+        setBlogs(prev => [...prev, newBlog]);
         // const link = document.createElement("a");
         // link.href = url;
         // link.download = title + ".docx";

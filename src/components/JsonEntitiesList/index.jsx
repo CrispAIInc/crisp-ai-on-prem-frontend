@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import BaseHeading from '../BaseHeading';
 import { searchByKey, sortByKey } from '../../utils';
-import KnowledgeGraphModal from '../JsonEntityModal';
+import JsonEntityModal from '../JsonEntityModal';
 import JsonEntityItem from '../JsonEntityItem';
 
 const KnowledgeGraphsList = () => {
@@ -64,7 +64,7 @@ const KnowledgeGraphsList = () => {
                 )
             }
 
-            {showJsonEntityModal && <KnowledgeGraphModal show={showJsonEntityModal} onHide={() => setShowJsonEntityModal(false)} />}
+            {showJsonEntityModal && <JsonEntityModal show={showJsonEntityModal} onHide={() => setShowJsonEntityModal(false)} />}
         </>
     );
 };

@@ -6,11 +6,12 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import JsonViewer from '../JsonViewer';
 import RippleButton from '../RippleButton';
 
-const JsonEntityModal = ({ show, onHide }) => {
+
+function BlogViewerModal({ show, onHide }) {
 
     const {
         theme,
-        selectedJsonEntity
+        selectedBlog,
     } = useContext(MainContext);
 
     const [isDownloading, setIsDownloading] = useState(false);
@@ -18,24 +19,22 @@ const JsonEntityModal = ({ show, onHide }) => {
     const handleDownload = () => {
         setIsDownloading(true);
         try {
-            const jsonString = JSON.stringify(selectedJsonEntity.graph, null, 2); // formatted
-            const blob = new Blob([jsonString], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
 
             const link = document.createElement("a");
-            link.href = url;
-            link.download = `${selectedJsonEntity.title}.json`;
+            link.href = selectedBlog.url;
+            link.download = `${selectedBlog.title}.docx`;
             document.body.appendChild(link);
             link.click();
 
             document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(selectedBlog.url);
         } catch (error) {
             console.log(error);
         } finally {
             setIsDownloading(false);
         }
     };
+
 
     return (
         <Modal
@@ -48,17 +47,14 @@ const JsonEntityModal = ({ show, onHide }) => {
             <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                 <Modal.Title id="contained-modal-title-vcenter" className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-1">
-                        <DataObjectIcon className={`${theme === 'dark' && 'text-textColor-200'}`} fontSize="large" />
-                        <p>JSON Structure</p>
+                        <p>{selectedBlog.title}</p>
                     </div>
                     <div>
                         <RippleButton cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
                             disabled={isDownloading} onClick={handleDownload}>
-                            {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Download JSON'}
+                            {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Download'}
                         </RippleButton>
                     </div>
-                    {/* JSON/Graph switched */}
-                    {/* ... */}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body
@@ -69,7 +65,11 @@ const JsonEntityModal = ({ show, onHide }) => {
                     {/* Scrollable JSON Container */}
                     <div className="flex-1 overflow-y-auto p-6">
                         <div className={`${theme === "light" ? 'bg-[#f5f5f5]' : 'bg-[#222]'} rounded-lg min-h-full`}>
-                            <JsonViewer />
+                            <iframe
+                                src={selectedBlog.url}
+                                title={selectedBlog.title}
+                                className="w-full h-full rounded-lg"
+                            />
                         </div>
                     </div>
 
@@ -86,6 +86,6 @@ const JsonEntityModal = ({ show, onHide }) => {
             </Modal.Footer>
         </Modal>
     );
-};
+}
 
-export default JsonEntityModal;
+export default BlogViewerModal;
