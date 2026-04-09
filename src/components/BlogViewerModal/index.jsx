@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 
-import DataObjectIcon from '@mui/icons-material/DataObject';
-import JsonViewer from '../JsonViewer';
+import useFirebase from '../../hooks/useFirebase';
 import RippleButton from '../RippleButton';
+
+import { renderAsync } from "docx-preview";
 
 
 function BlogViewerModal({ show, onHide }) {
@@ -14,7 +15,27 @@ function BlogViewerModal({ show, onHide }) {
         selectedBlog,
     } = useContext(MainContext);
 
+    const { getPublicUrl } = useFirebase();
+
     const [isDownloading, setIsDownloading] = useState(false);
+    const viewer = useRef(null);
+
+    useEffect(() => {
+        async function convert() {
+            const publicReelUrl = await getPublicUrl(selectedBlog.url);
+
+            console.log(publicReelUrl);
+            // setBlogPublicUrl(`https://view.officeapps.live.com/op/embed.aspx?src=${publicReelUrl}`);
+
+            const res = await fetch(publicReelUrl);
+            const blob = await res.blob();
+
+            viewer.current.innerHTML = "";
+            await renderAsync(blob, viewer.current);
+        }
+
+        convert();
+    }, [getPublicUrl, selectedBlog.url]);
 
     const handleDownload = () => {
         setIsDownloading(true);
@@ -61,18 +82,36 @@ function BlogViewerModal({ show, onHide }) {
                 className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}  p-0 `}
             >
                 <div className="flex flex-col h-[60vh]">
+                    <div className="flex-1 overflow-auto p-6">
+                        <div
+                            ref={viewer}
+                            className={`
+        w-full min-h-full rounded-lg
+        ${theme === "light" ? "bg-[#f5f5f5]" : "bg-[#222]"}
 
-                    {/* Scrollable JSON Container */}
-                    <div className="flex-1 overflow-y-auto p-6">
-                        <div className={`${theme === "light" ? 'bg-[#f5f5f5]' : 'bg-[#222]'} rounded-lg min-h-full`}>
-                            <iframe
-                                src={selectedBlog.url}
-                                title={selectedBlog.title}
-                                className="w-full h-full rounded-lg"
-                            />
-                        </div>
+        [&_.docx]:w-full
+        [&_.docx]:max-w-full
+
+        [&_.docx-wrapper]:w-full
+        [&_.docx-wrapper]:flex
+        [&_.docx-wrapper]:justify-center
+        [&_.docx-wrapper]:overflow-x-auto
+
+        [&_.docx-wrapper>section]:w-full
+        [&_.docx-wrapper>section]:max-w-full
+        [&_.docx-wrapper>section]:box-border
+        [&_.docx-wrapper>section]:bg-white
+        [&_.docx-wrapper>section]:rounded-xl
+        [&_.docx-wrapper>section]:shadow-lg
+
+        [&_.docx-wrapper>section]:scale-[0.99]
+        [&_.docx-wrapper>section]:origin-top
+        [&_.docx-wrapper>section]:!p-8
+    [&_.docx-wrapper>section]:!m-0
+        [&_.docx-wrapper]:p-2
+      `}
+                        />
                     </div>
-
                 </div>
             </Modal.Body>
 

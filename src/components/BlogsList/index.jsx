@@ -60,7 +60,7 @@ const BlogsList = () => {
                         </div>
                     </>
                 ) : (
-                    <BaseHeading text="No composers found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
+                    <BaseHeading text="No blogs found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                 )
             }
 
