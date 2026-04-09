@@ -115,6 +115,7 @@ const ChatPanel = () => {
     checkedSourcesCount,
     setJsonEntities,
     setSelectedJsonEntity,
+    setBlogs,
   } = useContext(MainContext);
 
   const { notify } = useToast();
@@ -577,12 +578,13 @@ const ChatPanel = () => {
 
       if (success) {
         setStep(STEPS[3]);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = title + ".docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        setBlogs(prev => [...prev, { title, url }]);
+        // const link = document.createElement("a");
+        // link.href = url;
+        // link.download = title + ".docx";
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link);
       } else {
         throw new Error(message || "couldn't donwload the blog");
       }
