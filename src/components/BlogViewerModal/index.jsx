@@ -17,17 +17,12 @@ function BlogViewerModal({ show, onHide }) {
 
     const { getPublicUrl } = useFirebase();
 
-    console.log(selectedBlog);
-
     const [isDownloading, setIsDownloading] = useState(false);
     const viewer = useRef(null);
 
     useEffect(() => {
         async function convert() {
             const publicReelUrl = await getPublicUrl(selectedBlog.blog_url);
-
-            console.log(publicReelUrl);
-            // setBlogPublicUrl(`https://view.officeapps.live.com/op/embed.aspx?src=${publicReelUrl}`);
 
             const res = await fetch(publicReelUrl);
             const blob = await res.blob();
@@ -39,18 +34,27 @@ function BlogViewerModal({ show, onHide }) {
         convert();
     }, [getPublicUrl, selectedBlog.blog_url]);
 
-    const handleDownload = () => {
+    const handleDownload = async () => {
         setIsDownloading(true);
         try {
 
+            const publicReelUrl = await getPublicUrl(selectedBlog.blog_url);
+
             const link = document.createElement("a");
-            link.href = selectedBlog.blog_url;
-            link.download = `${selectedBlog.title}.docx`;
+            link.href = publicReelUrl;
+            link.download = selectedBlog.title + ".docx";
             document.body.appendChild(link);
             link.click();
-
             document.body.removeChild(link);
-            URL.revokeObjectURL(selectedBlog.blog_url);
+
+            // const link = document.createElement("a");
+            // link.href = selectedBlog.blog_url;
+            // link.download = `${selectedBlog.title}.docx`;
+            // document.body.appendChild(link);
+            // link.click();
+
+            // document.body.removeChild(link);
+            // URL.revokeObjectURL(selectedBlog.blog_url);
         } catch (error) {
             console.log(error);
         } finally {
@@ -67,7 +71,7 @@ function BlogViewerModal({ show, onHide }) {
             centered
             className="graph-modal p-0 flex-1"
         >
-            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
+            <Modal.Header className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                 <Modal.Title id="contained-modal-title-vcenter" className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-1">
                         <p>{selectedBlog.title}</p>
