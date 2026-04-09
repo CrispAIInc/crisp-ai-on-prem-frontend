@@ -17,12 +17,14 @@ function BlogViewerModal({ show, onHide }) {
 
     const { getPublicUrl } = useFirebase();
 
+    console.log(selectedBlog);
+
     const [isDownloading, setIsDownloading] = useState(false);
     const viewer = useRef(null);
 
     useEffect(() => {
         async function convert() {
-            const publicReelUrl = await getPublicUrl(selectedBlog.url);
+            const publicReelUrl = await getPublicUrl(selectedBlog.blog_url);
 
             console.log(publicReelUrl);
             // setBlogPublicUrl(`https://view.officeapps.live.com/op/embed.aspx?src=${publicReelUrl}`);
@@ -35,20 +37,20 @@ function BlogViewerModal({ show, onHide }) {
         }
 
         convert();
-    }, [getPublicUrl, selectedBlog.url]);
+    }, [getPublicUrl, selectedBlog.blog_url]);
 
     const handleDownload = () => {
         setIsDownloading(true);
         try {
 
             const link = document.createElement("a");
-            link.href = selectedBlog.url;
+            link.href = selectedBlog.blog_url;
             link.download = `${selectedBlog.title}.docx`;
             document.body.appendChild(link);
             link.click();
 
             document.body.removeChild(link);
-            URL.revokeObjectURL(selectedBlog.url);
+            URL.revokeObjectURL(selectedBlog.blog_url);
         } catch (error) {
             console.log(error);
         } finally {

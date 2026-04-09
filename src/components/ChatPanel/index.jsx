@@ -22,6 +22,7 @@ import StoriesInsightsTab from '../StoriesInsightsTab';
 import StoryEditor from '../StoryEditor/index.jsx';
 import VideoSegmentDescription from '../VideoSegmentDescription/index.jsx';
 import './chat-panel.css';
+import BlogViewerModal from '../BlogViewerModal/index.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -112,7 +113,7 @@ const ChatPanel = () => {
     currentChat,
     displayedSources,
     knowledgeBase,
-    checkedSourcesCount,
+    setSelectedBlog,
     setJsonEntities,
     setSelectedJsonEntity,
     setBlogs,
@@ -579,6 +580,8 @@ const ChatPanel = () => {
       if (success) {
         setStep(STEPS[3]);
         setBlogs(prev => [...prev, newBlog]);
+        setSelectedBlog(newBlog);
+        setShowBlogModal(true);
         // const link = document.createElement("a");
         // link.href = url;
         // link.download = title + ".docx";
@@ -596,6 +599,8 @@ const ChatPanel = () => {
       setStep("");
     }
   }
+
+  const [showBlogModal, setShowBlogModal] = useState(false);
 
   return (
     <aside
@@ -809,6 +814,11 @@ const ChatPanel = () => {
         </div>
       )}
       {isReelOpen && <ReelViewer reel={reel} closeReel={() => setIsReelOpen(false)} setReel={setReel} />}
+      {
+        showBlogModal && (
+          <BlogViewerModal show={showBlogModal} onHide={() => setShowBlogModal(false)} />
+        )
+      }
     </aside>
   );
 };
