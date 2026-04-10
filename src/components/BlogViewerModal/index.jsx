@@ -19,9 +19,11 @@ function BlogViewerModal({ show, onHide }) {
 
     const [isDownloading, setIsDownloading] = useState(false);
     const viewer = useRef(null);
+    const [isDocLoaded, setIsDocLoaded] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
-    useEffect(() => {
-        async function convert() {
+    async function renderDocument() {
+        try {
             const publicReelUrl = await getPublicUrl(selectedBlog.blog_url);
 
             const res = await fetch(publicReelUrl);
@@ -29,10 +31,17 @@ function BlogViewerModal({ show, onHide }) {
 
             viewer.current.innerHTML = "";
             await renderAsync(blob, viewer.current);
+            setIsDocLoaded(true);
+        } catch (error) {
+            console.log(error);
+            setIsDocLoaded(false);
+            setErrorMessage("Failed to load the document.");
         }
+    }
 
-        convert();
-    }, [getPublicUrl, selectedBlog.blog_url]);
+    useEffect(() => {
+        renderDocument();
+    }, [selectedBlog.blog_url]);
 
     const handleDownload = async () => {
         setIsDownloading(true);
@@ -61,6 +70,12 @@ function BlogViewerModal({ show, onHide }) {
             setIsDownloading(false);
         }
     };
+
+    async function retryRenderDocument() {
+        setErrorMessage(null);
+        setIsDocLoaded(false);
+        await renderDocument();
+    }
 
 
     return (
@@ -117,6 +132,28 @@ function BlogViewerModal({ show, onHide }) {
         [&_.docx-wrapper]:p-2
       `}
                         />
+                        {
+                            (!isDocLoaded || errorMessage) && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    {
+                                        errorMessage ? (
+                                            <div className="flex flex-col items-center justify-center gap-4 p-4">
+                                                <p className="text-red-500">{errorMessage}</p>
+                                                <RippleButton cssClasses='flex items-center gap-1 p-2' onClick={retryRenderDocument}>
+                                                    Retry
+                                                </RippleButton>
+                                            </div>
+                                        ) : (
+                                            !isDocLoaded && (
+                                                <div className="flex items-center justify-center h-full">
+                                                    <span className="animate-customPulse">Loading document...</span>
+                                                </div>
+                                            )
+                                        )
+                                    }
+                                </div>
+                            )
+                        }
                     </div>
                 </div>
             </Modal.Body>
