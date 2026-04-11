@@ -50,7 +50,7 @@ function BlogViewerModal({ show, onHide }) {
             const publicReelUrl = await getPublicUrl(selectedBlog.blog_url);
 
             const link = document.createElement("a");
-            link.href = publicReelUrl;
+            link.href = selectedBlog.title;
             link.download = selectedBlog.title + ".docx";
             document.body.appendChild(link);
             link.click();
