@@ -30,7 +30,7 @@ const BlogsList = () => {
     useEffect(() => {
         setBlogsResults(sortByKey(blogs, "title"));
         handleBlogsSearch();
-    }, [blogs]);
+    }, [JSON.stringify(blogs)]);
 
     const [showBlogModal, setShowBlogModal] = useState(false);
 
