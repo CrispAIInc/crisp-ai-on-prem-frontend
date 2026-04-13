@@ -10,6 +10,8 @@ import { renderAsync } from "docx-preview";
 import InfoIcon from '@mui/icons-material/Info';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import LoadingSpinner from '../LoadingSpinner';
+import { Drawer } from '@mui/material';
+import BlogProps from '../BlogProps';
 
 
 function BlogViewerModal({ show, onHide }) {
@@ -89,48 +91,49 @@ function BlogViewerModal({ show, onHide }) {
 
 
     return (
-        <Modal
-            show={show}
-            onHide={onHide}
-            size="lg"
-            centered
-            className="graph-modal p-0 flex-1"
-        >
-            <Modal.Header className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
-                <Modal.Title id="contained-modal-title-vcenter" className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-1">
-                        <p>{selectedBlog.title}</p>
-                    </div>
-                    <div className="flex gap-2 items-center">
-                        <div title="Blog Details">
-                            <InfoIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer ${theme === " light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} right-5 top-10`} onClick={handleToggleBlogProps} />
+        <>
+            <Modal
+                show={show}
+                onHide={onHide}
+                size="lg"
+                centered
+                className="graph-modal p-0 flex-1"
+            >
+                <Modal.Header className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
+                    <Modal.Title id="contained-modal-title-vcenter" className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-1">
+                            <p>{selectedBlog.title}</p>
                         </div>
-                        <div title="Download" onClick={handleDownload}>
-                            {
-                                isDownloading ? (
-                                    <LoadingSpinner isSmall />
-                                ) : (
-                                    <FileDownloadIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer ${theme === " light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} right-5 top-10`} />
-                                )
-                            }
+                        <div className="flex gap-2 items-center">
+                            <div title="Blog Details">
+                                <InfoIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer ${theme === " light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} right-5 top-10`} onClick={handleToggleBlogProps} />
+                            </div>
+                            <div title="Download" onClick={handleDownload}>
+                                {
+                                    isDownloading ? (
+                                        <LoadingSpinner isSmall />
+                                    ) : (
+                                        <FileDownloadIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer ${theme === " light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} right-5 top-10`} />
+                                    )
+                                }
+                            </div>
                         </div>
-                    </div>
-                    {/* <div>
+                        {/* <div>
                         <RippleButton cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
                             disabled={isDownloading} onClick={handleDownload}>
                             {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Download'}
                         </RippleButton>
                     </div> */}
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body
-                className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}  p-0 `}
-            >
-                <div className="flex flex-col h-[60vh]">
-                    <div className="flex-1 overflow-auto p-6">
-                        <div
-                            ref={viewer}
-                            className={`
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body
+                    className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}  p-0 `}
+                >
+                    <div className="flex flex-col h-[60vh]">
+                        <div className="flex-1 overflow-auto p-6">
+                            <div
+                                ref={viewer}
+                                className={`
         w-full min-h-full rounded-lg
         ${theme === "light" ? "bg-[#f5f5f5]" : "bg-[#222]"}
 
@@ -155,42 +158,48 @@ function BlogViewerModal({ show, onHide }) {
     [&_.docx-wrapper>section]:!m-0
         [&_.docx-wrapper]:p-2
       `}
-                        />
-                        {
-                            (!isDocLoaded || errorMessage) && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    {
-                                        errorMessage ? (
-                                            <div className="flex flex-col items-center justify-center gap-4 p-4">
-                                                <p className="text-red-500">{errorMessage}</p>
-                                                <RippleButton cssClasses='flex items-center gap-1 p-2' onClick={retryRenderDocument}>
-                                                    Retry
-                                                </RippleButton>
-                                            </div>
-                                        ) : (
-                                            !isDocLoaded && (
-                                                <div className="flex items-center justify-center h-full">
-                                                    <span className="animate-customPulse">Loading document...</span>
+                            />
+                            {
+                                (!isDocLoaded || errorMessage) && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        {
+                                            errorMessage ? (
+                                                <div className="flex flex-col items-center justify-center gap-4 p-4">
+                                                    <p className="text-red-500">{errorMessage}</p>
+                                                    <RippleButton cssClasses='flex items-center gap-1 p-2' onClick={retryRenderDocument}>
+                                                        Retry
+                                                    </RippleButton>
                                                 </div>
+                                            ) : (
+                                                !isDocLoaded && (
+                                                    <div className="flex items-center justify-center h-full">
+                                                        <span className="animate-customPulse">Loading document...</span>
+                                                    </div>
+                                                )
                                             )
-                                        )
-                                    }
-                                </div>
-                            )
-                        }
+                                        }
+                                    </div>
+                                )
+                            }
+                        </div>
                     </div>
-                </div>
-            </Modal.Body>
+                </Modal.Body>
 
-            <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
-                <div
-                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
-                    onClick={onHide}
-                >
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Ok</span>
-                </div>
-            </Modal.Footer>
-        </Modal>
+                <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+                    <div
+                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        onClick={onHide}
+                    >
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Ok</span>
+                    </div>
+                </Modal.Footer>
+                {/* Blog properties side drawer */}
+                <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isBlogPropsOpen} onClose={handleToggleBlogProps}>
+                    <BlogProps blog={selectedBlog} closeBlogProps={handleToggleBlogProps} />
+                </Drawer>
+            </Modal>
+
+        </>
     );
 }
 
