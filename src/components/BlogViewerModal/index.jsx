@@ -34,6 +34,10 @@ function BlogViewerModal({ show, onHide }) {
         setIsBlogPropsOpen(prev => !prev);
     };
 
+    const handleCloseBlogProps = () => {
+        setIsBlogPropsOpen(false);
+    };
+
     async function renderDocument() {
         try {
             const publicReelUrl = await getPublicUrl(selectedBlog.blog_url);
@@ -96,7 +100,7 @@ function BlogViewerModal({ show, onHide }) {
                 show={show}
                 onHide={onHide}
                 size="lg"
-                centered
+
                 className="graph-modal p-0 flex-1"
             >
                 <Modal.Header className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
@@ -194,8 +198,8 @@ function BlogViewerModal({ show, onHide }) {
                     </div>
                 </Modal.Footer>
                 {/* Blog properties side drawer */}
-                <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isBlogPropsOpen} onClose={handleToggleBlogProps}>
-                    <BlogProps blog={selectedBlog} closeBlogProps={handleToggleBlogProps} />
+                <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isBlogPropsOpen} onClose={handleCloseBlogProps}>
+                    <BlogProps blog={selectedBlog} closeBlogProps={handleCloseBlogProps} />
                 </Drawer>
             </Modal>
 
