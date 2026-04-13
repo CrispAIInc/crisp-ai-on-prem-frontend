@@ -7,6 +7,10 @@ import RippleButton from '../RippleButton';
 
 import { renderAsync } from "docx-preview";
 
+import InfoIcon from '@mui/icons-material/Info';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import LoadingSpinner from '../LoadingSpinner';
+
 
 function BlogViewerModal({ show, onHide }) {
 
@@ -21,6 +25,12 @@ function BlogViewerModal({ show, onHide }) {
     const viewer = useRef(null);
     const [isDocLoaded, setIsDocLoaded] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
+
+    const [isBlogPropsOpen, setIsBlogPropsOpen] = useState(false);
+
+    const handleToggleBlogProps = () => {
+        setIsBlogPropsOpen(prev => !prev);
+    };
 
     async function renderDocument() {
         try {
@@ -91,12 +101,26 @@ function BlogViewerModal({ show, onHide }) {
                     <div className="flex items-center gap-1">
                         <p>{selectedBlog.title}</p>
                     </div>
-                    <div>
+                    <div className="flex gap-2 items-center">
+                        <div title="Blog Details">
+                            <InfoIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer ${theme === " light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} right-5 top-10`} onClick={handleToggleBlogProps} />
+                        </div>
+                        <div title="Download" onClick={handleDownload}>
+                            {
+                                isDownloading ? (
+                                    <LoadingSpinner isSmall />
+                                ) : (
+                                    <FileDownloadIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer ${theme === " light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} right-5 top-10`} />
+                                )
+                            }
+                        </div>
+                    </div>
+                    {/* <div>
                         <RippleButton cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
                             disabled={isDownloading} onClick={handleDownload}>
                             {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Download'}
                         </RippleButton>
-                    </div>
+                    </div> */}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body
