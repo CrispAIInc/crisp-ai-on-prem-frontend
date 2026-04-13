@@ -19,7 +19,7 @@ function BlogProps({ closeBlogProps = () => { } }) {
         knowledgeBase,
     } = useContext(MainContext);
 
-    const sourceObject = knowledgeBase.find(item => item.source_path === selectedBlog.source_path);
+    const sourcesUsed = knowledgeBase.filter(item => item.source_path === selectedBlog.source_path) || [];
 
 
     return (
@@ -60,6 +60,46 @@ function BlogProps({ closeBlogProps = () => { } }) {
                             <strong>Blog title: </strong>
 
                             <span className="break-words">{selectedBlog.title}</span>
+                        </div>
+                    </div>
+                </Accordion>
+
+
+                {/* videos used */}
+                <Accordion IconComponent={<PlayCircleOutlineIcon fontSize='small' className="text-purple-700" />} fromReelProps chosenLanguage={"en"} heading="Sources used in this blog" isFirstOpen>
+                    <div>
+                        {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
+                        <div className='flex flex-col flex-wrap gap-2'>
+                            {sourcesUsed?.map((video, index) => (
+                                <div key={index} className='flex items-start gap-2 p-1 rounded'>
+                                    {/* <img src={video.thumbnail} alt={video.source_path} className='w-12 h-12 rounded' /> */}
+                                    <GsFile gsUrl={video.thumbnail} alt={video.source_path} className="w-12 h-12 rounded" />
+                                    <div className="flex flex-col gap-0">
+                                        <div className="flex items-center gap-2">
+                                            <p className='text-sm font-semibold break-all'>{video.source_path}</p>
+                                            {/* {
+                                                !Array.isArray(video?.category) ? <Chip cssClasses="italic !text-[8px] !px-1" content={video.category} />
+                                                    :
+                                                    <div className="flex flex-wrap items-center gap-1">
+                                                        {
+                                                            video.category?.map((cat, index) => (
+                                                                <Chip key={`${cat}-${index}`} cssClasses="italic !text-[8px] !px-1" content={cat} />
+                                                            ))
+                                                        }
+                                                    </div>
+                                            } */}
+                                        </div>
+
+                                        {/* time segments */}
+                                        <div className="flex items-center gap-1 mt-1">
+                                            <AccessTimeIcon fontSize='small' className="text-gray-500" />
+                                            <span className="text-xs text-gray-500 tracking-wide font-bold">
+                                                {selectedBlog.range_from} - {selectedBlog.range_to}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </Accordion>
