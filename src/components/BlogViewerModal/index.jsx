@@ -100,8 +100,7 @@ function BlogViewerModal({ show, onHide }) {
                 show={show}
                 onHide={onHide}
                 size="lg"
-
-                className="graph-modal p-0 flex-1"
+                centered
             >
                 <Modal.Header className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                     <Modal.Title id="contained-modal-title-vcenter" className="flex items-center justify-between w-full">
@@ -198,7 +197,17 @@ function BlogViewerModal({ show, onHide }) {
                     </div>
                 </Modal.Footer>
                 {/* Blog properties side drawer */}
-                <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isBlogPropsOpen} onClose={handleCloseBlogProps}>
+                <style>
+                    {`
+                        .MuiPaper-root {
+                            border-top-left-radius: 32px;
+                            border-bottom-left-radius: 32px;
+                            box-shadow: 0px 0px 20px -7px;
+                            border: none;
+                        }
+                    `}
+                </style>
+                <Drawer className='pointer-events-auto shadow-2xl' slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isBlogPropsOpen} onClose={handleCloseBlogProps}>
                     <BlogProps blog={selectedBlog} closeBlogProps={handleCloseBlogProps} />
                 </Drawer>
             </Modal>
