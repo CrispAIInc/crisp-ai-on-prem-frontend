@@ -10,7 +10,7 @@ import RippleButton from '../RippleButton/index.jsx';
 import StoriesList from '../StoriesList/index.jsx';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 
-function StoriesInsightsTab({
+function GenStories({
     setShowStoriesEditor,
     currentTab,
     setCurrentTab,
@@ -83,7 +83,7 @@ function StoriesInsightsTab({
                 }))
             }));
 
-            setShowStoriesEditor(true);
+            setShowStoriesEditor?.(true);
         } catch (error) {
             console.log(error);
         } finally {
@@ -211,4 +211,4 @@ function StoriesInsightsTab({
     );
 }
 
-export default StoriesInsightsTab;
+export default GenStories;

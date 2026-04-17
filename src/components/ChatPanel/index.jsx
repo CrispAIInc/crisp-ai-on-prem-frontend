@@ -124,6 +124,7 @@ const ChatPanel = () => {
   const [isNewInsight, setIsNewInsight] = useState(false);
 
   const [currentTab, setCurrentTab] = useState("Stories");  // insights | stories | Blogs
+  const [showStoriesEditor, setShowStoriesEditor] = useState(false);
 
   const closeEditor = useCallback(() => {
     setIsNewInsight(false);
@@ -160,7 +161,7 @@ const ChatPanel = () => {
     setIsRightSidebarOpen(true);
   }, [setSidebarWidth, maxWidth, setIsRightSidebarOpen]);
 
-  const [showStoriesEditor, setShowStoriesEditor] = useState(false);
+
 
   useEffect(() => {
     if (showStoriesEditor === true || showEditor === true) {

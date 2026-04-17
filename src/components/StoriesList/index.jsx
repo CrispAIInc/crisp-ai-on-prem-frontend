@@ -46,7 +46,7 @@ function StoriesList({ setShowStoriesEditor }) {
         });
         setSelectedStory(story);
         setIsNewStory(false);
-        setShowStoriesEditor(true);
+        setShowStoriesEditor?.(true);
     };
 
     const [hoveredStory, setHoveredStory] = useState(null);

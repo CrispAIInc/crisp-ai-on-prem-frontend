@@ -12,6 +12,7 @@ import GenStories from "../GenStories";
 function StoriesInsightsTab({
     currentTab,
     setCurrentTab,
+    setShowStoriesEditor,
     videoStart,
     setVideoStart,
     videoEnd,
@@ -70,7 +71,7 @@ function StoriesInsightsTab({
             </div>
             {
                 currentTab === "Stories" ? (
-                    <GenStories />
+                    <GenStories setShowStoriesEditor={setShowStoriesEditor} />
                 ) : (
                     <GenBlogs
                         videoStart={videoStart}
