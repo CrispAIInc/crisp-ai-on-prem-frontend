@@ -539,9 +539,29 @@ const ChatPanel = () => {
   const [isGeneratinBlog, setIsGeneratingBlog] = useState(false);
   const canGenerateBlog = checkedVideoOrPdfSources.length === 1 && blogContext?.trim() !== "" && !isProjectReadOnly;
 
+  function isValidTimeFrame(sourceLength, start, end) {
+    const startInSeconds = toSeconds(start);
+    const endInSeconds = toSeconds(end);
+    return startInSeconds >= 0 && endInSeconds <= sourceLength && startInSeconds < endInSeconds;
+  }
+
+  function isValidPageFrame(totalPages, from, to) {
+    const fromPage = Number(from);
+    const toPage = Number(to);
+    return fromPage >= 1 && toPage <= totalPages && fromPage < toPage;
+  }
+
   async function generateBlog() {
     try {
       if (!canGenerateBlog) return;
+      if (checkedVideoOrPdfSources[0].file_type === "video" && !isValidTimeFrame(checkedVideoOrPdfSources[0].source_duration, videoStart, videoEnd)) {
+        throw new Error("Invalid time frame selected.");
+      }
+      if (checkedVideoOrPdfSources[0].file_type === "pdf" && !isValidPageFrame(checkedVideoOrPdfSources[0].total_pages, pageFrom, pageTo)) {
+        throw new Error("Invalid page frame selected.");
+      }
+
+
       setIsGeneratingBlog(true);
 
       setStep("");
@@ -576,25 +596,24 @@ const ChatPanel = () => {
         to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
         context: blogContext
       };
-      const { success, message, ...newBlog } = await makeApiRequest('/blog', 'POST', payload);
+      // const { success, message, ...newBlog } = await makeApiRequest('/blog', 'POST', payload);
 
-      if (success) {
-        setStep(STEPS[3]);
-        setBlogs(prev => [...prev, newBlog]);
-        setSelectedBlog(newBlog);
-        setShowBlogModal(true);
-        // const link = document.createElement("a");
-        // link.href = url;
-        // link.download = title + ".docx";
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
-      } else {
-        throw new Error(message || "couldn't donwload the blog");
-      }
+      // if (success) {
+      //   setStep(STEPS[3]);
+      //   setBlogs(prev => [...prev, newBlog]);
+      //   setSelectedBlog(newBlog);
+      //   setShowBlogModal(true);
+      // } else {
+      //   throw new Error(message || "couldn't donwload the blog");
+      // }
 
     } catch (error) {
       console.log(error);
+      notify({
+        variant: "error",
+        heading: "Couldn't generate blog",
+        subheading: error.message || "Something went wrong. Please verify your inputs and try again..",
+      });
     } finally {
       setIsGeneratingBlog(false);
       setStep("");
