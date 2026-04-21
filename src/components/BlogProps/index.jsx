@@ -36,11 +36,11 @@ function BlogProps({ closeBlogProps = () => { } }) {
                         {/* creation date */}
                         <div className='mb-2'>
 
-                            <strong>Creation date & time:: </strong>
+                            <strong>Creation date & time: </strong>
 
                             <span className="break-words">
                                 {
-                                    formatReadableDate(new Date(selectedBlog.created_at))
+                                    selectedBlog?.created_at ? formatReadableDate(new Date(selectedBlog.created_at)) : "-"
                                 }
                             </span>
                         </div>

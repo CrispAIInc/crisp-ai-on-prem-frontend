@@ -582,12 +582,6 @@ const ChatPanel = () => {
         setBlogs(prev => [...prev, newBlog]);
         setSelectedBlog(newBlog);
         setShowBlogModal(true);
-        // const link = document.createElement("a");
-        // link.href = url;
-        // link.download = title + ".docx";
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
       } else {
         throw new Error(message || "couldn't donwload the blog");
       }
