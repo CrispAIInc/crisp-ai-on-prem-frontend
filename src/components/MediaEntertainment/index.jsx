@@ -41,6 +41,7 @@ function MediaEntertainment({
     const { theme, displayedSources } = useContext(MainContext);
 
     const [, setContextFocused] = useState(false);
+    // const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(true);
 
     const { notify } = useToast();
 
@@ -96,6 +97,9 @@ function MediaEntertainment({
 
 
             setIsReelGenerated(true);
+
+            reel.title = "";
+            setContext('');
 
             // setTimeout(() => {
             //     setIsReelOpen(true);
@@ -233,7 +237,7 @@ function MediaEntertainment({
                         <span className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} text-sm`}>When no context or topic is provided, the reel will be based on the existing highlights.</span>
                     </div>
                     <textarea
-                        className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-2xl resize-none focus:outline-none`}
                         rows="3"
                         placeholder='What do you want your reel to be about?'
                         onFocus={() => setContextFocused(true)}
@@ -248,7 +252,7 @@ function MediaEntertainment({
                     <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel title</label>
                     <input
                         className={`${theme === 'dark' && 'text-textColor-100'
-                            } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md" : '!border !border-textColor-100'} focus:outline-none w-full focus:ring-2 focus:ring-blue-500`}
+                            } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50" : '!border !border-textColor-100'} focus:outline-none w-full rounded-xl`}
                         placeholder="Write a title for the reel"
                         value={reel.title}
                         onChange={(e) => setReel(prev => ({ ...prev, title: e.target.value }))}
@@ -297,7 +301,7 @@ function MediaEntertainment({
                 <BaseHeading text="Your reels" className="mt-2" />
                 {(reels?.length > 0 || reelsResults?.length > 0) && (
                     <input
-                        className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full  rounded-full !pl-[10px]`}
+                        className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full rounded-xl !pl-[10px]`}
                         placeholder={"Search..."}
                         value={reelsSearchValue}
                         onChange={handleReelsSearch}

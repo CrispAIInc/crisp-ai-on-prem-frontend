@@ -7,7 +7,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
 import { decimalSecondsToHHMMSS, formatTime, generateRandomHash, timeToSeconds, toBase64, toSeconds } from '../../utils';
-import AddOptionsModal from "../AddOptionsModal";
+// import AddOptionsModal from "../AddOptionsModal";
 import CustomSelectTwo from '../CustomSelectTwo';
 import ImageUpload from '../ImageUpload';
 import PreviewModal from '../PreviewModal';
@@ -25,6 +25,7 @@ import AnimatedText from '../AnimatedText/index.jsx';
 import ChatInput from '../ChatInput/index.jsx';
 import Chip from '../Chip/index.jsx';
 import SegmentDescription from '../SegmentDescription/index.jsx';
+import BaseHeading from '../BaseHeading/index.jsx';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -247,7 +248,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
   async function handleCaptioning(query) {
     let timestamps = await makeApiRequest('/find-timestamps', 'POST', JSON.stringify({
       prompt: query,
-      sources: checkedSources
+      sources: checkedSources.filter(items => items.file_type === "video"),
     }));
 
     return timestamps;
@@ -435,9 +436,8 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
         url.append("start_timestamp", formatTime((start)));
         url.append("end_timestamp", formatTime((end)));
-        url.append("video_filename", displayedSources.find(i => i.is_checked).source_path);
+        url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0]?.source_path);
         url.append("prompt", userMessage);
-
         let sessionID = null; // Variable to store the session ID
         const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message?${url.toString()}`, {
           headers: {
@@ -630,7 +630,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             )}
           </div>
         )}
-        {!isProjectReadOnly && <AddOptionsModal
+        {/* {!isProjectReadOnly && <AddOptionsModal
           text={
             selectedLanguage == "en" ? data.bot_message : newData.translatedText
           }
@@ -647,7 +647,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           showNoteModal={showNoteModal}
           selectedNote={selectedNote}
           notes={notes}
-        />}
+        />} */}
       </div>
     );
 
@@ -866,7 +866,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       const botMessage = (
         <div>
           <p>{caption}</p>
-          {!isProjectReadOnly && <AddOptionsModal
+          {/* {!isProjectReadOnly && <AddOptionsModal
             text={caption}
             models={["gpt-4-vision"]}
             addToNewNote={addToNewNote}
@@ -882,7 +882,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             selectedNote={selectedNote}
             notes={notes}
           />
-          }
+          } */}
         </div>
       );
       setMessages((prevMessages) => {
@@ -956,6 +956,12 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
           })
         }
       </section>
+
+      {
+        messages.length > 0 && (
+          <BaseHeading text="Crisp Wiz interaction" className="mb-3" />
+        )
+      }
 
       {messages?.length > 0 && <section
         className={`rounded-3xl overflow-hidden ${theme === "light" ? "!border" : "!border !border-textColor-300"
@@ -1067,7 +1073,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                                   : "text-textColor-200"
                                   }`}
                               >
-                                {!isProjectReadOnly && <AddOptionsModal
+                                {/* {!isProjectReadOnly && <AddOptionsModal
                                   models={["dall-e-3"]}
                                   text={message?.img}
                                   addToNewNote={addToNewNote}
@@ -1082,7 +1088,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                                   showNoteModal={showNoteModal}
                                   selectedNote={selectedNote}
                                   notes={notes} />
-                                }
+                                } */}
                               </span>
                             </div>
                             <div className="flex flex-wrap items-center gap-1 mt-3">
@@ -1135,7 +1141,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                             (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                           }
 
-                          {!isProjectReadOnly && <AddOptionsModal
+                          {/* {!isProjectReadOnly && <AddOptionsModal
                             text={
                               message?.botText
                             }
@@ -1153,7 +1159,7 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                             selectedNote={selectedNote}
                             notes={notes}
                           />
-                          }
+                          } */}
                         </>
                       )}
                     </div>

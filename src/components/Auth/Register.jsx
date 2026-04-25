@@ -10,6 +10,7 @@ import Alert from '@mui/material/Alert';
 
 export default function Register() {
     const navigate = useNavigate();
+    const { accountDeleted = false } = location.state || {};
     const [userInfo, setUserInfo] = useState({
         firstName: "",
         lastName: "",
@@ -84,6 +85,10 @@ export default function Register() {
             {
                 error === false ? <Alert className="mb-3">Verification email sent! Check out your inbox.</Alert> : error !== null ? <p className="mb-4 text-center text-red-500">{error}</p> : null
 
+            }
+
+            {
+                accountDeleted && <Alert className="mb-3">Account deleted successfully!</Alert>
             }
 
             <div className="flex flex-col gap-4">

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { MainContext } from "../contexts/mainContext.jsx";
 import { useResizableSidebar } from './useResizableSidebar';
+import { useToast } from "../contexts/toastContext.jsx";
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 export default function useReferenceLinkClick(isFromChat = false, contentPanelContainerRef) {
@@ -15,9 +16,14 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         setJumpToPage,
         setShowMetadata,
         setSummaries,
-        setIsLeftSidebarOpen,
-        setActiveView
+        knowledgeBase,
+        setActiveView,
+        workspaceContainer,
     } = useContext(MainContext);
+
+    const {
+        notify
+    } = useToast();
 
     const handleVideoLinkClick = (video) => {
         setFromChat(isFromChat);
@@ -28,15 +34,15 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         setSummary(video.summary);
         setSummaries(video.topic_summaries);
         setActiveView('resource');
-        setSidebarWidth(prev => {
-            if (prev !== maxWidth) return maxWidth;
-            return window.innerWidth / 3.5;
-        });
-        setIsLeftSidebarOpen(true);
-        // workspaceContainer.current.scrollTo({
-        //     top: 0,
-        //     behavior: "smooth", // Enables smooth scrolling
+        // setSidebarWidth(prev => {
+        //     if (prev !== maxWidth) return maxWidth;
+        //     return window.innerWidth / 3.5;
         // });
+        // setIsLeftSidebarOpen(true);
+        workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
         setShowMetadata(true);
         // setShowNoteDetails(false);
     };
@@ -50,15 +56,15 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         setSummaries(pdf.topic_summaries);
         setActiveView('resource');
         setJumpToPage({ page: parseInt(pdf?.page) + 1 });
-        setSidebarWidth(prev => {
-            if (prev !== maxWidth) return maxWidth;
-            return window.innerWidth / 3.5;
-        });
-        setIsLeftSidebarOpen(true);
-        // workspaceContainer.current.scrollTo({
-        //     top: 0,
-        //     behavior: "smooth", // Enables smooth scrolling
+        // setSidebarWidth(prev => {
+        //     if (prev !== maxWidth) return maxWidth;
+        //     return window.innerWidth / 3.5;
         // });
+        // setIsLeftSidebarOpen(true);
+        workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
         setShowMetadata(true);
         // setShowNoteDetails(false);
     };
@@ -66,14 +72,17 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
     const handleSourceLinkClick = (event, source) => {
         if (!source) return;
 
-        if (event) event.preventDefault();
+        const sourceExist = knowledgeBase.find(item => item.source_path === source?.source_path);
 
-        // setTimeout(() => {
-        contentPanelContainerRef?.current?.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-        // }, 0);
+        if (!sourceExist) {
+            notify({
+                variant: 'info',
+                heading: 'The source may have been deleted',
+            });
+            return;
+        }
+
+        if (event) event.preventDefault();
 
         if (source.file_type === "video") handleVideoLinkClick(source);
         else handlePDFLinkClick(source);

@@ -20,7 +20,7 @@ import { MainContext } from "../../contexts/mainContext";
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from "../../contexts/toastContext";
 import useAuth from '../../hooks/useAuth';
-import { generateRandomHash, getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
+import { delay, generateRandomHash, getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
 import AddSourceModal from "../AddSourceModal";
 import AnimatedText from '../AnimatedText';
 import BaseHeading from '../BaseHeading';
@@ -165,7 +165,7 @@ const ContentSection = ({
         resourceURL,
         isFileUploading, setIsFileUploading,
         setDisplayedSources,
-        showMetadata,
+        setShowMetadata,
         categoryOptions,
         currentResource,
         setCurrentResource,
@@ -189,200 +189,6 @@ const ContentSection = ({
     const { user } = useContext(AuthContext);
 
     const { logout } = useAuth();
-
-    const [isProgressStarted, setIsProgressStarted] = useState(false);
-    const [progressUpdateCount, setProgressUpdateCount] = useState(0);
-
-    useEffect(() => {
-        socket.on("connect", () => {
-            console.log("Connected:", socket.id);
-
-            // Generate or reuse a session ID
-            const sessionId = localStorage.getItem("sessionId") || Math.random();
-            localStorage.setItem("sessionId", sessionId);
-            console.log("Joining session:", sessionId);
-
-            // Tell the backend to join this upload session
-            socket.emit("join_upload_session", { session_id: sessionId });
-        });
-
-        socket.on('connect', () => {
-            console.log('🔌 Socket connected with ID:', socket.id);
-            console.log('🔌 Previous socket ID was:', localStorage.getItem('previousSocketId'));
-            localStorage.setItem('previousSocketId', socket.id);
-
-            // Auto-rejoin the session if we have a session ID
-            const existingSessionId = localStorage.getItem('sessionId');
-            if (existingSessionId) {
-                console.log('🔄 Auto-rejoining session after reconnect:', existingSessionId);
-                socket.emit("join_upload_session", { session_id: existingSessionId });
-
-                // Wait a moment for the join to complete
-                setTimeout(() => {
-                    console.log('🔄 Rejoin completed for session:', existingSessionId);
-                }, 500);
-            }
-        });
-
-        socket.on('disconnect', (reason) => {
-            console.log('🔌 Socket disconnected:', reason);
-        });
-
-        // Backend events (as discussed earlier)
-        socket.on('connected', (data) => {
-            console.log('Server confirmation:', data);
-        });
-
-        socket.io.on("reconnect_attempt", () => {
-            console.log("reconnect_attempt...");
-        });
-
-        socket.io.on("reconnect", () => {
-            console.log("reconnect...");
-        });
-
-        socket.on('progress_update', (data) => {
-            setProgressUpdateCount(prev => prev + 1);
-
-            // Update the displayed sources with real progress
-            setDisplayedSources((prev) => {
-                return prev.map((source) => {
-                    // Update progress for sources that are currently being uploaded
-                    // Check if this source is being uploaded (has progress property)
-
-                    //TODO: source.source_path === data.source_path ?
-                    if (source.progress !== undefined && data.progress_percentage <= 100) {
-                        if (data.currentIndex === source?.index) {
-                            // if current progress is 100 => current source finished uploading => remove progress and step from current source
-                            if (data.progress_percentage === 100) {
-                                const { progress, step, ...rest } = source;
-                                return {
-                                    // ...persistedUploadedFiles,
-                                    ...rest,
-                                    ...data,
-                                    is_checked: true
-                                };
-                            }
-                            if (data?.step_name === "Summarizing...") {
-                                return {
-                                    ...source,
-                                    // ...persistedUploadedFiles,
-                                    ...data,
-                                    progress: data.progress_percentage,
-                                    step: data.step_name,
-                                    metadata: {
-                                        ...source.metadata,
-                                        transcription: {
-                                            content: data.content,
-                                            title: "Transcription"
-                                        }
-                                    }
-                                };
-                            }
-                            if (data?.step_name === "Generating embeddings...") {
-                                return {
-                                    ...source,
-                                    // ...persistedUploadedFiles,
-                                    ...data,
-                                    progress: data.progress_percentage,
-                                    step: data.step_name,
-                                    metadata: {
-                                        ...source.metadata,
-                                        summary: {
-                                            content: data.content,
-                                            title: data.title,
-                                            verbosity: data.verbosity,
-                                            temperature: data.temperature
-                                        }
-                                    }
-                                };
-                            }
-                            return {
-                                ...source,
-                                // ...persistedUploadedFiles,
-                                ...data,
-                                progress: data.progress_percentage || 0,
-                                step: data.step_name || source.step
-                            };
-                        } else if (data.currentIndex > source?.index) {
-                            const { progress, step, ...rest } = source;
-                            return {
-                                ...rest,
-                                // ...persistedUploadedFiles,
-                                // ...data,
-                                is_checked: true
-                            };
-                        }
-                    }
-                    return { ...source };
-                });
-                // return displayedSourcesFromProgressEvent;
-            });
-        });
-
-        socket.on('upload_error', (data) => {
-            console.log('Upload error:', data);
-            setIsUploadFailed(true);
-            setUploadStatus("error");
-            setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
-        });
-
-        socket.on('upload_complete', (data) => {
-            console.log('*****************************Upload complete:*********************', data);
-            if (data.success) {
-                setUploadStatus("success");
-                setIsFileUploading(false);
-                setIsProgressStarted(false);
-                // Clear the displayed sources progress
-                setDisplayedSources((prev) => {
-                    if (data.currentIndex === prev?.index) {
-                        // remove progress and step properties from this object
-                        // delete prev.progress;
-                        // delete prev.step;
-                        const { progress, step, ...rest } = prev;
-                        return {
-                            ...rest,
-                            is_checked: true
-                        };
-                    }
-                    return prev;
-                });
-            } else {
-                setIsUploadFailed(true);
-                setUploadStatus("error");
-            }
-        });
-
-        socket.on('session_joined', (data) => {
-            // Store the session ID for use in uploads
-            if (data.session_id) {
-                localStorage.setItem("sessionId", data.session_id);
-                console.log('💾 Session ID saved to localStorage:', data.session_id);
-            }
-        });
-
-        socket.on('error', (data) => {
-            console.log('General error:', data);
-        });
-
-        // Add a generic event listener to catch any events
-        socket.onAny((eventName, ...args) => {
-            console.log('🔔 Received event:', eventName, args);
-        });
-
-
-        return () => {
-            socket.off('connect');
-            socket.off('disconnect');
-            socket.off('connect_error');
-            socket.off('connected');
-            socket.off('progress_update');
-            socket.off('upload_error');
-            socket.off('upload_complete');
-            socket.off('session_joined');
-            socket.off('error');
-        };
-    }, []);
 
     async function log() {
         localStorage.setItem('current_project', null);
@@ -420,7 +226,22 @@ const ContentSection = ({
         setCheckedAll(allSelected);
     }, [knowledgeBase]);
 
+    function removeSourceFromMetadataPanel(sources) {
+        // 1: retrieve all source paths from sources
+        const removedSourcePaths = sources.map(source => source.source_path);
+
+        // 2: check if source's filename exists in the array
+        const sourceExists = removedSourcePaths.includes(currentResource?.source_path);
+
+        // 3: clear currentResource if exist
+        if (sourceExists) {
+            setCurrentResource(null);
+            setShowMetadata(false);
+        }
+    }
+
     const deleteResource = async (event, items) => {
+        // console.log("deleting source...", items);
         try {
             setIsDeleting(true);
             setClickedIndex(items[0]);
@@ -433,8 +254,12 @@ const ContentSection = ({
                 };
             });
 
+            // remove source from metadata panel if it's active
+            removeSourceFromMetadataPanel(items);
+
             await makeApiRequest(`/delete`, "post", { sources: payload });
             setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
+
             notify({
                 variant: "success",
                 heading: "Source deleted successfully!",
@@ -462,7 +287,7 @@ const ContentSection = ({
             // );
             // setChatLoaded(chat_is_initialized);
 
-            setCurrentResource(null);
+            // setCurrentResource(null);
             setActiveView(null);
         } catch (error) {
             setIsDeleting(false);
@@ -679,8 +504,465 @@ const ContentSection = ({
         return `${name}_${hash}${extension}`;
     }
 
+    /**
+     * +++++++++++++ UPLOAD +++++++++++++++
+     */
+
+    const [isProgressStarted, setIsProgressStarted] = useState(false);
+    const [progressUpdateCount, setProgressUpdateCount] = useState(0);
+    const isUploadingRef = useRef(false);
+
+    function handleConnectToUploadSocket() {
+
+    }
+
+    function handleProgressUpdate(data) {
+        setProgressUpdateCount(prev => prev + 1);
+
+        // Update the displayed sources with real progress
+        setDisplayedSources((prev) => {
+            return prev.map((source) => {
+                // Update progress for sources that are currently being uploaded
+                // Check if this source is being uploaded (has progress property)
+
+                //TODO: source.source_path === data.source_path ?
+                if (source.progress !== undefined && data.progress_percentage <= 100) {
+                    if (data.currentIndex === source?.index) {
+                        // if current progress is 100 => current source finished uploading => remove progress and step from current source
+                        if (data.progress_percentage === 100) {
+                            const { progress, step, ...rest } = source;
+                            return {
+                                // ...persistedUploadedFiles,
+                                ...rest,
+                                ...data,
+                                is_checked: true
+                            };
+                        }
+                        if (data?.step_name === "Summarizing...") {
+                            return {
+                                ...source,
+                                // ...persistedUploadedFiles,
+                                ...data,
+                                progress: data.progress_percentage,
+                                step: data.step_name,
+                                metadata: {
+                                    ...source.metadata,
+                                    transcription: {
+                                        content: data.content,
+                                        title: "Transcription"
+                                    }
+                                }
+                            };
+                        }
+                        if (data?.step_name === "Generating embeddings...") {
+                            return {
+                                ...source,
+                                // ...persistedUploadedFiles,
+                                ...data,
+                                progress: data.progress_percentage,
+                                step: data.step_name,
+                                metadata: {
+                                    ...source.metadata,
+                                    summary: {
+                                        content: data.content,
+                                        title: data.title,
+                                        verbosity: data.verbosity,
+                                        temperature: data.temperature
+                                    }
+                                }
+                            };
+                        }
+                        return {
+                            ...source,
+                            // ...persistedUploadedFiles,
+                            ...data,
+                            progress: data.progress_percentage || 0,
+                            step: data.step_name || source.step
+                        };
+                    } else if (data.currentIndex > source?.index) {
+                        const { progress, step, ...rest } = source;
+                        return {
+                            ...rest,
+                            // ...persistedUploadedFiles,
+                            // ...data,
+                            is_checked: true
+                        };
+                    }
+                }
+                return { ...source };
+            });
+            // return displayedSourcesFromProgressEvent;
+        });
+    }
+
+    function handleUploadError(data) {
+        console.log('Upload error:', data);
+        setIsUploadFailed(true);
+        setUploadStatus("error");
+        setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
+    }
+
+    function handleUploadComplete(data) {
+        console.log('*****************************Upload complete:*********************', data);
+        if (data.success) {
+            setUploadStatus("success");
+            setIsFileUploading(false);
+            setIsProgressStarted(false);
+            // Clear the displayed sources progress
+            setDisplayedSources((prev) => {
+                if (data.currentIndex === prev?.index) {
+                    // remove progress and step properties from this object
+                    // delete prev.progress;
+                    // delete prev.step;
+                    const { progress, step, ...rest } = prev;
+                    return {
+                        ...rest,
+                        is_checked: true
+                    };
+                }
+                return prev;
+            });
+        } else {
+            setIsUploadFailed(true);
+            setUploadStatus("error");
+        }
+    }
+
+    // useEffect(() => {
+    //     // Backend events (as discussed earlier)
+    //     socket.on('connected', (data) => {
+    //         console.log('Server confirmation:', data);
+    //     });
+
+    //     socket.io.on("reconnect_attempt", () => {
+    //         console.log("reconnect_attempt...");
+    //     });
+
+    //     socket.io.on("reconnect", () => {
+    //         console.log("reconnect...");
+    //     });
+
+    //     // socket.on('progress_update', (data) => {
+    //     //     handleProgressUpdate(data);
+    //     // });
+
+    //     // socket.on('upload_error', (data) => {
+    //     //     console.log('Upload error:', data);
+    //     //     setIsUploadFailed(true);
+    //     //     setUploadStatus("error");
+    //     //     setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
+    //     // });
+
+    //     // socket.on('upload_complete', (data) => {
+    //     //     console.log('*****************************Upload complete:*********************', data);
+    //     //     if (data.success) {
+    //     //         setUploadStatus("success");
+    //     //         setIsFileUploading(false);
+    //     //         setIsProgressStarted(false);
+    //     //         // Clear the displayed sources progress
+    //     //         setDisplayedSources((prev) => {
+    //     //             if (data.currentIndex === prev?.index) {
+    //     //                 // remove progress and step properties from this object
+    //     //                 // delete prev.progress;
+    //     //                 // delete prev.step;
+    //     //                 const { progress, step, ...rest } = prev;
+    //     //                 return {
+    //     //                     ...rest,
+    //     //                     is_checked: true
+    //     //                 };
+    //     //             }
+    //     //             return prev;
+    //     //         });
+    //     //     } else {
+    //     //         setIsUploadFailed(true);
+    //     //         setUploadStatus("error");
+    //     //     }
+    //     // });
+
+    //     // socket.on('session_joined', (data) => {
+    //     //     // Store the session ID for use in uploads
+    //     //     if (data.session_id) {
+    //     //         localStorage.setItem("sessionId", data.session_id);
+    //     //         console.log('💾 Session ID saved to localStorage:', data.session_id);
+    //     //     }
+    //     // });
+
+    //     socket.on('error', (data) => {
+    //         console.log('General error:', data);
+    //     });
+
+    //     // Add a generic event listener to catch any events
+    //     socket.onAny((eventName, ...args) => {
+    //         console.log('🔔 Received event:', eventName, args);
+    //     });
+
+
+    //     return () => {
+    //         socket.off('connect');
+    //         socket.off('disconnect');
+    //         socket.off('connect_error');
+    //         socket.off('connected');
+    //         // socket.off('progress_update');
+    //         // socket.off('upload_error');
+    //         // socket.off('upload_complete');
+    //         // socket.off('session_joined');
+    //         socket.off('error');
+    //     };
+    // }, []);
+
+    function startSocket() {
+        socket.connect();
+        console.log("connecting to socket");
+
+        socket.on("connect", () => {
+            console.log("Connected:", socket.id);
+
+            // Generate or reuse a session ID
+            const sessionId = localStorage.getItem("sessionId") || Math.random();
+            localStorage.setItem("sessionId", sessionId);
+            console.log("Joining session:", sessionId);
+
+            // Tell the backend to join this upload session
+            socket.emit("join_upload_session", { session_id: sessionId });
+        });
+
+        socket.on('connect', () => {
+            console.log('🔌 Socket connected with ID:', socket.id);
+            console.log('🔌 Previous socket ID was:', localStorage.getItem('previousSocketId'));
+            localStorage.setItem('previousSocketId', socket.id);
+
+            // Auto-rejoin the session if we have a session ID
+            const existingSessionId = localStorage.getItem('sessionId');
+            if (existingSessionId) {
+                console.log('🔄 Auto-rejoining session after reconnect:', existingSessionId);
+                socket.emit("join_upload_session", { session_id: existingSessionId });
+
+                // Wait a moment for the join to complete
+                setTimeout(() => {
+                    console.log('🔄 Rejoin completed for session:', existingSessionId);
+                }, 500);
+            }
+        });
+
+        // Backend events (as discussed earlier)
+        socket.on('connected', (data) => {
+            console.log('Server confirmation:', data);
+        });
+
+        socket.io.on("reconnect_attempt", () => {
+            console.log("reconnect_attempt...");
+        });
+
+        socket.io.on("reconnect", () => {
+            console.log("reconnect...");
+        });
+
+        socket.on('progress_update', (data) => {
+            setProgressUpdateCount(prev => prev + 1);
+
+            // Update the displayed sources with real progress
+            setDisplayedSources((prev) => {
+                return prev.map((source) => {
+                    // Update progress for sources that are currently being uploaded
+                    // Check if this source is being uploaded (has progress property)
+
+                    //TODO: source.source_path === data.source_path ?
+                    if (source.progress !== undefined && data.progress_percentage <= 100) {
+                        if (data.currentIndex === source?.index) {
+                            // if current progress is 100 => current source finished uploading => remove progress and step from current source
+                            if (data.progress_percentage === 100) {
+                                const { progress, step, ...rest } = source;
+                                return {
+                                    // ...persistedUploadedFiles,
+                                    ...rest,
+                                    ...data,
+                                    is_checked: true
+                                };
+                            }
+                            if (data?.step_name === "Summarizing...") {
+                                return {
+                                    ...source,
+                                    // ...persistedUploadedFiles,
+                                    ...data,
+                                    progress: data.progress_percentage,
+                                    step: data.step_name,
+                                    metadata: {
+                                        ...source.metadata,
+                                        transcription: {
+                                            content: data.content,
+                                            title: "Transcription"
+                                        }
+                                    }
+                                };
+                            }
+                            if (data?.step_name === "Generating embeddings...") {
+                                return {
+                                    ...source,
+                                    // ...persistedUploadedFiles,
+                                    ...data,
+                                    progress: data.progress_percentage,
+                                    step: data.step_name,
+                                    metadata: {
+                                        ...source.metadata,
+                                        summary: {
+                                            content: data.content,
+                                            title: data.title,
+                                            verbosity: data.verbosity,
+                                            temperature: data.temperature
+                                        }
+                                    }
+                                };
+                            }
+                            return {
+                                ...source,
+                                // ...persistedUploadedFiles,
+                                ...data,
+                                progress: data.progress_percentage || 0,
+                                step: data.step_name || source.step
+                            };
+                        } else if (data.currentIndex > source?.index) {
+                            const { progress, step, ...rest } = source;
+                            return {
+                                ...rest,
+                                // ...persistedUploadedFiles,
+                                // ...data,
+                                is_checked: true
+                            };
+                        }
+                    }
+                    return { ...source };
+                });
+                // return displayedSourcesFromProgressEvent;
+            });
+        });
+
+        socket.on('upload_error', (data) => {
+            console.log('Upload error:', data);
+            setIsUploadFailed(true);
+            setUploadStatus("error");
+            setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
+        });
+
+        socket.on('upload_complete', (data) => {
+            console.log('*****************************Upload complete:*********************', data);
+            if (data.success) {
+                setUploadStatus("success");
+                setIsFileUploading(false);
+                setIsProgressStarted(false);
+                // Clear the displayed sources progress
+                setDisplayedSources((prev) => {
+                    if (data.currentIndex === prev?.index) {
+                        // remove progress and step properties from this object
+                        // delete prev.progress;
+                        // delete prev.step;
+                        const { progress, step, ...rest } = prev;
+                        return {
+                            ...rest,
+                            is_checked: true
+                        };
+                    }
+                    return prev;
+                });
+            } else {
+                setIsUploadFailed(true);
+                setUploadStatus("error");
+            }
+        });
+
+        socket.on('session_joined', (data) => {
+            // Store the session ID for use in uploads
+            if (data.session_id) {
+                localStorage.setItem("sessionId", data.session_id);
+                console.log('💾 Session ID saved to localStorage:', data.session_id);
+            }
+        });
+
+        socket.on('error', (data) => {
+            console.log('General error:', data);
+        });
+    }
+
+    function disconnectSocket() {
+        console.log("disconnecting from socket");
+        socket.on('disconnect', (reason) => {
+            console.log('🔌 Socket disconnected:', reason);
+        });
+
+        socket.off('connect');
+        socket.off('disconnect');
+        socket.off('connect_error');
+        socket.off('connected');
+        socket.off('progress_update');
+        socket.off('upload_error');
+        socket.off('upload_complete');
+        socket.off('session_joined');
+        socket.off('error');
+        socket.disconnect();
+    }
+
+    const removeUploadListeners = () => {
+        console.log("Removing upload listeners...");
+
+        socket.off('progress_update', handleProgressUpdate);
+        socket.off('upload_error', handleUploadError);
+        socket.off('upload_complete', handleUploadComplete);
+    };
+
+    const handleDisconnectUploadSocket = () => {
+        console.log("Disconnecting socket...");
+        socket.disconnect();
+    };
+
+    const registerUploadListeners = () => {
+        removeUploadListeners();
+        console.log("Registering upload listeners...");
+
+        socket.on("connect", () => {
+            console.log("Connected:", socket.id);
+
+            // Generate or reuse a session ID
+            const sessionId = localStorage.getItem("sessionId") || Math.random();
+            localStorage.setItem("sessionId", sessionId);
+            console.log("Joining session:", sessionId);
+
+            // Tell the backend to join this upload session
+            socket.emit("join_upload_session", { session_id: sessionId });
+        });
+
+        socket.on('connect', () => {
+            console.log('🔌 Socket connected with ID:', socket.id);
+            console.log('🔌 Previous socket ID was:', localStorage.getItem('previousSocketId'));
+            localStorage.setItem('previousSocketId', socket.id);
+
+            // Auto-rejoin the session if we have a session ID
+            const existingSessionId = localStorage.getItem('sessionId');
+            if (existingSessionId) {
+                console.log('🔄 Auto-rejoining session after reconnect:', existingSessionId);
+                socket.emit("join_upload_session", { session_id: existingSessionId });
+
+                // Wait a moment for the join to complete
+                setTimeout(() => {
+                    console.log('🔄 Rejoin completed for session:', existingSessionId);
+                }, 500);
+            }
+        });
+
+        socket.on('session_joined', (data) => {
+            // Store the session ID for use in uploads
+            if (data.session_id) {
+                localStorage.setItem("sessionId", data.session_id);
+                console.log('💾 Session ID saved to localStorage:', data.session_id);
+            }
+        });
+        socket.on('progress_update', handleProgressUpdate);
+        socket.on('upload_error', handleUploadError);
+        socket.on('upload_complete', handleUploadComplete);
+    };
+
 
     const handleUpload = async (event, fileFormat, _files) => {
+        console.log("Starting upload...");
+        startSocket();
         let rejoinInterval;
         try {
             setUploadStatus("uploading");
@@ -730,7 +1012,6 @@ const ContentSection = ({
             //TODO: loop throught files and populate the "initialSources" with the initial properties
 
 
-
             const fileSources = files.map((file, index) => {
                 const totalSourcesWithSameFilename = knowledgeBase.filter(item => item.source_path === file.name).length;
 
@@ -764,7 +1045,6 @@ const ContentSection = ({
             const totalFiles = files.length;
 
             setPersistedUploadedFiles(fileSources);
-
             setKnowledgeBase((prev) => {
                 // Merge existing knowledgeBase with new fileSources, avoiding duplicates
                 const existingPaths = new Set(prev.map(item => item.source_path));
@@ -775,13 +1055,14 @@ const ContentSection = ({
             // speed up the upload process by moving the progress bar to 3% after 10s-20s from uploading
             setTimeout(() => {
                 setKnowledgeBase(prev => prev.map(item => {
-                    if (item.progress === 0) {
+                    if (item.progress === 0 || item.progress < 15) {
                         return { ...item, progress: 3, step: "Source pre-processing..." };
                     }
                     return item;
                 }));
             }, 10000);
 
+            // await delay(3000);
             const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
 
             // ----------  Update knowledge base ----------
@@ -792,18 +1073,6 @@ const ContentSection = ({
                 variant: "success",
                 heading: "Source uploaded successfully!",
             });
-
-            // const { chat_is_initialized } = await makeApiRequest(
-            //     `/chat/all`,
-            //     "post",
-            //     JSON.stringify({
-            //         sources: [],
-            //         category: "all",
-            //         selectedAll: false,
-            //         is_exclusive: false
-            //     })
-            // );
-            // setChatLoaded(chat_is_initialized);
 
             setCurrentResource(prev => prev && uploaded_data[0]);
 
@@ -823,6 +1092,7 @@ const ContentSection = ({
             setuploadErrorMessage(error?.response?.data?.error || 'Upload failed. Please try again.');
             setKnowledgeBase(prev => prev.filter(item => !('progress' in item)));
         } finally {
+            disconnectSocket();
             clearInterval(rejoinInterval);
             setIsFileUploading(false);
             setIsProgressStarted(false);
@@ -856,7 +1126,7 @@ const ContentSection = ({
     return (
         <>
             {/* this is where i show the list of displayedSources */}
-            {!showMetadata && <section className={`relative flex flex-col items-start h-full`}>
+            <section className={`relative flex flex-col items-start h-full`}>
                 <div className="w-full">
                     <div className="w-full max-w-4xl pr-3">
                         <div className="flex flex-col gap-0">
@@ -867,15 +1137,13 @@ const ContentSection = ({
                                 data-tooltip-id="add-sources-tooltip"
                                 data-tooltip-content="Upload sources or create new indexes."
                                 id="upload_sources"
-                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'} `}
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'} ${isProjectReadOnly ? "cursor-default opacity-50" : "cursor-pointer opacity-100"}`}
                                 onClick={() => !isProjectReadOnly && handleAddModal(true)}
                             >
-                                <div className={`${isProjectReadOnly ? "cursor-default opacity-50" : "cursor-pointer opacity-100"}`}>
-                                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
-                                        Add sources
-                                    </span>
-                                </div>
+                                <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                                    Add sources
+                                </span>
 
                                 <Tooltip id="add-sources-tooltip" />
                             </div>
@@ -946,7 +1214,7 @@ const ContentSection = ({
 
                     <BaseHeading text={`Workspace sources (${results?.length} selected & ${results?.filter(i => i?.is_checked)?.length} checked.)`} className={` mt-4`} />
 
-                    {displayedSources.length > 0 && <input className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[75%] rounded-full !pl-[10px]`} placeholder={"Search in workspace sources..."} value={searchValue} onChange={handleSearch} />}
+                    {displayedSources.length > 0 && <input className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[75%] rounded-lg !pl-[10px]`} placeholder={"Search in workspace sources..."} value={searchValue} onChange={handleSearch} />}
 
                     {results?.length > 0 && <div className="flex items-center mt-2">
                         <span
@@ -972,25 +1240,35 @@ const ContentSection = ({
                                     results?.map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
                                         <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
-                                            {(showSourceContextMenu === option?.source_path && !('progress' in option)) && <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
-                                                <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
-                                                    onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
-                                                    <EditOutlinedIcon
-                                                        className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
-                                                    />
-                                                    <span>Rename</span>
-                                                </div>
-                                                <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
-                                                    <DeleteOutlineOutlinedIcon
-                                                        className={`cursor-pointer`}
-                                                    />
-                                                    <span>Delete</span>
-                                                </div>
-                                            </div>}
+                                            {
+                                                (showSourceContextMenu === option?.source_path && !('progress' in option)) && (
+
+                                                    <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+
+                                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
+                                                            onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
+                                                            <EditOutlinedIcon
+                                                                className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                                            />
+                                                            <span>Rename</span>
+                                                        </div>
+
+                                                        <hr className="m-0" />
+
+                                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
+                                                            <DeleteOutlineOutlinedIcon
+                                                                className={`cursor-pointer`}
+                                                            />
+                                                            <span>Delete</span>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             {
                                                 !isProjectReadOnly && (
                                                     !('progress' in option) ? (
-                                                        <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                        (option?.source_path === hoveredSource || showSourceContextMenu === option?.source_path) && (
+                                                            <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                        )
                                                     ) : (
                                                         <CircularProgressWithLabel value={option.progress} variant="determinate" isUploadFiled={false} />
                                                     )
@@ -1005,7 +1283,7 @@ const ContentSection = ({
                                                     <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                                 ) : null
                                             }
-                                            <div className="relative flex-shrink-0 w-10 h-10">
+                                            <div className="relative flex-shrink-0 w-12 h-12">
                                                 {(isDeleting && clickedIndex?.source_path === option?.source_path) && (
                                                     <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[5] translate-x-[-50%] translate-y-[-50%] transform">
                                                         <LoadingSpinner isSmall />
@@ -1020,14 +1298,16 @@ const ContentSection = ({
                                                     />
                                                 )
                                                     : <GsFile
-                                                        className="object-cover w-full h-full rounded-md"
+                                                        className="object-cover w-full h-full rounded-xl"
                                                         gsUrl={option.thumbnail}
                                                         alt="Video Thumbnail"
                                                         isPrivate
                                                     />}
                                             </div>
                                             <div className="flex flex-col ">
-                                                {(option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-keep' text={option?.step} />}
+                                                {
+                                                    (option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-keep' text={option?.step} />
+                                                }
                                                 <span className={`text-md font-medium break-keep ${theme === 'dark' && 'text-textColor-100'}`} style={{ overflowWrap: 'anywhere' }}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>
@@ -1132,21 +1412,6 @@ const ContentSection = ({
                                     <span>Settings</span>
                                 </div>
 
-                                {/* <div
-                                    className={`flex  px-3 items-center cursor-pointer gap-2 py-2 pl-1
-                                            ${theme === "light"
-                                            ? "hover:bg-textColor-100/20"
-                                            : "text-textColor-100 hover:bg-slate-800/50"
-                                        }`}
-                                    onClick={handleExitProject}
-                                >
-                                    {isExitPending ? <LoadingSpinner isSmall /> : <CloseOutlinedIcon
-                                        className={`cursor-pointer ${theme === "light" ? "text-[#333]" : "text-[#ABAEB4]"
-                                            }`}
-                                    />}
-                                    <span>Exit project</span>
-                                </div> */}
-
                                 <div
                                     className={`flex  px-3 text-red-600 items-center cursor-pointer gap-2 py-2 pl-1
  ${theme === "light"
@@ -1171,13 +1436,7 @@ const ContentSection = ({
                         onHide={() => setIsSettingsModalOpen(false)}
                     />
                 )}
-            </section>}
-
-            {/* metadata and source section */}
-            {showMetadata && (
-                <MetadataPanel leftWidth={leftWidth}
-                    maxWidth={maxWidth} workspaceContainer={workspaceContainer} />
-            )}
+            </section>
         </>
     );
 };

@@ -4,17 +4,25 @@ import ImageResize from "quill-image-resize-module-react";
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import makeApiRequest, { axiosInstance } from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext.jsx';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
+import { useToast } from '../../contexts/toastContext.jsx';
+import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals.js';
+import useAuth from '../../hooks/useAuth.js';
+import useMetadata from '../../hooks/useMetadata.js';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
+import { formatTime, toSeconds } from '../../utils.js';
+import KnowledgeGraph from '../Entities/index.jsx';
 import InsightEditor from '../InsightEditor/index.jsx';
 import MediaEntertainment from '../MediaEntertainment';
 import MetadataGen from '../MetadataGen';
 import ReelViewer from '../ReelViewer';
 import StoriesInsightsTab from '../StoriesInsightsTab';
 import StoryEditor from '../StoryEditor/index.jsx';
-import './chat-panel.css';
 import VideoSegmentDescription from '../VideoSegmentDescription/index.jsx';
-import { formatTime } from '../../utils.js';
+import './chat-panel.css';
+import BlogViewerModal from '../BlogViewerModal/index.jsx';
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -83,6 +91,13 @@ Quill.register('modules/referenceClickHandler', ReferenceClickHandler);
 const ChatPanel = () => {
   const { sidebarWidth: rightWidth, handleMouseDown: handleRightMouseDown, handleDoubleClick, maxWidth, setSidebarWidth } = useResizableSidebar(200, false);
 
+  const { token } = useAuth();
+
+  const {
+    currentProject,
+    isProjectReadOnly
+  } = useContext(ProjectContext);
+
   const {
     setSelectedNote,
     reels,
@@ -94,11 +109,22 @@ const ChatPanel = () => {
     theme,
     selectedStory,
     setSelectedStory,
+    checkedSources,
+    currentChat,
+    displayedSources,
+    knowledgeBase,
+    setSelectedBlog,
+    setJsonEntities,
+    setSelectedJsonEntity,
+    setBlogs,
   } = useContext(MainContext);
+
+  const { notify } = useToast();
 
   const [isNewInsight, setIsNewInsight] = useState(false);
 
-  const [currentTab, setCurrentTab] = useState("Insights");  // insights | stories
+  const [currentTab, setCurrentTab] = useState("Stories");  // insights | stories | Blogs
+  const [showStoriesEditor, setShowStoriesEditor] = useState(false);
 
   const closeEditor = useCallback(() => {
     setIsNewInsight(false);
@@ -135,7 +161,7 @@ const ChatPanel = () => {
     setIsRightSidebarOpen(true);
   }, [setSidebarWidth, maxWidth, setIsRightSidebarOpen]);
 
-  const [showStoriesEditor, setShowStoriesEditor] = useState(false);
+
 
   useEffect(() => {
     if (showStoriesEditor === true || showEditor === true) {
@@ -147,19 +173,19 @@ const ChatPanel = () => {
     }
   }, [showStoriesEditor, showEditor]);
 
-  const [actualTab, setActualTab] = useState("genMedia"); //genMetadata | genStories | genMedia
+  const [actualTab, setActualTab] = useState("genMetadata"); //genMetadata | genStories | genMedia | genGraph
 
   function handleTabClick(item) {
     setActualTab(item);
   }
 
   const [isGeneratingMetadata, setIsGeneratingMetadata] = useState(false);
-  const [verbosityValue, setVerbosityValue] = useState('Medium');
+  const [verbosityValue, setVerbosityValue] = useState('Low');
   const [context, setContext] = useState('');
 
   const [isGeneratingReel, setIsGeneratingReel] = useState(false);
   const [reelContext, setReelContext] = useState('');
-  const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1min)');
+  const [reelVerbosityValue, setReelVerbosityValue] = useState('Short (1m)');
 
   const [storyTitle, setStoryTitle] = useState(selectedStory?.story_name);
 
@@ -175,6 +201,427 @@ const ChatPanel = () => {
   });
   const [isReelOpen, setIsReelOpen] = useState(false);
 
+  /**
+   * ============== VIDEO SEGMENT FEAT ==================
+   */
+
+  const [currentSegmentTab, setCurrentSegmentTab] = useState("Time segment description");
+
+  // ========== time segment description ==============
+  const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
+
+
+
+
+  const [isSegmentPending, setIsSegmentPending] = useState(false);
+  const [showSegmentList, setShowSegmentList] = useState(true);
+  const [currentSegment, setCurrentSegment] = useState(null);
+  const [startSegmentDescription, setStartSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
+  const [endSegmentDescription, setEndSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
+
+  const [promptSegmentDescription, setPromptSegmentDescription] = useState("");
+
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+
+  const [segmentDescriptions, setSegmentDescriptions] = useState([]);
+
+  const [resultsDescription, setResultsDescription] = useState({
+    start: formatTime(startSegmentDescription),
+    end: formatTime(endSegmentDescription),
+    description: "",
+    refs: []
+  });
+
+  const canGenerate = checkedVideosCount > 0 && !isSegmentPending && promptSegmentDescription && promptSegmentDescription.trim().length > 0 && !isProjectReadOnly;
+  async function generateDescription() {
+    try {
+      if (!canGenerate) {
+        throw new Error('Make sure you provided video sources and prompt');
+      }
+
+      if (toSeconds(endSegmentDescription) <= toSeconds(startSegmentDescription)) {
+        throw new Error("Your timestamp range is invalid.");
+      }
+
+      setIsSegmentPending(true);
+      setResultsDescription(prev => ({
+        ...prev,
+        start: formatTime(startSegmentDescription),
+        end: formatTime(endSegmentDescription),
+        refs: []
+      }));
+
+      let url = new URLSearchParams();
+
+      url.append("start_timestamp", formatTime((startSegmentDescription)));
+      url.append("end_timestamp", formatTime((endSegmentDescription)));
+      url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
+      url.append("prompt", promptSegmentDescription);
+
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
+      axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+
+      const { data, success, message } = await makeApiRequest(`/segment-response?${url.toString()}`, 'GET', null, {
+        Authorization: `Bearer ${token}`,
+        SessionId: currentChat?.sessionId,
+        ProjectId: currentProject?.project_id,
+      });
+
+      if (success) {
+
+        notify({
+          variant: "success",
+          heading: "Description generated successfully",
+        });
+
+        setSegmentDescriptions(prev => [
+          ...prev,
+          data
+        ]);
+        setCurrentSegment(data);
+        setShowSegmentList(false);
+      } else {
+        throw new Error(message);
+      }
+
+    } catch (error) {
+      console.log(error);
+      notify({
+        variant: "error",
+        heading: "Couldn't generate description",
+        subheading: error?.message
+      });
+    } finally {
+      setIsSegmentPending(false);
+    }
+  }
+
+  useEffect(() => {
+
+    async function fetchTimeSegments() {
+      try {
+        axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+        const { data, success } = await makeApiRequest("/chat/segment-response", 'GET', null, {
+          ProjectId: currentProject.project_id,
+        });
+
+        if (success) {
+          setSegmentDescriptions(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchTimeSegments();
+  }, []);
+
+  // ========== time segment summary ==============
+  // const [startSegmentSummary, setStartSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
+  // const [endSegmentSummary, setEndSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
+
+  // const [promptSegmentSummary, setPromptSegmentSummary] = useState("");
+
+  // const [resultsSummary, setResultsSummary] = useState({
+  //     start: formatTime(startSegmentSummary),
+  //     end: formatTime(endSegmentSummary),
+  //     description: "",
+  //     refs: []
+  // });
+
+  // ========= Find moments in videos ===========
+
+  const [prompt, setPrompt] = useState("");
+  const [showList, setShowList] = useState(true);
+  const [currentMoment, setCurrentMoment] = useState(null);
+  const [moments, setMoments] = useState([]);
+  const [captionResults, setCaptionResults] = useState({
+    prompt: "",
+    context: "",
+    refs: [],
+  });
+
+  useEffect(() => {
+
+    async function fetchFindMoments() {
+      try {
+        axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+        const { data, success } = await makeApiRequest("/chat/moment-fetch", 'GET', null, {
+          ProjectId: currentProject.project_id,
+        });
+        if (success) {
+          setMoments(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchFindMoments();
+  }, []);
+
+  const [isPending, setIsPending] = useState(false);
+
+  async function handleCaptioning(query) {
+    let response = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
+      prompt: query,
+      sources: checkedSources.filter(items => items.file_type === "video"),
+      fromCrispWiz: false
+    }));
+
+    return response;
+  }
+  async function handleCaptionSubmit() {
+    try {
+      setIsPending(true);
+      if (!displayedSources?.every(item => item?.is_checked === false)) {
+        await makeApiRequest(
+          `/handle-embeddings`,
+          "post",
+          JSON.stringify({
+            sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+          })
+        );
+      }
+      let { results, success, message, ...rest } = await handleCaptioning(prompt);
+
+      if (success) {
+        if (results.length > 0) {
+          const finalResults = results.map((segment) => {
+            const source = knowledgeBase.find(item => item.source_id === segment.source_id);
+
+            if (!source) return null;
+
+            return {
+              ...segment,
+              timestampText: `${source.source_path} | ${segment.timestamp}`,
+              source: {
+                ...source,
+                timestamp: segment.timestamp
+              }
+            };
+          }).filter(Boolean);
+          const moment = {
+            ...rest,
+            results: finalResults
+          };
+
+          setMoments(prev => {
+            return [
+              moment,
+              ...prev,
+            ];
+          });
+
+          setCurrentMoment(moment);
+
+          setPrompt("");
+          setIsPending(false);
+          setShowList(false);
+        } else {
+          setIsPending(false);
+          notify({
+            variant: "info",
+            heading: "No moments found with the prompt you provided",
+            subheading: "Try providing another prompt for better results"
+          });
+        }
+      }
+      else {
+        throw new Error(message);
+      }
+    } catch (error) {
+      notify({
+        variant: "error",
+        heading: "Couldn't generate moment",
+        subheading: error?.message || ""
+      });
+      console.log(error);
+      setIsPending(false);
+      setShowList(false);
+    }
+  }
+
+  /**
+   * ============== VIDEO SEGMENT FEAT ==================
+   */
+
+  // =================== structure ====================
+  // const MAX_SOURCES_COUNT = 1;
+  const [entityContext, setEntityContext] = useState('');
+  const [ontology, setOntology] = useState('');
+  const [title, setTitle] = useState('');
+  const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
+  const [showGraphModal, setShowGraphModal] = useState(false);
+
+  const [isFullSourceDuration, setIsFullSourceDuration] = useState(false);
+
+
+  const checkedPdfSourcesEntity = checkedSources.filter(source => source.file_type === 'pdf');
+
+  const [entityVideoStart, setEntityVideoStart] = useState({ h: "00", m: "00", s: "00" });
+  const [entityVideoEnd, setEntityVideoEnd] = useState({ h: "00", m: "00", s: "00" });
+  const [entityPageFrom, setEntityPageFrom] = useState("1");
+  const [entityPageTo, setEntityPageTo] = useState(checkedPdfSourcesEntity[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
+
+  const checkedVideoSource = checkedSources.filter(source => source.file_type === 'video')[0];
+
+
+
+
+  // const checkedVideoSources = checkedSources.filter(source => source.file_type === 'video');
+  const checkedVideoOrPdfSources = checkedSources.filter(source => source.file_type === 'video' || source.file_type === 'pdf');
+
+  const sourceHasMetadata = Boolean(checkedVideoOrPdfSources[0]?.metadata?.summary?.content?.length > 0 && checkedVideoOrPdfSources[0]?.metadata?.highlights?.content?.length > 0 && checkedVideoOrPdfSources[0]?.metadata?.chapters?.content?.length > 0);
+
+  const canGenerateEntity = checkedVideoOrPdfSources.length === 1 && !isProjectReadOnly;
+
+  const { generateMetadata } = useMetadata();
+  const STEPS = [
+    "Generating metadata...",
+    "Generating precise structure...",
+    "Generating blog content...",
+    "Almost there..."
+  ];
+  const [step, setStep] = useState(""); // This state displays the current process description during the generation phase.
+
+  async function generateGraph(isContextRequired = true) {
+    try {
+      if (!canGenerateEntity || (isContextRequired && !entityContext?.trim())) return;
+      setIsGeneratingGraph(true);
+
+      setStep("");
+
+      if (!sourceHasMetadata) {
+        setStep(STEPS[0]);
+        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoOrPdfSources[0]], { isGraph: true });
+      }
+
+      setStep(STEPS[1]);
+      const payload = {
+        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+        selectedOptions: ["graph"],
+        inputContext: entityContext,
+        ontology,
+        title,
+        isFullSource: isFullSourceDuration,
+        from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoStart) : Number(entityPageFrom),
+        to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoEnd) : Number(entityPageTo),
+      };
+      let response = await makeApiRequest('/graph', 'POST', payload);
+
+      setStep(STEPS.at(-1));
+      setSelectedJsonEntity(response);
+      setJsonEntities(prev => [...prev, response]);
+      setShowGraphModal(true);
+      setEntityContext("");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsGeneratingGraph(false);
+      setStep("");
+    }
+  }
+  // =================== structure ====================
+
+
+  /**
+   * ============== BLOGS FEAT ===================
+   */
+  const checkedPdfSources = checkedSources.filter(source => source.file_type === "pdf");
+  const [videoStart, setVideoStart] = useState({ h: "00", m: "00", s: "00" });
+  const [videoEnd, setVideoEnd] = useState({ h: "00", m: "00", s: "00" });
+  const [pageFrom, setPageFrom] = useState("1");
+  const [pageTo, setPageTo] = useState(checkedPdfSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
+  const [isFullSourceDurationBlog, setIsFullSourceDurationBlog] = useState(false);
+  const [blogContext, setBlogContext] = useState("");
+  const [isGeneratinBlog, setIsGeneratingBlog] = useState(false);
+  const canGenerateBlog = checkedVideoOrPdfSources.length === 1 && blogContext?.trim() !== "" && !isProjectReadOnly;
+
+  function isValidTimeFrame(sourceLength, start, end) {
+    const startInSeconds = toSeconds(start);
+    const endInSeconds = toSeconds(end);
+    return startInSeconds >= 0 && endInSeconds <= sourceLength && startInSeconds < endInSeconds;
+  }
+
+  function isValidPageFrame(totalPages, from, to) {
+    const fromPage = Number(from);
+    const toPage = Number(to);
+    return fromPage >= 1 && toPage <= totalPages && fromPage < toPage;
+  }
+
+  async function generateBlog() {
+    try {
+      if (!canGenerateBlog) return;
+      if (checkedVideoOrPdfSources[0].file_type === "video" && !isValidTimeFrame(checkedVideoOrPdfSources[0].source_duration, videoStart, videoEnd)) {
+        throw new Error("Invalid time frame selected.");
+      }
+      if (checkedVideoOrPdfSources[0].file_type === "pdf" && !isValidPageFrame(checkedVideoOrPdfSources[0].total_pages, pageFrom, pageTo)) {
+        throw new Error("Invalid page frame selected.");
+      }
+
+
+      setIsGeneratingBlog(true);
+
+      setStep("");
+
+      // ============== generating metadata =====================
+      if (!sourceHasMetadata) {
+        setStep(STEPS[0]);
+        await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [checkedVideoOrPdfSources[0]], { isGraph: true });
+      }
+
+      // ============= generating json structure ==================
+      // setStep(STEPS[1]);
+      // const payload = {
+      //   isBlog: true,
+      // sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+      //   selectedOptions: ["graph"],
+      //   inputContext: "",
+      //   ontology: "",
+      //   title: "",
+      // isFullSource: isFullSourceDurationBlog,
+      // from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoStart) : Number(pageFrom),
+      // to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
+      // };
+      // let response = await makeApiRequest('/graph', 'POST', payload);
+
+      // =============== generating blog ===================
+      setStep(STEPS[2]);
+      const payload = {
+        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+        isFullSource: isFullSourceDurationBlog,
+        from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoStart) : Number(pageFrom),
+        to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
+        context: blogContext
+      };
+      // const { success, message, ...newBlog } = await makeApiRequest('/blog', 'POST', payload);
+
+      // if (success) {
+      //   setStep(STEPS[3]);
+      //   setBlogs(prev => [...prev, newBlog]);
+      //   setSelectedBlog(newBlog);
+      //   setShowBlogModal(true);
+      // } else {
+      //   throw new Error(message || "couldn't donwload the blog");
+      // }
+
+    } catch (error) {
+      console.log(error);
+      notify({
+        variant: "error",
+        heading: "Couldn't generate blog",
+        subheading: error.message || "Something went wrong. Please verify your inputs and try again..",
+      });
+    } finally {
+      setIsGeneratingBlog(false);
+      setStep("");
+    }
+  }
+
+  const [showBlogModal, setShowBlogModal] = useState(false);
+
   return (
     <aside
       className={`relative w-1/4 h-full overflow-hidden overflow-y-hidden bg-background ${!isRightSidebarOpen ? '!w-0 !px-0 !border-none' : "px-2 pb-[10px]"
@@ -186,7 +633,7 @@ const ChatPanel = () => {
         <div className='flex flex-col w-full'>
           <h5 className={`select-none p-[10px]   ${theme === "light" ? "!border-b !border-b-textColor-100/50 text-textColor-200" : "text-textColor-100 !border-b !border-b-textColor-300"
             }  text-center w-full`}>
-            Studio</h5>
+            Generator Services</h5>
         </div>
         {/* <RippleButton>Hello</RippleButton> */}
         {(showEditor || showStoriesEditor) && (
@@ -200,9 +647,9 @@ const ChatPanel = () => {
         )}
       </div>
 
-      <h5 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+      {/* <h5 className={`select-none ${theme === "light" ? " text-textColor-200" : "text-textColor-100"
         }  text-center`}>
-        Generator Services</h5>
+        Generator Services</h5> */}
 
       {/* Background blur elements */}
       <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/4 top-10 -z-1 blur-[160px]"></div>
@@ -218,8 +665,6 @@ const ChatPanel = () => {
           onDoubleClick={handleDoubleClick}
         />
       )}
-
-
 
       {/* Toggle button */}
       <div className="absolute left-0 z-10 flex flex-col items-center justify-center h-auto px-2 py-2 rounded-md top-1.5 w-fit">
@@ -242,7 +687,8 @@ const ChatPanel = () => {
         <div className='z-20 flex flex-col h-full gap-2 overflow-y-hidden'>
           {/* GenMetadata & GenStories */}
           {/* ::::::::::::::::::::::::::::::::::::::::::: */}
-          <div>
+          <div className={`${theme === "light" ? " text-textColor-200" : "text-textColor-100"
+            } pb-[10px]`}>
             {/* buttons */}
             <div className={`flex justify-around gap-5 mt-2 flex-items overflow-x-auto [&::-webkit-scrollbar]:h-[6px]
     [&::-webkit-scrollbar-track]:bg-transparent
@@ -252,21 +698,35 @@ const ChatPanel = () => {
     [&::-webkit-scrollbar-thumb]:border-transparent
     [&::-webkit-scrollbar-thumb]:bg-clip-padding`}>
               {[
-                { id: "genMetadata", title: "Cataloging" },
-                { id: "genStories", title: "Insights & Stories" },
+                { id: "genMetadata", title: "Catalog" },
                 { id: "genMedia", title: "Reels" },
-                // { id: "genTimeSegment", title: "Video Segment" },
+                { id: "genTimeSegment", title: "Video Segment" },
+                { id: "genStories", title: "Stories & Blogs" },
+                { id: "genGraph", title: "Structure" },
               ].map(item => (
+                // ${item.id === "genGraph" ? 'pointer-events-none opacity-30' : ''}
                 <h6
                   id={item.id}
                   onClick={() => handleTabClick(item.id)}
-                  className={`text-[14px] select-none text-md cursor-pointer min-w-fit ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}`}
+                  className={`text-[14px] select-none text-md cursor-pointer min-w-fit ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${item.id === actualTab && "font-bold !text-primary-300"}
+                   
+                   `}
                   key={item.id}
                 >
                   {item.title}
                 </h6>
               ))}
             </div>
+            {/* <GeneratorServicesDropdown
+              defaultTab={actualTab}
+              tabs={[
+                { id: "genMetadata", title: "Cataloging" },
+                { id: "genStories", title: "Insights & Stories" },
+                { id: "genMedia", title: "Reels" },
+                { id: "genGraph", title: "Composer" },
+              ]}
+              onChange={(id) => handleTabClick(id)}
+            /> */}
           </div>
           {actualTab !== null && <div className='h-full overflow-hidden'>
             {
@@ -274,20 +734,111 @@ const ChatPanel = () => {
                 <MetadataGen verbosityValue={verbosityValue} setVerbosityValue={setVerbosityValue}
                   context={context} setContext={setContext} isGeneratingMetadata={isGeneratingMetadata} setIsGeneratingMetadata={setIsGeneratingMetadata} />
               ) : actualTab === "genStories" ? (
-                <StoriesInsightsTab isNewInsight={isNewInsight}
-                  setIsNewInsight={setIsNewInsight} currentTab={currentTab} setCurrentTab={setCurrentTab} setShowStoriesEditor={setShowStoriesEditor} />
+                <StoriesInsightsTab
+                  isNewInsight={isNewInsight}
+                  setIsNewInsight={setIsNewInsight}
+                  currentTab={currentTab}
+                  setCurrentTab={setCurrentTab}
+                  setShowStoriesEditor={setShowStoriesEditor}
+                  videoStart={videoStart}
+                  setVideoStart={setVideoStart}
+                  videoEnd={videoEnd}
+                  setVideoEnd={setVideoEnd}
+                  pageFrom={pageFrom}
+                  setPageFrom={setPageFrom}
+                  pageTo={pageTo}
+                  setPageTo={setPageTo}
+                  isFullSourceDurationBlog={isFullSourceDurationBlog}
+                  setIsFullSourceDurationBlog={setIsFullSourceDurationBlog}
+                  handleGenerateBlog={generateBlog}
+                  context={blogContext}
+                  setContext={setBlogContext}
+                  isGeneratinBlog={isGeneratinBlog}
+                  setIsGeneratingBlog={setIsGeneratingBlog}
+                />
               ) : actualTab === "genMedia" ? (
                 <MediaEntertainment isGeneratingReel={isGeneratingReel} setIsGeneratingReel={setIsGeneratingReel} context={reelContext} setContext={setReelContext}
                   verbosityValue={reelVerbosityValue} setVerbosityValue={setReelVerbosityValue} reel={reel} setReel={setReel} reels={reels} setReels={setReels}
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
-              ) : actualTab === "genTimeSegment" && (
-                <VideoSegmentDescription />
-              )
+              ) : actualTab === "genTimeSegment" ? (
+                <VideoSegmentDescription
+                  currentSegmentTab={currentSegmentTab}
+                  setCurrentSegmentTab={setCurrentSegmentTab}
+                  isSegmentPending={isSegmentPending}
+                  setIsSegmentPending={setIsSegmentPending}
+                  showSegmentList={showSegmentList}
+                  setShowSegmentList={setShowSegmentList}
+                  currentSegment={currentSegment}
+                  setCurrentSegment={setCurrentSegment}
+                  startSegmentDescription={startSegmentDescription}
+                  setStartSegmentDescription={setStartSegmentDescription}
+                  endSegmentDescription={endSegmentDescription}
+                  setEndSegmentDescription={setEndSegmentDescription}
+                  promptSegmentDescription={promptSegmentDescription}
+                  setPromptSegmentDescription={setPromptSegmentDescription}
+                  isInfoTooltipOpen={isInfoTooltipOpen}
+                  setIsInfoTooltipOpen={setIsInfoTooltipOpen}
+                  segmentDescriptions={segmentDescriptions}
+                  setSegmentDescriptions={setSegmentDescriptions}
+                  resultsDescription={resultsDescription}
+                  setResultsDescription={setResultsDescription}
+                  canGenerate={canGenerate}
+                  generateDescription={generateDescription}
+                  prompt={prompt}
+                  setPrompt={setPrompt}
+                  showList={showList}
+                  setShowList={setShowList}
+                  currentMoment={currentMoment}
+                  setCurrentMoment={setCurrentMoment}
+                  moments={moments}
+                  setMoments={setMoments}
+                  captionResults={captionResults}
+                  setCaptionResults={setCaptionResults}
+                  isPending={isPending}
+                  setIsPending={setIsPending}
+                  handleCaptionSubmit={handleCaptionSubmit}
+                />
+              ) : actualTab === "genGraph" ? (
+                <KnowledgeGraph
+                  context={entityContext}
+                  setContext={setEntityContext}
+                  ontology={ontology}
+                  setOntology={setOntology}
+                  title={title}
+                  setTitle={setTitle}
+                  isGeneratingGraph={isGeneratingGraph}
+                  setIsGeneratingGraph={setIsGeneratingGraph}
+                  showGraphModal={showGraphModal}
+                  setShowGraphModal={setShowGraphModal}
+                  checkedVideoSource={checkedVideoSource}
+                  sourceHasMetadata={sourceHasMetadata}
+                  canGenerate={canGenerateEntity}
+                  STEPS={STEPS}
+                  step={step}
+                  setStep={setStep}
+                  generateGraph={generateGraph}
+                  entityVideoStart={entityVideoStart}
+                  setEntityVideoStart={setEntityVideoStart}
+                  entityVideoEnd={entityVideoEnd}
+                  setEntityVideoEnd={setEntityVideoEnd}
+                  entityPageFrom={entityPageFrom}
+                  setEntityPageFrom={setEntityPageFrom}
+                  entityPageTo={entityPageTo}
+                  setEntityPageTo={setEntityPageTo}
+                  isFullSourceDuration={isFullSourceDuration}
+                  setIsFullSourceDuration={setIsFullSourceDuration}
+                />
+              ) : null
             }
           </div>}
         </div>
       )}
       {isReelOpen && <ReelViewer reel={reel} closeReel={() => setIsReelOpen(false)} setReel={setReel} />}
+      {
+        showBlogModal && (
+          <BlogViewerModal show={showBlogModal} onHide={() => setShowBlogModal(false)} />
+        )
+      }
     </aside>
   );
 };

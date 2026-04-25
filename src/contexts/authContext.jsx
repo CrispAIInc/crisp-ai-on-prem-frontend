@@ -14,6 +14,17 @@ export default function AuthProvider({ children }) {
         emailVerified: false,
     });
 
+    function reinitializeUser() {
+        setUser({
+            userId: "",
+            username: "",
+            firstName: "",
+            lastName: "",
+            email: "",
+            emailVerified: false,
+        });
+    }
+
     // const [authReady, setAuthReady] = useState(false);
     // useEffect(() => {
     //   const getUserInfo = async () => {
@@ -35,7 +46,7 @@ export default function AuthProvider({ children }) {
     // }, []);
 
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{ user, setUser, reinitializeUser }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,58 +1,57 @@
-import React, { useContext, useState } from 'react';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import React, { useContext } from 'react';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
-import BaseHeading from '../BaseHeading';
-import { MainContext } from '../../contexts/mainContext';
-import TimeSegmentDescription from '../TimeSegmentDescription';
-import SegmentDescription from '../SegmentDescription';
-import SegmentDescriptionResult from "../SegmentDescriptionResult";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { MainContext } from '../../contexts/mainContext';
+import BaseHeading from '../BaseHeading';
+import TimeSegmentDescription from '../TimeSegmentDescription';
 
-import { formatTime } from "../../utils.js";
 import FindMoments from '../FindMoments/index.jsx';
 
-const VideoSegmentDescription = () => {
+const VideoSegmentDescription = ({
+    currentSegmentTab,
+    setCurrentSegmentTab,
+    isSegmentPending,
+    setIsSegmentPending,
+    showSegmentList,
+    setShowSegmentList,
+    currentSegment,
+    setCurrentSegment,
+    startSegmentDescription,
+    setStartSegmentDescription,
+    endSegmentDescription,
+    setEndSegmentDescription,
+    promptSegmentDescription,
+    setPromptSegmentDescription,
+    isInfoTooltipOpen,
+    setIsInfoTooltipOpen,
+    segmentDescriptions,
+    setSegmentDescriptions,
+    resultsDescription,
+    setResultsDescription,
+    generateDescription,
+    prompt,
+    setPrompt,
+    showList,
+    setShowList,
+    currentMoment,
+    setCurrentMoment,
+    moments,
+    setMoments,
+    captionResults,
+    setCaptionResults,
+    isPending,
+    setIsPending,
+    handleCaptionSubmit,
+}) => {
 
-    const { theme } = useContext(MainContext);
-
-    const [currentTab, setCurrentTab] = useState("Time segment description");
-
-    // ========== time segment description ==============
-    const [startSegmentDescription, setStartSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
-    const [endSegmentDescription, setEndSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
-
-    const [promptSegmentDescription, setPromptSegmentDescription] = useState("");
-
-    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-
-    const [resultsDescription, setResultsDescription] = useState({
-        start: formatTime(startSegmentDescription),
-        end: formatTime(endSegmentDescription),
-        description: "",
-        refs: []
-    });
-
-    // ========== time segment summary ==============
-    // const [startSegmentSummary, setStartSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
-    // const [endSegmentSummary, setEndSegmentSummary] = useState({ h: "00", m: "00", s: "00" });
-
-    // const [promptSegmentSummary, setPromptSegmentSummary] = useState("");
-
-    // const [resultsSummary, setResultsSummary] = useState({
-    //     start: formatTime(startSegmentSummary),
-    //     end: formatTime(endSegmentSummary),
-    //     description: "",
-    //     refs: []
-    // });
-
-    // ========= Find moments in videos ===========
-    const [captionPrompt, setCaptionPrompt] = useState("");
-    const [captionRefs, setCaptionRefs] = useState([]);
-    const [captionResults, setCaptionResults] = useState({
-        prompt: "",
-        refs: [],
-    });
+    const {
+        theme,
+        checkedSources,
+        displayedSources,
+        knowledgeBase,
+        currentChat,
+    } = useContext(MainContext);
 
     return (
         <div className="h-full flex flex-col">
@@ -63,19 +62,15 @@ const VideoSegmentDescription = () => {
                             icon: AutoAwesomeIcon,
                             title: "Time segment description"
                         },
-                        // {
-                        //     icon: AutoAwesomeIcon,
-                        //     title: "Time segment summary"
-                        // },
                         {
                             icon: AccessTimeOutlinedIcon,
                             title: "Find moments"
                         },
                     ].map(({ icon: Icon, title }, index) => {
                         return (
-                            <div className={`relative cursor-pointer flex items-center gap-1 pb-1 w-fit ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
-                                <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
-                                <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
+                            <div className={`relative cursor-pointer flex items-center gap-1 pb-1 w-fit ${title === currentSegmentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentSegmentTab(title)}>
+                                <Icon className={`${title !== currentSegmentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
+                                <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentSegmentTab ? ' !text-primary-300' : ''}`} />
                                 {
                                     title === "Time segment description" && (
                                         <>
@@ -83,7 +78,7 @@ const VideoSegmentDescription = () => {
 
                                             {
                                                 isInfoTooltipOpen && (
-                                                    <div className={`absolute right-0 p-2 bg-background_workspace shadow-md rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} text-sm`}>If you specify query, the response will be based on your contextual query, otherwise you get frame-by-frame descriptions of the segment.</div>
+                                                    <div className={`absolute right-0 p-2 bg-background_workspace shadow-md rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} text-sm`}>Analyze a specific video time range and generate precise breakdown.</div>
                                                 )
                                             }
                                         </>
@@ -96,10 +91,11 @@ const VideoSegmentDescription = () => {
             </div>
 
             {
-                currentTab === "Time segment description" ? (
+                currentSegmentTab === "Time segment description" ? (
                     <>
                         <TimeSegmentDescription
-                            key="description"
+                            segmentDescriptions={segmentDescriptions}
+                            setSegmentDescriptions={setSegmentDescriptions}
                             start={startSegmentDescription}
                             setStart={setStartSegmentDescription}
                             end={endSegmentDescription}
@@ -108,12 +104,30 @@ const VideoSegmentDescription = () => {
                             setPrompt={setPromptSegmentDescription}
                             results={resultsDescription}
                             setResults={setResultsDescription}
+                            isSegmentPending={isSegmentPending}
+                            setIsSegmentPending={setIsSegmentPending}
+                            showSegmentList={showSegmentList}
+                            setShowSegmentList={setShowSegmentList}
+                            currentSegment={currentSegment}
+                            setCurrentSegment={setCurrentSegment}
+                            generateDescription={generateDescription}
                         />
                     </>
                 ) : (
                     <FindMoments
+                        moments={moments}
+                        setMoments={setMoments}
                         captionResults={captionResults}
                         setCaptionResults={setCaptionResults}
+                        prompt={prompt}
+                        setPrompt={setPrompt}
+                        showList={showList}
+                        setShowList={setShowList}
+                        currentMoment={currentMoment}
+                        setCurrentMoment={setCurrentMoment}
+                        isPending={isPending}
+                        setIsPending={setIsPending}
+                        handleCaptionSubmit={handleCaptionSubmit}
                     />
                 )
             }

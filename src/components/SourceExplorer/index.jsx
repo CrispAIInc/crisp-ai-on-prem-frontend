@@ -267,7 +267,7 @@ export function SourceExplorer(props) {
                             )} */}
                             <div className="relative">
                                 {(props.isDeleting && props.clickedIndex.source_path === file.source_path) && (
-                                    <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[2] translate-x-[-50%] translate-y-[-50%] transform">
+                                    <div className="thumbnail-loader absolute z-[2] pointer-events-none flex w-full h-full flex-col items-center justify-center bg-white/40">
                                         <LoadingSpinner />
                                     </div>
                                 )}
@@ -293,7 +293,7 @@ export function SourceExplorer(props) {
                                     {
                                         !isProjectReadOnly && <DeleteIcon
                                             style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
-                                            onClick={(event) => props.deleteResource(event, [file])}
+                                            onClick={(event) => (!props.isDeleting || props.clickedIndex.source_path !== file.source_path) && props.deleteResource(event, [file])}
                                             className="delete-icon"
                                         />
                                     }
@@ -349,11 +349,11 @@ export function SourceExplorer(props) {
 
                                     {
                                         file.file_type === "video" ? (
-                                            <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <PlayCircleOutlineOutlinedIcon className={`text-[20px] ${theme === 'light' ? 'text-[#333' : 'text-[#ABAEB4'}`} />
                                         ) : file.file_type === "pdf" ? (
-                                            <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <ArticleOutlinedIcon className={`text-[20px] ${theme === 'light' ? 'text-[#333' : 'text-[#ABAEB4'}`} />
                                         ) : file.file_type === "img" ? (
-                                            <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <ImageOutlinedIcon className={`text-[20px] ${theme === 'light' ? 'text-[#333' : 'text-[#ABAEB4'}`} />
                                         ) : null
                                     }
 
@@ -441,7 +441,7 @@ export function SourceExplorer(props) {
                         <h3 className="current-path">{currentPath}</h3>
                     </div>}
 
-                    {viewModes[viewModes.length - 1] === "files" && <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-full !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
+                    {viewModes[viewModes.length - 1] === "files" && <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-lg !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
 
 
                 </div>

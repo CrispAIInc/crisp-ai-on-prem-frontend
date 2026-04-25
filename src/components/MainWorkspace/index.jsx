@@ -55,20 +55,33 @@ export const JOYRIDE_STEPS = [
     target: "#genMetadata",
     title: "Generate Metadata",
     content: "Automatically extract structured metadata from your content (e.g. Chapters, Highlights, Keywords, etc.).",
-    placement: "left",
-  },
-  {
-    target: "#genStories",
-    title: "Generate Stories",
-    content: "Turn raw information into clear, engaging stories and reports.",
-    placement: "left",
+    placement: "bottom",
   },
   {
     target: "#genMedia",
     title: "Generate Media",
     content: "Create visual or multimedia outputs based on your content.",
-    placement: "left",
+    placement: "bottom",
   },
+  {
+    target: "#genTimeSegment",
+    title: "Generate Video Segment information and find moments",
+    content: "Analyze specific sources and generate precise information from video segments.",
+    placement: "bottom",
+  },
+  {
+    target: "#genStories",
+    title: "Generate Stories",
+    content: "Turn raw information into clear, engaging stories and reports.",
+    placement: "bottom",
+  },
+  {
+    target: "#genGraph",
+    title: "Generate Entities",
+    content: "Turn raw information into structured JSONs and knowledge graphs.",
+    placement: "bottom",
+  },
+
 ];
 
 const MainWorkspace = ({ currentProject, setCurrentProject }) => {

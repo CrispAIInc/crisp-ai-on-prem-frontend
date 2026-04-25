@@ -131,7 +131,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                 <KeyboardDoubleArrowLeftIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={onHide} />
             </div>
 
-            <div className="flex flex-col flex-1 gap-7 z-50">
+            <div className="flex flex-col flex-1 gap-7 z-1">
                 <div>
                     <BaseHeading text="Select Project" className="mb-2" />
                     {/* switch project */}
@@ -204,7 +204,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                 </div>
             </div>
             {/* Profile dropdown */}
-            <div className="z-30 relative" ref={settingsMenuRef}>
+            <div className="z-2 relative" ref={settingsMenuRef}>
                 <button
                     onClick={handleToggleSettingsMenu}
                     className={`flex items-center gap-2

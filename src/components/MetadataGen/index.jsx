@@ -94,9 +94,15 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
                 });
             });
 
-
             setGeneratedResources(results);
-            setVerbosityValue('Medium');
+
+            notify({
+                variant: "success",
+                heading: "Metadata generated.",
+                subheading: "Click on the source the see the generated metadata..",
+            });
+
+            setVerbosityValue('Low');
             setContext('');
 
             notify({
@@ -123,14 +129,14 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
         <div className='z-20 flex flex-col gap-2'>
 
             {/* context */}
-            <div className="relative w-full mt-6">
+            <div className="relative w-full">
                 {/* <label
                     className={`absolute left-2 top-2 text-gray-500 px-1 pointer-events-none`}
                 >
                     Context
                 </label> */}
                 <textarea
-                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 rounded-md text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50  text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-2xl resize-none focus:outline-none`}
                     rows="3"
                     placeholder='Customize Metadata Generation results with context'
                     onFocus={() => setContextFocused(true)}
