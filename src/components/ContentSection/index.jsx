@@ -1118,6 +1118,17 @@ const ContentSection = ({
         });
     }
 
+    function handleClearSource(sourceId) {
+        setKnowledgeBase(prev => {
+            return prev.map(item => {
+                if (item.source_id === sourceId) {
+                    return { ...item, is_selected: false, is_checked: false };
+                }
+                return item;
+            });
+        });
+    }
+
     return (
         <>
             {/* this is where i show the list of displayedSources */}
@@ -1316,7 +1327,7 @@ const ContentSection = ({
                                                 <span className={`text-md font-medium break-keep ${theme === 'dark' && 'text-textColor-100'}`} style={{ overflowWrap: 'anywhere' }}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center ">
+                                        <div className="flex items-center">
                                             <Checkbox
                                                 className="p-0 !ml-1"
                                                 checked={option.is_checked}
@@ -1325,6 +1336,20 @@ const ContentSection = ({
                                                 inputProps={{ "aria-label": "Select source" }}
                                                 disabled={'progress' in option}
                                             />
+
+                                            {
+                                                !isProjectReadOnly && (
+                                                    <IndeterminateCheckBoxOutlinedIcon
+                                                        className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
+                                                        title="Clear all sources"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleClearSource(option.source_id);
+                                                        }}
+                                                        titleAccess='clear'
+                                                    />
+                                                )
+                                            }
 
                                         </div>
                                     </div>)
