@@ -327,6 +327,16 @@ function ReelViewer({
                 </div>
 
                 {/* reel properties side drawer */}
+                <style>
+                    {`
+                        .MuiPaper-root {
+                            border-top-left-radius: 32px;
+                            border-bottom-left-radius: 32px;
+                            box-shadow: 0px 0px 20px -7px;
+                            border: none;
+                        }
+                    `}
+                </style>
                 <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={handleCloseReelProps}>
                     <ReelProps reel={reel} closeReelProps={handleCloseReelProps} />
                 </Drawer>
