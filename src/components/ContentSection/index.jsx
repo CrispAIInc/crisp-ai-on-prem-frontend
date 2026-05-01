@@ -34,6 +34,8 @@ import SearchSection from '../SearchSection';
 import { SettingsModal } from "../Settings/SettingsModal";
 import SourceExplorer from "../SourceExplorer";
 
+import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
+
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
@@ -1123,6 +1125,12 @@ const ContentSection = ({
         setIsExitPending(false);
     }
 
+    function handleClearAllSources() {
+        setKnowledgeBase(prev => {
+            return prev.map(item => ({ ...item, is_selected: false, is_checked: false }));
+        });
+    }
+
     return (
         <>
             {/* this is where i show the list of displayedSources */}
@@ -1230,6 +1238,12 @@ const ContentSection = ({
                             onChange={(e) => handleToggleCheckSources(e.target.checked)}
                             inputProps={{ "aria-label": "Select All Sources" }}
                             label="Check All Sources"
+                        />
+                        <IndeterminateCheckBoxOutlinedIcon
+                            className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
+                            title="Clear all sources"
+                            onClick={handleClearAllSources}
+                            titleAccess='clear all sources'
                         />
                     </div>}
 
