@@ -1111,19 +1111,6 @@ const ContentSection = ({
         }
     }, [uploadStatus]);
 
-    const [isExitPending, setIsExitPending] = useState(false);
-    async function handleExitProject() {
-        setIsExitPending(true);
-        await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
-            sources: {
-                checked: displayedSources.filter(item => item.is_checked).map(item => item.source_path),
-                unchecked: displayedSources.filter(item => !item.is_checked).map(item => item.source_path),
-            },
-            chat: currentChat?.sessionId
-        }));
-        setCurrentProject(null);
-        setIsExitPending(false);
-    }
 
     function handleClearAllSources() {
         setKnowledgeBase(prev => {
@@ -1239,12 +1226,16 @@ const ContentSection = ({
                             inputProps={{ "aria-label": "Select All Sources" }}
                             label="Check All Sources"
                         />
-                        <IndeterminateCheckBoxOutlinedIcon
-                            className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
-                            title="Clear all sources"
-                            onClick={handleClearAllSources}
-                            titleAccess='clear all sources'
-                        />
+                        {
+                            !isProjectReadOnly && (
+                                <IndeterminateCheckBoxOutlinedIcon
+                                    className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
+                                    title="Clear all sources"
+                                    onClick={handleClearAllSources}
+                                    titleAccess='clear all sources'
+                                />
+                            )
+                        }
                     </div>}
 
                     <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
