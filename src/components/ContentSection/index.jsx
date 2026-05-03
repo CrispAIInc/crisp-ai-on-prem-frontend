@@ -358,7 +358,17 @@ const ContentSection = ({
 
     function handleToggleCheckSources(isChecked) {
         setKnowledgeBase(prev => {
-            return prev.filter(item => item.is_selected).map(item => ({ ...item, is_checked: isChecked }));
+            return prev.map(item => {
+                // Only update if the item exists in displayedSources
+                const existsInDisplayed = displayedSources.some(ds => ds.source_path === item.source_path);
+                if (existsInDisplayed) {
+                    return {
+                        ...item,
+                        is_checked: item.is_selected ? isChecked : item.is_checked,
+                    };
+                }
+                return item;
+            });
         });
     }
 
