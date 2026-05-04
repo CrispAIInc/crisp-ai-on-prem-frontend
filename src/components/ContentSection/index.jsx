@@ -34,6 +34,8 @@ import SearchSection from '../SearchSection';
 import { SettingsModal } from "../Settings/SettingsModal";
 import SourceExplorer from "../SourceExplorer";
 
+import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
+
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
@@ -356,7 +358,17 @@ const ContentSection = ({
 
     function handleToggleCheckSources(isChecked) {
         setKnowledgeBase(prev => {
-            return prev.filter(item => item.is_selected).map(item => ({ ...item, is_checked: isChecked }));
+            return prev.map(item => {
+                // Only update if the item exists in displayedSources
+                const existsInDisplayed = displayedSources.some(ds => ds.source_path === item.source_path);
+                if (existsInDisplayed) {
+                    return {
+                        ...item,
+                        is_checked: item.is_selected ? isChecked : item.is_checked,
+                    };
+                }
+                return item;
+            });
         });
     }
 
@@ -1109,18 +1121,22 @@ const ContentSection = ({
         }
     }, [uploadStatus]);
 
-    const [isExitPending, setIsExitPending] = useState(false);
-    async function handleExitProject() {
-        setIsExitPending(true);
-        await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
-            sources: {
-                checked: displayedSources.filter(item => item.is_checked).map(item => item.source_path),
-                unchecked: displayedSources.filter(item => !item.is_checked).map(item => item.source_path),
-            },
-            chat: currentChat?.sessionId
-        }));
-        setCurrentProject(null);
-        setIsExitPending(false);
+
+    function handleClearAllSources() {
+        setKnowledgeBase(prev => {
+            return prev.map(item => ({ ...item, is_selected: false, is_checked: false }));
+        });
+    }
+
+    function handleClearSource(sourceId) {
+        setKnowledgeBase(prev => {
+            return prev.map(item => {
+                if (item.source_id === sourceId) {
+                    return { ...item, is_selected: false, is_checked: false };
+                }
+                return item;
+            });
+        });
     }
 
     return (
@@ -1231,6 +1247,16 @@ const ContentSection = ({
                             inputProps={{ "aria-label": "Select All Sources" }}
                             label="Check All Sources"
                         />
+                        {
+                            !isProjectReadOnly && (
+                                <IndeterminateCheckBoxOutlinedIcon
+                                    className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
+                                    title="Clear all sources"
+                                    onClick={handleClearAllSources}
+                                    titleAccess='clear all sources'
+                                />
+                            )
+                        }
                     </div>}
 
                     <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
@@ -1311,7 +1337,7 @@ const ContentSection = ({
                                                 <span className={`text-md font-medium break-keep ${theme === 'dark' && 'text-textColor-100'}`} style={{ overflowWrap: 'anywhere' }}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center ">
+                                        <div className="flex items-center">
                                             <Checkbox
                                                 className="p-0 !ml-1"
                                                 checked={option.is_checked}
@@ -1320,6 +1346,20 @@ const ContentSection = ({
                                                 inputProps={{ "aria-label": "Select source" }}
                                                 disabled={'progress' in option}
                                             />
+
+                                            {
+                                                !isProjectReadOnly && (
+                                                    <IndeterminateCheckBoxOutlinedIcon
+                                                        className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
+                                                        title="Clear all sources"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleClearSource(option.source_id);
+                                                        }}
+                                                        titleAccess='clear'
+                                                    />
+                                                )
+                                            }
 
                                         </div>
                                     </div>)

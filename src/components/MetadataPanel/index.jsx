@@ -56,16 +56,25 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const [chosenLanguage, setChosenLanguage] = useState(currentResource?.originalSourceLanguage || "en");
 
   useEffect(() => {
-    if (isPlayerReady && hasDuration && resourceURL && currentResource?.file_type === "video") {
+    if (
+      isPlayerReady &&
+      resourceURL &&
+      currentResource?.file_type === "video"
+    ) {
       const timestamp = currentResource?.timestamp;
 
       if (timestamp !== undefined && timestamp !== null) {
+        const redirectedTimestamp =
+          typeof timestamp === "number"
+            ? timestamp
+            : timeToSeconds(timestamp);
 
-        const redirectedTimestamp = typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp);
-        player.current.seekTo(redirectedTimestamp, "seconds");
+        setTimeout(() => {
+          player.current?.seekTo(redirectedTimestamp, "seconds");
+        }, 1850); // small delay fixes race condition
       }
     }
-  }, [isPlayerReady, currentResource, currentResource?.timestamp]);
+  }, [isPlayerReady, currentResource?.timestamp]);
 
   useEffect(() => {
     if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {

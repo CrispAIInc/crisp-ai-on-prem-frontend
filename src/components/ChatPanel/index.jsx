@@ -554,10 +554,12 @@ const ChatPanel = () => {
   async function generateBlog() {
     try {
       if (!canGenerateBlog) return;
-      if (checkedVideoOrPdfSources[0].file_type === "video" && !isValidTimeFrame(checkedVideoOrPdfSources[0].source_duration, videoStart, videoEnd)) {
+
+      if (!isFullSourceDurationBlog && checkedVideoOrPdfSources[0].file_type === "video" && !isValidTimeFrame(checkedVideoOrPdfSources[0].source_duration, videoStart, videoEnd)) {
         throw new Error("Invalid time frame selected.");
       }
-      if (checkedVideoOrPdfSources[0].file_type === "pdf" && !isValidPageFrame(checkedVideoOrPdfSources[0].total_pages, pageFrom, pageTo)) {
+
+      if (!isFullSourceDurationBlog && checkedVideoOrPdfSources[0].file_type === "pdf" && !isValidPageFrame(checkedVideoOrPdfSources[0].total_pages, pageFrom, pageTo)) {
         throw new Error("Invalid page frame selected.");
       }
 
@@ -596,16 +598,16 @@ const ChatPanel = () => {
         to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
         context: blogContext
       };
-      // const { success, message, ...newBlog } = await makeApiRequest('/blog', 'POST', payload);
+      const { success, message, ...newBlog } = await makeApiRequest('/blog', 'POST', payload);
 
-      // if (success) {
-      //   setStep(STEPS[3]);
-      //   setBlogs(prev => [...prev, newBlog]);
-      //   setSelectedBlog(newBlog);
-      //   setShowBlogModal(true);
-      // } else {
-      //   throw new Error(message || "couldn't donwload the blog");
-      // }
+      if (success) {
+        setStep(STEPS[3]);
+        setBlogs(prev => [...prev, newBlog]);
+        setSelectedBlog(newBlog);
+        setShowBlogModal(true);
+      } else {
+        throw new Error(message || "couldn't donwload the blog");
+      }
 
     } catch (error) {
       console.log(error);
