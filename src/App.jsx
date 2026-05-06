@@ -26,7 +26,7 @@ import NotFound from './pages/NotFound';
 function App() {
 
   // const { theme, setTheme } = useContext(ThemeContext);
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   toastConfig({ theme });
 
 
