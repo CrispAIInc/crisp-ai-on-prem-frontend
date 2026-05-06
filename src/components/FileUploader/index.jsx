@@ -4,10 +4,10 @@ import FakeProgress from '../FakeProgressbar';
 import { Checkbox } from "@mui/material";
 import BaseHeading from "../BaseHeading";
 
-const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, closeModals }) => {
+const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, closeModals }) => {
     const [fileThumbnails, setFileThumbnails] = useState([]);
     const { isFileUploading } = useContext(MainContext);
-    const [isFineGrained, setIsFineGrained] = useState(false);
+
 
     const handleFileUpload = (event) => {
         const files = Array.from(event.target.files);

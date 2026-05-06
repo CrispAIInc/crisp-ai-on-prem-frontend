@@ -26,7 +26,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
     }
 
     function uploadSources() {
-        handleUpload(null, null, selectedFiles);
+        handleUpload(null, null, selectedFiles, isFineGrained);
         // closeModals();
     }
 
@@ -39,6 +39,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
     }
 
     const [selectedFileFormat, setSelectedFileFormat] = useState(fileFormats[0].value);
+    const [isFineGrained, setIsFineGrained] = useState(false);
     return (
         <Modal
             show={show}
@@ -54,7 +55,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                     <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={selectedIndex} options={categoryOptions} />
                     {/* <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} /> */}
                 </div>}
-                <FileUploader closeModals={closeModals} selectedFileFormat={selectedFileFormat} setSelectedFileFormat={setSelectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
+                <FileUploader isFineGrained={isFineGrained} setIsFineGrained={setIsFineGrained} closeModals={closeModals} selectedFileFormat={selectedFileFormat} setSelectedFileFormat={setSelectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
             </Modal.Body>
             <Modal.Footer className={`flex items-center gap-2 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
                 <div
