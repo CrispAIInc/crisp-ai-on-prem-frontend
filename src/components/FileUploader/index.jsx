@@ -121,9 +121,14 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
                 className="w-full p-4 text-center cursor-pointer text-primary-300"
             >
                 {!isFileUploading ? <>
-                    <p className="font-medium">Click to browse files</p>
+                    <p className="font-bold">Click to browse files</p>
+
                     <p className="mt-1 text-sm">
-                        Supported: Images, Videos, PDFs | Size ≤2GB | Video duration ≤5 mins
+                        If fine-grained mode selected, videos longer than <span className="font-medium">15 minutes</span> will be processed in <span className="font-medium">normal mode</span>
+                    </p>
+
+                    <p className="mt-1 text-sm">
+                        Supported: Images, Videos, PDFs | Size ≤2GB | Video duration ≤5 hours
                     </p>
                 </> : <p className="text-sm">Processing source ingestion...</p>
                 }
