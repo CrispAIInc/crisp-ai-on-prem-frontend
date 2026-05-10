@@ -104,6 +104,12 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
 
             setVerbosityValue('Low');
             setContext('');
+
+            notify({
+                variant: "success",
+                heading: "Metadata generated",
+                subheading: "See generated results under the source."
+            });
         } catch (error) {
             console.error(error);
             notify({

@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from "../../contexts/mainContext.jsx";
 import FakeProgress from '../FakeProgressbar';
+import { Checkbox } from "@mui/material";
+import BaseHeading from "../BaseHeading";
 
-const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, closeModals }) => {
+const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, closeModals }) => {
     const [fileThumbnails, setFileThumbnails] = useState([]);
     const { isFileUploading } = useContext(MainContext);
+
 
     const handleFileUpload = (event) => {
         const files = Array.from(event.target.files);
@@ -101,14 +104,31 @@ const FileUploader = ({ selectedFiles, setSelectedFiles, selectedFileFormat = ''
                 id="file-input"
                 onChange={handleFileUpload}
             />
+            <div className="!ml-auto flex items-center gap-1">
+                <Checkbox
+                    className={`p-0 "
+                 }`}
+                    checked={isFineGrained}
+                    onChange={(e) => setIsFineGrained(e.target.checked)}
+                    inputProps={{ "aria-label": "Select All Sources" }}
+                    label="Fine-grained mode"
+                />
+
+                <BaseHeading text="Fine-grained mode" />
+            </div>
             <label
                 htmlFor="file-input"
                 className="w-full p-4 text-center cursor-pointer text-primary-300"
             >
                 {!isFileUploading ? <>
-                    <p className="font-medium">Click to browse files</p>
+                    <p className="font-bold">Click to browse files</p>
+
                     <p className="mt-1 text-sm">
-                        Supported: Images, Videos, PDFs | File size ≤2GB
+                        If fine-grained mode selected, videos longer than <span className="font-medium">15 minutes</span> will be processed in <span className="font-medium">normal mode</span>
+                    </p>
+
+                    <p className="mt-1 text-sm">
+                        Supported: Images, Videos, PDFs | Size ≤2GB | Video duration ≤5 hours
                     </p>
                 </> : <p className="text-sm">Processing source ingestion...</p>
                 }

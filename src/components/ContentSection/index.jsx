@@ -972,7 +972,7 @@ const ContentSection = ({
     };
 
 
-    const handleUpload = async (event, fileFormat, _files) => {
+    const handleUpload = async (event, fileFormat, _files, isFineGrained = false) => {
         console.log("Starting upload...");
         startSocket();
         let rejoinInterval;
@@ -1019,6 +1019,7 @@ const ContentSection = ({
                 formData.append("fileType", file.type);
                 formData.append("session_id", sessionId);
                 formData.append("fileIndex", index);
+                formData.append("isFineGrained", isFineGrained);
             });
 
             //TODO: loop throught files and populate the "initialSources" with the initial properties
