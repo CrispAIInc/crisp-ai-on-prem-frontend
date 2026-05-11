@@ -704,7 +704,7 @@ const ChatPanel = () => {
                 { id: "genMedia", title: "Reels" },
                 { id: "genTimeSegment", title: "Video Segment" },
                 { id: "genStories", title: "Stories & Blogs" },
-                { id: "genGraph", title: "Structure" },
+                { id: "genGraph", title: "Business Intelligence" },
               ].map(item => (
                 // ${item.id === "genGraph" ? 'pointer-events-none opacity-30' : ''}
                 <h6
