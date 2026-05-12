@@ -13,7 +13,7 @@ import Chip from '../Chip';
 import BaseHeading from '../BaseHeading/index.jsx';
 
 export function SearchModal(props) {
-    const { discoveredSources, theme, handleCheckboxChange, onThumbnailClick } = useContext(MainContext);
+    const { discoveredSources, knowledgeBase, theme, handleCheckboxChange, onThumbnailClick } = useContext(MainContext);
 
     const handleClose = () => {
         props.onHide();
@@ -37,14 +37,16 @@ export function SearchModal(props) {
      */
 
     // Function to filter knowledgeBase items whose source paths exist in additionalSources and add timestamp or page to the item
+    const additionalSourcesSourcePaths = discoveredSources?.additionalSources?.map(source => source.source_path) || [];
     const filteredKnowledgeBase = [
         discoveredSources.mainSource,
-        ...discoveredSources.additionalSources.map(additionalSource => {
-            const matchingItem = discoveredSources.additionalSources.find(item => item.source_path === additionalSource.source_path);
-            if (matchingItem) {
-                return { ...additionalSource, timestamp: matchingItem.timestamp, page: matchingItem.page };
-            }
-            return additionalSource; // Return the original item if no match is found
+        ...knowledgeBase.filter(item => additionalSourcesSourcePaths.includes(item.source_path)).map(item => {
+            const additionalSource = discoveredSources.additionalSources.find(source => source.source_path === item.source_path);
+            return {
+                ...item,
+                timestamp: additionalSource?.timestamp,
+                page: additionalSource?.page
+            };
         })
     ];
 
