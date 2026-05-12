@@ -71,6 +71,7 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
 
     const handleSourceLinkClick = (event, source) => {
         if (!source) return;
+        console.log(source);
 
         const sourceExist = knowledgeBase.find(item => item.source_path === source?.source_path);
 

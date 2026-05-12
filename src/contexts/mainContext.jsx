@@ -185,7 +185,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // Additional Sources to show in the search modal (second most relevant, third most relevant, etc).
     // In the search modal, we show n videos, n pdfs, n images, in total. For now n = 3 (can be changed later).
-    const [additionalSources, setAdditionalSources] = useState([]);
+    const [discoveredSources, setDiscoveredSources] = useState([]);
     const [showSearchModal, setShowSearchModal] = useState(false);
     const [selectedNote, setSelectedNote] = useState({
         note_id: "",
@@ -1356,8 +1356,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         setSelectedCategory,
         selectedFormat,
         setSelectedFormat,
-        additionalSources,
-        setAdditionalSources,
+        discoveredSources,
+        setDiscoveredSources,
         showSearchModal,
         setShowSearchModal,
         selectedNote,

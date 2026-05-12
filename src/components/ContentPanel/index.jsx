@@ -240,14 +240,15 @@ const ContentPanel = ({ setCurrentProject }) => {
                 ></div>
             }
 
-            <SearchModal
-                show={showSearchModal}
-                onHide={onHideSearchModal}
-                knowledgeBase={knowledgeBase}
-                handleCheckboxChange={handleCheckboxChange}
-                onThumbnailClick={onThumbnailClick}
-                className="modal"
-            />
+            {showSearchModal && (
+                <SearchModal
+                    show={showSearchModal}
+                    onHide={onHideSearchModal}
+                    knowledgeBase={knowledgeBase}
+                    handleCheckboxChange={handleCheckboxChange}
+                    onThumbnailClick={onThumbnailClick}
+                    className="modal"
+                />)}
         </aside>
     );
 };

@@ -10,18 +10,39 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import GsFile from '../GsFile/index.jsx';
 import Chip from '../Chip';
+import BaseHeading from '../BaseHeading/index.jsx';
 
 export function SearchModal(props) {
-    const { additionalSources, theme, handleCheckboxChange, onThumbnailClick } = useContext(MainContext);
+    const { discoveredSources, theme, handleCheckboxChange, onThumbnailClick } = useContext(MainContext);
 
     const handleClose = () => {
         props.onHide();
     };
 
+    /**
+     * {
+            mainSource: {
+               source_path,
+               timestamp | page,
+               file_type,
+               ...
+            },
+            additionalSources: [
+              {
+                source_path,
+                timestamp | page
+              }
+            ]
+     * }
+     */
+
     // Function to filter knowledgeBase items whose source paths exist in additionalSources
     const filteredKnowledgeBase = props.knowledgeBase.filter((kbItem) =>
-        additionalSources.some((addSrc) => addSrc === kbItem.source_path)
+        discoveredSources.additionalSources.some((addSrc) => addSrc.source_path === kbItem.source_path)
     );
+
+    console.log("filteredKb: ", filteredKnowledgeBase);
+
 
     return (
         <>
@@ -44,14 +65,73 @@ export function SearchModal(props) {
                 </Modal.Header>
                 <Modal.Body className={`${theme === "light" ? "" : "bg-textColor-300 text-white"}`}>
                     <div className="flex flex-col gap-1">
+
+                        {/* main source */}
+                        <BaseHeading text="Main results" cssClasses="text-lg" />
+                        {/* {filteredKnowledgeBase[0].map((item, index) => ( */}
+                        <div className={`flex items-center gap-2 w-full max-w-full cursor-pointer p-2 ${theme === 'light' ? 'hover:bg-light-hover-100/70' : 'hover:bg-light-hover-200/20'} hover:rounded-lg`} onClick={(event) => onThumbnailClick(event, discoveredSources.mainSource)}>
+                            {
+                                discoveredSources.mainSource?.file_type === "video" ? (
+                                    <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                ) : discoveredSources.mainSource?.file_type === "pdf" ? (
+                                    <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                ) : discoveredSources.mainSource?.file_type === "img" ? (
+                                    <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                ) : null
+                            }
+                            <div className="relative flex-shrink-0 w-10 h-10">
+                                {(props.isDeleting && props.clickedIndex === 0) && (
+                                    <div>
+                                        <LoadingSpinner />
+                                    </div>
+                                )}
+                                {(discoveredSources.mainSource?.thumbnail?.startsWith('blob') && discoveredSources.mainSource?.file_type === "video") ? (
+                                    <video
+                                        src={discoveredSources.mainSource?.thumbnail}
+                                        className="object-cover w-full h-full rounded-md"
+                                        alt="video thumbnail"
+                                        controls={false}
+                                    />
+                                )
+                                    :
+                                    <GsFile
+                                        className="object-cover w-full h-full rounded-md"
+                                        gsUrl={discoveredSources.mainSource?.thumbnail}
+                                        alt="Video Thumbnail"
+                                    />
+
+                                }
+                            </div>
+                            <div className="flex flex-col self-start flex-1">
+                                <p className={`text-md font-medium break-all m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{discoveredSources.mainSource?.source_path?.replace(/\.[^/.]+$/, '')}</p>
+                                {
+                                    discoveredSources.mainSource?.category?.map((cat, index) => (
+                                        <Chip key={`${cat}-${index}`} className="italic" content={cat} />
+                                    ))
+                                }
+                            </div>
+                            <div className="flex items-center ">
+                                <Checkbox
+                                    className="p-0 !ml-1"
+                                    checked={discoveredSources.mainSource?.is_checked}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onChange={(e) => { e.stopPropagation(); handleCheckboxChange(e?.target?.checked, discoveredSources.mainSource); }}
+                                    inputProps={{ "aria-label": "Select source" }}
+                                />
+                            </div>
+                        </div>
+                        {/* ))} */}
+
+                        {/* additional sources */}
+                        <BaseHeading text="Additional results" cssClasses="text-lg" />
                         {filteredKnowledgeBase.map((item, index) => (
                             <div key={item?.source_path} className={`flex items-center gap-2 w-full max-w-full cursor-pointer p-2 ${theme === 'light' ? 'hover:bg-light-hover-100/70' : 'hover:bg-light-hover-200/20'} hover:rounded-lg`} onClick={(event) => onThumbnailClick(event, item)}>
                                 {
-                                    item.file_type === "video" ? (
+                                    item?.file_type === "video" ? (
                                         <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    ) : item.file_type === "pdf" ? (
+                                    ) : item?.file_type === "pdf" ? (
                                         <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                    ) : item.file_type === "img" ? (
+                                    ) : item?.file_type === "img" ? (
                                         <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                     ) : null
                                 }
@@ -61,9 +141,9 @@ export function SearchModal(props) {
                                             <LoadingSpinner />
                                         </div>
                                     )}
-                                    {(item?.thumbnail?.startsWith('blob') && item.file_type === "video") ? (
+                                    {(item?.thumbnail?.startsWith('blob') && item?.file_type === "video") ? (
                                         <video
-                                            src={item.thumbnail}
+                                            src={item?.thumbnail}
                                             className="object-cover w-full h-full rounded-md"
                                             alt="video thumbnail"
                                             controls={false}
@@ -72,16 +152,16 @@ export function SearchModal(props) {
                                         :
                                         <GsFile
                                             className="object-cover w-full h-full rounded-md"
-                                            gsUrl={item.thumbnail}
+                                            gsUrl={item?.thumbnail}
                                             alt="Video Thumbnail"
                                         />
 
                                     }
                                 </div>
                                 <div className="flex flex-col self-start flex-1">
-                                    <p className={`text-md font-medium break-all m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item.source_path.replace(/\.[^/.]+$/, '')}</p>
+                                    <p className={`text-md font-medium break-all m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item?.source_path?.replace(/\.[^/.]+$/, '')}</p>
                                     {
-                                        item.category?.map((cat, index) => (
+                                        item?.category?.map((cat, index) => (
                                             <Chip key={`${cat}-${index}`} className="italic" content={cat} />
                                         ))
                                     }
@@ -89,7 +169,7 @@ export function SearchModal(props) {
                                 <div className="flex items-center ">
                                     <Checkbox
                                         className="p-0 !ml-1"
-                                        checked={item.is_checked}
+                                        checked={item?.is_checked}
                                         onClick={(e) => e.stopPropagation()}
                                         onChange={(e) => { e.stopPropagation(); handleCheckboxChange(e?.target?.checked, item); }}
                                         inputProps={{ "aria-label": "Select source" }}

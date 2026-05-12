@@ -71,7 +71,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
         setTimeout(() => {
           player.current?.seekTo(redirectedTimestamp, "seconds");
-        }, 1850); // small delay fixes race condition
+        }, 2550); // small delay fixes race condition
       }
     }
   }, [isPlayerReady, currentResource?.timestamp]);

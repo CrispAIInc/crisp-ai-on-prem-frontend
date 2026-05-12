@@ -6,6 +6,7 @@ import { timeToSeconds } from '../../utils';
 import RippleButton from '../RippleButton';
 import AnimatedText from '../AnimatedText';
 import makeApiRequest from '../../api/index.js';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -13,7 +14,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
 
     const { currentResource, setCurrentResource, resourceURL, setResourceURL, player, isPlayerReady,
         selectedCategory, selectedFormat,
-        setAdditionalSources,
+        setDiscoveredSources,
         setShowSearchModal,
         setSummary,
         theme,
@@ -22,6 +23,8 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
     } = useContext(MainContext);
 
     const { notify } = useToast();
+
+    const { handleSourceLinkClick } = useReferenceLinkClick();
 
     const [, setFromChat] = useState(false);
     const [searchQuestion, setSearchQuestion] = useState('');
@@ -52,29 +55,21 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
                 throw new Error(message);
             }
             const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
-            let resourceURL = '';
-            if (source?.file_type == 'video') {
-                resourceURL = `${API_ENDPOINT}/video/all/${encodeURIComponent(rest.source_path)}`;
-            }
-            else if (source?.file_type == 'pdf') {
-                resourceURL = `${API_ENDPOINT}/pdf/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
-            }
-            else if (source?.file_type == 'img') {
-                resourceURL = `${API_ENDPOINT}/img/${selectedCategory}/${encodeURIComponent(rest.source_path)}`;
-            }
 
-            setCurrentResource({ ...source, timestamp });
-            setResourceURL(resourceURL);
-            setSummary(rest.summary);
-            if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-            setAdditionalSources(additional_sources);
+            handleSourceLinkClick(event, { ...source, timestamp, page });
+
+            // setCurrentResource({ ...source, timestamp });
+            // setResourceURL(resourceURL);
+            // setSummary(rest.summary);
+            // if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+            setDiscoveredSources({ mainSource: { ...source, timestamp, page }, additionalSources: additional_sources });
             if (!fromMetadata) {
                 setShowSearchModal(true);
             }
 
-            if (source?.file_type === "pdf") {
-                setJumpToPage({ page });
-            }
+            // if (source?.file_type === "pdf") {
+            //     setJumpToPage({ page });
+            // }
         } catch (error) {
             console.log(error);
             notify({
