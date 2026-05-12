@@ -331,7 +331,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         const resourceURL = `${import.meta.env.VITE_API_ENDPOINT
             }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
         let fileToCommit = knowledgeBase.find((item) => item.source_path === file.source_path) || file;
-        setCurrentResource(fileToCommit);
+
+        setCurrentResource({ ...fileToCommit, timestamp: file?.timestamp, page: file?.page });
         setResourceURL(resourceURL);
         setTranscription(fileToCommit.metadata ? fileToCommit.metadata.transcription : "");
         if (fileToCommit.file_type != "img") {

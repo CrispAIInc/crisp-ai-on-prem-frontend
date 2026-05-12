@@ -37,16 +37,16 @@ export function SearchModal(props) {
      */
 
     // Function to filter knowledgeBase items whose source paths exist in additionalSources and add timestamp or page to the item
-    const filteredKnowledgeBase = props.knowledgeBase.filter((kbItem) =>
-        discoveredSources.additionalSources.some((addSrc) => addSrc.source_path === kbItem.source_path)
-    ).map((kbItem) => {
-        const additionalSource = discoveredSources.additionalSources.find((addSrc) => addSrc.source_path === kbItem.source_path);
-        return {
-            ...kbItem,
-            timestamp: additionalSource?.timestamp,
-            page: additionalSource?.page
-        };
-    });
+    const filteredKnowledgeBase = [
+        discoveredSources.mainSource,
+        ...discoveredSources.additionalSources.map(additionalSource => {
+            const matchingItem = discoveredSources.additionalSources.find(item => item.source_path === additionalSource.source_path);
+            if (matchingItem) {
+                return { ...additionalSource, timestamp: matchingItem.timestamp, page: matchingItem.page };
+            }
+            return additionalSource; // Return the original item if no match is found
+        })
+    ];
 
     console.log("filteredKb: ", filteredKnowledgeBase);
 
