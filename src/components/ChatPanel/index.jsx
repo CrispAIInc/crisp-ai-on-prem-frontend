@@ -480,7 +480,7 @@ const ChatPanel = () => {
   const { generateMetadata } = useMetadata();
   const STEPS = [
     "Generating metadata...",
-    "Generating precise structure...",
+    "Generating business intelligence...",
     "Generating blog content...",
     "Almost there..."
   ];
