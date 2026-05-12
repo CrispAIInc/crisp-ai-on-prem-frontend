@@ -702,7 +702,7 @@ const ChatPanel = () => {
               {[
                 { id: "genMetadata", title: "Catalog" },
                 { id: "genMedia", title: "Reels" },
-                { id: "genTimeSegment", title: "Video Segment" },
+                { id: "genTimeSegment", title: "Segment" },
                 { id: "genStories", title: "Stories & Blogs" },
                 { id: "genGraph", title: "Business Intelligence" },
               ].map(item => (
