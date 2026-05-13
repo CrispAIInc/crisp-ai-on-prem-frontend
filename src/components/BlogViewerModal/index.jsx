@@ -61,25 +61,26 @@ function BlogViewerModal({ show, onHide }) {
 
     const handleDownload = async () => {
         setIsDownloading(true);
-        try {
 
+        try {
             const publicReelUrl = await getPublicUrl(selectedBlog.blog_url);
 
+            const response = await fetch(publicReelUrl);
+            const blob = await response.blob();
+
+            const blobUrl = window.URL.createObjectURL(blob);
+
             const link = document.createElement("a");
-            link.href = selectedBlog.title;
-            link.download = selectedBlog.title + ".docx";
+            link.href = blobUrl;
+            link.download = `${selectedBlog.title}.docx`;
+
             document.body.appendChild(link);
             link.click();
+
             document.body.removeChild(link);
 
-            // const link = document.createElement("a");
-            // link.href = selectedBlog.blog_url;
-            // link.download = `${selectedBlog.title}.docx`;
-            // document.body.appendChild(link);
-            // link.click();
+            window.URL.revokeObjectURL(blobUrl);
 
-            // document.body.removeChild(link);
-            // URL.revokeObjectURL(selectedBlog.blog_url);
         } catch (error) {
             console.log(error);
         } finally {
