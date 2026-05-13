@@ -346,7 +346,7 @@ const ChatPanel = () => {
     async function fetchFindMoments() {
       try {
         axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-        const { data, success } = await makeApiRequest("/chat/moment-fetch", 'GET', null, {
+        const { data, success } = await makeApiRequest("/chat/moment", 'GET', null, {
           ProjectId: currentProject.project_id,
         });
         if (success) {
@@ -363,7 +363,7 @@ const ChatPanel = () => {
   const [isPending, setIsPending] = useState(false);
 
   async function handleCaptioning(query, momentTitle) {
-    let response = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
+    let response = await makeApiRequest('/moment', 'POST', JSON.stringify({
       prompt: query,
       title: momentTitle,
       sources: checkedSources.filter(items => items.file_type === "video"),

@@ -82,7 +82,7 @@ const FindMoments = ({
     // const [isFetchingRefs, setIsFetchingRefs] = useState(false);
 
     // async function handleCaptioning(query) {
-    //     let response = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
+    //     let response = await makeApiRequest('/moment', 'POST', JSON.stringify({
     //         prompt: query,
     //         sources: checkedSources.filter(items => items.file_type === "video"),
     //         fromCrispWiz: false
