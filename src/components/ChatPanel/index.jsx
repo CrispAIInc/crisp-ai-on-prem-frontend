@@ -333,6 +333,7 @@ const ChatPanel = () => {
 
   const [prompt, setPrompt] = useState("");
   const [showList, setShowList] = useState(true);
+  const [momentTitle, setMomentTitle] = useState("");
   const [currentMoment, setCurrentMoment] = useState(null);
   const [moments, setMoments] = useState([]);
   const [captionResults, setCaptionResults] = useState({
@@ -375,6 +376,14 @@ const ChatPanel = () => {
   async function handleCaptionSubmit() {
     try {
       setIsPending(true);
+      if (!momentTitle) {
+        notify({
+          variant: "error",
+          heading: "Moment title is required"
+        });
+        setIsPending(false);
+        return;
+      }
       if (!displayedSources?.every(item => item?.is_checked === false)) {
         await makeApiRequest(
           `/handle-embeddings`,
@@ -384,7 +393,7 @@ const ChatPanel = () => {
           })
         );
       }
-      let { results, success, message, ...rest } = await handleCaptioning(prompt, segmentTitle);
+      let { results, success, message, ...rest } = await handleCaptioning(prompt, momentTitle);
 
       if (success) {
         if (results.length > 0) {
@@ -404,7 +413,7 @@ const ChatPanel = () => {
           }).filter(Boolean);
           const moment = {
             ...rest,
-            title: segmentTitle,
+            title: momentTitle,
             results: finalResults
           };
 
@@ -418,7 +427,7 @@ const ChatPanel = () => {
           setCurrentMoment(moment);
 
           setPrompt("");
-          setSegmentTitle("");
+          setMomentTitle("");
           setIsPending(false);
           setShowList(false);
         } else {

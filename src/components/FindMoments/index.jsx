@@ -335,6 +335,7 @@ const FindMoments = ({
                     placeholder="Write a title for this moment"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    required
                 />
             </div>
 
