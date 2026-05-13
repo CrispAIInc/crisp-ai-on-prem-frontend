@@ -216,6 +216,7 @@ const ChatPanel = () => {
   const [isSegmentPending, setIsSegmentPending] = useState(false);
   const [showSegmentList, setShowSegmentList] = useState(true);
   const [currentSegment, setCurrentSegment] = useState(null);
+  const [segmentTitle, setSegmentTitle] = useState("");
   const [startSegmentDescription, setStartSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
   const [endSegmentDescription, setEndSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
 
@@ -257,6 +258,7 @@ const ChatPanel = () => {
       url.append("end_timestamp", formatTime((endSegmentDescription)));
       url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
       url.append("prompt", promptSegmentDescription);
+      url.append("title", segmentTitle);
 
       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
@@ -277,7 +279,7 @@ const ChatPanel = () => {
 
         setSegmentDescriptions(prev => [
           ...prev,
-          data
+          { ...data, title: segmentTitle }
         ]);
         setCurrentSegment(data);
         setShowSegmentList(false);
@@ -764,6 +766,8 @@ const ChatPanel = () => {
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : actualTab === "genTimeSegment" ? (
                 <VideoSegmentDescription
+                  title={segmentTitle}
+                  setTitle={setSegmentTitle}
                   currentSegmentTab={currentSegmentTab}
                   setCurrentSegmentTab={setCurrentSegmentTab}
                   isSegmentPending={isSegmentPending}

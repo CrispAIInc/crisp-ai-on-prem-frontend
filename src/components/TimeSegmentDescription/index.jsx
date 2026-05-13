@@ -33,6 +33,8 @@ const TimeSegmentDescription = ({
     setEnd,
     prompt,
     setPrompt,
+    title,
+    setTitle,
     results,
     setResults,
     segmentDescriptions,
@@ -44,10 +46,6 @@ const TimeSegmentDescription = ({
     setCurrentSegment,
     generateDescription,
 }) => {
-
-    /**
-     * *MOCKUP DATA ONLY*
-     */
 
     const [timeSegmentDescriptions, setTimeSegmentDescriptions] = useState([
         {
@@ -110,24 +108,9 @@ const TimeSegmentDescription = ({
     const {
         checkedSources,
         theme,
-        currentChat,
-        contentPanelContainerRef,
     } = useContext(MainContext);
 
     const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
-
-    // const { currentProject } = useContext(ProjectContext);
-
-    const { token } = useAuth();
-
-    // const { notify } = useToast();
-
-    // const [isPending, setIsPending] = useState(false);
-    // const [isFetchingRefs, setIsFetchingRefs] = useState(false);
-    // const [showList, setShowList] = useState(true);
-    // const [currentSegment, setCurrentSegment] = useState(null);
-
-
 
 
     // =========== CONSTREINT TOOLTIP LOGIC =============
@@ -145,71 +128,6 @@ const TimeSegmentDescription = ({
     const handleMouseLeave = () => setTooltipVisible(false);
 
     const canGenerate = checkedVideosCount > 0 && !isSegmentPending && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
-
-    // async function generateDescription() {
-    //     try {
-    //         if (!canGenerate) {
-    //             throw new Error('Make sure you provided video sources and prompt');
-    //         }
-
-    //         if (toSeconds(end) <= toSeconds(start)) {
-    //             throw new Error("Your timestamp range is invalid.");
-    //         }
-
-    //         setIsPending(true);
-    //         setResults(prev => ({
-    //             ...prev,
-    //             start: formatTime(start),
-    //             end: formatTime(end),
-    //             refs: []
-    //         }));
-
-    //         let url = new URLSearchParams();
-
-    //         url.append("start_timestamp", formatTime((start)));
-    //         url.append("end_timestamp", formatTime((end)));
-    //         url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
-    //         url.append("prompt", prompt);
-
-    //         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    //         axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
-    //         axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-
-    //         const { data, success, message } = await makeApiRequest(`/segment-response?${url.toString()}`, 'GET', null, {
-    //             Authorization: `Bearer ${token}`,
-    //             SessionId: currentChat?.sessionId,
-    //             ProjectId: currentProject?.project_id,
-    //         });
-
-    //         if (success) {
-
-    //             notify({
-    //                 variant: "success",
-    //                 heading: "Description generated successfully",
-    //             });
-
-    //             setSegmentDescriptions(prev => [
-    //                 ...prev,
-    //                 data
-    //             ]);
-    //             setCurrentSegment(data);
-    //             setShowList(false);
-    //         } else {
-    //             throw new Error(message);
-    //         }
-
-    //     } catch (error) {
-    //         console.log(error);
-    //         notify({
-    //             variant: "error",
-    //             heading: "Couldn't generate description",
-    //             subheading: error?.message
-    //         });
-    //     } finally {
-    //         setIsPending(false);
-    //         setIsFetchingRefs(false);
-    //     }
-    // }
 
     // Helper function to convert a Base64 string to a Uint8Array (Prevents Word corruption)
     function base64ToUint8Array(base64) { const binaryString = window.atob(base64); const len = binaryString.length; const bytes = new Uint8Array(len); for (let i = 0; i < len; i++) { bytes[i] = binaryString.charCodeAt(i); } return bytes; }
@@ -277,6 +195,7 @@ const TimeSegmentDescription = ({
 
         return paragraphs;
     }
+
     async function exportSceneAnalysisToDocx(data) {
         try {
             /* ---------- LOAD LOGO ---------- */
@@ -572,8 +491,6 @@ const TimeSegmentDescription = ({
         }
     }, [results.description, isContentEmpty]);
 
-    const [isMultiline, setIsMultiline] = useState(false);
-
     const textareaRef = useRef(null);
     useEffect(() => {
         const el = textareaRef.current;
@@ -582,14 +499,6 @@ const TimeSegmentDescription = ({
         // Reset height to recalc
         el.style.height = "auto";
         el.style.height = el.scrollHeight + "px";
-
-        // Calculate 4 lines height
-        const lineHeight = parseFloat(
-            window.getComputedStyle(el).lineHeight
-        );
-        const maxSingleHeight = lineHeight * 3;
-
-        setIsMultiline(el.scrollHeight > maxSingleHeight);
     }, [prompt]);
 
     return (
@@ -632,6 +541,16 @@ const TimeSegmentDescription = ({
                         </p>
                     )}
                 </div>
+            </div>
+
+            <div className=''>
+                <input
+                    className={`${theme === 'dark' && 'text-textColor-100'
+                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50" : '!border !border-textColor-100'} focus:outline-none w-full rounded-xl`}
+                    placeholder="Write a title for this segment"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
             </div>
 
 

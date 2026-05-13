@@ -21,6 +21,8 @@ const VideoSegmentDescription = ({
     setStartSegmentDescription,
     endSegmentDescription,
     setEndSegmentDescription,
+    title,
+    setTitle,
     promptSegmentDescription,
     setPromptSegmentDescription,
     isInfoTooltipOpen,
@@ -94,6 +96,8 @@ const VideoSegmentDescription = ({
                 currentSegmentTab === "Time segment description" ? (
                     <>
                         <TimeSegmentDescription
+                            title={title}
+                            setTitle={setTitle}
                             segmentDescriptions={segmentDescriptions}
                             setSegmentDescriptions={setSegmentDescriptions}
                             start={startSegmentDescription}

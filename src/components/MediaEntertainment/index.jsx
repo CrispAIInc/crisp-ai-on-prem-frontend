@@ -249,7 +249,7 @@ function MediaEntertainment({
 
                 {/* title */}
                 <div className=''>
-                    <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Your reel title</label>
+                    <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Title</label>
                     <input
                         className={`${theme === 'dark' && 'text-textColor-100'
                             } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50" : '!border !border-textColor-100'} focus:outline-none w-full rounded-xl`}
