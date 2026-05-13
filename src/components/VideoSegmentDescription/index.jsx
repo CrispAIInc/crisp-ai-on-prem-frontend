@@ -21,8 +21,10 @@ const VideoSegmentDescription = ({
     setStartSegmentDescription,
     endSegmentDescription,
     setEndSegmentDescription,
-    title,
-    setTitle,
+    timeSegmentTitle,
+    setTimeSegmentTitle,
+    momentTitle,
+    setMomentTitle,
     promptSegmentDescription,
     setPromptSegmentDescription,
     isInfoTooltipOpen,
@@ -96,8 +98,8 @@ const VideoSegmentDescription = ({
                 currentSegmentTab === "Time segment description" ? (
                     <>
                         <TimeSegmentDescription
-                            title={title}
-                            setTitle={setTitle}
+                            title={timeSegmentTitle}
+                            setTitle={setTimeSegmentTitle}
                             segmentDescriptions={segmentDescriptions}
                             setSegmentDescriptions={setSegmentDescriptions}
                             start={startSegmentDescription}
@@ -132,8 +134,8 @@ const VideoSegmentDescription = ({
                         isPending={isPending}
                         setIsPending={setIsPending}
                         handleCaptionSubmit={handleCaptionSubmit}
-                        title={title}
-                        setTitle={setTitle}
+                        title={momentTitle}
+                        setTitle={setMomentTitle}
                     />
                 )
             }

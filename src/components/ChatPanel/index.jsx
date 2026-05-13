@@ -775,8 +775,10 @@ const ChatPanel = () => {
                   isReelOpen={isReelOpen} setIsReelOpen={setIsReelOpen} />
               ) : actualTab === "genTimeSegment" ? (
                 <VideoSegmentDescription
-                  title={segmentTitle}
-                  setTitle={setSegmentTitle}
+                  timeSegmentTitle={segmentTitle}
+                  setTimeSegmentTitle={setSegmentTitle}
+                  momentTitle={momentTitle}
+                  setMomentTitle={setMomentTitle}
                   currentSegmentTab={currentSegmentTab}
                   setCurrentSegmentTab={setCurrentSegmentTab}
                   isSegmentPending={isSegmentPending}
