@@ -276,7 +276,7 @@ const ChatPanel = () => {
 
         setSegmentDescriptions(prev => [
           ...prev,
-          { ...data, title: segmentTitle }
+          { ...data }
         ]);
         setCurrentSegment(data);
         setShowSegmentList(false);
