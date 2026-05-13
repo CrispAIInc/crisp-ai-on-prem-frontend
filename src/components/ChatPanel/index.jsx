@@ -210,9 +210,6 @@ const ChatPanel = () => {
   // ========== time segment description ==============
   const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
 
-
-
-
   const [isSegmentPending, setIsSegmentPending] = useState(false);
   const [showSegmentList, setShowSegmentList] = useState(true);
   const [currentSegment, setCurrentSegment] = useState(null);

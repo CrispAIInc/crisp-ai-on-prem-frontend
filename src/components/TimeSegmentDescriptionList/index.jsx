@@ -10,6 +10,9 @@ import ActionMenu from "../ActionMenu";
 import AnimatedText from "../AnimatedText";
 import { sortByDate } from '../../utils';
 
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import TimeSegmentTitleUpdaterModal from '../TimeSegmentTitleUpdaterModal';
+
 function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDescriptions, setSegmentDescriptions }) {
 
     const {
@@ -47,9 +50,11 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
         // }
     }
 
+    const [selectedSegment, setSelectedSegment] = useState(null);
     const [isSegmentDeleting, setIsSegmentDeleting] = useState(false);
 
     const [hoveredSegment, setHoveredSegment] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleMouseEnterSegment = (id) => {
         setHoveredSegment(id);
@@ -85,45 +90,62 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
     }
 
     return (
-        <div className="flex flex-col gap-2 overflow-y-auto">
-            <BaseHeading text="Saved segment responses" />
-            <div className='flex flex-col gap-1'>
-                {
-                    sortByDate(segmentDescriptions, "created_at", "desc").map(segment => (
-                        <div key={segment.id}
-                            className={`flex items-center  gap-2 ${theme === 'light'
-                                ? 'hover:bg-textColor-100/10'
-                                : 'hover:bg-light-hover-200/20'
-                                } cursor-pointer p-2 rounded-md select-none`}
-                            onClick={() => handleSelectResult(segment)}
-                            onMouseEnter={() => handleMouseEnterSegment(segment.id)}
-                            onMouseLeave={handleMouseLeaveSegment}
-                        >
+        <>
+            <div className="flex flex-col gap-2 overflow-y-auto">
+                <BaseHeading text="Saved segment responses" />
+                <div className='flex flex-col gap-1'>
+                    {
+                        sortByDate(segmentDescriptions, "created_at", "desc").map(segment => (
+                            <div key={segment.id}
+                                className={`flex items-center  gap-2 ${theme === 'light'
+                                    ? 'hover:bg-textColor-100/10'
+                                    : 'hover:bg-light-hover-200/20'
+                                    } cursor-pointer p-2 rounded-md select-none`}
+                                onClick={() => handleSelectResult(segment)}
+                                onMouseEnter={() => handleMouseEnterSegment(segment.id)}
+                                onMouseLeave={handleMouseLeaveSegment}
+                            >
 
-                            {
-                                !isProjectReadOnly && (
-                                    <ActionMenu
-                                        actions={[
-                                            {
-                                                label: isSegmentDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
-                                                icon: isSegmentDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon />,
-                                                onClick: () => deleteSegment(segment.id),
-                                            },
-                                        ]}
-                                    />
-                                )
-                            }
+                                {
+                                    !isProjectReadOnly && (
+                                        <ActionMenu
+                                            actions={[
+                                                {
+                                                    label: "Edit title",
+                                                    icon: <EditOutlinedIcon />,
+                                                    onClick: (e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedSegment(segment);
+                                                        setIsModalOpen(true);
+                                                    },
+                                                },
+                                                {
+                                                    label: isSegmentDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
+                                                    icon: isSegmentDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon />,
+                                                    onClick: () => deleteSegment(segment.id),
+                                                },
+                                            ]}
+                                        />
+                                    )
+                                }
 
-                            <div>
-                                <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema.talking_head.length > 0 ? `${segment.response_format.schema.talking_head.length} ${segment.response_format.schema.talking_head.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs" />
+                                <div>
+                                    <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema.talking_head.length > 0 ? `${segment.response_format.schema.talking_head.length} ${segment.response_format.schema.talking_head.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs" />
 
-                                <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit truncate`} key={segment.id}>{segment?.title || segment?.query}</p>
+                                    <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit truncate`} key={segment.id}>{segment?.title || segment?.query}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))
-                }
+                        ))
+                    }
+                </div>
             </div>
-        </div>
+
+            {
+                isModalOpen && (
+                    <TimeSegmentTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} segment={selectedSegment} setSegmentDescriptions={setSegmentDescriptions} />
+                )
+            }
+        </>
     );
 }
 
