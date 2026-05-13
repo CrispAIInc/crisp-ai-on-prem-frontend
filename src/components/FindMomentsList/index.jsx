@@ -127,7 +127,7 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
                                     )
                                 }
 
-                                <p onClick={() => handleSelectResult(item)} key={item.id} className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium truncate`}>{item.prompt}</p>
+                                <p onClick={() => handleSelectResult(item)} key={item.id} className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium truncate`}>{item.title}</p>
                             </div>
                         ))
                     }
