@@ -34,6 +34,8 @@ const FindMoments = ({
     isPending,
     setIsPending,
     handleCaptionSubmit,
+    title,
+    setTitle,
 }) => {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -325,6 +327,16 @@ const FindMoments = ({
                 </div>
             </div>
             {/* ==================================== */}
+
+            <div className=''>
+                <input
+                    className={`${theme === 'dark' && 'text-textColor-100'
+                        } font-medium p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50" : '!border !border-textColor-100'} focus:outline-none w-full rounded-xl`}
+                    placeholder="Write a title for this moment"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+            </div>
 
             <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
               backdrop-blur-sm`}>

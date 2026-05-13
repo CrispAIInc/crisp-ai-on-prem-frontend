@@ -362,9 +362,10 @@ const ChatPanel = () => {
 
   const [isPending, setIsPending] = useState(false);
 
-  async function handleCaptioning(query) {
+  async function handleCaptioning(query, momentTitle) {
     let response = await makeApiRequest('/moment-fetch', 'POST', JSON.stringify({
       prompt: query,
+      title: momentTitle,
       sources: checkedSources.filter(items => items.file_type === "video"),
       fromCrispWiz: false
     }));
@@ -383,7 +384,7 @@ const ChatPanel = () => {
           })
         );
       }
-      let { results, success, message, ...rest } = await handleCaptioning(prompt);
+      let { results, success, message, ...rest } = await handleCaptioning(prompt, segmentTitle);
 
       if (success) {
         if (results.length > 0) {
@@ -403,6 +404,7 @@ const ChatPanel = () => {
           }).filter(Boolean);
           const moment = {
             ...rest,
+            title: segmentTitle,
             results: finalResults
           };
 
@@ -416,6 +418,7 @@ const ChatPanel = () => {
           setCurrentMoment(moment);
 
           setPrompt("");
+          setSegmentTitle("");
           setIsPending(false);
           setShowList(false);
         } else {

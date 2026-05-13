@@ -132,6 +132,8 @@ const VideoSegmentDescription = ({
                         isPending={isPending}
                         setIsPending={setIsPending}
                         handleCaptionSubmit={handleCaptionSubmit}
+                        title={title}
+                        setTitle={setTitle}
                     />
                 )
             }
