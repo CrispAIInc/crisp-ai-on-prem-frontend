@@ -66,7 +66,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
     async function deleteSegment(segmentId) {
         try {
             setIsSegmentDeleting(true);
-            const { success, message } = await makeApiRequest(`/segment-response/${segmentId}`, 'DELETE');
+            const { success, message } = await makeApiRequest(`/segment/${segmentId}`, 'DELETE');
 
             if (success) {
                 setSegmentDescriptions(prev => prev.filter(item => item.id !== segmentId));

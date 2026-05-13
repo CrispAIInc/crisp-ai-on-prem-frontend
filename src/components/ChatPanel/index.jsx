@@ -261,7 +261,7 @@ const ChatPanel = () => {
       axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
       axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
 
-      const { data, success, message } = await makeApiRequest(`/segment-response?${url.toString()}`, 'GET', null, {
+      const { data, success, message } = await makeApiRequest(`/segment?${url.toString()}`, 'GET', null, {
         Authorization: `Bearer ${token}`,
         SessionId: currentChat?.sessionId,
         ProjectId: currentProject?.project_id,
@@ -301,7 +301,7 @@ const ChatPanel = () => {
     async function fetchTimeSegments() {
       try {
         axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-        const { data, success } = await makeApiRequest("/chat/segment-response", 'GET', null, {
+        const { data, success } = await makeApiRequest("/chat/segment", 'GET', null, {
           ProjectId: currentProject.project_id,
         });
 
