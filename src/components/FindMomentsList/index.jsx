@@ -8,7 +8,10 @@ import LoadingSpinner from '../LoadingSpinner';
 import DeleteIcon from "@mui/icons-material/Delete";
 import ActionMenu from '../ActionMenu';
 import AnimatedText from '../AnimatedText';
+import MomentTitleUpdaterModal from "../MomentTitleUpdaterModal";
 import { sortByDate } from '../../utils';
+
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments }) {
 
@@ -45,9 +48,11 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
         setShowList(false);
     }
 
+    const [selectedMoment, setSelectedMoment] = useState(null);
     const [isSegmentDeleting, setIsSegmentDeleting] = useState(false);
 
     const [hoveredSegment, setHoveredSegment] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleMouseEnterSegment = (id) => {
         setHoveredSegment(id);
@@ -83,41 +88,58 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
     }
 
     return (
-        <div className="flex flex-col gap-2 overflow-y-auto">
-            <BaseHeading text="All moments" />
-            <div className='flex flex-col gap-1'>
-                {
-                    sortByDate(moments, "created_at", "desc").map(item => (
-                        <div key={item.id}
-                            className={`flex items-center gap-2 ${theme === 'light'
-                                ? 'hover:bg-textColor-100/10'
-                                : 'hover:bg-light-hover-200/20'
-                                } cursor-pointer p-2 rounded-md select-none`}
-                            onClick={() => handleSelectResult(item)}
-                            onMouseEnter={() => handleMouseEnterSegment(item.id)}
-                            onMouseLeave={handleMouseLeaveSegment}
-                        >
+        <>
+            <div className="flex flex-col gap-2 overflow-y-auto h-full">
+                <BaseHeading text="All moments" />
+                <div className='flex flex-col gap-1'>
+                    {
+                        sortByDate(moments, "created_at", "desc").map(item => (
+                            <div key={item.id}
+                                className={`flex items-center gap-2 ${theme === 'light'
+                                    ? 'hover:bg-textColor-100/10'
+                                    : 'hover:bg-light-hover-200/20'
+                                    } cursor-pointer p-2 rounded-md select-none`}
+                                onClick={() => handleSelectResult(item)}
+                                onMouseEnter={() => handleMouseEnterSegment(item.id)}
+                                onMouseLeave={handleMouseLeaveSegment}
+                            >
 
-                            {
-                                !isProjectReadOnly && (
-                                    <ActionMenu
-                                        actions={[
-                                            {
-                                                label: isSegmentDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
-                                                icon: isSegmentDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon />,
-                                                onClick: () => deleteSegment(item.id),
-                                            },
-                                        ]}
-                                    />
-                                )
-                            }
+                                {
+                                    !isProjectReadOnly && (
+                                        <ActionMenu
+                                            actions={[
+                                                {
+                                                    label: "Edit title",
+                                                    icon: <EditOutlinedIcon />,
+                                                    onClick: (e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedMoment(item);
+                                                        setIsModalOpen(true);
+                                                    },
+                                                },
+                                                {
+                                                    label: isSegmentDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
+                                                    icon: isSegmentDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon />,
+                                                    onClick: () => deleteSegment(item.id),
+                                                },
+                                            ]}
+                                        />
+                                    )
+                                }
 
-                            <p onClick={() => handleSelectResult(item)} key={item.id} className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium truncate`}>{item.prompt}</p>
-                        </div>
-                    ))
-                }
+                                <p onClick={() => handleSelectResult(item)} key={item.id} className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit hover:font-medium truncate`}>{item.prompt}</p>
+                            </div>
+                        ))
+                    }
+                </div>
             </div>
-        </div>
+
+            {
+                isModalOpen && (
+                    <MomentTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} moment={selectedMoment} setMoments={setMoments} />
+                )
+            }
+        </>
     );
 }
 
