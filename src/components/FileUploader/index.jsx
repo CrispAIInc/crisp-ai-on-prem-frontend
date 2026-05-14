@@ -1,13 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from "../../contexts/mainContext.jsx";
-import FakeProgress from '../FakeProgressbar';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Checkbox } from "@mui/material";
 import BaseHeading from "../BaseHeading";
 
 const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, closeModals }) => {
-    const [fileThumbnails, setFileThumbnails] = useState([]);
-    const { isFileUploading } = useContext(MainContext);
 
+    const { isFileUploading, theme } = useContext(MainContext);
+
+
+    const [fileThumbnails, setFileThumbnails] = useState([]);
+    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
     const handleFileUpload = (event) => {
         const files = Array.from(event.target.files);
@@ -92,9 +95,6 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
 
     return (
         <div className="relative flex flex-col items-center p-4 border-2 border-dashed rounded-md border-primary-200">
-            {/* {(isFileUploading || isProgressStarted) && <div className="absolute z-40 w-[90%] h-12 mx-auto">
-                <FakeProgress setIsProgressStarted={setIsProgressStarted} isLoading={isFileUploading} closeModals={closeModals} progress={progress} setProgress={setProgress} />
-            </div>} */}
             <input
                 type="file"
                 multiple
@@ -104,7 +104,7 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
                 id="file-input"
                 onChange={handleFileUpload}
             />
-            <div className="!ml-auto flex items-center gap-1">
+            <div className="relative !ml-auto flex items-center gap-1">
                 <Checkbox
                     className={`p-0 "
                  }`}
@@ -115,6 +115,32 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
                 />
 
                 <BaseHeading text="Fine-grained mode" />
+
+                <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className='!relative !w-5' style={{ color: `${theme === 'light' ? '#777' : '#ABAEB4'}` }} />
+
+                {
+                    isInfoTooltipOpen && (
+                        <div
+                            className={
+                                `absolute
+                right-0
+                top-full
+                mt-2
+                z-40
+                w-[280px]
+                max-w-[calc(100vw-40px)]
+                p-2
+                rounded-md
+                shadow-[0px_0px_30px_-2px_rgba(82,79,79,0.6)]
+                break-words
+                ${theme === 'light' ? 'bg-white' : 'bg-textColor-300'}
+                                `
+                            }
+                        >
+                            <BaseHeading text="Get high detail info about visual part of the video. Processing time may increase." />
+                        </div>
+                    )
+                }
             </div>
             <label
                 htmlFor="file-input"

@@ -48,9 +48,9 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
-            className=""
+            className="!overflow-x-hidden"
         >
-            <Modal.Body className={`flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'} select-none`}>
+            <Modal.Body className={`!overflow-x-hidden flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'} select-none`}>
                 {indexName !== null && <div className="flex items-center gap-2">
                     <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={selectedIndex} options={categoryOptions} />
                     {/* <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} /> */}
