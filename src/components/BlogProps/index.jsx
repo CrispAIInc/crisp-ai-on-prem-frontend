@@ -6,7 +6,7 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import Accordion from "../Accordion";
-import ViewWeekOutlinedIcon from '@mui/icons-material/ViewWeekOutlined';
+import BaseHeading from "../BaseHeading";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import GsFile from '../GsFile';
 import Chip from '../Chip';
@@ -77,25 +77,20 @@ function BlogProps({ closeBlogProps = () => { } }) {
                                     <div className="flex flex-col gap-0">
                                         <div className="flex items-center gap-2">
                                             <p className='text-sm font-semibold break-all'>{video.source_path}</p>
-                                            {/* {
-                                                !Array.isArray(video?.category) ? <Chip cssClasses="italic !text-[8px] !px-1" content={video.category} />
-                                                    :
-                                                    <div className="flex flex-wrap items-center gap-1">
-                                                        {
-                                                            video.category?.map((cat, index) => (
-                                                                <Chip key={`${cat}-${index}`} cssClasses="italic !text-[8px] !px-1" content={cat} />
-                                                            ))
-                                                        }
-                                                    </div>
-                                            } */}
                                         </div>
 
                                         {/* time segments */}
                                         <div className="flex items-center gap-1 mt-1">
                                             <AccessTimeIcon fontSize='small' className="text-gray-500" />
-                                            <span className="text-xs text-gray-500 tracking-wide font-bold">
-                                                {selectedBlog.range_from} - {selectedBlog.range_to}
-                                            </span>
+                                            {
+                                                selectedBlog.is_full_source ? (
+                                                    <BaseHeading text={"Full source"} />
+                                                ) : (
+                                                    <span className="text-xs text-gray-500 tracking-wide font-bold">
+                                                        {selectedBlog.range_from} - {selectedBlog.range_to}
+                                                    </span>
+                                                )
+                                            }
                                         </div>
                                     </div>
                                 </div>
