@@ -123,7 +123,7 @@
 
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import { useContext, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import BaseHeading from '../BaseHeading';
@@ -156,6 +156,8 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
         setCurrentSegment(null);
         setShowList(true);
     }
+
+    const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
     function orderTalkingHeadByTimestamp(talkingHead) {
         const segments = [];
@@ -196,6 +198,21 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
     function timeToSeconds(time) {
         const [h, m, s] = time.split(":").map(Number);
         return h * 3600 + m * 60 + s;
+    }
+
+    function exportSegmentAsJson(segment) {
+        const safeFileName = `segment-${(segment.video || 'segment').replace(/[^a-zA-Z0-9-_]/g, '_')}-${segment.start || '0'}-${segment.end || '0'}.json`;
+        const jsonData = JSON.stringify(segment, null, 2);
+        const blob = new Blob([jsonData], { type: 'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = safeFileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
 
     return (
@@ -303,9 +320,40 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
             )}
 
             {/* action buttons */}
-            <div className="flex items-center gap-2">
-                <RippleButton cssClasses="px-3 py-1 text-sm  rounded" onClick={() => exportFn(currentSegment)}>Export</RippleButton>
-                {/* <RippleButton cssClasses="px-3 py-1 text-sm  rounded" noBg onClick={saveSegmentDescription}>Save</RippleButton> */}
+            <div className="flex items-center gap-2 relative">
+                <div className="relative inline-block">
+                    <RippleButton
+                        cssClasses="px-3 py-1 text-sm rounded"
+                        onClick={() => setExportMenuOpen((prev) => !prev)}
+                    >
+                        Export
+                    </RippleButton>
+
+                    {exportMenuOpen && (
+                        <div className={`absolute left-0 mt-2 min-w-[180px] rounded-lg border-textColor-300/20 shadow-xl z-10 mb-5 ${theme === "dark" ? 'bg-background_workspace text-textColor-100' : 'shadow-md border border-textColor-300'}`}>
+                            <button
+                                type="button"
+                                className="w-full text-left px-3 py-2 text-sm"
+                                onClick={() => {
+                                    exportFn(currentSegment);
+                                    setExportMenuOpen(false);
+                                }}
+                            >
+                                Export as .docx
+                            </button>
+                            <button
+                                type="button"
+                                className="w-full text-left px-3 py-2 text-sm"
+                                onClick={() => {
+                                    exportSegmentAsJson(currentSegment);
+                                    setExportMenuOpen(false);
+                                }}
+                            >
+                                Export as JSON
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
