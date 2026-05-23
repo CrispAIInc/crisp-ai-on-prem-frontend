@@ -425,9 +425,12 @@ export const toSeconds = ({ h, m, s }) =>
     Number(h) * 3600 + Number(m) * 60 + Number(s);
 
 export const fromSeconds = (total) => {
+    console.log(total);
     const hours = Math.floor(total / 3600);
     const minutes = Math.floor((total % 3600) / 60);
     const seconds = total % 60;
+
+    console.log({ hours, minutes, seconds });
 
     return {
         hours: String(hours).padStart(2, "0"),
@@ -436,8 +439,9 @@ export const fromSeconds = (total) => {
     };
 };
 
-export const formatTime = ({ h, m, s }) =>
-    `${h}:${m}:${s}`;
+export const formatTime = ({ h, m, s }) => {
+    return `${h}:${m}:${s}`;
+};
 
 /**
  * Converts an image URL to a Base64 string
@@ -463,4 +467,16 @@ export async function urlToBase64(url) {
         console.error("Error converting URL to Base64:", err);
         return null;
     }
+}
+
+// should return the new timestamp - reducedSeconds
+export function reduceSecondsFromTimestamp(timestamp, reducedSeconds) {
+    const totalSeconds = timeToSeconds(timestamp);
+    const newTotalSeconds = Math.max(0, totalSeconds - reducedSeconds);
+    return newTotalSeconds;
+}
+
+export function formatTotalSecondsToTimestamp(totalSeconds) {
+    const { hours, minutes, seconds } = fromSeconds(totalSeconds);
+    return { h: hours, m: minutes, s: seconds };
 }

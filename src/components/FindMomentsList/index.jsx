@@ -9,7 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ActionMenu from '../ActionMenu';
 import AnimatedText from '../AnimatedText';
 import MomentTitleUpdaterModal from "../MomentTitleUpdaterModal";
-import { sortByDate } from '../../utils';
+import { formatTime, formatTotalSecondsToTimestamp, reduceSecondsFromTimestamp, sortByDate } from '../../utils';
 
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
@@ -32,12 +32,16 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
         const fullShapeResult = item.results.map(result => {
             let source = knowledgeBase.find(item => item.source_id === result.source_id);
 
+            // console.log(reduceSecondsFromTimestamp(result.timestamp, 5));
+            const reducedTimestamp = formatTime(formatTotalSecondsToTimestamp(reduceSecondsFromTimestamp(result.timestamp, 5)));
+            // console.log(reducedTimestamp);
+
             return {
                 ...result,
-                timestampText: `${result.video} | ${result.timestamp}`,
+                timestampText: `${result.video} | ${reducedTimestamp}`,
                 source: {
                     ...source,
-                    timestamp: source ? result.timestamp : null,
+                    timestamp: source ? reducedTimestamp : null,
                 },
             };
         });
