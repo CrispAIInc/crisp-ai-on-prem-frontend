@@ -75,7 +75,14 @@ export default function MetadataAdvancedParams({
                         <label className={` w-fit !relative ${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium flex items-center gap-1`}>
                             Verbosity
                             <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className='!relative !w-5' style={{ color: `${theme === 'light' ? '#777' : '#ABAEB4'}` }} />
-                            {isInfoTooltipOpen && <div className="absolute right-0 p-2 bg-background_workspace shadow-[0px_0px_30px_-2px_rgba(82,79,79,0.6)] rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full">Choose the desired <span className="text-primary">quality</span> and <span className="text-primary">complexity</span> for your generated metadata. Higher quality may increase generation time.</div>}
+
+                            {
+                                isInfoTooltipOpen && (
+                                    <div className="absolute right-0 p-2 bg-background_workspace shadow-[0px_0px_30px_-2px_rgba(82,79,79,0.6)] rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full">
+                                        Choose the desired <span className="text-primary">quality</span> and <span className="text-primary">complexity</span> for your generated metadata. Higher quality may increase generation time.
+                                    </div>
+                                )
+                            }
                         </label>
                         <MetadataVerbosity verbosityValue={verbosityValue} setVerbosityValue={handleChange} />
                     </div>
