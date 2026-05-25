@@ -1,126 +1,3 @@
-// import React, { useContext, useEffect, useRef } from 'react';
-// import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-// import BaseHeading from '../BaseHeading';
-// import RippleButton from "../RippleButton";
-// import { MainContext } from '../../contexts/mainContext';
-// import { useToast } from "../../contexts/toastContext";
-// import AnimatedText from '../AnimatedText';
-// import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
-// import { Skeleton } from '@mui/material';
-// import Chip from '../Chip';
-// import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
-
-// const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegmentDescriptions, setShowList, currentSegment, setCurrentSegment }) => {
-
-//     const {
-//         theme,
-//         contentPanelContainerRef,
-//     } = useContext(MainContext);
-//     const { notify } = useToast();
-
-//     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
-
-//     function closeResultsTab() {
-//         setCurrentSegment(null);
-//         setShowList(true);
-//     }
-
-//     async function saveSegmentDescription() {
-//         // TODO: call save endpoint...
-
-//         setTimeSegmentDescriptions(prev => [...prev, results]);
-//         setShowList(true);
-//         console.log(results);
-//     }
-
-//     function copyToClipboard() {
-//         const textToCopy = `Segment: ${results.start} - ${results.end}\nDescription: ${results.description} \nReferences: ${results.refs && results.refs.length > 0 ? results.refs.map(ref => ref.displayText).join("\n") : "None"}`;
-//         navigator.clipboard.writeText(textToCopy)
-//             .then(() => {
-//                 notify({
-//                     variant: "info",
-//                     heading: "Description copied to clipboard!"
-//                 });
-//             })
-//             .catch(err => {
-//                 notify({
-//                     variant: "error",
-//                     heading: "Failed to copy description to clipboard!",
-//                     subheading: err?.message || ""
-//                 });
-//             });
-//     }
-
-//     return (
-//         <div>
-//             {isPending ? (
-//                 <div className="flex flex-col gap-2">
-//                     <Skeleton width={'50%'} />
-//                     <div>
-//                         <Skeleton />
-//                         <Skeleton />
-//                         <Skeleton />
-//                         <Skeleton />
-//                         <Skeleton />
-//                         <Skeleton />
-//                     </div>
-//                     <div className="flex items-center gap-2">
-//                         <Skeleton width={'20%'} height={40} />
-//                         <Skeleton width={'20%'} height={40} />
-//                     </div>
-//                 </div>
-//             ) : (
-//                 <div className="flex flex-col gap-3">
-//                     <div className="flex items-center justify-between gap-2 ">
-//                         <div className="flex items-center gap-2">
-//                             <AccessTimeOutlinedIcon className="text-purple-400" />
-//                             <BaseHeading text={`${currentSegment.start} - ${currentSegment.end}`} className="text-sm text-gradient-x" />
-//                         </div>
-//                         <BaseHeading text="close" className="text-sm cursor-pointer" onClick={closeResultsTab} />
-//                     </div>
-
-//                     <div className="flex flex-col ">
-//                         <BaseHeading text="Prompt" className="font-bold text-sm" />
-//                         <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{currentSegment.prompt}</p>
-//                     </div>
-
-//                     {/* <hr className="p-0 m-0 space-x-0" /> */}
-
-//                     <div className="flex flex-col ">
-//                         <BaseHeading text="Description" className="font-bold text-sm" />
-// <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: currentSegment.description }} />
-//                     </div>
-
-//                     {/* <hr className="p-0 m-0 space-x-0" /> */}
-
-//                     {currentSegment.refs && currentSegment.refs.length > 0 && (
-//                         <div className="">
-//                             <BaseHeading text="References" className="font-bold text-sm mb-2" />
-//                             <ul className="list-disc list-inside text-sm/6 text-textColor-300">
-//                                 {currentSegment.refs.map((ref, index) => {
-//                                     return (
-//                                         <Chip key={index} content={currentSegment.timestampText} data-object={ref} onClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer text-gradient-x" />
-//                                     );
-//                                 })}
-//                             </ul>
-//                         </div>
-//                     )}
-
-//                     {/* action buttons */}
-//                     <div className="flex items-center gap-2">
-//                         <RippleButton cssClasses="px-3 py-1 text-sm  rounded" onClick={exportFn}>Export</RippleButton>
-//                         <RippleButton cssClasses="px-3 py-1 text-sm  rounded" noBg onClick={saveSegmentDescription}>Save</RippleButton>
-//                     </div>
-//                 </div>
-//             )
-//             }
-//         </div>
-//     );
-// };
-
-// export default SegmentDescriptionResult;
-
-
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import { useContext, useState } from 'react';
@@ -130,6 +7,7 @@ import BaseHeading from '../BaseHeading';
 import Chip from '../Chip';
 import RippleButton from "../RippleButton";
 import TalkingHeadPanel from '../TalkingHeadPanel';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 
 const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegmentDescriptions, setShowList, currentSegment, setCurrentSegment }) => {
 
@@ -201,8 +79,9 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
     }
 
     function exportSegmentAsJson(segment) {
+        const { id, timestampText, refs, ...rest } = segment;
         const safeFileName = `segment-${(segment.video || 'segment').replace(/[^a-zA-Z0-9-_]/g, '_')}-${segment.start || '0'}-${segment.end || '0'}.json`;
-        const jsonData = JSON.stringify(segment, null, 2);
+        const jsonData = JSON.stringify(rest, null, 2);
         const blob = new Blob([jsonData], { type: 'application/json;charset=utf-8' });
         const url = URL.createObjectURL(blob);
 
@@ -323,33 +202,34 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
             <div className="flex items-center gap-2 relative">
                 <div className="relative inline-block">
                     <RippleButton
-                        cssClasses="px-3 py-1 text-sm rounded"
+                        cssClasses="px-2 flex items-center gap-1 py-1 text-sm rounded"
                         onClick={() => setExportMenuOpen((prev) => !prev)}
                     >
-                        Export
+                        Export as
+                        <UnfoldMoreIcon />
                     </RippleButton>
 
                     {exportMenuOpen && (
-                        <div className={`absolute left-0 mt-2 min-w-[180px] rounded-lg border-textColor-300/20 shadow-xl z-10 mb-5 ${theme === "dark" ? 'bg-background_workspace text-textColor-100' : 'shadow-md border border-textColor-300'}`}>
+                        <div className={`absolute left-0 bottom-0 mt-2 min-w-[180px] rounded-lg border-textColor-300/20 shadow-xl z-10 mb-5 ${theme === "dark" ? 'bg-background_workspace text-textColor-100' : 'bg-white shadow-md border border-textColor-300'}`}>
                             <button
                                 type="button"
-                                className="w-full text-left px-3 py-2 text-sm"
+                                className={`w-full text-left px-3 py-2 text-sm ${theme === "light" ? "hover:bg-gray-300/50" : "hover:bg-gray-700/20"}`}
                                 onClick={() => {
                                     exportFn(currentSegment);
                                     setExportMenuOpen(false);
                                 }}
                             >
-                                Export as .docx
+                                DOCX format
                             </button>
                             <button
                                 type="button"
-                                className="w-full text-left px-3 py-2 text-sm"
+                                className={`w-full text-left px-3 py-2 text-sm ${theme === "light" ? "hover:bg-gray-300/50" : "hover:bg-gray-700/20"}`}
                                 onClick={() => {
                                     exportSegmentAsJson(currentSegment);
                                     setExportMenuOpen(false);
                                 }}
                             >
-                                Export as JSON
+                                JSON format
                             </button>
                         </div>
                     )}
