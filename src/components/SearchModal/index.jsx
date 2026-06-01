@@ -36,17 +36,29 @@ export function SearchModal(props) {
      * }
      */
 
+    console.log(discoveredSources);
+
     // Function to filter knowledgeBase items whose source paths exist in additionalSources and add timestamp or page to the item
     const additionalSourcesSourcePaths = discoveredSources?.additionalSources?.map(source => source.source_path) || [];
+
     const filteredKnowledgeBase = [
         discoveredSources.mainSource,
-        ...knowledgeBase.filter(item => additionalSourcesSourcePaths.includes(item.source_path)).map(item => {
-            const additionalSource = discoveredSources.additionalSources.find(source => source.source_path === item.source_path);
-            return {
+        ...additionalSourcesSourcePaths.flatMap(sourcePath => {
+            const item = knowledgeBase.find(
+                kb => kb.source_path === sourcePath
+            );
+
+            if (!item) return [];
+
+            const additionalSource = discoveredSources.additionalSources.find(
+                source => source.source_path === sourcePath
+            );
+
+            return [{
                 ...item,
                 timestamp: additionalSource?.timestamp,
                 page: additionalSource?.page
-            };
+            }];
         })
     ];
 
@@ -133,7 +145,7 @@ export function SearchModal(props) {
 
                         {/* additional sources */}
                         <BaseHeading text="Additional results" cssClasses="text-lg" />
-                        {filteredKnowledgeBase.map((item, index) => (
+                        {filteredKnowledgeBase.slice(1).map((item, index) => (
                             <div key={item?.source_path} className={`flex items-center gap-2 w-full max-w-full cursor-pointer p-2 ${theme === 'light' ? 'hover:bg-light-hover-100/70' : 'hover:bg-light-hover-200/20'} hover:rounded-lg`} onClick={(event) => onThumbnailClick(event, item)}>
                                 {
                                     item?.file_type === "video" ? (
