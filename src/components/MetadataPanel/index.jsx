@@ -306,7 +306,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                 className="absolute top-0 left-0"
                 width="100%"
                 height="100%"
-                playing={isVideoPlaying}
+                playing={video_autoplay}
                 loop={video_loop}
                 url={sourcePublicUrl || resourceURL}
                 onReady={() => setIsPlayerReady(true)}
@@ -314,30 +314,30 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                 ref={player}
                 controls
 
-                // Thumbnail image
-                light={!isVideoPlaying && thumbnailPublicUrl}
-                onClickPreview={() => {
-                  if (!isVideoPlaying) {
-                    setIsVideoPlaying(true);
-                  }
+              // Thumbnail image
+              // light={!isVideoPlaying && thumbnailPublicUrl}
+              // onClickPreview={() => {
+              //   if (!isVideoPlaying) {
+              //     setIsVideoPlaying(true);
+              //   }
 
-                }}
+              // }}
 
-                // Custom center play button
-                playIcon={!isVideoPlaying &&
-                  <button
-                    className="w-20 h-20 rounded-full bg-black/70 flex items-center justify-center hover:scale-110 transition"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="white"
-                      viewBox="0 0 24 24"
-                      className="w-10 h-10 ml-1"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </button>
-                }
+              // Custom center play button
+              // playIcon={!isVideoPlaying &&
+              //   <button
+              //     className="w-20 h-20 rounded-full bg-black/70 flex items-center justify-center hover:scale-110 transition"
+              //   >
+              //     <svg
+              //       xmlns="http://www.w3.org/2000/svg"
+              //       fill="white"
+              //       viewBox="0 0 24 24"
+              //       className="w-10 h-10 ml-1"
+              //     >
+              //       <path d="M8 5v14l11-7z" />
+              //     </svg>
+              //   </button>
+              // }
               />
             </div>
             {/* video summary */}
