@@ -24,12 +24,10 @@ function GenStories({
         selectedStory,
         setSelectedStory,
         displayedSources, theme,
+        storyContext, setStoryContext,
+        storyStoryline, setStoryStoryline,
+        isGeneratingStory, setIsGeneratingStory,
     } = useContext(MainContext);
-
-    const [context, setContext] = useState('');
-    const [storyline, setStoryline] = useState('');
-
-    const [isLoading, setIsLoading] = useState(false);
 
     const [storyTitle, setStoryTitle] = useState(selectedStory?.story_name);
     useEffect(() => {
@@ -39,10 +37,10 @@ function GenStories({
 
     async function autoGenerateStory() {
         if (isProjectReadOnly) return;
-        setIsLoading(true);
+        setIsGeneratingStory(true);
         const httpPayload = {
-            storyContext: context,
-            storyline,
+            storyContext: storyContext,
+            storyline: storyStoryline,
             with_checked_sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, category: item?.category }))
         };
         try {
@@ -88,7 +86,7 @@ function GenStories({
             console.log(error);
         } finally {
             // setIsGeneratingIntroConlusion(false);
-            setIsLoading(false);
+            setIsGeneratingStory(false);
         }
     }
 
@@ -102,7 +100,7 @@ function GenStories({
         });
     };
 
-    const handleMouseEnter = () => ((context === "" || isProjectReadOnly) && !isLoading) && setTooltipVisible(true);
+    const handleMouseEnter = () => ((storyContext === "" || isProjectReadOnly) && !isGeneratingStory) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
     return (
@@ -119,8 +117,8 @@ function GenStories({
                     className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
                     rows="1"
                     placeholder="Provide story context"
-                    value={context}
-                    onChange={(e) => setContext(e.target.value)}
+                    value={storyContext}
+                    onChange={(e) => setStoryContext(e.target.value)}
                 />
             </div>
 
@@ -136,8 +134,8 @@ function GenStories({
                     className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
                     rows="1"
                     placeholder="Storyline"
-                    value={storyline}
-                    onChange={(e) => setStoryline(e.target.value)}
+                    value={storyStoryline}
+                    onChange={(e) => setStoryStoryline(e.target.value)}
                 />
             </div>
 
@@ -151,9 +149,9 @@ function GenStories({
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
                 <RippleButton fullWidth cssClasses='flex items-center gap-1 disabled:cursor-not-allowed  p-2'
-                    disabled={context === "" || isLoading || isProjectReadOnly}
+                    disabled={storyContext === "" || isGeneratingStory || isProjectReadOnly}
                     onClick={!isProjectReadOnly && autoGenerateStory}>
-                    {isLoading ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate story'}
+                    {isGeneratingStory ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">Generating...</span></> : 'Generate story'}
                 </RippleButton>
                 {tooltipVisible && (
                     <p

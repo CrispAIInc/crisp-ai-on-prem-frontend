@@ -219,6 +219,11 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [showStoryDetails, setShowStoryDetails] = useState(false);
     const [isNewStory, setIsNewStory] = useState(false);
 
+    // Story generation state - persists across tab switches
+    const [storyContext, setStoryContext] = useState('');
+    const [storyStoryline, setStoryStoryline] = useState('');
+    const [isGeneratingStory, setIsGeneratingStory] = useState(false);
+
     const [displayedSources, setDisplayedSources] = useState([]);
 
     const llmModels = [
@@ -1371,7 +1376,10 @@ export default function MainProvider({ children, theme, setTheme }) {
         noteIndex, setNoteIndex,
         stories, setStories,
         selectedStory, setSelectedStory,
-        showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm
+        showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm,
+        storyContext, setStoryContext,
+        storyStoryline, setStoryStoryline,
+        isGeneratingStory, setIsGeneratingStory
     };
 
     return (
