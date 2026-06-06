@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import AppAlert from '../components/AppAlert';
+import { randomUUID } from '../utils';
 
 export const ToastContext = createContext({});
 
@@ -7,7 +8,7 @@ export function ToastProvider({ children }) {
     const [toasts, setToasts] = useState([]);
 
     const notify = (toast) => {
-        const id = crypto.randomUUID();
+        const id = randomUUID();
 
         setToasts((prev) => [
             ...prev,
