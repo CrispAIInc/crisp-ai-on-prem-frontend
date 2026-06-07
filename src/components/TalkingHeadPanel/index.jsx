@@ -9,7 +9,7 @@ function TalkingHeadPanel({ talkingHeads, source }) {
             <BaseHeading text="Character Dialogue Analysis" className="mb-1" />
 
             <div className="flex flex-col gap-4">
-                {talkingHeads.map((char, i) => (
+                {talkingHeads?.map((char, i) => (
                     <CharacterCard key={i} character={char} source={source} />
                 ))}
             </div>

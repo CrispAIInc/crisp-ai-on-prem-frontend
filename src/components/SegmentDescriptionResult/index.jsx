@@ -37,42 +37,6 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
     const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
-    function orderTalkingHeadByTimestamp(talkingHead) {
-        const segments = [];
-
-        talkingHead.forEach(character => {
-            // if (!character.text_content) return;
-
-            const lines = character.text_content
-                .split("\n")
-                .map(l => l.trim())
-                .filter(Boolean);
-
-            lines.forEach(line => {
-                const match = line.match(/\[(.*?)\]\s*(.*)/);
-
-                if (!match) return;
-
-                const timeRange = match[1];
-                const text = match[2];
-
-                const [start] = timeRange.split("-");
-
-                segments.push({
-                    character_name: character.character_name,
-                    detected: character.detected,
-                    talking: character.talking,
-                    text_content: `[${timeRange}] ${text}`,
-                    startSeconds: timeToSeconds(start)
-                });
-            });
-        });
-
-        segments.sort((a, b) => a.startSeconds - b.startSeconds);
-
-        return segments.map(({ startSeconds, ...rest }) => rest);
-    }
-
     function timeToSeconds(time) {
         const [h, m, s] = time.split(":").map(Number);
         return h * 3600 + m * 60 + s;
@@ -166,12 +130,12 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
             />
 
             {/* Onscreen Text */}
-            {schema.onscreen_text.detected && (
+            {schema?.onscreen_text?.detected && (
                 <div>
                     <BaseHeading text="Detected On-screen Text" className="mb-2" />
 
                     <div className="rounded-lg text-sm flex gap-1 flex-wrap">
-                        {schema.onscreen_text.text_content.map((text) => (
+                        {schema.onscreen_text?.text_content?.map((text) => (
                             // <div
                             //     key={text}
                             //     className="inline-block mr-2 mb-2 px-3 py-1 rounded bg-emerald-500/20 text-emerald-500"
