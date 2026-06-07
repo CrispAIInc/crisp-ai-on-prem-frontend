@@ -1,29 +1,26 @@
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Skeleton } from '@mui/material';
 import {
-    Document,
-    Packer,
-    Paragraph,
-    TextRun,
-    HeadingLevel,
     AlignmentType,
     BorderStyle,
+    Document,
+    HeadingLevel,
     ImageRun,
-    ShadingType
+    Packer,
+    Paragraph,
+    ShadingType,
+    TextRun
 } from "docx";
 import { saveAs } from "file-saver";
 import { useContext, useEffect, useRef, useState } from 'react';
-import makeApiRequest, { axiosInstance } from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
-import { useToast } from '../../contexts/toastContext';
-import useAuth from '../../hooks/useAuth.js';
-import { formatTime, toSeconds, urlToBase64 } from "../../utils.js";
+import { urlToBase64 } from "../../utils.js";
 import LoadingSpinner from '../LoadingSpinner/index.jsx';
 import RippleButton from '../RippleButton/index.jsx';
 import SegmentDescription from '../SegmentDescription';
 import SegmentDescriptionResult from "../SegmentDescriptionResult";
 import TimeSegmentDescriptionList from "../TimeSegmentDescriptionList";
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 
 const TimeSegmentDescription = ({

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import makeApiRequest from '../../api';
 import LoadingSpinner from '../LoadingSpinner';

@@ -41,13 +41,6 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
             }] : []
         });
         setShowList(false);
-        // }
-        // else {
-        //     notify({
-        //         variant: "info",
-        //         heading: "The source for this segment doesn not exist."
-        //     });
-        // }
     }
 
     const [selectedSegment, setSelectedSegment] = useState(null);

@@ -51,10 +51,6 @@ const VideoSegmentDescription = ({
 
     const {
         theme,
-        checkedSources,
-        displayedSources,
-        knowledgeBase,
-        currentChat,
     } = useContext(MainContext);
 
     return (

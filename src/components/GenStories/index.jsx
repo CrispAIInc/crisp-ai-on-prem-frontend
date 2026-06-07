@@ -1,21 +1,14 @@
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import { useContext, useEffect, useState } from 'react';
 import "react-quill/dist/quill.snow.css";
 import makeApiRequest from '../../api/index.js';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import BaseHeading from '../BaseHeading/index.jsx';
-import InsightsList from "../InsightsList/index.jsx";
 import RippleButton from '../RippleButton/index.jsx';
 import StoriesList from '../StoriesList/index.jsx';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 function GenStories({
     setShowStoriesEditor,
-    currentTab,
-    setCurrentTab,
-    isNewInsight,
-    setIsNewInsight
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -107,12 +100,6 @@ function GenStories({
         <div className="relative z-10 flex flex-col h-full gap-1">
             {/* context */}
             <div className="relative w-full">
-                {/* <label
-                    className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
-                    ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base'}`}
-                >
-                    Write your story outline
-                </label> */}
                 <textarea
                     className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
                     rows="1"
@@ -124,12 +111,6 @@ function GenStories({
 
             {/* storyline */}
             <div className="relative w-full">
-                {/* <label
-                    className={`absolute left-2 top-2 text-gray-500  px-1 transition-all duration-200 pointer-events-none
-                    ${isActive ? 'text-md -top-7 left-1 text-blue-600' : 'text-base'}`}
-                >
-                    Write your story outline
-                </label> */}
                 <textarea
                     className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
                     rows="1"
@@ -138,12 +119,6 @@ function GenStories({
                     onChange={(e) => setStoryStoryline(e.target.value)}
                 />
             </div>
-
-            {/* generate outline button */}
-            {/* <button onClick={autoGenerateStory} className='relative flex items-center justify-center w-full max-w-full gap-2 py-2 m-auto text-center text-white rounded-md cursor-not-allowed disabled:opacity-50 bg-primary-300/85 hover:bg-primary-300'
-                disabled={isLoading}>
-                {isLoading ? <><LoadingSpinner isSmall /> Generating...</> : 'Generate outline'}
-            </button> */}
             {/* generate button */}
             <div className='relative inline-block' onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
@@ -166,41 +141,6 @@ function GenStories({
 
             {/* list of insights and stories */}
             <div className='relative z-10 flex flex-col flex-1 h-full overflow-hidden'>
-                {/* <div>
-                    <div className="relative z-10 flex items-center gap-3 mt-4">
-                        {
-                            [
-                                {
-                                    icon: AutoStoriesOutlinedIcon,
-                                    title: "Stories"
-                                },
-                            ].map(({ icon: Icon, title }, index) => {
-                                return (
-                                    <div className={`cursor-pointer flex items-center gap-1 pb-1 ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
-                                        <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
-                                        <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
-                                    </div>
-                                );
-                            })
-                        }
-                    </div>
-                </div> */}
-                {/* notes */}
-                {/* {
-                    currentTab === "Insights" ?
-                        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
-                            <InsightsList isNewInsight={isNewInsight}
-                                setIsNewInsight={setIsNewInsight} />
-                        </div>
-                        : currentTab === "Stories" ?
-                            <>
-                                <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
-                                    <StoriesList setShowStoriesEditor={setShowStoriesEditor} />
-                                </div>
-                            </>
-                            :
-                            null
-                } */}
                 <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
                     <StoriesList setShowStoriesEditor={setShowStoriesEditor} />
                 </div>
