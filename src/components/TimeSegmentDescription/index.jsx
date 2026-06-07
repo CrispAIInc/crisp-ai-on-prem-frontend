@@ -214,12 +214,12 @@ const TimeSegmentDescription = ({
             const descriptionParagraphs = actionDesc.split('\n').filter(p => p.trim() !== "");
 
             // Process On-Screen Text into an array for chips
-            const ocrText = schema.onscreen_text?.detected ? schema.onscreen_text.text_content : "";
+            const ocrText = schema.onscreen_text?.detected ? schema.onscreen_text?.text_content : "";
             const ocrArray = ocrText.map(item => item.trim()).filter(i => i !== "");
 
             let onscreenText = "None detected";
             if (schema.onscreen_text?.detected) {
-                onscreenText = schema.onscreen_text.text_content;
+                onscreenText = schema.onscreen_text?.text_content;
             }
 
             // 3. Define Theme Colors
