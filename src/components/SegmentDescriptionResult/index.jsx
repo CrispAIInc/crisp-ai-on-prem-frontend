@@ -161,7 +161,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
             </div>
 
             <TalkingHeadPanel
-                talkingHeads={schema.talking_head}
+                talkingHeads={schema?.talking_head}
                 source={source}
             />
 

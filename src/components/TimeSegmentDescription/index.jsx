@@ -353,7 +353,7 @@ const TimeSegmentDescription = ({
 
             /* ---------- CHARACTER DIALOGUE ---------- */
 
-            if (schema.talking_head && schema.talking_head.length > 0) {
+            if (schema?.talking_head && schema?.talking_head?.length > 0) {
 
                 docChildren.push(
 
@@ -379,7 +379,7 @@ const TimeSegmentDescription = ({
 
                 );
 
-                schema.talking_head.forEach(segment => {
+                schema?.talking_head?.forEach(segment => {
 
                     const match = segment.text_content.match(/\[(.*?)\]\s*(.*)/);
 

@@ -28,6 +28,11 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
         notify
     } = useContext(ToastContext);
 
+    console.log({
+        sorted: sortByDate(segmentDescriptions, "created_at", "desc"),
+        segmentDescriptions
+    });
+
     function handleSelectResult(segment) {
         const segmentSource = knowledgeBase.find(item => item.source_path === segment.video);
 
@@ -123,7 +128,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
                                 }
 
                                 <div>
-                                    <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema.talking_head.length > 0 ? `${segment.response_format.schema.talking_head.length} ${segment.response_format.schema.talking_head.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs" />
+                                    <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema?.talking_head?.length > 0 ? `${segment.response_format.schema?.talking_head?.length} ${segment.response_format.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs" />
 
                                     <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit truncate`} key={segment.id}>{segment?.title}</p>
                                 </div>
