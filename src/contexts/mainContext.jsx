@@ -1279,8 +1279,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [selectedJsonEntity, setSelectedJsonEntity] = useState(null);
 
 
+    const [frameExtractionRate, setFrameExtractionRate] = useState({ mode: "medium", frames: 1, interval: 3 });
+
+
     // create value object with all the states
     const value = {
+        frameExtractionRate, setFrameExtractionRate,
         blogs, setBlogs,
         selectedBlog, setSelectedBlog,
         jsonEntities,

@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from "../../contexts/mainContext.jsx";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Checkbox } from "@mui/material";
-import BaseHeading from "../BaseHeading";
+// import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+// import { Checkbox } from "@mui/material";
+// import BaseHeading from "../BaseHeading";
 
-const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, closeModals }) => {
+const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, setIsVideoIncluded }) => {
 
     const { isFileUploading, theme } = useContext(MainContext);
 
 
     const [fileThumbnails, setFileThumbnails] = useState([]);
-    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+    // const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
     const handleFileUpload = (event) => {
         const files = Array.from(event.target.files);
@@ -41,6 +41,9 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
 
     useEffect(() => {
         setSelectedFiles(fileThumbnails?.map(item => item?.file));
+        // if no video files in the selected files, set isVideoNotIncluded to true, else false
+        const hasVideo = fileThumbnails.some(item => item.file.type.startsWith('video/'));
+        setIsVideoIncluded(hasVideo);
     }, [fileThumbnails]);
 
     const renderThumbnail = (thumbnail, index) => {
@@ -104,7 +107,7 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
                 id="file-input"
                 onChange={handleFileUpload}
             />
-            <div className="relative !ml-auto flex items-center gap-1">
+            {/* <div className="relative !ml-auto flex items-center gap-1">
                 <Checkbox
                     className={`p-0 "
                  }`}
@@ -141,7 +144,7 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
                         </div>
                     )
                 }
-            </div>
+            </div> */}
             <label
                 htmlFor="file-input"
                 className="w-full p-4 text-center cursor-pointer text-primary-300"

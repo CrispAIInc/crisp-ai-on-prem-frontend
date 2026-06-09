@@ -171,7 +171,7 @@ const ContentSection = ({
         categoryOptions,
         currentResource,
         setCurrentResource,
-        workspaceContainer,
+        frameExtractionRate,
         player,
         displayedSources,
         knowledgeBase,
@@ -180,8 +180,8 @@ const ContentSection = ({
         setActiveView,
         setCheckedAll,
         theme,
-        chatLoaded, setPersistedUploadedFiles,
-        currentChat
+        chatLoaded,
+        setPersistedUploadedFiles,
     } = useContext(MainContext);
 
     const { notify } = useToast();
@@ -1020,6 +1020,7 @@ const ContentSection = ({
                 formData.append("session_id", sessionId);
                 formData.append("fileIndex", index);
                 formData.append("isFineGrained", isFineGrained);
+                frameExtractionRate && formData.append("frameExtractionRate", frameExtractionRate);
             });
 
             //TODO: loop throught files and populate the "initialSources" with the initial properties
