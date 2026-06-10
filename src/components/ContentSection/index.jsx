@@ -1019,9 +1019,11 @@ const ContentSection = ({
                 formData.append("fileType", file.type);
                 formData.append("session_id", sessionId);
                 formData.append("fileIndex", index);
-                formData.append("isFineGrained", isFineGrained);
-                frameExtractionRate && formData.append("frameExtractionRate", frameExtractionRate);
             });
+            formData.append("isFineGrained", isFineGrained);
+            if (frameExtractionRate) {
+                formData.append("frameExtractionRate", JSON.stringify(frameExtractionRate));
+            }
 
             //TODO: loop throught files and populate the "initialSources" with the initial properties
 
