@@ -1214,6 +1214,7 @@ const ContentSection = ({
                             setShowSourceExplorer={setShowSourceExplorer}
                             onHide={onHideSourceExplorer}
                             showIndexModal={openIndexModal}
+                            handleUpload={handleUpload}
                             knowledgeBase={knowledgeBase}
                             setKnowledgeBase={setKnowledgeBase}
                             categories={categoryOptions}

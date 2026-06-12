@@ -80,7 +80,7 @@ export function IndexModal({ show, onHide, handleUpload }) {
                         id='indexName'
                         value={indexName}
                         onChange={(e) => setIndexName(e.target.value)}
-                        className={`block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 ${theme === 'dark' && 'bg-textColor-300'}`}
+                        className={`block w-full p-2 mt-1  rounded-md focus:ring-blue-500 focus:border-blue-500 ${theme === 'dark' ? 'bg-textColor-300 !border !border-textColor-200' : '!border !border-slate-300/80'}`}
                         required
                         onKeyDown={(e) => e.key === 'Enter' && createIndex()}
                     />

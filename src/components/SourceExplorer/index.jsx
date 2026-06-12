@@ -6,7 +6,6 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import PDFThumbnail from "../PDFThumbnail";
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
 import { MainContext } from "../../contexts/mainContext.jsx";
@@ -89,6 +88,11 @@ export function SourceExplorer(props) {
         props.onHide();
     };
 
+    const openCreateCategoryModal = () => {
+        props.onHide();
+        props.showIndexModal?.();
+    };
+
     const openCategoryFolder = (category) => {
         setSelectedCategory(category);
         const newPath = currentPath + category + "/";
@@ -108,19 +112,6 @@ export function SourceExplorer(props) {
     useEffect(() => {
         setCurrentPath(history[history.length - 1] || "/");
     }, [JSON.stringify(history)]);
-
-    const goBack = () => {
-        setHistory((prevHistory) => {
-            const newHistory = [...prevHistory];
-            newHistory.pop();
-            return newHistory;
-        });
-        setViewModes((prevViewModes) => {
-            const newViewModes = [...prevViewModes];
-            newViewModes.pop();
-            return newViewModes;
-        });
-    };
 
     const getBreadcrumbLabel = (value) => {
         const normalizedValue = String(value || "").toLowerCase();
@@ -219,7 +210,7 @@ export function SourceExplorer(props) {
                 <>
                     <div>
                         <p>No index found!</p>
-                        <p onClick={() => props.showIndexModal()} className="mb-1 text-primary-300 hover:border-b hover:border-b-primary-300 w-fit hover:cursor-pointer">Create new index</p>
+                        <p onClick={() => props.showIndexModal?.()} className="mb-1 text-primary-300 hover:border-b hover:border-b-primary-300 w-fit hover:cursor-pointer">Create new index</p>
                     </div>
                     {/* <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={props?.handleUpload} /> */}
                 </>
@@ -464,7 +455,7 @@ export function SourceExplorer(props) {
             <Modal.Body
                 className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} z-20`}
             >
-                <div className="flex justify-between itms-center">
+                <div className="flex justify-between items-center gap-4">
                     {categoryOptions?.filter(cat => cat?.value !== "all").length > 0 && <div
                         className={`current-path-wrapper select-none ${theme === "dark" && "text-textColor-100"}`}
                     >
@@ -497,9 +488,19 @@ export function SourceExplorer(props) {
                     </div>}
 
                     {viewModes[viewModes.length - 1] === "files" && <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-lg !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
-
-
                 </div>
+                {viewModes[viewModes.length - 1] === "categories" && (
+                    <div className="mt-4 flex justify-start">
+                        <button
+                            type="button"
+                            onClick={openCreateCategoryModal}
+                            className={`inline-flex items-center gap-2 rounded-xl  px-3 py-2 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
+                        >
+                            <span className="text-base leading-none">＋</span>
+                            <span>Create category</span>
+                        </button>
+                    </div>
+                )}
                 <div className="flex flex-wrap items-start gap-10 folders-wrapper">
                     {viewModes[viewModes.length - 1] !== "files"
                         ? renderFolders()
