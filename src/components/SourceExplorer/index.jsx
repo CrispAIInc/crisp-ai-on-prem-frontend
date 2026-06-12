@@ -6,7 +6,7 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import PDFThumbnail from "../PDFThumbnail";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
 import { MainContext } from "../../contexts/mainContext.jsx";
@@ -19,6 +19,7 @@ import useResources from '../../hooks/useResources.js';
 import { useToast } from "../../contexts/toastContext";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
+import BaseHeading from '../BaseHeading/index.jsx';
 
 export function SourceExplorer(props) {
     const {
@@ -121,12 +122,43 @@ export function SourceExplorer(props) {
         });
     };
 
-    const BackButton = () =>
-        currentPath !== "/" && (
-            <button onClick={goBack} className="back-btn">
-                <ArrowBackIcon />
-            </button>
+    const getBreadcrumbLabel = (value) => {
+        const normalizedValue = String(value || "").toLowerCase();
+
+        const categoryLabel = (props.categories || categoryOptions || []).find((item) => String(item?.value || "").toLowerCase() === normalizedValue)?.label;
+        if (categoryLabel) return categoryLabel;
+
+        const formatLabel = (props.formats || []).find((item) => String(item?.value || "").toLowerCase() === normalizedValue)?.label;
+        return formatLabel || value;
+    };
+
+    const navigateToBreadcrumb = (level) => {
+        const pathSegments = currentPath.split("/").filter(Boolean);
+
+        if (level === 0) {
+            setCurrentPath("/");
+            setHistory(["/"]);
+            setViewModes(["categories"]);
+            setSelectedCategory(null);
+            setSelectedFormat(null);
+            return;
+        }
+
+        const targetPathSegments = pathSegments.slice(0, level);
+        const targetPath = `/${targetPathSegments.join("/")}/`;
+
+        setCurrentPath(targetPath);
+        setSelectedCategory(targetPathSegments[0] || null);
+        setSelectedFormat(targetPathSegments[1] || null);
+        setViewModes(
+            targetPathSegments.length === 0
+                ? ["categories"]
+                : targetPathSegments.length === 1
+                    ? ["categories", "formats"]
+                    : ["categories", "formats", "files"]
         );
+        setHistory(["/", ...targetPathSegments.map((_, index) => `/${targetPathSegments.slice(0, index + 1).join("/")}/`)]);
+    };
 
     const [searchValue, setSearchValue] = useState("");
     useEffect(() => {
@@ -425,8 +457,8 @@ export function SourceExplorer(props) {
                 className={`${theme === "dark" && "bg-textColor-300 text-textColor-100 !border-b-textColor-200"} z-20`}
             >
                 <Modal.Title id="contained-modal-title-vcenter" className="flex flex-col gap-0">
-                    <h3 className="mb-0 text-xl">Source Explorer</h3>
-                    <p className="font-normal">Select sources to add to your workspace, enabling metadata extraction and deeper insights.</p>
+                    <BaseHeading text="Source Explorer" className="text-xl" />
+                    <p className="text-slate-400 text-sm mt-0.5">Select sources to add to your workspace, enabling metadata extraction and deeper insights.</p>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body
@@ -434,11 +466,34 @@ export function SourceExplorer(props) {
             >
                 <div className="flex justify-between itms-center">
                     {categoryOptions?.filter(cat => cat?.value !== "all").length > 0 && <div
-                        className={`current-path-wrapper select-none ${theme === "dark" && "text-textColor-100"
-                            }`}
+                        className={`current-path-wrapper select-none ${theme === "dark" && "text-textColor-100"}`}
                     >
-                        <BackButton className={`back-btn`} />
-                        <h3 className="current-path">{currentPath}</h3>
+                        <div className="flex flex-wrap items-center gap-1 text-xl font-semibold">
+                            {currentPath !== "/" && (
+                                <button
+                                    type="button"
+                                    onClick={() => navigateToBreadcrumb(0)}
+                                    className={`breadcrumb-link ${theme === "dark" ? "text-textColor-200 hover:text-textColor-100" : "text-textColor-200 hover:text-textColor-300"}`}
+                                >
+                                    ..
+                                </button>
+                            )}
+                            {currentPath
+                                .split("/")
+                                .filter(Boolean)
+                                .map((segment, index) => (
+                                    <span key={`${segment}-${index}`} className="flex items-start gap-1">
+                                        <span className="breadcrumb-separator">&gt;</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => navigateToBreadcrumb(index + 1)}
+                                            className={`breadcrumb-link ${theme === "dark" ? "text-textColor-200 hover:text-textColor-100" : "text-textColor-200 hover:text-textColor-300"}`}
+                                        >
+                                            {getBreadcrumbLabel(segment)}
+                                        </button>
+                                    </span>
+                                ))}
+                        </div>
                     </div>}
 
                     {viewModes[viewModes.length - 1] === "files" && <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-lg !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
@@ -452,7 +507,7 @@ export function SourceExplorer(props) {
                 </div>
             </Modal.Body>
             <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"} z-20`}>
-                {itemsFoundInsideCategoryOrFormat && <div className="flex">
+                {itemsFoundInsideCategoryOrFormat && <div className="flex items-center">
                     <Checkbox
                         className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
                             }`}
@@ -461,12 +516,7 @@ export function SourceExplorer(props) {
                         inputProps={{ "aria-label": "Select All Sources" }}
                         label="Select All Sources"
                     />
-                    <span
-                        className={`${theme === "light" ? "text-textColor-300" : "text-textColor-100"
-                            }`}
-                    >
-                        Select all sources
-                    </span>
+                    <BaseHeading text="Select all sources" />
                 </div>}
                 <div
                     className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
