@@ -91,7 +91,7 @@ export default function ProjectRow({ project, recent }) {
                 <td className="px-4 py-2">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 overflow-hidden border rounded-full">
-                            <img src={publicThumbnailUrl} alt={project.name} className='object-cover w-full h-full' />
+                            <img src={publicThumbnailUrl || "/new-crisp-logo-resized.png"} alt={project.name} className='object-cover w-full h-full' />
                         </div>
 
                         <div>
@@ -108,7 +108,11 @@ export default function ProjectRow({ project, recent }) {
 
                 {/* Sources */}
                 <td className="hidden px-4 py-2 text-sm md:table-cell">
-                    {projectSourcesTotal} Source{`${projectSourcesTotal > 1 ? "s" : ""}`}.
+                    {
+                        (typeof projectSourcesTotal === 'number' && !Number.isNaN(projectSourcesTotal)) && (
+                            <span>{projectSourcesTotal} Source{`${projectSourcesTotal > 1 ? "s" : ""}`}.</span>
+                        )
+                    }
                 </td>
 
                 {/* Created */}
