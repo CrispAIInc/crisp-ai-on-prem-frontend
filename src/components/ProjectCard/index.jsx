@@ -82,8 +82,6 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                 {/* top to bottom gradient overlay */}
                 <div className="absolute inset-0 shadow-md bg-gradient-to-b from-transparent to-black/70 rounded-2xl"></div>
 
-                {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-600/40 rounded-2xl " /> */}
-
                 <div className="relative z-40 flex flex-col justify-between h-full ">
                     {/* top showcase */}
                     <div className="flex items-center justify-between ">
@@ -131,10 +129,14 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     <div className="font-semibold">
                         <h2 className="mb-0 !text-white line-clamp-2 text-lg font-semibold tracking-wide">{project.name}</h2>
                         <div className="flex flex-wrap items-center gap-1">
-                            <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} ~ </p>
-                            <p className="text-[10px] text-white">
-                                {projectSourcesTotal} Source{`${projectSourcesTotal > 1 ? "s" : ""}`}.
-                            </p>
+                            <p className="text-[10px] text-white">{formatReadableDate(recent ? project.updated_at : project.created_at)} </p>
+                            {
+                                (typeof projectSourcesTotal === "number" && !Number.isNaN(projectSourcesTotal)) && (
+                                    <p className="text-[10px] text-white">
+                                        ~ {projectSourcesTotal} Source{`${projectSourcesTotal > 1 ? "s" : ""}`}.
+                                    </p>
+                                )
+                            }
                         </div>
                     </div>
                 </div>
