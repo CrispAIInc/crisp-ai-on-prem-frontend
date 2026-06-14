@@ -15,6 +15,7 @@ import StagedImageThumbnail from '../StagedImageThumbnail';
 import { searchByKey, sortBySourcePath } from '../../utils';
 import makeApiRequest from '../../api/index.js';
 import AddIcon from '@mui/icons-material/Add';
+import UploadIcon from '@mui/icons-material/Upload';
 import useResources from '../../hooks/useResources.js';
 import { useToast } from "../../contexts/toastContext";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
@@ -502,7 +503,7 @@ export function SourceExplorer(props) {
                                     }}
                                     className={`inline-flex items-center gap-1 rounded-xl px-2 py-2 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
                                 >
-                                    <AddIcon />
+                                    <UploadIcon className={`${theme === "light" ? 'text-textColor-200' : 'text-textColor-100'}`} />
                                     <BaseHeading text="Upload new source" className="text-md" />
                                 </button>
                             )}
@@ -516,8 +517,8 @@ export function SourceExplorer(props) {
                             onClick={openCreateCategoryModal}
                             className={`inline-flex items-center gap-1 rounded-xl px-2 py-2 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
                         >
-                            <AddIcon />
-                            <span>Create category</span>
+                            <AddIcon className={`${theme === "light" ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                            <BaseHeading text="New index" className="text-md" />
                         </button>
                     </div>
                 )}
