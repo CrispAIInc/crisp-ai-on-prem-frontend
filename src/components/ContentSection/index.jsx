@@ -33,6 +33,7 @@ import NoData from '../NoData';
 import SearchSection from '../SearchSection';
 import { SettingsModal } from "../Settings/SettingsModal";
 import SourceExplorer from "../SourceExplorer";
+import FileUploaderModal from "../FileUploaderModal";
 
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 
@@ -197,6 +198,16 @@ const ContentSection = ({
         await logout();
     }
 
+    const openUploadModal = (category = "all") => {
+        setUploadModalCategory(category);
+        setShowSourceExplorer(false);
+        setShowUploadModal(true);
+    };
+
+    const closeUploadModal = () => {
+        setShowUploadModal(false);
+    };
+
     const formatOptions = [
         { value: "all", label: "All" },
         { value: "video", label: "Videos" },
@@ -206,6 +217,8 @@ const ContentSection = ({
 
     const [isSearching, setIsSearching] = useState(false);
     const [showSourceExplorer, setShowSourceExplorer] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [uploadModalCategory, setUploadModalCategory] = useState("all");
     const [isDeleting, setIsDeleting] = useState(false); // True when a resource is being deleted
     const [clickedIndex, setClickedIndex] = useState(null);
     const [isOpenedFromSourceExplorerBtn, setIsOpenedFromSourceExplorerBtn] =
@@ -1226,7 +1239,17 @@ const ContentSection = ({
                             handleCheckboxChange={handleCheckboxChange}
                             handleSelectAllCheckboxChange={handleSelectAllCheckboxChange}
                             isOpenedFromSourceExplorerBtn={isOpenedFromSourceExplorerBtn}
+                            onOpenUploadModal={openUploadModal}
                             className="modal"
+                        />
+                    )}
+                    {showUploadModal && (
+                        <FileUploaderModal
+                            show={showUploadModal}
+                            onHide={closeUploadModal}
+                            hideIndexModal={closeUploadModal}
+                            indexName={uploadModalCategory}
+                            handleUpload={handleUpload}
                         />
                     )}
                 </div>

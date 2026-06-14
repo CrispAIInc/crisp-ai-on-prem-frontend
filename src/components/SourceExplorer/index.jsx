@@ -14,6 +14,7 @@ import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
 import { searchByKey, sortBySourcePath } from '../../utils';
 import makeApiRequest from '../../api/index.js';
+import AddIcon from '@mui/icons-material/Add';
 import useResources from '../../hooks/useResources.js';
 import { useToast } from "../../contexts/toastContext";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
@@ -487,16 +488,35 @@ export function SourceExplorer(props) {
                         </div>
                     </div>}
 
-                    {viewModes[viewModes.length - 1] === "files" && <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-lg !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} />}
+                    {viewModes[viewModes.length - 1] === "files" && (
+                        <div className="flex items-center gap-2">
+                            {/* <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-lg !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} /> */}
+                            {!isProjectReadOnly && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const pathSegments = currentPath.split("/").filter(Boolean);
+                                        setSelectedCategory(pathSegments[0] || "all");
+                                        props.onHide();
+                                        props.onOpenUploadModal?.(pathSegments[0] || "all");
+                                    }}
+                                    className={`inline-flex items-center gap-1 rounded-xl px-2 py-2 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
+                                >
+                                    <AddIcon />
+                                    <BaseHeading text="Upload new source" className="text-md" />
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
                 {viewModes[viewModes.length - 1] === "categories" && (
                     <div className="mt-4 flex justify-start">
                         <button
                             type="button"
                             onClick={openCreateCategoryModal}
-                            className={`inline-flex items-center gap-2 rounded-xl  px-3 py-2 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
+                            className={`inline-flex items-center gap-1 rounded-xl px-2 py-2 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
                         >
-                            <span className="text-base leading-none">＋</span>
+                            <AddIcon />
                             <span>Create category</span>
                         </button>
                     </div>

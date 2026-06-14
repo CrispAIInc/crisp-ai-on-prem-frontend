@@ -30,8 +30,8 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
     }
 
     function uploadSources() {
+        onHide();
         handleUpload(null, null, selectedFiles, isFineGrained);
-        // closeModals();
     }
 
     const [selectedIndex, setSelectedIndex] = useState(indexName);
