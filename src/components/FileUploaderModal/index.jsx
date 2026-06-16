@@ -76,7 +76,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                             </div>
                             <div className="flex flex-col gap-2">
                                 {/* fine grained mode */}
-                                <div className="flex flex-col ml-3">
+                                {/* <div className="flex flex-col ml-3">
                                     <div className="relative flex items-center gap-1">
                                         <Checkbox
                                             className={`p-0 "
@@ -115,7 +115,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                                             )
                                         }
                                     </div>
-                                </div>
+                                </div> */}
                                 {/* Frame Extraction Rate */}
                                 <div className="flex flex-col">
                                     <p className="text-slate-400 text-xs mt-0.5 px-3">Select a frame extraction rate</p>
