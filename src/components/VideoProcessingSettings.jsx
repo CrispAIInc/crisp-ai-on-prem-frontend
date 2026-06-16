@@ -107,13 +107,14 @@ export default function VideoProcessingSettings({ value, onChange }) {
             <input
               min={1}
               max={10}
+              disabled={true}
               value={customFrames}
-              disabled={!isCustom}
+              // disabled={!isCustom}
               onChange={(e) => handleCustomChange("frames", e.target.value)}
               onBlur={(e) => handleCustomBlur("frames", e.target.value)}
               className={`w-14 text-center text-sm font-mono font-semibold rounded-md px-2 py-1.5
-                focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent
-               transition-colors ${theme === 'light' ? '!border !border-slate-300' : 'bg-textColor-300 text-white !border !border-textColor-200/50'}`}
+                focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent bg-textColor-100 cursor-not-allowed
+               transition-colors ${theme === 'light' ? '!border !border-slate-300' : ' text-white !border !border-textColor-200/50'}`}
             />
           </div>
 
