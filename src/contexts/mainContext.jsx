@@ -17,6 +17,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     const { user, setUser } = useContext(AuthContext);
     const { currentProject, setProjects } = useContext(ProjectContext);
     const [categoryOptions, setCategoryOptions] = useState([]);
+    const formatOptions = [
+        { value: "all", label: "All" },
+        { value: "video", label: "Videos" },
+        { value: "pdf", label: "PDFs" },
+        { value: "img", label: "Images" },
+    ];
     const [reels, setReels] = useState([]);
     const [stories, setStories] = useState([]);
     const [notes, setNotes] = useState([]);
@@ -1317,7 +1323,9 @@ export default function MainProvider({ children, theme, setTheme }) {
         selectedOptions, setSelectedOptions,
         workspaceContainer,
         generatedResources, setGeneratedResources,
-        categoryOptions, setCategoryOptions, showEditor, setShowEditor,
+        categoryOptions, setCategoryOptions,
+        formatOptions,
+        showEditor, setShowEditor,
         languageOptions,
         activeView, setActiveView,
         hasDuration, setHasDuration,

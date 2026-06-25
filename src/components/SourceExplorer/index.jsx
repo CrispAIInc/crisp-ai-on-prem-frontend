@@ -21,16 +21,17 @@ import { useToast } from "../../contexts/toastContext";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 import BaseHeading from '../BaseHeading/index.jsx';
+import SourceExplorerBody from '../SourceExplorerBody/index.jsx';
 
 export function SourceExplorer(props) {
     const {
         selectedAll,
+        selectedFormat,
         setSelectedFormat,
         selectedCategory,
         setSelectedCategory,
         theme,
         sourcesTobeCommited,
-        selectedFormat,
         knowledgeBase,
         setCategoryOptions,
         categoryOptions
@@ -445,6 +446,7 @@ export function SourceExplorer(props) {
         >
             <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-10 z-10 blur-[180px]"></div>
             <div className="w-56 h-56 bg-purple-400 rounded-full absolute left-0 top-80 z-10 blur-[180px]"></div>
+
             <Modal.Header
                 closeButton
                 className={`${theme === "dark" && "bg-textColor-300 text-textColor-100 !border-b-textColor-200"} z-20`}
@@ -454,10 +456,11 @@ export function SourceExplorer(props) {
                     <p className="text-slate-400 text-sm mt-0.5">Select sources to add to your workspace, enabling metadata extraction and deeper insights.</p>
                 </Modal.Title>
             </Modal.Header>
+
             <Modal.Body
                 className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} z-20`}
             >
-                <div className="flex justify-between items-center gap-4">
+                {/* <div className="flex justify-between items-center gap-4">
                     {categoryOptions?.filter(cat => cat?.value !== "all").length > 0 && <div
                         className={`current-path-wrapper select-none ${theme === "dark" && "text-textColor-100"}`}
                     >
@@ -491,7 +494,6 @@ export function SourceExplorer(props) {
 
                     {viewModes[viewModes.length - 1] === "files" && (
                         <div className="flex items-center gap-2">
-                            {/* <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-lg !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} /> */}
                             {!isProjectReadOnly && (
                                 <button
                                     type="button"
@@ -526,8 +528,10 @@ export function SourceExplorer(props) {
                     {viewModes[viewModes.length - 1] !== "files"
                         ? renderFolders()
                         : renderFiles()}
-                </div>
+                </div> */}
+                <SourceExplorerBody />
             </Modal.Body>
+
             <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"} z-20`}>
                 {itemsFoundInsideCategoryOrFormat && <div className="flex items-center">
                     <Checkbox

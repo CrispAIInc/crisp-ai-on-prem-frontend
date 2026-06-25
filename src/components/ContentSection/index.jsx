@@ -170,6 +170,7 @@ const ContentSection = ({
         setDisplayedSources,
         setShowMetadata,
         categoryOptions,
+        formatOptions,
         currentResource,
         setCurrentResource,
         frameExtractionRate,
@@ -208,12 +209,7 @@ const ContentSection = ({
         setShowUploadModal(false);
     };
 
-    const formatOptions = [
-        { value: "all", label: "All" },
-        { value: "video", label: "Videos" },
-        { value: "pdf", label: "PDFs" },
-        { value: "img", label: "Images" },
-    ];
+
 
     const [isSearching, setIsSearching] = useState(false);
     const [showSourceExplorer, setShowSourceExplorer] = useState(false);
