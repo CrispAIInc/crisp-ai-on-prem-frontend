@@ -31,7 +31,7 @@ function SourceExplorerItem({ source }) {
                     <CircleIcon className="!text-[5px]" />
                     <BaseHeading cssClasses={`text-xs`} text={source.file_type} />
                     <CircleIcon className="!text-[5px]" />
-                    <BaseHeading cssClasses={`text-xs`} text={formatDuration(source.source_duration) || source.total_pages || null} />
+                    <BaseHeading cssClasses={`text-xs`} text={source.total_pages ? `${source.total_pages} pages` : formatDuration(source.source_duration) || null} />
                 </div>
             </div>
 
