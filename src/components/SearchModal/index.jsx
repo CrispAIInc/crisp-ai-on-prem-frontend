@@ -6,6 +6,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { MainContext } from "../../contexts/mainContext.jsx";
 
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import GsFile from '../GsFile/index.jsx';
@@ -39,27 +40,36 @@ export function SearchModal(props) {
     console.log(discoveredSources);
 
     // Function to filter knowledgeBase items whose source paths exist in additionalSources and add timestamp or page to the item
-    const additionalSourcesSourcePaths = discoveredSources?.additionalSources?.map(source => source.source_path) || [];
+    // const additionalSourcesSourcePaths = discoveredSources?.additionalSources?.map(source => source.source_path) || [];
 
     const filteredKnowledgeBase = [
         discoveredSources.mainSource,
-        ...additionalSourcesSourcePaths.flatMap(sourcePath => {
-            const item = knowledgeBase.find(
-                kb => kb.source_path === sourcePath
-            );
-
-            if (!item) return [];
-
-            const additionalSource = discoveredSources.additionalSources.find(
-                source => source.source_path === sourcePath
-            );
-
-            return [{
-                ...item,
-                timestamp: additionalSource?.timestamp,
-                page: additionalSource?.page
-            }];
+        ...discoveredSources.additionalSources.map(source => {
+            const s = knowledgeBase.find(item => item.source_path === source.source_path);
+            if (!s) return null;
+            return {
+                ...s,
+                timestamp: source?.timestamp,
+                page: source?.page
+            };
         })
+        // ...additionalSourcesSourcePaths.flatMap(sourcePath => {
+        //     const item = knowledgeBase.find(
+        //         kb => kb.source_path === sourcePath
+        //     );
+
+        //     if (!item) return [];
+
+        //     const additionalSource = discoveredSources.additionalSources.find(
+        //         source => source.source_path === sourcePath
+        //     );
+
+        //     return [{
+        //         ...item,
+        //         timestamp: additionalSource?.timestamp,
+        //         page: additionalSource?.page
+        //     }];
+        // })
     ];
 
     console.log("filteredKb: ", filteredKnowledgeBase);
@@ -124,12 +134,17 @@ export function SearchModal(props) {
                                 }
                             </div>
                             <div className="flex flex-col self-start flex-1">
-                                <p className={`text-md font-medium break-all m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{discoveredSources.mainSource?.source_path?.replace(/\.[^/.]+$/, '')}</p>
-                                {
-                                    discoveredSources.mainSource?.category?.map((cat, index) => (
-                                        <Chip key={`${cat}-${index}`} className="italic" content={cat} />
-                                    ))
-                                }
+                                <p className={`text-md font-medium break-all m-0 ${theme === 'dark' && 'text-textColor-100'}`}> {discoveredSources.mainSource?.source_path?.replace(/\.[^/.]+$/, '')}
+                                </p>
+                                <div className="flex items-center gap-1">
+                                    {
+                                        discoveredSources.mainSource?.category?.map((cat, index) => (
+                                            <Chip key={`${cat}-${index}`} className="italic" content={cat} />
+                                        ))
+                                    }
+                                    <FiberManualRecordIcon className="text-[6px]" />
+                                    <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{discoveredSources.mainSource?.timestamp || discoveredSources.mainSource?.page}</p>
+                                </div>
                             </div>
                             <div className="flex items-center ">
                                 <Checkbox
@@ -181,11 +196,15 @@ export function SearchModal(props) {
                                 </div>
                                 <div className="flex flex-col self-start flex-1">
                                     <p className={`text-md font-medium break-all m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item?.source_path?.replace(/\.[^/.]+$/, '')}</p>
-                                    {
-                                        item?.category?.map((cat, index) => (
-                                            <Chip key={`${cat}-${index}`} className="italic" content={cat} />
-                                        ))
-                                    }
+                                    <div className="flex items-center gap-1">
+                                        {
+                                            item?.category?.map((cat, index) => (
+                                                <Chip key={`${cat}-${index}`} className="italic" content={cat} />
+                                            ))
+                                        }
+                                        <FiberManualRecordIcon className="!text-[6px]" />
+                                        <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item?.timestamp || item?.page}</p>
+                                    </div>
                                 </div>
                                 <div className="flex items-center ">
                                     <Checkbox
