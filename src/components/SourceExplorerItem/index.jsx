@@ -12,11 +12,15 @@ function SourceExplorerItem({ source }) {
 
     const {
         theme,
-        handleCheckboxChange
+        handleCheckboxChange,
+        onThumbnailClick
     } = useContext(MainContext);
 
     return (
-        <div className="flex items-center gap-2 min-w-0">
+        <div
+            className="flex items-center gap-2 min-w-0 border cursor-pointer"
+            onClick={(event) => onThumbnailClick(event, source)}
+        >
             {/* thumbnail */}
             <div className="rounded-xl overflow-auto w-14 h-14">
                 <GsFile gsUrl={source.thumbnail} className="w-full h-full object-cover" />
