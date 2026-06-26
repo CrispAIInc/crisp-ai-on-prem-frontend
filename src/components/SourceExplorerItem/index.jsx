@@ -19,7 +19,7 @@ function SourceExplorerItem({ source }) {
         <div className="flex items-center gap-2 min-w-0">
             {/* thumbnail */}
             <div className="rounded-xl overflow-auto w-14 h-14">
-                <GsFile gsUrl={source.thumbnail} className="w-full h-full" />
+                <GsFile gsUrl={source.thumbnail} className="w-full h-full object-cover" />
             </div>
 
             {/* metadata */}
