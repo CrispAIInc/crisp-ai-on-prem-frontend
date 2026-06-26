@@ -93,10 +93,10 @@ export function formatDuration(seconds) {
 
     const parts = [];
 
-    if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
-    if (minutes > 0) parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+    if (hours > 0) parts.push(`${hours}h`);
+    if (minutes > 0) parts.push(`${minutes}min`);
     if (remainingSeconds > 0 || parts.length === 0)
-        parts.push(`${remainingSeconds} second${remainingSeconds > 1 ? 's' : ''}`);
+        parts.push(`${remainingSeconds}sec`);
 
     return parts.join(' ');
 }
