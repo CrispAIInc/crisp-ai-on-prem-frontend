@@ -18,7 +18,7 @@ function SourceExplorerItem({ source }) {
 
     return (
         <div
-            className="flex items-center gap-2 min-w-0 border cursor-pointer"
+            className="flex items-center gap-2 min-w-0 cursor-pointer"
             onClick={(event) => onThumbnailClick(event, source)}
         >
             {/* thumbnail */}
@@ -44,6 +44,7 @@ function SourceExplorerItem({ source }) {
                 className={`flex-shrink-0 p-0 ${theme === "dark" && "border-white text-white"
                     }`}
                 checked={source.is_checked}
+                onClick={(e) => e.stopPropagation()}
                 onChange={(e) => handleCheckboxChange(e.target?.checked, source)}
                 inputProps={{ "aria-label": "Select source" }}
             />
