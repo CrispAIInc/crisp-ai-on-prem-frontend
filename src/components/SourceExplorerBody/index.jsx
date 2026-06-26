@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import BaseHeading from '../BaseHeading';
 import { MainContext } from '../../contexts/mainContext';
 import Chip from '../Chip';
+import SourceExplorerItem from '../SourceExplorerItem';
 
 function SourceExplorerBody() {
 
@@ -12,20 +13,59 @@ function SourceExplorerBody() {
         selectedCategory,
         setSelectedCategory,
         selectedFormat,
+        knowledgeBase,
     } = useContext(MainContext);
 
+    const [filteredSources, setFilteredSources] = useState(knowledgeBase);
+
+
     function handleIndexChange(value) {
-        console.log(value);
         setSelectedCategory(value);
     }
 
     function handleFormatChange(value) {
-        console.log(value);
         setSelectedFormat(value);
     }
 
+    useEffect(() => {
+        let filtered = knowledgeBase;
+
+        // if category is 'all', we return all the sources that match the selected format
+        // if format is 'all', we return all the sources that match the selected category, if category is all, we return all sources in knowledgebase
+
+        if (selectedCategory === "all") {
+            if (selectedFormat === "all") {
+                filtered = knowledgeBase;
+            } else {
+                filtered = knowledgeBase.filter(source => source.file_type === selectedFormat);
+            }
+        } else {
+            if (selectedFormat === "all") {
+                filtered = knowledgeBase.filter(source => {
+                    if (typeof source.category === "string") {
+                        return source.category === selectedCategory;
+                    } else if (Array.isArray(source.category)) {
+                        return source.category.includes(selectedCategory);
+                    }
+                    return false;
+                });
+            } else {
+                filtered = knowledgeBase.filter(source => {
+                    if (typeof source.category === "string") {
+                        return source.category === selectedCategory && source.file_type === selectedFormat;
+                    } else if (Array.isArray(source.category)) {
+                        return source.category.includes(selectedCategory) && source.file_type === selectedFormat;
+                    }
+                    return false;
+                });
+            }
+        }
+
+        setFilteredSources(filtered);
+    }, [selectedCategory, selectedFormat, knowledgeBase]);
+
     return (
-        <div>
+        <div className="flex flex-col gap-3">
             {/* indexes list */}
             <div className="flex flex-col gap-1">
                 <BaseHeading text="Indexs" />
@@ -67,6 +107,25 @@ function SourceExplorerBody() {
             </div>
 
             {/* sources list */}
+            <div>
+                <BaseHeading text={`Sources (${filteredSources.length})`} className={`mb-2`} />
+
+                {
+                    filteredSources.length === 0 ? (
+                        <BaseHeading text="No sources found" className={`text-sm italic`} />
+                    ) : (
+
+                        <div className="grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2">
+                            {filteredSources.map(source => (
+                                <SourceExplorerItem
+                                    key={source.source_id}
+                                    source={source}
+                                />
+                            ))}
+                        </div>
+                    )
+                }
+            </div>
         </div>
     );
 }
