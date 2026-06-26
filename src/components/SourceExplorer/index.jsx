@@ -14,7 +14,6 @@ import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
 import { searchByKey, sortBySourcePath } from '../../utils';
 import makeApiRequest from '../../api/index.js';
-import AddIcon from '@mui/icons-material/Add';
 import UploadIcon from '@mui/icons-material/Upload';
 import useResources from '../../hooks/useResources.js';
 import { useToast } from "../../contexts/toastContext";
@@ -89,11 +88,6 @@ export function SourceExplorer(props) {
         setHistory(["/"]);
         setViewModes(["categories"]);
         props.onHide();
-    };
-
-    const openCreateCategoryModal = () => {
-        props.onHide();
-        props.showIndexModal?.();
     };
 
     const openCategoryFolder = (category) => {
@@ -529,7 +523,10 @@ export function SourceExplorer(props) {
                         ? renderFolders()
                         : renderFiles()}
                 </div> */}
-                <SourceExplorerBody />
+                <SourceExplorerBody
+                    onHide={props.onHide}
+                    showIndexModal={props.showIndexModal}
+                />
             </Modal.Body>
 
             <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"} z-20`}>

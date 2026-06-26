@@ -4,7 +4,12 @@ import { MainContext } from '../../contexts/mainContext';
 import Chip from '../Chip';
 import SourceExplorerItem from '../SourceExplorerItem';
 
-function SourceExplorerBody() {
+import AddIcon from '@mui/icons-material/Add';
+
+function SourceExplorerBody({
+    onHide,
+    showIndexModal
+}) {
 
     const {
         formatOptions,
@@ -26,6 +31,11 @@ function SourceExplorerBody() {
     function handleFormatChange(value) {
         setSelectedFormat(value);
     }
+
+    const openCreateCategoryModal = () => {
+        onHide();
+        showIndexModal?.();
+    };
 
     useEffect(() => {
         let filtered = knowledgeBase;
@@ -83,6 +93,12 @@ function SourceExplorerBody() {
                             );
                         })
                     }
+                    <Chip
+                        content={<AddIcon className={`!text-[16px]`} />}
+                        cssClasses={`cursor-pointer`}
+                        handleClick={openCreateCategoryModal}
+                    />
+
                 </div>
             </div>
 
