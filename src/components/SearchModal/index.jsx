@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import LoadingSpinner from "../LoadingSpinner";
 import Checkbox from "@mui/material/Checkbox";
@@ -12,9 +12,11 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import GsFile from '../GsFile/index.jsx';
 import Chip from '../Chip';
 import BaseHeading from '../BaseHeading/index.jsx';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick.js';
 
 export function SearchModal(props) {
     const { discoveredSources, knowledgeBase, theme, handleCheckboxChange, onThumbnailClick } = useContext(MainContext);
+    const { handleSourceLinkClick } = useReferenceLinkClick();
 
     const handleClose = () => {
         props.onHide();
@@ -37,12 +39,12 @@ export function SearchModal(props) {
      * }
      */
 
-    console.log(discoveredSources);
+    // console.log(discoveredSources);
 
     // Function to filter knowledgeBase items whose source paths exist in additionalSources and add timestamp or page to the item
     // const additionalSourcesSourcePaths = discoveredSources?.additionalSources?.map(source => source.source_path) || [];
 
-    const filteredKnowledgeBase = [
+    const [filteredKnowledgeBase, setFilteredKnowledgeBase] = useState([
         discoveredSources.mainSource,
         ...discoveredSources.additionalSources.map(source => {
             const s = knowledgeBase.find(item => item.source_path === source.source_path);
@@ -50,29 +52,58 @@ export function SearchModal(props) {
             return {
                 ...s,
                 timestamp: source?.timestamp,
-                page: source?.page
+                page: Number(source?.page)
             };
-        })
-        // ...additionalSourcesSourcePaths.flatMap(sourcePath => {
-        //     const item = knowledgeBase.find(
-        //         kb => kb.source_path === sourcePath
-        //     );
+        })]);
 
-        //     if (!item) return [];
+    useEffect(() => {
+        setFilteredKnowledgeBase([
+            discoveredSources.mainSource,
+            ...discoveredSources.additionalSources.map(source => {
+                const s = knowledgeBase.find(item => item.source_path === source.source_path);
+                if (!s) return null;
+                return {
+                    ...s,
+                    timestamp: source?.timestamp,
+                    page: Number(source?.page)
+                };
+            })
+        ]);
 
-        //     const additionalSource = discoveredSources.additionalSources.find(
-        //         source => source.source_path === sourcePath
-        //     );
+        handleSourceLinkClick(event, { ...discoveredSources.mainSource });
+    }, [discoveredSources, knowledgeBase]);
 
-        //     return [{
-        //         ...item,
-        //         timestamp: additionalSource?.timestamp,
-        //         page: additionalSource?.page
-        //     }];
-        // })
-    ];
+    // const filteredKnowledgeBase = [
+    //     discoveredSources.mainSource,
+    //     ...discoveredSources.additionalSources.map(source => {
+    //         const s = knowledgeBase.find(item => item.source_path === source.source_path);
+    //         if (!s) return null;
+    //         return {
+    //             ...s,
+    //             timestamp: source?.timestamp,
+    //             page: Number(source?.page)
+    //         };
+    //     })
+    // ...additionalSourcesSourcePaths.flatMap(sourcePath => {
+    //     const item = knowledgeBase.find(
+    //         kb => kb.source_path === sourcePath
+    //     );
 
-    console.log("filteredKb: ", filteredKnowledgeBase);
+    //     if (!item) return [];
+
+    //     const additionalSource = discoveredSources.additionalSources.find(
+    //         source => source.source_path === sourcePath
+    //     );
+
+    //     return [{
+    //         ...item,
+    //         timestamp: additionalSource?.timestamp,
+    //         page: additionalSource?.page
+    //     }];
+    // })
+    // ];
+
+    // console.log("filteredKb: ", filteredKnowledgeBase);
 
 
     return (
@@ -142,7 +173,7 @@ export function SearchModal(props) {
                                             <Chip key={`${cat}-${index}`} className="italic" content={cat} />
                                         ))
                                     }
-                                    <FiberManualRecordIcon className="text-[6px]" />
+                                    <FiberManualRecordIcon className="!text-[6px]" />
                                     <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{discoveredSources.mainSource?.timestamp || discoveredSources.mainSource?.page}</p>
                                 </div>
                             </div>

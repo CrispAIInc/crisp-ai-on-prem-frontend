@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { MainContext } from "../contexts/mainContext.jsx";
 import { useResizableSidebar } from './useResizableSidebar';
 import { useToast } from "../contexts/toastContext.jsx";
+import { delay } from '../utils.js';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 export default function useReferenceLinkClick(isFromChat = false, contentPanelContainerRef) {
@@ -47,15 +48,16 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         // setShowNoteDetails(false);
     };
 
-    const handlePDFLinkClick = (pdf) => {
+    const handlePDFLinkClick = async (pdf) => {
         const resourceURL = `${API_ENDPOINT}/${pdf.file_type
             }/all/${encodeURIComponent(pdf.source_path)}`;
         setCurrentResource({ ...pdf });
+        console.log(pdf);
         setResourceURL(resourceURL);
         setSummary(pdf.summary);
         setSummaries(pdf.topic_summaries);
         setActiveView('resource');
-        setJumpToPage({ page: parseInt(pdf?.page) + 1 });
+
         // setSidebarWidth(prev => {
         //     if (prev !== maxWidth) return maxWidth;
         //     return window.innerWidth / 3.5;
@@ -66,6 +68,9 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
             behavior: "smooth",
         });
         setShowMetadata(true);
+        // set a little delay
+        // await delay(3000);
+        setJumpToPage({ page: parseInt(pdf?.page) });
         // setShowNoteDetails(false);
     };
 

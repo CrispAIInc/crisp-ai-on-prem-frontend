@@ -7,7 +7,7 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import useResources from '../hooks/useResources';
 import { AuthContext } from './authContext';
-import { generateRandomId, pick } from '../utils';
+import { delay, generateRandomId, pick } from '../utils';
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
 
@@ -331,7 +331,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [, setTranscription] = useState("");
 
-    const onThumbnailClick = (event, file, isFromCheckbox = false) => {
+    const onThumbnailClick = async (event, file, isFromCheckbox = false) => {
         if (event) event.preventDefault();
         const resourceURL = `${import.meta.env.VITE_API_ENDPOINT
             }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
@@ -346,8 +346,10 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page life the case when clicking on a reference
+        console.log(file, fileToCommit);
         if (fileToCommit.file_type === "pdf") {
-            setJumpToPage({ page: -1 });
+            await delay(1000);
+            setJumpToPage({ page: Number(file?.page) });
         }
         setActiveView('resource');
         if (!isFromCheckbox) { setShowMetadata(true); }

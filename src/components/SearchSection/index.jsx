@@ -56,13 +56,13 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
             }
             const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
 
-            handleSourceLinkClick(event, { ...source, timestamp, page });
+            // handleSourceLinkClick(event, { ...source, timestamp, page });
 
             // setCurrentResource({ ...source, timestamp });
             // setResourceURL(resourceURL);
             // setSummary(rest.summary);
             // if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-            setDiscoveredSources({ mainSource: { ...source, timestamp, page }, additionalSources: additional_sources });
+            setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page) }, additionalSources: additional_sources });
             if (!fromMetadata) {
                 setShowSearchModal(true);
             }
