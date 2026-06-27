@@ -90,7 +90,7 @@ const ChatMessage = ({ text, refs, timestamps }) => {
             {refs.pdfLinks.map((pdf, index) => (
               <Chip
                 key={pdf.source_path + '' + index}
-                content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10) + 1}`}
+                content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10)}`}
                 data-object={pdf}
                 onClick={(e) => handleSourceLinkClick(e, pdf)}
                 cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
@@ -559,10 +559,10 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
       });
 
       pdfLinks = data?.pdf_references?.map((pdf) => {
-        noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1));
+        noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page)));
         refs["pdfLinks"].push(pdf);
         return (
-          <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page) + 1)} data-object={pdf} onClick={(event) => handleSourceLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+          <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page))} data-object={pdf} onClick={(event) => handleSourceLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         );
       });
 
