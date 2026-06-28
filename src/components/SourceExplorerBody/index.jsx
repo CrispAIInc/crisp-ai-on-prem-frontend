@@ -130,14 +130,19 @@ function SourceExplorerBody({
                     filteredSources.length === 0 ? (
                         <BaseHeading text="No sources found" className={`text-sm italic`} />
                     ) : (
-
-                        <div className="flex-1 grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2">
-                            {filteredSources.map(source => (
-                                <SourceExplorerItem
-                                    key={source.source_id}
-                                    source={source}
-                                />
-                            ))}
+                        <div className="relative overflow-hidden flex flex-col">
+                            {/* Top fade */}
+                            <div className="pointer-events-none absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white to-transparent z-10" />
+                            <div className="flex-1 grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2">
+                                {filteredSources.map(source => (
+                                    <SourceExplorerItem
+                                        key={source.source_id}
+                                        source={source}
+                                    />
+                                ))}
+                            </div>
+                            {/* Bottom fade */}
+                            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent z-10" />
                         </div>
                     )
                 }
