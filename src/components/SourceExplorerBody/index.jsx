@@ -5,6 +5,8 @@ import Chip from '../Chip';
 import SourceExplorerItem from '../SourceExplorerItem';
 
 import AddIcon from '@mui/icons-material/Add';
+import AnimatedText from '../AnimatedText';
+import { sortArrayOfObjects, sortBySourcePath } from '../../utils';
 
 function SourceExplorerBody({
     onHide,
@@ -20,6 +22,7 @@ function SourceExplorerBody({
         setSelectedCategory,
         selectedFormat,
         knowledgeBase,
+        isKnowledgeBaseFetching,
     } = useContext(MainContext);
 
     const [filteredSources, setFilteredSources] = useState(knowledgeBase);
@@ -72,7 +75,7 @@ function SourceExplorerBody({
             }
         }
 
-        setFilteredSources(filtered);
+        setFilteredSources(sortArrayOfObjects(filtered, "source_path"));
     }, [selectedCategory, selectedFormat, knowledgeBase]);
 
     return (
@@ -125,28 +128,35 @@ function SourceExplorerBody({
 
             {/* sources list */}
             <div className="overflow-hidden flex flex-col">
-                <BaseHeading text={`Sources (${filteredSources.length})`} className={`mb-2`} />
-
+                <BaseHeading text={`Sources${!isKnowledgeBaseFetching ? ` (${filteredSources.length})` : ''}`} className={`mb-2`} />
                 {
-                    filteredSources.length === 0 ? (
-                        <BaseHeading text="No sources found" className={`text-sm italic`} />
+                    isKnowledgeBaseFetching ? (
+                        <AnimatedText text='Preparing your knowledge base...' cssClasses="font-semibold" />
                     ) : (
-                        <div className="relative overflow-hidden flex flex-col">
-                            {/* Top fade */}
-                            <div className={`pointer-events-none absolute top-0 left-0 right-1 h-6 bg-gradient-to-b ${theme === "light" ? "from-[#F9F1FD]" : "from-[#333333]"} to-transparent z-10`} />
+                        <>
+                            {
+                                filteredSources.length > 0 ? (
+                                    <div className="relative overflow-hidden flex flex-col">
+                                        {/* Top fade */}
+                                        <div className={`pointer-events-none absolute top-0 left-0 right-1 h-6 bg-gradient-to-b ${theme === "light" ? "from-[#F9F1FD]" : "from-[#333333]"} to-transparent z-10`} />
 
-                            <div className="flex-1 grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2 py-3">
-                                {filteredSources.map(source => (
-                                    <SourceExplorerItem
-                                        key={source.source_id}
-                                        source={source}
-                                    />
-                                ))}
-                            </div>
+                                        <div className="flex-1 grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2 py-3">
+                                            {filteredSources.map(source => (
+                                                <SourceExplorerItem
+                                                    key={source.source_id}
+                                                    source={source}
+                                                />
+                                            ))}
+                                        </div>
 
-                            {/* Bottom fade */}
-                            <div className={`pointer-events-none absolute bottom-0 left-0 right-1 h-6 bg-gradient-to-t ${theme === "light" ? "from-[#F9F1FD]" : "from-[#333333]"} to-transparent z-10`} />
-                        </div>
+                                        {/* Bottom fade */}
+                                        <div className={`pointer-events-none absolute bottom-0 left-0 right-1 h-6 bg-gradient-to-t ${theme === "light" ? "from-[#F9F1FD]" : "from-[#333333]"} to-transparent z-10`} />
+                                    </div>
+                                ) : (
+                                    <BaseHeading text="No sources found" className={`text-sm italic`} />
+                                )
+                            }
+                        </>
                     )
                 }
             </div>

@@ -91,8 +91,10 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [persistedUploadedFiles, setPersistedUploadedFiles] = useState([]);
 
+    const [isKnowledgeBaseFetching, setisKnowledgeBaseFetching] = useState(false);
     useLayoutEffect(() => {
         const makeRequest = async () => {
+            setisKnowledgeBaseFetching(true);
             try {
                 axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
                 const data = await makeApiRequest(
@@ -102,9 +104,10 @@ export default function MainProvider({ children, theme, setTheme }) {
                 setKnowledgeBase(data);
             } catch (error) {
                 console.warn(error);
+            } finally {
+                setisKnowledgeBaseFetching(false);
             }
         };
-
         makeRequest();
     }, [currentProject.project_id]);
 
@@ -1290,6 +1293,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // create value object with all the states
     const value = {
+        isKnowledgeBaseFetching, setisKnowledgeBaseFetching,
         frameExtractionRate, setFrameExtractionRate,
         blogs, setBlogs,
         selectedBlog, setSelectedBlog,
