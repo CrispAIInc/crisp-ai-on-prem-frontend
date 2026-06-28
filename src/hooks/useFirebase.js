@@ -8,8 +8,8 @@ export default function useFirebase() {
         if (gsUrl.startsWith('blob') || gsUrl.includes('PDF-file-thumbnail.png')) return gsUrl;
 
         // Extract everything after the bucket name
-        const bucket = "gs://crispai-app-462614.firebasestorage.app/";
-        const path = gsUrl.replace(bucket, ""); // "video_uploads/videos/generic/bill gates.mp4"
+        const bucket = import.meta.env.VITE_FIREBASE_PRIVATE_PREFIX;
+        const path = gsUrl.replace(bucket, "");
 
         try {
             const fileRef = ref(storage, path);
