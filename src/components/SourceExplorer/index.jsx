@@ -452,7 +452,7 @@ export function SourceExplorer(props) {
             </Modal.Header>
 
             <Modal.Body
-                className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} z-20`}
+                className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} z-20 overflow-hidden flex flex-col`}
             >
                 {/* <div className="flex justify-between items-center gap-4">
                     {categoryOptions?.filter(cat => cat?.value !== "all").length > 0 && <div

@@ -75,7 +75,7 @@ function SourceExplorerBody({
     }, [selectedCategory, selectedFormat, knowledgeBase]);
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 overflow-hidden">
             {/* indexes list */}
             <div className="flex flex-col gap-1">
                 <BaseHeading text="Indexs" />
@@ -123,7 +123,7 @@ function SourceExplorerBody({
             </div>
 
             {/* sources list */}
-            <div>
+            <div className="overflow-hidden flex flex-col">
                 <BaseHeading text={`Sources (${filteredSources.length})`} className={`mb-2`} />
 
                 {
@@ -131,7 +131,7 @@ function SourceExplorerBody({
                         <BaseHeading text="No sources found" className={`text-sm italic`} />
                     ) : (
 
-                        <div className="grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2">
+                        <div className="flex-1 grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2">
                             {filteredSources.map(source => (
                                 <SourceExplorerItem
                                     key={source.source_id}
