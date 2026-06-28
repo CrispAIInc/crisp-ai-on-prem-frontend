@@ -12,6 +12,7 @@ function SourceExplorerBody({
 }) {
 
     const {
+        theme,
         formatOptions,
         categoryOptions,
         setSelectedFormat,
@@ -78,7 +79,7 @@ function SourceExplorerBody({
         <div className="flex flex-col gap-3 overflow-hidden">
             {/* indexes list */}
             <div className="flex flex-col gap-1">
-                <BaseHeading text="Indexs" />
+                <BaseHeading text="Indexes" />
                 <div className="flex items-center gap-2">
                     {
                         categoryOptions.map((option, index) => {
@@ -132,8 +133,9 @@ function SourceExplorerBody({
                     ) : (
                         <div className="relative overflow-hidden flex flex-col">
                             {/* Top fade */}
-                            <div className="pointer-events-none absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white to-transparent z-10" />
-                            <div className="flex-1 grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2">
+                            <div className={`pointer-events-none absolute top-0 left-0 right-1 h-6 bg-gradient-to-b ${theme === "light" ? "from-[#F9F1FD]" : "from-[#333333]"} to-transparent z-10`} />
+
+                            <div className="flex-1 grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2 py-3">
                                 {filteredSources.map(source => (
                                     <SourceExplorerItem
                                         key={source.source_id}
@@ -141,8 +143,9 @@ function SourceExplorerBody({
                                     />
                                 ))}
                             </div>
+
                             {/* Bottom fade */}
-                            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent z-10" />
+                            <div className={`pointer-events-none absolute bottom-0 left-0 right-1 h-6 bg-gradient-to-t ${theme === "light" ? "from-[#F9F1FD]" : "from-[#333333]"} to-transparent z-10`} />
                         </div>
                     )
                 }
