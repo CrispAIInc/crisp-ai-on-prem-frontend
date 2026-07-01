@@ -6,7 +6,7 @@ import SourceExplorerItem from '../SourceExplorerItem';
 
 import AddIcon from '@mui/icons-material/Add';
 import AnimatedText from '../AnimatedText';
-import { sortArrayOfObjects, sortBySourcePath } from '../../utils';
+import { searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
 
 function SourceExplorerBody({
     onHide,
@@ -25,6 +25,7 @@ function SourceExplorerBody({
         isKnowledgeBaseFetching,
     } = useContext(MainContext);
 
+    const [searchValue, setSearchValue] = useState("");
     const [filteredSources, setFilteredSources] = useState(knowledgeBase);
 
 
@@ -39,6 +40,29 @@ function SourceExplorerBody({
     const openCreateCategoryModal = () => {
         onHide();
         showIndexModal?.();
+    };
+
+
+    // useEffect(() => {
+    //     let base = [...knowledgeBase];
+
+    //     if (searchValue.trim() !== "") {
+    //         base = searchByKey(base, "source_path", searchValue);
+    //     }
+
+    //     setFilteredSources(sortBySourcePath(base));
+    // }, [searchValue, knowledgeBase]);
+
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearchValue(value);
+
+        // if (value.trim() === "") {
+        //     setFilteredSources(sortBySourcePath(filteredSources));
+        // } else {
+        //     const filtered = searchByKey(filteredSources, "source_path", value);
+        //     setFilteredSources(sortBySourcePath(filtered));
+        // }
     };
 
     useEffect(() => {
@@ -75,8 +99,10 @@ function SourceExplorerBody({
             }
         }
 
-        setFilteredSources(sortArrayOfObjects(filtered, "source_path"));
-    }, [selectedCategory, selectedFormat, knowledgeBase]);
+        const foundSources = searchByKey(filtered, "source_path", searchValue);
+
+        setFilteredSources(sortArrayOfObjects(foundSources, "source_path"));
+    }, [selectedCategory, selectedFormat, knowledgeBase, searchValue]);
 
     return (
         <div className="flex flex-col gap-3 overflow-hidden">
@@ -130,7 +156,16 @@ function SourceExplorerBody({
 
             {/* sources list */}
             <div className="overflow-hidden flex flex-col">
-                <BaseHeading text={`Sources${!isKnowledgeBaseFetching ? ` (${filteredSources.length})` : ''}`} className={`mb-2`} />
+                <div className="flex items-center justify-between gap-1">
+                    <BaseHeading text={`Sources${!isKnowledgeBaseFetching ? ` (${filteredSources.length})` : ''}`} className={`mb-2 flex-1`} />
+                    <input
+                        type="text"
+                        placeholder="Search by source name..."
+                        value={searchValue}
+                        onChange={handleSearch}
+                        className={`max-w-60 px-2 py-2 outline-none font-semibold text-sm rounded-md  ${theme === "light" ? "!border !border-gray-300 bg-white text-black" : "!border !border-textColor-300 bg-gray-800 text-white"}`}
+                    />
+                </div>
                 {
                     isKnowledgeBaseFetching ? (
                         <AnimatedText text='Preparing your knowledge base...' cssClasses="font-semibold" />
