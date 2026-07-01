@@ -90,6 +90,11 @@ export function SourceExplorer(props) {
         props.onHide();
     };
 
+    const handleOpenUploadCategoriesModal = () => {
+        props.onHide();
+        props.onOpenCategoriesModal?.();
+    };
+
     const openCategoryFolder = (category) => {
         setSelectedCategory(category);
         const newPath = currentPath + category + "/";
@@ -442,13 +447,24 @@ export function SourceExplorer(props) {
             <div className="w-56 h-56 bg-purple-400 rounded-full absolute left-0 top-80 z-10 blur-[180px]"></div>
 
             <Modal.Header
-                closeButton
                 className={`${theme === "dark" && "bg-textColor-300 text-textColor-100 !border-b-textColor-200"} z-20`}
             >
-                <Modal.Title id="contained-modal-title-vcenter" className="flex flex-col gap-0">
-                    <BaseHeading text="Source Explorer" className="text-xl" />
-                    <p className="text-slate-400 text-sm mt-0.5">Select sources to add to your workspace, enabling metadata extraction and deeper insights.</p>
-                </Modal.Title>
+                <div className="flex w-full items-center justify-between gap-3">
+                    <Modal.Title id="contained-modal-title-vcenter" className="flex flex-col gap-0">
+                        <BaseHeading text="Source Explorer" className="text-xl" />
+                        <p className="text-slate-400 text-sm mt-0.5">Select sources to add to your workspace, enabling metadata extraction and deeper insights.</p>
+                    </Modal.Title>
+                    {!isProjectReadOnly && (
+                        <button
+                            type="button"
+                            onClick={handleOpenUploadCategoriesModal}
+                            className={`inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
+                        >
+                            <UploadIcon className={`text-[10px] ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`} />
+                            <span className="text-sm">Upload new source</span>
+                        </button>
+                    )}
+                </div>
             </Modal.Header>
 
             <Modal.Body

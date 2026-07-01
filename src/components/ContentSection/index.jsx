@@ -392,9 +392,17 @@ const ContentSection = ({
     };
 
     const [showAddModal, setShowAddModal] = useState(false);
+    const [shouldOpenCategoriesModal, setShouldOpenCategoriesModal] = useState(false);
+
     function handleAddModal(state) {
         setShowAddModal(state);
     }
+
+    const handleOpenCategoriesModal = () => {
+        setShowSourceExplorer(false);
+        setShowAddModal(true);
+        setShouldOpenCategoriesModal(true);
+    };
 
     const [showSourceContextMenu, setShowSourceContextMenu] = useState(null);
     function handleOpenSourceContextMenu(e, sourcePath) {
@@ -1216,7 +1224,18 @@ const ContentSection = ({
                         </div>
                     </div>
                     <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={handleUpload} />
-                    <AddSourceModal show={showAddModal} setShowAddModal={setShowAddModal} isUploading={isFileUploading} setIsUploading={setIsFileUploading} onHide={() => handleAddModal(false)} handleUpload={handleUpload} />
+                    <AddSourceModal
+                        show={showAddModal}
+                        setShowAddModal={setShowAddModal}
+                        isUploading={isFileUploading}
+                        setIsUploading={setIsFileUploading}
+                        openCategoriesModal={shouldOpenCategoriesModal}
+                        onHide={() => {
+                            handleAddModal(false);
+                            setShouldOpenCategoriesModal(false);
+                        }}
+                        handleUpload={handleUpload}
+                    />
                     {showSourceExplorer && (
                         <SourceExplorer
                             show={showSourceExplorer}
@@ -1236,6 +1255,7 @@ const ContentSection = ({
                             handleSelectAllCheckboxChange={handleSelectAllCheckboxChange}
                             isOpenedFromSourceExplorerBtn={isOpenedFromSourceExplorerBtn}
                             onOpenUploadModal={openUploadModal}
+                            onOpenCategoriesModal={handleOpenCategoriesModal}
                             className="modal"
                         />
                     )}
