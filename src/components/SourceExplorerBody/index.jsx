@@ -10,7 +10,10 @@ import { searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
 
 function SourceExplorerBody({
     onHide,
-    showIndexModal
+    showIndexModal,
+    isDeleting,
+    clickedIndex,
+    deleteResource
 }) {
 
     const {
@@ -27,6 +30,7 @@ function SourceExplorerBody({
 
     const [searchValue, setSearchValue] = useState("");
     const [filteredSources, setFilteredSources] = useState(knowledgeBase);
+    const [isManagingSources, setIsManagingSources] = useState(false);
 
 
     function handleIndexChange(value) {
@@ -165,6 +169,8 @@ function SourceExplorerBody({
                         onChange={handleSearch}
                         className={`max-w-60 px-2 py-2 outline-none font-semibold text-sm rounded-md  ${theme === "light" ? "!border !border-gray-300 bg-white text-black" : "!border !border-textColor-300 bg-gray-800 text-white"}`}
                     />
+
+                    <BaseHeading text="Manage sources" className={`text-sm font-semibold cursor-pointer p-2 rounded-md  ${theme === "light" ? "!border !border-gray-300 bg-white text-textColor-200" : "!border !border-textColor-300 bg-gray-800 text-textColor-100"} ${isManagingSources ? (theme === "light" ? "!text-black font-bold" : "!text-white font-bold") : ""}`} onClick={() => setIsManagingSources(!isManagingSources)} />
                 </div>
                 {
                     isKnowledgeBaseFetching ? (
@@ -183,6 +189,10 @@ function SourceExplorerBody({
                                                 <SourceExplorerItem
                                                     key={source.source_id}
                                                     source={source}
+                                                    isDeleting={isDeleting}
+                                                    clickedIndex={clickedIndex}
+                                                    deleteResource={deleteResource}
+                                                    isManagingSources={isManagingSources}
                                                 />
                                             ))}
                                         </div>

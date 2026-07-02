@@ -1,14 +1,23 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import GsFile from '../GsFile';
 
 import CircleIcon from '@mui/icons-material/Circle';
 import Checkbox from "@mui/material/Checkbox";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import BaseHeading from '../BaseHeading';
 import { formatDuration } from '../../utils';
 import { MainContext } from '../../contexts/mainContext';
+import { ProjectContext } from '../../contexts/projectContext';
+import LoadingSpinner from '../LoadingSpinner';
 
-function SourceExplorerItem({ source }) {
+function SourceExplorerItem({
+    source,
+    isDeleting,
+    clickedIndex,
+    deleteResource,
+    isManagingSources
+}) {
 
     const {
         theme,
@@ -16,14 +25,38 @@ function SourceExplorerItem({ source }) {
         onThumbnailClick
     } = useContext(MainContext);
 
+    const { isProjectReadOnly } = useContext(ProjectContext);
+
+    const handleDeleteSource = (event, source) => {
+        event.stopPropagation();
+        deleteResource(event, [source]);
+    };
+
     return (
         <div
             className="flex items-center gap-2 min-w-0 cursor-pointer"
             onClick={(event) => onThumbnailClick(event, source)}
         >
             {/* thumbnail */}
-            <div className="rounded-xl overflow-auto w-14 h-14">
+            <div className="rounded-xl overflow-auto w-14 h-14 relative">
                 <GsFile gsUrl={source.thumbnail} className="w-full h-full object-cover" />
+                {
+                    (!isProjectReadOnly && isManagingSources) && (
+                        <div className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center ${theme === 'light' ? 'bg-white/70' : 'bg-gray-800/70'} rounded-xl`} onClick={(event) => handleDeleteSource(event, source)}>
+                            {
+                                (isDeleting && clickedIndex === source.index) ? (
+                                    <LoadingSpinner isSmall />
+                                ) : (
+                                    <DeleteIcon
+                                        style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
+                                        onClick={(event) => (!isDeleting || clickedIndex.source_path !== source.source_path) && deleteResource(event, [source])}
+                                        className="delete-icon cursor-pointer"
+                                    />
+                                )
+                            }
+                        </div>
+                    )
+                }
             </div>
 
             {/* metadata */}

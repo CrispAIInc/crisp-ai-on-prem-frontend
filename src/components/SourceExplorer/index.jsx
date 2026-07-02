@@ -542,6 +542,9 @@ export function SourceExplorer(props) {
                 <SourceExplorerBody
                     onHide={props.onHide}
                     showIndexModal={props.showIndexModal}
+                    isDeleting={props.isDeleting}
+                    clickedIndex={props.clickedIndex}
+                    deleteResource={props.deleteResource}
                 />
             </Modal.Body>
 
