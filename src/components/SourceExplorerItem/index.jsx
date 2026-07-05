@@ -44,7 +44,7 @@ function SourceExplorerItem({
                     (!isProjectReadOnly && isManagingSources) && (
                         <div className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center ${theme === 'light' ? 'bg-white/70' : 'bg-gray-800/70'} rounded-xl`} onClick={(event) => handleDeleteSource(event, source)}>
                             {
-                                (isDeleting && clickedIndex === source.index) ? (
+                                (isDeleting && clickedIndex?.source_id === source.source_id) ? (
                                     <LoadingSpinner isSmall />
                                 ) : (
                                     <DeleteIcon
