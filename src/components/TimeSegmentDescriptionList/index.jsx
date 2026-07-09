@@ -89,7 +89,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
 
     return (
         <>
-            <div className="flex flex-col gap-2 overflow-y-auto">
+            <div className="flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
                 <BaseHeading text="Saved segment responses" />
                 <div className='flex flex-col gap-1'>
                     {
@@ -127,10 +127,10 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
                                     )
                                 }
 
-                                <div>
+                                <div className="overflow-x-hidden">
                                     <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema?.talking_head?.length > 0 ? `${segment.response_format.schema?.talking_head?.length} ${segment.response_format.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs" />
 
-                                    <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-fit truncate`} key={segment.id}>{segment?.title}</p>
+                                    <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-full truncate`} key={segment.id}>{segment?.title}</p>
                                 </div>
                             </div>
                         ))
