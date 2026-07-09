@@ -52,14 +52,14 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
             <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Metadata output</label>
             <div className="relative inline-block w-full" ref={dropdownRef}>
                 {/* upper section */}
-                <div onClick={handleOpenDropdownMenu} className={`rounded-xl flex items-center justify-between h-10 py-4 pl-1 !border !border-slate-400 cursor-pointer relative`}>
+                <div onClick={handleOpenDropdownMenu} className={`rounded-xl flex items-center justify-between h-10 py-4 pl-1 ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200/50'} cursor-pointer relative`}>
                     {/* <div className="absolute inset-y-0 left-0 w-8 pointer-events-none z-3 bg-gradient-to-r from-white to-transparent"></div> */}
                     <div className="relative flex items-center flex-1 gap-1 overflow-x-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                         {
                             selectedOptions.length === 0 && <p className="text-slate-400">Select metadata options</p>
                         }
                         {
-                            selectedOptions.map((option) => <Chip cssClasses="rounded-xl" key={option.id} content={option.name} />)
+                            selectedOptions.map((option) => <Chip cssClasses={`rounded-xl ${theme === "light" ? 'bg-white' : 'bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)] !border-none'}`} key={option.id} content={option.name} />)
                         }
                     </div>
                     {/* <div className="absolute inset-y-0 right-0 w-8 pointer-events-none z-3 bg-gradient-to-l from-white to-transparent"></div> */}
