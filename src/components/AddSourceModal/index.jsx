@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import UploadIcon from '@mui/icons-material/Upload';
 import LoadingSpinner from '../LoadingSpinner';
 import CategoriesModal from '../CategoriesModal';
+import BaseHeading from '../BaseHeading/index.jsx';
 
 export default function AddSourceModal(props) {
 
@@ -46,7 +47,7 @@ export default function AddSourceModal(props) {
         <Modal
             show={props.show}
             onHide={props.onHide}
-            size="sm"
+            size="md"
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
@@ -54,25 +55,44 @@ export default function AddSourceModal(props) {
         >
             <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <h5 className="!text-md">Ingest new source or index</h5>
+                    <BaseHeading text="Add content" className="text-xl" />
+                    <p className="text-slate-400 text-sm mt-0.5">Choose how you&apos;d like to add data.</p>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
+
                 <div
-                    className={`source-explorer flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                    className={`source-explorer px-2 py-2 rounded-md cursor-pointer w-full ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/5'}`}
                     onClick={openIndexModal}
                 >
-                    <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>New Index</span>
+                    <div className="flex items-center gap-1">
+                        <AddIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} font-bold !text-2xl`} />
+                        <BaseHeading text="Create new Index" className="!text-lg !mb-0" />
+                    </div>
+                    <p className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Organize your sources into a new index.</p>
 
                 </div>
-                {categoryOptions?.filter(cat => cat.value !== "all").length > 0 && <div
-                    className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
-                    onClick={handleAddNewResource}
-                >
-                    {props?.isUploading ? (<LoadingSpinner isSmall />) : (<UploadIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />)}
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Ingest</span>
-                </div>}
+                {categoryOptions?.filter(cat => cat.value !== "all").length > 0 && (
+                    <div
+                        className={`px-2 py-2 rounded-md cursor-pointer w-full ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/5'}`}
+                        onClick={handleAddNewResource}
+                    >
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-1">
+                                {props?.isUploading ? (
+                                    <LoadingSpinner isSmall />
+                                ) : (
+                                    <UploadIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}  font-bold !text-2xl`} />
+                                )}
+                                <BaseHeading text="Ingest" className="!text-lg !mb-0" />
+                            </div>
+                            <div className="flex flex-col">
+                                <p className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Uplaod sources to an index you&apos;ve created.</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <IndexModal show={isIndexModalOpen} onHide={hideIndexModal} handleUpload={props?.handleUpload} />
                 <CategoriesModal
                     show={showCategoriesModal}
