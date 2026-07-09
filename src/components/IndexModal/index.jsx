@@ -111,7 +111,7 @@ export function IndexModal({ show, onHide, handleUpload }) {
                     type="button"
                     disabled={isCreateDisabled || isLoading}
                     onClick={createIndex}
-                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isCreateDisabled || isLoading ? (theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-slate-500 text-slate-300') : 'bg-[linear-gradient(90deg,#755bea,#b76894)] text-white hover:opacity-90'} ${theme === 'dark' && !isCreateDisabled && !isLoading ? '' : ''} ${isCreateDisabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isCreateDisabled || isLoading ? (theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-textColor-100/25 text-gray-700') : 'bg-[linear-gradient(90deg,#755bea,#b76894)] text-white hover:opacity-90'} ${theme === 'dark' && !isCreateDisabled && !isLoading ? '' : ''} ${isCreateDisabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                     {isLoading ? <LoadingSpinner isSmall /> : <span className="font-medium">Create</span>}
                 </button>

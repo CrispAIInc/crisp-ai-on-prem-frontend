@@ -13,6 +13,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
     const { theme, categoryOptions, isFileUploading, fileFormats, setSelectedCategory, frameExtractionRate, setFrameExtractionRate } = useContext(MainContext);
 
     const [selectedFiles, setSelectedFiles] = useState([]);
+    const isUploadDisabled = isFileUploading || selectedFiles.length === 0;
 
     useEffect(() => {
         if (indexName !== null) {
@@ -138,12 +139,14 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                 >
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Cancel</span>
                 </div>
-                <div
-                    className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'} ${isFileUploading && '!cursor-not-allowed'}`}
-                    onClick={!isFileUploading && uploadSources}
+                <button
+                    type="button"
+                    disabled={isUploadDisabled}
+                    onClick={uploadSources}
+                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isUploadDisabled ? `cursor-not-allowed ${(theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-textColor-100/25 text-gray-700')}` : 'bg-[linear-gradient(90deg,#755bea,#b76894)] text-white hover:opacity-90'}`}
                 >
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Upload</span>
-                </div>
+                    <span className="font-medium">Upload</span>
+                </button>
             </Modal.Footer>
         </Modal>
     );
