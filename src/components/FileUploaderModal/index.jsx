@@ -54,11 +54,10 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
             onHide={onHide}
             size="md"
             aria-labelledby="contained-modal-title-vcenter"
-            scrollable={true}
             centered
             className="!overflow-x-hidden"
         >
-            <Modal.Body className={`!overflow-x-hidden flex flex-col gap-2 ${theme === 'light' ? '' : 'bg-textColor-300 text-white'} select-none`}>
+            <Modal.Body style={{ maxHeight: '80vh' }} className={`!overflow-hidden flex flex-col gap-2 h-full ${theme === 'light' ? '' : 'bg-textColor-300 text-white'} select-none`}>
                 {indexName !== null && <div className="flex items-center gap-2">
                     <Dropdown onChange={(option) => handleIndexChange(option)} label="Index" indexName={selectedIndex} options={categoryOptions} />
                     {/* <Dropdown onChange={(option) => handleFileFormatChange(option)} label="File type" options={fileFormats} /> */}
@@ -66,16 +65,16 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                 <FileUploader isFineGrained={isFineGrained} setIsFineGrained={setIsFineGrained} closeModals={closeModals} selectedFileFormat={selectedFileFormat} setSelectedFileFormat={setSelectedFileFormat} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} setIsVideoIncluded={setIsVideoIncluded} />
                 {
                     isVideoIncluded && (
-                        <div>
+                        <div className="flex flex-col gap-2 h-[55vh] overflow-hidden rounded-lg">
                             {/* Header */}
-                            <div className="px-3 py-2 mb-1">
+                            <div className="px-3 py-2 border-b border-slate-200 dark:border-textColor-200/30">
                                 <div className="flex items-center gap-2">
                                     <span className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} text-sm font-semibold tracking-wide uppercase`}>
                                         Video processing settings
                                     </span>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2 overflow-y-auto p-3">
                                 {/* fine grained mode */}
                                 {/* <div className="flex flex-col ml-3">
                                     <div className="relative flex items-center gap-1">
