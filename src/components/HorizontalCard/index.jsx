@@ -15,7 +15,7 @@ function HorizontalCard({ item, workspaceContainer }) {
     }
 
     return (
-        <div key={item.id} className={`relative grid grid-cols-[64px_1fr] gap-3 p-3 bg-background rounded-md shadow-sm mb-4`}>
+        <div key={item.id} className={`relative grid grid-cols-[64px_1fr] gap-3 p-3 ${theme === "light" ? 'bg-background' : 'bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)] backdrop-blur-sm'} rounded-md shadow-md mb-4`}>
             {/* item thumbnail */}
             <div className="relative w-20 h-20 rounded-md cursor-pointer " onClick={() => setLightboxOpen(true)}>
                 <GsFile gsUrl={item.keyframe_url ?? item.thumbnail_url} alt="chapter" className="object-cover w-full h-full rounded-md lg:max-w-full" />

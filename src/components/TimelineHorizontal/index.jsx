@@ -36,7 +36,7 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                     >
 
                         {/* Timeline content */}
-                        <div className="relative flex flex-col gap-2 p-2 rounded-md shadow-md bg-background">
+                        <div className={`relative flex flex-col gap-2 p-2 rounded-md shadow-md ${theme === 'light' ? 'bg-white' : 'bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)] backdrop-blur-sm'}`}>
                             {/* Image */}
                             <div className="w-full rounded-md cursor-pointer" onClick={() => { setSelectedChapter(chapter); setLightboxOpen(true); }}>
                                 <GsFile
