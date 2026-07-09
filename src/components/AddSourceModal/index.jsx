@@ -87,7 +87,7 @@ export default function AddSourceModal(props) {
                                 <BaseHeading text="Ingest" className="!text-lg !mb-0" />
                             </div>
                             <div className="flex flex-col">
-                                <p className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Uplaod sources to an index you&apos;ve created.</p>
+                                <p className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Upload sources to an index you&apos;ve created.</p>
                             </div>
                         </div>
                     </div>

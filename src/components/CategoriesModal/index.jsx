@@ -65,7 +65,7 @@ const CategoriesModal = (props) => {
                                                 <FolderOpenOutlinedIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} font-bold !text-2xl`} />
                                                 <div className="flex flex-col">
                                                     <BaseHeading text={label} className="!text-lg !mb-0" />
-                                                    <span className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Contains {sourcesCount} source{sourcesCount > 1 ? 's' : ''}.</span>
+                                                    <span className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Contains {sourcesCount} source{sourcesCount !== 1 ? 's' : ''}.</span>
                                                 </div>
                                             </div>
                                         </div>
