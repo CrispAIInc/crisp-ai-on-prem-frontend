@@ -24,7 +24,8 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
     }
 
     return (
-        <div className="main overflow-x-auto overflow-y-hidden relative m-auto w-11/12 max-w-[90vw] py-10 custom-scroll">
+        <div className={`main overflow-x-auto overflow-y-hidden relative m-auto w-11/12 max-w-[90vw] py-10 custom-scroll [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-600 [&::-webkit-scrollbar-thumb]:bg-neutral-800 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-900'}`}>
             {/* Horizontal timeline container */}
             <div className="relative flex items-center w-max before:absolute before:top-1/2 before:left-0 before:h-1 before:rounded-full before:w-full before:bg-primary-300 before:-translate-y-1/2">
                 {chapters.map((chapter, index) => (
