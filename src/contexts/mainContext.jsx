@@ -17,6 +17,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     const { user, setUser } = useContext(AuthContext);
     const { currentProject, setProjects } = useContext(ProjectContext);
     const [categoryOptions, setCategoryOptions] = useState([]);
+    const formatOptions = [
+        { value: "all", label: "All" },
+        { value: "video", label: "Videos" },
+        { value: "pdf", label: "PDFs" },
+        { value: "img", label: "Images" },
+    ];
     const [reels, setReels] = useState([]);
     const [stories, setStories] = useState([]);
     const [notes, setNotes] = useState([]);
@@ -85,8 +91,10 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [persistedUploadedFiles, setPersistedUploadedFiles] = useState([]);
 
+    const [isKnowledgeBaseFetching, setisKnowledgeBaseFetching] = useState(false);
     useLayoutEffect(() => {
         const makeRequest = async () => {
+            setisKnowledgeBaseFetching(true);
             try {
                 axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
                 const data = await makeApiRequest(
@@ -96,9 +104,10 @@ export default function MainProvider({ children, theme, setTheme }) {
                 setKnowledgeBase(data);
             } catch (error) {
                 console.warn(error);
+            } finally {
+                setisKnowledgeBaseFetching(false);
             }
         };
-
         makeRequest();
     }, [currentProject.project_id]);
 
@@ -1286,6 +1295,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // create value object with all the states
     const value = {
+        isKnowledgeBaseFetching, setisKnowledgeBaseFetching,
         frameExtractionRate, setFrameExtractionRate,
         blogs, setBlogs,
         selectedBlog, setSelectedBlog,
@@ -1319,7 +1329,9 @@ export default function MainProvider({ children, theme, setTheme }) {
         selectedOptions, setSelectedOptions,
         workspaceContainer,
         generatedResources, setGeneratedResources,
-        categoryOptions, setCategoryOptions, showEditor, setShowEditor,
+        categoryOptions, setCategoryOptions,
+        formatOptions,
+        showEditor, setShowEditor,
         languageOptions,
         activeView, setActiveView,
         hasDuration, setHasDuration,

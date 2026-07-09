@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { MainContext } from '../../contexts/mainContext.jsx';
@@ -27,6 +27,20 @@ export default function AddSourceModal(props) {
     const handleAddNewResource = () => {
         setShowCategoriesModal(true);
     };
+
+    useEffect(() => {
+        if (props.openCategoriesModal && props.show) {
+            setShowCategoriesModal(true);
+        }
+    }, [props.openCategoriesModal, props.show]);
+
+    useEffect(() => {
+        if (!props.show) {
+            setShowCategoriesModal(false);
+            setShowFileFormatsModal(false);
+            setIsIndexModalOpen(false);
+        }
+    }, [props.show]);
 
     return (
         <Modal

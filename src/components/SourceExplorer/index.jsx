@@ -14,23 +14,23 @@ import StagedVideoThumbnail from '../StagedVideoThumbnail';
 import StagedImageThumbnail from '../StagedImageThumbnail';
 import { searchByKey, sortBySourcePath } from '../../utils';
 import makeApiRequest from '../../api/index.js';
-import AddIcon from '@mui/icons-material/Add';
 import UploadIcon from '@mui/icons-material/Upload';
 import useResources from '../../hooks/useResources.js';
 import { useToast } from "../../contexts/toastContext";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 import BaseHeading from '../BaseHeading/index.jsx';
+import SourceExplorerBody from '../SourceExplorerBody/index.jsx';
 
 export function SourceExplorer(props) {
     const {
         selectedAll,
+        selectedFormat,
         setSelectedFormat,
         selectedCategory,
         setSelectedCategory,
         theme,
         sourcesTobeCommited,
-        selectedFormat,
         knowledgeBase,
         setCategoryOptions,
         categoryOptions
@@ -90,9 +90,9 @@ export function SourceExplorer(props) {
         props.onHide();
     };
 
-    const openCreateCategoryModal = () => {
+    const handleOpenUploadCategoriesModal = () => {
         props.onHide();
-        props.showIndexModal?.();
+        props.onOpenCategoriesModal?.();
     };
 
     const openCategoryFolder = (category) => {
@@ -445,19 +445,32 @@ export function SourceExplorer(props) {
         >
             <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-10 z-10 blur-[180px]"></div>
             <div className="w-56 h-56 bg-purple-400 rounded-full absolute left-0 top-80 z-10 blur-[180px]"></div>
+
             <Modal.Header
-                closeButton
                 className={`${theme === "dark" && "bg-textColor-300 text-textColor-100 !border-b-textColor-200"} z-20`}
             >
-                <Modal.Title id="contained-modal-title-vcenter" className="flex flex-col gap-0">
-                    <BaseHeading text="Source Explorer" className="text-xl" />
-                    <p className="text-slate-400 text-sm mt-0.5">Select sources to add to your workspace, enabling metadata extraction and deeper insights.</p>
-                </Modal.Title>
+                <div className="flex w-full items-center justify-between gap-3">
+                    <Modal.Title id="contained-modal-title-vcenter" className="flex flex-col gap-0">
+                        <BaseHeading text="Source Explorer" className="text-xl" />
+                        <p className="text-slate-400 text-sm mt-0.5">Select sources to add to your workspace, enabling metadata extraction and deeper insights.</p>
+                    </Modal.Title>
+                    {!isProjectReadOnly && (
+                        <button
+                            type="button"
+                            onClick={handleOpenUploadCategoriesModal}
+                            className={`inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
+                        >
+                            <UploadIcon className={`text-[10px] ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`} />
+                            <span className="text-sm">Upload new source</span>
+                        </button>
+                    )}
+                </div>
             </Modal.Header>
+
             <Modal.Body
-                className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} z-20`}
+                className={`${theme === "light" ? "" : "bg-textColor-300 text-white"} z-20 overflow-hidden flex flex-col`}
             >
-                <div className="flex justify-between items-center gap-4">
+                {/* <div className="flex justify-between items-center gap-4">
                     {categoryOptions?.filter(cat => cat?.value !== "all").length > 0 && <div
                         className={`current-path-wrapper select-none ${theme === "dark" && "text-textColor-100"}`}
                     >
@@ -491,7 +504,6 @@ export function SourceExplorer(props) {
 
                     {viewModes[viewModes.length - 1] === "files" && (
                         <div className="flex items-center gap-2">
-                            {/* <input className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200'} w-ful lg:w-[30%] rounded-lg !pl-[10px]`} placeholder={"Search..."} value={searchValue} onChange={handleSearch} /> */}
                             {!isProjectReadOnly && (
                                 <button
                                     type="button"
@@ -526,8 +538,16 @@ export function SourceExplorer(props) {
                     {viewModes[viewModes.length - 1] !== "files"
                         ? renderFolders()
                         : renderFiles()}
-                </div>
+                </div> */}
+                <SourceExplorerBody
+                    onHide={props.onHide}
+                    showIndexModal={props.showIndexModal}
+                    isDeleting={props.isDeleting}
+                    clickedIndex={props.clickedIndex}
+                    deleteResource={props.deleteResource}
+                />
             </Modal.Body>
+
             <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"} z-20`}>
                 {itemsFoundInsideCategoryOrFormat && <div className="flex items-center">
                     <Checkbox
