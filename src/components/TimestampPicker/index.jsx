@@ -80,7 +80,7 @@ const TimeInput = ({ initVal, max, onChange }) => {
         onChange={handleInput}
         onBlur={handleBlur}
         onClick={() => setIsOpen(!isOpen)}
-        className={`py-2 text-xs font-semibold text-center rounded-lg w-9 h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400 ${theme === 'light' ? 'bg-white !border !border-textColor-100/60 text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}
+        className={`py-2 text-xs font-semibold text-center rounded-lg w-9 h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400 ${theme === 'light' ? 'bg-white !border !border-textColor-100/60 text-textColor-200' : 'bg-black/30 text-textColor-100 !border !border-textColor-200/40'}`}
       />
 
       <div ref={timeOptionsRef} className={`absolute z-[9999] top-full left-0 w-full h-[100px] min-h-[100px] overflow-y-auto rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'} ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}>
@@ -161,12 +161,12 @@ export default function TimestampPicker({ isPending, start, setStart, end, setEn
 
   return (
     <div
-      className={` p-3 rounded-2xl select-none
+      className={`mt-2 p-3 rounded-2xl select-none
     flex items-center gap-1
-    w-fit
+    w-fit shadow-sm
     ${theme === 'light'
           ? 'bg-white !border'
-          : 'bg-textColor-300 !border !border-textColor-200/40'}
+          : 'bg-black/30 !border-none'}
   `}
     >
       {/* FROM */}
