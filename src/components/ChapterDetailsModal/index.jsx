@@ -49,7 +49,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                         <GsFile
                             gsUrl={chapter?.keyframe_url ?? chapter?.thumbnail_url}
                             alt="chapter thumbnail"
-                            className="object-cover w-full h-full border rounded-lg shadow-2xl border-primary-300"
+                            className="object-cover w-full h-full rounded-lg shadow-md "
                         />
                     </div>
                     {/* right part => details */}
