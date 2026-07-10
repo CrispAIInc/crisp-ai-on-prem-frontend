@@ -1174,7 +1174,7 @@ const ContentSection = ({
                                 data-tooltip-id="add-sources-tooltip"
                                 data-tooltip-content="Upload sources or create new indexes."
                                 id="upload_sources"
-                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'} ${isProjectReadOnly ? "cursor-default opacity-50" : "cursor-pointer opacity-100"}`}
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md w-fit ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/20'} ${isProjectReadOnly ? "cursor-default opacity-50" : "cursor-pointer opacity-100"}`}
                                 onClick={() => !isProjectReadOnly && handleAddModal(true)}
                             >
                                 <AddIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
@@ -1191,7 +1191,7 @@ const ContentSection = ({
                                 data-tooltip-id="source-explorer-tooltip"
                                 data-tooltip-content="Explore and manage your sources."
                                 id="source_explorer"
-                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={handleExploreSources}
                             >
                                 <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
@@ -1206,7 +1206,7 @@ const ContentSection = ({
                                 data-tooltip-id="discovery-tooltip"
                                 data-tooltip-content="Search across your knowledge base."
                                 id="discovery"
-                                className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20'}`}
+                                className={`flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={() => setIsSearching(!isSearching)}
                             >
                                 <SearchOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`} />
