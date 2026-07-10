@@ -25,7 +25,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
         <Modal
             show={show}
             onHide={onHide}
-            size="lg"
+            size="md"
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
@@ -40,7 +40,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
-                <div className='sm:grid sm:grid-cols-[30%,1fr] sm:gap-4'>
+                <div className='flex flex-col gap-2'>
                     {/* left part => thumbnail */}
                     <div className="flex items-center justify-center w-2/3 mx-auto mb-4 sm:w-full sm:h-fit sm:mb-0 ">
                         <GsFile
@@ -50,7 +50,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                         />
                     </div>
                     {/* right part => details */}
-                    <div className="">
+                    <div>
                         {
                             chapter.timestamp ? <div className='text-[15px] cursor-pointer text-primary-300  flex items-center gap-2 mb-2 w-fit tracking-wider' onClick={() => {
 
