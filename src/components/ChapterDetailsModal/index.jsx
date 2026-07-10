@@ -13,6 +13,8 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
     // const { getPublicUrl } = useFirebase();
 
     // const [url, setUrl] = useState("");
+    const [expanded, setExpanded] = useState(false);
+    const CONTENT_TRUNCATE_LENGTH = 400;
 
     // useEffect(() => {
     //     if (!chapter?.keyframe_url) return;
@@ -73,7 +75,22 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
                             </div>
                         }
                         <h3 className="text-xl font-semibold">{chapter.title}</h3>
-                        <p className="mt-2 text-md">{chapter.content}</p>
+                        <p className="mt-2 text-md">
+                            {chapter?.content && chapter.content.length > CONTENT_TRUNCATE_LENGTH ? (
+                                <>
+                                    {expanded ? chapter.content : `${chapter.content.slice(0, CONTENT_TRUNCATE_LENGTH)}...`}
+                                    <button
+                                        type="button"
+                                        onClick={() => setExpanded(prev => !prev)}
+                                        className="ml-2 text-primary-300 font-semibold underline text-sm"
+                                    >
+                                        {expanded ? 'Show less' : 'Read more'}
+                                    </button>
+                                </>
+                            ) : (
+                                chapter?.content
+                            )}
+                        </p>
                     </div>
                 </div>
             </Modal.Body>
