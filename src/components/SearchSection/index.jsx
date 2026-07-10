@@ -84,26 +84,19 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
 
     return (
         <div className={`search-wrapper ${className}`}>
-            {
-                chatLoaded ?
-                    (
-                        <div className={`flex items-center pr-[1px] bg-background_workspace ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-300'} rounded-xl bg-transparent`}>
+            <div className={`flex items-center pr-[1px] bg-background_workspace ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-300'} rounded-xl bg-transparent`}>
 
-                            <input className={`flex-1 p-2 bg-transparent border-none rounded-xl outline-none ${theme === 'dark' && 'text-textColor-100'}`} placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={(event) => setSearchQuestion(event.target.value)} onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    handleSubmitQuestion(e);
-                                }
-                            }} />
+                <input className={`flex-1 p-2 bg-transparent border-none rounded-xl outline-none ${theme === 'dark' && 'text-textColor-100'}`} placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={(event) => setSearchQuestion(event.target.value)} onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        handleSubmitQuestion(e);
+                    }
+                }} />
 
-                            <RippleButton disabled={isSearching || searchQuestion.trim().length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl'>
-                                {isSearching ? <AnimatedText cssClasses='text-white' text='Searching...' /> : isGlobalSearch ? 'Discover' : 'Search'}
-                            </RippleButton>
+                <RippleButton disabled={isSearching || searchQuestion.trim().length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl'>
+                    {isSearching ? <AnimatedText cssClasses='text-white' text='Searching...' /> : isGlobalSearch ? 'Discover' : 'Search'}
+                </RippleButton>
 
-                        </div>
-                    ) : <div className='text-center'>
-                        <BaseHeading text='Please wait for data to load...' />
-                    </div>
-            }
+            </div>
         </div>
     );
 };
