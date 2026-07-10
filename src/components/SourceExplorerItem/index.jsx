@@ -34,7 +34,7 @@ function SourceExplorerItem({
 
     return (
         <div
-            className="flex items-center gap-2 min-w-0 cursor-pointer"
+            className={`flex items-center gap-2 min-w-0 cursor-pointer rounded-xl p-1 ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10'}`}
             onClick={(event) => onThumbnailClick(event, source)}
         >
             {/* thumbnail */}
