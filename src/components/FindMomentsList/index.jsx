@@ -100,8 +100,8 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
                         sortByDate(moments, "created_at", "desc").map(item => (
                             <div key={item.id}
                                 className={`flex items-center gap-2 ${theme === 'light'
-                                    ? 'hover:bg-textColor-100/10'
-                                    : 'hover:bg-light-hover-200/20'
+                                    ? 'hover:bg-textColor-100/25'
+                                    : 'hover:bg-light-hover-200/10'
                                     } cursor-pointer p-2 rounded-md select-none`}
                                 onClick={() => handleSelectResult(item)}
                                 onMouseEnter={() => handleMouseEnterSegment(item.id)}

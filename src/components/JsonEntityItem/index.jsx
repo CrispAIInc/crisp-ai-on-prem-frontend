@@ -49,7 +49,7 @@ const JsonEntityItem = ({ jsonEntity, onClick }) => {
 
     return (
         <>
-            <div key={jsonEntity.id} className={`flex py-2 items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-gray-100' : 'hover:bg-gray-700'} transition-colors`}>
+            <div key={jsonEntity.id} className={`flex py-2 items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10'} transition-colors`}>
                 <ActionMenu
                     actions={[
                         {
@@ -67,7 +67,7 @@ const JsonEntityItem = ({ jsonEntity, onClick }) => {
                         },
                     ]}
                 />
-                <p className={`font-semibold ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(jsonEntity)}>{jsonEntity.title}</p>
+                <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(jsonEntity)}>{jsonEntity.title}</p>
             </div>
 
             {

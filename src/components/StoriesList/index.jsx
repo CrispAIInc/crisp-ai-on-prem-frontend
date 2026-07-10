@@ -107,6 +107,7 @@ function StoriesList({ setShowStoriesEditor }) {
 
     return (
         <div className="flex flex-col overflow-y-auto">
+            <BaseHeading text="My stories" className={`mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
             {(stories?.length > 0 || storiesResults?.length > 0) && (
                 <input
                     className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full rounded-xl !pl-[10px]`} placeholder={"Search..."}
@@ -119,11 +120,11 @@ function StoriesList({ setShowStoriesEditor }) {
                     :
                     storiesResults?.map((story, index) => (
                         <div key={story.story_id} className={`flex items-center gap-2 ${theme === 'light'
-                            ? 'hover:bg-textColor-100/10'
-                            : 'hover:bg-light-hover-200/20'
+                            ? 'hover:bg-textColor-100/25'
+                            : 'hover:bg-light-hover-200/10'
                             } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
                             <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                            <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                            <p className={` flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                                 }`}>{story.story_name}</p>
                             {
                                 !isProjectReadOnly && (
@@ -136,8 +137,7 @@ function StoriesList({ setShowStoriesEditor }) {
                                 )
                             }
                         </div>
-                    ))
-            }
+                    ))}
         </div>
     );
 }

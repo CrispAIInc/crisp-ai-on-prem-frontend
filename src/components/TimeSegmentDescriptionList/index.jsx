@@ -96,8 +96,8 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
                         sortByDate(segmentDescriptions, "created_at", "desc").map(segment => (
                             <div key={segment.id}
                                 className={`flex items-center  gap-2 ${theme === 'light'
-                                    ? 'hover:bg-textColor-100/10'
-                                    : 'hover:bg-light-hover-200/20'
+                                    ? 'hover:bg-textColor-100/25'
+                                    : 'hover:bg-light-hover-200/10'
                                     } cursor-pointer p-2 rounded-md select-none`}
                                 onClick={() => handleSelectResult(segment)}
                                 onMouseEnter={() => handleMouseEnterSegment(segment.id)}

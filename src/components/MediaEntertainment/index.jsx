@@ -298,7 +298,7 @@ function MediaEntertainment({
 
             {/* ============= list of reels ============= */}
             <div className="flex flex-col mb-2 gap-2 h-full overflow-hidden">
-                <BaseHeading text="Your reels" className="mt-2" />
+                <BaseHeading text="My reels" className="mt-2" />
                 {(reels?.length > 0 || reelsResults?.length > 0) && (
                     <input
                         className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full rounded-xl !pl-[10px]`}
@@ -314,12 +314,12 @@ function MediaEntertainment({
                         <div className="overflow-y-auto h-full">
                             {reelsResults?.map((reel, index) => (
                                 <div key={reel.id} className={`flex items-center gap-2 ${theme === 'light'
-                                    ? 'hover:bg-textColor-100/10'
-                                    : 'hover:bg-light-hover-200/20'
+                                    ? 'hover:bg-textColor-100/25'
+                                    : 'hover:bg-light-hover-200/10'
                                     } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
 
                                     <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
-                                    <p className={`font-semibold flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-200"
+                                    <p className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                                         }`}>{reel.title}</p>
 
                                     {

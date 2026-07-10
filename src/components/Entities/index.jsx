@@ -187,8 +187,17 @@ function KnowledgeGraph({
                 </div>
 
                 <div className={`flex flex-col gap-2 ${isDropdownMenuOpen ? 'block' : 'hidden'}`}>
+                    <div className="relative w-full ">
+                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Title (optional)</label>
+                        <input
+                            className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
+                            placeholder="Write a title for the entities"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </div>
                     <div className="relative w-full">
-                        <div className="flex flex-col mb-2">
+                        <div className="flex flex-col ">
                             <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context</label>
                         </div>
                         <input
@@ -221,7 +230,7 @@ function KnowledgeGraph({
                             value={input}
                             onChange={handleChange}
                             placeholder="Paste or type business schema here (in JSON format)..."
-                            className={`w-full h-32 p-3 rounded-2xl font-mono  text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white !border !border-textColor-100/80'} outline-none resize-none`}
+                            className={`w-full h-28 p-3 rounded-2xl font-mono  text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900' : 'text-textColor-300 bg-white !border !border-textColor-100/80'} outline-none resize-none`}
                             onKeyDown={handleTabClick}
                         />
 
@@ -273,15 +282,7 @@ function KnowledgeGraph({
                         )
                     }
 
-                    <div className="relative w-full mb-2">
-                        <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium mb-1`}>Title (optional)</label>
-                        <input
-                            className={`font-medium p-2 bg-transparent !border ${theme === "dark" ? "text-textColor-100 !border !border-textColor-200/50" : '!border !border-textColor-100'} rounded-xl focus:outline-none w-full`}
-                            placeholder="Write a title for the entities"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
-                    </div>
+
                     {/* generate button */}
                     <div className={`relative inline-block`} onMouseMove={handleMouseMove}
                         onMouseEnter={handleMouseEnter}
@@ -290,7 +291,7 @@ function KnowledgeGraph({
                         <RippleButton
                             onClick={generateGraph}
                             fullWidth
-                            cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                            cssClasses='flex items-center mt-2 gap-1 disabled:cursor-not-allowed p-2'
                             disabled={isGeneratingGraph || !canGenerate}>
                             {isGeneratingGraph ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">{step}</span></> : 'Generate'}
                         </RippleButton>
@@ -309,7 +310,7 @@ function KnowledgeGraph({
                 </div>
 
                 {/* list of JSON structures */}
-                <div className="flex flex-col mt-2 mb-2 gap-2 h-full overflow-hidden">
+                <div className="flex flex-col mt-2  gap-2 h-full overflow-hidden">
                     <JsonEntitiesList />
                 </div>
             </div>

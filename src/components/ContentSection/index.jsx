@@ -1276,157 +1276,147 @@ const ContentSection = ({
 
                     {displayedSources.length > 0 && <input className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[75%] rounded-lg !pl-[10px]`} placeholder={"Search in workspace sources..."} value={searchValue} onChange={handleSearch} />}
 
-                    {results?.length > 0 && <div className="flex items-center mt-2">
-                        <span
-                            className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
-                                }`}
-                        >
-                            check all sources
-                        </span>
-                        <Checkbox
-                            className={`select-all-checkbox p-0 "
- }`}
-                            checked={results?.every(item => item?.is_checked)}
-                            onChange={(e) => handleToggleCheckSources(e.target.checked)}
-                            inputProps={{ "aria-label": "Select All Sources" }}
-                            label="Check All Sources"
-                        />
-                        {
-                            !isProjectReadOnly && (
-                                <IndeterminateCheckBoxOutlinedIcon
-                                    className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
-                                    title="Clear all sources"
-                                    onClick={handleClearAllSources}
-                                    titleAccess='clear all sources'
-                                />
-                            )
-                        }
-                    </div>}
+                    {results?.length > 0 && (
+                        <div className="flex items-center mt-2">
+                            <span
+                                className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                                    }`}
+                            >
+                                check all sources
+                            </span>
+                            <Checkbox
+                                className="select-all-checkbox p-0"
+                                checked={results?.every(item => item?.is_checked)}
+                                onChange={(e) => handleToggleCheckSources(e.target.checked)}
+                                inputProps={{ "aria-label": "Select All Sources" }}
+                                label="Check All Sources"
+                            />
+                            {
+                                !isProjectReadOnly && (
+                                    <IndeterminateCheckBoxOutlinedIcon
+                                        className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
+                                        title="Clear all sources"
+                                        onClick={handleClearAllSources}
+                                        titleAccess='clear all sources'
+                                    />
+                                )
+                            }
+                        </div>
+                    )}
 
                     <div className="flex flex-col flex-1 w-full h-full overflow-y-hidden selected-sources-container">
                         {
-                            results?.length > 0 && <div className={` h-full gap-2 w-full max-w-full mt-2 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} empty:!border-none`}>
-                                {
-                                    results?.map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-light-hover-100/30' : 'hover:bg-light-hover-200/20')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
+                            results?.length > 0 && (
+                                <div className={`h-full gap-2 w-full max-w-full mt-2 overflow-y-auto ${theme === 'dark' ? '!border !border-textColor-300' : 'border'} rounded-xl empty:!border-none`}>
+                                    {
+                                        results?.map((option) => <div key={option?.source_path} className={`flex w-full max-w-full cursor-pointer rounded-xl py-2 px-1 ${showSourceContextMenu === null && (theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10')}`} onMouseEnter={() => handleMouseEnter(option?.source_path)} onMouseLeave={handleMouseLeave} onClick={(event) => onThumbnailClick(event, option)}>
 
-                                        <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
-                                            {
-                                                (showSourceContextMenu === option?.source_path && !('progress' in option)) && (
-
-                                                    <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
-
-                                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
-                                                            onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
-                                                            <EditOutlinedIcon
-                                                                className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
-                                                            />
-                                                            <span>Rename</span>
-                                                        </div>
-
-                                                        <hr className="m-0" />
-
-                                                        <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
-                                                            <DeleteOutlineOutlinedIcon
-                                                                className={`cursor-pointer`}
-                                                            />
-                                                            <span>Delete</span>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            {
-                                                !isProjectReadOnly && (
-                                                    !('progress' in option) ? (
-                                                        (option?.source_path === hoveredSource || showSourceContextMenu === option?.source_path) && (
-                                                            <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
-                                                        )
-                                                    ) : (
-                                                        <CircularProgressWithLabel value={option.progress} variant="determinate" isUploadFiled={false} />
-                                                    )
-                                                )
-                                            }
-                                            {
-                                                option.file_type === "video" ? (
-                                                    <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                                ) : option.file_type === "pdf" ? (
-                                                    <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                                ) : option.file_type === "img" ? (
-                                                    <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                                ) : null
-                                            }
-                                            <div className="relative flex-shrink-0 w-12 h-12">
-                                                {(isDeleting && clickedIndex?.source_path === option?.source_path) && (
-                                                    <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[5] translate-x-[-50%] translate-y-[-50%] transform">
-                                                        <LoadingSpinner isSmall />
-                                                    </div>
-                                                )}
-                                                {(option?.thumbnail?.startsWith('blob') && option.file_type === "video") ? (
-                                                    <video
-                                                        src={option.thumbnail}
-                                                        className="object-cover w-full h-full rounded-md"
-                                                        alt="video thumbnail"
-                                                        controls={false}
-                                                    />
-                                                )
-                                                    : <GsFile
-                                                        className="object-cover w-full h-full rounded-xl"
-                                                        gsUrl={option.thumbnail}
-                                                        alt="Video Thumbnail"
-                                                        isPrivate
-                                                    />}
-                                            </div>
-                                            <div className="flex flex-col ">
+                                            <div className="relative flex items-center flex-1 w-full max-w-full gap-2">
                                                 {
-                                                    (option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-keep' text={option?.step} />
+                                                    (showSourceContextMenu === option?.source_path && !('progress' in option)) && (
+
+                                                        <div ref={dropdownRef} className={` absolute left-0 top-full z-10 flex flex-col p-1 rounded-md shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
+
+                                                            <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : 'text-textColor-100 hover:bg-slate-800/50'}`}
+                                                                onClick={(event) => handleOpenFilenameUpdateModal(event, option)}>
+                                                                <EditOutlinedIcon
+                                                                    className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
+                                                                />
+                                                                <span>Rename</span>
+                                                            </div>
+
+                                                            <hr className="m-0" />
+
+                                                            <div className={`flex gap-2 py-2 pr-10 pl-1 font-medium text-left ${theme === "light" ? 'hover:bg-textColor-100/15' : ' hover:bg-slate-800/40'} text-red-400`} onClick={(event) => { event.stopPropagation(); deleteResource(event, [option]); }}>
+                                                                <DeleteOutlineOutlinedIcon
+                                                                    className={`cursor-pointer`}
+                                                                />
+                                                                <span>Delete</span>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                {
+                                                    !isProjectReadOnly && (
+                                                        !('progress' in option) ? (
+                                                            (option?.source_path === hoveredSource || showSourceContextMenu === option?.source_path) && (
+                                                                <MoreVertOutlinedIcon className={`${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'} cursor-pointer`} onClick={e => handleOpenSourceContextMenu(e, option?.source_path)} />
+                                                            )
+                                                        ) : (
+                                                            <CircularProgressWithLabel value={option.progress} variant="determinate" isUploadFiled={false} />
+                                                        )
+                                                    )
                                                 }
-                                                <span className={`text-md font-medium break-keep ${theme === 'dark' && 'text-textColor-100'}`} style={{ overflowWrap: 'anywhere' }}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
+                                                {
+                                                    option.file_type === "video" ? (
+                                                        <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                    ) : option.file_type === "pdf" ? (
+                                                        <ArticleOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                    ) : option.file_type === "img" ? (
+                                                        <ImageOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                                    ) : null
+                                                }
+                                                <div className="relative flex-shrink-0 w-12 h-12">
+                                                    {(isDeleting && clickedIndex?.source_path === option?.source_path) && (
+                                                        <div className="thumbnail-loader absolute left-1/2 top-1/2 z-[5] translate-x-[-50%] translate-y-[-50%] transform">
+                                                            <LoadingSpinner isSmall />
+                                                        </div>
+                                                    )}
+                                                    {(option?.thumbnail?.startsWith('blob') && option.file_type === "video") ? (
+                                                        <video
+                                                            src={option.thumbnail}
+                                                            className="object-cover w-full h-full rounded-md"
+                                                            alt="video thumbnail"
+                                                            controls={false}
+                                                        />
+                                                    )
+                                                        : <GsFile
+                                                            className="object-cover w-full h-full rounded-xl"
+                                                            gsUrl={option.thumbnail}
+                                                            alt="Video Thumbnail"
+                                                            isPrivate
+                                                        />}
+                                                </div>
+                                                <div className="flex flex-col ">
+                                                    {
+                                                        (option.step && option.step !== "") && <AnimatedText cssClasses='text-xs break-keep' text={option?.step} />
+                                                    }
+                                                    <span className={`text-md font-medium break-keep ${theme === 'dark' && 'text-textColor-100'}`} style={{ overflowWrap: 'anywhere' }}>{option.source_path.replace(/\.[^/.]+$/, '')}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <Checkbox
-                                                className="p-0 !ml-1"
-                                                checked={option.is_checked}
-                                                onChange={(e) => handleCheckboxChange(e?.target?.checked, option)}
-                                                onClick={(event) => event.stopPropagation()}
-                                                inputProps={{ "aria-label": "Select source" }}
-                                                disabled={'progress' in option}
-                                            />
+                                            <div className="flex items-center">
+                                                <Checkbox
+                                                    className="p-0 !ml-1"
+                                                    checked={option.is_checked}
+                                                    onChange={(e) => handleCheckboxChange(e?.target?.checked, option)}
+                                                    onClick={(event) => event.stopPropagation()}
+                                                    inputProps={{ "aria-label": "Select source" }}
+                                                    disabled={'progress' in option}
+                                                />
 
-                                            {
-                                                !isProjectReadOnly && (
-                                                    <IndeterminateCheckBoxOutlinedIcon
-                                                        className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
-                                                        title="Clear all sources"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleClearSource(option.source_id);
-                                                        }}
-                                                        titleAccess='clear'
-                                                    />
-                                                )
-                                            }
+                                                {
+                                                    !isProjectReadOnly && (
+                                                        <IndeterminateCheckBoxOutlinedIcon
+                                                            className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer`}
+                                                            title="Clear all sources"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleClearSource(option.source_id);
+                                                            }}
+                                                            titleAccess='clear'
+                                                        />
+                                                    )
+                                                }
 
-                                        </div>
-                                    </div>)
-                                }
-                            </div>
-                        }
+                                            </div>
+                                        </div>)
+                                    }
+                                </div>
+                            )}
                         {
 
-                            displayedSources.length > 0
-                                ?
-                                <>
-                                    {/* {sourcesTobeCommited.some(source => source?.metadata?.embeddings_generated === true) && <div className="mx-auto w-fit">
- <CustomButton onClick={() => commitSelectedSources(sourcesTobeCommited.filter(source => source?.metadata?.embeddings_generated))} className="my-1 text-white bg-primary-300">{!chatLoaded ? <div className="flex items-center gap-1"><LoadingSpinner isSmall /><span>Updating...</span></div> : 'Update sources'}</CustomButton>
- </div>} */}
-                                    {/* <div className="mx-auto w-fit">
- <CustomButton onClick={handleSelectAllSources} className="my-0 text-primary-300">Check all sources</CustomButton>
- </div>
- <div className="mx-auto w-fit">
- <CustomButton onClick={handleUnselectAllCheckboxChange} className="my-0 text-primary-300">Uncheck all sources</CustomButton>
- </div> */}
-                                </>
-                                :
-                                <NoData message="No sources selected" classes="mt-4" />
+                            displayedSources.length === 0
+                            &&
+                            <NoData message="No sources selected" classes="mt-4" />
                         }
                         {
                             (results.length === 0 && displayedSources.length > 0) && (

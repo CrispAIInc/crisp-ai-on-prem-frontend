@@ -44,7 +44,7 @@ const KnowledgeGraphsList = () => {
             {
                 (jsonEntities.length > 0 || jsonEntitysResults.length > 0) ? (
                     <>
-                        <BaseHeading text="Your entities" />
+                        <BaseHeading text="My entities" />
                         <input
                             className={`py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full rounded-xl !pl-[10px]`}
                             placeholder={"Search..."}
