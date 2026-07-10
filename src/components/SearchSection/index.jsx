@@ -95,7 +95,7 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
                                 }
                             }} />
 
-                            <RippleButton onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl'>
+                            <RippleButton disabled={isSearching || searchQuestion.trim().length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl'>
                                 {isSearching ? <AnimatedText cssClasses='text-white' text='Searching...' /> : isGlobalSearch ? 'Discover' : 'Search'}
                             </RippleButton>
 
