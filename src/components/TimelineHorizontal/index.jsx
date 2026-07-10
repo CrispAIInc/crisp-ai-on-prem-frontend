@@ -94,7 +94,7 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                 {(selectedChapter !== null && isLightboxOpen) && (
                     <PreviewModal closeLightbox={closeLightbox} content={selectedChapter.keyframe_url ?? selectedChapter.thumbnail_url} classNames="w-full sm:w-2/3 md:w-1/2 lg:w-1/3 h-full" />
                 )}
-                {selectedChapter !== null && <ChapterDetailsModal show={showChapterDetailsModal} onHide={hideChapterDetails} chapter={selectedChapter} workspaceContainer={workspaceContainer} />}
+                {selectedChapter !== null && <ChapterDetailsModal show={showChapterDetailsModal} onHide={hideChapterDetails} chapter={selectedChapter} />}
             </div>
         </div>
     );

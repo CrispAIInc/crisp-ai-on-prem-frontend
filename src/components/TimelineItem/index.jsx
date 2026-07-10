@@ -4,7 +4,7 @@ import PreviewModal from '../PreviewModal';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
-function TimelineItem({ chapter, index, theme, workspaceContainer, handleReadMoreClick }) {
+function TimelineItem({ chapter, index, theme, handleReadMoreClick }) {
 
     const thumbnail = import.meta.env.VITE_API_ENDPOINT + (chapter.keyframe_url ?? chapter.thumbnail_url);
     const { setJumpToPage,

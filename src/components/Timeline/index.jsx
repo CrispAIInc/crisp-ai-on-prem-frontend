@@ -47,10 +47,10 @@ function Timeline({ theme, chapters, workspaceContainer }) {
                             setSelectedChapter(chapter);
                             setShowChapterDetailsModal(true);
                         };
-                        return <TimelineItem key={chapter.id} chapter={chapter} index={index} theme={theme} workspaceContainer={workspaceContainer} handleReadMoreClick={handleReadMoreClick} />;
+                        return <TimelineItem key={chapter.id} chapter={chapter} index={index} theme={theme} handleReadMoreClick={handleReadMoreClick} />;
                     })
                 }
-                {selectedChapter !== null && <ChapterDetailsModal show={showChapterDetailsModal} onHide={hideChapterDetails} chapter={selectedChapter} workspaceContainer={workspaceContainer} />}
+                {selectedChapter !== null && <ChapterDetailsModal show={showChapterDetailsModal} onHide={hideChapterDetails} chapter={selectedChapter} />}
             </div>
         </div>
     );

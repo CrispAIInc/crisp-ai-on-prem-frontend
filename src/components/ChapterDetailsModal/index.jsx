@@ -6,9 +6,9 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import useFirebase from '../../hooks/useFirebase.js';
 import GsFile from '../GsFile/index.jsx';
 
-export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer }) {
+export function ChapterDetailsModal({ show, onHide, chapter }) {
 
-    const { theme, setCurrentResource, setJumpToPage, contentPanelContainerRef } = useContext(MainContext);
+    const { theme, setCurrentResource, setJumpToPage, workspaceContainer } = useContext(MainContext);
 
     // const { getPublicUrl } = useFirebase();
 
@@ -59,7 +59,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
 
                                 setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
                                 onHide();
-                                contentPanelContainerRef.current.scrollTo({
+                                workspaceContainer.current.scrollTo({
                                     top: 0,
                                     behavior: "smooth", // Enables smooth scrolling
                                 });
@@ -69,7 +69,7 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
 
                                 setJumpToPage({ page: parseInt(chapter.page) });
                                 onHide();
-                                contentPanelContainerRef.current.scrollTo({
+                                workspaceContainer.current.scrollTo({
                                     top: 0,
                                     behavior: "smooth", // Enables smooth scrolling
                                 });
