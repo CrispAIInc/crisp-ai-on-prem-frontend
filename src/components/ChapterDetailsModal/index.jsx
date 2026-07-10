@@ -36,7 +36,10 @@ export function ChapterDetailsModal({ show, onHide, chapter, workspaceContainer 
             <div className="w-56 h-56 bg-yellow-300 rounded-full absolute left-3/4 top-80 -z-0 blur-[160px]"></div>
             <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Chapter details
+                    <div className="flex items-center gap-2">
+                        <MenuBookIcon fontSize="medium" className="text-primary-300" />
+                        <span className="font-semibold">Chapter details</span>
+                    </div>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
