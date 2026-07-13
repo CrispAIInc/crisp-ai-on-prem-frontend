@@ -181,7 +181,7 @@ function SourceExplorerBody({
                                 filteredSources.length > 0 ? (
                                     <div className="relative overflow-hidden flex flex-col">
                                         {/* Top fade */}
-                                        <div className={`pointer-events-none absolute top-0 left-0 right-1 h-6 bg-gradient-to-b ${theme === "light" ? "from-[#F9F1FD]" : "from-[#333333]"} to-transparent z-10 `} />
+                                        <div className={`pointer-events-none absolute top-0 left-0 right-1 h-6 bg-gradient-to-b ${theme === "light" ? "from-background_workspace" : "from-[#333333]"} to-transparent z-10 `} />
 
                                         <div className={`flex-1 grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2 py-3 [&::-webkit-scrollbar]:w-1
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-600 [&::-webkit-scrollbar-thumb]:bg-neutral-800 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-900'}`}>
@@ -198,7 +198,7 @@ function SourceExplorerBody({
                                         </div>
 
                                         {/* Bottom fade */}
-                                        <div className={`pointer-events-none absolute bottom-0 left-0 right-1 h-6 bg-gradient-to-t ${theme === "light" ? "from-[#F9F1FD]" : "from-[#333333]"} to-transparent z-10`} />
+                                        <div className={`pointer-events-none absolute bottom-0 left-0 right-1 h-6 bg-gradient-to-t ${theme === "light" ? "from-background_workspace" : "from-[#333333]"} to-transparent z-10`} />
                                     </div>
                                 ) : (
                                     <BaseHeading text="No sources found" className={`text-sm italic`} />

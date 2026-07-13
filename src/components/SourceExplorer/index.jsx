@@ -461,7 +461,7 @@ export function SourceExplorer(props) {
                             className={`inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
                         >
                             <UploadIcon className={`text-[10px] ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`} />
-                            <span className="text-sm">Upload new source</span>
+                            <span className="text-sm">New source</span>
                         </button>
                     )}
                 </div>
