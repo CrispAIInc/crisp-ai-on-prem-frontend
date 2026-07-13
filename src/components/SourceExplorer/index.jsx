@@ -443,8 +443,8 @@ export function SourceExplorer(props) {
             centered
             className="relative"
         >
-            <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-10 z-10 blur-[180px]"></div>
-            <div className="w-56 h-56 bg-purple-400 rounded-full absolute left-0 top-80 z-10 blur-[180px]"></div>
+            {/* <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-10 z-10 blur-[180px]"></div>
+            <div className="w-56 h-56 bg-purple-400 rounded-full absolute left-0 top-80 z-10 blur-[180px]"></div> */}
 
             <Modal.Header
                 className={`${theme === "dark" && "bg-textColor-300 text-textColor-100 !border-b-textColor-200"} z-20`}
