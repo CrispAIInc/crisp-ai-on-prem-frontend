@@ -214,7 +214,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                                         transition`}
                 >
                     {/* Avatar */}
-                    <div className="flex items-center justify-center text-sm font-semibold text-white rounded-full w-7 h-7 bg-gradient-to-br from-indigo-500 to-cyan-400">
+                    <div className={`flex items-center justify-center text-sm font-semibold text-white rounded-full w-7 h-7 ${theme === "light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"}`}>
                         {user?.firstName[0]?.toUpperCase()}{user?.lastName[0]?.toUpperCase()}
                     </div>
 

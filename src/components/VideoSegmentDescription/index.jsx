@@ -68,9 +68,9 @@ const VideoSegmentDescription = ({
                         },
                     ].map(({ icon: Icon, title }, index) => {
                         return (
-                            <div className={`relative cursor-pointer flex items-center gap-1 pb-1 w-fit ${title === currentSegmentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentSegmentTab(title)}>
+                            <div className={`relative cursor-pointer flex items-center gap-1 pb-1 w-fit ${title === currentSegmentTab ? ' !text-purple-500' : ''}`} key={title} onClick={() => setCurrentSegmentTab(title)}>
                                 <Icon className={`${title !== currentSegmentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
-                                <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentSegmentTab ? ' !text-primary-300' : ''}`} />
+                                <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentSegmentTab ? ' !text-gradient-x' : ''}`} />
                                 {
                                     title === "Time segment description" && (
                                         <>

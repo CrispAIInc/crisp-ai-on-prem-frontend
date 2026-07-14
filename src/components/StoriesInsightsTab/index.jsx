@@ -61,9 +61,9 @@ function StoriesInsightsTab({
                 {
                     tabs.map(({ icon: Icon, title }, index) => {
                         return (
-                            <div className={`relative cursor-pointer flex items-center gap-1 pb-1 w-fit ${title === currentTab ? ' !text-primary-300' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
+                            <div className={`relative cursor-pointer flex items-center gap-1 pb-1 w-fit ${title === currentTab ? ' !text-purple-500' : ''}`} key={title} onClick={() => setCurrentTab(title)}>
                                 <Icon className={`${title !== currentTab && (theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]')}`} />
-                                <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-primary-300' : ''}`} />
+                                <BaseHeading key={index} text={title} className={` font-extrabold !text-[12px] ${title === currentTab ? ' !text-gradient-x' : ''}`} />
                             </div>
                         );
                     })
