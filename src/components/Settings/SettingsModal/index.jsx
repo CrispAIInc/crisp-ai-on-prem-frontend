@@ -33,13 +33,12 @@ export function SettingsModal(props) {
             onHide={props.onHide}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
-            scrollable={true}
             centered
             className="note-modal rounded-3xl"
-            dialogClassName="custom-rounded"
+            dialogClassName="settings-modal-dialog custom-rounded"
         >
 
-            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'} pb-5`}>
+            <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'} settings-modal-body pb-5 flex flex-col`}>
                 <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-3 text-xl">
                         {
@@ -58,7 +57,7 @@ export function SettingsModal(props) {
                         <CloseIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                     </div>
                 </div>
-                <div className="mt-4 text-gray-700">{renderActiveSettingsTab()}</div>
+                <div className="settings-modal-scroll mt-4 text-gray-700 overflow-y-auto flex-1 min-h-0">{renderActiveSettingsTab()}</div>
             </Modal.Body>
         </Modal>
     );
