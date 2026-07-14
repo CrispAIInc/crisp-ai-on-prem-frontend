@@ -1,9 +1,12 @@
+import { useContext, useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import axios from "axios";
 import { EventSourcePolyfill } from 'event-source-polyfill';
-import { useContext, useEffect, useRef, useState } from "react";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext";
 import { decimalSecondsToHHMMSS, formatTime, generateRandomHash, timeToSeconds, toBase64, toSeconds } from '../../utils';
@@ -41,9 +44,9 @@ const ChatMessage = ({ text, refs, timestamps }) => {
           {timestamps[0]} → {timestamps[1]}
         </div>
       )}
-      <div className="coorg-response break-keep">
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>
         {text}
-      </div>
+      </ReactMarkdown>
       <div>
         {(refs?.videoLinks?.length > 0 ||
           refs?.keyframeLinks?.length > 0 ||
@@ -386,7 +389,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             } else if (data.type === "MESSAGE") {
               setShowCursor(false);
               const newToken = data.text;
-              botMessage += " " + newToken;
+              botMessage += newToken;
               setMessages((prevMessages) => {
                 const newMessages = [...prevMessages];
                 if (newMessages.length > 0) {
