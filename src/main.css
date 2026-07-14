@@ -277,7 +277,7 @@ input {
   overflow: hidden;
 }
 
-.settings-modal-scroll {
+/* .settings-modal-scroll {
   overflow-y: auto;
   scrollbar-width: thin;
   -webkit-overflow-scrolling: touch;
@@ -290,7 +290,7 @@ input {
 .settings-modal-scroll::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.5);
   border-radius: 9999px;
-}
+} */
 
 @keyframes slide-down {
   from {

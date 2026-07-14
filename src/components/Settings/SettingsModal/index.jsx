@@ -57,7 +57,8 @@ export function SettingsModal(props) {
                         <CloseIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                     </div>
                 </div>
-                <div className="settings-modal-scroll mt-4 text-gray-700 overflow-y-auto flex-1 min-h-0">{renderActiveSettingsTab()}</div>
+                <div className={`settings-modal-scroll mt-4 text-gray-700 overflow-y-auto flex-1 min-h-0 [&::-webkit-scrollbar]:w-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-600 [&::-webkit-scrollbar-thumb]:bg-neutral-800 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-900'}`}>{renderActiveSettingsTab()}</div>
             </Modal.Body>
         </Modal>
     );
