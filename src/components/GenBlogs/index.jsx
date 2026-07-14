@@ -116,6 +116,7 @@ function GenBlogs({
                     onChange={(e) => setIsFullSourceDurationBlog(e.target.checked)}
                     inputProps={{ "aria-label": "Select All Sources" }}
                     label="Include full source"
+                    className={`${theme === "dark" && "border-textColor-100 !text-textColor-100"}`}
                 />
 
                 <BaseHeading
