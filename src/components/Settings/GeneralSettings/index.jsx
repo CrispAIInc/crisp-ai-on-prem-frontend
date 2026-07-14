@@ -38,7 +38,7 @@ function GeneralSettings({ hideTheme = false }) {
                 type="text"
                 value={value}
                 onChange={onChange}
-                className={`w-full max-w-[240px] h-9 px-3 placeholder-transparent bg-transparent focus:outline-none focus:border-blue-500 rounded-full ${theme === "light"
+                className={`w-full max-w-[240px] h-9 px-3 placeholder-transparent bg-transparent focus:outline-none focus:border-blue-500 rounded-xl ${theme === "light"
                     ? "text-textColor-300 !border !border-textColor-100/60"
                     : "text-textColor-100 !border !border-textColor-200/20"
                     } disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed`}
