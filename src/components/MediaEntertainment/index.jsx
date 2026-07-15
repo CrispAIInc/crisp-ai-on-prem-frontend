@@ -314,7 +314,7 @@ function MediaEntertainment({
                     (reels?.length === 0 || reelsResults?.length === 0) ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                         :
                         <div className={`overflow-y-auto h-full [&::-webkit-scrollbar]:h-1
-        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-600 [&::-webkit-scrollbar-thumb]:bg-neutral-800 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-900'}`}>
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
                             {reelsResults?.map((reel, index) => (
                                 <div key={reel.id} className={`flex items-center gap-2 ${theme === 'light'
                                     ? 'hover:bg-textColor-100/25'
@@ -323,7 +323,7 @@ function MediaEntertainment({
 
                                     {
                                         !isProjectReadOnly && (
-                                            <ActionMenu
+                                            hoveredReel === reel.id && (<ActionMenu
                                                 actions={[
                                                     {
                                                         label: "Edit title",
@@ -339,7 +339,7 @@ function MediaEntertainment({
                                                         onClick: () => deleteReel(reel.id),
                                                     },
                                                 ]}
-                                            />
+                                            />)
                                         )
                                     }
 

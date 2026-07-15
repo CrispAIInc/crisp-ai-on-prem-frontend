@@ -97,7 +97,7 @@ function GenStories({
     const handleMouseLeave = () => setTooltipVisible(false);
 
     return (
-        <div className="relative z-10 flex flex-col h-full gap-1">
+        <div className="relative z-10 flex flex-col h-full gap-1 overflow-y-hidden">
             {/* context */}
             <div className="relative w-full">
                 <textarea
@@ -141,9 +141,9 @@ function GenStories({
 
             {/* list of insights and stories */}
             <div className='relative z-10 flex flex-col flex-1 h-full overflow-hidden'>
-                <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto">
-                    <StoriesList setShowStoriesEditor={setShowStoriesEditor} />
-                </div>
+                {/* <div className="flex-1 h-full overflow-hidden"> */}
+                <StoriesList setShowStoriesEditor={setShowStoriesEditor} />
+                {/* </div> */}
             </div>
         </div>
     );

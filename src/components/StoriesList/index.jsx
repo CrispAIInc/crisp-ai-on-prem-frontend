@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
-import DeleteIcon from "@mui/icons-material/Delete";
+import ActionMenu from '../ActionMenu';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import BaseHeading from '../BaseHeading';
 import LoadingSpinner from '../LoadingSpinner';
 import { MainContext } from '../../contexts/mainContext';
@@ -106,7 +107,7 @@ function StoriesList({ setShowStoriesEditor }) {
     }, [JSON.stringify(stories)]);
 
     return (
-        <div className="flex flex-col overflow-y-auto">
+        <div className="flex flex-col h-full overflow-hidden">
             <BaseHeading text="My stories" className={`mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
             {(stories?.length > 0 || storiesResults?.length > 0) && (
                 <input
@@ -118,26 +119,32 @@ function StoriesList({ setShowStoriesEditor }) {
             {
                 (storiesResults?.length === 0 || stories?.length === 0) ? <BaseHeading text="No stories found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                     :
-                    storiesResults?.map((story, index) => (
-                        <div key={story.story_id} className={`flex items-center gap-2 ${theme === 'light'
-                            ? 'hover:bg-textColor-100/25'
-                            : 'hover:bg-light-hover-200/10'
-                            } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
-                            {
-                                !isProjectReadOnly && (
-                                    hoveredStory === story?.story_id && (
-                                        isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon
-                                            onClick={(event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }}
-                                            className="text-red-400 cursor-pointer"
-                                        />
+                    <div className={`flex-1 h-full overflow-y-auto [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
+                        {storiesResults?.map((story, index) => (
+                            <div key={story.story_id} className={`flex items-center gap-2 ${theme === 'light'
+                                ? 'hover:bg-textColor-100/25'
+                                : 'hover:bg-light-hover-200/10'
+                                } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
+                                {
+                                    !isProjectReadOnly && (
+                                        hoveredStory === story?.story_id && (<ActionMenu
+                                            actions={[
+                                                {
+                                                    label: "Delete",
+                                                    icon: isStoryDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
+                                                    onClick: (event) => { event.stopPropagation(); deleteStory(event, story?.story_id); }
+                                                },
+                                            ]}
+                                        />)
                                     )
-                                )
-                            }
-                            <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                            <p className={` flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
-                                }`}>{story.story_name}</p>
-                        </div>
-                    ))}
+                                }
+                                <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                                <p className={` flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                                    }`}>{story.story_name}</p>
+                            </div>
+                        ))}
+                    </div>}
         </div>
     );
 }

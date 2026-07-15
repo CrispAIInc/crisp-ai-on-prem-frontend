@@ -110,7 +110,7 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
 
                                 {
                                     !isProjectReadOnly && (
-                                        <ActionMenu
+                                        hoveredSegment === item.id && (<ActionMenu
                                             actions={[
                                                 {
                                                     label: "Edit title",
@@ -127,7 +127,7 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
                                                     onClick: () => deleteSegment(item.id),
                                                 },
                                             ]}
-                                        />
+                                        />)
                                     )
                                 }
 
