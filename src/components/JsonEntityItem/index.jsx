@@ -18,8 +18,17 @@ const JsonEntityItem = ({ jsonEntity, onClick }) => {
 
     const { notify } = useToast();
 
+    const [showModal, setShowModal] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleMouseEnter = () => {
+        setShowModal(true);
+    };
+
+    const handleMouseLeave = () => {
+        setShowModal(false);
+    };
 
     const handleDelete = async () => {
         setIsDeleting(true);
@@ -49,24 +58,25 @@ const JsonEntityItem = ({ jsonEntity, onClick }) => {
 
     return (
         <>
-            <div key={jsonEntity.id} className={`flex py-2 items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10'} transition-colors`}>
-                <ActionMenu
-                    actions={[
-                        {
-                            label: "Edit title",
-                            icon: <EditOutlinedIcon />,
-                            onClick: (e) => {
-                                e.stopPropagation();
-                                setIsModalOpen(true);
+            <div key={jsonEntity.id} className={`flex py-2 items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10'} ${!showModal && 'pl-2'} transition-colors`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                {showModal && (
+                    <ActionMenu
+                        actions={[
+                            {
+                                label: "Edit title",
+                                icon: <EditOutlinedIcon />,
+                                onClick: (e) => {
+                                    e.stopPropagation();
+                                    setIsModalOpen(true);
+                                },
                             },
-                        },
-                        {
-                            label: "Delete",
-                            icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
-                            onClick: () => handleDelete(),
-                        },
-                    ]}
-                />
+                            {
+                                label: "Delete",
+                                icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
+                                onClick: () => handleDelete(),
+                            },
+                        ]}
+                    />)}
                 <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(jsonEntity)}>{jsonEntity.title}</p>
             </div>
 
