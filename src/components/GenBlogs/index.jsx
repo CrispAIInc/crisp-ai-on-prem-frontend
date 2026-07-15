@@ -154,7 +154,7 @@ function GenBlogs({
                     </>
                 )}
 
-            <div className={`flex-1 flex flex-col overflow-y-scroll gap-2 px-1 rounded-lg ${theme === "light" ? "!border !border-textColor-100/60" : "!border !border-textColor-200/20"}`}>
+            <div className={`flex-1 flex flex-col overflow-y-hidden gap-2 px-1 rounded-lg ${theme === "light" ? "!border !border-textColor-100/60" : "!border !border-textColor-200/20"}`}>
                 <BlogsList />
             </div>
         </div>
