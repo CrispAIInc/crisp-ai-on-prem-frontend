@@ -51,7 +51,8 @@ const BlogsList = () => {
                             value={searchValue}
                             onChange={handleBlogsSearch}
                         />
-                        <div className="overflow-y-auto h-full">
+                        <div className={`overflow-y-auto h-full [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-600 [&::-webkit-scrollbar-thumb]:bg-neutral-800 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-900'}`}>
                             {
                                 blogsResults.map((blog) => (
                                     <BlogItem key={blog.blog_id} blog={blog} onClick={() => handleBlogClick(blog)} />

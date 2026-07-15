@@ -89,7 +89,8 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
 
     return (
         <>
-            <div className="flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
+            <div className={`flex flex-col gap-2 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-600 [&::-webkit-scrollbar-thumb]:bg-neutral-800 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-900'}`}>
                 <BaseHeading text="Saved segment responses" />
                 <div className='flex flex-col gap-1'>
                     {

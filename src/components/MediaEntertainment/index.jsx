@@ -16,6 +16,8 @@ import { searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils.j
 import FilenameUpdateModal from "../AppSingleValueModal";
 import useFirebase from '../../hooks/useFirebase.js';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
+import AnimatedText from '../AnimatedText/index.jsx';
+import ActionMenu from '../ActionMenu/index.jsx';
 
 // const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 function MediaEntertainment({
@@ -311,33 +313,39 @@ function MediaEntertainment({
 
                     (reels?.length === 0 || reelsResults?.length === 0) ? <BaseHeading text="No reels found" className={`text-center mt-4 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                         :
-                        <div className="overflow-y-auto h-full">
+                        <div className={`overflow-y-auto h-full [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-600 [&::-webkit-scrollbar-thumb]:bg-neutral-800 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-900'}`}>
                             {reelsResults?.map((reel, index) => (
                                 <div key={reel.id} className={`flex items-center gap-2 ${theme === 'light'
                                     ? 'hover:bg-textColor-100/25'
                                     : 'hover:bg-light-hover-200/10'
                                     } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterReel(reel.id)} onMouseLeave={handleMouseLeaveReel} onClick={(event) => showSelectedReel(event, reel, index)}>
 
+                                    {
+                                        !isProjectReadOnly && (
+                                            <ActionMenu
+                                                actions={[
+                                                    {
+                                                        label: "Edit title",
+                                                        icon: <EditOutlinedIcon />,
+                                                        onClick: (e) => {
+                                                            e.stopPropagation();
+                                                            handleOpenFilenameUpdateModal(e, reel);
+                                                        },
+                                                    },
+                                                    {
+                                                        label: isReelDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
+                                                        icon: isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon />,
+                                                        onClick: () => deleteReel(reel.id),
+                                                    },
+                                                ]}
+                                            />
+                                        )
+                                    }
+
                                     <GsFile className="!w-8 !h-8 !rounded-md" gsUrl={reel?.thumbnail} alt={reel?.title} />
                                     <p className={`flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                                         }`}>{reel.title}</p>
-
-                                    {
-                                        !isProjectReadOnly && (
-                                            hoveredReel === reel?.id && (
-                                                <>
-                                                    <EditOutlinedIcon
-                                                        className={`cursor-pointer ${theme === 'light' ? 'text-[#333]' : 'text-[#ABAEB4]'}`}
-                                                        onClick={(event) => { event.stopPropagation(); handleOpenFilenameUpdateModal(event, reel); }}
-                                                    />
-                                                    {isReelDeleting ? <LoadingSpinner isSmall isDeleting /> : <DeleteIcon
-                                                        onClick={(event) => { event.stopPropagation(); deleteReel(event, reel); }}
-                                                        className="text-red-400 cursor-pointer"
-                                                    />}
-                                                </>
-                                            )
-                                        )
-                                    }
                                 </div>
                             ))}
                         </div>
