@@ -1,9 +1,8 @@
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import "react-quill/dist/quill.snow.css";
 import { MainContext } from '../../contexts/mainContext.jsx';
-import { ProjectContext } from '../../contexts/projectContext.jsx';
 import BaseHeading from '../BaseHeading/index.jsx';
 
 import GenBlogs from '../GenBlogs/index.jsx';
@@ -31,12 +30,10 @@ function StoriesInsightsTab({
 }) {
 
     const {
-        selectedStory,
-        setSelectedStory,
-        displayedSources, theme,
+        theme,
     } = useContext(MainContext);
 
-    const [tabs, setTabs] = useState([
+    const tabs = [
         {
             icon: AutoStoriesOutlinedIcon,
             title: "Stories"
@@ -45,7 +42,7 @@ function StoriesInsightsTab({
             icon: ArticleOutlinedIcon,
             title: "Blogs"
         }
-    ]); // Stories | Blogs
+    ];
 
     // ==================== blog feature =====================
 

@@ -5,7 +5,7 @@ import { MainContext } from '../../contexts/mainContext';
 
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import JsonEntityTitleUpdaterModal from '../JsonEntityTitleUpdaterModal';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
 import BlogTitleUpdaterModal from '../BlogTitleUpdaterModal';
@@ -79,6 +79,7 @@ const BlogItem = ({ blog, onClick }) => {
                         ]}
                     />
                 )}
+                <ArticleOutlinedIcon className={`mr-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
                 <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(blog)}>{blog.title}</p>
             </div>
 

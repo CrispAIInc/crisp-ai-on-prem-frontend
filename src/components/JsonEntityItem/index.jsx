@@ -3,6 +3,7 @@ import ActionMenu from '../ActionMenu';
 import LoadingSpinner from '../LoadingSpinner';
 import { MainContext } from '../../contexts/mainContext';
 
+import DataObjectIcon from '@mui/icons-material/DataObject';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import JsonEntityTitleUpdaterModal from '../JsonEntityTitleUpdaterModal';
@@ -77,6 +78,7 @@ const JsonEntityItem = ({ jsonEntity, onClick }) => {
                             },
                         ]}
                     />)}
+                <DataObjectIcon className={`mr-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
                 <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(jsonEntity)}>{jsonEntity.title}</p>
             </div>
 

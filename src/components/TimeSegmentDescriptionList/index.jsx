@@ -129,7 +129,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
                                 }
 
                                 <div className="overflow-x-hidden">
-                                    <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema?.talking_head?.length > 0 ? `${segment.response_format.schema?.talking_head?.length} ${segment.response_format.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs" />
+                                    <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema?.talking_head?.length > 0 ? `${segment.response_format.schema?.talking_head?.length} ${segment.response_format.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs !font-bold !italic" />
 
                                     <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} cursor-pointer w-full truncate`} key={segment.id}>{segment?.title}</p>
                                 </div>

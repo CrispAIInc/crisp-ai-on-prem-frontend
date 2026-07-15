@@ -139,7 +139,7 @@ function StoriesList({ setShowStoriesEditor }) {
                                         />)
                                     )
                                 }
-                                <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                                <AutoStoriesOutlinedIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
                                 <p className={` flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
                                     }`}>{story.story_name}</p>
                             </div>
