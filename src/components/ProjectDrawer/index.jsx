@@ -209,8 +209,8 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                     onClick={handleToggleSettingsMenu}
                     className={`flex items-center gap-2
                                         px-3 py-1.5
-                                        rounded-full
-                                        ${theme === 'light' ? 'bg-gray-100/70 hover:bg-gray-200/70' : 'bg-gray-800/70 hover:bg-gray-700/70 '}
+                                        rounded-xl
+                                        ${theme === 'light' ? 'bg-gray-100/70 hover:bg-gray-200/70' : 'bg-gray-800/40 hover:bg-gray-700/50 '}
                                         transition`}
                 >
                     {/* Avatar */}
