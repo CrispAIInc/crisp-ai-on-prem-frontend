@@ -21,6 +21,15 @@ const BlogItem = ({ blog, onClick }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [showActionMenu, setShowActionMenu] = useState(false);
+
+    const handleMouseEnterBlog = () => {
+        setShowActionMenu(true);
+    };
+
+    const handleMouseLeaveBlog = () => {
+        setShowActionMenu(false);
+    };
 
     const handleDelete = async () => {
         setIsDeleting(true);
@@ -50,24 +59,26 @@ const BlogItem = ({ blog, onClick }) => {
 
     return (
         <>
-            <div key={blog.blog_id} className={`flex py-2 items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10'} transition-colors`}>
-                <ActionMenu
-                    actions={[
-                        {
-                            label: "Edit title",
-                            icon: <EditOutlinedIcon />,
-                            onClick: (e) => {
-                                e.stopPropagation();
-                                setIsModalOpen(true);
+            <div key={blog.blog_id} className={`flex py-2 items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10'} ${!showActionMenu && 'pl-2'} transition-colors`} onMouseEnter={handleMouseEnterBlog} onMouseLeave={handleMouseLeaveBlog}>
+                {showActionMenu && (
+                    <ActionMenu
+                        actions={[
+                            {
+                                label: "Edit title",
+                                icon: <EditOutlinedIcon />,
+                                onClick: (e) => {
+                                    e.stopPropagation();
+                                    setIsModalOpen(true);
+                                },
                             },
-                        },
-                        {
-                            label: "Delete",
-                            icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
-                            onClick: () => handleDelete(),
-                        },
-                    ]}
-                />
+                            {
+                                label: "Delete",
+                                icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
+                                onClick: () => handleDelete(),
+                            },
+                        ]}
+                    />
+                )}
                 <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(blog)}>{blog.title}</p>
             </div>
 
