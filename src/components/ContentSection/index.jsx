@@ -1236,7 +1236,7 @@ const ContentSection = ({
                             </div>
                             {
                                 isSearching && (
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center mt-2 gap-2">
                                         <SearchSection chatLoaded={chatLoaded} className='flex-1' />
                                     </div>
                                 )

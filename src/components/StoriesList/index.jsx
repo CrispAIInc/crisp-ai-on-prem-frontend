@@ -123,9 +123,6 @@ function StoriesList({ setShowStoriesEditor }) {
                             ? 'hover:bg-textColor-100/25'
                             : 'hover:bg-light-hover-200/10'
                             } cursor-pointer p-2 rounded-md select-none`} onMouseEnter={() => handleMouseEnterStory(story.story_id)} onMouseLeave={handleMouseLeaveStory} onClick={(event) => showSelectedStory(event, story, index)}>
-                            <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
-                            <p className={` flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
-                                }`}>{story.story_name}</p>
                             {
                                 !isProjectReadOnly && (
                                     hoveredStory === story?.story_id && (
@@ -136,6 +133,9 @@ function StoriesList({ setShowStoriesEditor }) {
                                     )
                                 )
                             }
+                            <AutoStoriesOutlinedIcon style={{ color: theme === 'light' ? '#333' : '#5293FD' }} />
+                            <p className={` flex-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"
+                                }`}>{story.story_name}</p>
                         </div>
                     ))}
         </div>
