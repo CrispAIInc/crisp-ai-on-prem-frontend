@@ -45,7 +45,7 @@ const JsonEntityModal = ({ show, onHide }) => {
             centered
             className="graph-modal p-0 flex-1"
         >
-            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
+            <Modal.Header className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                 <Modal.Title id="contained-modal-title-vcenter" className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-1">
                         <DataObjectIcon className={`${theme === 'dark' && 'text-textColor-200'}`} fontSize="large" />
