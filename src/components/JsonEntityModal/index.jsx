@@ -67,7 +67,7 @@ const JsonEntityModal = ({ show, onHide }) => {
                 <div className="flex flex-col h-[60vh]">
 
                     {/* Scrollable JSON Container */}
-                    <div className="flex-1 overflow-y-auto p-6">
+                    <div className={`flex-1 overflow-y-auto p-6 *:[&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700]'}`}>
                         <div className={`${theme === "light" ? 'bg-[#f5f5f5]' : 'bg-[#222]'} rounded-lg min-h-full`}>
                             <JsonViewer />
                         </div>
