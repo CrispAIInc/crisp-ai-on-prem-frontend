@@ -18,6 +18,7 @@ import HorizontalCard from '../HorizontalCard/index.jsx';
 import SearchSection from '../SearchSection';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
+import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth }) => {
@@ -300,7 +301,18 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
       {currentResource?.file_type === "video" && (
         <>
           <div className="relative ">
-            <div className={`relative aspect-video w-full overflow-hidden rounded-md shadow-sm ${theme === 'light' ? '!border' : '!border !border-textColor-300'} `}>
+            <CustomVideoPlayer
+              sourcePublicUrl={sourcePublicUrl}
+              resourceURL={resourceURL}
+              video_autoplay={video_autoplay}
+              video_loop={video_loop}
+              title={currentResource?.source_path}
+              chapters={translatedResource?.chapters?.content || []}
+              onReady={() => setIsPlayerReady(true)}
+              onDuration={() => setHasDuration(true)}
+              playerRef={player}
+            />
+            {/* <div className={`relative aspect-video w-full overflow-hidden rounded-md shadow-sm ${theme === 'light' ? '!border' : '!border !border-textColor-300'} `}>
               <ReactPlayer
                 id="react-player"
                 className="absolute top-0 left-0"
@@ -313,33 +325,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                 onDuration={() => setHasDuration(true)}
                 ref={player}
                 controls
-
-              // Thumbnail image
-              // light={!isVideoPlaying && thumbnailPublicUrl}
-              // onClickPreview={() => {
-              //   if (!isVideoPlaying) {
-              //     setIsVideoPlaying(true);
-              //   }
-
-              // }}
-
-              // Custom center play button
-              // playIcon={!isVideoPlaying &&
-              //   <button
-              //     className="w-20 h-20 rounded-full bg-black/70 flex items-center justify-center hover:scale-110 transition"
-              //   >
-              //     <svg
-              //       xmlns="http://www.w3.org/2000/svg"
-              //       fill="white"
-              //       viewBox="0 0 24 24"
-              //       className="w-10 h-10 ml-1"
-              //     >
-              //       <path d="M8 5v14l11-7z" />
-              //     </svg>
-              //   </button>
-              // }
               />
-            </div>
+            </div> */}
             {/* video summary */}
             {!isTranslationLoading ? (
               <div
