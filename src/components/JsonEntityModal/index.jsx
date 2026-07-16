@@ -45,7 +45,7 @@ const JsonEntityModal = ({ show, onHide }) => {
             centered
             className="graph-modal p-0 flex-1"
         >
-            <Modal.Header className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
+            <Modal.Header className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200/20'}`}>
                 <Modal.Title id="contained-modal-title-vcenter" className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-1">
                         <DataObjectIcon className={`${theme === 'dark' && 'text-textColor-200'}`} fontSize="large" />
@@ -76,7 +76,7 @@ const JsonEntityModal = ({ show, onHide }) => {
                 </div>
             </Modal.Body>
 
-            <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+            <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200/20"}`}>
                 <div
                     className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={onHide}

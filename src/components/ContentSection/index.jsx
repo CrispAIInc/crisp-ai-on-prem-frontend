@@ -2,6 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 // import AppTooltip from "../AppTooltip";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
@@ -1214,7 +1215,7 @@ const ContentSection = ({
                                 className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/20'}`}
                                 onClick={handleExploreSources}
                             >
-                                <FolderOpenIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                <PermMediaOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                 <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
 
                                 <Tooltip id="source-explorer-tooltip" />

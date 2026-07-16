@@ -53,7 +53,7 @@ export default function AddSourceModal(props) {
             centered
             className="!rounded-xl note-modal"
         >
-            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
+            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200/20'}`}>
                 <Modal.Title id="contained-modal-title-vcenter">
                     <BaseHeading text="Add content" className="text-xl" />
                     <p className="text-slate-400 text-sm mt-0.5">Choose how you&apos;d like to add data.</p>

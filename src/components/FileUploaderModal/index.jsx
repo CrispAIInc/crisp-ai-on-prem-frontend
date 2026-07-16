@@ -67,7 +67,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                     isVideoIncluded && (
                         <div className="flex flex-col gap-2 h-[55vh] overflow-hidden rounded-lg">
                             {/* Header */}
-                            <div className="px-3 py-2 border-b border-slate-200 dark:border-textColor-200/30">
+                            <div className="px-3 py-2 border-b border-slate-200 dark:border-textColor-200/20">
                                 <div className="flex items-center gap-2">
                                     <span className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} text-sm font-semibold tracking-wide uppercase`}>
                                         Video processing settings
@@ -131,7 +131,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                         </div>
                     )}
             </Modal.Body>
-            <Modal.Footer className={`flex items-center gap-2 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+            <Modal.Footer className={`flex items-center gap-2 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200/20"}`}>
                 <div
                     className={`flex items-center justify-center gap-2  rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={onHide}

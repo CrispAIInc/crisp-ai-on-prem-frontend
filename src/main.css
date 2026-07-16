@@ -85,7 +85,7 @@
 .dark .jodit-wysiwyg,
 .dark .jodit-source,
 .dark .jodit-scroll {
-  background: #111 !important;
+  background: rgba(17, 17, 17, 0.3) !important;
   color: #d1d5db !important;
   border-color: rgba(148, 163, 184, 0.18) !important;
 }

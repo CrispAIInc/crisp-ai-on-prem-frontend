@@ -70,7 +70,7 @@ export function IndexModal({ show, onHide, handleUpload }) {
             dialogClassName='text-left'
         >
 
-            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
+            <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200/20'}`}>
                 <Modal.Title id="contained-modal-title-vcenter">
                     <BaseHeading text="Create New Index" className="text-xl" />
                     <p className="text-slate-400 text-sm mt-0.5">Create a new index to organize your uploaded sources.</p>
@@ -90,14 +90,14 @@ export function IndexModal({ show, onHide, handleUpload }) {
                         ref={(input) => input && input.focus()}
                         value={indexName}
                         onChange={(e) => setIndexName(e.target.value)}
-                        className={`block w-full p-2 mt-1  rounded-md outline-none ${theme === 'dark' ? 'bg-textColor-300 !border !border-textColor-200' : '!border !border-slate-300/80'}`}
+                        className={`block w-full p-2 mt-1  rounded-md outline-none ${theme === 'dark' ? 'bg-textColor-300 !border !border-textColor-200/20' : '!border !border-slate-300/80'}`}
                         required
                         onKeyDown={(e) => e.key === 'Enter' && createIndex()}
                     />
                     {isUploadModalOpen && <FileUploaderModal handleUpload={handleUpload} indexName={indexName} show={isUploadModalOpen} hideIndexModal={onHide} onHide={() => setIsUploadModalOpen(false)} />}
                 </div>
             </Modal.Body>
-            <Modal.Footer className={`flex items-center gap-3 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200"}`}>
+            <Modal.Footer className={`flex items-center gap-3 ${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200/20"}`}>
                 <div
                     className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
                     onClick={onHide}
