@@ -1450,7 +1450,7 @@ const ContentSection = ({
                 {isUpdateFilenameModalOpen && <UpdateFilenameModal show={isUpdateFilenameModalOpen} onHide={() => setIsUpdateFilenameModalOpen(false)} filename={filename} extension={updatingSource?.source_path?.split('.')?.at(-1)} setFilename={setFilename} oldFilename={updatingSource?.source_path} sourceCategory={updatingSource?.category} filetype={updatingSource?.file_type} />}
 
                 {/* settings & profile button */}
-                <div className="relative" ref={settingsMenuRef}>
+                <div className="relative mt-2" ref={settingsMenuRef}>
                     <button
                         onClick={handleToggleSettingsMenu}
                         className={`flex items-center gap-2
