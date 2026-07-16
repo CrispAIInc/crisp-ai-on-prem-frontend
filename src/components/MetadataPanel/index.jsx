@@ -308,6 +308,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
               video_loop={video_loop}
               title={currentResource?.source_path}
               chapters={translatedResource?.chapters?.content || []}
+              highlights={translatedResource?.highlights?.content || []}
               onReady={() => setIsPlayerReady(true)}
               onDuration={() => setHasDuration(true)}
               playerRef={player}
