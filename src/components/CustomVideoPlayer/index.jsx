@@ -278,7 +278,7 @@ export default function CustomVideoPlayer({
                             return (
                                 <div
                                     key={i}
-                                    className="relative h-1 rounded-full bg-white/20"
+                                    className="relative h-1.5 rounded-full bg-white/20"
                                     style={{ width: `${segWidth * 100}%` }}
                                     onMouseEnter={() => setHoveredChapterIdx(i)}
                                     onMouseLeave={() =>
@@ -286,10 +286,10 @@ export default function CustomVideoPlayer({
                                     }
                                 >
                                     <div
-                                        className="absolute left-0 top-0 h-1 rounded-full"
+                                        className="absolute left-0 top-0 h-1.5 rounded-full"
                                         style={{
                                             width: `${segPlayed * 100}%`,
-                                            background: '755bea',
+                                            background: '#755bea',
                                         }}
                                     />
                                     {seg.title && hoveredChapterIdx === i && (
@@ -309,11 +309,11 @@ export default function CustomVideoPlayer({
 
                     {/* Highlight strip */}
                     {highlightRanges.length > 0 && (
-                        <div className="relative h-[3px] w-full rounded-full ">
+                        <div className="relative h-[1px] w-full rounded-full">
                             {highlightRanges.map((hl, i) => (
                                 <div
                                     key={i}
-                                    className="group/hl absolute top-0 h-[3px] cursor-pointer rounded-full"
+                                    className="group/hl  absolute top-0 h-[3px] cursor-pointer rounded-full"
                                     style={{
                                         left: `${hl.start * 100}%`,
                                         // width: `${Math.max(0.5, (hl.end - hl.start) * 100)}%`,
@@ -326,6 +326,10 @@ export default function CustomVideoPlayer({
                                     onMouseLeave={() =>
                                         setHoveredHighlightIdx((cur) => (cur === i ? null : cur))
                                     }
+                                    onClick={() => {
+                                        internalRef.current?.seekTo(hl.start);
+                                        setPlayed(hl.start);
+                                    }}
                                 >
                                     {hl.title && hoveredHighlightIdx === i && (
                                         <div
