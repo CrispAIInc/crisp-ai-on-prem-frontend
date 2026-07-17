@@ -256,13 +256,6 @@ export default function CustomVideoPlayer({
                         'linear-gradient(to top, rgba(5,6,10,0.92) 0%, rgba(5,6,10,0.55) 55%, rgba(5,6,10,0) 100%)',
                 }}
             >
-                {/* Current chapter title row */}
-                {currentChapter?.title && (
-                    <div className="mb-1.5 truncate text-[13px] font-medium text-white/90 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md w-fit flex items-center gap-1">
-                        <Dot strokeWidth={7} color="#A78BFA" />
-                        {currentChapter.title}
-                    </div>
-                )}
 
                 {/* Scrubber */}
                 <div className="relative mb-2 flex h-6 flex-col justify-center gap-1">
@@ -362,8 +355,8 @@ export default function CustomVideoPlayer({
                 </div>
 
                 {/* Controls row */}
-                <div className="flex items-center justify-between text-white">
-                    <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between gap-2 text-white">
+                    <div className="flex min-w-0 items-center gap-3">
                         <button
                             onClick={togglePlay}
                             aria-label={playing ? 'Pause' : 'Play'}
@@ -394,6 +387,17 @@ export default function CustomVideoPlayer({
                         <span className="text-[12px] tabular-nums text-white/80">
                             {formatTime(currentSeconds)} / {formatTime(duration)}
                         </span>
+
+                        {/* CURRENT CHAPTER */}
+                        {currentChapter?.title && (
+                            <div className="mb-1.5 min-w-0 max-w-[60%] flex-1 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-[13px] backdrop-blur-sm">
+                                <div className="flex items-center gap-1">
+                                    <Dot strokeWidth={7} color="#A78BFA" />
+                                    <span className="truncate font-medium text-white/90">{currentChapter.title}</span>
+                                </div>
+                            </div>
+                        )}
+
                     </div>
 
                     <div className="flex items-center gap-2">
