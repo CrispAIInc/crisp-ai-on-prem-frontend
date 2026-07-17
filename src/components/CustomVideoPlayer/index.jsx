@@ -148,7 +148,7 @@ export default function CustomVideoPlayer({
         (a, b) => parseTimestamp(a.timestamp?.[0]) - parseTimestamp(b.timestamp?.[0])
     );
     const segments = (() => {
-        if (sortedChapters.length === 0 || duration <= 0) {
+        if (sortedChapters.length === 0 || duration <= 0 || !areChaptersVisible) {
             return [{ title: null, start: 0, end: 1 }];
         }
         const built = sortedChapters.map((ch) => ({
