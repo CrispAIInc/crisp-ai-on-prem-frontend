@@ -61,6 +61,9 @@ export default function CustomVideoPlayer({
     const [isPlayerSettingsVisible, setIsPlayerSettingsVisible] = useState(false);
     const [areChaptersVisible, setAreChaptersVisibile] = useState(true);
     const [areHighlightsVisible, setAreHighlightsVisibile] = useState(true);
+    const [playbackRate, setPlaybackRate] = useState(1);
+
+    const PLAYBACK_RATES = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
     const setRefs = useCallback(
         (node) => {
@@ -190,11 +193,18 @@ export default function CustomVideoPlayer({
             }))
             : [];
 
+    const handleMouseLeave = () => {
+        if (playing) {
+            setShowControls(false);
+            setIsPlayerSettingsVisible(false);
+        }
+    };
+
     return (
         <div
             ref={containerRef}
             onMouseMove={wakeControls}
-            // onMouseLeave={() => playing && setShowControls(false)}
+            onMouseLeave={handleMouseLeave}
             className={`group relative aspect-video w-full overflow-hidden rounded-xl shadow-md select-none`}
             style={{ background: '#05060a' }}
         >
@@ -220,6 +230,7 @@ export default function CustomVideoPlayer({
                 }}
                 onClick={togglePlay}
                 progressInterval={250}
+                playbackRate={playbackRate}
             />
 
             {/* Center play/pause tap target */}
@@ -436,6 +447,9 @@ export default function CustomVideoPlayer({
                                             setAreChaptersVisibile={setAreChaptersVisibile}
                                             areHighlightsVisible={areHighlightsVisible}
                                             setAreHighlightsVisibile={setAreHighlightsVisibile}
+                                            playBackRates={PLAYBACK_RATES}
+                                            playbackRate={playbackRate}
+                                            setPlaybackRate={setPlaybackRate}
                                         />
                                     </div>
                                 )
