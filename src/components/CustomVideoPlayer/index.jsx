@@ -326,7 +326,7 @@ export default function CustomVideoPlayer({
 
                     {/* Highlight strip */}
                     {highlightRanges.length > 0 && (
-                        <div className="relative h-[0px] w-full rounded-full bg-red-600">
+                        <div className="relative h-[1px] w-full mt-0.5 rounded-full">
                             {highlightRanges.map((hl, i) => (
                                 <div
                                     key={i}
