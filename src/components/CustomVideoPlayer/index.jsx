@@ -430,9 +430,9 @@ export default function CustomVideoPlayer({
                         {/* CURRENT CHAPTER */}
                         {currentChapter?.title && (
                             <div className="mb-1.5 min-w-0 max-w-[60%] flex-1 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-[13px] backdrop-blur-sm">
-                                <div className="flex items-center gap-1">
-                                    <Dot strokeWidth={7} color="#A78BFA" />
-                                    <span className="truncate font-medium text-white/90">{currentChapter.title}</span>
+                                <div className="flex items-center">
+                                    <Dot className="w-[15px] h-[15px]" strokeWidth={7} color="#A78BFA" />
+                                    <span className="truncate font-medium text-sm text-white/90">{currentChapter.title}</span>
                                 </div>
                             </div>
                         )}
