@@ -7,24 +7,13 @@ import {
     RotateCw,
     Volume2,
     VolumeX,
-    // Settings,
+    Settings,
     PictureInPicture2,
     Maximize,
     Minimize,
     Dot
 } from 'lucide-react';
-
-/**
- * CustomVideoPlayer
- * -------------------------------------------------------------
- * Drop-in replacement for the default ReactPlayer `controls` UI.
- * Keeps ReactPlayer for actual playback/source handling, but renders
- * a fully custom control bar + scrubber underneath (dark, pill-shaped
- * markers on the progress track, title left-aligned above the bar).
- *
- * Props mirror the ones already used in your app so it's a near
- * drop-in swap for the previous <ReactPlayer .../> block.
- */
+import CustomVideoPlayerSettings from '../CustomVideoPlayerSettings';
 
 const formatTime = (seconds = 0) => {
     if (!Number.isFinite(seconds)) return '0:00';
@@ -48,16 +37,11 @@ export default function CustomVideoPlayer({
     resourceURL,
     video_autoplay = false,
     video_loop = false,
-    theme = 'dark',
-    title = '',
-    // chapters: raw `data.content` array from the API, e.g.
-    // [{ title: "Welcome and The Rehearsal Dance", timestamp: ["00:00:00", "00:00:41"], ... }, ...]
     chapters = [],
-    // highlights: same shape as chapters (array of { title, timestamp: [start, end], ... })
     highlights = [],
     onReady,
     onDuration,
-    playerRef, // optional external ref, in addition to internal one
+    playerRef,
 }) {
     const internalRef = useRef(null);
     const containerRef = useRef(null);
@@ -74,6 +58,8 @@ export default function CustomVideoPlayer({
     const [showVolumeSlider, setShowVolumeSlider] = useState(false);
     const [hoveredChapterIdx, setHoveredChapterIdx] = useState(null);
     const [hoveredHighlightIdx, setHoveredHighlightIdx] = useState(null);
+    const [isPlayerSettingsVisible, setIsPlayerSettingsVisible] = useState(false);
+    const [areChaptersVisible, setAreChaptersVisibile] = useState(true);
 
     const setRefs = useCallback(
         (node) => {
@@ -207,7 +193,7 @@ export default function CustomVideoPlayer({
         <div
             ref={containerRef}
             onMouseMove={wakeControls}
-            onMouseLeave={() => playing && setShowControls(false)}
+            // onMouseLeave={() => playing && setShowControls(false)}
             className={`group relative aspect-video w-full overflow-hidden rounded-xl shadow-md select-none`}
             style={{ background: '#05060a' }}
         >
@@ -433,12 +419,27 @@ export default function CustomVideoPlayer({
                             </button>
                         </div>
 
-                        {/* <button
-                            aria-label="Settings"
-                            className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10"
-                        >
-                            <Settings className="h-4 w-4" />
-                        </button> */}
+                        {/* SETTINGS ICON */}
+                        <div className="relative">
+                            <button
+                                aria-label="Settings"
+                                className="relative flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10"
+                                onClick={() => setIsPlayerSettingsVisible(v => !v)}
+                            >
+                                <Settings className="h-4 w-4" />
+                            </button>
+                            {
+                                isPlayerSettingsVisible && (
+                                    <div className="absolute bottom-full right-0 w-64">
+                                        <CustomVideoPlayerSettings
+                                            areChaptersVisible={areChaptersVisible}
+                                            setAreChaptersVisibile={setAreChaptersVisibile}
+                                        />
+                                    </div>
+                                )
+                            }
+                        </div>
+
                         <button
                             onClick={togglePip}
                             aria-label="Picture in picture"
