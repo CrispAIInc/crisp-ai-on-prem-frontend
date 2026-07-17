@@ -284,8 +284,15 @@ export default function CustomVideoPlayer({
                                         }}
                                     />
                                     {seg.title && hoveredChapterIdx === i && (
-                                        <div className="pointer-events-none absolute bottom-3 left-0 z-10 whitespace-nowrap rounded-md bg-[#05060a] px-2 py-1 text-[11px] font-medium text-white shadow ring-1 ring-white/10">
-                                            {seg.title}
+                                        <div
+                                            className={`pointer-events-none flex items-center gap-1 absolute bottom-2 z-10 whitespace-nowrap text-white/90 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md w-fit text-[11px] font-medium text-white shadow ring-1 ring-white/10 ${seg.start > 0.60 ? 'right-0' : 'left-0'
+                                                }`}
+                                        >
+                                            <div className="flex flex-col">
+                                                <span className="italic font-semibold text-[#755bea] text-[10px]">
+                                                    Chapter: {chapters[i]?.timestamp[0]} - {chapters[i]?.timestamp[1]}</span>
+                                                <span>{seg.title}</span>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -300,18 +307,14 @@ export default function CustomVideoPlayer({
 
                     {/* Highlight strip */}
                     {highlightRanges.length > 0 && (
-                        <div className="relative h-[1px] w-full rounded-full">
+                        <div className="relative h-[0px] w-full rounded-full bg-red-600">
                             {highlightRanges.map((hl, i) => (
                                 <div
                                     key={i}
-                                    className="group/hl  absolute top-0 h-[3px] cursor-pointer rounded-full"
+                                    className="group/hl absolute top-0 w-2 h-2 cursor-pointer rounded-full bg-[#FBBF24]"
                                     style={{
                                         left: `${hl.start * 100}%`,
                                         // width: `${Math.max(0.5, (hl.end - hl.start) * 100)}%`,
-                                        borderRadius: '50%',
-                                        width: "8px",
-                                        height: "8px",
-                                        background: '#FBBF24',
                                     }}
                                     onMouseEnter={() => setHoveredHighlightIdx(i)}
                                     onMouseLeave={() =>
@@ -324,11 +327,12 @@ export default function CustomVideoPlayer({
                                 >
                                     {hl.title && hoveredHighlightIdx === i && (
                                         <div
-                                            className={`pointer-events-none flex items-center gap-1 absolute bottom-2 z-10 whitespace-nowrap text-white/90 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md w-fit text-[11px] font-medium text-white shadow ring-1 ring-white/10 ${hl.start > 0.75 ? 'right-0' : 'left-0'
-                                                }`}
+                                            className={`pointer-events-none flex items-center gap-1 absolute bottom-2 z-10 whitespace-nowrap text-white/90 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md w-fit text-[11px] font-medium text-white shadow ring-1 ring-white/10 ${hl.start > 0.60 ? 'right-0' : 'left-0'
+                                                } pointer-events-none`}
                                         >
                                             <div className="flex flex-col">
-                                                <span className="italic  text-gradient-x text-[10px]">{highlights[i]?.timestamp[0]} - {highlights[i]?.timestamp[1]}</span>
+                                                <span className="italic  text-[#FBBF24] text-[10px]">
+                                                    Highlight: {highlights[i]?.timestamp[0]} - {highlights[i]?.timestamp[1]}</span>
                                                 <span>{hl.title}</span>
                                             </div>
                                         </div>
@@ -349,6 +353,22 @@ export default function CustomVideoPlayer({
                         onChange={handleSeekChange}
                         onMouseUp={handleSeekMouseUp}
                         onTouchEnd={handleSeekMouseUp}
+                        onMouseMove={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const fraction = (e.clientX - rect.left) / rect.width;
+                            const segIdx = segments.findIndex(
+                                (seg) => fraction >= seg.start && fraction < seg.end
+                            );
+                            setHoveredChapterIdx(segIdx === -1 ? null : segIdx);
+                            const hlIdx = highlightRanges.findIndex(
+                                (hl) => fraction >= hl.start && fraction < hl.end
+                            );
+                            setHoveredHighlightIdx(hlIdx === -1 ? null : hlIdx);
+                        }}
+                        onMouseLeave={() => {
+                            setHoveredChapterIdx(null);
+                            setHoveredHighlightIdx(null);
+                        }}
                         className="absolute inset-0 h-4 w-full cursor-pointer opacity-0"
                         aria-label="Seek"
                     />
