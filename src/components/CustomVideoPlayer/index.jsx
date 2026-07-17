@@ -60,6 +60,7 @@ export default function CustomVideoPlayer({
     const [hoveredHighlightIdx, setHoveredHighlightIdx] = useState(null);
     const [isPlayerSettingsVisible, setIsPlayerSettingsVisible] = useState(false);
     const [areChaptersVisible, setAreChaptersVisibile] = useState(true);
+    const [areHighlightsVisible, setAreHighlightsVisibile] = useState(true);
 
     const setRefs = useCallback(
         (node) => {
@@ -181,7 +182,7 @@ export default function CustomVideoPlayer({
     // Highlight ranges as fractions of full duration (0-1), positioned on top
     // of the chapter track. Same shape as chapters: { title, timestamp: [start, end] }.
     const highlightRanges =
-        duration > 0
+        (duration > 0 && areHighlightsVisible)
             ? highlights.map((h) => ({
                 title: h.title,
                 start: parseTimestamp(h.timestamp?.[0]) / duration,
@@ -322,7 +323,6 @@ export default function CustomVideoPlayer({
                                             className={`pointer-events-none flex items-center gap-1 absolute bottom-2 z-10 whitespace-nowrap text-white/90 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md w-fit text-[11px] font-medium text-white shadow ring-1 ring-white/10 ${hl.start > 0.75 ? 'right-0' : 'left-0'
                                                 }`}
                                         >
-                                            {/* <Dot strokeWidth={3} color="#FBBF24" /> */}
                                             <div className="flex flex-col">
                                                 <span className="italic  text-gradient-x text-[10px]">{highlights[i]?.timestamp[0]}</span>
                                                 <span>{hl.title}</span>
@@ -434,6 +434,8 @@ export default function CustomVideoPlayer({
                                         <CustomVideoPlayerSettings
                                             areChaptersVisible={areChaptersVisible}
                                             setAreChaptersVisibile={setAreChaptersVisibile}
+                                            areHighlightsVisible={areHighlightsVisible}
+                                            setAreHighlightsVisibile={setAreHighlightsVisibile}
                                         />
                                     </div>
                                 )
