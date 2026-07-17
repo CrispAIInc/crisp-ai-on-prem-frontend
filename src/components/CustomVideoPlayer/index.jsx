@@ -45,6 +45,8 @@ export default function CustomVideoPlayer({
 }) {
     const internalRef = useRef(null);
     const containerRef = useRef(null);
+    const settingsMenuRef = useRef(null);
+    const settingsButtonRef = useRef(null);
     const hideControlsTimeout = useRef(null);
 
     const [playing, setPlaying] = useState(video_autoplay);
@@ -139,6 +141,23 @@ export default function CustomVideoPlayer({
             if (playing) setShowControls(false);
         }, 2200);
     }, [playing]);
+
+    useEffect(() => {
+        if (!isPlayerSettingsVisible) return undefined;
+
+        const handlePointerDown = (event) => {
+            const clickedInsideSettingsMenu = settingsMenuRef.current?.contains(event.target);
+            const clickedSettingsButton = settingsButtonRef.current?.contains(event.target);
+
+            if (!clickedInsideSettingsMenu && !clickedSettingsButton) {
+                setIsPlayerSettingsVisible(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handlePointerDown);
+
+        return () => document.removeEventListener('mousedown', handlePointerDown);
+    }, [isPlayerSettingsVisible]);
 
     useEffect(() => () => clearTimeout(hideControlsTimeout.current), []);
 
@@ -457,6 +476,7 @@ export default function CustomVideoPlayer({
                         {/* SETTINGS ICON */}
                         <div className="relative">
                             <button
+                                ref={settingsButtonRef}
                                 aria-label="Settings"
                                 className="relative flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10"
                                 onClick={() => setIsPlayerSettingsVisible(v => !v)}
@@ -465,7 +485,7 @@ export default function CustomVideoPlayer({
                             </button>
                             {
                                 isPlayerSettingsVisible && (
-                                    <div className="absolute bottom-full right-0 w-64">
+                                    <div ref={settingsMenuRef} className="absolute bottom-full right-0 w-64">
                                         <CustomVideoPlayerSettings
                                             areChaptersVisible={areChaptersVisible}
                                             setAreChaptersVisibile={setAreChaptersVisibile}
