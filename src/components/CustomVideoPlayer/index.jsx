@@ -335,7 +335,7 @@ export default function CustomVideoPlayer({
                                                 }`}
                                         >
                                             <div className="flex flex-col">
-                                                <span className="italic  text-gradient-x text-[10px]">{highlights[i]?.timestamp[0]}</span>
+                                                <span className="italic  text-gradient-x text-[10px]">{highlights[i]?.timestamp[0]} - {highlights[i]?.timestamp[1]}</span>
                                                 <span>{hl.title}</span>
                                             </div>
                                         </div>
