@@ -74,13 +74,13 @@ const TimeInput = ({ initVal, max, onChange }) => {
 
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0">
       <input
         value={value}
         onChange={handleInput}
         onBlur={handleBlur}
         onClick={() => setIsOpen(!isOpen)}
-        className={`py-2 text-xs font-semibold text-center rounded-lg w-9 h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400 ${theme === 'light' ? 'bg-white !border !border-textColor-100/60 text-textColor-200' : 'bg-black/30 text-textColor-100 !border !border-textColor-200/40'}`}
+        className={`py-2 text-xs font-semibold text-center rounded-lg w-9 min-w-[2.25rem] h-7 focus:outline-none focus:border-none focus:ring-2 focus:ring-purple-400 ${theme === 'light' ? 'bg-white !border !border-textColor-100/60 text-textColor-200' : 'bg-black/30 text-textColor-100 !border !border-textColor-200/40'}`}
       />
 
       <div ref={timeOptionsRef} className={`absolute z-[9999] top-full left-0 w-full h-[100px] min-h-[100px] overflow-y-auto rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'} ${theme === 'light' ? 'bg-white !border text-textColor-200' : 'bg-textColor-300 text-textColor-100 !border !border-textColor-200/40'}`}>
@@ -162,20 +162,21 @@ export default function TimestampPicker({ isPending, start, setStart, end, setEn
   return (
     <div
       className={`mt-2 p-3 rounded-2xl select-none
-    flex items-center gap-1
-    w-fit shadow-sm
+    flex flex-col gap-x-1 gap-y-2
+    w-full max-w-full min-w-0 shadow-sm overflow-visible
+    sm:flex-row sm:flex-wrap sm:items-center
     ${theme === 'light'
           ? 'bg-white !border'
           : 'bg-black/30 !border-none'}
   `}
     >
       {/* FROM */}
-      <div className="flex items-center">
-        <span className={`w-10 text-xs font-medium ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}>
+      <div className="flex min-w-0 flex-wrap items-center gap-1">
+        <span className={`w-10 shrink-0 text-xs font-medium ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}>
           From
         </span>
 
-        <div className="flex items-center gap-1">
+        <div className="flex min-w-0 flex-wrap items-center gap-1">
           <TimeInput
             initVal={start.h}
             max={Number(fromSeconds(sourceDuration).h)}
@@ -197,12 +198,12 @@ export default function TimestampPicker({ isPending, start, setStart, end, setEn
       </div>
 
       {/* TO */}
-      <div className="flex items-center">
-        <span className={`text-xs font-medium ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}  mr-1`}>
+      <div className="flex min-w-0 flex-wrap items-center gap-1">
+        <span className={`mr-1 shrink-0 text-xs font-medium ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}>
           To
         </span>
 
-        <div className="flex items-center gap-1">
+        <div className="flex min-w-0 flex-wrap items-center gap-1">
           <TimeInput
             initVal={end.h}
             max={Number(fromSeconds(sourceDuration).h)}
@@ -224,7 +225,7 @@ export default function TimestampPicker({ isPending, start, setStart, end, setEn
       </div>
 
       {(!isProjectReadOnly) && (
-        <div className="flex justify-end pt-1">
+        <div className="flex shrink-0 justify-end pt-1 sm:ml-auto sm:pt-0">
           {
             isPending ? <LoadingSpinner isSmall cssClasses="ml-2" /> : <CheckIcon
               className={`cursor-pointer hover:scale-105 transition ${theme === "light" ? "text-textColor-200" : "text-textColor-100"}`}
