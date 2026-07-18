@@ -703,13 +703,8 @@ const ChatPanel = () => {
           <div className={`${theme === "light" ? " text-textColor-200" : "text-textColor-100"
             } pb-[10px]`}>
             {/* buttons */}
-            <div className={`flex justify-around gap-5 mt-2 flex-items overflow-x-auto [&::-webkit-scrollbar]:h-[6px]
-    [&::-webkit-scrollbar-track]:bg-transparent
-    [&::-webkit-scrollbar-thumb]:bg-gray-400
-    [&::-webkit-scrollbar-thumb]:rounded-full
-    [&::-webkit-scrollbar-thumb]:border-2
-    [&::-webkit-scrollbar-thumb]:border-transparent
-    [&::-webkit-scrollbar-thumb]:bg-clip-padding`}>
+            <div className={`flex justify-around gap-5 mt-2 flex-items overflow-x-auto [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
               {[
                 { id: "genMetadata", title: "Catalog" },
                 { id: "genMedia", title: "Reels" },

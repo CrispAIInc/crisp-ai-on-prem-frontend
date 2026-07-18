@@ -201,7 +201,7 @@ function KnowledgeGraph({
                             <label className={`${theme === "dark" ? 'text-textColor-100' : 'text-textColor-200'} font-medium`}>Context</label>
                         </div>
                         <input
-                            className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-200" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
+                            className={`w-full p-2 bg-transparent !border ${theme === "dark" ? "!border !border-textColor-200/50 text-textColor-100" : '!border !border-textColor-100 text-textColor-300'} rounded-xl resize-none focus:outline-none`}
                             placeholder='e.g. Travel, finance.'
                             value={context}
                             onChange={(e) => setContext(e.target.value)}
