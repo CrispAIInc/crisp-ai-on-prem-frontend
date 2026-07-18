@@ -179,7 +179,7 @@ export function SearchModal(props) {
                             </div>
                             <div className="flex items-center ">
                                 <Checkbox
-                                    className="p-0 !ml-1"
+                                    className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                                     checked={discoveredSources.mainSource?.is_checked}
                                     onClick={(e) => e.stopPropagation()}
                                     onChange={(e) => { e.stopPropagation(); handleCheckboxChange(e?.target?.checked, discoveredSources.mainSource); }}
@@ -239,7 +239,7 @@ export function SearchModal(props) {
                                 </div>
                                 <div className="flex items-center ">
                                     <Checkbox
-                                        className="p-0 !ml-1"
+                                        className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                                         checked={item?.is_checked}
                                         onClick={(e) => e.stopPropagation()}
                                         onChange={(e) => { e.stopPropagation(); handleCheckboxChange(e?.target?.checked, item); }}

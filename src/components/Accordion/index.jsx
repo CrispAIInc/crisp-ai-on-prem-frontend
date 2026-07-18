@@ -28,7 +28,7 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, ch
                     className={`w-6 h-6 transform transition-transform ${isOpen ? "rotate-180" : ""
                         } `}
                     fill="none"
-                    stroke={fromReelProps ? '#755bea' : `#5293FD`}
+                    stroke="#755BEA"
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                 >

@@ -243,9 +243,9 @@ function KnowledgeGraph({
                         <Checkbox
                             sx={{ p: 0 }}
                             onChange={(e) => setIsFullSourceDuration(e.target.checked)}
-                            inputProps={{ "aria-label": "Select All Sources" }}
+                            inputProps={{ "aria-label": "Include full source" }}
                             label="Include full source"
-                            className={`${theme === "dark" && "border-textColor-100 !text-textColor-100"}`}
+                            className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                         />
 
                         <BaseHeading

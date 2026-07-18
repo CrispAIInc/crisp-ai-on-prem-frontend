@@ -82,11 +82,11 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
                     <Chip
                         content={(
                             <>
-                                <CloseIcon className='font-bold cursor-pointer !text-[16px]' onClick={closeCurrentChat} />
-                                <p className={`font-bold !text-[11px]`}>{currentChat.title}</p>
+                                <CloseIcon className='font-bold cursor-pointer !text-[16px] text-primary-300' onClick={closeCurrentChat} />
+                                <p className="font-bold !text-[11px] text-primary-300">{currentChat.title}</p>
                             </>
                         )}
-                        cssClasses='flex items-center gap-1'
+                        cssClasses='flex items-center gap-1 !border !border-primary-300'
                     />
                 </div>
             )}
@@ -94,7 +94,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
             {/* add new chat icon */}
             {
                 !isProjectReadOnly && (
-                    <AddIcon onClick={createNewChat} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} />
+                    <AddIcon onClick={createNewChat} className="cursor-pointer text-primary-300" />
                 )
             }
 
@@ -102,7 +102,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
             <div className="relative">
                 {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup crispWizInputContainerRef={crispWizInputContainerRef}
                     crispWizInputRef={crispWizInputRef} chatTitleUpdaterModalRef={chatTitleUpdaterModalRef} createNewChat={createNewChat} twClasses={`absolute top-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
-                <ScheduleOutlinedIcon ref={keyboardArrowUpRef} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
+                <ScheduleOutlinedIcon ref={keyboardArrowUpRef} className="cursor-pointer text-primary-300" onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
             </div>
         </div>
     );

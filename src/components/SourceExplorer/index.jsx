@@ -298,8 +298,7 @@ export function SourceExplorer(props) {
                                 )}
                                 <div className="flex items-center justify-between">
                                     <Checkbox
-                                        className={`select-all-checkbox ${theme === "dark" && "border-white text-white"
-                                            } p-0`}
+                                        className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                                         checked={file.is_checked}
                                         onChange={(e) => props.handleCheckboxChange(e.target?.checked, file)}
                                         inputProps={{ "aria-label": "Select source" }}
@@ -365,8 +364,7 @@ export function SourceExplorer(props) {
                             <div className="relative">
                                 <div className="flex items-center justify-between">
                                     <Checkbox
-                                        className={`select-all-checkbox ${theme === "dark" && "border-white text-white"
-                                            } absolute p-0`}
+                                        className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                                         checked={file.is_checked}
                                         onChange={(e) => props.handleCheckboxChange(e.target?.checked, file)}
                                         inputProps={{ "aria-label": "Select source" }}
@@ -551,11 +549,10 @@ export function SourceExplorer(props) {
             <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200/20"} z-20`}>
                 {itemsFoundInsideCategoryOrFormat && <div className="flex items-center">
                     <Checkbox
-                        className={`select-all-checkbox p-0 ${theme === "dark" && "border-white text-white"
-                            }`}
+                        className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                         checked={selectedAll || isCheckedAll}
                         onChange={(e) => props.handleSelectAllCheckboxChange(currentPath, e.target.checked)}
-                        inputProps={{ "aria-label": "Select All Sources" }}
+                        inputProps={{ "aria-label": "Select all sources" }}
                         label="Select All Sources"
                     />
                     <BaseHeading text="Select all sources" />

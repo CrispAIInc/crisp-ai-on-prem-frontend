@@ -32,7 +32,7 @@ const ContentPanelThumbnail = ({
 
         <div className="flex items-center justify-between">
           <Checkbox
-            className="p-0 !ml-1"
+            className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
             checked={item.is_checked}
             onChange={(e) => handleCheckboxChange(e?.target?.checked, item)}
             onClick={(event) => event.stopPropagation()}

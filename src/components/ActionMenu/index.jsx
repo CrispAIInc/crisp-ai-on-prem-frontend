@@ -23,7 +23,7 @@ export default function ActionMenu({ actions }) {
       e.stopPropagation();
       setOpen((p) => !p);
     }}>
-      <MoreVertOutlinedIcon className="text-purple-500" />
+      <MoreVertOutlinedIcon className="text-primary-300" />
 
       {open && (
         <div className={`absolute left-0 w-40 z-10 mt-1 ${theme === 'light' ? 'bg-white' : 'bg-gray-800'} top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]`}>

@@ -296,10 +296,9 @@ export default function CustomVideoPlayer({
                                     }
                                 >
                                     <div
-                                        className="absolute left-0 top-0 h-1.5 rounded-full"
+                                        className="absolute left-0 top-0 h-1.5 rounded-full bg-primary-300"
                                         style={{
                                             width: `${segPlayed * 100}%`,
-                                            background: '#755bea',
                                         }}
                                     />
                                     {seg.title && hoveredChapterIdx === i && (
@@ -308,8 +307,9 @@ export default function CustomVideoPlayer({
                                                 }`}
                                         >
                                             <div className="flex flex-col">
-                                                <span className="italic font-semibold text-[#755bea] text-[10px]">
-                                                    Chapter: {chapters[i]?.timestamp[0]} - {chapters[i]?.timestamp[1]}</span>
+                                                <span className="italic font-semibold text-primary-300 text-[10px]">
+                                                    Chapter: {chapters[i]?.timestamp[0]} - {chapters[i]?.timestamp[1]}
+                                                </span>
                                                 <span>{seg.title}</span>
                                             </div>
                                         </div>
@@ -431,7 +431,7 @@ export default function CustomVideoPlayer({
                         {currentChapter?.title && (
                             <div className="mb-1.5 min-w-0 max-w-[60%] flex-1 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-[13px] backdrop-blur-sm">
                                 <div className="flex items-center">
-                                    <Dot className="w-[15px] h-[15px]" strokeWidth={7} color="#A78BFA" />
+                                    <Dot className="w-[15px] h-[15px] text-primary-300" strokeWidth={7} />
                                     <span className="truncate font-medium text-sm text-white/90">{currentChapter.title}</span>
                                 </div>
                             </div>

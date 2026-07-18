@@ -109,11 +109,10 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
             />
             {/* <div className="relative !ml-auto flex items-center gap-1">
                 <Checkbox
-                    className={`p-0 "
-                 }`}
+                    className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                     checked={isFineGrained}
                     onChange={(e) => setIsFineGrained(e.target.checked)}
-                    inputProps={{ "aria-label": "Select All Sources" }}
+                    inputProps={{ "aria-label": "Fine-grained mode" }}
                     label="Fine-grained mode"
                 />
 

@@ -1306,10 +1306,10 @@ const ContentSection = ({
                                 check all sources
                             </span>
                             <Checkbox
-                                className="select-all-checkbox p-0"
+                                className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                                 checked={results?.every(item => item?.is_checked)}
                                 onChange={(e) => handleToggleCheckSources(e.target.checked)}
-                                inputProps={{ "aria-label": "Select All Sources" }}
+                                inputProps={{ "aria-label": "Check all sources" }}
                                 label="Check All Sources"
                             />
                             {
@@ -1406,7 +1406,7 @@ const ContentSection = ({
                                             </div>
                                             <div className="flex items-center">
                                                 <Checkbox
-                                                    className="p-0 !ml-1"
+                                                    className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                                                     checked={option.is_checked}
                                                     onChange={(e) => handleCheckboxChange(e?.target?.checked, option)}
                                                     onClick={(event) => event.stopPropagation()}

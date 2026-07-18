@@ -103,9 +103,9 @@ export default function ChatInput({
                 >
                     {
                         canSendMessage ?
-                            <NorthIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                            <NorthIcon className="text-primary-300" />
                             :
-                            <StopIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                            <StopIcon className="text-primary-300" />
                     }
 
                     {showTooltip && <Tooltip id="crisp-wiz-send-btn-tooltip" />}

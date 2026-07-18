@@ -134,9 +134,9 @@ export default {
         background: "var(--background-color)",
         background_workspace: "var(--background-workspace-color)",
         primary: {
-          100: "#BBD1F5",
-          200: "#77A8F9",
-          300: "#5293FD",
+          100: "#D4CCFB",
+          200: "#A694F3",
+          300: "#755BEA",
         },
         fontColor: "var(--text-color)",
         hoverBg: "var(--hover-background)",

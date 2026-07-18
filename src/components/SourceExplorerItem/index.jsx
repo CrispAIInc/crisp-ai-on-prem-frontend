@@ -74,8 +74,7 @@ function SourceExplorerItem({
 
             {/* checkbox` */}
             <Checkbox
-                className={`flex-shrink-0 p-0 ${theme === "dark" && "border-white text-white"
-                    }`}
+                className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                 checked={source.is_checked}
                 onClick={(e) => e.stopPropagation()}
                 onChange={(e) => handleCheckboxChange(e.target?.checked, source)}

@@ -78,9 +78,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                                 {/* fine grained mode */}
                                 {/* <div className="flex flex-col ml-3">
                                     <div className="relative flex items-center gap-1">
-                                        <Checkbox
-                                            className={`p-0 "
-                                 }`}
+                                        className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                                             checked={isFineGrained}
                                             onChange={(e) => setIsFineGrained(e.target.checked)}
                                             inputProps={{ "aria-label": "Select All Sources" }}
