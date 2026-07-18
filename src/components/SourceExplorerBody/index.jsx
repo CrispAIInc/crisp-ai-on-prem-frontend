@@ -122,7 +122,7 @@ function SourceExplorerBody({
                                     key={index}
                                     content={option.label}
                                     handleClick={() => handleIndexChange(option.value)}
-                                    cssClasses={`text-xs cursor-pointer !border !border-textColor-200/20`}
+                                    cssClasses={`text-xs cursor-pointer ${theme === 'light' ? '!border !border-primary-100' : '!border !border-textColor-200/20'}`}
                                     isActive={option.value === selectedCategory}
                                 />
                             );
@@ -130,7 +130,7 @@ function SourceExplorerBody({
                     }
                     <Chip
                         content={<AddIcon className={`!text-[16px]`} />}
-                        cssClasses={`cursor-pointer !border !border-textColor-200/20`}
+                        cssClasses={`cursor-pointer ${theme === 'light' ? '!border !border-primary-100' : '!border !border-textColor-200/20'}`}
                         handleClick={openCreateCategoryModal}
                     />
 
@@ -149,7 +149,7 @@ function SourceExplorerBody({
                                     key={index}
                                     content={option.label}
                                     handleClick={() => handleFormatChange(option.value)}
-                                    cssClasses={`text-xs cursor-pointer !border !border-textColor-200/20`}
+                                    cssClasses={`text-xs cursor-pointer ${theme === 'light' ? '!border !border-primary-100' : '!border !border-textColor-200/20'}`}
                                     isActive={option.value === selectedFormat}
                                 />
                             );

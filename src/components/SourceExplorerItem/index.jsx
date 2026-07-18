@@ -48,9 +48,8 @@ function SourceExplorerItem({
                                     <LoadingSpinner isSmall />
                                 ) : (
                                     <DeleteIcon
-                                        style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }}
                                         onClick={(event) => (!isDeleting || clickedIndex.source_path !== source.source_path) && deleteResource(event, [source])}
-                                        className="delete-icon cursor-pointer"
+                                        className="delete-icon cursor-pointer text-primary-300"
                                     />
                                 )
                             }
