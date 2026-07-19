@@ -70,12 +70,18 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
             ? timestamp
             : timeToSeconds(timestamp);
 
-        setTimeout(() => {
-          player.current?.seekTo(redirectedTimestamp, "seconds");
-        }, 2550); // small delay fixes race condition
+        const seekContext = `${currentResource?.source_path ?? ""}:${redirectedTimestamp}`;
+
+        if (seekContext !== lastSeekContextRef.current) {
+          lastSeekContextRef.current = seekContext;
+
+          setTimeout(() => {
+            player.current?.seekTo(redirectedTimestamp, "seconds");
+          }, 250);
+        }
       }
     }
-  }, [isPlayerReady, currentResource?.timestamp]);
+  }, [isPlayerReady, resourceURL, currentResource?.source_path, currentResource?.timestamp, currentResource?.file_type]);
 
   useEffect(() => {
     if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
@@ -115,6 +121,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   };
 
   const pageRefs = useRef({});
+  const lastSeekContextRef = useRef(null);
 
   async function translateMetadata(_chosenLanguage, object, fromTranslateDropdown = false) {
     // updateContent();

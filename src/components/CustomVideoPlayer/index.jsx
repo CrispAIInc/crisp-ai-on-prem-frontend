@@ -340,7 +340,9 @@ export default function CustomVideoPlayer({
                                         setHoveredHighlightIdx((cur) => (cur === i ? null : cur))
                                     }
                                     onClick={() => {
-                                        internalRef.current?.seekTo(hl.start);
+                                        if (!duration || !internalRef.current) return;
+                                        const targetSeconds = Math.max(0, hl.start * duration);
+                                        internalRef.current?.seekTo(targetSeconds, 'seconds');
                                         setPlayed(hl.start);
                                     }}
                                 >

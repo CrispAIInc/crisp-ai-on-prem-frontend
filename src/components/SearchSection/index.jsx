@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import BaseHeading from '../BaseHeading';
 import { useToast } from "../../contexts/toastContext";
-import { timeToSeconds } from '../../utils';
 import RippleButton from '../RippleButton';
 import AnimatedText from '../AnimatedText';
 import makeApiRequest from '../../api/index.js';
@@ -29,15 +28,6 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
     const [, setFromChat] = useState(false);
     const [searchQuestion, setSearchQuestion] = useState('');
     const [isSearching, setIsSearching] = useState(false);
-
-    useEffect(() => {
-        if (isPlayerReady && resourceURL && currentResource?.file_type === 'video') {
-            const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-            if (timestamp !== undefined && timestamp !== null) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-            else;
-            setFromChat(false);
-        }
-    }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
     const handleSubmitQuestion = async (event) => {
         event.preventDefault();

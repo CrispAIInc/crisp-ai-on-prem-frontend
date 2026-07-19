@@ -1,31 +1,9 @@
 
-import { useContext, useEffect, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext.jsx';
-import { timeToSeconds } from '../../utils';
+import { useState } from 'react';
 import { ChapterDetailsModal } from '../ChapterDetailsModal';
 import TimelineItem from '../TimelineItem';
 
-function Timeline({ theme, chapters, workspaceContainer }) {
-
-    const { isPlayerReady,
-        setFromChat,
-        resourceURL,
-        currentResource,
-        player } = useContext(MainContext);
-
-    useEffect(() => {
-        if (
-            isPlayerReady &&
-            resourceURL &&
-            currentResource.file_type === "video"
-        ) {
-            const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-            if (timestamp !== undefined && timestamp !== null) {
-                player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-            }
-            setFromChat(false);
-        }
-    }, [isPlayerReady, currentResource, currentResource?.timestamp]);
+function Timeline({ theme, chapters }) {
 
     // const renderTooltip = (props, content) => (
     //     <Tooltip className='h-auto truncate tooltip' {...props}>{content}</Tooltip>

@@ -242,15 +242,6 @@ const ContentSection = ({
         useState();
 
     useEffect(() => {
-        if (isPlayerReady && resourceURL && currentResource?.file_type === "video") {
-            const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
-            if (timestamp && Number.isInteger(+timestamp))
-                player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
-            else;
-        }
-    }, [isPlayerReady, currentResource, currentResource?.timestamp]);
-
-    useEffect(() => {
         // Check if every item in knowledgeBase is selected
         const allSelected = knowledgeBase.every((item) => item.is_checked);
 
