@@ -7,6 +7,10 @@ import SourceExplorerItem from '../SourceExplorerItem';
 import AddIcon from '@mui/icons-material/Add';
 import AnimatedText from '../AnimatedText';
 import { searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
+import useResources from '../../hooks/useResources';
+import makeApiRequest from '../../api';
+import { useToast } from '../../contexts/toastContext';
+import ConfirmationModal from '../ConfirmationModal';
 
 function SourceExplorerBody({
     onHide,
@@ -26,12 +30,57 @@ function SourceExplorerBody({
         selectedFormat,
         knowledgeBase,
         isKnowledgeBaseFetching,
+        setCategoryOptions
     } = useContext(MainContext);
+
+    const { getIndexes } = useResources({ setCategoryOptions });
+    const { notify } = useToast();
 
     const [searchValue, setSearchValue] = useState("");
     const [filteredSources, setFilteredSources] = useState(knowledgeBase);
     const [isManagingSources, setIsManagingSources] = useState(false);
+    const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
+    const [isIndexDeleting, setIsIndexDeleting] = useState(false);
+    const [indexToRemove, setIndexToRemove] = useState("");
 
+
+    function removeIndex(e, indexValue) {
+        e.stopPropagation();
+        setIndexToRemove(indexValue);
+        setShowRemoveIndexModal(true);
+    }
+
+    async function deleteIndex() {
+        try {
+            setIsIndexDeleting(true);
+
+            // remove sources before index
+            const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(indexToRemove));
+
+            if (itemsToBeDeleted.length > 0) {
+                await deleteResource(null, itemsToBeDeleted);
+            }
+
+            await makeApiRequest(`/remove-index`, 'post', { index: "alpha" });
+
+            getIndexes();
+
+            notify({
+                variant: "success",
+                heading: "Index deleted!",
+            });
+            setShowRemoveIndexModal(false);
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error?.response?.data?.error || 'Error deleting index',
+            });
+        } finally {
+            setIsIndexDeleting(false);
+        }
+    }
 
     function handleIndexChange(value) {
         setSelectedCategory(value);
@@ -46,27 +95,9 @@ function SourceExplorerBody({
         showIndexModal?.();
     };
 
-
-    // useEffect(() => {
-    //     let base = [...knowledgeBase];
-
-    //     if (searchValue.trim() !== "") {
-    //         base = searchByKey(base, "source_path", searchValue);
-    //     }
-
-    //     setFilteredSources(sortBySourcePath(base));
-    // }, [searchValue, knowledgeBase]);
-
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchValue(value);
-
-        // if (value.trim() === "") {
-        //     setFilteredSources(sortBySourcePath(filteredSources));
-        // } else {
-        //     const filtered = searchByKey(filteredSources, "source_path", value);
-        //     setFilteredSources(sortBySourcePath(filtered));
-        // }
     };
 
     useEffect(() => {
@@ -110,6 +141,10 @@ function SourceExplorerBody({
 
     return (
         <div className="flex flex-col gap-3 overflow-hidden">
+
+            {/* MANAGE SOURCES & INDEXES */}
+            <BaseHeading text="Manage sources" className={`text-sm font-semibold cursor-pointer p-2 rounded-md  ${theme === "light" ? "!border !border-gray-300 bg-white text-textColor-200" : "!border !border-textColor-300 bg-gray-800 text-textColor-100"} ${isManagingSources ? '!text-primary-300 !border !border-primary-300' : ""} w-fit ml-auto flex self-end`} onClick={() => setIsManagingSources(!isManagingSources)} />
+
             {/* indexes list */}
             <div className="flex flex-col gap-1">
                 <BaseHeading text="Indexes" />
@@ -124,6 +159,8 @@ function SourceExplorerBody({
                                     handleClick={() => handleIndexChange(option.value)}
                                     cssClasses={`text-xs cursor-pointer ${theme === 'light' ? '!border !border-primary-100' : '!border !border-textColor-200/20'}`}
                                     isActive={option.value === selectedCategory}
+                                    hasX={option.value !== "all" && isManagingSources}
+                                    handleXClicked={(e) => removeIndex(e, option.value)}
                                 />
                             );
                         })
@@ -135,6 +172,9 @@ function SourceExplorerBody({
                     />
 
                 </div>
+
+                {/* DELETE INDEX MODAL */}
+                <ConfirmationModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} heading="Are you sure you want to delete this index?" subheading="CAUTION: all sources from this category will be permanently deleted." confirmedFn={deleteIndex} isDeleting={isIndexDeleting} />
             </div>
 
             {/* formats list */}
@@ -169,8 +209,6 @@ function SourceExplorerBody({
                         onChange={handleSearch}
                         className={`max-w-60 px-2 py-2 outline-none font-semibold text-sm rounded-md  ${theme === "light" ? "!border !border-gray-300 bg-white text-black" : "!border !border-textColor-300 bg-gray-800 text-white"}`}
                     />
-
-                    <BaseHeading text="Manage sources" className={`text-sm font-semibold cursor-pointer p-2 rounded-md  ${theme === "light" ? "!border !border-gray-300 bg-white text-textColor-200" : "!border !border-textColor-300 bg-gray-800 text-textColor-100"} ${isManagingSources ? (theme === "light" ? "!text-black font-bold" : "!text-white font-bold") : ""}`} onClick={() => setIsManagingSources(!isManagingSources)} />
                 </div>
                 {
                     isKnowledgeBaseFetching ? (
