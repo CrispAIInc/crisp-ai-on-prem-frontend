@@ -42,11 +42,14 @@ function SourceExplorerBody({
     const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
     const [isIndexDeleting, setIsIndexDeleting] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState("");
+    const [sourcesToDelete, setSourcesToDelete] = useState([]);
 
 
     function removeIndex(e, indexValue) {
         e.stopPropagation();
         setIndexToRemove(indexValue);
+        const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(indexValue));
+        setSourcesToDelete(itemsToBeDeleted);
         setShowRemoveIndexModal(true);
     }
 
@@ -55,15 +58,18 @@ function SourceExplorerBody({
             setIsIndexDeleting(true);
 
             // remove sources before index
-            const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(indexToRemove));
-
-            if (itemsToBeDeleted.length > 0) {
-                await deleteResource(null, itemsToBeDeleted);
+            if (sourcesToDelete.length > 0) {
+                await deleteResource(null, sourcesToDelete);
             }
 
-            await makeApiRequest(`/remove-index`, 'post', { index: "alpha" });
+            await makeApiRequest(`/remove-index`, 'post', { index: indexToRemove });
 
             getIndexes();
+
+            // CHANGE CURRENTCATEGORY IF IT IS THE DELETING ONE
+            if (selectedCategory === indexToRemove) {
+                setSelectedCategory("all");
+            }
 
             notify({
                 variant: "success",
@@ -161,6 +167,7 @@ function SourceExplorerBody({
                                     isActive={option.value === selectedCategory}
                                     hasX={option.value !== "all" && isManagingSources}
                                     handleXClicked={(e) => removeIndex(e, option.value)}
+                                    isPending={isIndexDeleting && option.value === indexToRemove}
                                 />
                             );
                         })
@@ -174,7 +181,17 @@ function SourceExplorerBody({
                 </div>
 
                 {/* DELETE INDEX MODAL */}
-                <ConfirmationModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} heading="Are you sure you want to delete this index?" subheading="CAUTION: all sources from this category will be permanently deleted." confirmedFn={deleteIndex} isDeleting={isIndexDeleting} />
+                <ConfirmationModal
+                    show={showRemoveIndexModal}
+                    onHide={() => setShowRemoveIndexModal(false)}
+                    targetName={indexToRemove}
+                    itemCount={sourcesToDelete.length}
+                    itemLabel="sources"
+                    requireTypedConfirmation={true}
+                    confirmedFn={deleteIndex}
+                    isDeleting={isIndexDeleting}
+                />
+                {/* <ConfirmationModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} heading="Are you sure you want to delete this index?" subheading="CAUTION: all sources from this category will be permanently deleted." confirmedFn={deleteIndex} isDeleting={isIndexDeleting} /> */}
             </div>
 
             {/* formats list */}
