@@ -17,7 +17,7 @@ export default function Chip({ content, handleClick = () => null, wordWrap = fal
                         <LoadingSpinner isSmall />
                     ) : (
                         <CloseIcon
-                            className="!text-sm text-primary-300 bg-primary-100/50 w-5 h-5 rounded-full"
+                            className={`!text-sm text-primary-300 w-5 h-5 rounded-full ${theme === 'light' && 'bg-primary-100/50'}`}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleXClicked(e);
