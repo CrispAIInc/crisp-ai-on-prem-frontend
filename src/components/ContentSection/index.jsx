@@ -3,7 +3,6 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 // import AppTooltip from "../AppTooltip";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
-import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
@@ -21,7 +20,7 @@ import { MainContext } from "../../contexts/mainContext";
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from "../../contexts/toastContext";
 import useAuth from '../../hooks/useAuth';
-import { delay, generateRandomHash, getFileType, searchByKey, sortArrayOfObjects, timeToSeconds } from '../../utils';
+import { generateRandomHash, getFileType, searchByKey, sortArrayOfObjects } from '../../utils';
 import AddSourceModal from "../AddSourceModal";
 import AnimatedText from '../AnimatedText';
 import BaseHeading from '../BaseHeading';
@@ -29,7 +28,6 @@ import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import GsFile from '../GsFile';
 import { IndexModal } from '../IndexModal';
 import LoadingSpinner from "../LoadingSpinner";
-import MetadataPanel from "../MetadataPanel";
 import NoData from '../NoData';
 import SearchSection from '../SearchSection';
 import { SettingsModal } from "../Settings/SettingsModal";
@@ -42,7 +40,7 @@ import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
-    const { theme, setDisplayedSources, setKnowledgeBase } = useContext(MainContext);
+    const { theme, setKnowledgeBase } = useContext(MainContext);
 
     const { notify } = useToast();
     const [isLoading, setIsLoading] = useState(false);
@@ -176,17 +174,13 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
 };
 
 const ContentSection = ({
-    setCurrentProject,
     onThumbnailClick,
     handleCheckboxChange,
     setKnowledgeBase,
     setUploadedSources,
-    leftWidth, maxWidth
 
 }) => {
     const {
-        isPlayerReady,
-        resourceURL,
         isFileUploading, setIsFileUploading,
         setDisplayedSources,
         setShowMetadata,
@@ -195,7 +189,6 @@ const ContentSection = ({
         currentResource,
         setCurrentResource,
         frameExtractionRate,
-        player,
         displayedSources,
         knowledgeBase,
         setGeneratedResources,
@@ -296,19 +289,6 @@ const ContentSection = ({
                 let deletedSourcePaths = payload.map(item => item.fileName);
                 return prev.filter(item => !deletedSourcePaths.includes(item.source_path));
             });
-
-            // setChatLoaded(false);
-            // const { chat_is_initialized } = await makeApiRequest(
-            //     `/chat/all`,
-            //     "post",
-            //     JSON.stringify({
-            //         sources: selectedSources,
-            //         category: selectedCategory,
-            //         checkedAll,
-            //         reinitialize: true,
-            //     })
-            // );
-            // setChatLoaded(chat_is_initialized);
 
             // setCurrentResource(null);
             setActiveView(null);

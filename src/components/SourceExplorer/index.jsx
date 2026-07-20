@@ -1,24 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import PDFThumbnail from "../PDFThumbnail";
-import LoadingSpinner from "../LoadingSpinner";
 import { Bolt } from 'lucide-react';
 import Checkbox from "@mui/material/Checkbox";
 import { MainContext } from "../../contexts/mainContext.jsx";
 import "./source_explorer.css";
-import StagedVideoThumbnail from '../StagedVideoThumbnail';
-import StagedImageThumbnail from '../StagedImageThumbnail';
-import { searchByKey, sortBySourcePath } from '../../utils';
-import makeApiRequest from '../../api/index.js';
-import UploadIcon from '@mui/icons-material/Upload';
-import useResources from '../../hooks/useResources.js';
-import { useToast } from "../../contexts/toastContext";
-import ConfirmationModal from '../ConfirmationModal/index.jsx';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 import BaseHeading from '../BaseHeading/index.jsx';
 import SourceExplorerBody from '../SourceExplorerBody/index.jsx';
@@ -36,10 +21,6 @@ export function SourceExplorer(props) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
-
-    // const [currentPath, setCurrentPath] = useState('/');
-    const [viewModes, setViewModes] = useState(["categories"]); // 'categories' or 'formats'
-    const [results, setResults] = useState(knowledgeBase);
     const [history, setHistory] = useState(["/"]);
     const [currentPath, setCurrentPath] = useState(history[history.length - 1] || "/");
     const [isManagingSources, setIsManagingSources] = useState(false);
@@ -77,20 +58,15 @@ export function SourceExplorer(props) {
     useEffect(() => {
         // update current path whenever selectedCategory changes in Parent component
         if (selectedCategory !== null && !props.isOpenedFromSourceExplorerBtn) {
-            setViewModes((prevViewModes) => [...prevViewModes, "formats"]);
             setHistory([`/${selectedCategory}/`]);
         }
     }, [selectedCategory]);
 
     const handleClose = () => {
-        setHistory(["/"]);
-        setViewModes(["categories"]);
         props.onHide();
     };
 
     const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
-
-    console.log(isCheckedAll);
 
     // const handleSearch = (e) => {
     //     const value = e.target.value;
