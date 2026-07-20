@@ -5,19 +5,24 @@ import Chip from '../Chip';
 import SourceExplorerItem from '../SourceExplorerItem';
 
 import AddIcon from '@mui/icons-material/Add';
+import UploadIcon from '@mui/icons-material/Upload';
+
 import AnimatedText from '../AnimatedText';
-import { searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
+import { searchByKey, sortArrayOfObjects } from '../../utils';
 import useResources from '../../hooks/useResources';
 import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
 import ConfirmationModal from '../ConfirmationModal';
+import { ProjectContext } from '../../contexts/projectContext';
 
 function SourceExplorerBody({
     onHide,
     showIndexModal,
     isDeleting,
     clickedIndex,
-    deleteResource
+    deleteResource,
+    onOpenCategoriesModal,
+    isManagingSources
 }) {
 
     const {
@@ -33,12 +38,13 @@ function SourceExplorerBody({
         setCategoryOptions
     } = useContext(MainContext);
 
+    const { isProjectReadOnly } = useContext(ProjectContext);
+
     const { getIndexes } = useResources({ setCategoryOptions });
     const { notify } = useToast();
 
     const [searchValue, setSearchValue] = useState("");
     const [filteredSources, setFilteredSources] = useState(knowledgeBase);
-    const [isManagingSources, setIsManagingSources] = useState(false);
     const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
     const [isIndexDeleting, setIsIndexDeleting] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState("");
@@ -106,6 +112,11 @@ function SourceExplorerBody({
         setSearchValue(value);
     };
 
+    const handleOpenUploadCategoriesModal = () => {
+        onHide();
+        onOpenCategoriesModal?.();
+    };
+
     useEffect(() => {
         let filtered = knowledgeBase;
 
@@ -148,9 +159,6 @@ function SourceExplorerBody({
     return (
         <div className="flex flex-col gap-3 overflow-hidden">
 
-            {/* MANAGE SOURCES & INDEXES */}
-            <BaseHeading text="Manage sources" className={`text-sm font-semibold cursor-pointer p-2 rounded-md  ${theme === "light" ? "!border !border-gray-300 bg-white text-textColor-200" : "!border !border-textColor-300 bg-gray-800 text-textColor-100"} ${isManagingSources ? '!text-primary-300 !border !border-primary-300' : ""} w-fit ml-auto flex self-end`} onClick={() => setIsManagingSources(!isManagingSources)} />
-
             {/* indexes list */}
             <div className="flex flex-col gap-1">
                 <BaseHeading text="Indexes" />
@@ -191,7 +199,6 @@ function SourceExplorerBody({
                     confirmedFn={deleteIndex}
                     isDeleting={isIndexDeleting}
                 />
-                {/* <ConfirmationModal show={showRemoveIndexModal} onHide={() => setShowRemoveIndexModal(false)} heading="Are you sure you want to delete this index?" subheading="CAUTION: all sources from this category will be permanently deleted." confirmedFn={deleteIndex} isDeleting={isIndexDeleting} /> */}
             </div>
 
             {/* formats list */}
@@ -227,6 +234,19 @@ function SourceExplorerBody({
                         className={`max-w-60 px-2 py-2 outline-none font-semibold text-sm rounded-md  ${theme === "light" ? "!border !border-gray-300 bg-white text-black" : "!border !border-textColor-300 bg-gray-800 text-white"}`}
                     />
                 </div>
+                {/* SOURCE ACTIONS */}
+                <div className="flex items-center gap-2 mb-3">
+                    {!isProjectReadOnly && (
+                        <button
+                            type="button"
+                            onClick={handleOpenUploadCategoriesModal}
+                            className={`inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200/20 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
+                        >
+                            <UploadIcon className={`text-[10px] text-primary-300`} />
+                            <span className="text-sm">New source</span>
+                        </button>
+                    )}
+                </div>
                 {
                     isKnowledgeBaseFetching ? (
                         <AnimatedText text='Preparing your knowledge base...' cssClasses="font-semibold" />
@@ -236,7 +256,7 @@ function SourceExplorerBody({
                                 filteredSources.length > 0 ? (
                                     <div className="relative overflow-hidden flex flex-col">
                                         {/* Top fade */}
-                                        <div className={`pointer-events-none absolute top-0 left-0 right-1 h-6 bg-gradient-to-b ${theme === "light" ? "from-background_workspace" : "from-[#333333]"} to-transparent z-10 `} />
+                                        <div className={`pointer-events-none absolute top-0 left-0 right-1 h-6 bg-gradient-to-b ${theme === "light" ? "from-white" : "from-[#333333]"} to-transparent z-10 `} />
 
                                         <div className={`flex-1 grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2 py-3 [&::-webkit-scrollbar]:w-1
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
@@ -253,7 +273,7 @@ function SourceExplorerBody({
                                         </div>
 
                                         {/* Bottom fade */}
-                                        <div className={`pointer-events-none absolute bottom-0 left-0 right-1 h-6 bg-gradient-to-t ${theme === "light" ? "from-background_workspace" : "from-[#333333]"} to-transparent z-10`} />
+                                        <div className={`pointer-events-none absolute bottom-0 left-0 right-1 h-6 bg-gradient-to-t ${theme === "light" ? "from-white" : "from-[#333333]"} to-transparent z-10`} />
                                     </div>
                                 ) : (
                                     <BaseHeading text="No sources found" className={`text-sm italic`} />
