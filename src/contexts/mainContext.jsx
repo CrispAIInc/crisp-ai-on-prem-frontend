@@ -43,7 +43,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [showNoteDetails, setShowNoteDetails] = useState(false);
 
     const [selectedSources, setSelectedSources] = useState([]); // Selected Sources to stage before commiting into the current Knowledge Base
-    const [selectedAll, setCheckedAll] = useState(false); // Flag to handle selecting all sources (all categories, all formats)
+    const [checkedAll, setCheckedAll] = useState(false); // Flag to handle selecting all sources (all categories, all formats)
     const [knowledgeBase, setKnowledgeBase] = useState([]); // Knowledge Base (Videos, Pdfs, Docs, etc) metadata
     // From Content Panel
     const [selectedCategory, setSelectedCategory] = useState("all");
@@ -1375,7 +1375,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         setShowNoteModal,
         selectedSources,
         setSelectedSources,
-        selectedAll,
+        checkedAll,
         setCheckedAll,
         setSelectedCategory,
         selectedFormat,

@@ -245,7 +245,7 @@ const ContentSection = ({
         // Check if every item in knowledgeBase is selected
         const allSelected = knowledgeBase.every((item) => item.is_checked);
 
-        // Update selectedAll state based on the check
+        // Update checkedAll state based on the check
         setCheckedAll(allSelected);
     }, [knowledgeBase]);
 
@@ -304,7 +304,7 @@ const ContentSection = ({
             //     JSON.stringify({
             //         sources: selectedSources,
             //         category: selectedCategory,
-            //         selectedAll,
+            //         checkedAll,
             //         reinitialize: true,
             //     })
             // );

@@ -25,21 +25,17 @@ import SourceExplorerBody from '../SourceExplorerBody/index.jsx';
 
 export function SourceExplorer(props) {
     const {
-        selectedAll,
+        checkedAll,
         selectedFormat,
-        setSelectedFormat,
+        setCheckedAll,
         selectedCategory,
-        setSelectedCategory,
         theme,
         sourcesTobeCommited,
         knowledgeBase,
-        setCategoryOptions,
-        categoryOptions
     } = useContext(MainContext);
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
-    const { notify } = useToast();
 
     // const [currentPath, setCurrentPath] = useState('/');
     const [viewModes, setViewModes] = useState(["categories"]); // 'categories' or 'formats'
@@ -71,10 +67,10 @@ export function SourceExplorer(props) {
     }
 
 
-    const [isCheckedAll, setisCheckedAll] = useState(false);
+    const [isCheckedAll, setIsCheckedAll] = useState(false);
 
     useEffect(() => {
-        setisCheckedAll(ge());
+        setIsCheckedAll(ge());
     }, [currentPath, selectedCategory, selectedFormat, sourcesTobeCommited]);
 
 
@@ -92,12 +88,9 @@ export function SourceExplorer(props) {
         props.onHide();
     };
 
-    const handleOpenUploadCategoriesModal = () => {
-        props.onHide();
-        props.onOpenCategoriesModal?.();
-    };
-
     const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
+
+    console.log(isCheckedAll);
 
     // const handleSearch = (e) => {
     //     const value = e.target.value;
@@ -159,13 +152,14 @@ export function SourceExplorer(props) {
                     <div
                         className={`flex items-center gap-1 cursor-pointer px-1 py-1.5 rounded-md ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
                         onClick={() => {
-                            setisCheckedAll(v => !v);
-                            props.handleSelectAllCheckboxChange(currentPath, !isCheckedAll);
+                            setIsCheckedAll(v => !v);
+                            setCheckedAll(v => !v);
+                            props.handleSelectAllCheckboxChange(currentPath, !checkedAll);
                         }}
                     >
                         <Checkbox
                             className={`p-0 !border-primary-300 !text-primary-300`}
-                            checked={selectedAll || isCheckedAll}
+                            checked={checkedAll}
                             onChange={(e) => props.handleSelectAllCheckboxChange(currentPath, e.target.checked)}
                             inputProps={{ "aria-label": "Select all sources" }}
                             label="Select All Sources"
