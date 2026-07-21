@@ -55,7 +55,7 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
             <label className={`font-semibold mb-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`}>Metadata output</label>
             <div className="relative inline-block w-full" ref={dropdownRef}>
                 {/* upper section */}
-                <div onClick={handleOpenDropdownMenu} className={`rounded-xl flex items-center justify-between h-10 py-4 pl-1 ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200/50'} cursor-pointer relative`}>
+                <div onClick={handleOpenDropdownMenu} className={`rounded-xl flex items-center justify-between h-10 py-2 pl-1 ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200/50'} cursor-pointer relative`}>
                     {/* <div className="absolute inset-y-0 left-0 w-8 pointer-events-none z-3 bg-gradient-to-r from-white to-transparent"></div> */}
                     <div className="relative flex items-center flex-1 gap-1 overflow-x-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                         {
