@@ -225,33 +225,36 @@ function SourceExplorerBody({
 
             {/* sources list */}
             <div className="overflow-hidden flex flex-col">
+
                 <div className="flex items-center justify-between">
                     <BaseHeading text={`Sources${!isKnowledgeBaseFetching ? ` (${filteredSources.length})` : ''}`} className={`mb-2 flex-1`} />
 
-                    <div className={`flex items-center rounded-xl overflow-hidden ${theme === "light" ? "!border !border-gray-300 bg-white text-black" : "!border !border-textColor-300 bg-gray-800 text-white"}`}>
-                        <Search size={23} className={`pl-2 pr-0 mr-0 !text-primary-300`} />
-                        <input
-                            type="text"
-                            placeholder="Search by source name..."
-                            value={searchValue}
-                            onChange={handleSearch}
-                            className={`max-w-60 px-2 py-2 outline-none text-sm rounded-md border-none`}
-                        />
+                    <div className='flex items-center gap-2'>
+
+                        <div className={`flex items-center rounded-lg overflow-hidden ${theme === "light" ? "!border !border-gray-300 bg-white text-black" : "!border !border-textColor-200/20 bg-background_workspace text-white"}`}>
+                            <Search size={23} className={`pl-2 pr-0 mr-0 !text-primary-300`} />
+                            <input
+                                type="text"
+                                placeholder="Search by source name..."
+                                value={searchValue}
+                                onChange={handleSearch}
+                                className={`max-w-60 px-2 !py-[8px] outline-none text-sm rounded-md border-none bg-transparent`}
+                            />
+                        </div>
+
+                        {!isProjectReadOnly && (
+                            <button
+                                type="button"
+                                onClick={handleOpenUploadCategoriesModal}
+                                className={`inline-flex items-center gap-1 rounded-lg p-2 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200/20 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
+                            >
+                                <UploadIcon className={`text-[10px] text-primary-300`} />
+                                <span className="text-sm">New source</span>
+                            </button>
+                        )}
                     </div>
                 </div>
-                {/* SOURCE ACTIONS */}
-                <div className="flex items-center gap-2 mb-3">
-                    {!isProjectReadOnly && (
-                        <button
-                            type="button"
-                            onClick={handleOpenUploadCategoriesModal}
-                            className={`inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200/20 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
-                        >
-                            <UploadIcon className={`text-[10px] text-primary-300`} />
-                            <span className="text-sm">New source</span>
-                        </button>
-                    )}
-                </div>
+
                 {
                     isKnowledgeBaseFetching ? (
                         <AnimatedText text='Preparing your knowledge base...' cssClasses="font-semibold" />
