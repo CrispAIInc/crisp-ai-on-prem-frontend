@@ -6,6 +6,7 @@ import SourceExplorerItem from '../SourceExplorerItem';
 
 import AddIcon from '@mui/icons-material/Add';
 import UploadIcon from '@mui/icons-material/Upload';
+import { Search } from 'lucide-react';
 
 import AnimatedText from '../AnimatedText';
 import { searchByKey, sortArrayOfObjects } from '../../utils';
@@ -224,15 +225,19 @@ function SourceExplorerBody({
 
             {/* sources list */}
             <div className="overflow-hidden flex flex-col">
-                <div className="flex items-center justify-between gap-1">
+                <div className="flex items-center justify-between">
                     <BaseHeading text={`Sources${!isKnowledgeBaseFetching ? ` (${filteredSources.length})` : ''}`} className={`mb-2 flex-1`} />
-                    <input
-                        type="text"
-                        placeholder="Search by source name..."
-                        value={searchValue}
-                        onChange={handleSearch}
-                        className={`max-w-60 px-2 py-2 outline-none font-semibold text-sm rounded-md  ${theme === "light" ? "!border !border-gray-300 bg-white text-black" : "!border !border-textColor-300 bg-gray-800 text-white"}`}
-                    />
+
+                    <div className={`flex items-center rounded-xl overflow-hidden ${theme === "light" ? "!border !border-gray-300 bg-white text-black" : "!border !border-textColor-300 bg-gray-800 text-white"}`}>
+                        <Search size={23} className={`pl-2 pr-0 mr-0 !text-primary-300`} />
+                        <input
+                            type="text"
+                            placeholder="Search by source name..."
+                            value={searchValue}
+                            onChange={handleSearch}
+                            className={`max-w-60 px-2 py-2 outline-none text-sm rounded-md border-none`}
+                        />
+                    </div>
                 </div>
                 {/* SOURCE ACTIONS */}
                 <div className="flex items-center gap-2 mb-3">
