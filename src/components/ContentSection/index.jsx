@@ -1,6 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-// import AppTooltip from "../AppTooltip";
+import { Search } from 'lucide-react';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -1266,7 +1266,19 @@ const ContentSection = ({
 
                     <BaseHeading text={`Workspace sources (${results?.length} selected & ${results?.filter(i => i?.is_checked)?.length} checked.)`} className={` mt-4`} />
 
-                    {displayedSources.length > 0 && <input className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[75%] rounded-lg !pl-[10px]`} placeholder={"Search in workspace sources..."} value={searchValue} onChange={handleSearch} />}
+                    {displayedSources.length > 0 && (
+                        <div className={`mt-2 max-w-96 flex items-center pl-2 bg-transparent rounded-lg overflow-hidden ${theme === "light" ? "!border !border-gray-300  text-black" : "!border !border-textColor-200/40 text-white"}`}>
+                            <Search size={18} className={`pr-0 mr-0 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+                            <input
+                                type="text"
+                                placeholder="Search in workspace sources..."
+                                value={searchValue}
+                                onChange={handleSearch}
+                                className={`flex-1 mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' && ' text-textColor-100'} w-full lg:w-[75%] rounded-lg !pl-[10px]`}
+                            />
+                            {/* <input className={`mt-2 mb-2 py-1 text-sm bg-transparent outline-none ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200 text-textColor-100'} w-full lg:w-[75%] rounded-lg !pl-[10px]`} placeholder={"Search in workspace sources..."} value={searchValue} onChange={handleSearch} /> */}
+                        </div>
+                    )}
 
                     {results?.length > 0 && (
                         <div className="flex items-center mt-2">
