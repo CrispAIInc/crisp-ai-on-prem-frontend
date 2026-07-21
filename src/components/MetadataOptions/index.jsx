@@ -82,30 +82,32 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
                 {/* dropdown menu */}
                 {
                     isDropdownMenuOpen && (
-                        <div className={`absolute z-10 w-full h-64 overflow-y-auto mt-2 rounded-md shadow-lg  ${theme === 'light' ? 'bg-white' : 'bg-[#382746] text-textColor-100'}`}>
+                        <div className={`absolute z-10 w-full h-64 flex flex-col overflow-y-hidden mt-2 rounded-md shadow-lg  ${theme === 'light' ? 'bg-white' : 'bg-[#382746] text-textColor-100'}`}>
                             <div onClick={toggleAllOptions} className={`cursor-pointer border-b border-b-light-hover-200 p-2 active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-light-hover-200/35' : 'hover:bg-light-hover-200/20 !border-b !border-b-slate-600'} flex items-center gap-2`}>
                                 {/* checkbox for selecting and unselecting all options */}
                                 <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length} />
                                 <span className="text-sm font-bold select-none">Select all metadata</span>
                             </div>
-                            {
-                                options.map((option) => {
-                                    if (option.id === 'knowledgeGraph') {
+                            <div className='overflow-y-auto'>
+                                {
+                                    options.map((option) => {
+                                        if (option.id === 'knowledgeGraph') {
+                                            return (
+                                                <div key={option.id} className={`cursor-not-allowed border-b border-b-light-hover-200 p-2 bg-light-hover-200 ${theme === 'light' && 'opacity-50 text-gray-500 bg-gray-200'}`}>
+                                                    <p className='font-semibold text-md'>{option.name}</p>
+                                                    <span className="text-sm">{option.description}</span>
+                                                </div>
+                                            );
+                                        }
                                         return (
-                                            <div key={option.id} className={`cursor-not-allowed border-b border-b-light-hover-200 p-2 bg-light-hover-200 ${theme === 'light' && 'opacity-50 text-gray-500 bg-gray-200'}`}>
-                                                <p className='font-semibold text-md'>{option.name}</p>
-                                                <span className="text-sm">{option.description}</span>
+                                            <div key={option.id} onClick={() => toggleOption(option)} className={`cursor-pointer border-b border-b-light-hover-200 p-2 ${selectedOptions.includes(option) && 'bg-primary-200/20'} active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10 !border-b !border-b-slate-600'}`}>
+                                                <p className='font-semibold select-none text-md'>{option.name}</p>
+                                                <span className="text-sm select-none">{option.description}</span>
                                             </div>
                                         );
-                                    }
-                                    return (
-                                        <div key={option.id} onClick={() => toggleOption(option)} className={`cursor-pointer border-b border-b-light-hover-200 p-2 ${selectedOptions.includes(option) && 'bg-primary-200/20'} active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10 !border-b !border-b-slate-600'}`}>
-                                            <p className='font-semibold select-none text-md'>{option.name}</p>
-                                            <span className="text-sm select-none">{option.description}</span>
-                                        </div>
-                                    );
-                                })
-                            }
+                                    })
+                                }
+                            </div>
                         </div>
                     )
                 }
