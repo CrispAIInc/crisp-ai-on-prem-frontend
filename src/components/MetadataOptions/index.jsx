@@ -88,7 +88,7 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
                                 <input type="checkbox" className='cursor-pointer w-fit' checked={selectedOptions.length === options.length} />
                                 <span className="text-sm font-bold select-none">Select all metadata</span>
                             </div>
-                            <div className='overflow-y-auto'>
+                            <div className={`overflow-y-auto *:[&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700]'}`}>
                                 {
                                     options.map((option) => {
                                         if (option.id === 'knowledgeGraph') {
