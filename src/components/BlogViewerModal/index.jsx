@@ -191,10 +191,10 @@ function BlogViewerModal({ show, onHide }) {
 
                 <Modal.Footer className={`${theme === "light" ? "" : "!bg-textColor-300 !text-white !border-t !border-t-textColor-200/20"}`}>
                     <div
-                        className={`flex items-center justify-center gap-2 px-2 py-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        className={`flex items-center justify-center gap-2 p-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
                         onClick={onHide}
                     >
-                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Ok</span>
+                        <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Done</span>
                     </div>
                 </Modal.Footer>
                 {/* Blog properties side drawer */}
