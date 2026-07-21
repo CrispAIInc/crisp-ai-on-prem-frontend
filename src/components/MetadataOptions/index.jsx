@@ -1,6 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import Chip from "../Chip";
+
 import { MainContext } from '../../contexts/mainContext.jsx';
+import Chip from "../Chip";
+
+import { Check } from 'lucide-react';
 
 
 
@@ -100,9 +103,15 @@ export default function MetadataOptions({ selectedOptions, setSelectedOptions, o
                                             );
                                         }
                                         return (
-                                            <div key={option.id} onClick={() => toggleOption(option)} className={`cursor-pointer border-b border-b-light-hover-200 p-2 ${selectedOptions.includes(option) && 'bg-primary-200/20'} active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10 !border-b !border-b-slate-600'}`}>
+                                            <div
+                                                key={option.id}
+                                                onClick={() => toggleOption(option)}
+                                                className={`flex-1 cursor-pointer border-b border-b-light-hover-200 p-2 active:bg-primary-200/20 ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10 !border-b !border-b-slate-600'} relative `}>
                                                 <p className='font-semibold select-none text-md'>{option.name}</p>
                                                 <span className="text-sm select-none">{option.description}</span>
+                                                {
+                                                    selectedOptions.some(item => item.id === option.id) && <Check size={18} className="absolute top-1/2 right-1 -translate-y-1/2" />
+                                                }
                                             </div>
                                         );
                                     })
