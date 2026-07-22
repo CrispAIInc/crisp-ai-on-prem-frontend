@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import makeApiRequest from '../../api';
 import { extractThumbnail } from '../../utils';
 import Modal from 'react-bootstrap/Modal';
@@ -7,8 +7,10 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import LoadingSpinner from '../LoadingSpinner';
 
 import { useToast } from "../../contexts/toastContext";
+import { MainContext } from '../../contexts/mainContext';
+import { ProjectContext } from '../../contexts/projectContext';
 
-const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hideProjectDrawer }) => {
+const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hideProjectDrawer, theme }) => {
 
     const { notify } = useToast();
 
@@ -16,12 +18,15 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hide
     const [isLoading, setIsLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(null);
     const [projectThumbnail, setProjectThumbnail] = useState(null);
+    const isCreateDisabled = !newProjectName.trim();
 
     const projectThumbnailRef = useRef(null);
 
     const handleSave = async () => {
         try {
-            if (newProjectName === "") return;
+            if (newProjectName === "") {
+                throw new Error("Project name is required");
+            }
             setIsLoading(true);
             const formData = new FormData();
             formData.append("name", newProjectName);
@@ -75,7 +80,7 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hide
         >
 
             <Modal.Body>
-                <div className='flex flex-col items-start justify-center gap-3'>
+                <div className={`flex flex-col items-start justify-center gap-3`}>
                     <div className="flex flex-col w-full gap-1">
                         {/* project thumbnail wrapper */}
                         <label className={`block text-sm font-medium`}>
@@ -108,7 +113,7 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hide
                                 id='indexName'
                                 value={newProjectName}
                                 onChange={(e) => setNewProjectName(e.target.value)}
-                                className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500`}
+                                className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md outline-none`}
                                 required
                                 onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                             />
@@ -126,14 +131,22 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hide
                     </span>
                 </div>
 
-                <div
+                {/* <div
                     className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100`}
                     onClick={handleSave}
                 >
                     {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium text-purple-500`}>
                         Create
                     </span>}
-                </div>
+                </div> */}
+                <button
+                    type="button"
+                    disabled={isCreateDisabled || isLoading}
+                    onClick={handleSave}
+                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isCreateDisabled || isLoading ? (theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-textColor-100/25 text-gray-700') : 'bg-[linear-gradient(90deg,#755bea,#b76894)] text-white hover:opacity-90'} ${theme === 'dark' && !isCreateDisabled && !isLoading ? '' : ''} ${isCreateDisabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                >
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className="font-medium">Create</span>}
+                </button>
             </Modal.Footer>
         </Modal>
     );

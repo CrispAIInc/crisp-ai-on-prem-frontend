@@ -199,6 +199,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                         setProjects={setProjects}
                         setCurrentProject={setCurrentProject}
                         hideProjectDrawer={onHide}
+                        theme={theme}
                     />}
                 </div>
             </div>
