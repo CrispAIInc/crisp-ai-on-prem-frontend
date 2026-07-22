@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { ProjectContext } from '../../contexts/projectContext';
 import { MainContext } from '../../contexts/mainContext';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import { ArrowLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
+import { FolderOpenDot } from 'lucide-react';
 import { formatChatHistoryByDate, formatReadableDate } from '../../utils';
 import UnfoldMoreOutlinedIcon from '@mui/icons-material/UnfoldMoreOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
@@ -126,20 +129,26 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-0 top-40 -z-1 blur-[160px]"></div>
             <div className="w-56 h-56 bg-pink-300 rounded-full absolute left-1/2 top-80 -z-1 blur-[160px]"></div>
 
-            <div className="flex items-center justify-between z-50">
-                <h5 className='mb-0 '>Manage Projects</h5>
-                <KeyboardDoubleArrowLeftIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={onHide} />
+            <div>
+                <div className="flex items-center justify-between z-50">
+                    <h5 className='mb-0 '>Projects</h5>
+                    <ChevronLeft style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} className="cursor-pointer " onClick={onHide} />
+                </div>
+                <BaseHeading text="Switch between your workspaces." className="!text-xs mt-1" />
             </div>
 
             <div className="flex flex-col flex-1 gap-7 z-1">
                 <div>
-                    <BaseHeading text="Select Project" className="mb-2" />
+                    <BaseHeading text="Current project" className="mb-2" />
                     {/* switch project */}
                     <div className="relative">
                         {/* dropdown header */}
-                        <div className={`cursor-pointer flex items-center shadow-sm gap-10 px-3 py-2 rounded-md justify-between ${theme === 'light' ? '!border !border-textColor-100/20' : '!border !border-zinc-600'}`}
+                        <div className={`cursor-pointer flex items-center shadow-sm gap-10 px-2 py-2 rounded-md justify-between ${theme === 'light' ? '!border !border-textColor-100/20' : '!border !border-zinc-600'}`}
                             onClick={() => setShowProjects(!showProjects)}>
-                            <p>{currentProject?.name || "Untitled Project"}</p>
+                            <div className="flex items-center gap-1">
+                                <FolderOpenDot size={20} className="text-primary-300" />
+                                <p>{currentProject?.name || "Untitled Project"}</p>
+                            </div>
                             <UnfoldMoreOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                         </div>
 
@@ -179,7 +188,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                         </div >}
                     </div>
 
-                    <RippleButton onClick={() => setIsModalOpen(true)} cssClasses="py-2 px-3 rounded-md mt-3">
+                    <RippleButton onClick={() => setIsModalOpen(true)} cssClasses="py-2 px-2 rounded-md mt-3">
                         <AddIcon className="text-white" />
                         New project
                     </RippleButton>
@@ -192,15 +201,14 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                         hideProjectDrawer={onHide}
                     />}
                 </div>
-                <div>
-                    <BaseHeading text="Projects settings" className="mb-2" />
-                    <div
-                        className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit hover:bg-red-600/10`}
-                        onClick={handleExitProject}
-                    >
-                        {isExitPending ? <LoadingSpinner isSmall /> : <ChangeCircleOutlinedIcon className="text-red-600" />}
-                        <span className={`font-medium text-red-600`}>Exit project</span>
-                    </div>
+            </div>
+            <div>
+                <div
+                    className={`source-explorer flex items-center justify-center gap-2 px-1 py-1 rounded-md cursor-pointer w-fit hover:bg-red-600/10`}
+                    onClick={handleExitProject}
+                >
+                    {isExitPending ? <LoadingSpinner isSmall /> : <ArrowLeft size={20} className="text-red-600" />}
+                    <span className={`font-medium text-red-600`}>Leave project</span>
                 </div>
             </div>
             {/* Profile dropdown */}
