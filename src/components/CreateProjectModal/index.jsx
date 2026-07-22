@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import makeApiRequest from '../../api';
 import { extractThumbnail } from '../../utils';
 import Modal from 'react-bootstrap/Modal';
@@ -7,8 +7,6 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import LoadingSpinner from '../LoadingSpinner';
 
 import { useToast } from "../../contexts/toastContext";
-import { MainContext } from '../../contexts/mainContext';
-import { ProjectContext } from '../../contexts/projectContext';
 
 const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hideProjectDrawer, theme }) => {
 

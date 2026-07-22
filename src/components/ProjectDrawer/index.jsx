@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { ProjectContext } from '../../contexts/projectContext';
 import { MainContext } from '../../contexts/mainContext';
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import { ArrowLeft } from 'lucide-react';
 import { ChevronLeft } from 'lucide-react';
 import { FolderOpenDot } from 'lucide-react';
@@ -11,7 +10,6 @@ import UnfoldMoreOutlinedIcon from '@mui/icons-material/UnfoldMoreOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import BaseHeading from "../BaseHeading";
 import makeApiRequest from '../../api';
-import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
 import LoadingSpinner from "../LoadingSpinner";
 import { AuthContext } from '../../contexts/authContext';
 import useAuth from '../../hooks/useAuth';
@@ -188,7 +186,7 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                         </div >}
                     </div>
 
-                    <RippleButton onClick={() => setIsModalOpen(true)} cssClasses="py-2 px-2 rounded-md mt-3">
+                    <RippleButton onClick={() => setIsModalOpen(true)} cssClasses="py-2 px-2 rounded-md mt-3 ml-auto">
                         <AddIcon className="text-white" />
                         New project
                     </RippleButton>
