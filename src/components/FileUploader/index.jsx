@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from "../../contexts/mainContext.jsx";
-// import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-// import { Checkbox } from "@mui/material";
-// import BaseHeading from "../BaseHeading";
+import { ArrowUpFromLine } from 'lucide-react';
+
 
 const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, setIsVideoIncluded }) => {
 
@@ -93,11 +92,8 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
         }
     };
 
-    // const [progress, setProgress] = useState(0);
-    // const [isProgressStarted, setIsProgressStarted] = useState(false);
-
     return (
-        <div className="relative flex flex-col items-center p-4 border-2 border-dashed rounded-md border-primary-200">
+        <div className={`relative flex flex-col items-center p-4 border-dashed border-[0.5px] rounded-xl border-primary-200 ${theme === 'light' ? 'bg-primary-100/50' : 'bg-primary-300/5'}`}>
             <input
                 type="file"
                 multiple
@@ -107,48 +103,12 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
                 id="file-input"
                 onChange={handleFileUpload}
             />
-            {/* <div className="relative !ml-auto flex items-center gap-1">
-                <Checkbox
-                    className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
-                    checked={isFineGrained}
-                    onChange={(e) => setIsFineGrained(e.target.checked)}
-                    inputProps={{ "aria-label": "Fine-grained mode" }}
-                    label="Fine-grained mode"
-                />
-
-                <BaseHeading text="Fine-grained mode" />
-
-                <InfoOutlinedIcon onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className='!relative !w-5' style={{ color: `${theme === 'light' ? '#777' : '#ABAEB4'}` }} />
-
-                {
-                    isInfoTooltipOpen && (
-                        <div
-                            className={
-                                `absolute
-                right-0
-                top-full
-                mt-2
-                z-40
-                w-[280px]
-                max-w-[calc(100vw-40px)]
-                p-2
-                rounded-md
-                shadow-[0px_0px_30px_-2px_rgba(82,79,79,0.6)]
-                break-words
-                ${theme === 'light' ? 'bg-white' : 'bg-textColor-300'}
-                                `
-                            }
-                        >
-                            <BaseHeading text="Get high detail info about visual part of the video. Processing time may increase." />
-                        </div>
-                    )
-                }
-            </div> */}
             <label
                 htmlFor="file-input"
                 className="w-full p-4 text-center cursor-pointer text-primary-300"
             >
                 {!isFileUploading ? <>
+                    <ArrowUpFromLine size={40} className="mx-auto mb-3" />
                     <p className="font-bold">Click to browse files</p>
 
                     <p className="mt-1 text-sm">
