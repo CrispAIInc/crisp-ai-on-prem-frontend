@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from "../../contexts/mainContext.jsx";
 import { ArrowUpFromLine } from 'lucide-react';
+import { generatePdfThumbnail } from '../../utils.js';
 
 
 const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelectedFiles, selectedFileFormat = '', setSelectedFileFormat, setIsVideoIncluded }) => {
@@ -11,19 +12,32 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
     const [fileThumbnails, setFileThumbnails] = useState([]);
     // const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
-    const handleFileUpload = (event) => {
+    const handleFileUpload = async (event) => {
         const files = Array.from(event.target.files);
-        // add files to previously set files in selectedFiles
+
         setSelectedFiles((prev) => [...prev, ...files]);
-        const thumbnails = files.map((file) => {
-            const type = file.type;
-            setSelectedFileFormat(type);
-            const preview =
-                type.startsWith('image/') || type.startsWith('video/')
-                    ? URL.createObjectURL(file)
-                    : null;
-            return { file, preview };
-        });
+
+        const thumbnails = await Promise.all(
+            files.map(async (file) => {
+                const type = file.type;
+
+                let preview = null;
+
+                if (type.startsWith("image/") || type.startsWith("video/")) {
+                    preview = URL.createObjectURL(file);
+                } else if (type === "application/pdf") {
+                    preview = await generatePdfThumbnail(file);
+                }
+
+                return {
+                    file,
+                    preview,
+                };
+            })
+        );
+
+        setSelectedFileFormat(files[0]?.type ?? "");
+
         setFileThumbnails((prev) => [...prev, ...thumbnails]);
     };
 
@@ -49,28 +63,21 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
         const { file, preview } = thumbnail;
         const type = file.type;
 
-        if (type.startsWith('image/')) {
+        if (type.startsWith('image/') || type === 'application/pdf') {
             return (
                 <img
                     src={preview}
                     alt={file.name}
-                    className="object-cover w-full h-32 rounded-md"
+                    className="object-cover w-full h-full rounded-xl !border !border-primary-200"
                 />
             );
         } else if (type.startsWith('video/')) {
             return (
                 <video
                     src={preview}
-                    className="object-cover w-full h-32 rounded-md"
+                    className="object-cover w-full h-full rounded-xl !border !border-primary-200"
                     controls
                 />
-            );
-        } else if (type === 'application/pdf') {
-            return (
-                <div className="flex flex-col items-center justify-center w-full h-32 bg-gray-200 rounded-md">
-                    <p className="font-bold text-red-500">PDF</p>
-                    <p className="text-xs text-center text-gray-500 break-all">{file.name}</p>
-                </div>
             );
         } else if (
             type === 'application/msword' ||
@@ -121,16 +128,17 @@ const FileUploader = ({ isFineGrained, setIsFineGrained, selectedFiles, setSelec
                 </> : <p className="text-sm">Processing source ingestion...</p>
                 }
             </label>
-            <div className="grid w-full grid-cols-3 gap-4 mt-4">
+            <div className="w-full flex items-center gap-4 mt-4">
                 {fileThumbnails.map((thumbnail, index) => (
-                    <div key={index} className="relative">
+                    <div key={index} className="relative w-20 h-20 rounded-xl">
                         {renderThumbnail(thumbnail, index)}
                         <button
                             onClick={() => handleRemoveThumbnail(index)}
-                            className="absolute flex flex-col items-center justify-center w-5 h-5 text-xs text-center text-white bg-black rounded-full top-1 right-1"
+                            className="absolute flex flex-col items-center justify-center w-5 h-5 text-xs text-center text-white bg-black/55 rounded-full -top-2 -right-2"
                         >
                             ✕
                         </button>
+                        <p className="mt-1 text-xs truncate">{thumbnail?.file?.name}</p>
                     </div>
                 ))}
             </div>

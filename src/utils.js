@@ -1,3 +1,49 @@
+import * as pdfjsLib from 'pdfjs-dist';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url
+).toString();
+
+export async function generatePdfThumbnail(file) {
+    const fileReader = new FileReader();
+
+    return new Promise((resolve, reject) => {
+        fileReader.onload = async () => {
+            try {
+                const typedArray = new Uint8Array(fileReader.result);
+
+                const pdf = await pdfjsLib.getDocument({
+                    data: typedArray,
+                }).promise;
+
+                const page = await pdf.getPage(1);
+
+                const viewport = page.getViewport({
+                    scale: 1,
+                });
+
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                await page.render({
+                    canvasContext: context,
+                    viewport,
+                }).promise;
+
+                resolve(canvas.toDataURL("image/png"));
+            } catch (err) {
+                reject(err);
+            }
+        };
+
+        fileReader.readAsArrayBuffer(file);
+    });
+}
+
 export function extractSections(outlineText) {
     const sectionRegex = /^(?:####\s*)?(?:\*\*)?(I{1,3}|IV|V|X|IX|C|D|M|VI{1,3}|I{1,3})\.\s+(.+?)(?:\*\*)?$|^\s{3}(A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z)\.\s+(.+)|^\s{6}(\d+)\.\s+(.+)/gm;
     let match;
