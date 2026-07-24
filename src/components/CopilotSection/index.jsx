@@ -64,7 +64,7 @@ const ChatMessage = ({ text, refs, timestamps }) => {
                   key={video.source_path + '' + index}
                   content={`${video.source_path} | Timestamp: ${video.timestamp}`}
                   data-object={video}
-                  onClick={(e) => handleSourceLinkClick(e, video)}
+                  handleClick={(e) => handleSourceLinkClick(e, video)}
                   cssClasses={`ml-0 cursor-pointer break-keep ${!video.score && 'text-gradient-x'}`}
                 />
               );
@@ -80,7 +80,7 @@ const ChatMessage = ({ text, refs, timestamps }) => {
                 key={video.source_path + '' + index}
                 content={`${video.source_path} | Keyframe at: ${decimalSecondsToHHMMSS(video.timestamp)}`}
                 data-object={video}
-                onClick={(e) => handleSourceLinkClick(e, video)}
+                handleClick={(e) => handleSourceLinkClick(e, video)}
                 cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
               />
             ))}
@@ -95,7 +95,7 @@ const ChatMessage = ({ text, refs, timestamps }) => {
                 key={pdf.source_path + '' + index}
                 content={`${pdf.source_path} | Page: ${parseInt(pdf.page, 10)}`}
                 data-object={pdf}
-                onClick={(e) => handleSourceLinkClick(e, pdf)}
+                handleClick={(e) => { handleSourceLinkClick(e, pdf); }}
                 cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
               />
             ))}
@@ -110,7 +110,7 @@ const ChatMessage = ({ text, refs, timestamps }) => {
                 key={img.source_path + '' + index}
                 content={img.source_path}
                 data-object={img}
-                onClick={(e) => handleSourceLinkClick(e, img)}
+                handleClick={(e) => handleSourceLinkClick(e, img)}
                 cssClasses="ml-0 cursor-pointer  break-keep text-gradient-x"
               />
             ))}
@@ -549,7 +549,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         noteReferences.videoLinks.push(video.source_path + " | Timestamp: " + video.timestamp);
         refs["videoLinks"].push(video);
         return (
-          <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+          <Chip key={video.source_path} content={video.source_path + " | Timestamp: " + video.timestamp} data-object={video} handleClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         );
       });
 
@@ -557,7 +557,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         noteReferences.keyframeLinks.push(video.source_path + " | Keyframe at: " + decimalSecondsToHHMMSS(video.timestamp));
         refs["keyframeLinks"].push(video);
         return (
-          <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+          <Chip key={video.source_path} content={video.source_path + " | keyframe at: " + decimalSecondsToHHMMSS(video.timestamp)} data-object={video} handleClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         );
       });
 
@@ -565,7 +565,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         noteReferences.pdfLinks.push(pdf.source_path + " | Page: " + (parseInt(pdf.page)));
         refs["pdfLinks"].push(pdf);
         return (
-          <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page))} data-object={pdf} onClick={(event) => handleSourceLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
+          <Chip key={pdf.source_path} content={pdf.source_path + " | Page: " + (parseInt(pdf.page))} data-object={pdf} handleClick={(event) => handleSourceLinkClick(event, pdf)} cssClasses="ml-0 cursor-pointer  text-gradient-x" />
         );
       });
 
@@ -573,7 +573,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         noteReferences.imageLinks.push(img.source_path);
         refs["imageLinks"].push(img);
         return (
-          <Chip key={img.source_path} content={img.source_path} data-object={img} onClick={(event) => handleSourceLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
+          <Chip key={img.source_path} content={img.source_path} data-object={img} handleClick={(event) => handleSourceLinkClick(event, img)} cssClasses="ml-0 cursor-pointer" />
         );
       });
     } else {
@@ -583,7 +583,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
         noteReferences.videoLinks.push(timestamps);
         refs["videoLinks"].push(video);
         return (
-          <Chip key={video.source_path} content={timestamps} data-object={video} onClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
+          <Chip key={video.source_path} content={timestamps} data-object={video} handleClick={(event) => handleSourceLinkClick(event, video)} cssClasses="ml-0 cursor-pointer" />
         );
       });
     }

@@ -19,6 +19,7 @@ import SearchSection from '../SearchSection';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
+import PdfViewer from '../PdfViewer/';
 // import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth }) => {
@@ -35,7 +36,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     setIsPlayerReady,
     hasDuration,
     setHasDuration,
-    contentPanelContainerRef,
+    pdfRef,
     jumpToPage,
     committedSources,
     activeView,
@@ -84,15 +85,17 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   }, [isPlayerReady, resourceURL, currentResource?.source_path, currentResource?.timestamp, currentResource?.file_type]);
 
   useEffect(() => {
-    if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
-      setTimeout(() => {
-        const targetRef = pageRefs.current[jumpToPage.page - 1];
-        if (targetRef && targetRef.scrollIntoView) {
-          targetRef.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 1500);
-    }
-  }, [jumpToPage, numPages, isPdfLoaded]);
+    console.log("hellooo");
+    // if (jumpToPage.page > 0 && jumpToPage.page <= numPages) {
+    pdfRef.current?.goToPage(jumpToPage.page);
+    // setTimeout(() => {
+    //   const targetRef = pageRefs.current[jumpToPage.page - 1];
+    //   if (targetRef && targetRef.scrollIntoView) {
+    //     targetRef.scrollIntoView({ behavior: "smooth" });
+    //   }
+    // }, 1500);
+    // }
+  }, [jumpToPage, numPages, isPdfLoaded, pdfRef]);
 
   useEffect(() => {
     if (activeView === "resource") {
@@ -466,7 +469,13 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
               // ref={workspaceContainer}
               style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             >
-              <Document
+              <PdfViewer
+                sourcePublicUrl={sourcePublicUrl}
+                resourceURL={resourceURL}
+                fileName={null}
+                ref={pdfRef}
+              />
+              {/* <Document
                 className="!w-full mx-auto relative"
                 file={sourcePublicUrl || resourceURL}
                 onLoadSuccess={onDocumentLoadSuccess}
@@ -489,7 +498,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
                   </div>
                 ))}
-              </Document>
+              </Document> */}
             </div>
             {/* PDF summary */}
             {!isTranslationLoading ? (

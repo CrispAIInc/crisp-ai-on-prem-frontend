@@ -49,6 +49,7 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
     };
 
     const handlePDFLinkClick = async (pdf) => {
+        console.log("hello handle");
         const resourceURL = `${API_ENDPOINT}/${pdf.file_type
             }/all/${encodeURIComponent(pdf.source_path)}`;
         setCurrentResource({ ...pdf });
@@ -57,26 +58,16 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         setSummary(pdf.summary);
         setSummaries(pdf.topic_summaries);
         setActiveView('resource');
-
-        // setSidebarWidth(prev => {
-        //     if (prev !== maxWidth) return maxWidth;
-        //     return window.innerWidth / 3.5;
-        // });
-        // setIsLeftSidebarOpen(true);
         workspaceContainer.current.scrollTo({
             top: 0,
             behavior: "smooth",
         });
         setShowMetadata(true);
-        // set a little delay
-        // await delay(3000);
         setJumpToPage({ page: parseInt(pdf?.page) });
-        // setShowNoteDetails(false);
     };
 
     const handleSourceLinkClick = (event, source) => {
         if (!source) return;
-        console.log(source);
 
         const sourceExist = knowledgeBase.find(item => item.source_path === source?.source_path);
 

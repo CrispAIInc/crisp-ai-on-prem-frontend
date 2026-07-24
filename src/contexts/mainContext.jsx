@@ -1292,9 +1292,12 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [frameExtractionRate, setFrameExtractionRate] = useState({ mode: "medium", frames: 1, interval: 3 });
 
+    // Pdf viewer ref
+    const pdfRef = useRef(null);
 
     // create value object with all the states
     const value = {
+        pdfRef,
         isKnowledgeBaseFetching, setisKnowledgeBaseFetching,
         frameExtractionRate, setFrameExtractionRate,
         blogs, setBlogs,
