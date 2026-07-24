@@ -66,8 +66,12 @@ function SourceExplorerItem({
                     <BaseHeading cssClasses={`text-xs`} text={typeof (source.category) === "string" ? source.category : source.category[0]} />
                     <CircleIcon className="!text-[5px]" />
                     <BaseHeading cssClasses={`text-xs`} text={source.file_type} />
-                    <CircleIcon className="!text-[5px]" />
-                    <BaseHeading cssClasses={`text-xs`} text={source.total_pages ? `${source.total_pages} page${source.total_pages > 1 ? 's' : ''}` : formatDuration(source.source_duration) || null} />
+                    {
+                        (source.total_pages || source?.source_duration) && (
+                            <CircleIcon className="!text-[5px]" />
+                        )
+                    }
+                    <BaseHeading cssClasses={`text-xs`} text={source.total_pages ? `${source.total_pages} page${source.total_pages > 1 ? 's' : ''}` : source?.source_duration ? formatDuration(source.source_duration) : ''} />
                 </div>
             </div>
 
