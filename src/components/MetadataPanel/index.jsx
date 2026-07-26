@@ -290,6 +290,13 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const [isVideoPlaying, setIsVideoPlaying] = useState(video_autoplay);
   const [thumbnailPublicUrl, setThumbnailPublicUrl] = useState(null);
 
+  const handleDownload = () => {
+    const url = sourcePublicUrl || resourceURL;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = currentResource;
+    a.click();
+  };
 
 
   useEffect(() => {
@@ -548,7 +555,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
                 {/* Actions */}
                 <div style={{ display: "flex", gap: 2 }}>
-                  <button style={actionBtnStyle} aria-label="Download">
+                  <button style={actionBtnStyle} onClick={handleDownload} aria-label="Download">
                     <Download size={16} />
                   </button>
                   <button style={actionBtnStyle} aria-label="Fullscreen">
