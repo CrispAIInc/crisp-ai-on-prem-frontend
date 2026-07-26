@@ -86,7 +86,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
     return (
         <div
             id="combined_summary"
-            className="relative flex flex-col max-w-4xl pt-10 mx-auto"
+            className="relative flex flex-col max-w-4xl pt-3 mx-auto"
             ref={centerPanelRef}
         >
 

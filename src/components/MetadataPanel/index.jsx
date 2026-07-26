@@ -20,7 +20,16 @@ import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
 import PdfViewer from '../PdfViewer/';
-// import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import {
+  FileText,
+  ChevronUp,
+  ChevronDown,
+  Minus,
+  Plus,
+  Download,
+  Maximize2,
+} from "lucide-react";
+import BaseHeading from '../BaseHeading/index.jsx';
 
 const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth }) => {
   const {
@@ -42,7 +51,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     activeView,
     theme,
     generatedResources,
-    metadataPanelContainer
+    metadataPanelContainer,
+    setJumpToPage
   } = useContext(MainContext);
 
 
@@ -84,18 +94,21 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     }
   }, [isPlayerReady, resourceURL, currentResource?.source_path, currentResource?.timestamp, currentResource?.file_type]);
 
+  // pdfRef.current?.goToPage(jumpToPage.page);
   useEffect(() => {
-    console.log("hellooo");
-    // if (jumpToPage.page > 0 && jumpToPage.page <= numPages) {
-    pdfRef.current?.goToPage(jumpToPage.page);
-    // setTimeout(() => {
-    //   const targetRef = pageRefs.current[jumpToPage.page - 1];
-    //   if (targetRef && targetRef.scrollIntoView) {
-    //     targetRef.scrollIntoView({ behavior: "smooth" });
-    //   }
-    // }, 1500);
-    // }
-  }, [jumpToPage, numPages, isPdfLoaded, pdfRef]);
+    if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
+      setTimeout(() => {
+        const targetRef = pageRefs.current[jumpToPage.page - 1];
+        if (targetRef && targetRef.scrollIntoView) {
+          targetRef.scrollIntoView({ behavior: "smooth" });
+          workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        }
+      }, 500);
+    }
+  }, [jumpToPage, numPages, isPdfLoaded]);
 
   useEffect(() => {
     if (activeView === "resource") {
@@ -465,40 +478,118 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
         currentResource?.file_type === "pdf" && (
           <>
             <div
-              className={`relative w-[90%] h-[430px] mx-auto  overflow-y-auto ${theme === " light" ? "!border" : "!border !border-textColor-300"}  overflow-auto rounded-md overflow-x-auto`}
-              // ref={workspaceContainer}
-              style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
+              className={`relative w-[90%] h-[500px] mx-auto overflow-y-hidden ${theme === " light" ? "!border" : "!border !border-textColor-300"} flex flex-col rounded-md overflow-x-auto`}
+            // ref={workspaceContainer}
+            // style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             >
-              <PdfViewer
+              {/* <PdfViewer
                 sourcePublicUrl={sourcePublicUrl}
                 resourceURL={resourceURL}
                 fileName={null}
                 ref={pdfRef}
-              />
-              {/* <Document
-                className="!w-full mx-auto relative"
-                file={sourcePublicUrl || resourceURL}
-                onLoadSuccess={onDocumentLoadSuccess}
+              /> */}
+              {/* <div className="relative flex flex-col"> */}
+              <div
+                className="backdrop-blur-md !bg-transparent"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  padding: "8px 14px",
+                  // background: "var(--pdf-surface-2)",
+                  borderBottom: "1px solid var(--pdf-border)",
+                  flexShrink: 0,
+                  position: 'sticky',
+                  left: 0,
+                  top: 0,
+                  width: '100%',
+                  // height: "100%",
+                }}
               >
+                <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, flex: 1 }}>
+                  <FileText size={17} style={{ color: "var(--pdf-text-secondary)", flexShrink: 0 }} />
+                  <BaseHeading text={currentResource.source_path} />
+                </div>
 
-                {Array.from(new Array(numPages), (el, index) => (
-                  <div
-                    key={`page_${index + 1}`}
-                    ref={(el) => {
-                      pageRefs.current[index] = el;
-                    }}
-                  >
-                    <Page
-                      className="mx-auto"
-                      pageNumber={index + 1}
-                      renderTextLayer={true}
-                      renderAnnotationLayer={true}
-                      scale={1}
-                    />
+                {/* Page jump */}
+                <div style={pillStyle}>
+                  <button style={iconBtnStyle} onClick={() => setJumpToPage({ page: parseInt(jumpToPage.page) - 1 })} aria-label="Previous page">
+                    <ChevronUp size={15} />
+                  </button>
+                  {/* <form onSubmit={handlePageInputSubmit} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <input
+                        value={pageInput}
+                        onChange={(e) => setPageInput(e.target.value)}
+                        onBlur={handlePageInputSubmit}
+                        style={pageInputStyle}
+                        aria-label="Current page"
+                      />
+                      <span style={{ fontSize: 12, color: "var(--pdf-text-secondary)", fontVariantNumeric: "tabular-nums" }}>
+                        / {numPages || "—"}
+                      </span>
+                    </form> */}
+                  <button style={iconBtnStyle} onClick={() => setJumpToPage({ page: parseInt(jumpToPage.page) + 1 })} aria-label="Next page">
+                    <ChevronDown size={15} />
+                  </button>
+                </div>
 
-                  </div>
-                ))}
-              </Document> */}
+                {/* Zoom */}
+                {/* <div style={pillStyle}>
+                    <button style={iconBtnStyle} onClick={zoomOut} aria-label="Zoom out">
+                      <Minus size={14} />
+                    </button>
+                    <span style={{ fontSize: 12, color: "var(--pdf-text-secondary)", minWidth: 36, textAlign: "center" }}>
+                      {Math.round(scale * 100)}%
+                    </span>
+                    <button style={iconBtnStyle} onClick={zoomIn} aria-label="Zoom in">
+                      <Plus size={14} />
+                    </button>
+                  </div> */}
+
+                {/* Actions */}
+                <div style={{ display: "flex", gap: 2 }}>
+                  <button style={actionBtnStyle} aria-label="Download">
+                    <Download size={16} />
+                  </button>
+                  <button style={actionBtnStyle} aria-label="Fullscreen">
+                    <Maximize2 size={16} />
+                  </button>
+                </div>
+              </div>
+              <div className='flex-1 h-full overflow-y-auto'>
+                <Document
+                  className="!w-full mx-auto relative "
+                  file={sourcePublicUrl || resourceURL}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                >
+
+                  {Array.from(new Array(numPages), (el, index) => (
+                    <div
+                      key={`page_${index + 1}`}
+                      ref={(el) => {
+                        pageRefs.current[index] = el;
+                      }}
+                    >
+                      <Page
+                        className="mx-auto"
+                        pageNumber={index + 1}
+                        renderTextLayer={true}
+                        renderAnnotationLayer={true}
+                        scale={1}
+                      // onRenderSuccess={() => {
+                      //   if (jumpToPage.page === index + 1) {
+                      //     pageRefs.current[index]?.scrollIntoView({
+                      //       behavior: "smooth",
+                      //     });
+                      //   }
+                      // }}
+                      />
+
+                    </div>
+                  ))}
+                </Document>
+              </div>
+              {/* </div> */}
             </div>
             {/* PDF summary */}
             {!isTranslationLoading ? (
@@ -651,3 +742,51 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   );
 };
 export default MetadataPanel;
+
+
+const pillStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: 4,
+  background: "var(--pdf-surface-1)",
+  border: "1px solid var(--pdf-border)",
+  borderRadius: 6,
+  padding: 3,
+};
+
+const iconBtnStyle = {
+  width: 26,
+  height: 26,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "transparent",
+  border: "none",
+  borderRadius: 4,
+  color: "var(--pdf-text-secondary)",
+  cursor: "pointer",
+};
+
+const actionBtnStyle = {
+  width: 30,
+  height: 30,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "transparent",
+  border: "none",
+  borderRadius: 6,
+  color: "var(--pdf-text-secondary)",
+  cursor: "pointer",
+};
+
+const pageInputStyle = {
+  width: 30,
+  height: 24,
+  textAlign: "center",
+  border: "1px solid var(--pdf-border)",
+  borderRadius: 4,
+  fontSize: 12,
+  background: "var(--pdf-surface-1)",
+  color: "var(--pdf-text-primary)",
+};
