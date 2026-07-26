@@ -290,12 +290,30 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const [isVideoPlaying, setIsVideoPlaying] = useState(video_autoplay);
   const [thumbnailPublicUrl, setThumbnailPublicUrl] = useState(null);
 
-  const handleDownload = () => {
-    const url = sourcePublicUrl || resourceURL;
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = currentResource;
-    a.click();
+  const handleDownload = async () => {
+
+    try {
+      const publicReelUrl = await getPublicUrl(sourcePublicUrl || resourceURL);
+
+      const response = await fetch(publicReelUrl);
+      const blob = await response.blob();
+
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `${currentResource.source_path}.pdf`;
+
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(blobUrl);
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
 
@@ -324,6 +342,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
         .catch(console.error);
     }
   }, [currentResource]);
+
 
   return (
     <div className="max-w-4xl mx-auto overflow-y-auto" ref={metadataPanelContainer}>
@@ -495,7 +514,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                 fileName={null}
                 ref={pdfRef}
               /> */}
-              {/* <div className="relative flex flex-col"> */}
               <div
                 className="backdrop-blur-md !bg-transparent"
                 style={{
@@ -558,9 +576,9 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                   <button style={actionBtnStyle} onClick={handleDownload} aria-label="Download">
                     <Download size={16} />
                   </button>
-                  <button style={actionBtnStyle} aria-label="Fullscreen">
+                  {/* <button style={actionBtnStyle} onClick={handleFullscreen} aria-label="Fullscreen">
                     <Maximize2 size={16} />
-                  </button>
+                  </button> */}
                 </div>
               </div>
               <div className='flex-1 h-full overflow-y-auto'>
@@ -596,7 +614,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                   ))}
                 </Document>
               </div>
-              {/* </div> */}
             </div>
             {/* PDF summary */}
             {!isTranslationLoading ? (
