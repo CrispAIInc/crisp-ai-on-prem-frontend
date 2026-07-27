@@ -348,6 +348,10 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
   const [pageInput, setPageInput] = useState(1);
 
+  useEffect(() => {
+    setPageInput(jumpToPage.page);
+  }, [jumpToPage, jumpToPage.page]);
+
   const handlePageInputSubmit = (e) => {
     e.preventDefault();
     setJumpToPage({ page: parseInt(pageInput, 10) });
@@ -356,13 +360,13 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const handleToPagePrevious = () => {
     const newPage = jumpToPage.page <= 1 ? 1 : parseInt(jumpToPage.page) - 1;
     setJumpToPage({ page: newPage });
-    setPageInput(newPage);
+    // setPageInput(newPage);
   };
 
   const handleToPageNext = () => {
     const newPage = jumpToPage.page >= numPages ? numPages : parseInt(jumpToPage.page) + 1;
     setJumpToPage({ page: newPage });
-    setPageInput(newPage);
+    // setPageInput(newPage);
   };
 
 
