@@ -96,8 +96,11 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
   // pdfRef.current?.goToPage(jumpToPage.page);
   useEffect(() => {
+    console.log(1);
     if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
+      console.log(2);
       setTimeout(() => {
+        console.log(3);
         const targetRef = pageRefs.current[jumpToPage.page - 1];
         if (targetRef && targetRef.scrollIntoView) {
           targetRef.scrollIntoView({ behavior: "smooth" });
@@ -343,9 +346,29 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     }
   }, [currentResource]);
 
+  const [pageInput, setPageInput] = useState(1);
+
+  const handlePageInputSubmit = (e) => {
+    e.preventDefault();
+    setJumpToPage({ page: parseInt(pageInput, 10) });
+  };
+
+  const handleToPagePrevious = () => {
+    const newPage = jumpToPage.page <= 1 ? 1 : parseInt(jumpToPage.page) - 1;
+    setJumpToPage({ page: newPage });
+    setPageInput(newPage);
+  };
+
+  const handleToPageNext = () => {
+    const newPage = jumpToPage.page >= numPages ? numPages : parseInt(jumpToPage.page) + 1;
+    setJumpToPage({ page: newPage });
+    setPageInput(newPage);
+  };
+
 
   return (
-    <div className="max-w-4xl mx-auto overflow-y-auto" ref={metadataPanelContainer}>
+    <div className={`max-w-4xl mx-auto overflow-y-auto [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`} ref={metadataPanelContainer}>
 
       {currentResource?.file_type === "video" && (
         <>
@@ -393,7 +416,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                 <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {/* generate visual/combined summary */}
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-2 mt-6 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-full`}>
-                  <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
+                  <LanguageOutlinedIcon className={`text-primary-300 ml-1`} />
                   <CustomSelectTwo
                     withIcon
                     options={languageOptions}
@@ -504,7 +527,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
         currentResource?.file_type === "pdf" && (
           <>
             <div
-              className={`relative w-[90%] h-[500px] mx-auto overflow-y-hidden ${theme === " light" ? "!border" : "!border !border-textColor-300"} flex flex-col rounded-md overflow-x-auto`}
+              className={`relative w-[90%] h-[500px] mx-auto overflow-y-hidden ${theme === "light" ? "!border !border-textColor-200/20" : "!border !border-textColor-300"} flex flex-col rounded-md overflow-x-auto shadow-sm [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}
             // ref={workspaceContainer}
             // style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             >
@@ -538,22 +562,25 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
                 {/* Page jump */}
                 <div style={pillStyle}>
-                  <button style={iconBtnStyle} onClick={() => setJumpToPage({ page: parseInt(jumpToPage.page) - 1 })} aria-label="Previous page">
+                  <button style={iconBtnStyle} onClick={handleToPagePrevious} aria-label="Previous page">
                     <ChevronUp size={15} />
                   </button>
-                  {/* <form onSubmit={handlePageInputSubmit} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <input
-                        value={pageInput}
-                        onChange={(e) => setPageInput(e.target.value)}
-                        onBlur={handlePageInputSubmit}
-                        style={pageInputStyle}
-                        aria-label="Current page"
-                      />
-                      <span style={{ fontSize: 12, color: "var(--pdf-text-secondary)", fontVariantNumeric: "tabular-nums" }}>
-                        / {numPages || "—"}
-                      </span>
-                    </form> */}
-                  <button style={iconBtnStyle} onClick={() => setJumpToPage({ page: parseInt(jumpToPage.page) + 1 })} aria-label="Next page">
+                  <form onSubmit={handlePageInputSubmit} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    <input
+                      min={1}
+                      max={numPages}
+                      value={pageInput}
+                      onChange={(e) => setPageInput(e.target.value)}
+                      // onBlur={handlePageInputSubmit}
+                      style={pageInputStyle}
+                      aria-label="Current page"
+                      className={`outline-none ${theme === 'light' ? '!border !border-textColor-200/30' : '!border !border-textColor-200/20'}`}
+                    />
+                    <span style={{ fontSize: 12, color: "var(--pdf-text-secondary)", fontVariantNumeric: "tabular-nums" }}>
+                      / {numPages || "—"}
+                    </span>
+                  </form>
+                  <button style={iconBtnStyle} onClick={handleToPageNext} aria-label="Next page">
                     <ChevronDown size={15} />
                   </button>
                 </div>
@@ -581,7 +608,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                   </button> */}
                 </div>
               </div>
-              <div className='flex-1 h-full overflow-y-auto'>
+              <div className={`flex-1 h-full overflow-y-auto [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
                 <Document
                   className="!w-full mx-auto relative "
                   file={sourcePublicUrl || resourceURL}
@@ -628,8 +656,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
               >
                 {/* search */}
                 <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
-                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-10 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
-                  <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
+                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mt-5 mb-2 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
+                  <LanguageOutlinedIcon className={`text-primary-300 ml-1`} />
                   <CustomSelectTwo
                     withIcon
                     options={languageOptions}
@@ -698,7 +726,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
       {
         currentResource?.file_type === "img" && (
           <div className="pb-10">
-            <div className={`relative pt-[56.25%] w-full max-w-lg mx-auto h-80 ${theme === " light" ? "!border" : "!border !border-textColor-300"} rounded-md overflow-hidden`}>
+            <div className={`relative pt-[56.25%] w-full max-w-lg mx-auto h-80 ${theme === " light" ? "!border" : "!border !border-textColor-300"} rounded-md overflow-hidden [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
               <GsFile
                 className="absolute top-0 left-0 object-contain w-full h-full"
                 gsUrl={currentResource?.thumbnail || resourceURL}
@@ -717,7 +746,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
               >
                 {/* search */}
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-10 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
-                  <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
+                  <LanguageOutlinedIcon className={`text-primary-300 ml-1`} />
                   <CustomSelectTwo
                     withIcon
                     options={languageOptions}
@@ -808,7 +837,7 @@ const pageInputStyle = {
   width: 30,
   height: 24,
   textAlign: "center",
-  border: "1px solid var(--pdf-border)",
+  // border: "1px solid var(--pdf-border)",
   borderRadius: 4,
   fontSize: 12,
   background: "var(--pdf-surface-1)",
