@@ -139,7 +139,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     setIsPdfLoaded(true);
   };
 
-  const pageRefs = useRef({});
+  const pageRefs = useRef([]);
   const lastSeekContextRef = useRef(null);
 
   async function translateMetadata(_chosenLanguage, object, fromTranslateDropdown = false) {
@@ -347,10 +347,51 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   }, [currentResource]);
 
   const [pageInput, setPageInput] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [scale, setScale] = useState(1.1);
+
+  const zoomIn = () => setScale((s) => Math.min(2.5, +(s + 0.1).toFixed(2)));
+  const zoomOut = () => setScale((s) => Math.max(0.5, +(s - 0.1).toFixed(2)));
+  // const pageWidth = containerWidth ? Math.min(containerWidth - 48, 760) * scale : undefined;
+
+  useEffect(() => {
+    if (!numPages) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the page that's most visible
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible.length > 0) {
+          const page = Number(
+            visible[0].target.getAttribute("data-page")
+          );
+
+          setCurrentPage(page);
+        }
+      },
+      {
+        root: workspaceContainer.current, // your scroll container
+        threshold: [0.25, 0.5, 0.75],
+      }
+    );
+
+    pageRefs.current.forEach((page) => {
+      if (page) observer.observe(page);
+    });
+
+    return () => observer.disconnect();
+  }, [numPages, pageInput, jumpToPage.page, jumpToPage]);
 
   useEffect(() => {
     setPageInput(jumpToPage.page);
   }, [jumpToPage, jumpToPage.page]);
+
+  useEffect(() => {
+    setPageInput(String(currentPage));
+  }, [currentPage]);
 
   const handlePageInputSubmit = (e) => {
     e.preventDefault();
@@ -358,17 +399,16 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   };
 
   const handleToPagePrevious = () => {
-    const newPage = jumpToPage.page <= 1 ? 1 : parseInt(jumpToPage.page) - 1;
+    const newPage = currentPage <= 1 ? 1 : currentPage - 1;
     setJumpToPage({ page: newPage });
     // setPageInput(newPage);
   };
 
   const handleToPageNext = () => {
-    const newPage = jumpToPage.page >= numPages ? numPages : parseInt(jumpToPage.page) + 1;
+    const newPage = currentPage >= numPages ? numPages : currentPage + 1;
     setJumpToPage({ page: newPage });
     // setPageInput(newPage);
   };
-
 
   return (
     <div className={`max-w-4xl mx-auto overflow-y-auto [&::-webkit-scrollbar]:h-1
@@ -563,7 +603,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                   <FileText size={17} style={{ color: "var(--pdf-text-secondary)", flexShrink: 0 }} />
                   <BaseHeading text={currentResource.source_path} />
                 </div>
-
                 {/* Page jump */}
                 <div style={pillStyle}>
                   <button style={iconBtnStyle} onClick={handleToPagePrevious} aria-label="Previous page">
@@ -575,7 +614,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                       max={numPages}
                       value={pageInput}
                       onChange={(e) => setPageInput(e.target.value)}
-                      // onBlur={handlePageInputSubmit}
                       style={pageInputStyle}
                       aria-label="Current page"
                       className={`outline-none ${theme === 'light' ? '!border !border-textColor-200/30' : '!border !border-textColor-200/20'}`}
@@ -590,17 +628,17 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                 </div>
 
                 {/* Zoom */}
-                {/* <div style={pillStyle}>
-                    <button style={iconBtnStyle} onClick={zoomOut} aria-label="Zoom out">
-                      <Minus size={14} />
-                    </button>
-                    <span style={{ fontSize: 12, color: "var(--pdf-text-secondary)", minWidth: 36, textAlign: "center" }}>
-                      {Math.round(scale * 100)}%
-                    </span>
-                    <button style={iconBtnStyle} onClick={zoomIn} aria-label="Zoom in">
-                      <Plus size={14} />
-                    </button>
-                  </div> */}
+                <div style={pillStyle}>
+                  <button style={iconBtnStyle} onClick={zoomOut} aria-label="Zoom out">
+                    <Minus size={14} />
+                  </button>
+                  <span style={{ fontSize: 12, color: "var(--pdf-text-secondary)", minWidth: 36, textAlign: "center" }}>
+                    {Math.round(scale * 100)}%
+                  </span>
+                  <button style={iconBtnStyle} onClick={zoomIn} aria-label="Zoom in">
+                    <Plus size={14} />
+                  </button>
+                </div>
 
                 {/* Actions */}
                 <div style={{ display: "flex", gap: 2 }}>
@@ -623,6 +661,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                   {Array.from(new Array(numPages), (el, index) => (
                     <div
                       key={`page_${index + 1}`}
+                      data-page={index + 1}
                       ref={(el) => {
                         pageRefs.current[index] = el;
                       }}
@@ -632,7 +671,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                         pageNumber={index + 1}
                         renderTextLayer={true}
                         renderAnnotationLayer={true}
-                        scale={1}
+                        scale={scale}
+                      // width={pageWidth}
                       // onRenderSuccess={() => {
                       //   if (jumpToPage.page === index + 1) {
                       //     pageRefs.current[index]?.scrollIntoView({
