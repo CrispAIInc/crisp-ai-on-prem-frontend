@@ -346,7 +346,7 @@ export default function MainProvider({ children, theme, setTheme }) {
             }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
         let fileToCommit = knowledgeBase.find((item) => item.source_path === file.source_path) || file;
 
-        setCurrentResource({ ...fileToCommit, timestamp: file?.timestamp, page: file?.page });
+        setCurrentResource({ ...fileToCommit, timestamp: file?.timestamp, page: file?.page || 1 });
         setResourceURL(resourceURL);
         setTranscription(fileToCommit.metadata ? fileToCommit.metadata.transcription : "");
         if (fileToCommit.file_type != "img") {
@@ -354,11 +354,11 @@ export default function MainProvider({ children, theme, setTheme }) {
             setSummaries(fileToCommit.topic_summaries);
         }
 
-        // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page life the case when clicking on a reference
+        // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page like the case when clicking on a reference
         console.log(file, fileToCommit);
         if (fileToCommit.file_type === "pdf") {
             await delay(1000);
-            setJumpToPage({ page: Number(file?.page) });
+            setJumpToPage({ page: file?.page || 1 });
         }
         setActiveView('resource');
         if (!isFromCheckbox) { setShowMetadata(true); }
@@ -378,9 +378,9 @@ export default function MainProvider({ children, theme, setTheme }) {
 
         if (!isChecked) setCheckedAll(false);
 
-        if (isChecked === true && !currentResource) {
-            onThumbnailClick(undefined, file, true);
-        }
+        // if (isChecked === true && !currentResource) {
+        //     onThumbnailClick(undefined, file, true);
+        // }
     };
 
     const [checkedSources, setCheckedSources] = useState(knowledgeBase.filter(item => item.is_checked));
@@ -1292,9 +1292,12 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const [frameExtractionRate, setFrameExtractionRate] = useState({ mode: "medium", frames: 1, interval: 3 });
 
+    // Pdf viewer ref
+    const pdfRef = useRef(null);
 
     // create value object with all the states
     const value = {
+        pdfRef,
         isKnowledgeBaseFetching, setisKnowledgeBaseFetching,
         frameExtractionRate, setFrameExtractionRate,
         blogs, setBlogs,

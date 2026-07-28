@@ -86,14 +86,14 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
     return (
         <div
             id="combined_summary"
-            className="relative flex flex-col max-w-4xl pt-10 mx-auto"
+            className="relative flex flex-col max-w-4xl pt-3 mx-auto"
             ref={centerPanelRef}
         >
 
             {showMetadata && (
                 <div className="w-full max-w-full">
                     <div className="flex items-center justify-between gap-3 mb-3">
-                        <BaseHeading text={`Source: ${currentResource.source_path}`} className="truncate" />
+                        {/* <BaseHeading text={`Source: ${currentResource.source_path}`} className="truncate" /> */}
                         <div className="justify-end w-fit flex items-center cursor-pointer " onClick={closeMetadataPanel} >
                             <CloseIcon className={`text-[10px] ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} />
                             <BaseHeading text="Close metadata" />

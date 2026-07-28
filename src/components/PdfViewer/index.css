@@ -1,0 +1,48 @@
+.pdf-shell--dark {
+  --pdf-surface-1: #14161c;
+  --pdf-surface-2: #1b1e26;
+  --pdf-canvas-bg: #0e1015;
+  --pdf-border: #2a2e38;
+  --pdf-text-primary: #e8e9ec;
+  --pdf-text-secondary: #9a9da8;
+  --pdf-text-muted: #6b6e78;
+  --pdf-accent: #6c8dff;
+}
+
+.pdf-shell--light {
+  --pdf-surface-1: #ffffff;
+  --pdf-surface-2: #f5f6f8;
+  --pdf-canvas-bg: #eceef1;
+  --pdf-border: #e2e4e9;
+  --pdf-text-primary: #17181c;
+  --pdf-text-secondary: #6b6e78;
+  --pdf-text-muted: #9a9da8;
+  --pdf-accent: #3b5fe0;
+}
+
+.pdf-shell button:hover {
+  background: var(--pdf-canvas-bg) !important;
+}
+
+.pdf-shell button:active {
+  transform: scale(0.96);
+}
+
+/* thin, unobtrusive scrollbars */
+.pdf-shell *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.pdf-shell *::-webkit-scrollbar-thumb {
+  background: var(--pdf-border);
+  border-radius: 4px;
+}
+.pdf-shell *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* react-pdf's own text/annotation layers — keep them invisible but selectable */
+.pdf-shell .react-pdf__Page__textContent,
+.pdf-shell .react-pdf__Page__annotations {
+  opacity: 1;
+}

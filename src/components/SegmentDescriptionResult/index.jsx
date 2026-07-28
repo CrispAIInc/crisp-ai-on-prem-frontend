@@ -155,7 +155,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                     <ul className="list-disc list-inside text-sm/6 text-textColor-300">
                         {source.map((ref, index) => {
                             return (
-                                <Chip key={index} content={timestampText} data-object={ref} onClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer text-gradient-x" />
+                                <Chip key={index} content={timestampText} data-object={ref} handleClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer text-gradient-x" />
                             );
                         })}
                     </ul>

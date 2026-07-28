@@ -19,7 +19,17 @@ import SearchSection from '../SearchSection';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
 import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
-// import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PdfViewer from '../PdfViewer/';
+import {
+  FileText,
+  ChevronUp,
+  ChevronDown,
+  Minus,
+  Plus,
+  Download,
+  Maximize2,
+} from "lucide-react";
+import BaseHeading from '../BaseHeading/index.jsx';
 
 const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth }) => {
   const {
@@ -35,13 +45,14 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     setIsPlayerReady,
     hasDuration,
     setHasDuration,
-    contentPanelContainerRef,
+    pdfRef,
     jumpToPage,
     committedSources,
     activeView,
     theme,
     generatedResources,
-    metadataPanelContainer
+    metadataPanelContainer,
+    setJumpToPage
   } = useContext(MainContext);
 
 
@@ -83,14 +94,22 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     }
   }, [isPlayerReady, resourceURL, currentResource?.source_path, currentResource?.timestamp, currentResource?.file_type]);
 
+  // pdfRef.current?.goToPage(jumpToPage.page);
   useEffect(() => {
+    console.log(1);
     if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
+      console.log(2);
       setTimeout(() => {
+        console.log(3);
         const targetRef = pageRefs.current[jumpToPage.page - 1];
         if (targetRef && targetRef.scrollIntoView) {
           targetRef.scrollIntoView({ behavior: "smooth" });
+          workspaceContainer.current.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         }
-      }, 1500);
+      }, 500);
     }
   }, [jumpToPage, numPages, isPdfLoaded]);
 
@@ -120,7 +139,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     setIsPdfLoaded(true);
   };
 
-  const pageRefs = useRef({});
+  const pageRefs = useRef([]);
   const lastSeekContextRef = useRef(null);
 
   async function translateMetadata(_chosenLanguage, object, fromTranslateDropdown = false) {
@@ -274,6 +293,31 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const [isVideoPlaying, setIsVideoPlaying] = useState(video_autoplay);
   const [thumbnailPublicUrl, setThumbnailPublicUrl] = useState(null);
 
+  const handleDownload = async () => {
+
+    try {
+      const publicReelUrl = await getPublicUrl(sourcePublicUrl || resourceURL);
+
+      const response = await fetch(publicReelUrl);
+      const blob = await response.blob();
+
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `${currentResource.source_path}.pdf`;
+
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(blobUrl);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
   useEffect(() => {
@@ -302,8 +346,76 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     }
   }, [currentResource]);
 
+  const [pageInput, setPageInput] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [scale, setScale] = useState(1.1);
+
+  const isPrevArrowDisabled = currentPage <= 1;
+  const isNextArrowDisabled = currentPage >= numPages;
+
+  const zoomIn = () => setScale((s) => Math.min(2.5, +(s + 0.1).toFixed(2)));
+  const zoomOut = () => setScale((s) => Math.max(0.5, +(s - 0.1).toFixed(2)));
+
+
+  useEffect(() => {
+    if (!numPages) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the page that's most visible
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible.length > 0) {
+          const page = Number(
+            visible[0].target.getAttribute("data-page")
+          );
+
+          setCurrentPage(page);
+        }
+      },
+      {
+        root: workspaceContainer.current, // your scroll container
+        threshold: [0.25, 0.5, 0.75],
+      }
+    );
+
+    pageRefs.current.forEach((page) => {
+      if (page) observer.observe(page);
+    });
+
+    return () => observer.disconnect();
+  }, [numPages, pageInput, jumpToPage.page, jumpToPage]);
+
+  useEffect(() => {
+    setPageInput(jumpToPage.page);
+  }, [jumpToPage, jumpToPage.page]);
+
+  useEffect(() => {
+    setPageInput(String(currentPage));
+  }, [currentPage]);
+
+  const handlePageInputSubmit = (e) => {
+    e.preventDefault();
+    setJumpToPage({ page: parseInt(pageInput, 10) });
+  };
+
+  const handleToPagePrevious = () => {
+    const newPage = currentPage <= 1 ? 1 : currentPage - 1;
+    setJumpToPage({ page: newPage });
+    // setPageInput(newPage);
+  };
+
+  const handleToPageNext = () => {
+    const newPage = currentPage >= numPages ? numPages : currentPage + 1;
+    setJumpToPage({ page: newPage });
+    // setPageInput(newPage);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto overflow-y-auto" ref={metadataPanelContainer}>
+    <div className={`max-w-4xl mx-auto overflow-y-auto [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`} ref={metadataPanelContainer}>
 
       {currentResource?.file_type === "video" && (
         <>
@@ -351,7 +463,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                 <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
                 {/* generate visual/combined summary */}
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-2 mt-6 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-full`}>
-                  <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
+                  <LanguageOutlinedIcon className={`text-primary-300 ml-1`} />
                   <CustomSelectTwo
                     withIcon
                     options={languageOptions}
@@ -462,34 +574,121 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
         currentResource?.file_type === "pdf" && (
           <>
             <div
-              className={`relative w-[90%] h-[430px] mx-auto  overflow-y-auto ${theme === " light" ? "!border" : "!border !border-textColor-300"}  overflow-auto rounded-md overflow-x-auto`}
-              // ref={workspaceContainer}
-              style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
+              className={`relative w-[90%] h-[500px] mx-auto overflow-y-hidden ${theme === "light" ? "!border !border-textColor-200/20" : "!border !border-textColor-300"} flex flex-col rounded-md overflow-x-auto shadow-sm [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}
+            // ref={workspaceContainer}
+            // style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             >
-              <Document
-                className="!w-full mx-auto relative"
-                file={sourcePublicUrl || resourceURL}
-                onLoadSuccess={onDocumentLoadSuccess}
+              {/* <PdfViewer
+                sourcePublicUrl={sourcePublicUrl}
+                resourceURL={resourceURL}
+                fileName={null}
+                ref={pdfRef}
+              /> */}
+              <div
+                className="backdrop-blur-md !bg-transparent"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  padding: "8px 14px",
+                  // background: "var(--pdf-surface-2)",
+                  borderBottom: "1px solid var(--pdf-border)",
+                  flexShrink: 0,
+                  position: 'sticky',
+                  left: 0,
+                  top: 0,
+                  width: '100%',
+                  // height: "100%",
+                }}
               >
-
-                {Array.from(new Array(numPages), (el, index) => (
-                  <div
-                    key={`page_${index + 1}`}
-                    ref={(el) => {
-                      pageRefs.current[index] = el;
-                    }}
-                  >
-                    <Page
-                      className="mx-auto"
-                      pageNumber={index + 1}
-                      renderTextLayer={true}
-                      renderAnnotationLayer={true}
-                      scale={1}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, flex: 1 }}>
+                  <FileText size={17} style={{ color: "var(--pdf-text-secondary)", flexShrink: 0 }} />
+                  <BaseHeading text={currentResource.source_path} />
+                </div>
+                {/* Page jump */}
+                <div style={pillStyle}>
+                  <button disabled={isPrevArrowDisabled} style={iconBtnStyle} className={`${isPrevArrowDisabled ? `!cursor-not-allowed ${(theme === 'light' ? ' !text-gray-400/80' : ' !text-gray-500')}` : ''}`} onClick={handleToPagePrevious} aria-label="Previous page">
+                    <ChevronUp size={15} />
+                  </button>
+                  <form onSubmit={handlePageInputSubmit} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    <input
+                      min={1}
+                      max={numPages}
+                      value={pageInput}
+                      onChange={(e) => setPageInput(e.target.value)}
+                      style={pageInputStyle}
+                      aria-label="Current page"
+                      className={`outline-none ${theme === 'light' ? '!border !border-textColor-200/30' : '!border !border-textColor-200/20'}`}
                     />
+                    <span style={{ fontSize: 12, color: "var(--pdf-text-secondary)", fontVariantNumeric: "tabular-nums" }}>
+                      / {numPages || "—"}
+                    </span>
+                  </form>
+                  <button disabled={isNextArrowDisabled} style={iconBtnStyle} className={`${isNextArrowDisabled ? `!cursor-not-allowed ${(theme === 'light' ? ' !text-gray-400/80' : ' !text-gray-500')}` : ''}`} onClick={handleToPageNext} aria-label="Next page">
+                    <ChevronDown size={15} />
+                  </button>
+                </div>
 
-                  </div>
-                ))}
-              </Document>
+                {/* Zoom */}
+                <div style={pillStyle}>
+                  <button style={iconBtnStyle} onClick={zoomOut} aria-label="Zoom out">
+                    <Minus size={14} />
+                  </button>
+                  <span style={{ fontSize: 12, color: "var(--pdf-text-secondary)", minWidth: 36, textAlign: "center" }}>
+                    {Math.round(scale * 100)}%
+                  </span>
+                  <button style={iconBtnStyle} onClick={zoomIn} aria-label="Zoom in">
+                    <Plus size={14} />
+                  </button>
+                </div>
+
+                {/* Actions */}
+                <div style={{ display: "flex", gap: 2 }}>
+                  <button style={actionBtnStyle} onClick={handleDownload} aria-label="Download">
+                    <Download size={16} />
+                  </button>
+                  {/* <button style={actionBtnStyle} onClick={handleFullscreen} aria-label="Fullscreen">
+                    <Maximize2 size={16} />
+                  </button> */}
+                </div>
+              </div>
+              <div className={`flex-1 h-full overflow-y-auto [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
+                <Document
+                  className="!w-full mx-auto relative "
+                  file={sourcePublicUrl || resourceURL}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                >
+
+                  {Array.from(new Array(numPages), (el, index) => (
+                    <div
+                      key={`page_${index + 1}`}
+                      data-page={index + 1}
+                      ref={(el) => {
+                        pageRefs.current[index] = el;
+                      }}
+                    >
+                      <Page
+                        className="mx-auto"
+                        pageNumber={index + 1}
+                        renderTextLayer={true}
+                        renderAnnotationLayer={true}
+                        scale={scale}
+                      // width={pageWidth}
+                      // onRenderSuccess={() => {
+                      //   if (jumpToPage.page === index + 1) {
+                      //     pageRefs.current[index]?.scrollIntoView({
+                      //       behavior: "smooth",
+                      //     });
+                      //   }
+                      // }}
+                      />
+
+                    </div>
+                  ))}
+                </Document>
+              </div>
             </div>
             {/* PDF summary */}
             {!isTranslationLoading ? (
@@ -504,8 +703,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
               >
                 {/* search */}
                 <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
-                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-10 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
-                  <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
+                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mt-5 mb-2 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
+                  <LanguageOutlinedIcon className={`text-primary-300 ml-1`} />
                   <CustomSelectTwo
                     withIcon
                     options={languageOptions}
@@ -574,7 +773,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
       {
         currentResource?.file_type === "img" && (
           <div className="pb-10">
-            <div className={`relative pt-[56.25%] w-full max-w-lg mx-auto h-80 ${theme === " light" ? "!border" : "!border !border-textColor-300"} rounded-md overflow-hidden`}>
+            <div className={`relative pt-[56.25%] w-full max-w-lg mx-auto h-80 ${theme === " light" ? "!border" : "!border !border-textColor-300"} rounded-md overflow-hidden [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
               <GsFile
                 className="absolute top-0 left-0 object-contain w-full h-full"
                 gsUrl={currentResource?.thumbnail || resourceURL}
@@ -593,7 +793,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
               >
                 {/* search */}
                 {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-10 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
-                  <LanguageOutlinedIcon className={`${theme === 'light' ? '#333' : '#ABAEB4'} ml-1`} />
+                  <LanguageOutlinedIcon className={`text-primary-300 ml-1`} />
                   <CustomSelectTwo
                     withIcon
                     options={languageOptions}
@@ -642,3 +842,51 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   );
 };
 export default MetadataPanel;
+
+
+const pillStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: 4,
+  background: "var(--pdf-surface-1)",
+  border: "1px solid var(--pdf-border)",
+  borderRadius: 6,
+  padding: 3,
+};
+
+const iconBtnStyle = {
+  width: 26,
+  height: 26,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "transparent",
+  border: "none",
+  borderRadius: 4,
+  color: "var(--pdf-text-secondary)",
+  cursor: "pointer",
+};
+
+const actionBtnStyle = {
+  width: 30,
+  height: 30,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "transparent",
+  border: "none",
+  borderRadius: 6,
+  color: "var(--pdf-text-secondary)",
+  cursor: "pointer",
+};
+
+const pageInputStyle = {
+  width: 30,
+  height: 24,
+  textAlign: "center",
+  // border: "1px solid var(--pdf-border)",
+  borderRadius: 4,
+  fontSize: 12,
+  background: "var(--pdf-surface-1)",
+  color: "var(--pdf-text-primary)",
+};
