@@ -350,9 +350,12 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const [currentPage, setCurrentPage] = useState(1);
   const [scale, setScale] = useState(1.1);
 
+  const isPrevArrowDisabled = currentPage <= 1;
+  const isNextArrowDisabled = currentPage >= numPages;
+
   const zoomIn = () => setScale((s) => Math.min(2.5, +(s + 0.1).toFixed(2)));
   const zoomOut = () => setScale((s) => Math.max(0.5, +(s - 0.1).toFixed(2)));
-  // const pageWidth = containerWidth ? Math.min(containerWidth - 48, 760) * scale : undefined;
+
 
   useEffect(() => {
     if (!numPages) return;
@@ -605,7 +608,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                 </div>
                 {/* Page jump */}
                 <div style={pillStyle}>
-                  <button style={iconBtnStyle} onClick={handleToPagePrevious} aria-label="Previous page">
+                  <button disabled={isPrevArrowDisabled} style={iconBtnStyle} className={`${isPrevArrowDisabled ? `!cursor-not-allowed ${(theme === 'light' ? ' !text-gray-400/80' : ' !text-gray-500')}` : ''}`} onClick={handleToPagePrevious} aria-label="Previous page">
                     <ChevronUp size={15} />
                   </button>
                   <form onSubmit={handlePageInputSubmit} style={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -622,7 +625,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                       / {numPages || "—"}
                     </span>
                   </form>
-                  <button style={iconBtnStyle} onClick={handleToPageNext} aria-label="Next page">
+                  <button disabled={isNextArrowDisabled} style={iconBtnStyle} className={`${isNextArrowDisabled ? `!cursor-not-allowed ${(theme === 'light' ? ' !text-gray-400/80' : ' !text-gray-500')}` : ''}`} onClick={handleToPageNext} aria-label="Next page">
                     <ChevronDown size={15} />
                   </button>
                 </div>
