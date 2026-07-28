@@ -11,7 +11,7 @@ import {
     PictureInPicture2,
     Maximize,
     Minimize,
-    Dot
+    Dot,
 } from 'lucide-react';
 import CustomVideoPlayerSettings from '../CustomVideoPlayerSettings';
 
@@ -42,6 +42,7 @@ export default function CustomVideoPlayer({
     onReady,
     onDuration,
     playerRef,
+    title
 }) {
     const internalRef = useRef(null);
     const containerRef = useRef(null);
@@ -251,6 +252,12 @@ export default function CustomVideoPlayer({
                 progressInterval={250}
                 playbackRate={playbackRate}
             />
+
+            {/* video name */}
+            {showControls && <div className="absolute inset-0 top-2 left-2 max-w-[60%] truncate self-start flex items-center gap-2 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-[13px] backdrop-blur-sm">
+                <Play className="w-[18px] h-[18px] text-primary-300" strokeWidth={4} />
+                <span className="truncate font-medium text-sm text-white/90" >{title}</span>
+            </div>}
 
             {/* Center play/pause tap target */}
             <button
