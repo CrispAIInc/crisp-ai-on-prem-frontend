@@ -173,8 +173,12 @@ export function SearchModal(props) {
                                             <Chip key={`${cat}-${index}`} className="italic" content={cat} />
                                         ))
                                     }
-                                    <FiberManualRecordIcon className="!text-[6px]" />
-                                    <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{discoveredSources.mainSource?.timestamp || discoveredSources.mainSource?.page}</p>
+                                    {
+                                        (discoveredSources.mainSource?.timestamp || discoveredSources.mainSource?.page) && (
+                                            <FiberManualRecordIcon className="!text-[6px]" />
+                                        )
+                                    }
+                                    <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{discoveredSources?.mainSource?.timestamp ? discoveredSources.mainSource?.timestamp : discoveredSources.mainSource?.page ? discoveredSources.mainSource?.page : ''}</p>
                                 </div>
                             </div>
                             <div className="flex items-center ">
@@ -233,8 +237,12 @@ export function SearchModal(props) {
                                                 <Chip key={`${cat}-${index}`} className="italic" content={cat} />
                                             ))
                                         }
-                                        <FiberManualRecordIcon className="!text-[6px]" />
-                                        <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item?.timestamp || item?.page}</p>
+                                        {
+                                            (item?.timestamp || item?.page) && (
+                                                <FiberManualRecordIcon className="!text-[6px]" />
+                                            )
+                                        }
+                                        <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item?.timestamp ? item?.timestamp : item?.page ? item?.page : ''}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center ">
