@@ -110,7 +110,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
             )}
 
             {
-                (activeView === 'resource' && displayedSources.length > 0) && (
+                (activeView === 'resource' && displayedSources.length > 0 && displayedSources.some(item => item.metadata?.summary?.content !== undefined)) && (
 
 
                     <Accordion isFirstOpen={Boolean(messages.length === 0)} chosenLanguage={"en"} heading={`Sources Summary ${selectedSources > 0 ? `(${selectedSources} Source${selectedSources > 1 ? "s" : ""})` : ""}`} >
