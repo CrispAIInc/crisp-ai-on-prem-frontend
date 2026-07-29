@@ -4,6 +4,7 @@ import { Document, Page } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import ReactPlayer from "react-player";
+import ImageViewer from "../ImageViewer";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext.jsx";
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
@@ -413,6 +414,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     // setPageInput(newPage);
   };
 
+  const [index, setIndex] = useState(0);
+
   return (
     <div className={`max-w-4xl mx-auto overflow-y-auto [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`} ref={metadataPanelContainer}>
@@ -773,13 +776,18 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
       {
         currentResource?.file_type === "img" && (
           <div className="pb-10">
-            <div className={`relative pt-[56.25%] w-full max-w-lg mx-auto h-80 ${theme === " light" ? "!border" : "!border !border-textColor-300"} rounded-md overflow-hidden [&::-webkit-scrollbar]:h-1
-        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
-              <GsFile
+            {/* <div className={`relative pt-[56.25%] w-full max-w-lg mx-auto h-80 ${theme === " light" ? "!border" : "!border !border-textColor-300"} rounded-md overflow-hidden [&::-webkit-scrollbar]:h-1 */}
+            {/* [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}> */}
+            {/* <GsFile
                 className="absolute top-0 left-0 object-contain w-full h-full"
                 gsUrl={currentResource?.thumbnail || resourceURL}
-              />
-            </div>
+              /> */}
+            <ImageViewer
+              src={currentResource?.thumbnail || resourceURL}
+              alt={currentResource.source_path}
+              eyebrow={currentResource.source_path}
+            />
+            {/* </div> */}
             {/* Image Caption */}
             {!isTranslationLoading ? (
               <div
