@@ -31,6 +31,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
         showMetadata,
         setShowMetadata,
         workspaceContainer,
+        setCurrentResource
     } = useContext(MainContext);
 
     const { sidebarWidth: leftWidth, maxWidth } = useResizableSidebar(200, true);
@@ -79,6 +80,7 @@ const CenterPanel = ({ messages, combinedSummary, setCombinedSummary, isCombined
 
     function closeMetadataPanel() {
         setShowMetadata(false);
+        setCurrentResource(null);
     }
 
     const centerPanelRef = useRef(null);
