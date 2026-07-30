@@ -346,7 +346,7 @@ export default function MainProvider({ children, theme, setTheme }) {
             }/${file.file_type}/all/${encodeURIComponent(file.source_path)}`;
         let fileToCommit = knowledgeBase.find((item) => item.source_path === file.source_path) || file;
 
-        setCurrentResource({ ...fileToCommit, timestamp: file?.timestamp, page: file?.page || 1 });
+        setCurrentResource({ ...fileToCommit, timestamp: file?.timestamp, page: file?.page });
         setResourceURL(resourceURL);
         setTranscription(fileToCommit.metadata ? fileToCommit.metadata.transcription : "");
         if (fileToCommit.file_type != "img") {
