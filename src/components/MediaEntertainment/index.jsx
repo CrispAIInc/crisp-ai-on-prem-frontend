@@ -336,7 +336,7 @@ function MediaEntertainment({
                                                     {
                                                         label: isReelDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
                                                         icon: isReelDeleting ? <LoadingSpinner isSmall /> : <DeleteIcon />,
-                                                        onClick: () => deleteReel(reel.id),
+                                                        onClick: (e) => deleteReel(e, reel),
                                                     },
                                                 ]}
                                             />)
