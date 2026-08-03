@@ -337,7 +337,7 @@ export default function CustomVideoPlayer({
                             {highlightRanges.map((hl, i) => (
                                 <div
                                     key={i}
-                                    className="group/hl absolute top-0 w-2 h-2 cursor-pointer rounded-full bg-[#FBBF24]"
+                                    className="absolute top-0 w-2 h-2 cursor-pointer rounded-full bg-[#FBBF24]"
                                     style={{
                                         left: `${hl.start * 100}%`,
                                         // width: `${Math.max(0.5, (hl.end - hl.start) * 100)}%`,
@@ -388,10 +388,6 @@ export default function CustomVideoPlayer({
                                 (seg) => fraction >= seg.start && fraction < seg.end
                             );
                             setHoveredChapterIdx(segIdx === -1 ? null : segIdx);
-                            const hlIdx = highlightRanges.findIndex(
-                                (hl) => fraction >= hl.start && fraction < hl.end
-                            );
-                            setHoveredHighlightIdx(hlIdx === -1 ? null : hlIdx);
                         }}
                         onMouseLeave={() => {
                             setHoveredChapterIdx(null);
