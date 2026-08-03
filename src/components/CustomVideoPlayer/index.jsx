@@ -254,7 +254,7 @@ export default function CustomVideoPlayer({
             />
 
             {/* video name */}
-            {showControls && <div className="absolute inset-0 top-2 left-2 max-w-[60%] truncate self-start flex items-center gap-2 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-[13px] backdrop-blur-sm">
+            {showControls && <div className="absolute inset-0 top-2 left-2 w-fit max-w-[60%] truncate self-start flex items-center gap-2 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-[13px] backdrop-blur-sm">
                 <Play className="w-[18px] h-[18px] text-primary-300" strokeWidth={4} />
                 <span className="truncate font-medium text-sm text-white/90" >{title}</span>
             </div>}
