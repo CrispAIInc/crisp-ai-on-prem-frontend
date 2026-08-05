@@ -34,7 +34,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                 searchQuestion,
                 currentResource: isGlobalSearch ? null : currentResource,
                 selectedFormat,
-                indexes: selectedDiscoveryIndexes.map(item => item.value)
+                indexes: selectedDiscoveryIndexes
             })
             );
 
