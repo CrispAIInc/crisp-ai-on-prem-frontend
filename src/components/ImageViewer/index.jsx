@@ -97,10 +97,10 @@ function ImageViewer({ src, alt, title, eyebrow = "Now viewing" }) {
     useEffect(() => {
         const onKey = (e) => {
             if (e.key === "Escape" && isFullscreen) setIsFullscreen(false);
-            else if (e.key === "+" || e.key === "=") zoomIn();
-            else if (e.key === "-") zoomOut();
-            else if (e.key === "0") resetZoom();
-            else if (e.key === "f") setIsFullscreen((f) => !f);
+            // else if (e.key === "+" || e.key === "=") zoomIn();
+            // else if (e.key === "-") zoomOut();
+            // else if (e.key === "0") resetZoom();
+            // else if (e.key === "f") setIsFullscreen((f) => !f);
         };
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);

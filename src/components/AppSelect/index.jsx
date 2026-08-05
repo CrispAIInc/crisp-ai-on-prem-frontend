@@ -160,7 +160,7 @@ export default function Select({
                 type="button"
                 onClick={toggleOpen}
                 className={`flex w-full items-center justify-between rounded-xl px-1 py-2 text-sm font-medium transition-all duration-150 ease-out focus:outline-none ${t.trigger
-                    } ${isOpen ? t.triggerOpen : ""}  ${theme === 'dark' ? '!border-none' : 'border'} !backdrop-blur-sm`}
+                    } ${isOpen ? t.triggerOpen : ""}  ${theme === 'dark' ? '!border-none' : 'border'} !backdrop-blur-md`}
             >
                 <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
                     {selectedValues.length === 0 && (
@@ -203,7 +203,7 @@ export default function Select({
             {/* Panel */}
             {isOpen && (
                 <div
-                    className={`absolute z-50 mt-2 w-full origin-top overflow-hidden rounded-xl border animate-[fadeIn_120ms_ease-out] ${t.panel}`}
+                    className={`absolute z-50 mt-2 w-full origin-top overflow-hidden rounded-xl animate-[fadeIn_120ms_ease-out] ${t.panel} ${theme === "light" && 'border'}`}
                 >
                     {searchable && (
                         <div className={`flex items-center gap-2 border-b px-3 py-2 ${t.divider}`}>

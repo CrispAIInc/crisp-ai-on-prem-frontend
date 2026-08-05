@@ -174,11 +174,11 @@ export function SearchModal(props) {
                                         ))
                                     }
                                     {
-                                        (discoveredSources.mainSource?.timestamp || discoveredSources.mainSource?.page) && (
+                                        (discoveredSources.mainSource?.file_type !== 'img') && (
                                             <FiberManualRecordIcon className="!text-[6px]" />
                                         )
                                     }
-                                    <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{discoveredSources?.mainSource?.timestamp ? discoveredSources.mainSource?.timestamp : discoveredSources.mainSource?.page ? discoveredSources.mainSource?.page : ''}</p>
+                                    <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{discoveredSources.mainSource?.file_type === 'img' ? '' : discoveredSources.mainSource?.timestamp ? discoveredSources.mainSource?.timestamp : discoveredSources.mainSource?.page ? discoveredSources.mainSource?.page : ''}</p>
                                 </div>
                             </div>
                             <div className="flex items-center ">
@@ -238,11 +238,11 @@ export function SearchModal(props) {
                                             ))
                                         }
                                         {
-                                            (item?.timestamp || item?.page) && (
+                                            (item?.file_type !== 'img') && (
                                                 <FiberManualRecordIcon className="!text-[6px]" />
                                             )
                                         }
-                                        <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item?.timestamp ? item?.timestamp : item?.page ? item?.page : ''}</p>
+                                        <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item?.file_type === 'img' ? '' : item?.timestamp ? item?.timestamp : item?.page ? item?.page : ''}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center ">
