@@ -72,16 +72,6 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         <div className={`search-wrapper ${className}`}>
             <div className={`flex flex-col pr-[2px] bg-background_workspace ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200/50'} rounded-xl bg-transparent`}>
 
-                {/* <input
-                    className={`w-full flex-1 p-2 bg-transparent border-none rounded-xl outline-none ${theme === 'dark' && 'text-textColor-100'}`}
-                    placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"}
-                    value={searchQuestion}
-                    onChange={(event) => setSearchQuestion(event.target.value)} onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            handleSubmitQuestion(e);
-                        }
-                    }} /> */}
-
                 <textarea
                     ref={el => {
                         textareaRef.current = el;
@@ -90,11 +80,6 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                     placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"}
                     value={searchQuestion}
                     onChange={(event) => setSearchQuestion(event.target.value)}
-                    // onKeyDown={(e) => {
-                    //     if (e.key === 'Enter') {
-                    //         handleSubmitQuestion(e);
-                    //     }
-                    // }}
                     className={`w-full p-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-28 placeholder:text-neutral-400 ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}
                 />
 
