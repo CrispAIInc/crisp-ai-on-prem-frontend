@@ -1,33 +1,29 @@
 import { useState, useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import BaseHeading from '../BaseHeading';
 import { useToast } from "../../contexts/toastContext";
 import RippleButton from '../RippleButton';
 import AnimatedText from '../AnimatedText';
 import makeApiRequest from '../../api/index.js';
-import useReferenceLinkClick from '../../hooks/useReferenceLinkClick.js';
+import AppSelect from "../AppSelect";
 
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, fromMetadata = false }) => {
+const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = false }) => {
 
-    const { currentResource, setCurrentResource, resourceURL, setResourceURL, player, isPlayerReady,
-        selectedCategory, selectedFormat,
+    const { currentResource,
+        selectedCategory,
+        selectedFormat,
+        categoryOptionsWithoutAll,
         setDiscoveredSources,
         setShowSearchModal,
-        setSummary,
         theme,
-        setJumpToPage,
         knowledgeBase
     } = useContext(MainContext);
 
     const { notify } = useToast();
 
-    const { handleSourceLinkClick } = useReferenceLinkClick();
-
-    const [, setFromChat] = useState(false);
     const [searchQuestion, setSearchQuestion] = useState('');
     const [isSearching, setIsSearching] = useState(false);
+    const [selectedDiscoveryIndexes, setSelectedDiscoveryIndexes] = useState([]);
 
     const handleSubmitQuestion = async (event) => {
         event.preventDefault();
@@ -45,21 +41,10 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
                 throw new Error(message);
             }
             const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
-
-            // handleSourceLinkClick(event, { ...source, timestamp, page });
-
-            // setCurrentResource({ ...source, timestamp });
-            // setResourceURL(resourceURL);
-            // setSummary(rest.summary);
-            // if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page) }, additionalSources: additional_sources });
             if (!fromMetadata) {
                 setShowSearchModal(true);
             }
-
-            // if (source?.file_type === "pdf") {
-            //     setJumpToPage({ page });
-            // }
         } catch (error) {
             console.log(error);
             notify({
@@ -74,18 +59,32 @@ const SearchSection = ({ chatLoaded, className = '', isGlobalSearch = true, from
 
     return (
         <div className={`search-wrapper ${className}`}>
-            <div className={`flex items-center pr-[2px] bg-background_workspace ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200/50'} rounded-xl bg-transparent`}>
+            <div className={`flex flex-col pr-[2px] bg-background_workspace ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200/50'} rounded-xl bg-transparent`}>
 
-                <input className={`flex-1 p-2 bg-transparent border-none rounded-xl outline-none ${theme === 'dark' && 'text-textColor-100'}`} placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"} value={searchQuestion} onChange={(event) => setSearchQuestion(event.target.value)} onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        handleSubmitQuestion(e);
-                    }
-                }} />
+                <input
+                    className={`w-full flex-1 p-2 bg-transparent border-none rounded-xl outline-none ${theme === 'dark' && 'text-textColor-100'}`}
+                    placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"}
+                    value={searchQuestion}
+                    onChange={(event) => setSearchQuestion(event.target.value)} onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            handleSubmitQuestion(e);
+                        }
+                    }} />
 
-                <RippleButton disabled={isSearching || searchQuestion.trim().length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl'>
-                    {isSearching ? <AnimatedText cssClasses='text-white' text='Searching...' /> : isGlobalSearch ? 'Discover' : 'Search'}
-                </RippleButton>
+                <div className="flex items-center gap-2 px-2 py-1.5 rounded-xl max-w-full">
+                    <AppSelect
+                        options={categoryOptionsWithoutAll}
+                        value={selectedDiscoveryIndexes}
+                        onChange={(value) => setSelectedDiscoveryIndexes(value)}
+                        multiple
+                        placeholder="Select index"
+                        className="max-w-full"
+                    />
 
+                    <RippleButton disabled={isSearching || searchQuestion.trim().length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl'>
+                        {isSearching ? <AnimatedText cssClasses='text-white' text='Searching...' /> : isGlobalSearch ? 'Discover' : 'Search'}
+                    </RippleButton>
+                </div>
             </div>
         </div>
     );
