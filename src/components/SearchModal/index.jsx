@@ -183,7 +183,7 @@ export function SearchModal(props) {
                                         discoveredSources.mainSource?.score && (
                                             <>
                                                 <FiberManualRecordIcon className="!text-[6px]" />
-                                                <BaseHeading text={`${discoveredSources.mainSource?.score * 100}% score`} />
+                                                <BaseHeading text={`${discoveredSources.mainSource?.score * 10}% score`} />
                                             </>
                                         )
                                     }
@@ -255,7 +255,7 @@ export function SearchModal(props) {
                                             item?.score && (
                                                 <>
                                                     <FiberManualRecordIcon className="!text-[6px]" />
-                                                    <BaseHeading text={`${item?.score * 100}% score`} />
+                                                    <BaseHeading text={`${item?.score * 10}% score`} />
                                                 </>
                                             )
                                         }
