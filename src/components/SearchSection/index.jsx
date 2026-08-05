@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef, useEffect } from 'react';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import { useToast } from "../../contexts/toastContext";
 import RippleButton from '../RippleButton';
@@ -24,6 +24,16 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
     const [searchQuestion, setSearchQuestion] = useState('');
     const [isSearching, setIsSearching] = useState(false);
     const [selectedDiscoveryIndexes, setSelectedDiscoveryIndexes] = useState([]);
+    const textareaRef = useRef(null);
+
+    useEffect(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+
+        // Reset height to recalc
+        el.style.height = "auto";
+        el.style.height = el.scrollHeight + "px";
+    }, [searchQuestion]);
 
     const handleSubmitQuestion = async (event) => {
         event.preventDefault();
@@ -62,7 +72,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         <div className={`search-wrapper ${className}`}>
             <div className={`flex flex-col pr-[2px] bg-background_workspace ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200/50'} rounded-xl bg-transparent`}>
 
-                <input
+                {/* <input
                     className={`w-full flex-1 p-2 bg-transparent border-none rounded-xl outline-none ${theme === 'dark' && 'text-textColor-100'}`}
                     placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"}
                     value={searchQuestion}
@@ -70,7 +80,23 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                         if (e.key === 'Enter') {
                             handleSubmitQuestion(e);
                         }
-                    }} />
+                    }} /> */}
+
+                <textarea
+                    ref={el => {
+                        textareaRef.current = el;
+                    }}
+                    rows={2}
+                    placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"}
+                    value={searchQuestion}
+                    onChange={(event) => setSearchQuestion(event.target.value)}
+                    // onKeyDown={(e) => {
+                    //     if (e.key === 'Enter') {
+                    //         handleSubmitQuestion(e);
+                    //     }
+                    // }}
+                    className={`w-full p-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-28 placeholder:text-neutral-400 `}
+                />
 
                 <div className="flex items-center gap-2 px-2 py-1.5 rounded-xl max-w-full">
                     <AppSelect
