@@ -52,7 +52,8 @@ export function SearchModal(props) {
             return {
                 ...s,
                 timestamp: source?.timestamp,
-                page: Number(source?.page)
+                page: Number(source?.page),
+                score: source?.score
             };
         })]);
 
@@ -65,7 +66,8 @@ export function SearchModal(props) {
                 return {
                     ...s,
                     timestamp: source?.timestamp,
-                    page: Number(source?.page)
+                    page: Number(source?.page),
+                    score: source?.score
                 };
             })
         ]);
