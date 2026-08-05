@@ -25,7 +25,7 @@ const styles = {
         optionAll: "text-slate-500",
         divider: "border-slate-100",
         chip: "bg-slate-100 text-slate-700 hover:bg-slate-200",
-        chipMore: "bg-indigo-50 text-indigo-600",
+        chipMore: "bg-primary-100/20 text-primary-300",
         check: "bg-indigo-600 border-indigo-600",
         checkEmpty: "border-slate-300",
         empty: "text-slate-400",
@@ -42,7 +42,7 @@ const styles = {
         optionAll: "text-slate-400",
         divider: "border-slate-800",
         chip: "bg-slate-800 text-slate-200 hover:bg-slate-700",
-        chipMore: "bg-indigo-500/10 text-indigo-300",
+        chipMore: "bg-primary-300/10 text-primary-300",
         check: "bg-indigo-500 border-indigo-500",
         checkEmpty: "border-slate-600",
         empty: "text-slate-500",
@@ -62,7 +62,7 @@ const styles = {
  * @param {string}   label              optional floating label above the control
  * @param {boolean}  searchable         show a search box inside the panel
  * @param {string}   className          wrapper className, lets you place it anywhere
- * @param {string}   width              tailwind width class, default 'w-72'
+ * @param {string}   width              tailwind width class, default 'w-full'
  */
 export default function Select({
     options,
@@ -72,7 +72,7 @@ export default function Select({
     placeholder = "Select…",
     searchable = true,
     className = "",
-    width = "w-72",
+    width = "w-full",
 }) {
     const { theme } = useContext(MainContext);
     const t = styles[theme === "dark" ? "dark" : "light"];
@@ -159,7 +159,7 @@ export default function Select({
             <button
                 type="button"
                 onClick={toggleOpen}
-                className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 ease-out focus:outline-none ${t.trigger
+                className={`flex w-full items-center justify-between rounded-xl px-1 py-2 text-sm font-medium transition-all duration-150 ease-out focus:outline-none ${t.trigger
                     } ${isOpen ? t.triggerOpen : ""}  ${theme === 'dark' ? '!border-none' : 'border'} !backdrop-blur-sm`}
             >
                 <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
@@ -172,12 +172,12 @@ export default function Select({
                     )}
 
                     {multiple &&
-                        selectedLabels.slice(0, 1).map((lbl, i) => (
+                        selectedLabels.slice(0, 2).map((lbl, i) => (
                             <span
                                 key={selectedValues[i]}
-                                className={`flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium transition-colors ${t.chip}`}
+                                className={`flex items-center gap-1 rounded-md px-2 py-0.5 !text-[10px] font-medium transition-colors ${t.chip}`}
                             >
-                                <span className="max-w-[7rem] truncate">{lbl}</span>
+                                <span className="max-w-[7rem] truncate !text-[12px]">{lbl}</span>
                                 <X
                                     size={12}
                                     className="cursor-pointer opacity-60 hover:opacity-100"
@@ -186,9 +186,9 @@ export default function Select({
                             </span>
                         ))}
 
-                    {multiple && selectedValues.length > 1 && (
-                        <span className={`rounded-md px-2 py-0.5 text-xs font-semibold ${t.chipMore}`}>
-                            +{selectedValues.length - 1}
+                    {multiple && selectedValues.length > 2 && (
+                        <span className={`rounded-md px-2 py-0.5 !text-[10px] font-semibold ${t.chipMore}`}>
+                            +{selectedValues.length - 2}
                         </span>
                     )}
                 </div>

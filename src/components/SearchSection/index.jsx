@@ -79,7 +79,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                         onChange={(value) => setSelectedDiscoveryIndexes(value)}
                         multiple
                         placeholder="Select index"
-                        className="max-w-full"
+                        className="flex-1 min-w-0"
                     />
 
                     <RippleButton disabled={isSearching || searchQuestion.trim().length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl'>
