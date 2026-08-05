@@ -179,6 +179,14 @@ export function SearchModal(props) {
                                         )
                                     }
                                     <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{discoveredSources.mainSource?.file_type === 'img' ? '' : discoveredSources.mainSource?.timestamp ? discoveredSources.mainSource?.timestamp : discoveredSources.mainSource?.page ? discoveredSources.mainSource?.page : ''}</p>
+                                    {
+                                        discoveredSources.mainSource?.score && (
+                                            <>
+                                                <FiberManualRecordIcon className="!text-[6px]" />
+                                                <BaseHeading text={`${discoveredSources.mainSource?.score * 100}% score`} />
+                                            </>
+                                        )
+                                    }
                                 </div>
                             </div>
                             <div className="flex items-center ">
@@ -243,9 +251,17 @@ export function SearchModal(props) {
                                             )
                                         }
                                         <p className={`text-sm m-0 ${theme === 'dark' && 'text-textColor-100'}`}>{item?.file_type === 'img' ? '' : item?.timestamp ? item?.timestamp : item?.page ? item?.page : ''}</p>
+                                        {
+                                            item?.score && (
+                                                <>
+                                                    <FiberManualRecordIcon className="!text-[6px]" />
+                                                    <BaseHeading text={`${item?.score * 100}% score`} />
+                                                </>
+                                            )
+                                        }
                                     </div>
                                 </div>
-                                <div className="flex items-center ">
+                                <div className="flex items-center">
                                     <Checkbox
                                         className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                                         checked={item?.is_checked}

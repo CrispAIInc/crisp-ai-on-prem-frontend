@@ -39,7 +39,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         event.preventDefault();
         setIsSearching(true);
         try {
-            const { additional_sources, timestamp, page, message, success, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+            const { additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
                 selectedCategory,
                 searchQuestion,
                 currentResource: isGlobalSearch ? null : currentResource,
@@ -52,7 +52,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                 throw new Error(message);
             }
             const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
-            setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page) }, additionalSources: additional_sources });
+            setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page), score }, additionalSources: additional_sources });
             if (!fromMetadata) {
                 setShowSearchModal(true);
             }
