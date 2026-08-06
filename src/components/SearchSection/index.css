@@ -1,0 +1,20 @@
+.animated-gradient-border {
+  position: relative;
+  padding: 2px;
+  border-radius: 0.75rem;
+  background: linear-gradient(270deg, #7c5cff, #4f9dff, #ff84d8, #a78bfa);
+  background-size: 400% 400%;
+  animation: gradient-border-flow 6s ease infinite;
+}
+
+@keyframes gradient-border-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

@@ -6,6 +6,8 @@ import AnimatedText from '../AnimatedText';
 import makeApiRequest from '../../api/index.js';
 import AppSelect from "../AppSelect";
 
+import "./index.css";
+
 
 const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = false }) => {
 
@@ -69,8 +71,8 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
     };
 
     return (
-        <div className={`search-wrapper ${className}`}>
-            <div className={`flex flex-col pr-[2px] bg-background_workspace ${theme === 'light' ? '!border !border-textColor-100' : '!border !border-textColor-200/50'} rounded-xl bg-transparent`}>
+        <div className={`search-wrapper animated-gradient-border ${className}`}>
+            <div className={`flex flex-col pr-[2px] bg-background_workspace ${theme === 'light' ? '!bg-white' : '!bg-neutral-900'} rounded-xl`}>
 
                 <textarea
                     ref={el => {
