@@ -71,8 +71,8 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
     };
 
     return (
-        <div className={`search-wrapper animated-gradient-border ${className}`}>
-            <div className={`flex flex-col pr-[2px] bg-background_workspace ${theme === 'light' ? '!bg-white' : '!bg-neutral-900'} rounded-xl`}>
+        <div className={`search-wrapper animated-gradient-border w-full max-w-[600px] ${className}`}>
+            <div className={`flex flex-col pr-[2px] ${theme === 'light' ? '' : 'bg-gray-900/35'} rounded-xl relative z-10`}>
 
                 <textarea
                     ref={el => {
@@ -83,6 +83,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                     value={searchQuestion}
                     onChange={(event) => setSearchQuestion(event.target.value)}
                     className={`w-full p-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-28 placeholder:text-neutral-400 ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}
+                    autoFocus
                 />
 
                 <div className="flex items-center gap-2 px-2 py-1.5 rounded-xl max-w-full">

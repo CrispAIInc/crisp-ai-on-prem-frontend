@@ -230,7 +230,7 @@ function KnowledgeGraph({
                             value={input}
                             onChange={handleChange}
                             placeholder="Paste or type business schema here (in JSON format)..."
-                            className={`w-full h-28 p-3 rounded-2xl font-mono  text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900/35' : 'text-textColor-300 bg-white !border !border-textColor-100/80'} outline-none resize-none`}
+                            className={`w-full h-28 p-3 rounded-2xl font-mono text-sm ${theme === 'dark' ? 'text-textColor-100 bg-gray-900/35' : 'text-textColor-300 bg-white !border !border-textColor-100/80'} outline-none resize-none`}
                             onKeyDown={handleTabClick}
                         />
 
