@@ -31,7 +31,7 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
     }
 
     function uploadSources() {
-        onHide();
+        closeModals();
         handleUpload(null, null, selectedFiles, isFineGrained);
     }
 
