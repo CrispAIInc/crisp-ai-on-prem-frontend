@@ -1295,7 +1295,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     // Pdf viewer ref
     const pdfRef = useRef(null);
 
-    const categoryOptionsWithoutAll = [...categoryOptions.filter(item => item.value !== 'all'), { label: "alpha", value: "alpha" }, { label: "test", value: "test" }];
+    const categoryOptionsWithoutAll = categoryOptions.filter(item => item.value !== 'all');
 
     // create value object with all the states
     const value = {

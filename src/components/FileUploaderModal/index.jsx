@@ -1,12 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Checkbox } from "@mui/material";
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import FileUploader from '../FileUploader';
 import Dropdown from '../Dropdown';
 import VideoProcessingSettings from '../VideoProcessingSettings.jsx';
-import BaseHeading from '../BaseHeading/index.jsx';
 
 export default function FileUploaderModal({ show, onHide, hideIndexModal, indexName, handleUpload }) {
 
@@ -43,7 +40,6 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
         }
     }
 
-    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
     const [selectedFileFormat, setSelectedFileFormat] = useState(fileFormats[0].value);
     const [isVideoIncluded, setIsVideoIncluded] = useState(false);
     const [isFineGrained, setIsFineGrained] = useState(false);
