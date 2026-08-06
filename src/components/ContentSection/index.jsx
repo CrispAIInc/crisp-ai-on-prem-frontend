@@ -310,8 +310,25 @@ const ContentSection = ({
         setShowSourceExplorer(false);
     };
 
-    const handleSelectAllCheckboxChange = (path, isChecked) => {
-        const pathSegments = path.split("/").filter(Boolean); // Removes empty strings from array
+    const handleSelectAllCheckboxChange = (sourcesToToggle, isChecked) => {
+        if (Array.isArray(sourcesToToggle)) {
+            const sourcePathsToToggle = new Set(sourcesToToggle.map((source) => source.source_path));
+
+            setKnowledgeBase((prev) => {
+                return prev.map((item) => {
+                    if (sourcePathsToToggle.has(item.source_path)) {
+                        return { ...item, is_selected: true, is_checked: isChecked };
+                    }
+
+                    return item;
+                });
+            });
+
+            setCheckedAll(isChecked && sourcesToToggle.length > 0);
+            return;
+        }
+
+        const pathSegments = sourcesToToggle?.split("/").filter(Boolean) || []; // Removes empty strings from array
         const category = pathSegments[0];
         const format = pathSegments[1];
 

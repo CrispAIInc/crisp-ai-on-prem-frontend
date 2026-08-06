@@ -23,7 +23,8 @@ function SourceExplorerBody({
     clickedIndex,
     deleteResource,
     onOpenCategoriesModal,
-    isManagingSources
+    isManagingSources,
+    onFilteredSourcesChange
 }) {
 
     const {
@@ -153,9 +154,11 @@ function SourceExplorerBody({
         }
 
         const foundSources = searchByKey(filtered, "source_path", searchValue);
+        const sortedSources = sortArrayOfObjects(foundSources, "source_path");
 
-        setFilteredSources(sortArrayOfObjects(foundSources, "source_path"));
-    }, [selectedCategory, selectedFormat, knowledgeBase, searchValue]);
+        setFilteredSources(sortedSources);
+        onFilteredSourcesChange?.(sortedSources);
+    }, [selectedCategory, selectedFormat, knowledgeBase, searchValue, onFilteredSourcesChange]);
 
     return (
         <div className="flex flex-col gap-3 overflow-hidden">

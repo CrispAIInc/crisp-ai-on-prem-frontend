@@ -10,9 +10,6 @@ import SourceExplorerBody from '../SourceExplorerBody/index.jsx';
 
 export function SourceExplorer(props) {
     const {
-        checkedAll,
-        selectedFormat,
-        setCheckedAll,
         selectedCategory,
         theme,
         sourcesTobeCommited,
@@ -21,46 +18,16 @@ export function SourceExplorer(props) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
-    const [history, setHistory] = useState(["/"]);
-    const [currentPath, setCurrentPath] = useState(history[history.length - 1] || "/");
     const [isManagingSources, setIsManagingSources] = useState(false);
+    const [filteredSourcesForSelectAll, setFilteredSourcesForSelectAll] = useState(knowledgeBase);
 
-    function ge() {
-        let filteredItems;
-        const pathSegments = currentPath.split("/").filter(Boolean); // Removes empty strings from array
-        const category = pathSegments[0];
-        const format = pathSegments[1];
-
-        if (!category && !format) {
-            filteredItems = knowledgeBase; // Root `/` case: Select all items
-        } else if (category && !format) {
-            filteredItems = knowledgeBase.filter((item) => {
-                return item.category.includes(category) || category === 'all';
-            }
-            ); // Category only
-        } else {
-            filteredItems = knowledgeBase.filter(item =>
-                (item.category.includes(category) || category === 'all') && (item.file_type === format || format === 'all')
-            ); // Category + Format
-        }
-
-        return filteredItems.length > 0 && filteredItems.every(item => item.is_checked);
-    }
-
-
-    const [isCheckedAll, setIsCheckedAll] = useState(false);
+    const handleFilteredSourcesChange = (sources) => {
+        setFilteredSourcesForSelectAll(sources);
+    };
 
     useEffect(() => {
-        setIsCheckedAll(ge());
-    }, [currentPath, selectedCategory, selectedFormat, sourcesTobeCommited]);
-
-
-    useEffect(() => {
-        // update current path whenever selectedCategory changes in Parent component
-        if (selectedCategory !== null && !props.isOpenedFromSourceExplorerBtn) {
-            setHistory([`/${selectedCategory}/`]);
-        }
-    }, [selectedCategory]);
+        setFilteredSourcesForSelectAll(knowledgeBase);
+    }, [knowledgeBase, selectedCategory, sourcesTobeCommited]);
 
     const handleClose = () => {
         props.onHide();
@@ -120,6 +87,7 @@ export function SourceExplorer(props) {
                     deleteResource={props.deleteResource}
                     onOpenCategoriesModal={props.onOpenCategoriesModal}
                     isManagingSources={isManagingSources}
+                    onFilteredSourcesChange={handleFilteredSourcesChange}
                 />
             </Modal.Body>
 
@@ -127,16 +95,12 @@ export function SourceExplorer(props) {
                 {itemsFoundInsideCategoryOrFormat && (
                     <div
                         className={`flex items-center gap-1 cursor-pointer px-1 py-1.5 rounded-md ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
-                        onClick={() => {
-                            setIsCheckedAll(v => !v);
-                            setCheckedAll(v => !v);
-                            props.handleSelectAllCheckboxChange(currentPath, !checkedAll);
-                        }}
+                        onClick={() => props.handleSelectAllCheckboxChange(filteredSourcesForSelectAll, !filteredSourcesForSelectAll.every(item => item.is_checked))}
                     >
                         <Checkbox
                             className={`p-0 !border-primary-300 !text-primary-300`}
-                            checked={checkedAll}
-                            onChange={(e) => props.handleSelectAllCheckboxChange(currentPath, e.target.checked)}
+                            checked={filteredSourcesForSelectAll.length > 0 && filteredSourcesForSelectAll.every(item => item.is_checked)}
+                            onChange={(e) => props.handleSelectAllCheckboxChange(filteredSourcesForSelectAll, e.target.checked)}
                             inputProps={{ "aria-label": "Select all sources" }}
                             label="Select All Sources"
                         />
