@@ -172,7 +172,7 @@ export function SearchModal(props) {
                                 <div className="flex items-center gap-1">
                                     {
                                         discoveredSources.mainSource?.category?.map((cat, index) => (
-                                            <Chip key={`${cat}-${index}`} className="italic" content={cat} />
+                                            <Chip key={`${cat}-${index}`} cssClasses="italic !px-2 !py-0.5 !text-xs" content={cat} />
                                         ))
                                     }
                                     {
@@ -185,7 +185,7 @@ export function SearchModal(props) {
                                         discoveredSources.mainSource?.score && (
                                             <>
                                                 <FiberManualRecordIcon className="!text-[6px]" />
-                                                <BaseHeading text={`${discoveredSources.mainSource?.score * 10}% score`} />
+                                                <BaseHeading text={`${discoveredSources.mainSource?.score * 10}% score`} className={`rounded-md px-2 py-0.5 font-semibold  !text-primary-300 ${theme === 'light' ? 'bg-primary-100/30' : 'bg-primary-300/10'}`} />
                                             </>
                                         )
                                     }
@@ -244,7 +244,7 @@ export function SearchModal(props) {
                                     <div className="flex items-center gap-1">
                                         {
                                             item?.category?.map((cat, index) => (
-                                                <Chip key={`${cat}-${index}`} className="italic" content={cat} />
+                                                <Chip key={`${cat}-${index}`} cssClasses="italic !px-2 !py-0.5 !text-xs" content={cat} />
                                             ))
                                         }
                                         {
@@ -257,7 +257,7 @@ export function SearchModal(props) {
                                             item?.score && (
                                                 <>
                                                     <FiberManualRecordIcon className="!text-[6px]" />
-                                                    <BaseHeading text={`${item?.score * 10}% score`} />
+                                                    <BaseHeading text={`${item?.score * 10}% score`} className={`rounded-md px-2 py-0.5 font-semibold  !text-primary-300 ${theme === 'light' ? 'bg-primary-100/30' : 'bg-primary-300/10'}`} />
                                                 </>
                                             )
                                         }
