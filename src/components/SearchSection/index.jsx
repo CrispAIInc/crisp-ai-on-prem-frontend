@@ -87,16 +87,16 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                 />
 
                 <div className="flex items-center gap-2 px-2 py-1.5 rounded-xl max-w-full">
-                    <AppSelect
+                    {!fromMetadata && <AppSelect
                         options={categoryOptionsWithoutAll}
                         value={selectedDiscoveryIndexes}
                         onChange={(value) => setSelectedDiscoveryIndexes(value)}
                         multiple
                         placeholder="Select index"
                         className="flex-1 min-w-0"
-                    />
+                    />}
 
-                    <RippleButton disabled={isSearching || searchQuestion.trim().length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl'>
+                    <RippleButton disabled={isSearching || searchQuestion.trim().length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl !ml-auto'>
                         {isSearching ? <AnimatedText cssClasses='text-white' text='Searching...' /> : isGlobalSearch ? 'Discover' : 'Search'}
                     </RippleButton>
                 </div>
