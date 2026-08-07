@@ -133,7 +133,7 @@ export function SearchModal(props) {
                         {/* main source */}
                         <BaseHeading text="Main results" cssClasses="text-lg" />
                         {/* {filteredKnowledgeBase[0].map((item, index) => ( */}
-                        <div className={`flex items-center gap-2 w-full max-w-full cursor-pointer p-2 ${theme === 'light' ? 'hover:bg-light-hover-100/70' : 'hover:bg-light-hover-200/20'} hover:rounded-lg`} onClick={(event) => onThumbnailClick(event, discoveredSources.mainSource)}>
+                        <div className={`flex items-center gap-2 w-full max-w-full cursor-pointer p-2 ${theme === 'light' ? 'hover:bg-textColor-100/5' : 'hover:bg-light-hover-200/5'} hover:rounded-lg`} onClick={(event) => onThumbnailClick(event, discoveredSources.mainSource)}>
                             {
                                 discoveredSources.mainSource?.file_type === "video" ? (
                                     <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
@@ -206,7 +206,7 @@ export function SearchModal(props) {
                         {/* additional sources */}
                         <BaseHeading text="Additional results" cssClasses="text-lg" />
                         {filteredKnowledgeBase.slice(1).map((item, index) => (
-                            <div key={item?.source_path} className={`flex items-center gap-2 w-full max-w-full cursor-pointer p-2 ${theme === 'light' ? 'hover:bg-light-hover-100/70' : 'hover:bg-light-hover-200/20'} hover:rounded-lg`} onClick={(event) => onThumbnailClick(event, item)}>
+                            <div key={item?.source_path} className={`flex items-center gap-2 w-full max-w-full cursor-pointer p-2 ${theme === 'light' ? 'hover:bg-textColor-100/5' : 'hover:bg-light-hover-200/5'} hover:rounded-lg`} onClick={(event) => onThumbnailClick(event, item)}>
                                 {
                                     item?.file_type === "video" ? (
                                         <PlayCircleOutlineOutlinedIcon style={{ fontSize: "20px", color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
