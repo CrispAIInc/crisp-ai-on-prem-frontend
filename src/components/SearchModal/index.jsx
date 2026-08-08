@@ -45,7 +45,7 @@ export function SearchModal(props) {
     // Function to filter knowledgeBase items whose source paths exist in additionalSources and add timestamp or page to the item
     // const additionalSourcesSourcePaths = discoveredSources?.additionalSources?.map(source => source.source_path) || [];
 
-    const [filteredKnowledgeBase, setFilteredKnowledgeBase] = useState([
+    const [filteredKnowledgeBase, setFilteredKnowledgeBase] = useState(discoveredSources ? [
         discoveredSources.mainSource,
         ...discoveredSources.additionalSources.map(source => {
             const s = knowledgeBase.find(item => item.source_path === source.source_path);
@@ -56,9 +56,13 @@ export function SearchModal(props) {
                 page: Number(source?.page),
                 score: source?.score
             };
-        })]);
+        })] : []);
 
     useEffect(() => {
+        if (!discoveredSources) {
+            setFilteredKnowledgeBase([]);
+            return;
+        }
         setFilteredKnowledgeBase([
             discoveredSources.mainSource,
             ...discoveredSources.additionalSources.map(source => {
@@ -73,9 +77,8 @@ export function SearchModal(props) {
             })
         ]);
 
-        if (discoveredSources.mainSource) {
-            handleSourceLinkClick(event, { ...discoveredSources.mainSource });
-        }
+        handleSourceLinkClick(event, { ...discoveredSources.mainSource });
+
     }, [discoveredSources, knowledgeBase]);
 
 
