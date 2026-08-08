@@ -9,7 +9,7 @@ import AppSelect from "../AppSelect";
 import "./index.css";
 
 
-const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = false }) => {
+const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = false, searchQuestion, setSearchQuestion }) => {
 
     const { currentResource,
         selectedCategory,
@@ -22,8 +22,6 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
     } = useContext(MainContext);
 
     const { notify } = useToast();
-
-    const [searchQuestion, setSearchQuestion] = useState('');
     const [isSearching, setIsSearching] = useState(false);
     const [selectedDiscoveryIndexes, setSelectedDiscoveryIndexes] = useState([]);
     const textareaRef = useRef(null);
@@ -41,7 +39,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         event.preventDefault();
         setIsSearching(true);
         try {
-            const { additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+            const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
                 selectedCategory,
                 searchQuestion,
                 currentResource: isGlobalSearch ? null : currentResource,
@@ -53,8 +51,17 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
             if (!success) {
                 throw new Error(message);
             }
-            const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
-            setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page), score }, additionalSources: additional_sources });
+
+
+            if (!found) {
+                setDiscoveredSources({ mainSource: null, additionalSources: [] });
+            }
+            else {
+                const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
+                setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page), score }, additionalSources: additional_sources });
+            }
+
+
             if (!fromMetadata) {
                 setShowSearchModal(true);
             }
