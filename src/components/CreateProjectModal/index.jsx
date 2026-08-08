@@ -1,9 +1,7 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import makeApiRequest from '../../api';
-import { extractThumbnail } from '../../utils';
 import Modal from 'react-bootstrap/Modal';
-import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import AddIcon from '@mui/icons-material/Add';
 import LoadingSpinner from '../LoadingSpinner';
 
 import { useToast } from "../../contexts/toastContext";
@@ -14,11 +12,8 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hide
 
     const [newProjectName, setNewProjectName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [imagePreview, setImagePreview] = useState(null);
-    const [projectThumbnail, setProjectThumbnail] = useState(null);
+    const [projectThumbnail] = useState(null);
     const isCreateDisabled = !newProjectName.trim();
-
-    const projectThumbnailRef = useRef(null);
 
     const handleSave = async () => {
         try {
@@ -59,91 +54,82 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hide
 
     if (!show) return null;
 
-    function handleThumbnailChange(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        setProjectThumbnail(file);
-        setImagePreview(extractThumbnail(file));
-    }
-
     return (
         <Modal
             show={show}
             onHide={onHide}
-            size="sm"
+            size="md"
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
             dialogClassName='text-left'
         >
-
             <Modal.Body>
-                <div className={`flex flex-col items-start justify-center gap-3`}>
-                    <div className="flex flex-col w-full gap-1">
-                        {/* project thumbnail wrapper */}
-                        <label className={`block text-sm font-medium`}>
-                            Project Thumbnail (optional)
-                        </label>
-                        <div onClick={() => projectThumbnailRef.current.click()} className="relative flex flex-col items-center justify-center w-full border-2 border-dashed rounded-md cursor-pointer h-36 border-purple-500/40">
-                            {imagePreview ? <img src={imagePreview} alt="Thumbnail preview"
-                                className="object-cover w-full h-full rounded-md" /> : <FileUploadOutlinedIcon className="!h-16 !w-16 text-purple-500" />}
-
-                            {/* clear preview X icon */}
-                            {imagePreview && <DeleteOutlinedIcon onClick={(e) => {
-                                e.stopPropagation();
-                                setImagePreview(null);
-                            }} className="absolute p-1 !text-[23px] text-white rounded-full cursor-pointer bg-purple-500 -top-2 -left-2" />}
+                <div className="flex flex-col items-start justify-center gap-4">
+                    <div className="flex flex-col w-full gap-2">
+                        <div className="flex items-center gap-2">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 bg-gray-50">
+                                <AddIcon className="!h-5 !w-5 text-textColor-300" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-semibold text-textColor-300">Create a new project</h3>
+                                <p className="text-sm text-textColor-200">
+                                    Give your workspace a clear name and start organizing your work with structure.
+                                </p>
+                            </div>
                         </div>
-                        {/* thumbnail input */}
-                        <input accept="image/*" ref={projectThumbnailRef} type="file" className="hidden" onChange={e => handleThumbnailChange(e)} />
+
+                        <div className="w-full rounded-lg border border-gray-200 bg-gray-50/70 p-3">
+                            <div className="flex items-start gap-2">
+                                <div className="mt-1 h-2.5 w-2.5 p-1.5 rounded-full bg-primary-300" />
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-sm font-medium text-textColor-300">What happens next</span>
+                                    <p className="text-sm text-textColor-200">
+                                        Your project becomes a focused workspace for sources, interactions, and content in one place.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* project name */}
-                    <div className="flex flex-col w-full">
-                        <label htmlFor="indexName" className={`block text-sm font-medium`}>
+                    <div className="flex flex-col w-full gap-2">
+                        <label htmlFor="indexName" className="block text-sm font-semibold text-textColor-300">
                             Project Name
                         </label>
-                        <div className="flex items-center gap-1">
-                            <input
-                                type="text"
-                                name="indexName"
-                                placeholder='Project name'
-                                id='indexName'
-                                value={newProjectName}
-                                onChange={(e) => setNewProjectName(e.target.value)}
-                                className={`flex-1 block w-full p-2 mt-1 border border-gray-300 rounded-md outline-none`}
-                                required
-                                onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-                            />
-                        </div>
+                        <input
+                            type="text"
+                            name="indexName"
+                            placeholder="Project name"
+                            id="indexName"
+                            value={newProjectName}
+                            onChange={(e) => setNewProjectName(e.target.value)}
+                            className="flex-1 block w-full rounded-md border border-gray-300 bg-white text-sm outline-none transition focus:border-gray-400 p-2"
+                            required
+                            onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+                        />
+                        <p className="text-xs text-primary-200">
+                            Choose a descriptive name so it is easy to find later.
+                        </p>
                     </div>
                 </div>
             </Modal.Body>
-            <Modal.Footer className={`flex items-center gap-3 `}>
+            <Modal.Footer className="flex items-center justify-between gap-3">
                 <div
-                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100`}
+                    className="flex items-center justify-center gap-2 rounded-md cursor-pointer px-2 py-1 hover:bg-light-hover-100"
                     onClick={onHide}
                 >
-                    <span className={`select-none font-medium text-textColor-300`}>
+                    <span className="select-none font-medium text-textColor-300">
                         Cancel
                     </span>
                 </div>
 
-                {/* <div
-                    className={`flex items-center justify-center gap-2 rounded-md cursor-pointer w-fit hover:bg-light-hover-100`}
-                    onClick={handleSave}
-                >
-                    {isLoading ? <LoadingSpinner isSmall /> : <span className={`select-none font-medium text-purple-500`}>
-                        Create
-                    </span>}
-                </div> */}
                 <button
                     type="button"
                     disabled={isCreateDisabled || isLoading}
                     onClick={handleSave}
-                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isCreateDisabled || isLoading ? (theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-textColor-100/25 text-gray-700') : 'bg-[linear-gradient(90deg,#755bea,#b76894)] text-white hover:opacity-90'} ${theme === 'dark' && !isCreateDisabled && !isLoading ? '' : ''} ${isCreateDisabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isCreateDisabled || isLoading ? (theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-textColor-100/25 text-gray-700') : 'bg-[linear-gradient(90deg,#755bea,#b76894)] text-white hover:opacity-90'} ${isCreateDisabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 >
-                    {isLoading ? <LoadingSpinner isSmall /> : <span className="font-medium">Create</span>}
+                    {isLoading ? <LoadingSpinner isSmall /> : <span className="font-medium">Create project</span>}
                 </button>
             </Modal.Footer>
         </Modal>
