@@ -53,13 +53,13 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
             }
 
 
-            if (!found) {
-                setDiscoveredSources({ mainSource: null, additionalSources: [] });
-            }
-            else {
-                const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
-                setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page), score }, additionalSources: additional_sources });
-            }
+            // if (!found) {
+            //     setDiscoveredSources({ mainSource: null, additionalSources: [] });
+            // }
+            // else {
+            const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
+            setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page), score }, additionalSources: additional_sources });
+            // }
 
 
             if (!fromMetadata) {
@@ -103,7 +103,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                         className="flex-1 min-w-0"
                     />}
 
-                    <RippleButton disabled={isSearching || searchQuestion.trim().length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl !ml-auto'>
+                    <RippleButton disabled={isSearching || searchQuestion?.trim()?.length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl !ml-auto'>
                         {isSearching ? <AnimatedText cssClasses='text-white' text='Searching...' /> : isGlobalSearch ? 'Discover' : 'Search'}
                     </RippleButton>
                 </div>
