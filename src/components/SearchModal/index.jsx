@@ -7,6 +7,7 @@ import { MainContext } from "../../contexts/mainContext.jsx";
 
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { Search } from 'lucide-react';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import GsFile from '../GsFile/index.jsx';
@@ -77,38 +78,6 @@ export function SearchModal(props) {
         }
     }, [discoveredSources, knowledgeBase]);
 
-    // const filteredKnowledgeBase = [
-    //     discoveredSources.mainSource,
-    //     ...discoveredSources.additionalSources.map(source => {
-    //         const s = knowledgeBase.find(item => item.source_path === source.source_path);
-    //         if (!s) return null;
-    //         return {
-    //             ...s,
-    //             timestamp: source?.timestamp,
-    //             page: Number(source?.page)
-    //         };
-    //     })
-    // ...additionalSourcesSourcePaths.flatMap(sourcePath => {
-    //     const item = knowledgeBase.find(
-    //         kb => kb.source_path === sourcePath
-    //     );
-
-    //     if (!item) return [];
-
-    //     const additionalSource = discoveredSources.additionalSources.find(
-    //         source => source.source_path === sourcePath
-    //     );
-
-    //     return [{
-    //         ...item,
-    //         timestamp: additionalSource?.timestamp,
-    //         page: additionalSource?.page
-    //     }];
-    // })
-    // ];
-
-    // console.log("filteredKb: ", filteredKnowledgeBase);
-
 
     return (
         <>
@@ -126,7 +95,10 @@ export function SearchModal(props) {
                     : "bg-textColor-300 text-white !border-b-textColor-200"
                     }`}>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Search Results
+                        <div className="flex items-center gap-2">
+                            <Search size={18} />
+                            <BaseHeading text="Search Results" className="text-[1.17rem]" />
+                        </div>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={`${theme === "light" ? "" : "bg-textColor-300 text-white"}`}>
