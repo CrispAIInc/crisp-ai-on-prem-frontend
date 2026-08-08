@@ -265,7 +265,7 @@ export function SearchModal(props) {
                                 <div className={`flex flex-col items-center justify-center gap-1 mt-2 ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
                                     <p className="m-0">Try:</p>
                                     <ul className="list-disc list-inside m-0 font-semibold">
-                                        <li>Using fewer keywords</li>
+                                        <li>Using more detailed search query</li>
                                         <li>Checking your selected indexes</li>
                                         <li>Searching for a broader topic</li>
                                     </ul>
