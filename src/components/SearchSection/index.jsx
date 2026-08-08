@@ -54,7 +54,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
 
 
             if (!found) {
-                setDiscoveredSources({ mainSource: null, additionalSources: [] });
+                setDiscoveredSources(null);
             }
             else {
                 const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
