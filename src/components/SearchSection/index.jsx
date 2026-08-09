@@ -7,6 +7,8 @@ import makeApiRequest from '../../api/index.js';
 import AppSelect from "../AppSelect";
 
 import "./index.css";
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick.js';
+import { timeToSeconds } from '../../utils.js';
 
 
 const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = false, }) => {
@@ -19,12 +21,16 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         setShowSearchModal,
         theme,
         knowledgeBase,
-        searchQuestion, setSearchQuestion
+        searchQuestion,
+        setSearchQuestion,
+        isPlayerReady,
+        player
     } = useContext(MainContext);
 
     const [currentSourceSearchQuesry, setCurrentSourceSearchQuery] = useState("");
 
     const { notify } = useToast();
+    const { handleSourceLinkClick } = useReferenceLinkClick();
     const [isSearching, setIsSearching] = useState(false);
     const [selectedDiscoveryIndexes, setSelectedDiscoveryIndexes] = useState([]);
     const textareaRef = useRef(null);
@@ -62,6 +68,9 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
             else {
                 const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
                 setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page), score }, additionalSources: additional_sources });
+
+                handleSourceLinkClick(event, { ...source, timestamp, page });
+                if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             }
 
 

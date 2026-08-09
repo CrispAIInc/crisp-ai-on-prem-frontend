@@ -71,7 +71,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   useEffect(() => {
     if (
       isPlayerReady &&
-      resourceURL &&
       currentResource?.file_type === "video"
     ) {
       const timestamp = currentResource?.timestamp;
@@ -93,7 +92,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
         }
       }
     }
-  }, [isPlayerReady, resourceURL, currentResource?.source_path, currentResource?.timestamp, currentResource?.file_type]);
+  }, [isPlayerReady, currentResource?.source_path, currentResource?.timestamp, currentResource?.file_type]);
 
   // pdfRef.current?.goToPage(jumpToPage.page);
   useEffect(() => {

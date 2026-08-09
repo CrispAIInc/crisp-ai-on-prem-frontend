@@ -27,6 +27,7 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
     } = useToast();
 
     const handleVideoLinkClick = (video) => {
+        console.log(video);
         setFromChat(isFromChat);
         const resourceURL = `${API_ENDPOINT}/${video.file_type
             }/all/${encodeURIComponent(video.source_path)}`;
