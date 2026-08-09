@@ -28,7 +28,6 @@ const ContentPanel = ({ setCurrentProject }) => {
         onThumbnailClick,
         isLeftSidebarOpen,
         setShowMetadata,
-        showMetadata,
         setIsLeftSidebarOpen, setTheme, uploadedSources, setUploadedSources, setSelectedNote, theme, noteIndex, contentPanelContainerRef } = useContext(MainContext);
 
 
@@ -93,7 +92,7 @@ const ContentPanel = ({ setCurrentProject }) => {
     ];
 
     const [activeTab, setActiveTab] = useState('sources');
-    const [searchQuestion, setSearchQuestion] = useState('');
+
 
     const switchTheme = (newTheme) => {
         setTheme(newTheme);
@@ -173,8 +172,6 @@ const ContentPanel = ({ setCurrentProject }) => {
                     handleCheckboxChange={handleCheckboxChange}
                     name="Sources"
                     key={0}
-                    searchQuestion={searchQuestion}
-                    setSearchQuestion={setSearchQuestion}
                     classes="flex-1 h-full overflow-y-auto"
                 />
                 {(activeTab === 'sources' && (Boolean(localStorage.getItem(`guide_completed_sources`)) === false || localStorage.getItem(`guide_completed_sources`) === "false")) && <Guide steps={contentSectionSteps} tabIdentifier="sources" />}
@@ -191,7 +188,6 @@ const ContentPanel = ({ setCurrentProject }) => {
 
             {showSearchModal && (
                 <SearchModal
-                    searchQuestion={searchQuestion}
                     show={showSearchModal}
                     onHide={onHideSearchModal}
                     knowledgeBase={knowledgeBase}

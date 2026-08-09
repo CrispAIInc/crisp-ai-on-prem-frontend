@@ -178,8 +178,7 @@ const ContentSection = ({
     handleCheckboxChange,
     setKnowledgeBase,
     setUploadedSources,
-    searchQuestion,
-    setSearchQuestion
+
 
 }) => {
     const {
@@ -1229,8 +1228,6 @@ const ContentSection = ({
                                 isSearching && (
                                     <div className="flex items-center mt-2 gap-2">
                                         <SearchSection
-                                            searchQuestion={searchQuestion}
-                                            setSearchQuestion={setSearchQuestion}
                                             chatLoaded={chatLoaded}
                                             className='flex-1' />
                                     </div>

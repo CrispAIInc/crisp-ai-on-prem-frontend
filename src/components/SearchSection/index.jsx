@@ -9,7 +9,7 @@ import AppSelect from "../AppSelect";
 import "./index.css";
 
 
-const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = false, searchQuestion, setSearchQuestion }) => {
+const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = false, }) => {
 
     const { currentResource,
         selectedCategory,
@@ -18,8 +18,11 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         setDiscoveredSources,
         setShowSearchModal,
         theme,
-        knowledgeBase
+        knowledgeBase,
+        searchQuestion, setSearchQuestion
     } = useContext(MainContext);
+
+    const [currentSourceSearchQuesry, setCurrentSourceSearchQuery] = useState("");
 
     const { notify } = useToast();
     const [isSearching, setIsSearching] = useState(false);
@@ -33,7 +36,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         // Reset height to recalc
         el.style.height = "auto";
         el.style.height = el.scrollHeight + "px";
-    }, [searchQuestion]);
+    }, [searchQuestion, currentSourceSearchQuesry]);
 
     const handleSubmitQuestion = async (event) => {
         event.preventDefault();
@@ -41,7 +44,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         try {
             const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
                 selectedCategory,
-                searchQuestion,
+                searchQuestion: fromMetadata ? currentSourceSearchQuesry : searchQuestion,
                 currentResource: isGlobalSearch ? null : currentResource,
                 selectedFormat,
                 indexes: selectedDiscoveryIndexes
@@ -87,8 +90,8 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                     }}
                     rows={2}
                     placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"}
-                    value={searchQuestion}
-                    onChange={(event) => setSearchQuestion(event.target.value)}
+                    value={fromMetadata ? currentSourceSearchQuesry : searchQuestion}
+                    onChange={(event) => fromMetadata ? setCurrentSourceSearchQuery(event.target.value) : setSearchQuestion(event.target.value)}
                     className={`w-full p-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-28 placeholder:text-neutral-400 ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}
                     autoFocus
                 />
@@ -103,7 +106,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                         className="flex-1 min-w-0"
                     />}
 
-                    <RippleButton disabled={isSearching || searchQuestion?.trim()?.length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl !ml-auto'>
+                    <RippleButton disabled={isSearching || (fromMetadata ? currentSourceSearchQuesry : searchQuestion)?.trim()?.length === 0} onClick={handleSubmitQuestion} cssClasses='p-2 rounded-xl !ml-auto'>
                         {isSearching ? <AnimatedText cssClasses='text-white' text='Searching...' /> : isGlobalSearch ? 'Discover' : 'Search'}
                     </RippleButton>
                 </div>

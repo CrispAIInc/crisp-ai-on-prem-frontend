@@ -1296,10 +1296,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     const pdfRef = useRef(null);
 
     const categoryOptionsWithoutAll = categoryOptions.filter(item => item.value !== 'all');
+    const [searchQuestion, setSearchQuestion] = useState('');
 
     // create value object with all the states
     const value = {
         pdfRef,
+        searchQuestion, setSearchQuestion,
         categoryOptionsWithoutAll,
         isKnowledgeBaseFetching, setisKnowledgeBaseFetching,
         frameExtractionRate, setFrameExtractionRate,
