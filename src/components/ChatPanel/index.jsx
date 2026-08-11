@@ -376,14 +376,14 @@ const ChatPanel = () => {
   async function handleCaptionSubmit() {
     try {
       setIsPending(true);
-      if (!momentTitle) {
-        notify({
-          variant: "error",
-          heading: "Moment title is required"
-        });
-        setIsPending(false);
-        return;
-      }
+      // if (!momentTitle) {
+      //   notify({
+      //     variant: "error",
+      //     heading: "Moment title is required"
+      //   });
+      //   setIsPending(false);
+      //   return;
+      // }
       if (!displayedSources?.every(item => item?.is_checked === false)) {
         await makeApiRequest(
           `/handle-embeddings`,
@@ -417,13 +417,6 @@ const ChatPanel = () => {
             results: finalResults
           };
 
-          setMoments(prev => {
-            return [
-              moment,
-              ...prev,
-            ];
-          });
-
           setCurrentMoment(moment);
 
           setPrompt("");
@@ -451,6 +444,33 @@ const ChatPanel = () => {
       console.log(error);
       setIsPending(false);
       setShowList(false);
+    }
+  }
+
+  async function saveMoment(moment) {
+    try {
+      const { success, message } = await makeApiRequest('/moment/save', 'POST', JSON.stringify({ moment }));
+
+      if (!success) {
+        throw new Error(message);
+      }
+
+      setMoments(prev => {
+        return [
+          moment,
+          ...prev,
+        ];
+      });
+      notify({
+        variant: "success",
+        heading: "Moment saved successfully"
+      });
+    } catch (error) {
+      notify({
+        variant: "error",
+        heading: "Couldn't save moment",
+        subheading: error?.message || ""
+      });
     }
   }
 
@@ -809,6 +829,7 @@ const ChatPanel = () => {
                   isPending={isPending}
                   setIsPending={setIsPending}
                   handleCaptionSubmit={handleCaptionSubmit}
+                  saveMoment={saveMoment}
                 />
               ) : actualTab === "genGraph" ? (
                 <KnowledgeGraph

@@ -47,6 +47,7 @@ const VideoSegmentDescription = ({
     isPending,
     setIsPending,
     handleCaptionSubmit,
+    saveMoment
 }) => {
 
     const {
@@ -132,6 +133,7 @@ const VideoSegmentDescription = ({
                         handleCaptionSubmit={handleCaptionSubmit}
                         title={momentTitle}
                         setTitle={setMomentTitle}
+                        saveMoment={saveMoment}
                     />
                 )
             }

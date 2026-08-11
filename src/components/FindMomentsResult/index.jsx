@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import BaseHeading from '../BaseHeading';
 import RippleButton from "../RippleButton";
 import { MainContext } from '../../contexts/mainContext';
 import { useToast } from "../../contexts/toastContext";
-import AnimatedText from '../AnimatedText';
-import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import { Skeleton } from '@mui/material';
 import Chip from '../Chip';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 
-const FindMomentsResult = ({ exportFn, isPending, captionResults, currentMoment, setShowList }) => {
+const FindMomentsResult = ({ isPending, captionResults, currentMoment, setShowList, moments, saveMoment }) => {
 
     const {
         theme,
@@ -83,7 +80,17 @@ const FindMomentsResult = ({ exportFn, isPending, captionResults, currentMoment,
                             <BaseHeading text="Prompt" className="text-sm text-gradient-x" />
                             <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{currentMoment.prompt}</p>
                         </div>
-                        <BaseHeading text="close" className="text-sm cursor-pointer" onClick={closeResultsTab} />
+                        <div className="flex items-center gap-3">
+                            {!moments.some(item => item.id === currentMoment.id) && (
+                                <RippleButton
+                                    onClick={saveMoment}
+                                    cssClasses="p-2 text-[8px]"
+                                >
+                                    Save
+                                </RippleButton>
+                            )}
+                            <BaseHeading text="X" className="text-sm cursor-pointer" onClick={closeResultsTab} />
+                        </div>
                     </div>
 
                     <div>

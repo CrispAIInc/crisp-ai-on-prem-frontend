@@ -32,7 +32,7 @@ const FindMoments = ({
     currentMoment,
     setCurrentMoment,
     isPending,
-    setIsPending,
+    saveMoment,
     handleCaptionSubmit,
     title,
     setTitle,
@@ -42,8 +42,6 @@ const FindMoments = ({
     const {
         theme,
         checkedSources,
-        knowledgeBase,
-        displayedSources,
     } = useContext(MainContext);
 
     // const { notify } = useContext(ToastContext);
@@ -381,12 +379,14 @@ const FindMoments = ({
                             />
                         ) : (
                             <FindMomentsResult
+                                moments={moments}
                                 currentMoment={currentMoment}
                                 setCurrentMoment={setCurrentMoment}
                                 captionResults={captionResults}
                                 isPending={isPending}
                                 exportFn={() => exportToDocx(captionResults)}
                                 setShowList={setShowList}
+                                saveMoment={saveMoment}
                             />
                         )
                     )
