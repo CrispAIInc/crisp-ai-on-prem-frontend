@@ -83,7 +83,7 @@ const FindMomentsResult = ({ isPending, captionResults, currentMoment, setShowLi
                         <div className="flex items-center gap-3">
                             {!moments.some(item => item.id === currentMoment.id) && (
                                 <RippleButton
-                                    onClick={saveMoment}
+                                    onClick={() => saveMoment(currentMoment)}
                                     cssClasses="p-2 text-[8px]"
                                 >
                                     Save
