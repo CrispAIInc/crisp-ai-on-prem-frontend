@@ -90,8 +90,8 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
     };
 
     return (
-        <div className={`search-wrapper animated-gradient-border w-full max-w-[600px] ${className}`}>
-            <div className={`flex flex-col pr-[2px] ${theme === 'light' ? '' : 'bg-gray-900/35'} rounded-xl relative z-10`}>
+        <div className={`search-wrapper animated-gradient-border w-full max-w-[600px] !z-1 ${className}`}>
+            <div className={`flex flex-col pr-[2px] ${theme === 'light' ? '' : 'bg-gray-900/35'} rounded-xl relative !z-1`}>
 
                 <textarea
                     ref={el => {
