@@ -473,6 +473,10 @@ const ChatPanel = () => {
           ...prev,
         ];
       });
+      setCurrentMoment({
+        id,
+        ...moment,
+      });
       notify({
         variant: "success",
         heading: "Moment saved successfully"
