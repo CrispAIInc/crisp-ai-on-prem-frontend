@@ -195,7 +195,7 @@ const FindMomentsResult = ({ isPending, captionResults, currentMoment, setShowLi
                                         <Chip content={segment.timestampText} data-object={segment?.source} handleClick={(event) => handleSourceLinkClick(event, segment?.source)} cssClasses="ml-0 cursor-pointer " />
                                         {
                                             segment?.score !== undefined && (
-                                                <ScoreChip score={segment.score * 10} />
+                                                <ScoreChip score={segment.score * 100} />
                                             )
                                         }
                                     </div>
