@@ -448,8 +448,17 @@ const ChatPanel = () => {
   }
 
   async function saveMoment(moment) {
+    const momentWithoutSource = {
+      ...moment,
+      results: moment.results.map(item => {
+        const { source, ...rest } = item;
+
+        return rest;
+      })
+    };
+
     try {
-      const { success, message } = await makeApiRequest('/moment/save', 'POST', JSON.stringify({ moment }));
+      const { success, message } = await makeApiRequest('/moment/save', 'POST', JSON.stringify({ momentWithoutSource }));
 
       if (!success) {
         throw new Error(message);
