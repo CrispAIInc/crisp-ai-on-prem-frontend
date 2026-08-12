@@ -466,7 +466,7 @@ const ChatPanel = () => {
 
       setMoments(prev => {
         return [
-          ...{
+          {
             id,
             ...moment,
           },
