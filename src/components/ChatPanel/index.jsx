@@ -458,7 +458,7 @@ const ChatPanel = () => {
     };
 
     try {
-      const { success, message } = await makeApiRequest('/moment/save', 'POST', JSON.stringify({ momentWithoutSource }));
+      const { success, message, id } = await makeApiRequest('/moment/save', 'POST', JSON.stringify({ momentWithoutSource }));
 
       if (!success) {
         throw new Error(message);
@@ -466,7 +466,10 @@ const ChatPanel = () => {
 
       setMoments(prev => {
         return [
-          moment,
+          ...{
+            id,
+            ...moment,
+          },
           ...prev,
         ];
       });

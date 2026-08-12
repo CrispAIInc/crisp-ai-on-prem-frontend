@@ -101,7 +101,7 @@ const FindMomentsResult = ({ isPending, captionResults, currentMoment, setShowLi
                             <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{currentMoment.prompt}</p>
                         </div>
                         <div className="flex items-center gap-3">
-                            {!moments.some(item => item.id === currentMoment.id) && (
+                            {!('id' in currentMoment) && (
                                 <RippleButton
                                     onClick={() => {
                                         setMomentTitle(currentMoment?.title || "");
