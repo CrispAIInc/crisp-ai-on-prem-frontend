@@ -7,6 +7,7 @@ import { Skeleton } from '@mui/material';
 import Chip from '../Chip';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import Modal from 'react-bootstrap/Modal';
+import ScoreChip from '../ScoreChip';
 
 const FindMomentsResult = ({ isPending, captionResults, currentMoment, setShowList, moments, saveMoment }) => {
 
@@ -190,7 +191,14 @@ const FindMomentsResult = ({ isPending, captionResults, currentMoment, setShowLi
                                 <div key={index} className="mb-4">
                                     <p className={`text-sm/6 mb-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{segment.context}</p>
 
-                                    <Chip content={segment.timestampText} data-object={segment?.source} handleClick={(event) => handleSourceLinkClick(event, segment?.source)} cssClasses="ml-0 cursor-pointer " />
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <Chip content={segment.timestampText} data-object={segment?.source} handleClick={(event) => handleSourceLinkClick(event, segment?.source)} cssClasses="ml-0 cursor-pointer " />
+                                        {
+                                            segment?.score !== undefined && (
+                                                <ScoreChip score={segment.score} />
+                                            )
+                                        }
+                                    </div>
                                 </div>
                             ))
                         }

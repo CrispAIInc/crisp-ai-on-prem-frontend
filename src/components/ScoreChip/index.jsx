@@ -6,7 +6,7 @@ function ScoreChip({ score }) {
     const { theme } = useContext(MainContext);
 
     return (
-        <div className={`p-2 text-primary-300 ${theme === 'light' ? 'bg-primary-200/50' : 'bg-primary-200/50'} text-xs rounded-md`}>{score}</div>
+        <div className={`p-2 ${score < 50 ? 'text-red-500 bg-red-200' : (theme === 'light' ? 'text-green-500 bg-green-200' : 'text-green-300 bg-green-700')} text-xs rounded-md`}>{score}% score</div>
     );
 }
 
