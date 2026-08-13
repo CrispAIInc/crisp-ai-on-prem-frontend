@@ -71,14 +71,14 @@ function MediaEntertainment({
 
     async function generateMedia() {
         if (isProjectReadOnly) return;
-        if (reel.title === "") {
-            notify({
-                variant: "error",
-                heading: "Oops!",
-                subheading: "Reel title is required!",
-            });
-            return;
-        }
+        // if (reel.title === "") {
+        //     notify({
+        //         variant: "error",
+        //         heading: "Oops!",
+        //         subheading: "Reel title is required!",
+        //     });
+        //     return;
+        // }
         try {
             setIsReelOpen(false);
             setIsGeneratingReel(true);
