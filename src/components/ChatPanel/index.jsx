@@ -273,11 +273,7 @@ const ChatPanel = () => {
           variant: "success",
           heading: "Description generated successfully",
         });
-
-        setSegmentDescriptions(prev => [
-          ...prev,
-          { ...data }
-        ]);
+        // Do not persist generated segment automatically; user must explicitly save.
         setCurrentSegment(data);
         setShowSegmentList(false);
       } else {

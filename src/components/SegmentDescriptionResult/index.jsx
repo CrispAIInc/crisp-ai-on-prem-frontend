@@ -1,15 +1,16 @@
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import BaseHeading from '../BaseHeading';
 import Chip from '../Chip';
 import RippleButton from "../RippleButton";
+import SaveSegmentModal from '../SaveSegmentModal';
 import TalkingHeadPanel from '../TalkingHeadPanel';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 
-const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegmentDescriptions, setShowList, currentSegment, setCurrentSegment }) => {
+const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegmentDescriptions, setSegmentDescriptions, setShowList, currentSegment, setCurrentSegment }) => {
 
     const {
         video,
@@ -36,6 +37,13 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
     }
 
     const [exportMenuOpen, setExportMenuOpen] = useState(false);
+    const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+    const [isSaved, setIsSaved] = useState(Boolean(currentSegment && currentSegment.id));
+
+    // reset/update saved flag when currentSegment changes
+    useEffect(() => {
+        setIsSaved(Boolean(currentSegment && currentSegment.id));
+    }, [currentSegment]);
 
     function timeToSeconds(time) {
         const [h, m, s] = time.split(":").map(Number);
@@ -199,6 +207,22 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                     )}
                 </div>
             </div>
+            <div>
+                {!isSaved && (
+                    <RippleButton cssClasses="px-2 flex items-center gap-1 py-1 text-sm rounded" onClick={() => setIsSaveModalOpen(true)}>
+                        Save
+                    </RippleButton>
+                )}
+            </div>
+            {isSaveModalOpen && (
+                <SaveSegmentModal
+                    show={isSaveModalOpen}
+                    onHide={() => setIsSaveModalOpen(false)}
+                    segment={currentSegment}
+                    setSegmentDescriptions={setSegmentDescriptions}
+                    onSaved={(id) => setIsSaved(true)}
+                />
+            )}
         </div>
     );
 };

@@ -599,6 +599,7 @@ const TimeSegmentDescription = ({
                             isPending={isSegmentPending}
                             exportFn={(result) => exportSceneAnalysisToDocx(result)}
                             setTimeSegmentDescriptions={setTimeSegmentDescriptions}
+                            setSegmentDescriptions={setSegmentDescriptions}
                         />
                     )
                 }
