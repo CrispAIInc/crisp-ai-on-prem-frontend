@@ -105,6 +105,7 @@ const TimeSegmentDescription = ({
     const {
         checkedSources,
         theme,
+        displayedSources
     } = useContext(MainContext);
 
     const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
@@ -124,7 +125,7 @@ const TimeSegmentDescription = ({
     const handleMouseEnter = () => (checkedVideosCount === 0 || prompt.trim() === "" || isProjectReadOnly) && setTooltipVisible(true);
     const handleMouseLeave = () => setTooltipVisible(false);
 
-    const canGenerate = checkedVideosCount > 0 && !isSegmentPending && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
+    const canGenerate = checkedVideosCount === 1 && !isSegmentPending && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
 
     // Helper function to convert a Base64 string to a Uint8Array (Prevents Word corruption)
     function base64ToUint8Array(base64) { const binaryString = window.atob(base64); const len = binaryString.length; const bytes = new Uint8Array(len); for (let i = 0; i < len; i++) { bytes[i] = binaryString.charCodeAt(i); } return bytes; }
@@ -526,7 +527,6 @@ const TimeSegmentDescription = ({
                         disabled={!canGenerate}
                     >
                         {isSegmentPending ? <LoadingSpinner /> : <AutoAwesomeIcon className={`text-white !text-[16px]`} />}
-                        {/* <span className="text-sm">Find</span> */}
                     </RippleButton>
 
                     {tooltipVisible && (
@@ -534,7 +534,7 @@ const TimeSegmentDescription = ({
                             className={`absolute z-10 p-2 text-sm font-semibold rounded shadow-2xl bg-background_workspace top-full ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}
                             style={{ top: position.y, left: position.x, opacity: tooltipVisible ? 1 : 0 }}
                         >
-                            {isProjectReadOnly ? "Cannot edit an example project." : checkedVideosCount === 0 ? "check at least one video source to enable." : "No prompt provided."}
+                            {isProjectReadOnly ? "Cannot edit an example project." : displayedSources.filter(i => (i.is_checked && i.file_type === "video")).length !== 1 ? "check ONE video source to enable." : "No prompt provided."}
                         </p>
                     )}
                 </div>

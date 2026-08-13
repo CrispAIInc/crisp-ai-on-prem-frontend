@@ -25,6 +25,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
         theme,
         contentPanelContainerRef,
         knowledgeBase,
+        displayedSources
     } = useContext(MainContext);
 
     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
@@ -209,7 +210,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
             </div>
             <div>
                 {!isSaved && (
-                    <RippleButton cssClasses="px-2 flex items-center gap-1 py-1 text-sm rounded" onClick={() => setIsSaveModalOpen(true)}>
+                    <RippleButton disabled={displayedSources.filter(item => item.is_checked).length !== 1} cssClasses="px-2 flex items-center gap-1 py-1 text-sm rounded" onClick={() => setIsSaveModalOpen(true)}>
                         Save
                     </RippleButton>
                 )}
