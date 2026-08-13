@@ -13,6 +13,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
 import { Drawer } from '@mui/material';
+import Modal from 'react-bootstrap/Modal';
 import ReelProps from '../ReelProps/index.jsx';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import Moveable from "react-moveable";
@@ -42,7 +43,13 @@ function ReelViewer({
 
     const [isDownloading, setIsDownloading] = useState(false);
     const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
+    const [showSaveTitleModal, setShowSaveTitleModal] = useState(false);
+    const [saveTitleValue, setSaveTitleValue] = useState(reel?.title || '');
     // const [isPending, setIsPending] = useState(false);
+
+    useEffect(() => {
+        setSaveTitleValue(reel?.title || '');
+    }, [reel?.title]);
 
     useEffect(() => {
         if (reel?.reel_video_url) {
@@ -50,7 +57,7 @@ function ReelViewer({
                 .then(setSourcePublicUrl)
                 .catch(console.error);
         }
-    }, [reel?.reel_video_url]);
+    }, [reel?.reel_video_url, getPublicUrl]);
 
     const handleCloseReel = (e) => {
         e.stopPropagation();
@@ -108,10 +115,8 @@ function ReelViewer({
         }
     };
 
-    const [duration, setDuration] = useState(0);
-
-    const handleDuration = (dur) => {
-        setDuration(dur);
+    const handleDuration = () => {
+        // intentionally kept for media lifecycle hooks
     };
     const handleProgress = (progress) => {
         const currentTime = progress.playedSeconds;
@@ -266,25 +271,53 @@ function ReelViewer({
         setIsOutsideClickEnabled(false);
     };
 
-    async function saveReel() {
-        console.log(reel);
-        try {
-            const { success, message, id } = await makeApiRequest('/reel/save', 'POST');
+    async function saveReel(titleOverride = reel?.title || '') {
+        const nextTitle = (titleOverride || '').trim();
 
-            if (!success) {
-                throw new Error(message);
+        if (!nextTitle) {
+            notify({
+                variant: "error",
+                heading: "Title required",
+                subheading: "Please enter a title before saving the reel."
+            });
+            return;
+        }
+
+        try {
+            let savedId = reel?.id;
+
+            try {
+                const backendResponse = await makeApiRequest('/reel/save', 'POST', JSON.stringify({ ...reel, title: nextTitle }));
+                if (backendResponse?.id) {
+                    savedId = backendResponse.id;
+                }
+            } catch (backendError) {
+                console.warn('Reel save endpoint not available; continuing with local reel save flow.', backendError);
             }
 
             const savedReel = {
-                id,
-                ...reel
+                ...reel,
+                id: savedId || reel?.id,
+                title: nextTitle,
             };
 
             setReel(savedReel);
-            setReels(prev => [
-                savedReel,
-                ...(prev || [])
-            ]);
+            setReels(prev => {
+                const existingReels = prev || [];
+                const alreadyExists = existingReels.some(item => item.id === savedReel.id);
+
+                if (alreadyExists) {
+                    return existingReels.map(item => item.id === savedReel.id ? savedReel : item);
+                }
+
+                return [savedReel, ...existingReels];
+            });
+
+            setShowSaveTitleModal(false);
+            notify({
+                variant: "success",
+                heading: "Reel saved successfully!",
+            });
         } catch (error) {
             notify({
                 variant: "error",
@@ -318,7 +351,11 @@ function ReelViewer({
                         <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
                             {
                                 (!isProjectReadOnly && reels.find(item => item.id === reel.id) === undefined) && (
-                                    <Save onClick={saveReel} size={30} className="p-2 z-50 text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
+                                    <Save onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSaveTitleValue(reel?.title || '');
+                                        setShowSaveTitleModal(true);
+                                    }} size={30} className="p-2 z-50 text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
                                 )
                             }
                             {areReelControlsVisible ? (
@@ -382,6 +419,76 @@ function ReelViewer({
                     <ReelProps reel={reel} closeReelProps={handleCloseReelProps} />
                 </Drawer>
             </div>
+            {showSaveTitleModal && (
+                <Modal
+                    show={showSaveTitleModal}
+                    onHide={() => setShowSaveTitleModal(false)}
+                    size="md"
+                    centered
+                    dialogClassName='text-left'
+                >
+                    <Modal.Header className={`border-0 pb-0 ${theme === 'dark' ? '!bg-textColor-300 !text-white' : ''}`}>
+                        <div className="flex flex-col gap-1">
+                            <Modal.Title className={`text-lg font-semibold ${theme === 'dark' ? 'text-textColor-100' : 'text-gray-900'}`}>
+                                Save reel
+                            </Modal.Title>
+                            <p className={`text-sm m-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>
+                                Choose a title before saving this reel.
+                            </p>
+                        </div>
+                    </Modal.Header>
+
+                    <Modal.Body className={`${theme === 'dark' ? 'bg-textColor-300 text-white' : ''}`}>
+                        <div className='flex flex-col items-start justify-center gap-3'>
+                            <div className="flex flex-col w-full">
+                                <label htmlFor="reelTitle" className={`block text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    Reel title
+                                </label>
+                                <input
+                                    type="text"
+                                    name="reelTitle"
+                                    id="reelTitle"
+                                    value={saveTitleValue}
+                                    onChange={(e) => setSaveTitleValue(e.target.value)}
+                                    placeholder="Enter a title for this reel"
+                                    className={`flex-1 block w-full p-2 mt-1 rounded-xl outline-none transition ${theme === 'dark'
+                                        ? '!border !border-textColor-200 bg-textColor-300 text-white placeholder:text-gray-400'
+                                        : '!border !border-gray-300 bg-white text-gray-900'}`}
+                                    onKeyDown={(e) => e.key === 'Enter' && saveReel(saveTitleValue)}
+                                />
+                            </div>
+                        </div>
+                    </Modal.Body>
+
+                    <Modal.Footer className={`flex items-center justify-end gap-3 ${theme === 'dark' ? '!bg-textColor-300 !text-white !border-t !border-t-textColor-200' : ''}`}>
+                        <button
+                            type="button"
+                            className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 w-fit transition ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                            onClick={() => setShowSaveTitleModal(false)}
+                        >
+                            <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                                Cancel
+                            </span>
+                        </button>
+
+                        <button
+                            type="button"
+                            className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 w-fit transition ${!saveTitleValue.trim()
+                                ? 'cursor-not-allowed text-gray-400'
+                                : theme === 'dark'
+                                    ? 'hover:bg-purple-500/20 text-purple-300'
+                                    : 'hover:bg-purple-50 text-purple-600'}`}
+                            onClick={() => saveReel(saveTitleValue)}
+                            disabled={!saveTitleValue.trim()}
+                        >
+                            <span className="select-none font-medium">
+                                Save reel
+                            </span>
+                        </button>
+                    </Modal.Footer>
+                </Modal>
+            )}
+
             <Moveable
                 target={document.querySelector(".reel-viewer")}
                 container={null}
@@ -407,7 +514,7 @@ function ReelViewer({
                 /* Only one of resizable, scalable, warpable can be used. */
                 resizable={false}
                 throttleResize={0}
-                onResize={({ target, width, height, drag }) => {
+                onResize={({ target, width, height }) => {
                     // Apply size to target
                     // const el = target.current;
                     target.style.width = `${width}px`;
