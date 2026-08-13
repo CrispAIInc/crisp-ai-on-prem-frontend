@@ -73,6 +73,7 @@ const JsonEntityModal = ({ show, onHide }) => {
             const { success, message, id } = await makeApiRequest("/graph/save", 'POST', updatedEntity.graph);
             if (success) {
                 setJsonEntities(prev => [...prev, { ...updatedEntity, id }]);
+                setSelectedJsonEntity({ ...updatedEntity, id });
                 setShowTitleModal(false);
                 notify({
                     variant: "success",
@@ -139,7 +140,7 @@ const JsonEntityModal = ({ show, onHide }) => {
                     <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Cancel</span>
                 </div>
                 {
-                    (jsonEntities.find(item => item.graph_id === selectedJsonEntity.graph_id) === undefined || !('graph_id' in selectedJsonEntity)) && (
+                    (!('graph_id' in selectedJsonEntity)) && (
                         <RippleButton onClick={() => {
                             setEntityTitleValue(selectedJsonEntity?.title || '');
                             setShowTitleModal(true);
