@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 
@@ -13,6 +13,7 @@ const JsonEntityModal = ({ show, onHide }) => {
     const {
         theme,
         selectedJsonEntity,
+        setSelectedJsonEntity,
         setJsonEntities,
         jsonEntities
     } = useContext(MainContext);
@@ -20,6 +21,12 @@ const JsonEntityModal = ({ show, onHide }) => {
     const { notify } = useToast();
 
     const [isDownloading, setIsDownloading] = useState(false);
+    const [showTitleModal, setShowTitleModal] = useState(false);
+    const [entityTitleValue, setEntityTitleValue] = useState(selectedJsonEntity?.title || '');
+
+    useEffect(() => {
+        setEntityTitleValue(selectedJsonEntity?.title || '');
+    }, [selectedJsonEntity?.title, show]);
 
     const handleDownload = () => {
         setIsDownloading(true);
@@ -43,11 +50,30 @@ const JsonEntityModal = ({ show, onHide }) => {
         }
     };
 
-    const saveEntity = async () => {
+    const saveEntity = async (titleOverride = selectedJsonEntity?.title || '') => {
+        const nextTitle = (titleOverride || '').trim();
+
+        if (!nextTitle) {
+            notify({
+                variant: "error",
+                heading: "Title required",
+                subheading: "Please enter a title before saving the entity.",
+            });
+            return;
+        }
+
         try {
-            const { success, message, id } = await makeApiRequest("/graph/save", 'POST', selectedJsonEntity.graph);
+            const updatedEntity = {
+                ...selectedJsonEntity,
+                title: nextTitle,
+            };
+
+            setSelectedJsonEntity(updatedEntity);
+
+            const { success, message, id } = await makeApiRequest("/graph/save", 'POST', updatedEntity.graph);
             if (success) {
-                setJsonEntities(prev => [...prev, { ...selectedJsonEntity, id }]);
+                setJsonEntities(prev => [...prev, { ...updatedEntity, id }]);
+                setShowTitleModal(false);
                 notify({
                     variant: "success",
                     heading: "Entity saved!",
@@ -114,12 +140,81 @@ const JsonEntityModal = ({ show, onHide }) => {
                 </div>
                 {
                     (jsonEntities.find(item => item.graph_id === selectedJsonEntity.graph_id) === undefined || !('graph_id' in selectedJsonEntity)) && (
-                        <RippleButton onClick={saveEntity} cssClasses={`flex items-center gap-1 p-2 ${theme === 'light' ? 'bg-primary-500 hover:bg-primary-600 text-white' : 'bg-primary-500/20 hover:bg-primary-500/30 text-white'}`}>
+                        <RippleButton onClick={() => {
+                            setEntityTitleValue(selectedJsonEntity?.title || '');
+                            setShowTitleModal(true);
+                        }} cssClasses={`flex items-center gap-1 p-2 ${theme === 'light' ? 'bg-primary-500 hover:bg-primary-600 text-white' : 'bg-primary-500/20 hover:bg-primary-500/30 text-white'}`}>
                             Save JSON
                         </RippleButton>
                     )
                 }
             </Modal.Footer>
+
+            <Modal
+                show={showTitleModal}
+                onHide={() => setShowTitleModal(false)}
+                size="md"
+                centered
+                dialogClassName='text-left'
+            >
+                <Modal.Header className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200/20'}`}>
+                    <div className="flex flex-col gap-1">
+                        <Modal.Title className={`text-lg font-semibold ${theme === 'dark' ? 'text-textColor-100' : 'text-gray-900'}`}>
+                            Save entity
+                        </Modal.Title>
+                        <p className={`text-sm m-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>
+                            Choose a title before saving this JSON entity.
+                        </p>
+                    </div>
+                </Modal.Header>
+
+                <Modal.Body className={`${theme === 'dark' ? 'bg-textColor-300 text-white' : ''}`}>
+                    <div className="flex flex-col w-full">
+                        <label htmlFor="entityTitle" className={`block text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                            Entity title
+                        </label>
+                        <input
+                            type="text"
+                            id="entityTitle"
+                            name="entityTitle"
+                            value={entityTitleValue}
+                            onChange={(e) => setEntityTitleValue(e.target.value)}
+                            placeholder="Enter a title for this entity"
+                            className={`flex-1 block w-full p-2 mt-1 rounded-xl outline-none transition ${theme === 'dark'
+                                ? '!border !border-textColor-200 bg-textColor-300 text-white placeholder:text-gray-400'
+                                : '!border !border-gray-300 bg-white text-gray-900'}`}
+                            onKeyDown={(e) => e.key === 'Enter' && saveEntity(entityTitleValue)}
+                        />
+                    </div>
+                </Modal.Body>
+
+                <Modal.Footer className={`${theme === 'light' ? '' : '!bg-textColor-300 !text-white !border-t !border-t-textColor-200/20'}`}>
+                    <button
+                        type="button"
+                        className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 w-fit transition ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}
+                        onClick={() => setShowTitleModal(false)}
+                    >
+                        <span className={`select-none font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>
+                            Cancel
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 w-fit transition ${!entityTitleValue.trim()
+                            ? 'cursor-not-allowed text-gray-400'
+                            : theme === 'dark'
+                                ? 'hover:bg-purple-500/20 text-purple-300'
+                                : 'hover:bg-purple-50 text-purple-600'}`}
+                        onClick={() => saveEntity(entityTitleValue)}
+                        disabled={!entityTitleValue.trim()}
+                    >
+                        <span className="select-none font-medium">
+                            Save entity
+                        </span>
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </Modal>
     );
 };
