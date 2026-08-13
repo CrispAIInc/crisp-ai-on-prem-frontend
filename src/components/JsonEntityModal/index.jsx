@@ -5,13 +5,19 @@ import { MainContext } from '../../contexts/mainContext';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import JsonViewer from '../JsonViewer';
 import RippleButton from '../RippleButton';
+import makeApiRequest from '../../api';
+import { useToast } from '../../contexts/toastContext';
 
 const JsonEntityModal = ({ show, onHide }) => {
 
     const {
         theme,
-        selectedJsonEntity
+        selectedJsonEntity,
+        setJsonEntities,
+        jsonEntities
     } = useContext(MainContext);
+
+    const { notify } = useToast();
 
     const [isDownloading, setIsDownloading] = useState(false);
 
@@ -34,6 +40,29 @@ const JsonEntityModal = ({ show, onHide }) => {
             console.log(error);
         } finally {
             setIsDownloading(false);
+        }
+    };
+
+    const saveEntity = async () => {
+        try {
+            const { success, message, id } = await makeApiRequest("/graph/save", 'POST', selectedJsonEntity.graph);
+            if (success) {
+                setJsonEntities(prev => [...prev, { ...selectedJsonEntity, id }]);
+                notify({
+                    variant: "success",
+                    heading: "Entity saved!",
+                    subheading: "Your entity has been saved successfully.",
+                });
+            } else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            console.error("Failed to save entity:", error.message);
+            notify({
+                variant: "error",
+                heading: "Failed to save entity!",
+                subheading: error?.message || "An error occurred while saving the entity.",
+            });
         }
     };
 
@@ -81,8 +110,15 @@ const JsonEntityModal = ({ show, onHide }) => {
                     className={`flex items-center justify-center gap-2 p-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
                     onClick={onHide}
                 >
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Done</span>
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Cancel</span>
                 </div>
+                {
+                    (jsonEntities.find(item => item.graph_id === selectedJsonEntity.graph_id) === undefined || !('graph_id' in selectedJsonEntity)) && (
+                        <RippleButton onClick={saveEntity} cssClasses={`flex items-center gap-1 p-2 ${theme === 'light' ? 'bg-primary-500 hover:bg-primary-600 text-white' : 'bg-primary-500/20 hover:bg-primary-500/30 text-white'}`}>
+                            Save JSON
+                        </RippleButton>
+                    )
+                }
             </Modal.Footer>
         </Modal>
     );
