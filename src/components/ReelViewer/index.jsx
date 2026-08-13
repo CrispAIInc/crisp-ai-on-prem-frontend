@@ -269,15 +269,20 @@ function ReelViewer({
     async function saveReel() {
         console.log(reel);
         try {
-            const { success, message, reel } = await makeApiRequest('/reel/save', 'POST');
+            const { success, message, id } = await makeApiRequest('/reel/save', 'POST');
 
             if (!success) {
                 throw new Error(message);
             }
 
-            setReel(reel);
+            const savedReel = {
+                id,
+                ...reel
+            };
+
+            setReel(savedReel);
             setReels(prev => [
-                reel,
+                savedReel,
                 ...(prev || [])
             ]);
         } catch (error) {

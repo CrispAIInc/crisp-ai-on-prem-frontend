@@ -82,16 +82,19 @@ function MediaEntertainment({
         try {
             setIsReelOpen(false);
             setIsGeneratingReel(true);
-            const res = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
+            const { success, message, reel } = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
                 sources: displayedSources.filter(item => item.is_checked).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
                 context,
                 title: reel.title,
                 verbosityValue: verbosityValue.split(" ")[0]?.toLowerCase() || "short"
             }));
 
+            if (!success) {
+                throw new Error(message);
+            }
 
-            setReel(res);
-            getReels();
+            setReel(reel);
+            // getReels();
 
             //TODO show video here or in another tab or something
             // setVideoUrl(`${API_ENDPOINT}/${res.reel_video_url}`);
@@ -111,8 +114,8 @@ function MediaEntertainment({
             console.log(error);
             notify({
                 variant: "error",
-                heading: "Oops!",
-                subheading: error?.response?.data?.error || "Somthing went wrong",
+                heading: "Couldn't generate reel!",
+                subheading: error?.message || "",
             });
         } finally {
             setIsGeneratingReel(false);
