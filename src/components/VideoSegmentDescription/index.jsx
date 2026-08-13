@@ -34,6 +34,8 @@ const VideoSegmentDescription = ({
     resultsDescription,
     setResultsDescription,
     generateDescription,
+    isFullSourceDuration,
+    setIsFullSourceDuration,
     prompt,
     setPrompt,
     showList,
@@ -114,6 +116,8 @@ const VideoSegmentDescription = ({
                             currentSegment={currentSegment}
                             setCurrentSegment={setCurrentSegment}
                             generateDescription={generateDescription}
+                            isFullSourceDuration={isFullSourceDuration}
+                            setIsFullSourceDuration={setIsFullSourceDuration}
                         />
                     </>
                 ) : (

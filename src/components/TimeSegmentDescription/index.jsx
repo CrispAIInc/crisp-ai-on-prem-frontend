@@ -13,8 +13,10 @@ import {
 } from "docx";
 import { saveAs } from "file-saver";
 import { useContext, useEffect, useRef, useState } from 'react';
+import { Checkbox } from '@mui/material';
 import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
+import BaseHeading from '../BaseHeading';
 import { urlToBase64 } from "../../utils.js";
 import LoadingSpinner from '../LoadingSpinner/index.jsx';
 import RippleButton from '../RippleButton/index.jsx';
@@ -42,6 +44,8 @@ const TimeSegmentDescription = ({
     currentSegment,
     setCurrentSegment,
     generateDescription,
+    isFullSourceDuration,
+    setIsFullSourceDuration,
 }) => {
 
     const [timeSegmentDescriptions, setTimeSegmentDescriptions] = useState([
@@ -109,7 +113,7 @@ const TimeSegmentDescription = ({
     } = useContext(MainContext);
 
     const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
-
+    const isSingleVideoSelected = checkedVideosCount === 1;
 
     // =========== CONSTREINT TOOLTIP LOGIC =============
     const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -208,25 +212,17 @@ const TimeSegmentDescription = ({
 
             const schema = data.response_format?.schema || {};
             const actionDesc = schema.action_description || "No description available.";
-            const moods = schema.mood ? schema.mood.join(", ") : "N/A";
-            const shotTypes = schema.shot_type ? schema.shot_type.join(", ") : "N/A";
 
             // 1. Handle Newline formatting in description
             const descriptionParagraphs = actionDesc.split('\n').filter(p => p.trim() !== "");
 
             // Process On-Screen Text into an array for chips
             const ocrText = schema.onscreen_text?.detected ? schema.onscreen_text?.text_content : "";
-            const ocrArray = ocrText.map(item => item.trim()).filter(i => i !== "");
-
-            let onscreenText = "None detected";
-            if (schema.onscreen_text?.detected) {
-                onscreenText = schema.onscreen_text?.text_content;
-            }
+            const ocrArray = Array.isArray(ocrText) ? ocrText.map(item => item.trim()).filter(i => i !== "") : [];
 
             // 3. Define Theme Colors
             const primaryColor = "8E44AD"; // A nice Purple for a cinematic theme
             const secondaryColor = "595959"; // Dark Gray
-            const accentColor = "E8DAEF"; // Light purple for borders
             const colors = {
                 primary: "4338CA",    // Deep Indigo
                 accent: "8B5CF6",     // Vibrant Violet
@@ -552,14 +548,36 @@ const TimeSegmentDescription = ({
 
 
 
-            <SegmentDescription
-                start={start}
-                setStart={setStart}
-                end={end}
-                setEnd={setEnd}
-                handleGenerate={generateDescription}
-                isPending={isSegmentPending}
-            />
+            <div className="flex items-center">
+                <Checkbox
+                    sx={{ p: 0 }}
+                    checked={isSingleVideoSelected && isFullSourceDuration}
+                    disabled={!isSingleVideoSelected}
+                    onChange={(e) => {
+                        if (!isSingleVideoSelected) return;
+                        setIsFullSourceDuration(e.target.checked);
+                    }}
+                    inputProps={{ "aria-label": "Include full source" }}
+                    className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
+                />
+
+                <BaseHeading
+                    text="Include full source length"
+                    className={`${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}
+                />
+            </div>
+
+            {!isFullSourceDuration && (
+                <SegmentDescription
+                    start={start}
+                    setStart={setStart}
+                    end={end}
+                    setEnd={setEnd}
+                    handleGenerate={generateDescription}
+                    isPending={isSegmentPending}
+                    isDisabled={false}
+                />
+            )}
 
             <div ref={containerRef} className={`relative overflow-y-auto shadow-xl ${theme === "light" ? '!border !border-textColor-100/40' : '!border !border-textColor-200/40'} mt-4 w-full p-2 rounded-md h-full bg-[radial-gradient(circle_at_20%_20%,rgba(171,95,199,0.10),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(119,83,237,0.08),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(99,102,241,0.06),transparent_50%)]
   backdrop-blur-sm [&::-webkit-scrollbar]:h-1

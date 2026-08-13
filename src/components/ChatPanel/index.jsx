@@ -12,7 +12,7 @@ import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals.js';
 import useAuth from '../../hooks/useAuth.js';
 import useMetadata from '../../hooks/useMetadata.js';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-import { formatTime, toSeconds } from '../../utils.js';
+import { formatTime, fromSeconds, toSeconds } from '../../utils.js';
 import KnowledgeGraph from '../Entities/index.jsx';
 import InsightEditor from '../InsightEditor/index.jsx';
 import MediaEntertainment from '../MediaEntertainment';
@@ -216,6 +216,7 @@ const ChatPanel = () => {
   const [segmentTitle, setSegmentTitle] = useState("");
   const [startSegmentDescription, setStartSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
   const [endSegmentDescription, setEndSegmentDescription] = useState({ h: "00", m: "00", s: "00" });
+  const [isFullSourceDuration, setIsFullSourceDuration] = useState(false);
 
   const [promptSegmentDescription, setPromptSegmentDescription] = useState("");
 
@@ -231,29 +232,45 @@ const ChatPanel = () => {
   });
 
   const canGenerate = checkedVideosCount > 0 && !isSegmentPending && promptSegmentDescription && promptSegmentDescription.trim().length > 0 && !isProjectReadOnly;
+
+  useEffect(() => {
+    if (checkedVideosCount !== 1) {
+      setIsFullSourceDuration(false);
+    }
+  }, [checkedVideosCount]);
+
   async function generateDescription() {
     try {
       if (!canGenerate) {
         throw new Error('Make sure you provided video sources and prompt');
       }
 
-      if (toSeconds(endSegmentDescription) <= toSeconds(startSegmentDescription)) {
+      const checkedVideo = checkedSources.find(item => item.file_type === "video");
+      const selectedStart = startSegmentDescription;
+      const selectedEnd = endSegmentDescription;
+
+      if (!isFullSourceDuration && toSeconds(endSegmentDescription) <= toSeconds(startSegmentDescription)) {
         throw new Error("Your timestamp range is invalid.");
       }
 
       setIsSegmentPending(true);
       setResultsDescription(prev => ({
         ...prev,
-        start: formatTime(startSegmentDescription),
-        end: formatTime(endSegmentDescription),
+        start: formatTime(selectedStart),
+        end: formatTime(selectedEnd),
         refs: []
       }));
 
       let url = new URLSearchParams();
 
-      url.append("start_timestamp", formatTime((startSegmentDescription)));
-      url.append("end_timestamp", formatTime((endSegmentDescription)));
-      url.append("video_filename", checkedSources.filter(items => items.file_type === "video")[0].source_path);
+      if (isFullSourceDuration) {
+        url.append("isFullSource", "true");
+      } else {
+        url.append("start_timestamp", formatTime(selectedStart));
+        url.append("end_timestamp", formatTime(selectedEnd));
+      }
+
+      url.append("video_filename", checkedVideo.source_path);
       url.append("prompt", promptSegmentDescription);
       url.append("title", segmentTitle);
 
@@ -497,9 +514,6 @@ const ChatPanel = () => {
   const [title, setTitle] = useState('');
   const [isGeneratingGraph, setIsGeneratingGraph] = useState(false);
   const [showGraphModal, setShowGraphModal] = useState(false);
-
-  const [isFullSourceDuration, setIsFullSourceDuration] = useState(false);
-
 
   const checkedPdfSourcesEntity = checkedSources.filter(source => source.file_type === 'pdf');
 
@@ -828,6 +842,8 @@ const ChatPanel = () => {
                   setResultsDescription={setResultsDescription}
                   canGenerate={canGenerate}
                   generateDescription={generateDescription}
+                  isFullSourceDuration={isFullSourceDuration}
+                  setIsFullSourceDuration={setIsFullSourceDuration}
                   prompt={prompt}
                   setPrompt={setPrompt}
                   showList={showList}
