@@ -111,7 +111,7 @@ export function SourceExplorer(props) {
                     className={`flex items-center justify-center gap-2 p-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
                     onClick={props.onHide}
                 >
-                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Confirm</span>
+                    <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Done</span>
                 </div>
             </Modal.Footer>
         </Modal>
