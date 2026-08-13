@@ -752,7 +752,7 @@ const ChatPanel = () => {
             <div className={`flex justify-around gap-5 mt-2 flex-items overflow-x-auto [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
               {[
-                { id: "genMetadata", title: "Catalog" },
+                    { id: "genMetadata", title: "Contextual Metadata" },
                 { id: "genMedia", title: "Reels" },
                 { id: "genTimeSegment", title: "Analytics" },
                 { id: "genStories", title: "Stories & Blogs" },
