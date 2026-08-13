@@ -269,7 +269,7 @@ function ReelViewer({
     async function saveReel() {
         console.log(reel);
         try {
-            const { success, message, reel } = await makeApiRequest('/reel/save');
+            const { success, message, reel } = await makeApiRequest('/reel/save', 'POST');
 
             if (!success) {
                 throw new Error(message);
