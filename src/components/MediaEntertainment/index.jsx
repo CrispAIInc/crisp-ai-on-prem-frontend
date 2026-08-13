@@ -82,7 +82,7 @@ function MediaEntertainment({
         try {
             setIsReelOpen(false);
             setIsGeneratingReel(true);
-            const { success, message, reel } = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
+            const { success, message, newReel } = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
                 sources: displayedSources.filter(item => item.is_checked).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
                 context,
                 title: reel.title,
@@ -93,7 +93,7 @@ function MediaEntertainment({
                 throw new Error(message);
             }
 
-            setReel(reel);
+            setReel(newReel);
             // getReels();
 
             //TODO show video here or in another tab or something
