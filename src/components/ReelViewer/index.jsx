@@ -19,13 +19,21 @@ import Moveable from "react-moveable";
 import PictureInPictureAltIcon from '@mui/icons-material/PictureInPictureAlt';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
+import { Save } from "lucide-react";
+import makeApiRequest from '../../api/index.js';
 
 function ReelViewer({
     closeReel,
-    reel, }) {
+    reel,
+    setReel
+}) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
-    const { theme } = useContext(MainContext);
+    const {
+        theme,
+        reels,
+        setReels
+    } = useContext(MainContext);
     const { getPublicUrl, getDownloadableUrl } = useFirebase();
 
     const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
@@ -258,6 +266,29 @@ function ReelViewer({
         setIsOutsideClickEnabled(false);
     };
 
+    async function saveReel() {
+        console.log(reel);
+        try {
+            const { success, message, reel } = await makeApiRequest('/reel/save');
+
+            if (!success) {
+                throw new Error(message);
+            }
+
+            setReel(reel);
+            setReels(prev => [
+                reel,
+                ...(prev || [])
+            ]);
+        } catch (error) {
+            notify({
+                variant: "error",
+                heading: "Couldn't save reel",
+                subheading: error?.message || ""
+            });
+        }
+    }
+
 
     return (
         <>
@@ -280,6 +311,11 @@ function ReelViewer({
                             </CSSTransition>
                         </SwitchTransition>}
                         <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
+                            {
+                                (!isProjectReadOnly && reels.find(item => item.id === reel.id) === undefined) && (
+                                    <Save onClick={saveReel} size={30} className="p-2 z-50 text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
+                                )
+                            }
                             {areReelControlsVisible ? (
                                 <div title="Collapse">
                                     <PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} />
