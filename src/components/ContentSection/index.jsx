@@ -1205,7 +1205,7 @@ const ContentSection = ({
                                 onClick={handleExploreSources}
                             >
                                 <PermMediaOutlinedIcon style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
-                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Existing sources</span>
+                                <span className={`font-medium ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`}>Collection</span>
 
                                 <Tooltip id="source-explorer-tooltip" />
                             </div>
