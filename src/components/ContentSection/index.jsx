@@ -759,10 +759,11 @@ const ContentSection = ({
 
         socket.on('connect', () => {
             console.log('🔌 Socket connected with ID:', socket.id);
-            const sessionId = localStorage.getItem('sessionId') || String(Date.now());
-            localStorage.setItem('sessionId', sessionId);
-            console.log('🔄 Joining session after connect:', sessionId);
+            const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            sessionIdRef.current = sessionId;
+            localStorage.setItem("sessionId", sessionId);
             socket.emit('join_upload_session', { session_id: sessionId });
+            console.log("🆕 Created new session_id for this upload batch:", sessionId);
         });
 
         socket.on('connected', (data) => {
@@ -840,11 +841,6 @@ const ContentSection = ({
     const handleUpload = async (event, fileFormat, _files, isFineGrained = false) => {
         console.log("Starting upload...");
 
-        const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        sessionIdRef.current = sessionId;
-        localStorage.setItem("sessionId", sessionId);
-        console.log("🆕 Created new session_id for this upload batch:", sessionId);
-
         startSocket();
         let rejoinInterval;
         try {
@@ -862,19 +858,13 @@ const ContentSection = ({
             setUploadedSources(processedFiles);
 
             const formData = new FormData();
-            const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-            console.log("🆕 Created new session_id for this upload batch:", sessionId);
-
-            console.log("Joining session room before upload:", sessionId);
-            console.log("Current socket ID:", socket.id);
-            socket.emit("join_upload_session", { session_id: sessionId });
 
             await new Promise(resolve => setTimeout(resolve, 500));
 
             rejoinInterval = setInterval(() => {
                 if (socket.connected) {
-                    console.log("🔄 Periodic rejoin to session:", sessionId);
-                    socket.emit("join_upload_session", { session_id: sessionId });
+                    console.log("🔄 Periodic rejoin to session:", sessionIdRef.current);
+                    socket.emit("join_upload_session", { session_id: sessionIdRef.current });
                 }
             }, 5000);
 
