@@ -741,6 +741,8 @@ const ContentSection = ({
     //     };
     // }, []);
 
+    const sessionIdRef = useRef(null);
+
     function startSocket() {
         if (!socket.connected) {
             socket.connect();
@@ -806,7 +808,7 @@ const ContentSection = ({
         });
 
         socket.on('session_joined', (data) => {
-            if (data.session_id) {
+            if (data.session_id && data.session_id === sessionIdRef.current) {
                 localStorage.setItem('sessionId', data.session_id);
                 console.log('💾 Session ID saved to localStorage:', data.session_id);
             }
@@ -843,62 +845,15 @@ const ContentSection = ({
         socket.off('upload_complete', handleUploadComplete);
     };
 
-    const handleDisconnectUploadSocket = () => {
-        console.log("Disconnecting socket...");
-        socket.disconnect();
-    };
-
-    const registerUploadListeners = () => {
-        removeUploadListeners();
-        console.log("Registering upload listeners...");
-
-        socket.on("connect", () => {
-            console.log("Connected:", socket.id);
-
-            // Generate or reuse a session ID
-            const sessionId = localStorage.getItem("sessionId") || Math.random();
-            localStorage.setItem("sessionId", sessionId);
-            console.log("Joining session:", sessionId);
-
-            // Tell the backend to join this upload session
-            socket.emit("join_upload_session", { session_id: sessionId });
-        });
-
-        socket.on('connect', () => {
-            console.log('🔌 Socket connected with ID:', socket.id);
-            console.log('🔌 Previous socket ID was:', localStorage.getItem('previousSocketId'));
-            localStorage.setItem('previousSocketId', socket.id);
-
-            // Auto-rejoin the session if we have a session ID
-            const existingSessionId = localStorage.getItem('sessionId');
-            if (existingSessionId) {
-                console.log('🔄 Auto-rejoining session after reconnect:', existingSessionId);
-                socket.emit("join_upload_session", { session_id: existingSessionId });
-
-                // Wait a moment for the join to complete
-                setTimeout(() => {
-                    console.log('🔄 Rejoin completed for session:', existingSessionId);
-                }, 500);
-            }
-        });
-
-        socket.on('session_joined', (data) => {
-            // Store the session ID for use in uploads
-            if (data.session_id) {
-                localStorage.setItem("sessionId", data.session_id);
-                console.log('💾 Session ID saved to localStorage:', data.session_id);
-            }
-        });
-        socket.on('progress_update', handleProgressUpdate);
-        socket.on('upload_error', handleUploadError);
-        socket.on('upload_complete', handleUploadComplete);
-    };
-
-
     const handleUpload = async (event, fileFormat, _files, isFineGrained = false) => {
         console.log("Starting upload...");
+
+        const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        sessionIdRef.current = sessionId;
+        localStorage.setItem("sessionId", sessionId);
+        console.log("🆕 Created new session_id for this upload batch:", sessionId);
+
         startSocket();
-        let rejoinInterval;
         try {
             setUploadStatus("uploading");
             setIsUploadFailed(false);
