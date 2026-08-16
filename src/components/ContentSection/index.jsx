@@ -557,21 +557,19 @@ const ContentSection = ({
 
     function handleProgressUpdate(data) {
         setProgressUpdateCount(prev => prev + 1);
+        const currentIndex = Number(data?.currentIndex ?? -1);
 
         // Update the displayed sources with real progress
         setDisplayedSources((prev) => {
             return prev.map((source) => {
-                // Update progress for sources that are currently being uploaded
-                // Check if this source is being uploaded (has progress property)
+                const sourceIndex = Number(source?.index ?? -1);
 
-                //TODO: source.source_path === data.source_path ?
                 if (source.progress !== undefined && data.progress_percentage <= 100) {
-                    if (data.currentIndex === source?.index) {
+                    if (currentIndex === sourceIndex) {
                         // if current progress is 100 => current source finished uploading => remove progress and step from current source
                         if (data.progress_percentage === 100) {
                             const { progress, step, ...rest } = source;
                             return {
-                                // ...persistedUploadedFiles,
                                 ...rest,
                                 ...data,
                                 is_checked: true
@@ -580,7 +578,6 @@ const ContentSection = ({
                         if (data?.step_name === "Summarizing...") {
                             return {
                                 ...source,
-                                // ...persistedUploadedFiles,
                                 ...data,
                                 progress: data.progress_percentage,
                                 step: data.step_name,
@@ -596,7 +593,6 @@ const ContentSection = ({
                         if (data?.step_name === "Generating embeddings...") {
                             return {
                                 ...source,
-                                // ...persistedUploadedFiles,
                                 ...data,
                                 progress: data.progress_percentage,
                                 step: data.step_name,
@@ -613,24 +609,20 @@ const ContentSection = ({
                         }
                         return {
                             ...source,
-                            // ...persistedUploadedFiles,
                             ...data,
                             progress: data.progress_percentage || 0,
                             step: data.step_name || source.step
                         };
-                    } else if (data.currentIndex > source?.index) {
+                    } else if (currentIndex > sourceIndex) {
                         const { progress, step, ...rest } = source;
                         return {
                             ...rest,
-                            // ...persistedUploadedFiles,
-                            // ...data,
                             is_checked: true
                         };
                     }
                 }
                 return { ...source };
             });
-            // return displayedSourcesFromProgressEvent;
         });
     }
 
@@ -750,168 +742,72 @@ const ContentSection = ({
     // }, []);
 
     function startSocket() {
-        socket.connect();
+        if (!socket.connected) {
+            socket.connect();
+        }
         console.log("connecting to socket");
 
-        socket.on("connect", () => {
-            console.log("Connected:", socket.id);
-
-            // Generate or reuse a session ID
-            const sessionId = localStorage.getItem("sessionId") || Math.random();
-            localStorage.setItem("sessionId", sessionId);
-            console.log("Joining session:", sessionId);
-
-            // Tell the backend to join this upload session
-            socket.emit("join_upload_session", { session_id: sessionId });
-        });
+        socket.off('connect');
+        socket.off('connected');
+        socket.off('progress_update');
+        socket.off('upload_error');
+        socket.off('upload_complete');
+        socket.off('session_joined');
+        socket.off('error');
 
         socket.on('connect', () => {
             console.log('🔌 Socket connected with ID:', socket.id);
-            console.log('🔌 Previous socket ID was:', localStorage.getItem('previousSocketId'));
-            localStorage.setItem('previousSocketId', socket.id);
-
-            // Auto-rejoin the session if we have a session ID
-            const existingSessionId = localStorage.getItem('sessionId');
-            if (existingSessionId) {
-                console.log('🔄 Auto-rejoining session after reconnect:', existingSessionId);
-                socket.emit("join_upload_session", { session_id: existingSessionId });
-
-                // Wait a moment for the join to complete
-                setTimeout(() => {
-                    console.log('🔄 Rejoin completed for session:', existingSessionId);
-                }, 500);
-            }
+            const sessionId = localStorage.getItem('sessionId') || String(Date.now());
+            localStorage.setItem('sessionId', sessionId);
+            console.log('🔄 Joining session after connect:', sessionId);
+            socket.emit('join_upload_session', { session_id: sessionId });
         });
 
-        // Backend events (as discussed earlier)
         socket.on('connected', (data) => {
             console.log('Server confirmation:', data);
         });
 
-        socket.io.on("reconnect_attempt", () => {
-            console.log("reconnect_attempt...");
+        socket.io.on('reconnect_attempt', () => {
+            console.log('reconnect_attempt...');
         });
 
-        socket.io.on("reconnect", () => {
-            console.log("reconnect...");
+        socket.io.on('reconnect', () => {
+            console.log('reconnect...');
         });
 
-        socket.on('progress_update', (data) => {
-            setProgressUpdateCount(prev => prev + 1);
-
-            // Update the displayed sources with real progress
-            setDisplayedSources((prev) => {
-                return prev.map((source) => {
-                    // Update progress for sources that are currently being uploaded
-                    // Check if this source is being uploaded (has progress property)
-
-                    //TODO: source.source_path === data.source_path ?
-                    if (source.progress !== undefined && data.progress_percentage <= 100) {
-                        if (data.currentIndex === source?.index) {
-                            // if current progress is 100 => current source finished uploading => remove progress and step from current source
-                            if (data.progress_percentage === 100) {
-                                const { progress, step, ...rest } = source;
-                                return {
-                                    // ...persistedUploadedFiles,
-                                    ...rest,
-                                    ...data,
-                                    is_checked: true
-                                };
-                            }
-                            if (data?.step_name === "Summarizing...") {
-                                return {
-                                    ...source,
-                                    // ...persistedUploadedFiles,
-                                    ...data,
-                                    progress: data.progress_percentage,
-                                    step: data.step_name,
-                                    metadata: {
-                                        ...source.metadata,
-                                        transcription: {
-                                            content: data.content,
-                                            title: "Transcription"
-                                        }
-                                    }
-                                };
-                            }
-                            if (data?.step_name === "Generating embeddings...") {
-                                return {
-                                    ...source,
-                                    // ...persistedUploadedFiles,
-                                    ...data,
-                                    progress: data.progress_percentage,
-                                    step: data.step_name,
-                                    metadata: {
-                                        ...source.metadata,
-                                        summary: {
-                                            content: data.content,
-                                            title: data.title,
-                                            verbosity: data.verbosity,
-                                            temperature: data.temperature
-                                        }
-                                    }
-                                };
-                            }
-                            return {
-                                ...source,
-                                // ...persistedUploadedFiles,
-                                ...data,
-                                progress: data.progress_percentage || 0,
-                                step: data.step_name || source.step
-                            };
-                        } else if (data.currentIndex > source?.index) {
-                            const { progress, step, ...rest } = source;
-                            return {
-                                ...rest,
-                                // ...persistedUploadedFiles,
-                                // ...data,
-                                is_checked: true
-                            };
-                        }
-                    }
-                    return { ...source };
-                });
-                // return displayedSourcesFromProgressEvent;
-            });
-        });
+        socket.on('progress_update', handleProgressUpdate);
 
         socket.on('upload_error', (data) => {
             console.log('Upload error:', data);
             setIsUploadFailed(true);
-            setUploadStatus("error");
+            setUploadStatus('error');
             setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
         });
 
         socket.on('upload_complete', (data) => {
             console.log('*****************************Upload complete:*********************', data);
             if (data.success) {
-                setUploadStatus("success");
+                setUploadStatus('success');
                 setIsFileUploading(false);
                 setIsProgressStarted(false);
-                // Clear the displayed sources progress
-                setDisplayedSources((prev) => {
-                    if (data.currentIndex === prev?.index) {
-                        // remove progress and step properties from this object
-                        // delete prev.progress;
-                        // delete prev.step;
-                        const { progress, step, ...rest } = prev;
-                        return {
-                            ...rest,
-                            is_checked: true
-                        };
+                setDisplayedSources((prev) => prev.map((source) => {
+                    const sourceIndex = Number(source?.index ?? -1);
+                    const completedIndex = Number(data?.currentIndex ?? -1);
+                    if (completedIndex >= 0 && sourceIndex === completedIndex) {
+                        const { progress, step, ...rest } = source;
+                        return { ...rest, is_checked: true };
                     }
-                    return prev;
-                });
+                    return source;
+                }));
             } else {
                 setIsUploadFailed(true);
-                setUploadStatus("error");
+                setUploadStatus('error');
             }
         });
 
         socket.on('session_joined', (data) => {
-            // Store the session ID for use in uploads
             if (data.session_id) {
-                localStorage.setItem("sessionId", data.session_id);
+                localStorage.setItem('sessionId', data.session_id);
                 console.log('💾 Session ID saved to localStorage:', data.session_id);
             }
         });
@@ -1018,34 +914,28 @@ const ContentSection = ({
             setUploadedSources(processedFiles);
 
             const formData = new FormData();
-            // Always try to reuse existing session ID, only create new one if none exists
-            // Generate a unique session ID for each upload batch to avoid conflicts
-            // This ensures proper isolation between concurrent or sequential uploads
             const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
             console.log("🆕 Created new session_id for this upload batch:", sessionId);
 
-            // Ensure we're joined to the session room before starting upload
             console.log("Joining session room before upload:", sessionId);
             console.log("Current socket ID:", socket.id);
             socket.emit("join_upload_session", { session_id: sessionId });
 
-            // Wait a moment for the join to complete
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            // Set up periodic rejoin to ensure we stay in the room during long uploads
             rejoinInterval = setInterval(() => {
                 if (socket.connected) {
                     console.log("🔄 Periodic rejoin to session:", sessionId);
                     socket.emit("join_upload_session", { session_id: sessionId });
                 }
-            }, 5000); // Rejoin every 30 seconds
+            }, 5000);
 
             files.forEach((file, index) => {
                 formData.append("file", file);
                 formData.append("category", selectedCategory);
                 formData.append("fileType", file.type);
                 formData.append("session_id", sessionId);
-                formData.append("fileIndex", index);
+                formData.append("fileIndex", String(index));
             });
             formData.append("isFineGrained", isFineGrained);
             if (frameExtractionRate) {
@@ -1096,14 +986,14 @@ const ContentSection = ({
             });
 
             // speed up the upload process by moving the progress bar to 3% after 10s-20s from uploading
-            setTimeout(() => {
-                setKnowledgeBase(prev => prev.map(item => {
-                    if (item.progress === 0 || item.progress < 15) {
-                        return { ...item, progress: 3, step: "Source pre-processing..." };
-                    }
-                    return item;
-                }));
-            }, 10000);
+            // setTimeout(() => {
+            //     setKnowledgeBase(prev => prev.map(item => {
+            //         if (item.progress === 0 || item.progress < 15) {
+            //             return { ...item, progress: 3, step: "Source pre-processing..." };
+            //         }
+            //         return item;
+            //     }));
+            // }, 10000);
 
             // await delay(3000);
             const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
