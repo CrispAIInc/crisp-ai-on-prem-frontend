@@ -837,14 +837,6 @@ const ContentSection = ({
         socket.disconnect();
     }
 
-    const removeUploadListeners = () => {
-        console.log("Removing upload listeners...");
-
-        socket.off('progress_update', handleProgressUpdate);
-        socket.off('upload_error', handleUploadError);
-        socket.off('upload_complete', handleUploadComplete);
-    };
-
     const handleUpload = async (event, fileFormat, _files, isFineGrained = false) => {
         console.log("Starting upload...");
 
@@ -854,6 +846,7 @@ const ContentSection = ({
         console.log("🆕 Created new session_id for this upload batch:", sessionId);
 
         startSocket();
+        let rejoinInterval;
         try {
             setUploadStatus("uploading");
             setIsUploadFailed(false);
