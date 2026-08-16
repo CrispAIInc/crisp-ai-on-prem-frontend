@@ -559,8 +559,8 @@ const ContentSection = ({
         setProgressUpdateCount(prev => prev + 1);
         const currentIndex = Number(data?.currentIndex ?? -1);
 
-        // Update the displayed sources with real progress
-        setDisplayedSources((prev) => {
+        // Update knowledgeBase (source of truth); displayedSources is derived from it
+        setKnowledgeBase((prev) => {
             return prev.map((source) => {
                 const sourceIndex = Number(source?.index ?? -1);
 
@@ -682,7 +682,7 @@ const ContentSection = ({
                 setUploadStatus('success');
                 setIsFileUploading(false);
                 setIsProgressStarted(false);
-                setDisplayedSources((prev) => prev.map((source) => {
+                setKnowledgeBase((prev) => prev.map((source) => {
                     const sourceIndex = Number(source?.index ?? -1);
                     const completedIndex = Number(data?.currentIndex ?? -1);
                     if (completedIndex >= 0 && sourceIndex === completedIndex) {
@@ -813,11 +813,12 @@ const ContentSection = ({
                 return [...newSources, ...prev];
             });
 
-            // speed up the upload process by moving the progress bar to 3% after 10s-20s from uploading
+            // If real progress is still < 3% after 10s, show a 3% pre-processing cue
             setTimeout(() => {
                 setKnowledgeBase(prev => prev.map(item => {
-                    const currentProgress = Number(item.progress) || 0;
+                    if (!('progress' in item)) return item;
 
+                    const currentProgress = Number(item.progress) || 0;
                     if (currentProgress < 3) {
                         return {
                             ...item,
