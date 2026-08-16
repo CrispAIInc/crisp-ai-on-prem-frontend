@@ -925,14 +925,15 @@ const ContentSection = ({
             });
 
             // speed up the upload process by moving the progress bar to 3% after 10s-20s from uploading
-            // setTimeout(() => {
-            //     setKnowledgeBase(prev => prev.map(item => {
-            //         if (item.progress === 0 || item.progress < 15) {
-            //             return { ...item, progress: 3, step: "Source pre-processing..." };
-            //         }
-            //         return item;
-            //     }));
-            // }, 10000);
+            setTimeout(() => {
+                setKnowledgeBase(prev => prev.map(item => {
+                    if (item.progress < 15) {
+                        return { ...item, progress: 3, step: "Source pre-processing..." };
+                    } else {
+                        return item;
+                    }
+                }));
+            }, 10000);
 
             // await delay(3000);
             const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
