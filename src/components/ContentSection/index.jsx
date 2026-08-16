@@ -607,10 +607,13 @@ const ContentSection = ({
                                 }
                             };
                         }
+                        const newProgress = Number(data.progress_percentage) || 0;
+                        const currentProgress = Number(source.progress) || 0;
+
                         return {
                             ...source,
                             ...data,
-                            progress: data.progress_percentage || 0,
+                            progress: Math.max(currentProgress, newProgress),
                             step: data.step_name || source.step
                         };
                     } else if (currentIndex > sourceIndex) {
@@ -626,120 +629,6 @@ const ContentSection = ({
         });
     }
 
-    function handleUploadError(data) {
-        console.log('Upload error:', data);
-        setIsUploadFailed(true);
-        setUploadStatus("error");
-        setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
-    }
-
-    function handleUploadComplete(data) {
-        console.log('*****************************Upload complete:*********************', data);
-        if (data.success) {
-            setUploadStatus("success");
-            setIsFileUploading(false);
-            setIsProgressStarted(false);
-            // Clear the displayed sources progress
-            setDisplayedSources((prev) => {
-                if (data.currentIndex === prev?.index) {
-                    // remove progress and step properties from this object
-                    // delete prev.progress;
-                    // delete prev.step;
-                    const { progress, step, ...rest } = prev;
-                    return {
-                        ...rest,
-                        is_checked: true
-                    };
-                }
-                return prev;
-            });
-        } else {
-            setIsUploadFailed(true);
-            setUploadStatus("error");
-        }
-    }
-
-    // useEffect(() => {
-    //     // Backend events (as discussed earlier)
-    //     socket.on('connected', (data) => {
-    //         console.log('Server confirmation:', data);
-    //     });
-
-    //     socket.io.on("reconnect_attempt", () => {
-    //         console.log("reconnect_attempt...");
-    //     });
-
-    //     socket.io.on("reconnect", () => {
-    //         console.log("reconnect...");
-    //     });
-
-    //     // socket.on('progress_update', (data) => {
-    //     //     handleProgressUpdate(data);
-    //     // });
-
-    //     // socket.on('upload_error', (data) => {
-    //     //     console.log('Upload error:', data);
-    //     //     setIsUploadFailed(true);
-    //     //     setUploadStatus("error");
-    //     //     setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
-    //     // });
-
-    //     // socket.on('upload_complete', (data) => {
-    //     //     console.log('*****************************Upload complete:*********************', data);
-    //     //     if (data.success) {
-    //     //         setUploadStatus("success");
-    //     //         setIsFileUploading(false);
-    //     //         setIsProgressStarted(false);
-    //     //         // Clear the displayed sources progress
-    //     //         setDisplayedSources((prev) => {
-    //     //             if (data.currentIndex === prev?.index) {
-    //     //                 // remove progress and step properties from this object
-    //     //                 // delete prev.progress;
-    //     //                 // delete prev.step;
-    //     //                 const { progress, step, ...rest } = prev;
-    //     //                 return {
-    //     //                     ...rest,
-    //     //                     is_checked: true
-    //     //                 };
-    //     //             }
-    //     //             return prev;
-    //     //         });
-    //     //     } else {
-    //     //         setIsUploadFailed(true);
-    //     //         setUploadStatus("error");
-    //     //     }
-    //     // });
-
-    //     // socket.on('session_joined', (data) => {
-    //     //     // Store the session ID for use in uploads
-    //     //     if (data.session_id) {
-    //     //         localStorage.setItem("sessionId", data.session_id);
-    //     //         console.log('💾 Session ID saved to localStorage:', data.session_id);
-    //     //     }
-    //     // });
-
-    //     socket.on('error', (data) => {
-    //         console.log('General error:', data);
-    //     });
-
-    //     // Add a generic event listener to catch any events
-    //     socket.onAny((eventName, ...args) => {
-    //         console.log('🔔 Received event:', eventName, args);
-    //     });
-
-
-    //     return () => {
-    //         socket.off('connect');
-    //         socket.off('disconnect');
-    //         socket.off('connect_error');
-    //         socket.off('connected');
-    //         // socket.off('progress_update');
-    //         // socket.off('upload_error');
-    //         // socket.off('upload_complete');
-    //         // socket.off('session_joined');
-    //         socket.off('error');
-    //     };
-    // }, []);
 
     const sessionIdRef = useRef(null);
 
@@ -927,11 +816,17 @@ const ContentSection = ({
             // speed up the upload process by moving the progress bar to 3% after 10s-20s from uploading
             setTimeout(() => {
                 setKnowledgeBase(prev => prev.map(item => {
-                    if (item.progress < 15) {
-                        return { ...item, progress: 3, step: "Source pre-processing..." };
-                    } else {
-                        return item;
+                    const currentProgress = Number(item.progress) || 0;
+
+                    if (currentProgress < 3) {
+                        return {
+                            ...item,
+                            progress: 3,
+                            step: "Source pre-processing..."
+                        };
                     }
+
+                    return item;
                 }));
             }, 10000);
 
