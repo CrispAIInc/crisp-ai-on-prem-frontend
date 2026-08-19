@@ -70,7 +70,8 @@ export default function FileUploaderModal({ show, onHide, hideIndexModal, indexN
                                     </span>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-2 overflow-y-auto p-3">
+                            <div className={`flex flex-col gap-2 overflow-y-auto p-3 [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
                                 {/* fine grained mode */}
                                 {/* <div className="flex flex-col ml-3">
                                     <div className="relative flex items-center gap-1">

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from '../contexts/mainContext';
 
 import { Checkbox } from "@mui/material";
@@ -15,12 +15,27 @@ export default function VideoProcessingSettings({ value, onChange }) {
   const {
     theme,
     isDetailedMode,
-    setIsDetailedMode
+    setIsDetailedMode,
+    videoCaptionContext,
+    setVideoCaptionContext
   } = useContext(MainContext);
 
   const [selected, setSelected] = useState(value?.mode ?? "medium");
   const [customFrames, setCustomFrames] = useState(value?.frames ?? 3);
   const [customInterval, setCustomInterval] = useState(value?.interval ?? 1);
+
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+
+    // Reset height to recalc
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
+
+  }, [videoCaptionContext]);
+
 
   const handleSelect = (id) => {
     setSelected(id);
@@ -166,6 +181,24 @@ export default function VideoProcessingSettings({ value, onChange }) {
           <br />
           <span className="font-bold text-xs">Processing time may increase.</span>
         </p>
+      </div>
+
+      {/* video captioning context input */}
+      <div
+        className={`px-3 pb-4 transition-all duration-200 ease-in-out`}
+      >
+        <p className="text-slate-400 text-xs mt-0.5">Provide context to improve video captioning accuracy.</p>
+        <textarea
+          ref={el => {
+            textareaRef.current = el;
+          }}
+          rows={2}
+          value={videoCaptionContext}
+          onChange={(e) => setVideoCaptionContext(e.target.value)}
+          placeholder="e.g. The video is about..."
+          className={`w-full py-2 mt-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-28 placeholder:text-neutral-400 *:${theme === 'light' ? 'text-textColor-100 !border !border-textColor-200/20' : 'text-textColor-300 !border !border-textColor-200/20'} rounded-xl px-3 [&::-webkit-scrollbar]:h-1
+        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}
+        />
       </div>
     </div>
   );
