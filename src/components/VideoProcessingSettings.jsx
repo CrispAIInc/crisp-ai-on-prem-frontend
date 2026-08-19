@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { MainContext } from '../contexts/mainContext';
 
+import { Checkbox } from "@mui/material";
+
 const PRESETS = [
   { id: "low", label: "Low", description: "1 frame / 5 sec", fps: 1, interval: 5 },
   { id: "medium", label: "Medium", description: "1 frame / 3 sec", fps: 1, interval: 3 },
@@ -10,7 +12,11 @@ const PRESETS = [
 
 export default function VideoProcessingSettings({ value, onChange }) {
 
-  const { theme } = useContext(MainContext);
+  const {
+    theme,
+    isDetailedMode,
+    setIsDetailedMode
+  } = useContext(MainContext);
 
   const [selected, setSelected] = useState(value?.mode ?? "medium");
   const [customFrames, setCustomFrames] = useState(value?.frames ?? 3);
@@ -98,7 +104,7 @@ export default function VideoProcessingSettings({ value, onChange }) {
 
       {/* Custom inputs */}
       <div
-        className={`px-3 pb-5 transition-all duration-200 ease-in-out
+        className={`px-3 pb-4 transition-all duration-200 ease-in-out
           ${isCustom ? "opacity-100 pointer-events-auto" : "opacity-40 pointer-events-none"}`}
       >
         <div className={`flex items-center gap-3 p-3 rounded-xl ${theme === 'light' ? '!border !border-slate-300' : '!border !border-textColor-200/50'}`}>
@@ -139,6 +145,27 @@ export default function VideoProcessingSettings({ value, onChange }) {
             Select <span className="font-semibold">Custom</span> to configure manually
           </p>
         )}
+      </div>
+
+      {/* is detailed mode checkbox */}
+      <div className={`px-3 pb-5 transition-all duration-200 ease-in-out`}>
+        <label className={`flex items-center gap-2 p-2 rounded-xl cursor-pointer ${theme === 'light' ? '!border !border-slate-300' : '!border !border-textColor-200/50'}`}>
+          <Checkbox
+            className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
+            checked={isDetailedMode}
+            onChange={(e) => setIsDetailedMode(e.target.checked)}
+            onClick={(event) => event.stopPropagation()}
+            inputProps={{ "aria-label": "detailed mode ingestion" }}
+          />
+          <span className={`text-sm font-medium transition-colors ${theme === 'light' ? "text-slate-700" : "text-textColor-100"}`}>
+            Enable Detailed Mode
+          </span>
+        </label>
+        <p className="text-xs mt-1 font-medium text-primary-200">
+          Get high detail info about visual part of the video.
+          <br />
+          <span className="font-bold text-xs">Processing time may increase.</span>
+        </p>
       </div>
     </div>
   );

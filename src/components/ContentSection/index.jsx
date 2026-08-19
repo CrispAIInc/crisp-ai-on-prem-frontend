@@ -199,6 +199,7 @@ const ContentSection = ({
         theme,
         chatLoaded,
         setPersistedUploadedFiles,
+        isDetailedMode,
     } = useContext(MainContext);
 
     const { notify } = useToast();
@@ -763,6 +764,8 @@ const ContentSection = ({
                 formData.append("category", selectedCategory);
                 formData.append("fileType", file.type);
                 formData.append("session_id", sessionId);
+                formData.append("isDetailedMode", isDetailedMode);
+                // formData.append("videoCaptionContext", videoCaptionContext);
                 formData.append("fileIndex", String(index));
             });
             formData.append("isFineGrained", isFineGrained);

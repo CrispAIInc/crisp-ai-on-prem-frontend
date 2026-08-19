@@ -1290,7 +1290,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [selectedJsonEntity, setSelectedJsonEntity] = useState(null);
 
 
+    /**
+     * VIDEO PROCESSING SETTINGS
+     */
     const [frameExtractionRate, setFrameExtractionRate] = useState({ mode: "medium", frames: 1, interval: 3 });
+    const [isDetailedMode, setIsDetailedMode] = useState(false);
+    const [videoCaptionContext, setVideoCaptionContext] = useState("");
 
     // Pdf viewer ref
     const pdfRef = useRef(null);
@@ -1305,6 +1310,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         categoryOptionsWithoutAll,
         isKnowledgeBaseFetching, setisKnowledgeBaseFetching,
         frameExtractionRate, setFrameExtractionRate,
+        isDetailedMode, setIsDetailedMode,
+        videoCaptionContext, setVideoCaptionContext,
         blogs, setBlogs,
         selectedBlog, setSelectedBlog,
         jsonEntities,
