@@ -1,45 +1,93 @@
-import { Settings } from "lucide-react";
+import {
+  Settings,
+  LogOut
+} from "lucide-react";
+import { useContext, useEffect, useRef, useState } from 'react';
+import { AuthContext } from '../../contexts/authContext';
 
 /**
  * TopBar - the uppermost strip of the shared app.
  * Contains the product mark on the left and account-level
  * controls (settings, avatar) on the right.
  */
-export default function TopBar({ user = { initials: "JD" } }) {
+export default function TopBar() {
+
+  const { user } = useContext(AuthContext);
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // Close the dropdown on outside click or Escape.
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    function handlePointerDown(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    }
+    function handleKeyDown(e) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [menuOpen]);
+
   return (
     <header className="h-14 border-b border-gray-100 bg-white">
       <div className="h-full flex items-center justify-between px-6">
         {/* Brand mark */}
-        <div className="flex items-center gap-2.5">
-          <div className="relative w-7 h-7 rounded-full bg-gradient-to-br from-blue-600 to-slate-900 flex items-center justify-center shrink-0">
-            <div className="w-3 h-3 rounded-full bg-white/90" />
-          </div>
-          <div className="leading-tight">
-            <div className="text-[15px] font-semibold text-gray-900 tracking-tight">
-              CRISP AI
-            </div>
-            <div className="text-[10px] text-gray-400 -mt-0.5">
-              Discover Understanding
-            </div>
-          </div>
+        <div className="w-32 h-auto flex items-center justify-center">
+          <img src='/new-crips-ai-logo.png' alt='Crisp AI logo.' />
         </div>
 
         {/* Account controls */}
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            aria-label="Settings"
-            className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors"
-          >
-            <Settings size={15} />
-          </button>
+        <div className="relative" ref={menuRef}>
           <button
             type="button"
             aria-label="Account menu"
-            className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 text-white text-xs font-semibold flex items-center justify-center hover:opacity-90 transition-opacity"
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+            className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 text-white text-xs font-semibold flex items-center justify-center hover:opacity-90 transition-opacity"
           >
-            {user.initials}
+            {user?.firstName[0]?.toUpperCase()}{user?.lastName[0]?.toUpperCase()}
           </button>
+
+          {menuOpen && (
+            <div
+              role="menu"
+              className="absolute right-0 top-10 w-44 bg-white border border-gray-100 rounded-lg shadow-lg py-1 z-50"
+            >
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => setMenuOpen(false)}
+                className="w-full flex items-center gap-2 px-3 py-1 text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <Settings size={14} className="text-gray-400" />
+                Settings
+              </button>
+              <div className="my-1 border-t border-gray-100" />
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setMenuOpen(false);
+                  // onLogout();
+                }}
+                className="w-full flex items-center gap-2 px-3 py-1 text-[13px] text-red-600 hover:bg-red-50 transition-colors"
+              >
+                <LogOut size={14} />
+                Log out
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
