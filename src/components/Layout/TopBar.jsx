@@ -70,7 +70,7 @@ export default function TopBar() {
           {menuOpen && (
             <div
               role="menu"
-              className="absolute right-0 top-10 w-44 bg-white border border-gray-100 rounded-lg shadow-lg py-1 z-50"
+              className="absolute right-0 top-10 w-44 bg-white border border-gray-100 rounded-lg shadow-md py-1 z-50"
             >
               <button
                 type="button"
@@ -78,7 +78,7 @@ export default function TopBar() {
                 onClick={handleSettingsModalState}
                 className="w-full flex items-center gap-2 px-3 py-1 text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                <Settings size={14} className="text-gray-400" />
+                <Settings size={14} className="text-gray-700" />
                 Settings
               </button>
               <div className="my-1 border-t border-gray-100" />
