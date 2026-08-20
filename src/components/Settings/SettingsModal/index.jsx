@@ -4,6 +4,11 @@ import GeneralSettings from '../GeneralSettings';
 import AccountSettings from "../AccountSettings";
 import { ProjectContext } from '../../../contexts/projectContext.jsx';
 
+import {
+    Settings,
+    UserShield
+} from "lucide-react";
+
 import CloseIcon from '@mui/icons-material/Close';
 
 export function SettingsModal(props) {
@@ -11,6 +16,17 @@ export function SettingsModal(props) {
     const { theme } = useContext(ProjectContext);
 
     const [activeTab, setActiveTab] = useState("General");
+
+    const SETTINGS_NAV_LINKS = [
+        {
+            name: "General",
+            icon: Settings
+        },
+        {
+            name: "Account",
+            icon: UserShield
+        }
+    ];
 
     const renderActiveSettingsTab = () => {
         switch (activeTab) {
@@ -38,9 +54,10 @@ export function SettingsModal(props) {
                 <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-3 text-xl">
                         {
-                            ["General", "Account"].map((setting, index) => (
-                                <div key={index} onClick={() => setActiveTab(setting)} className={`cursor-pointer py-2 px-3 rounded-md mb-2 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}>
-                                    <p className={` ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${setting === activeTab && `font-bold !text-primary-300`}`}>{setting}</p>
+                            SETTINGS_NAV_LINKS.map(({ name, icon: Icon }, index) => (
+                                <div key={index} onClick={() => setActiveTab(name)} className={`cursor-pointer py-2 px-3 rounded-md mb-2 hover:bg-light-hover-100 flex items-center gap-1`}>
+                                    <Icon size={17} className={`${name === activeTab && `!text-primary-300`}`} />
+                                    <p className={` ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${name === activeTab && `!text-primary-300`}`}>{name}</p>
                                 </div>
                             ))
                         }
