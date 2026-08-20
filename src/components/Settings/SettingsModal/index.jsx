@@ -40,7 +40,7 @@ export function SettingsModal(props) {
                         {
                             ["General", "Account"].map((setting, index) => (
                                 <div key={index} onClick={() => setActiveTab(setting)} className={`cursor-pointer py-2 px-3 rounded-md mb-2 ${theme === 'light' ? 'hover:bg-light-hover-100' : 'hover:bg-background_workspace'}`}>
-                                    <p className={` ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${setting === activeTab && `font-bold ${theme === "light" ? 'text-black/70' : 'text-textColor-100'}`}`}>{setting}</p>
+                                    <p className={` ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${setting === activeTab && `font-bold !text-primary-300`}`}>{setting}</p>
                                 </div>
                             ))
                         }
