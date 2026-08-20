@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import ThemeToggle from '../../ThemeToggle';
-import { MainContext } from '../../../contexts/mainContext';
+import { ProjectContext } from '../../../contexts/projectContext';
 import { AuthContext } from '../../../contexts/authContext';
 import { SettingsContext } from "../../../contexts/settingsContext";
 import RippleButton from '../../RippleButton';
@@ -15,7 +15,7 @@ import { logOut } from '../../../services/auth';
 
 function GeneralSettings({ hideTheme = false }) {
     const navigate = useNavigate();
-    const { theme } = useContext(MainContext);
+    const { theme } = useContext(ProjectContext);
     const { user, setUser } = useContext(AuthContext);
     const { generalSettings, setGeneralSettings } = useContext(SettingsContext);
     const [isSendingEmailPending, setIsSendingEmailPending] = useState(false);

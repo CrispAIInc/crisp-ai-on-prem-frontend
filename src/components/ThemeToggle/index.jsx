@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import NightlightRoundOutlinedIcon from '@mui/icons-material/NightlightRoundOutlined';
-import { MainContext } from '../../contexts/mainContext.jsx';
+import { ProjectContext } from '../../contexts/projectContext.jsx';
 
 export default function ThemeToggle() {
-    const { theme, setTheme } = useContext(MainContext);
+    const { theme, setTheme } = useContext(ProjectContext);
 
     // Optional: sync with system preference or local storage
     // useEffect(() => {

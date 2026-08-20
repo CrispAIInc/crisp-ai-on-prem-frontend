@@ -18,10 +18,6 @@ export function SettingsModal(props) {
                 return <GeneralSettings hideTheme={props?.hideTheme} />;
             case "Account":
                 return <AccountSettings />;
-            // case "Privacy":
-            //     return <div>Privacy settings content goes here...</div>;
-            // case "Notifications":
-            //     return <div>Notifications settings content goes here...</div>;
             default:
                 return null;
         }

@@ -4,6 +4,8 @@ import {
 } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../../contexts/authContext';
+import { ProjectContext } from '../../contexts/projectContext';
+import { SettingsModal } from '../Settings/SettingsModal';
 
 /**
  * TopBar - the uppermost strip of the shared app.
@@ -13,6 +15,7 @@ import { AuthContext } from '../../contexts/authContext';
 export default function TopBar() {
 
   const { user } = useContext(AuthContext);
+  const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -37,6 +40,11 @@ export default function TopBar() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [menuOpen]);
+
+  function handleSettingsModalState() {
+    setIsSettingsModalOpen(true);
+    setMenuOpen(false);
+  }
 
   return (
     <header className="h-14 border-b border-gray-100 bg-white">
@@ -67,7 +75,7 @@ export default function TopBar() {
               <button
                 type="button"
                 role="menuitem"
-                onClick={() => setMenuOpen(false)}
+                onClick={handleSettingsModalState}
                 className="w-full flex items-center gap-2 px-3 py-1 text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 <Settings size={14} className="text-gray-400" />
@@ -90,6 +98,14 @@ export default function TopBar() {
           )}
         </div>
       </div>
+
+      {isSettingsModalOpen && (
+        <SettingsModal
+          show={isSettingsModalOpen}
+          onHide={() => setIsSettingsModalOpen(false)}
+          hideTheme
+        />
+      )}
     </header>
   );
 }

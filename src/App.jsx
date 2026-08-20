@@ -27,7 +27,7 @@ import AppLayout from './components/Layout/AppLayout.jsx';
 function App() {
 
   // const { theme, setTheme } = useContext(ThemeContext);
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   toastConfig({ theme });
 
 
