@@ -13,6 +13,11 @@ import { Alert } from '@mui/material';
 import LoadingSpinner from '../../LoadingSpinner';
 import { logOut } from '../../../services/auth';
 
+import {
+    User,
+    Settings2
+} from "lucide-react";
+
 function GeneralSettings({ hideTheme = false }) {
     const navigate = useNavigate();
     const { theme } = useContext(ProjectContext);
@@ -122,8 +127,9 @@ function GeneralSettings({ hideTheme = false }) {
 
             <section className={`rounded-2xl p-4 shadow-sm ${theme === "light" ? "!border !border-gray-200/50 bg-white/80" : "!border !border-textColor-200/20 bg-textColor-300/70"}`}>
                 <div>
-                    <h3 className={`text-[15px] font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>
-                        Profile
+                    <h3 className={`text-[15px] font-semibold flex items-center gap-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>
+                        <User size={15} />
+                        <span className="text-[15px]">Profile</span>
                     </h3>
                     <p className={`mt-1 text-sm ${theme === "light" ? "text-gray-500" : "text-textColor-100/80"}`}>
                         Update your personal details and keep your account verified.
@@ -165,8 +171,9 @@ function GeneralSettings({ hideTheme = false }) {
 
             <section className={`rounded-2xl p-4 shadow-sm ${theme === "light" ? "!border !border-gray-200/50 bg-white/80" : "!border !border-textColor-200/20 bg-textColor-300/70"}`}>
                 <div>
-                    <h3 className={`text-[15px] font-semibold ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>
-                        Preferences
+                    <h3 className={`text-[15px] font-semibold flex items-center gap-1 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>
+                        <Settings2 size={15} />
+                        <span className="text-[15px]">Preferences</span>
                     </h3>
                     <p className={`mt-1 text-sm ${theme === "light" ? "text-gray-500" : "text-textColor-100/80"}`}>
                         Choose how videos play while you browse your content.
