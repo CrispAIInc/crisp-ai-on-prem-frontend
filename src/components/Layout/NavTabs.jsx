@@ -28,7 +28,7 @@ const NAV_ITEMS = [
 export default function NavTabs({ active = "media", onChange = () => { } }) {
   return (
     <nav className="bg-white border-b border-gray-100">
-      <ul className="flex items-center px-6 overflow-x-auto [&::-webkit-scrollbar]:h-1
+      <ul className="flex items-center px-6 overflow-y-hidden overflow-x-auto [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
         {NAV_ITEMS.map(({ key, label, icon: Icon }) => {
           const isActive = key === active;
