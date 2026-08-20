@@ -21,6 +21,7 @@ import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 import MainWorkspacePage from './pages/MainWorkspacePage';
 import NotFound from './pages/NotFound';
 import AppLayout from './components/Layout/AppLayout.jsx';
+import Studio from './components/Studio/index.jsx';
 
 
 
@@ -65,9 +66,8 @@ function App() {
                 <PrivateRoute>
                   <ProjectProvider theme={theme} setTheme={setTheme}>
                     <SettingsProvider>
-                      {/* <MainWorkspacePage /> */}
                       <AppLayout>
-                        <h1>Main Section</h1>
+                        <Studio />
                       </AppLayout>
                     </SettingsProvider>
                   </ProjectProvider>
