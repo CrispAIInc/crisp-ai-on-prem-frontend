@@ -6,6 +6,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../../contexts/authContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import { SettingsModal } from '../Settings/SettingsModal';
+import useAuth from '../../hooks/useAuth';
 
 /**
  * TopBar - the uppermost strip of the shared app.
@@ -14,6 +15,7 @@ import { SettingsModal } from '../Settings/SettingsModal';
  */
 export default function TopBar() {
 
+  const { logout } = useAuth();
   const { user } = useContext(AuthContext);
   const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
 
@@ -46,11 +48,21 @@ export default function TopBar() {
     setMenuOpen(false);
   }
 
+  async function log() {
+    localStorage.setItem('current_project', null);
+    await logout();
+  }
+
+  function handleLogout() {
+    setMenuOpen(false);
+    log();
+  }
+
   return (
     <header className="h-14 border-b border-gray-100 bg-white">
       <div className="h-full flex items-center justify-between px-6">
         {/* Brand mark */}
-        <div className="w-32 h-auto flex items-center justify-center">
+        <div className="w-36 h-auto flex items-center justify-center">
           <img src='/new-crips-ai-logo.png' alt='Crisp AI logo.' />
         </div>
 
@@ -85,10 +97,7 @@ export default function TopBar() {
               <button
                 type="button"
                 role="menuitem"
-                onClick={() => {
-                  setMenuOpen(false);
-                  // onLogout();
-                }}
+                onClick={handleLogout}
                 className="w-full flex items-center gap-2 px-3 py-1 text-[13px] text-red-600 hover:bg-red-50 transition-colors"
               >
                 <LogOut size={14} />
