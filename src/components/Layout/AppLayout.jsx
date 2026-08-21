@@ -16,8 +16,6 @@ export default function AppLayout({ children }) {
     setActiveTab
   } = useContext(MainContext);
 
-  console.log(activeTab);
-
   return (
     <div className="h-screen bg-gray-50 flex flex-col">
       <TopBar />

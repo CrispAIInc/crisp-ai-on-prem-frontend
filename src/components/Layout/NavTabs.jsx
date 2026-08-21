@@ -1,4 +1,4 @@
-import { NAV_ITEMS } from '../../globals';
+import { NAV_ITEMS } from "../../navigation/navitems.js";
 
 /**
  * NavTabs - the primary section navigation, rendered directly

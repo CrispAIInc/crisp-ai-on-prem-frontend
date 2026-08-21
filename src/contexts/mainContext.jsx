@@ -10,7 +10,7 @@ import { AuthContext } from './authContext';
 import { delay, generateRandomId, pick } from '../utils';
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
-import { NAV_ITEMS } from '../globals';
+import { NAV_ITEMS } from '../navigation/navitems.js';
 
 export const MainContext = createContext({});
 
