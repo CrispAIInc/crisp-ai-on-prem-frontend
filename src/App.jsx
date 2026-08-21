@@ -33,13 +33,13 @@ function ProjectWorkspace({ theme, setTheme }) {
   }
 
   return (
-    // <MainProvider theme={theme} setTheme={setTheme}>
-    <SettingsProvider>
-      <AppLayout>
-        <Studio />
-      </AppLayout>
-    </SettingsProvider>
-    // </MainProvider>
+    <MainProvider theme={theme} setTheme={setTheme}>
+      <SettingsProvider>
+        <AppLayout>
+          <Studio />
+        </AppLayout>
+      </SettingsProvider>
+    </MainProvider>
   );
 }
 
