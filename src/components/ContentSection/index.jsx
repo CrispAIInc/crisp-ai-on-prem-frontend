@@ -381,7 +381,7 @@ const ContentSection = ({
         setKnowledgeBase(prev => {
             return prev.map(item => {
                 // Only update if the item exists in displayedSources
-                const existsInDisplayed = displayedSources.some(ds => ds.source_path === item.source_path);
+                const existsInDisplayed = displayedSources?.some(ds => ds.source_path === item.source_path);
                 if (existsInDisplayed) {
                     return {
                         ...item,
@@ -1015,7 +1015,7 @@ const ContentSection = ({
 
                     <BaseHeading text={`Workspace sources (${results?.length} selected & ${results?.filter(i => i?.is_checked)?.length} checked.)`} className={` mt-4`} />
 
-                    {displayedSources.length > 0 && (
+                    {displayedSources?.length > 0 && (
                         <div className={`mt-2 max-w-96 flex items-center pl-2 bg-transparent rounded-lg overflow-hidden ${theme === "light" ? "!border !border-gray-300  text-black" : "!border !border-textColor-200/40 text-white"}`}>
                             <Search size={18} className={`pr-0 mr-0 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
                             <input
@@ -1167,12 +1167,12 @@ const ContentSection = ({
                             )}
                         {
 
-                            displayedSources.length === 0
+                            displayedSources?.length === 0
                             &&
                             <NoData message="No sources selected" classes="mt-4" />
                         }
                         {
-                            (results.length === 0 && displayedSources.length > 0) && (
+                            (results.length === 0 && displayedSources?.length > 0) && (
                                 <BaseHeading text='No sources found' className='mt-4 text-center' />
                             )
                         }

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -22,8 +22,26 @@ import MainWorkspacePage from './pages/MainWorkspacePage';
 import NotFound from './pages/NotFound';
 import AppLayout from './components/Layout/AppLayout.jsx';
 import Studio from './components/Studio/index.jsx';
+import MainProvider from './contexts/mainContext.jsx';
+import { ProjectContext } from './contexts/projectContext.jsx';
 
+function ProjectWorkspace({ theme, setTheme }) {
+  const { currentProject } = useContext(ProjectContext);
 
+  if (!currentProject) {
+    return null;
+  }
+
+  return (
+    // <MainProvider theme={theme} setTheme={setTheme}>
+    <SettingsProvider>
+      <AppLayout>
+        <Studio />
+      </AppLayout>
+    </SettingsProvider>
+    // </MainProvider>
+  );
+}
 
 function App() {
 
@@ -65,11 +83,7 @@ function App() {
               <Route path="/" element={
                 <PrivateRoute>
                   <ProjectProvider theme={theme} setTheme={setTheme}>
-                    <SettingsProvider>
-                      <AppLayout>
-                        <Studio />
-                      </AppLayout>
-                    </SettingsProvider>
+                    <ProjectWorkspace theme={theme} setTheme={setTheme} />
                   </ProjectProvider>
                 </PrivateRoute>
               } />
