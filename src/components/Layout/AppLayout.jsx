@@ -12,10 +12,10 @@ export default function AppLayout({ children }) {
   const [activeTab, setActiveTab] = useState("media");
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="h-screen bg-gray-50 flex flex-col">
       <TopBar />
       <NavTabs active={activeTab} onChange={setActiveTab} />
-      <main className="flex-1 min-h-0">{children}</main>
+      <main className="flex-1 min-h-0 h-full">{children}</main>
     </div>
   );
 }
