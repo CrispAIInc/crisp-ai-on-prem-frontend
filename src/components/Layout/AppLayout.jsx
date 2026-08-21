@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TopBar from "./TopBar";
 import NavTabs from "./NavTabs";
+import { MainContext } from '../../contexts/mainContext';
 
 /**
  * AppLayout - the shared shell used across every page:
@@ -9,7 +10,13 @@ import NavTabs from "./NavTabs";
  * rendered beneath it.
  */
 export default function AppLayout({ children }) {
-  const [activeTab, setActiveTab] = useState("media");
+
+  const {
+    activeTab,
+    setActiveTab
+  } = useContext(MainContext);
+
+  console.log(activeTab);
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col">

@@ -21,6 +21,6 @@ export const NAV_ITEMS = [
     { key: "wiz", label: "Crisp Wiz", icon: MessageCircle },
     { key: "reels", label: "Reels", icon: Clapperboard },
     { key: "analytics", label: "Analytics", icon: LineChart },
-    { key: "stories", label: "Stories & Blogs", icon: BookOpen },
-    { key: "bi", label: "Business Intelligence", icon: PieChart },
+    { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen },
+    { key: "business_intelligence", label: "Business Intelligence", icon: PieChart },
 ];
