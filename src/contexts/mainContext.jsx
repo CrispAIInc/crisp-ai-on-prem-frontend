@@ -10,6 +10,7 @@ import { AuthContext } from './authContext';
 import { delay, generateRandomId, pick } from '../utils';
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
+import { NAV_ITEMS } from '../globals';
 
 export const MainContext = createContext({});
 
@@ -276,8 +277,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         },
         { value: "gemini-pro", label: "Gemini Pro", type: "llm", color: "#D10363" },
     ];
-
-    const [activeTab, setActiveTab] = useState('genMetadata');
 
     const modules = {
         toolbar: [
@@ -1302,6 +1301,26 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const categoryOptionsWithoutAll = categoryOptions.filter(item => item.value !== 'all');
     const [searchQuestion, setSearchQuestion] = useState('');
+
+
+
+    /**
+     * ON PREM NEW LAYOUT APP STATE
+     */
+
+    /**
+     * const NAV_ITEMS = [
+  { key: "media", label: "Media", icon: Image },
+  { key: "discovery", label: "Discovery", icon: Search },
+  { key: "metadata", label: "Contextual Metadata", icon: Star },
+  { key: "wiz", label: "Crisp Wiz", icon: MessageCircle },
+  { key: "reels", label: "Reels", icon: Clapperboard },
+  { key: "analytics", label: "Analytics", icon: LineChart },
+  { key: "stories", label: "Stories & Blogs", icon: BookOpen },
+  { key: "business_intelligence", label: "Business Intelligence", icon: PieChart },
+];
+     */
+    const [activeTab, setActiveTab] = useState(NAV_ITEMS[0]?.key || "media");
 
     // create value object with all the states
     const value = {

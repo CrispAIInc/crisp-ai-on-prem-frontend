@@ -1,24 +1,4 @@
-import {
-  Image,
-  Search,
-  Star,
-  MessageCircle,
-  Clapperboard,
-  LineChart,
-  BookOpen,
-  PieChart,
-} from "lucide-react";
-
-const NAV_ITEMS = [
-  { key: "media", label: "Media", icon: Image },
-  { key: "discovery", label: "Discovery", icon: Search },
-  { key: "metadata", label: "Contextual Metadata", icon: Star },
-  { key: "wiz", label: "Crisp Wiz", icon: MessageCircle },
-  { key: "reels", label: "Reels", icon: Clapperboard },
-  { key: "analytics", label: "Analytics", icon: LineChart },
-  { key: "stories", label: "Stories & Blogs", icon: BookOpen },
-  { key: "bi", label: "Business Intelligence", icon: PieChart },
-];
+import { NAV_ITEMS } from '../../globals';
 
 /**
  * NavTabs - the primary section navigation, rendered directly
