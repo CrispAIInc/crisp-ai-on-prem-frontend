@@ -1,17 +1,14 @@
-import { useState } from "react";
-import { Upload, FolderOpen, Check, Film, Image as ImageIcon } from "lucide-react";
-
-// Static placeholder data — replace with real source items.
-const MOCK_ITEMS = [
-    { id: 1, name: "BEST_VIDEO_CV_EVER_MARK.mp4", type: "video" },
-    { id: 2, name: "product_launch_teaser.mp4", type: "video" },
-    { id: 3, name: "onboarding_walkthrough.mp4", type: "video" },
-    { id: 4, name: "team_offsite_photo.png", type: "image" },
-    { id: 5, name: "customer_interview_q3.mp4", type: "video" },
-    { id: 6, name: "brand_guidelines_cover.png", type: "image" },
-    { id: 7, name: "webinar_recording_aug.mp4", type: "video" },
-    { id: 8, name: "hero_banner_draft.png", type: "image" },
-];
+import { useContext, useState } from "react";
+import { Upload, FolderOpen, Check } from "lucide-react";
+import AddSourceModal from "../AddSourceModal";
+import FileUploaderModal from "../FileUploaderModal";
+import SourceExplorer from "../SourceExplorer";
+import MediaCard from "../MediaCard";
+import { MainContext } from "../../contexts/mainContext.jsx";
+import { ProjectContext } from "../../contexts/projectContext.jsx";
+import { useToast } from "../../contexts/toastContext.jsx";
+import makeApiRequest from "../../api";
+import { getFileType } from "../../utils.js";
 
 /**
  * Media - Upload / Collection sub-navigation above a grid of
@@ -21,47 +18,184 @@ const MOCK_ITEMS = [
  * Presentational only — no upload, filtering, or persistence
  * logic is wired up.
  */
+
+const MEDIA_NAV = [
+    { key: "ingest", label: "Ingest", icon: Upload },
+    { key: "collection", label: "Collection", icon: FolderOpen },
+];
+
 export default function Media() {
-    const [activeNav, setActiveNav] = useState("upload");
-    const [checkedIds, setCheckedIds] = useState([]);
+    const {
+        categoryOptions,
+        formatOptions,
+        currentResource,
+        displayedSources = [],
+        frameExtractionRate,
+        isDetailedMode,
+        handleCheckboxChange,
+        knowledgeBase,
+        onThumbnailClick,
+        selectedCategory,
+        setActiveView,
+        setCurrentResource,
+        setDisplayedSources,
+        setGeneratedResources,
+        setIsFileUploading,
+        setKnowledgeBase,
+        setPersistedUploadedFiles,
+        videoCaptionContext,
+    } = useContext(MainContext);
+    const { isProjectReadOnly } = useContext(ProjectContext);
+    const { notify } = useToast();
 
-    const allChecked = checkedIds.length === MOCK_ITEMS.length;
-    const someChecked = checkedIds.length > 0;
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [showSourceExplorer, setShowSourceExplorer] = useState(false);
+    const [uploadModalCategory, setUploadModalCategory] = useState("all");
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [clickedIndex, setClickedIndex] = useState(null);
 
-    function toggleCard(id) {
-        setCheckedIds((prev) =>
-            prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-        );
+    const checkedSources = displayedSources.filter((source) => source?.is_checked);
+    const allChecked = displayedSources.length > 0 && checkedSources.length === displayedSources.length;
+    const someChecked = checkedSources.length > 0;
+
+    function handleMediaNavClick(key) {
+        if (key === "ingest" && !isProjectReadOnly) {
+            setUploadModalCategory("all");
+            setShowSourceExplorer(false);
+            setShowAddModal(true);
+        }
+        if (key === "collection") {
+            setShowSourceExplorer(true);
+        }
+    }
+
+    function openUploadModal(category = "all") {
+        setUploadModalCategory(category);
+        setShowSourceExplorer(false);
+        setShowUploadModal(true);
+    }
+
+    async function handleUpload(event, fileFormat, files, isFineGrained = false) {
+        const selectedFiles = files || Array.from(event?.target?.files || []);
+        if (selectedFiles.length === 0) return;
+
+        setIsFileUploading(true);
+        const formData = new FormData();
+        selectedFiles.forEach((file) => {
+            formData.append("file", file);
+            formData.append("category", selectedCategory);
+            formData.append("fileType", file.type);
+            formData.append("isDetailedMode", isDetailedMode);
+            formData.append("videoCaptionContext", videoCaptionContext);
+        });
+        formData.append("isFineGrained", isFineGrained);
+        if (frameExtractionRate) {
+            formData.append("frameExtractionRate", JSON.stringify(frameExtractionRate));
+        }
+
+        const pendingSources = selectedFiles.map((file) => ({
+            category: [selectedCategory],
+            file_type: getFileType(file.type),
+            source_path: file.name,
+            thumbnail: null,
+            is_checked: false,
+            is_selected: true,
+            progress: 0,
+            step: "Initialize ingestion...",
+        }));
+
+        setPersistedUploadedFiles(pendingSources);
+        setKnowledgeBase((previous) => [...pendingSources, ...previous]);
+        setShowAddModal(false);
+        setShowUploadModal(false);
+
+        try {
+            const { uploaded_data: uploadedData = [] } = await makeApiRequest(
+                "/upload",
+                "post",
+                formData,
+                { "Content-type": "multipart/form-data" }
+            );
+            setKnowledgeBase((previous) => [
+                ...uploadedData,
+                ...previous.filter((item) => !pendingSources.some((pending) => pending.source_path === item.source_path)),
+            ]);
+            setCurrentResource((previous) => previous && uploadedData[0]);
+            if (uploadedData.length > 0) setActiveView("resource");
+            notify({ variant: "success", heading: "Source uploaded successfully!" });
+        } catch (error) {
+            setKnowledgeBase((previous) => previous.filter((item) => !pendingSources.includes(item)));
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error?.response?.data?.error || "Failed to upload new source. Please try again.",
+            });
+        } finally {
+            setIsFileUploading(false);
+        }
+    }
+
+    async function deleteResource(event, items) {
+        try {
+            setIsDeleting(true);
+            setClickedIndex(items[0]);
+            const payload = items.map((item) => ({
+                category: item.category,
+                fileName: item.source_path,
+                fileType: item.file_type,
+            }));
+            await makeApiRequest("/delete", "post", { sources: payload });
+            const deletedPaths = new Set(payload.map((item) => item.fileName));
+            setDisplayedSources((previous) => previous.filter((item) => !deletedPaths.has(item.source_path)));
+            setKnowledgeBase((previous) => previous.filter((item) => !deletedPaths.has(item.source_path)));
+            setGeneratedResources((previous) => previous?.filter((item) => !deletedPaths.has(item.source_path)));
+            if (items.some((item) => item.source_path === currentResource?.source_path)) {
+                setCurrentResource(null);
+                setActiveView(null);
+            }
+            notify({ variant: "success", heading: "Source deleted successfully!" });
+        } catch (error) {
+            notify({ variant: "error", heading: "Unable to delete source." });
+        } finally {
+            setIsDeleting(false);
+            setClickedIndex(null);
+        }
+    }
+
+    function handleSelectAllCheckboxChange(sources, isChecked) {
+        const paths = new Set(sources.map((source) => source.source_path));
+        setKnowledgeBase((previous) => previous.map((item) => paths.has(item.source_path)
+            ? { ...item, is_selected: true, is_checked: isChecked }
+            : item));
     }
 
     function toggleAll() {
-        setCheckedIds(allChecked ? [] : MOCK_ITEMS.map((item) => item.id));
+        const sourcePaths = new Set(displayedSources.map((source) => source.source_path));
+        setKnowledgeBase((previous) => previous.map((source) => sourcePaths.has(source.source_path)
+            ? { ...source, is_checked: !allChecked, is_selected: true }
+            : source));
     }
 
     function clearAll() {
-        setCheckedIds([]);
+        setKnowledgeBase((previous) => previous.map((source) => displayedSources.some((item) => item.source_path === source.source_path)
+            ? { ...source, is_checked: false }
+            : source));
     }
 
     return (
         <div className="max-w-[1400px] h-full mx-auto px-6 py-6 bg-white">
             {/* Sub-navigation */}
             <nav className="flex items-center gap-6 border-b border-gray-100 mb-5">
-                {[
-                    { key: "upload", label: "Upload", icon: Upload },
-                    { key: "collection", label: "Collection", icon: FolderOpen },
-                ].map(({ key, label, icon: Icon }) => {
-                    const isActive = key === activeNav;
+                {MEDIA_NAV.map(({ key, label, icon: Icon }) => {
                     return (
                         <button
                             key={key}
                             type="button"
-                            onClick={() => setActiveNav(key)}
                             className={[
                                 "flex items-center gap-1.5 pb-3 text-[13px] font-medium border-b-2 -mb-px transition-colors",
-                                isActive
-                                    ? "border-violet-600 text-violet-700"
-                                    : "border-transparent text-gray-500 hover:text-gray-800",
                             ].join(" ")}
+                            onClick={() => handleMediaNavClick(key)}
                         >
                             <Icon size={14} strokeWidth={2} />
                             {label}
@@ -91,7 +225,7 @@ export default function Media() {
                     </span>
                     {allChecked ? "Deselect all" : "Select all"}
                     <span className="text-gray-400">
-                        {someChecked ? `(${checkedIds.length} selected)` : `(${MOCK_ITEMS.length})`}
+                        {someChecked ? `(${checkedSources.length} selected)` : `(${displayedSources.length})`}
                     </span>
                 </label>
 
@@ -110,50 +244,52 @@ export default function Media() {
                 </button>
             </div>
 
+            <AddSourceModal
+                show={showAddModal}
+                setShowAddModal={setShowAddModal}
+                isUploading={false}
+                openCategoriesModal={false}
+                onHide={() => setShowAddModal(false)}
+                handleUpload={handleUpload}
+            />
+            {showUploadModal && (
+                <FileUploaderModal
+                    show={showUploadModal}
+                    onHide={() => setShowUploadModal(false)}
+                    hideIndexModal={() => setShowUploadModal(false)}
+                    indexName={uploadModalCategory}
+                    handleUpload={handleUpload}
+                />
+            )}
+            {showSourceExplorer && (
+                <SourceExplorer
+                    show={showSourceExplorer}
+                    onHide={() => setShowSourceExplorer(false)}
+                    showIndexModal={() => setShowAddModal(true)}
+                    handleUpload={handleUpload}
+                    knowledgeBase={knowledgeBase}
+                    setKnowledgeBase={setKnowledgeBase}
+                    categories={categoryOptions}
+                    formats={formatOptions}
+                    isDeleting={isDeleting}
+                    clickedIndex={clickedIndex}
+                    deleteResource={deleteResource}
+                    handleSelectAllCheckboxChange={handleSelectAllCheckboxChange}
+                    onOpenUploadModal={openUploadModal}
+                    onOpenCategoriesModal={() => setShowAddModal(true)}
+                />
+            )}
+
             {/* Card grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                {MOCK_ITEMS.map((item) => {
-                    const isChecked = checkedIds.includes(item.id);
-                    const Icon = item.type === "video" ? Film : ImageIcon;
-
-                    return (
-                        <div
-                            key={item.id}
-                            className={[
-                                "group relative bg-white rounded-xl border shadow-sm overflow-hidden transition-colors cursor-pointer",
-                                isChecked ? "border-violet-400 ring-2 ring-violet-100" : "border-gray-100 hover:border-gray-200",
-                            ].join(" ")}
-                            onClick={() => toggleCard(item.id)}
-                        >
-                            {/* Checkbox */}
-                            <div
-                                className={[
-                                    "absolute top-2.5 left-2.5 z-10 w-5 h-5 rounded flex items-center justify-center border transition-colors",
-                                    isChecked
-                                        ? "bg-violet-600 border-violet-600"
-                                        : "bg-white/90 border-gray-300 group-hover:border-gray-400",
-                                ].join(" ")}
-                            >
-                                {isChecked && <Check size={12} className="text-white" strokeWidth={3} />}
-                            </div>
-
-                            {/* Thumbnail */}
-                            <div className="relative aspect-square bg-gradient-to-br from-gray-800 to-gray-950 flex items-center justify-center">
-                                <Icon size={22} className="text-white/40" />
-                                {item.type === "video" && (
-                                    <span className="absolute bottom-2 right-2 text-[10px] text-white/80 bg-black/40 rounded px-1.5 py-0.5 tabular-nums">
-                                        2:10
-                                    </span>
-                                )}
-                            </div>
-
-                            {/* File name */}
-                            <div className="px-2.5 py-2 border-t border-gray-100">
-                                <p className="text-[12px] text-gray-700 truncate">{item.name}</p>
-                            </div>
-                        </div>
-                    );
-                })}
+            <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))]">
+                {displayedSources.map((source) => (
+                    <MediaCard
+                        key={source.source_path}
+                        source={source}
+                        onOpen={onThumbnailClick}
+                        onToggle={handleCheckboxChange}
+                    />
+                ))}
             </div>
         </div>
     );

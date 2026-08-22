@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import TopBar from "./TopBar";
 import NavTabs from "./NavTabs";
 import { MainContext } from '../../contexts/mainContext';
@@ -17,7 +17,7 @@ export default function AppLayout({ children }) {
   } = useContext(MainContext);
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col">
+    <div className="h-screen overflow-hidden bg-gray-50 flex flex-col">
       <TopBar />
       <NavTabs active={activeTab} onChange={setActiveTab} />
       <main className="flex-1 min-h-0 h-full">{children}</main>

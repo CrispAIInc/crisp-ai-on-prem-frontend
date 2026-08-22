@@ -1,0 +1,86 @@
+import { Check, Film, Image as ImageIcon } from "lucide-react";
+import GsFile from "../GsFile";
+
+export default function MediaCard({ source, onOpen, onToggle }) {
+    const isChecked = Boolean(source?.is_checked);
+    const Icon = source?.file_type === "video" ? Film : ImageIcon;
+
+    return (
+        <div
+            className={`group relative overflow-hidden rounded-xl border bg-white shadow-sm transition-colors cursor-pointer ${isChecked
+                ? "border-primary-300 ring-2 ring-violet-100"
+                : "border-gray-100 hover:border-gray-200"
+                }`}
+            onClick={(event) => onOpen(event, source)}
+        >
+            <div
+                className={`absolute top-2.5 left-2.5 z-10 flex h-5 w-5 items-center justify-center rounded border transition-colors ${isChecked
+                    ? "border-primary-300 bg-primary-300"
+                    : "border-gray-300 bg-white/90 group-hover:border-gray-400"
+                    }`}
+                onClick={(event) => {
+                    event.stopPropagation();
+                    onToggle(!isChecked, source);
+                }}
+                role="checkbox"
+                aria-checked={isChecked}
+                tabIndex={0}
+                onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        onToggle(!isChecked, source);
+                    }
+                }}
+            >
+                {isChecked && <Check size={12} className="text-white" strokeWidth={3} />}
+            </div>
+
+            <div className="relative flex aspect-video items-center justify-center bg-gray-900">
+                {source?.thumbnail ? (
+                    source.thumbnail.startsWith("blob") && source.file_type === "video" ? (
+                        <video
+                            src={source.thumbnail}
+                            className="h-full w-full object-cover"
+                            muted
+                            controls={false}
+                            aria-label={source.source_path}
+                        />
+                    ) : (
+                        <GsFile
+                            gsUrl={source.thumbnail}
+                            className="h-full w-full object-cover"
+                            alt={source.source_path}
+                            isPrivate
+                        />
+                    )
+                ) : (
+                    <Icon size={30} className="text-white/40" />
+                )}
+                {source?.file_type === "video" && (
+                    <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
+                        Video
+                    </span>
+                )}
+
+                {source?.file_type === "img" && (
+                    <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
+                        Image
+                    </span>
+                )}
+
+                {source?.file_type === "pdf" && (
+                    <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
+                        PDF
+                    </span>
+                )}
+            </div>
+
+            <div className="border-t border-gray-100 px-2.5 py-2">
+                <p className="truncate text-[12px] text-gray-700" title={source?.source_path}>
+                    {source?.source_path?.replace(/\.[^/.]+$/, "")}
+                </p>
+            </div>
+        </div>
+    );
+}
