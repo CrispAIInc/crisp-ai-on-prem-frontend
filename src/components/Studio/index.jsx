@@ -57,13 +57,13 @@ function Studio() {
                         type="button"
                         aria-label="Resize panel"
                         title="Resize panel"
-                        className="absolute -left-3 top-0 z-10 hidden h-full w-6 cursor-col-resize items-center justify-center lg:flex"
+                        className="absolute -left-3 top-0 z-10 hidden h-full w-6 items-center justify-center lg:flex"
                         onPointerDown={(event) => {
                             event.preventDefault();
                             setIsDragging(true);
                         }}
                     >
-                        <span className="h-16 w-1 rounded-full bg-gray-300 transition-colors hover:bg-violet-500" />
+                        <span className="h-16 w-2 cursor-col-resize rounded-full bg-gray-300 transition-colors hover:bg-primary-200" />
                     </button>
                     <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden">
                         {ActiveComponent && <ActiveComponent />}
