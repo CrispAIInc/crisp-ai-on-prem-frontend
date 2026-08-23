@@ -10,6 +10,7 @@ import { ProjectContext } from "../../contexts/projectContext.jsx";
 import { useToast } from "../../contexts/toastContext.jsx";
 import makeApiRequest from "../../api";
 import { getFileType } from "../../utils.js";
+import NoData from '../NoData/index.jsx';
 
 /**
  * Media - Upload / Collection sub-navigation above a grid of
@@ -230,44 +231,48 @@ export default function Media() {
             </nav>
 
             {/* Selection controls */}
-            <div className="flex items-center justify-between mb-4">
-                <label className="flex items-center gap-2 text-[13px] text-gray-600 cursor-pointer select-none">
-                    <span
-                        onClick={toggleAll}
+            {displayedSources.length > 0 ? (
+                <div className="flex items-center justify-between mb-4">
+                    <label className="flex items-center gap-2 text-[13px] text-gray-600 cursor-pointer select-none">
+                        <span
+                            onClick={toggleAll}
+                            className={[
+                                "w-4 h-4 rounded flex items-center justify-center border transition-colors",
+                                allChecked
+                                    ? "bg-violet-600 border-violet-600"
+                                    : someChecked
+                                        ? "bg-violet-100 border-violet-400"
+                                        : "bg-white border-gray-300",
+                            ].join(" ")}
+                        >
+                            {allChecked && <Check size={11} className="text-white" strokeWidth={3} />}
+                            {!allChecked && someChecked && (
+                                <span className="w-1.5 h-1.5 rounded-sm bg-violet-500" />
+                            )}
+                        </span>
+                        {allChecked ? "Deselect all" : "Select all"}
+                        <span className="text-gray-400">
+                            {someChecked ? `(${checkedSources.length} selected)` : `(${displayedSources.length})`}
+                        </span>
+                    </label>
+
+                    <button
+                        type="button"
+                        onClick={clearAll}
+                        disabled={!someChecked}
                         className={[
-                            "w-4 h-4 rounded flex items-center justify-center border transition-colors",
-                            allChecked
-                                ? "bg-violet-600 border-violet-600"
-                                : someChecked
-                                    ? "bg-violet-100 border-violet-400"
-                                    : "bg-white border-gray-300",
+                            "text-[13px] font-medium transition-colors",
+                            someChecked
+                                ? "text-red-600 hover:text-red-700"
+                                : "text-gray-300 cursor-not-allowed",
                         ].join(" ")}
                     >
-                        {allChecked && <Check size={11} className="text-white" strokeWidth={3} />}
-                        {!allChecked && someChecked && (
-                            <span className="w-1.5 h-1.5 rounded-sm bg-violet-500" />
-                        )}
-                    </span>
-                    {allChecked ? "Deselect all" : "Select all"}
-                    <span className="text-gray-400">
-                        {someChecked ? `(${checkedSources.length} selected)` : `(${displayedSources.length})`}
-                    </span>
-                </label>
-
-                <button
-                    type="button"
-                    onClick={clearAll}
-                    disabled={!someChecked}
-                    className={[
-                        "text-[13px] font-medium transition-colors",
-                        someChecked
-                            ? "text-red-600 hover:text-red-700"
-                            : "text-gray-300 cursor-not-allowed",
-                    ].join(" ")}
-                >
-                    Clear all
-                </button>
-            </div>
+                        Clear all
+                    </button>
+                </div>
+            ) : (
+                <NoData message="Select a source to start generating content" classes="mt-4" />
+            )}
 
             <AddSourceModal
                 show={showAddModal}
