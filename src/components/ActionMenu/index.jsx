@@ -5,6 +5,7 @@ import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 export default function ActionMenu({ actions }) {
   const { theme } = useContext(MainContext);
   const [open, setOpen] = useState(false);
+  const [alignRight, setAlignRight] = useState(false);
   const ref = useRef(null);
 
   // close on outside click
@@ -21,12 +22,18 @@ export default function ActionMenu({ actions }) {
   return (
     <div ref={ref} className={`relative flex flex-col cursor-pointer rounded-full hover:bg-white/20`} onClick={(e) => {
       e.stopPropagation();
-      setOpen((p) => !p);
+      setOpen((previousOpen) => {
+        if (!previousOpen) {
+          const triggerBounds = ref.current?.getBoundingClientRect();
+          setAlignRight(Boolean(triggerBounds && triggerBounds.right + 160 > window.innerWidth));
+        }
+        return !previousOpen;
+      });
     }}>
       <MoreVertOutlinedIcon className="text-primary-300" />
 
       {open && (
-        <div className={`absolute left-0 w-40 z-10 mt-1 ${theme === 'light' ? 'bg-white' : 'bg-gray-800'} top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]`}>
+        <div className={`absolute ${alignRight ? 'right-0' : 'left-0'} w-40 z-10 mt-1 ${theme === 'light' ? 'bg-white' : 'bg-gray-800'} top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]`}>
           {actions.map((action) => (
             <button
               key={action.label}

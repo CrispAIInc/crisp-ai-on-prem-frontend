@@ -1,13 +1,17 @@
-import { Check, Film, Image as ImageIcon } from "lucide-react";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { Pencil, Check, Film, Image as ImageIcon } from "lucide-react";
+import ActionMenu from "../ActionMenu";
+import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import GsFile from "../GsFile";
 
-export default function MediaCard({ source, onOpen, onToggle }) {
+export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete, isProjectReadOnly }) {
     const isChecked = Boolean(source?.is_checked);
+    const isUploading = Object.prototype.hasOwnProperty.call(source || {}, "progress");
     const Icon = source?.file_type === "video" ? Film : ImageIcon;
 
     return (
         <div
-            className={`group relative overflow-hidden rounded-xl border bg-white shadow-sm transition-colors cursor-pointer ${isChecked
+            className={`group relative rounded-xl border bg-white shadow-sm transition-colors cursor-pointer ${isChecked
                 ? "border-primary-300 ring-2 ring-violet-100"
                 : "border-gray-100 hover:border-gray-200"
                 }`}
@@ -36,7 +40,7 @@ export default function MediaCard({ source, onOpen, onToggle }) {
                 {isChecked && <Check size={12} className="text-white" strokeWidth={3} />}
             </div>
 
-            <div className="relative flex aspect-video items-center justify-center bg-gray-900">
+            <div className="relative flex aspect-video items-center justify-center rounded-t-xl bg-gray-900">
                 {source?.thumbnail ? (
                     source.thumbnail.startsWith("blob") && source.file_type === "video" ? (
                         <video
@@ -74,12 +78,36 @@ export default function MediaCard({ source, onOpen, onToggle }) {
                         PDF
                     </span>
                 )}
+
+                {isUploading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/45">
+                        <CircularProgressWithLabel value={source.progress} variant="determinate" isUploadFailed={false} />
+                    </div>
+                )}
             </div>
 
-            <div className="border-t border-gray-100 px-2.5 py-2">
+            <div className="relative border-t border-gray-100 px-2.5 py-2">
                 <p className="truncate text-[12px] text-gray-700" title={source?.source_path}>
                     {source?.source_path?.replace(/\.[^/.]+$/, "")}
                 </p>
+                {!isUploading && !isProjectReadOnly && (
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                        <ActionMenu
+                            actions={[
+                                {
+                                    label: "Update",
+                                    icon: <Pencil size={16} />,
+                                    onClick: (event) => onUpdate(event, source),
+                                },
+                                {
+                                    label: "Delete",
+                                    icon: <DeleteOutlineOutlinedIcon fontSize="small" />,
+                                    onClick: (event) => onDelete(event, [source]),
+                                }
+                            ]}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );
