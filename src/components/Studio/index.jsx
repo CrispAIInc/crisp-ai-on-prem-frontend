@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { NAV_ITEMS } from '../../navigation/navitems';
 import { MainContext } from '../../contexts/mainContext';
+import MetadataPanel from '../MetadataPanel';
 
 function Studio() {
 
@@ -9,8 +10,12 @@ function Studio() {
     const [isDragging, setIsDragging] = useState(false);
 
     const {
-        activeTab
+        activeTab,
+        currentResource,
+        workspaceContainer,
     } = useContext(MainContext);
+
+    const metadataPanelRef = useRef(null);
 
     const activeItem = NAV_ITEMS.find(
         (item) => item.key === activeTab
@@ -48,12 +53,24 @@ function Studio() {
     return (
         <div ref={studioRef} className="max-w-[1400px] mx-auto h-full min-h-0 overflow-hidden">
             <div
-                className="grid h-full min-h-0 grid-cols-1 gap-6 items-start bg-green-600 lg:grid-cols-[minmax(0,1fr)_var(--studio-panel-width)]"
+                className="grid h-full min-h-0 grid-cols-1 bg-gray-100 items-start lg:grid-cols-[minmax(0,1fr)_var(--studio-panel-width)]"
                 style={{ '--studio-panel-width': `${panelWidth}px` }}
             >
-                <p>Left</p>
+                <div ref={metadataPanelRef} className="h-full min-h-0 min-w-0 overflow-x-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2
+        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-300">
+                    {currentResource ? (
+                        <MetadataPanel
+                            workspaceContainer={workspaceContainer}
+                            centerPanelRef={metadataPanelRef}
+                            leftWidth={panelWidth}
+                            maxWidth={720}
+                        />
+                    ) : (
+                        <p className="p-4 text-white">Select a source to view its metadata.</p>
+                    )}
+                </div>
                 <div className="relative h-full min-h-0 min-w-0">
-                    <button
+                    {/* <button
                         type="button"
                         aria-label="Resize panel"
                         title="Resize panel"
@@ -64,7 +81,7 @@ function Studio() {
                         }}
                     >
                         <span className="h-16 w-2 cursor-col-resize rounded-full bg-gray-300 transition-colors hover:bg-primary-200" />
-                    </button>
+                    </button> */}
                     <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden">
                         {ActiveComponent && <ActiveComponent />}
                     </div>
