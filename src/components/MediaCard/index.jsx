@@ -86,12 +86,12 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 )}
             </div>
 
-            <div className="relative border-t border-gray-100 px-2.5 py-2">
+            <div className="relative border-t border-gray-100 px-2.5 py-2 flex items-center justify-between gap-2">
                 <p className="truncate text-[12px] text-gray-700" title={source?.source_path}>
                     {source?.source_path?.replace(/\.[^/.]+$/, "")}
                 </p>
                 {!isUploading && !isProjectReadOnly && (
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2 z-2">
+                    <div>
                         <ActionMenu
                             actions={[
                                 {
