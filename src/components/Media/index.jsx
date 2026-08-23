@@ -241,7 +241,7 @@ export default function Media() {
     }
 
     return (
-        <div className="max-w-[1400px] h-full mx-auto px-6 py-6 bg-white">
+        <div className="flex h-full min-h-0 max-w-[1400px] flex-col overflow-hidden mx-auto px-6 py-6 bg-white">
             {/* Sub-navigation */}
             <nav className="flex items-center gap-6 border-b border-gray-100 mb-5">
                 {MEDIA_NAV.map(({ key, label, icon: Icon }) => {
@@ -371,18 +371,20 @@ export default function Media() {
             )}
 
             {/* Card grid */}
-            <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))]">
-                {displayedSources.map((source) => (
-                    <MediaCard
-                        key={source.source_path}
-                        source={source}
-                        onOpen={onThumbnailClick}
-                        onToggle={handleCheckboxChange}
-                        onUpdate={openSourceUpdate}
-                        onDelete={deleteResource}
-                        isProjectReadOnly={isProjectReadOnly}
-                    />
-                ))}
+            <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+                <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))]">
+                    {displayedSources.map((source) => (
+                        <MediaCard
+                            key={source.source_path}
+                            source={source}
+                            onOpen={onThumbnailClick}
+                            onToggle={handleCheckboxChange}
+                            onUpdate={openSourceUpdate}
+                            onDelete={deleteResource}
+                            isProjectReadOnly={isProjectReadOnly}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );
