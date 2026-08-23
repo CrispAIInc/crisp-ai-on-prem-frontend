@@ -45,7 +45,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                     source.thumbnail.startsWith("blob") && source.file_type === "video" ? (
                         <video
                             src={source.thumbnail}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-cover rounded-xl"
                             muted
                             controls={false}
                             aria-label={source.source_path}
@@ -53,7 +53,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                     ) : (
                         <GsFile
                             gsUrl={source.thumbnail}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-cover rounded-xl"
                             alt={source.source_path}
                             isPrivate
                         />
