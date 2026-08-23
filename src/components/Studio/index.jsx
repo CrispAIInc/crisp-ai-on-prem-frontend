@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { NAV_ITEMS } from '../../navigation/navitems';
 import { MainContext } from '../../contexts/mainContext';
 import MetadataPanel from '../MetadataPanel';
+import EmptyWorkspace from "../EmptyWorkspace";
 
 function Studio() {
 
@@ -56,8 +57,7 @@ function Studio() {
                 className="grid h-full min-h-0 grid-cols-1 bg-gray-100 items-start lg:grid-cols-[minmax(0,1fr)_var(--studio-panel-width)]"
                 style={{ '--studio-panel-width': `${panelWidth}px` }}
             >
-                <div ref={metadataPanelRef} className="h-full min-h-0 min-w-0 overflow-x-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2
-        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-300">
+                <div ref={metadataPanelRef} className="h-full min-h-0 min-w-0 overflow-x-hidden overflow-y-auto">
                     {currentResource ? (
                         <MetadataPanel
                             workspaceContainer={workspaceContainer}
@@ -66,7 +66,7 @@ function Studio() {
                             maxWidth={720}
                         />
                     ) : (
-                        <p className="p-4 text-white">Select a source to view its metadata.</p>
+                        <EmptyWorkspace />
                     )}
                 </div>
                 <div className="relative h-full min-h-0 min-w-0">
