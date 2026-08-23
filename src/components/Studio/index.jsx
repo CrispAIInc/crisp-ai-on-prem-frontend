@@ -3,6 +3,7 @@ import { NAV_ITEMS } from '../../navigation/navitems';
 import { MainContext } from '../../contexts/mainContext';
 import MetadataPanel from '../MetadataPanel';
 import EmptyWorkspace from "../EmptyWorkspace";
+import MainStudio from '../MainStudio';
 
 function Studio() {
 
@@ -57,18 +58,9 @@ function Studio() {
                 className="grid h-full min-h-0 grid-cols-1 bg-gray-100 items-start lg:grid-cols-[minmax(0,1fr)_var(--studio-panel-width)]"
                 style={{ '--studio-panel-width': `${panelWidth}px` }}
             >
-                <div ref={metadataPanelRef} className="h-full min-h-0 min-w-0 overflow-x-hidden overflow-y-auto">
-                    {currentResource ? (
-                        <MetadataPanel
-                            workspaceContainer={workspaceContainer}
-                            centerPanelRef={metadataPanelRef}
-                            leftWidth={panelWidth}
-                            maxWidth={720}
-                        />
-                    ) : (
-                        <EmptyWorkspace />
-                    )}
-                </div>
+                <MainStudio
+                    panelWidth={panelWidth}
+                />
                 <div className="relative h-full min-h-0 min-w-0">
                     {/* <button
                         type="button"
