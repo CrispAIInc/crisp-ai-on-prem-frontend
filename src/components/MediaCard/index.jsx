@@ -96,7 +96,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                             actions={[
                                 {
                                     label: "Update",
-                                    icon: <Pencil size={16} />,
+                                    icon: <Pencil size={15} />,
                                     onClick: (event) => onUpdate(event, source),
                                 },
                                 {
