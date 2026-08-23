@@ -12,7 +12,7 @@ const EmptyWorkspace = () => {
         <div className="flex h-full w-full items-center justify-center bg-[#f5f6f8] px-6">
             <div className="flex max-w-xl flex-col items-center text-center">
                 {/* Icon */}
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 shadow-sm">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-200 to-primary-300 shadow-sm">
                     <Sparkles className="h-5 w-5 text-white" />
                 </div>
 
@@ -49,7 +49,7 @@ const EmptyWorkspace = () => {
                 </div>
 
                 {/* Hint */}
-                <div className="mt-7 flex items-center gap-1.5 text-[12px] text-gray-400">
+                <div className="mt-7 flex items-center gap-1.5 text-[12px] text-primary-300">
                     <span>Select a source from the right panel</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                 </div>
@@ -62,7 +62,7 @@ const FeatureCard = ({ icon: Icon, title, description }) => {
     return (
         <div className="flex flex-col items-center rounded-xl border border-gray-200/80 bg-white px-3 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
             <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-purple-50">
-                <Icon className="h-4 w-4 text-purple-600" strokeWidth={1.8} />
+                <Icon className="h-4 w-4 text-primary-300" strokeWidth={1.8} />
             </div>
 
             <span className="text-[12px] font-medium text-gray-700">

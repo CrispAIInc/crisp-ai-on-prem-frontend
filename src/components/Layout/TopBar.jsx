@@ -74,7 +74,7 @@ export default function TopBar() {
             aria-haspopup="menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
-            className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 text-white text-xs font-semibold flex items-center justify-center hover:opacity-90 transition-opacity"
+            className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs font-semibold flex items-center justify-center hover:opacity-90 transition-opacity"
           >
             {user?.firstName[0]?.toUpperCase()}{user?.lastName[0]?.toUpperCase()}
           </button>
