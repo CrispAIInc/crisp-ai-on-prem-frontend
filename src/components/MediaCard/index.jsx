@@ -18,7 +18,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
             onClick={(event) => onOpen(event, source)}
         >
             <div
-                className={`absolute top-2.5 left-2.5 z-10 flex h-5 w-5 items-center justify-center rounded border transition-colors ${isChecked
+                className={`absolute top-2.5 left-2.5 z-1 flex h-5 w-5 items-center justify-center rounded border transition-colors ${isChecked
                     ? "border-primary-300 bg-primary-300"
                     : "border-gray-300 bg-white/90 group-hover:border-gray-400"
                     }`}
@@ -91,7 +91,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                     {source?.source_path?.replace(/\.[^/.]+$/, "")}
                 </p>
                 {!isUploading && !isProjectReadOnly && (
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 z-2">
                         <ActionMenu
                             actions={[
                                 {
