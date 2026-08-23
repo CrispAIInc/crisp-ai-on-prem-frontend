@@ -58,9 +58,11 @@ function Studio() {
                 className="grid h-full min-h-0 grid-cols-1 bg-gray-100 items-start lg:grid-cols-[minmax(0,1fr)_var(--studio-panel-width)]"
                 style={{ '--studio-panel-width': `${panelWidth}px` }}
             >
-                <MainStudio
-                    panelWidth={panelWidth}
-                />
+                <div className="py-4 h-full min-h-0 min-w-0 overflow-x-hidden overflow-y-auto">
+                    <MainStudio
+                        panelWidth={panelWidth}
+                    />
+                </div>
                 <div className="relative h-full min-h-0 min-w-0">
                     {/* <button
                         type="button"
