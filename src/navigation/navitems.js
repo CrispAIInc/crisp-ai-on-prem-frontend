@@ -1,11 +1,11 @@
 import {
-    Image,
     Search,
-    Star,
+    Sparkles,
     MessageCircle,
-    Clapperboard,
+    Film,
     LineChart,
     BookOpen,
+    FolderOpen,
     PieChart,
 } from "lucide-react";
 
@@ -16,11 +16,11 @@ import Media from "../components/Media";
 
 
 export const NAV_ITEMS = [
-    { key: "media", label: "Media", icon: Image, component: Media },
+    { key: "media", label: "Media", icon: FolderOpen, component: Media },
     { key: "discovery", label: "Discovery", icon: Search },
-    { key: "metadata", label: "Contextual Metadata", icon: Star },
     { key: "wiz", label: "Crisp Wiz", icon: MessageCircle },
-    { key: "reels", label: "Reels", icon: Clapperboard },
+    { key: "metadata", label: "Contextual Metadata", icon: Sparkles },
+    { key: "reels", label: "Reels", icon: Film },
     { key: "analytics", label: "Analytics", icon: LineChart },
     { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen },
     { key: "business_intelligence", label: "Business Intelligence", icon: PieChart },
