@@ -1,8 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { NAV_ITEMS } from '../../navigation/navitems';
 import { MainContext } from '../../contexts/mainContext';
-import MetadataPanel from '../MetadataPanel';
-import EmptyWorkspace from "../EmptyWorkspace";
 import MainStudio from '../MainStudio';
 
 function Studio() {
@@ -13,11 +11,7 @@ function Studio() {
 
     const {
         activeTab,
-        currentResource,
-        workspaceContainer,
     } = useContext(MainContext);
-
-    const metadataPanelRef = useRef(null);
 
     const activeItem = NAV_ITEMS.find(
         (item) => item.key === activeTab

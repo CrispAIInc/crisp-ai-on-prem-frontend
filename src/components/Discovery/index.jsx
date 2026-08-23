@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { MainContext } from '../../contexts/mainContext';
+
 import { Search, Flame, Star } from "lucide-react";
+import IndexSearchBar from "../IndexSearchBar";
 
 /**
  * Discovery — search results panel (header + search box + grouped results).
  *
  * Card rendering is NOT this component's job: pass already-built card
  * elements in via `groups[].cards`. This component only owns the search
- * input, the empty/no-results states, group headers, and the grid/scroll
+ * bar, the empty/no-results states, group headers, and the grid/scroll
  * shell around whatever cards you give it.
  *
  * Fills 100% of its parent's height (parent must have a bounded height,
@@ -14,29 +17,46 @@ import { Search, Flame, Star } from "lucide-react";
  * surrounding app layout.
  *
  * Props:
- *  - query, onQueryChange: controlled search input (optional — falls back
+ *  - query, onQueryChange: controlled search text (optional — falls back
  *    to internal state if omitted)
- *  - placeholder: input placeholder text
+ *  - indexOptions: [{ id, label }] — optional list of indexes the user can
+ *    filter by, shown as removable chips. Omit/leave empty to hide index
+ *    selection entirely and fall back to a plain search bar.
+ *  - selectedIndexes, onSelectedIndexesChange: controlled index selection
+ *    (optional — falls back to internal state if omitted)
+ *  - onDiscover(query, selectedIndexes): fired when "Discover" runs
  *  - hasSearched: force the "not searched yet" vs "results" state. If
- *    omitted, inferred from whether `query` is non-empty.
+ *    omitted, inferred from whether Discover has been triggered yet.
  *  - groups: [{ id, label, icon?, tone?: 'relevant' | 'default', count?, cards: ReactNode[] }]
  *  - className: extra classes on the root element
  */
 export default function Discovery({
-    query: queryProp,
+    query,
     onQueryChange,
-    placeholder = "Search in all sources…",
+    selectedIndexes,
+    onSelectedIndexesChange,
+    onDiscover,
     groups = [],
     hasSearched: hasSearchedProp,
     className = "",
 }) {
-    const [internalQuery, setInternalQuery] = useState("");
-    const isControlled = queryProp !== undefined;
-    const query = isControlled ? queryProp : internalQuery;
-    const setQuery = onQueryChange ?? setInternalQuery;
 
-    const hasSearched = hasSearchedProp ?? query.trim().length > 0;
+    const {
+        categoryOptions
+    } = useContext(MainContext);
+
+
+    const [triggered, setTriggered] = useState(false);
+    const [lastQuery, setLastQuery] = useState("");
+
+    const hasSearched = hasSearchedProp ?? triggered;
     const hasResults = groups.some((g) => g.cards && g.cards.length > 0);
+
+    const handleDiscover = (q, indexes) => {
+        setTriggered(true);
+        setLastQuery(q);
+        onDiscover?.(q, indexes);
+    };
 
     return (
         <div className={`h-full min-h-0 flex flex-col overflow-hidden ${className}`}>
@@ -46,18 +66,16 @@ export default function Discovery({
                 <p className="text-xs text-ink-secondary mt-0.5">Ranked matches across your workspace catalog.</p>
             </div>
 
-            {/* Search box */}
+            {/* Search bar — index selection is optional, see indexOptions above */}
             <div className="px-[18px] pt-3.5 pb-3 shrink-0">
-                <div className="flex items-center gap-2 bg-surface-alt rounded-lg px-3 py-2.5 focus-within:ring-1 focus-within:ring-primary">
-                    <Search size={13} className="text-ink-muted shrink-0" />
-                    <input
-                        type="text"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder={placeholder}
-                        className="flex-1 bg-transparent outline-none text-[12.5px] text-ink placeholder:text-ink-muted"
-                    />
-                </div>
+                <IndexSearchBar
+                    query={query}
+                    onQueryChange={onQueryChange}
+                    indexOptions={categoryOptions}
+                    selectedIndexes={selectedIndexes}
+                    onSelectedIndexesChange={onSelectedIndexesChange}
+                    onDiscover={handleDiscover}
+                />
             </div>
 
             {/* Scrollable results area — this is the only part that scrolls */}
@@ -70,7 +88,7 @@ export default function Discovery({
                 ) : !hasResults ? (
                     <StatePlaceholder
                         title="No matches found"
-                        description={query ? `Nothing matched “${query}”. Try a different phrase.` : "Try a different search."}
+                        description={lastQuery ? `Nothing matched “${lastQuery}”. Try a different phrase.` : "Try a different search."}
                     />
                 ) : (
                     groups.map((group) => <ResultGroup key={group.id} group={group} />)

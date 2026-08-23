@@ -13,11 +13,12 @@ import {
  * COMPONENT LIST
  */
 import Media from "../components/Media";
+import Discovery from "../components/Discovery";
 
 
 export const NAV_ITEMS = [
     { key: "media", label: "Media", icon: FolderOpen, component: Media },
-    { key: "discovery", label: "Discovery", icon: Search },
+    { key: "discovery", label: "Discovery", icon: Search, component: Discovery },
     { key: "wiz", label: "Crisp Wiz", icon: MessageCircle },
     { key: "metadata", label: "Contextual Metadata", icon: Sparkles },
     { key: "reels", label: "Reels", icon: Film },
