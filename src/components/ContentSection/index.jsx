@@ -39,7 +39,7 @@ import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/Indeterminate
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
-const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
+export const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype, onUpdated }) => {
     const { theme, setKnowledgeBase } = useContext(MainContext);
 
     const { notify } = useToast();
@@ -74,13 +74,18 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
                     if (item.source_path === oldFilename) {
                         return {
                             ...item,
-                            thumbnail: response.thumbnail,
-                            [mediaKey]: response[mediaKey],
+                            ...(response.thumbnail ? { thumbnail: response.thumbnail } : {}),
+                            ...(mediaKey ? { [mediaKey]: response[mediaKey] } : {}),
                             source_path: `${filename}.${extension}`
                         };
                     }
                     return item;
                 });
+            });
+            onUpdated?.({
+                oldFilename,
+                newFilename: `${filename}.${extension}`,
+                response,
             });
             onHide();
             notify({

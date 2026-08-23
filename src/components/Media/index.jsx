@@ -1,11 +1,10 @@
 import { useContext, useState } from "react";
 import { Upload, FolderOpen, Check } from "lucide-react";
-import Modal from "react-bootstrap/Modal";
 import AddSourceModal from "../AddSourceModal";
 import FileUploaderModal from "../FileUploaderModal";
-import LoadingSpinner from "../LoadingSpinner";
 import SourceExplorer from "../SourceExplorer";
 import MediaCard from "../MediaCard";
+import { UpdateFilenameModal } from "../ContentSection";
 import { MainContext } from "../../contexts/mainContext.jsx";
 import { ProjectContext } from "../../contexts/projectContext.jsx";
 import { useToast } from "../../contexts/toastContext.jsx";
@@ -57,8 +56,7 @@ export default function Media() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [clickedIndex, setClickedIndex] = useState(null);
     const [sourceToUpdate, setSourceToUpdate] = useState(null);
-    const [updatedSourceName, setUpdatedSourceName] = useState("");
-    const [isUpdatingSource, setIsUpdatingSource] = useState(false);
+    const [filename, setFilename] = useState("");
 
     const checkedSources = displayedSources.filter((source) => source?.is_checked);
     const allChecked = displayedSources.length > 0 && checkedSources.length === displayedSources.length;
@@ -84,53 +82,23 @@ export default function Media() {
     function openSourceUpdate(event, source) {
         event.stopPropagation();
         setSourceToUpdate(source);
-        setUpdatedSourceName(source?.source_path?.split(".")?.slice(0, -1).join(".") || "");
+        setFilename(source?.source_path?.split(".")?.slice(0, -1).join(".") || "");
     }
 
     function closeSourceUpdate() {
-        if (!isUpdatingSource) {
-            setSourceToUpdate(null);
-            setUpdatedSourceName("");
-        }
+        setSourceToUpdate(null);
+        setFilename("");
     }
 
-    async function updateSourcePath() {
-        const trimmedName = updatedSourceName.trim();
-        if (!trimmedName || !sourceToUpdate) return;
-
-        const extension = sourceToUpdate.source_path.split(".").at(-1);
-        const newSourcePath = `${trimmedName}.${extension}`;
-        setIsUpdatingSource(true);
-
-        try {
-            const response = await makeApiRequest("/rename", "PATCH", JSON.stringify({
-                category: sourceToUpdate.category,
-                oldFilename: sourceToUpdate.source_path,
-                newFilename: newSourcePath,
-                filetype: sourceToUpdate.file_type,
-            }));
-            const mediaKey = ["video_url", "pdf_url", "thumbnail"].find((key) => response[key]);
-            const updateSource = (source) => source.source_path === sourceToUpdate.source_path
-                ? {
-                    ...source,
-                    source_path: newSourcePath,
-                    ...(mediaKey ? { [mediaKey]: response[mediaKey] } : {}),
-                }
-                : source;
-
-            setKnowledgeBase((previous) => previous.map(updateSource));
-            setDisplayedSources((previous) => previous.map(updateSource));
-            notify({ variant: "success", heading: "Source renamed successfully!" });
-            closeSourceUpdate();
-        } catch (error) {
-            notify({
-                variant: "error",
-                heading: "Oops!",
-                subheading: error?.response?.data?.error || "Unable to rename source.",
-            });
-        } finally {
-            setIsUpdatingSource(false);
-        }
+    function handleSourceUpdated({ oldFilename, newFilename, response }) {
+        const mediaKey = ["video_url", "pdf_url", "thumbnail"].find((key) => response[key]);
+        setDisplayedSources((previous) => previous.map((source) => source.source_path === oldFilename
+            ? {
+                ...source,
+                source_path: newFilename,
+                ...(mediaKey ? { [mediaKey]: response[mediaKey] } : {}),
+            }
+            : source));
     }
 
     async function handleUpload(event, fileFormat, files, isFineGrained = false) {
@@ -338,36 +306,17 @@ export default function Media() {
             )}
 
             {sourceToUpdate && (
-                <Modal show onHide={closeSourceUpdate} centered>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Update source path</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <label htmlFor="source-path" className="mb-1 block text-sm font-medium text-gray-700">
-                            Source filename
-                        </label>
-                        <div className="flex items-center gap-1">
-                            <input
-                                id="source-path"
-                                type="text"
-                                value={updatedSourceName}
-                                onChange={(event) => setUpdatedSourceName(event.target.value)}
-                                onKeyDown={(event) => event.key === "Enter" && updateSourcePath()}
-                                className="block w-full rounded-xl border border-gray-300 p-2 outline-none"
-                                autoFocus
-                            />
-                            <span className="text-gray-500">.{sourceToUpdate.source_path.split(".").at(-1)}</span>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <button type="button" onClick={closeSourceUpdate} disabled={isUpdatingSource} className="rounded-md px-3 py-2 text-gray-600 hover:bg-gray-100">
-                            Cancel
-                        </button>
-                        <button type="button" onClick={updateSourcePath} disabled={!updatedSourceName.trim() || isUpdatingSource} className="rounded-md px-3 py-2 text-primary-300 hover:bg-primary-50 disabled:cursor-not-allowed disabled:text-gray-400">
-                            {isUpdatingSource ? <LoadingSpinner isSmall /> : "Save title"}
-                        </button>
-                    </Modal.Footer>
-                </Modal>
+                <UpdateFilenameModal
+                    show
+                    onHide={closeSourceUpdate}
+                    filename={filename}
+                    setFilename={setFilename}
+                    extension={sourceToUpdate.source_path.split(".").at(-1)}
+                    sourceCategory={sourceToUpdate.category}
+                    oldFilename={sourceToUpdate.source_path}
+                    filetype={sourceToUpdate.file_type}
+                    onUpdated={handleSourceUpdated}
+                />
             )}
 
             {/* Card grid */}
