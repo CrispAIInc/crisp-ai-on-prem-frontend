@@ -219,7 +219,7 @@ export default function Media() {
                             key={key}
                             type="button"
                             className={[
-                                "flex items-center gap-1.5 pb-3 text-[13px] font-medium border-b-2 -mb-px transition-colors",
+                                "text-textColor-200 flex items-center gap-1.5 pb-3 text-[13px] font-medium border-b-2 -mb-px transition-colors",
                             ].join(" ")}
                             onClick={() => handleMediaNavClick(key)}
                         >
