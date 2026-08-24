@@ -160,10 +160,10 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
         title: "Visual Flow",
         content: "",
       },
-      combined_summary: {
-        title: "",
-        content: "",
-      },
+      // combined_summary: {
+      //   title: "",
+      //   content: "",
+      // },
       topic_summaries: {
         title: "",
         content: "",
@@ -201,7 +201,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     const TRANSLATABLE_KEYS = [
       "summary",
       "visual_summary",
-      "combined_summary",
+      // "combined_summary",
       "topic_summaries",
       "transcription",
       "caption",
