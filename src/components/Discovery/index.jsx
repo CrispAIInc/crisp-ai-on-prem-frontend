@@ -19,7 +19,7 @@ import IndexSearchBar from "../IndexSearchBar";
  * Props:
  *  - query, onQueryChange: controlled search text (optional — falls back
  *    to internal state if omitted)
- *  - indexOptions: [{ id, label }] — optional list of indexes the user can
+ *  - indexOptions: [{ id, value, name }] — optional list of indexes the user can
  *    filter by, shown as removable chips. Omit/leave empty to hide index
  *    selection entirely and fall back to a plain search bar.
  *  - selectedIndexes, onSelectedIndexesChange: controlled index selection
@@ -59,7 +59,7 @@ export default function Discovery({
     };
 
     return (
-        <div className={`h-full min-h-0 flex flex-col overflow-hidden ${className}`}>
+        <div className={`h-full min-h-0 flex flex-col overflow-hidden bg-white ${className}`}>
             {/* Header */}
             <div className="px-[18px] pt-4 pb-3 border-b border-border shrink-0">
                 <h2 className="font-display text-[14.5px] font-semibold text-ink">Search results</h2>
@@ -71,7 +71,7 @@ export default function Discovery({
                 <IndexSearchBar
                     query={query}
                     onQueryChange={onQueryChange}
-                    indexOptions={categoryOptions}
+                    indexOptions={categoryOptions?.filter(item => item.value !== "all")}
                     selectedIndexes={selectedIndexes}
                     onSelectedIndexesChange={onSelectedIndexesChange}
                     onDiscover={handleDiscover}
