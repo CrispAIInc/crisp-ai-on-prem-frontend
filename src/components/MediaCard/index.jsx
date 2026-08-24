@@ -84,6 +84,11 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                         <CircularProgressWithLabel value={source.progress} variant="determinate" isUploadFailed={false} />
                     </div>
                 )}
+                {typeof source?.score === "number" && (
+                    <span className="absolute bottom-2 left-2 rounded bg-primary-100/80 px-1.5 py-0.5 text-[10px] font-medium text-primary-300">
+                        {Math.round(source.score * 10)}% score
+                    </span>
+                )}
             </div>
 
             <div className="relative border-t border-gray-100 px-2.5 py-2 flex items-center justify-between gap-2">

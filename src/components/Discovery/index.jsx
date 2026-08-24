@@ -8,6 +8,7 @@ import makeApiRequest from '../../api';
 import { timeToSeconds } from '../../utils';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import { useToast } from '../../contexts/toastContext';
+import MediaCard from '../MediaCard';
 
 /**
  * Discovery — search results panel (header + search box + grouped results).
@@ -32,7 +33,6 @@ import { useToast } from '../../contexts/toastContext';
  *  - onDiscover(query, selectedIndexes): fired when "Discover" runs
  *  - hasSearched: force the "not searched yet" vs "results" state. If
  *    omitted, inferred from whether Discover has been triggered yet.
- *  - groups: [{ id, label, icon?, tone?: 'relevant' | 'default', count?, cards: ReactNode[] }]
  *  - className: extra classes on the root element
  */
 export default function Discovery({
@@ -40,7 +40,6 @@ export default function Discovery({
     onQueryChange,
     selectedIndexes,
     onSelectedIndexesChange,
-    groups = [],
     hasSearched: hasSearchedProp,
     className = "",
 }) {
@@ -50,11 +49,14 @@ export default function Discovery({
         currentResource,
         selectedCategory,
         selectedFormat,
+        discoveredSources,
         setDiscoveredSources,
         setShowSearchModal,
         knowledgeBase,
         isPlayerReady,
-        player
+        player,
+        handleCheckboxChange,
+        onThumbnailClick
     } = useContext(MainContext);
     const { handleSourceLinkClick } = useReferenceLinkClick();
     const { notify } = useToast();
@@ -96,7 +98,18 @@ export default function Discovery({
             else {
                 setSearchOutcome("found");
                 const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
-                setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page), score }, additionalSources: additional_sources });
+                setDiscoveredSources({
+                    mainSource: { ...source, timestamp, page: Number(page), score },
+                    additionalSources: additional_sources?.map(item => {
+                        const sourceItem = knowledgeBase.find(el => el.source_path === item?.source_path);
+                        return {
+                            ...sourceItem,
+                            timestamp: item?.timestamp,
+                            page: Number(item?.page) || -1,
+                            score: item?.score
+                        };
+                    })
+                });
 
                 handleSourceLinkClick(null, { ...source, timestamp, page });
                 if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
@@ -110,6 +123,7 @@ export default function Discovery({
                 heading: "Oops!",
                 subheading: error.message || "An error occured while discovering",
             });
+            setSearchOutcome("error");
         } finally {
             setIsSearching(false);
         }
@@ -152,16 +166,47 @@ export default function Discovery({
                     <div className="mt-4">
                         <DiscoveryNotFound searchQuestion={lastQuery} />
                     </div>
+                ) : discoveredSources?.mainSource ? (
+                    <>
+                        <ResultGroup
+                            label="Most relevant"
+                            icon={Flame}
+                            tone="relevant"
+                            count={1}
+                            cards={[
+                                <MediaCard
+                                    key={discoveredSources.mainSource.source_path}
+                                    source={discoveredSources.mainSource}
+                                    onOpen={onThumbnailClick}
+                                    onToggle={handleCheckboxChange}
+                                    isProjectReadOnly={true}
+                                />
+                            ]}
+                        />
+                        <ResultGroup
+                            label="Additional sources"
+                            icon={Star}
+                            count={discoveredSources.additionalSources?.length || 0}
+                            cards={(discoveredSources.additionalSources || []).map((source, index) => (
+                                <MediaCard
+                                    key={`${source.source_path}-${index}`}
+                                    source={source}
+                                    onOpen={onThumbnailClick}
+                                    onToggle={handleCheckboxChange}
+                                    isProjectReadOnly={true}
+                                />
+                            ))}
+                        />
+                    </>
                 ) : (
-                    groups.map((group) => <ResultGroup key={group.id} group={group} />)
+                    null
                 )}
             </div>
         </div>
     );
 }
 
-function ResultGroup({ group }) {
-    const { label, icon: Icon = Star, tone = "default", count, cards = [] } = group;
+function ResultGroup({ label, icon: Icon = Star, tone = "default", count, cards = [] }) {
     if (!cards.length) return null;
 
     return (
