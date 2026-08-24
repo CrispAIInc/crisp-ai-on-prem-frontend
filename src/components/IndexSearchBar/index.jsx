@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { X, ChevronDown, Search, CheckIcon } from "lucide-react";
+import { X, ChevronDown, Search } from "lucide-react";
+import LoadingSpinner from '../LoadingSpinner';
 
 /**
  * IndexSearchBar — "Search in all sources" input that optionally supports
@@ -29,6 +30,7 @@ export default function IndexSearchBar({
     selectedIndexes: selectedProp,
     onSelectedIndexesChange,
     onDiscover,
+    isSearching
 }) {
     const [internalQuery, setInternalQuery] = useState("");
     const [internalSelected, setInternalSelected] = useState([]);
@@ -119,7 +121,13 @@ export default function IndexSearchBar({
                     onClick={() => onDiscover?.(query, selectedIndexes)}
                     className="shrink-0 rounded-[10px] px-2 py-1 text-xs font-bold text-white bg-gradient-to-r from-primary-200 to-primary-300 hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
                 >
-                    <Search size={13} />
+                    {
+                        isSearching ? (
+                            <LoadingSpinner isSmall />
+                        ) : (
+                            <Search size={13} />
+                        )
+                    }
                     Discover
                 </button>
             </div>

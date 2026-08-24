@@ -3,6 +3,11 @@ import { MainContext } from '../../contexts/mainContext';
 
 import { Search, Flame, Star } from "lucide-react";
 import IndexSearchBar from "../IndexSearchBar";
+import DiscoveryNotFound from "../DiscoveryNotFound";
+import makeApiRequest from '../../api';
+import { timeToSeconds } from '../../utils';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
+import { useToast } from '../../contexts/toastContext';
 
 /**
  * Discovery — search results panel (header + search box + grouped results).
@@ -35,27 +40,79 @@ export default function Discovery({
     onQueryChange,
     selectedIndexes,
     onSelectedIndexesChange,
-    onDiscover,
     groups = [],
     hasSearched: hasSearchedProp,
     className = "",
 }) {
 
     const {
-        categoryOptions
+        categoryOptions,
+        currentResource,
+        selectedCategory,
+        selectedFormat,
+        setDiscoveredSources,
+        setShowSearchModal,
+        knowledgeBase,
+        isPlayerReady,
+        player
     } = useContext(MainContext);
+    const { handleSourceLinkClick } = useReferenceLinkClick();
+    const { notify } = useToast();
 
 
     const [triggered, setTriggered] = useState(false);
     const [lastQuery, setLastQuery] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
+    const [searchOutcome, setSearchOutcome] = useState(null);
 
     const hasSearched = hasSearchedProp ?? triggered;
-    const hasResults = groups.some((g) => g.cards && g.cards.length > 0);
 
-    const handleDiscover = (q, indexes) => {
+    const handleDiscover = async (q, indexes) => {
         setTriggered(true);
         setLastQuery(q);
-        onDiscover?.(q, indexes);
+        setSearchOutcome(null);
+
+        setIsSearching(true);
+
+        try {
+            const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+                selectedCategory,
+                searchQuestion: q,
+                currentResource,
+                selectedFormat,
+                indexes
+            })
+            );
+
+            if (!success) {
+                throw new Error(message);
+            }
+
+
+            if (!found) {
+                setDiscoveredSources(null);
+                setSearchOutcome("not-found");
+            }
+            else {
+                setSearchOutcome("found");
+                const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
+                setDiscoveredSources({ mainSource: { ...source, timestamp, page: Number(page), score }, additionalSources: additional_sources });
+
+                handleSourceLinkClick(null, { ...source, timestamp, page });
+                if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+            }
+
+            setShowSearchModal(true);
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error.message || "An error occured while discovering",
+            });
+        } finally {
+            setIsSearching(false);
+        }
     };
 
     return (
@@ -75,6 +132,7 @@ export default function Discovery({
                     selectedIndexes={selectedIndexes}
                     onSelectedIndexesChange={onSelectedIndexesChange}
                     onDiscover={handleDiscover}
+                    isSearching={isSearching}
                 />
             </div>
 
@@ -85,11 +143,15 @@ export default function Discovery({
                         title="Search to discover sources"
                         description="Type a topic, name, or phrase above to find matching moments across your catalog."
                     />
-                ) : !hasResults ? (
+                ) : isSearching ? (
                     <StatePlaceholder
-                        title="No matches found"
-                        description={lastQuery ? `Nothing matched “${lastQuery}”. Try a different phrase.` : "Try a different search."}
+                        title="Searching your sources"
+                        description="Looking for matching moments across your catalog."
                     />
+                ) : searchOutcome === "not-found" ? (
+                    <div className="mt-4">
+                        <DiscoveryNotFound searchQuestion={lastQuery} />
+                    </div>
                 ) : (
                     groups.map((group) => <ResultGroup key={group.id} group={group} />)
                 )}

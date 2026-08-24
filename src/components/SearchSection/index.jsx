@@ -13,7 +13,8 @@ import { timeToSeconds } from '../../utils.js';
 
 const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = false, }) => {
 
-    const { currentResource,
+    const {
+        currentResource,
         selectedCategory,
         selectedFormat,
         categoryOptionsWithoutAll,
