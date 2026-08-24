@@ -3,6 +3,20 @@ import { NAV_ITEMS } from '../../navigation/navitems';
 import { MainContext } from '../../contexts/mainContext';
 import MainStudio from '../MainStudio';
 
+
+{/* <button
+    type="button"
+    aria-label="Resize panel"
+    title="Resize panel"
+    className="absolute -left-3 top-0 z-10 hidden h-full w-6 items-center justify-center lg:flex"
+    onPointerDown={(event) => {
+        event.preventDefault();
+        setIsDragging(true);
+    }}
+>
+    <span className="h-16 w-2 cursor-col-resize rounded-full bg-gray-300 transition-colors hover:bg-primary-200" />
+</button> */}
+
 function Studio() {
 
     const studioRef = useRef(null);
@@ -58,18 +72,6 @@ function Studio() {
                     />
                 </div>
                 <div className="relative h-full min-h-0 min-w-0">
-                    {/* <button
-                        type="button"
-                        aria-label="Resize panel"
-                        title="Resize panel"
-                        className="absolute -left-3 top-0 z-10 hidden h-full w-6 items-center justify-center lg:flex"
-                        onPointerDown={(event) => {
-                            event.preventDefault();
-                            setIsDragging(true);
-                        }}
-                    >
-                        <span className="h-16 w-2 cursor-col-resize rounded-full bg-gray-300 transition-colors hover:bg-primary-200" />
-                    </button> */}
                     <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden">
                         {ActiveComponent && <ActiveComponent />}
                     </div>
