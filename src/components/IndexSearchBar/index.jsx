@@ -69,7 +69,7 @@ export default function IndexSearchBar({
 
     return (
         <div ref={rootRef} className="relative">
-            <div className="flex items-stretch justify-between gap-1.5 rounded-xl bg-gray-100 border border-border p-1">
+            <div className="flex items-stretch justify-between gap-1.5 rounded-xl bg-gray-100 !border !border-gray-200 p-1">
                 <div className="flex-1 flex flex-wrap items-center gap-1.5 bg-surface rounded-[10px] pl-2.5 pr-1.5 py-1.5 min-h-[38px]">
                     {selectedIndexes.map((value) => {
                         const opt = indexOptions.find((o) => o.value === value);

@@ -120,7 +120,7 @@ function ResultGroup({ group }) {
 function StatePlaceholder({ title, description }) {
     return (
         <div className="flex flex-col items-center justify-center text-center gap-2.5 h-full py-8 px-2">
-            <div className="w-11 h-11 rounded-xl bg-surface-alt flex items-center justify-center text-ink-muted shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-ink-muted shrink-0">
                 <Search size={18} />
             </div>
             <strong className="text-ink text-[13px] font-semibold">{title}</strong>
