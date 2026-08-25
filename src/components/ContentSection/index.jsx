@@ -60,10 +60,7 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
             setIsLoading(true);
 
             const payload = {
-                category: sourceCategory,
-                oldFilename,
                 newFilename: filename + "." + extension,
-                filetype
             };
             const response = await makeApiRequest(`/assets/${knowledgeBase.find(item => item.source_path === oldFilename)?.source_id}`, 'PATCH', JSON.stringify(payload));
 
@@ -276,7 +273,7 @@ const ContentSection = ({
             // remove source from metadata panel if it's active
             removeSourceFromMetadataPanel(items);
 
-            await makeApiRequest(`/assets/${items[0].asset_id}`, "DELETE");
+            await makeApiRequest(`/assets/${items[0].source_id}`, "DELETE");
             setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
 
             notify({
