@@ -92,9 +92,9 @@ export default function ContextualMetadata({
 
                 <CollapsibleSection title="Advanced settings" defaultOpen>
                     <div>
-                        <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2 mb-2">
                             <label className="text-[12px] font-medium text-ink-secondary">Verbosity</label>
-                            <span className="text-[12px] font-semibold text-primary-300">{formatDuration(verbosity)}</span>
+                            <span className="text-[12px] font-semibold px-1 rounded-md bg-primary-100/50 text-primary-300">{formatDuration(verbosity)}</span>
                         </div>
                         <VerbositySlider value={verbosity} onChange={setVerbosity} />
                         <p className="text-[11.5px] text-ink-muted mt-3">
@@ -114,9 +114,6 @@ export default function ContextualMetadata({
                     <Sparkles size={14} />
                     Generate metadata
                 </button>
-                <p className="text-center text-[11px] text-ink-muted mt-2">
-                    Uses {sourceIds.length || 0} of your source{sourceIds.length === 1 ? "" : "s"}&apos; transcript + selected context
-                </p>
             </div>
         </div>
     );
