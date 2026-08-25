@@ -174,7 +174,7 @@ function SourceExplorerBody({
                         categoryOptions.map((option, index) => {
                             return (
                                 <Chip
-                                    key={index}
+                                    key={option.id}
                                     content={option.label}
                                     handleClick={() => handleIndexChange(option.value)}
                                     cssClasses={`text-xs cursor-pointer ${theme === 'light' ? '!border !border-primary-100' : '!border !border-textColor-200/20'}`}
