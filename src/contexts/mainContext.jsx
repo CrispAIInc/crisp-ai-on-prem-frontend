@@ -97,11 +97,10 @@ export default function MainProvider({ children, theme, setTheme }) {
             setisKnowledgeBaseFetching(true);
             try {
                 axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-                const { uploaded_data } = await makeApiRequest(
-                    "/assets",
-                    "GET"
+                const data = await makeApiRequest(
+                    "/assets"
                 );
-                setKnowledgeBase(uploaded_data.map(d => ({
+                setKnowledgeBase(data.map(d => ({
                     ...d,
                     category: [categoryOptions.find(item => item.id === d.index_id)?.value]
                 })));
