@@ -762,7 +762,7 @@ const ContentSection = ({
 
             files.forEach((file, index) => {
                 formData.append("file", file);
-                formData.append("category", selectedCategory);
+                formData.append("index_id", categoryOptions.find(item => item.value === selectedCategory)?.id);
                 formData.append("fileType", file.type);
                 formData.append("session_id", sessionId);
                 formData.append("isDetailedMode", isDetailedMode);
@@ -836,7 +836,7 @@ const ContentSection = ({
             }, 10000);
 
             // await delay(3000);
-            const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
+            const { uploaded_data } = await makeApiRequest("/assets", "POST", formData, { 'Content-type': "multipart/form-data" });
 
             // ----------  Update knowledge base ----------
             setKnowledgeBase(prev => [...uploaded_data, ...prev.slice(totalFiles)]);
