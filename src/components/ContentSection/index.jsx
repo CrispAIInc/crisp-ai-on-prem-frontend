@@ -782,6 +782,7 @@ const ContentSection = ({
 
                 return {
                     category: [selectedCategory],
+                    index_id: categoryOptions.find(item => item.value === selectedCategory)?.id,
                     file_type: getFileType(file.type),
                     source_path:
                         totalSourcesWithSameFilename > 0
