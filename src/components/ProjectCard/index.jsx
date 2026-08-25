@@ -12,6 +12,9 @@ import ProjectNameUpdaterModal from "../ProjectNameUpdatedModal";
 import useProject from '../../hooks/useProject';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import { AuthContext } from '../../contexts/authContext';
+import Modal from 'react-bootstrap/Modal';
+
+import { Sparkles } from "lucide-react";
 
 const PROJECT_OWNER_ID = "uCWw2cICQzb2qyqWkwSPqPTzBkV2";
 
@@ -24,7 +27,30 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+    const [isExampleDisclaimerOpen, setIsExampleDisclaimerOpen] = useState(false);
     const [projectThumbnail, setProjectThumbnail] = useState(null);
+
+    const isExampleProject = project?.is_shared && userId !== PROJECT_OWNER_ID;
+
+    const enterProject = () => {
+        const now = new Date();
+        setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
+            if (prev?.project_id === project.project_id) {
+                return {
+                    ...prev,
+                    updated_at: now
+                };
+            } return prev;
+        });
+    };
+
+    const handleProjectClick = () => {
+        if (isExampleProject) {
+            setIsExampleDisclaimerOpen(true);
+            return;
+        }
+        enterProject();
+    };
 
     const handleDeleteProject = async (projectId) => {
         setIsDeleting(true);
@@ -62,17 +88,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                 }}
                 className={`bg-no-repeat bg-center relative rounded-2xl p-3 min-w-80 h-48 cursor-pointer ${project?.is_shared && 'animate-glow-multiple'
                     }`}
-                onClick={() => {
-                    const now = new Date();
-                    setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
-                        if (prev?.project_id === project.project_id) {
-                            return {
-                                ...prev,
-                                updated_at: now
-                            };
-                        } return prev;
-                    });
-                }}
+                onClick={handleProjectClick}
             >
                 {/* delete overlap */}
                 {isDeleting && <div className="absolute inset-0 flex flex-col items-center justify-center w-full h-full bg-white/80">
@@ -110,17 +126,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                                     ]}
                                 />
                                 <div className="relative flex flex-col p-2 rounded-full shadow-lg cursor-pointer hover:bg-white/20 backdrop-blur">
-                                    <ArrowForwardIosIcon onClick={() => {
-                                        const now = new Date();
-                                        setCurrentProject({ ...project, updated_at: now }); setProjects(prev => {
-                                            if (prev?.project_id === project.project_id) {
-                                                return {
-                                                    ...prev,
-                                                    updated_at: now
-                                                };
-                                            } return prev;
-                                        });
-                                    }} className="font-bold text-purple-500 cursor-pointer backdrop-blur" />
+                                    <ArrowForwardIosIcon onClick={handleProjectClick} className="font-bold text-purple-500 cursor-pointer backdrop-blur" />
                                 </div>
                             </>
                         )}
@@ -159,6 +165,44 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                     isDeleting={isDeleting}
                 />
             }
+            {isExampleDisclaimerOpen && <Modal
+                show={isExampleDisclaimerOpen}
+                onHide={() => setIsExampleDisclaimerOpen(false)}
+                size="md"
+                centered
+                aria-labelledby="example-project-disclaimer-title"
+            >
+                <Modal.Body>
+                    <div className="flex flex-col gap-3 text-textColor-300">
+                        <div className="flex items-center gap-2">
+                            <Sparkles size={18} />
+                            <h2 id="example-project-disclaimer-title" className="mb-0 text-xl font-semibold">Example Project</h2>
+                        </div>
+                        <p className="mb-0 text-sm">
+                            This project is provided as an example. It is read-only and cannot be edited.
+                        </p>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="flex items-center justify-end gap-2">
+                    <button
+                        type="button"
+                        onClick={() => setIsExampleDisclaimerOpen(false)}
+                        className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-textColor-300 hover:bg-gray-50"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setIsExampleDisclaimerOpen(false);
+                            enterProject();
+                        }}
+                        className="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+                    >
+                        Continue
+                    </button>
+                </Modal.Footer>
+            </Modal>}
         </>
     );
 };

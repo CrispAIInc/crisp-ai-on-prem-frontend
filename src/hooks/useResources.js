@@ -49,24 +49,27 @@ export default function useResources(config = {}) {
             }
         },
         getIndexes: async () => {
-            let { indexes } = await makeApiRequest("/get-indexes");
+            let { indexes } = await makeApiRequest("/indexes");
             // transform the indexes to the format value/label
-            indexes = indexes.map((index) => {
+            indexes = indexes.map(({ id, name }) => {
                 return {
-                    value: index,
-                    label: index.charAt(0).toUpperCase() + index.slice(1),
+                    id,
+                    value: name,
+                    label: name.charAt(0).toUpperCase() + name.slice(1),
                 };
             });
 
             indexes = [{
+                id: "N/A",
                 value: "all",
                 label: "All"
             }, ...indexes];
 
             if (config.setCategoryOptions) {
-                config.setCategoryOptions(sortStrings(pluck(indexes, "label")).map(item => ({
-                    label: item,
-                    value: item.charAt(0).toLowerCase() + item.slice(1),
+                config.setCategoryOptions(sortStrings(pluck(indexes, "label")).map(label => ({
+                    id: indexes.find(item => item.label === label)?.id,
+                    label: label,
+                    value: label.charAt(0).toLowerCase() + label.slice(1),
                 })));
             }
         }

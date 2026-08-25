@@ -88,7 +88,7 @@ function App() {
                 </PrivateRoute>
               } />
 
-              {/* <Route path="/sign-up" element={<AuthRoute><RegisterPage theme={theme} setTheme={setTheme} /></AuthRoute>} /> */}
+              <Route path="/sign-up" element={<AuthRoute><RegisterPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
               <Route path="/verify" element={<AuthRoute><VerifyAccount theme={theme} setTheme={setTheme} /></AuthRoute>} />
               <Route path="/login" element={<AuthRoute><LoginPage theme={theme} setTheme={setTheme} /></AuthRoute>} />
               <Route path="/forgot-password" element={<AuthRoute><ForgotPasswordPage theme={theme} setTheme={setTheme} /></AuthRoute>} />

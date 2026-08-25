@@ -25,7 +25,8 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         searchQuestion,
         setSearchQuestion,
         isPlayerReady,
-        player
+        player,
+        categoryOptions
     } = useContext(MainContext);
 
     const [currentSourceSearchQuesry, setCurrentSourceSearchQuery] = useState("");
@@ -49,12 +50,15 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
         event.preventDefault();
         setIsSearching(true);
         try {
-            const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+            const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/discover', 'POST', JSON.stringify({
                 selectedCategory,
                 searchQuestion: fromMetadata ? currentSourceSearchQuesry : searchQuestion,
                 currentResource: isGlobalSearch ? null : currentResource,
                 selectedFormat,
-                indexes: selectedDiscoveryIndexes
+                indexes: selectedDiscoveryIndexes.map(item => {
+                    let indexId = categoryOptions.find(idx => idx.value === item)?.id;
+                    return indexId;
+                })
             })
             );
 

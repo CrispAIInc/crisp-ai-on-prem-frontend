@@ -34,19 +34,29 @@ export function IndexModal({ show, onHide, handleUpload }) {
         }
 
         try {
-            const newIndex = await makeApiRequest('/create-new-index', 'post', { category: indexName });
-            setIndexName(newIndex?.category);
-            getIndexes();
+            const { success, message, id } = await makeApiRequest('/indexes', 'POST', { index: indexName });
+
+            if (!success) {
+                throw new Error(message);
+            }
+
+            setCategoryOptions(prev => [
+                ...prev,
+                {
+                    id,
+                    label: indexName.charAt(0).toUpperCase() + indexName.slice(1),
+                    value: indexName.charAt(0).toLowerCase() + indexName.slice(1)
+                }
+            ]);
             notify({
                 variant: "success",
-                heading: "Index created!",
+                heading: message || "Index created!",
             });
         } catch (error) {
             console.log(error.response.data.error);
             notify({
                 variant: "error",
-                heading: "Oops!",
-                subheading: "Error creating index",
+                heading: error.message || "Couldn't create index. Please try again.",
             });
             setIsLoading(false);
         } finally {
