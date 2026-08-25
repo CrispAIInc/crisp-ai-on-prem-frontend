@@ -100,10 +100,7 @@ export default function MainProvider({ children, theme, setTheme }) {
                 const data = await makeApiRequest(
                     "/assets"
                 );
-                setKnowledgeBase(data.map(d => ({
-                    ...d,
-                    category: [categoryOptions.find(item => item.id === d.index_id)?.value]
-                })));
+                setKnowledgeBase(data);
             } catch (error) {
                 console.warn(error);
             } finally {
