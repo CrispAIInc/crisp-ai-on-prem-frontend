@@ -14,13 +14,14 @@ import {
  */
 import Media from "../components/Media";
 import Discovery from "../components/Discovery";
+import ContextualMetadata from "../components/ContextualMetadata";
 
 
 export const NAV_ITEMS = [
     { key: "media", label: "Media", icon: FolderOpen, component: Media },
     { key: "discovery", label: "Discovery", icon: Search, component: Discovery },
     { key: "wiz", label: "Interaction", icon: MessageCircle },
-    { key: "metadata", label: "Contextual Metadata", icon: Sparkles },
+    { key: "metadata", label: "Contextual Metadata", icon: Sparkles, component: ContextualMetadata },
     { key: "shorts", label: "Shorts", icon: Film },
     { key: "analytics", label: "Analytics", icon: LineChart },
     { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen },
