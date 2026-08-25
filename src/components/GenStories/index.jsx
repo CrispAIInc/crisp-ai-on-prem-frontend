@@ -43,7 +43,7 @@ function GenStories({
                     `/handle-embeddings`,
                     "post",
                     JSON.stringify({
-                        sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, index_id: item?.index_id })),
+                        sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_id: item?.source_id, index_id: item?.index_id })),
                     })
                 );
             }

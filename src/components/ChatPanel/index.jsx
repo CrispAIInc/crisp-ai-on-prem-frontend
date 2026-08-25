@@ -402,7 +402,7 @@ const ChatPanel = () => {
           `/handle-embeddings`,
           "post",
           JSON.stringify({
-            sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_path: item?.source_path, index_id: item?.index_id })),
+            sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_id: item?.source_id, index_id: item?.index_id })),
           })
         );
       }
