@@ -98,10 +98,13 @@ export default function MainProvider({ children, theme, setTheme }) {
             try {
                 axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
                 const data = await makeApiRequest(
-                    "/content",
+                    "/assets",
                     "GET"
                 );
-                setKnowledgeBase(data);
+                setKnowledgeBase(data.map(item => ({
+                    ...data,
+                    category: [categoryOptions.find(item => item.id === data.index_id)]
+                })));
             } catch (error) {
                 console.warn(error);
             } finally {
