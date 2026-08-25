@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { MainContext } from '../../contexts/mainContext';
 
-import { Search, Flame, Star } from "lucide-react";
+import { Search, SearchX, Flame, Star } from "lucide-react";
 import IndexSearchBar from "../IndexSearchBar";
 import DiscoveryNotFound from "../DiscoveryNotFound";
 import makeApiRequest from '../../api';
@@ -9,6 +9,7 @@ import { timeToSeconds } from '../../utils';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import { useToast } from '../../contexts/toastContext';
 import MediaCard from '../MediaCard';
+import AnimatedText from '../AnimatedText';
 
 /**
  * Discovery — search results panel (header + search box + grouped results).
@@ -77,12 +78,16 @@ export default function Discovery({
         setIsSearching(true);
 
         try {
-            const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/process-query', 'POST', JSON.stringify({
+
+            const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/discover', 'POST', JSON.stringify({
                 selectedCategory,
                 searchQuestion: q,
                 currentResource,
                 selectedFormat,
-                indexes
+                indexes: indexes.map(item => {
+                    let indexId = categoryOptions.find(idx => idx.value === item)?.id;
+                    return indexId;
+                })
             })
             );
 
@@ -162,6 +167,12 @@ export default function Discovery({
                         title="Searching your sources"
                         description="Looking for matching moments across your catalog."
                     />
+                ) : searchOutcome === "error" ? (
+                    <StatePlaceholder
+                        title="Couldn't generate results"
+                        description="Please check your internet and try again later."
+                        hasError
+                    />
                 ) : searchOutcome === "not-found" ? (
                     <div className="mt-4">
                         <DiscoveryNotFound searchQuestion={lastQuery} />
@@ -224,13 +235,25 @@ function ResultGroup({ label, icon: Icon = Star, tone = "default", count, cards 
     );
 }
 
-function StatePlaceholder({ title, description }) {
+function StatePlaceholder({ title, description, animated = false, hasError = false }) {
     return (
         <div className="flex flex-col items-center justify-center text-center gap-2.5 h-full py-8 px-2">
             <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-ink-muted shrink-0">
-                <Search size={18} />
+                {
+                    hasError ? (
+                        <SearchX size={18} />
+                    ) : (
+                        <Search size={18} />
+                    )
+                }
             </div>
-            <strong className="text-ink text-[13px] font-semibold">{title}</strong>
+            {
+                animated ? (
+                    <AnimatedText text={title} />
+                ) : (
+                    <strong className="text-ink text-[13px] font-semibold">{title}</strong>
+                )
+            }
             <span className="text-[12.5px] text-ink-muted max-w-[240px]">{description}</span>
         </div>
     );

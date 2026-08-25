@@ -4,7 +4,6 @@ import {
     Play,
     Star,
     Lightbulb,
-    ArrowRight,
 } from "lucide-react";
 
 const EmptyWorkspace = () => {
@@ -50,8 +49,7 @@ const EmptyWorkspace = () => {
 
                 {/* Hint */}
                 <div className="mt-7 flex items-center gap-1.5 text-[12px] text-primary-300">
-                    <span>Select a source from the right panel</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    <span>Select a source from the left panel</span>
                 </div>
             </div>
         </div>
