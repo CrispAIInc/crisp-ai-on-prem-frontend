@@ -103,7 +103,7 @@ export default function MainProvider({ children, theme, setTheme }) {
                 );
                 setKnowledgeBase(uploaded_data.map(d => ({
                     ...d,
-                    category: [categoryOptions.find(item => item.id === d.index_id)]
+                    category: [categoryOptions.find(item => item.id === d.index_id)?.value]
                 })));
             } catch (error) {
                 console.warn(error);
