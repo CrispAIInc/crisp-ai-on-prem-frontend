@@ -70,26 +70,28 @@ function SourceExplorerBody({
                 await deleteResource(null, sourcesToDelete);
             }
 
-            await makeApiRequest(`/remove-index`, 'post', { index: indexToRemove });
+            const { success, message } = await makeApiRequest(`/indexes/${categoryOptions.find(idx => idx.value === indexToRemove)?.id}`, 'DELETE');
 
-            getIndexes();
+            if (!success) {
+                throw new Error(message);
+            }
 
             // CHANGE CURRENTCATEGORY IF IT IS THE DELETING ONE
             if (selectedCategory === indexToRemove) {
                 setSelectedCategory("all");
             }
 
+            setCategoryOptions(prev => [...prev.filter(item => item.value !== indexToRemove)]);
             notify({
                 variant: "success",
-                heading: "Index deleted!",
+                heading: message || "Index deleted!",
             });
             setShowRemoveIndexModal(false);
         } catch (error) {
             console.log(error);
             notify({
                 variant: "error",
-                heading: "Oops!",
-                subheading: error?.response?.data?.error || 'Error deleting index',
+                heading: error.message || "Couldn't delete index. Please try again later.",
             });
         } finally {
             setIsIndexDeleting(false);

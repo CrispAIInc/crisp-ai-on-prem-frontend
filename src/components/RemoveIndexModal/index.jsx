@@ -20,18 +20,23 @@ function RemoveIndexModal({ show, onHide, index, deleteResource, setIsIndexDelet
             setIsIndexDeleting(true);
             const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(index));
             if (itemsToBeDeleted.length > 0) await deleteResource(null, itemsToBeDeleted);
-            await makeApiRequest(`/remove-index`, 'post', { index: index });
-            getIndexes();
+
+            const { success, message } = await makeApiRequest(`/indexes/${setCategoryOptions.find(idx => idx.value === index)?.id}`, 'DELETE');
+
+            if (!success) {
+                throw new Error(message);
+            }
+
+            setCategoryOptions(prev => [...prev.filter(item => item.value !== index)]);
             notify({
                 variant: "success",
-                heading: "Index deleted!",
+                heading: message || "Index deleted!",
             });
         } catch (error) {
             console.log(error.response.data.error);
             notify({
                 variant: "error",
-                heading: "Oops!",
-                subheading: error?.response?.data?.eroor || "An error occured while deleting eindex",
+                heading: error.message || "Couldn't delete index. Please try again later.",
             });
         } finally {
             setIsIndexDeleting(false);
