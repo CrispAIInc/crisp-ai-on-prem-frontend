@@ -101,9 +101,9 @@ export default function MainProvider({ children, theme, setTheme }) {
                     "/assets",
                     "GET"
                 );
-                setKnowledgeBase(data.map(item => ({
-                    ...data,
-                    category: [categoryOptions.find(item => item.id === data.index_id)]
+                setKnowledgeBase(data.map(d => ({
+                    ...d,
+                    category: [categoryOptions.find(item => item.id === d.index_id)]
                 })));
             } catch (error) {
                 console.warn(error);
