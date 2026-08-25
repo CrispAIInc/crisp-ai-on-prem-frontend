@@ -94,7 +94,7 @@ export default function ContextualMetadata({
                     <div>
                         <div className="flex items-center justify-between mb-2">
                             <label className="text-[12px] font-medium text-ink-secondary">Verbosity</label>
-                            <span className="text-[12px] font-semibold text-primary">{formatDuration(verbosity)}</span>
+                            <span className="text-[12px] font-semibold text-primary-300">{formatDuration(verbosity)}</span>
                         </div>
                         <VerbositySlider value={verbosity} onChange={setVerbosity} />
                         <p className="text-[11.5px] text-ink-muted mt-3">
@@ -109,7 +109,7 @@ export default function ContextualMetadata({
                     type="button"
                     disabled={!canGenerate}
                     onClick={() => onGenerate?.({ sourceIds, context, outputFormats, verbosity })}
-                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold text-white bg-grad hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                     <Sparkles size={14} />
                     Generate metadata

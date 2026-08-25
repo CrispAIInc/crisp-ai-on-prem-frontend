@@ -19,7 +19,7 @@ export default function VerbositySlider({ value, onChange }) {
                 step={1}
                 value={value}
                 onChange={(e) => onChange(Number(e.target.value))}
-                className="w-full accent-primary cursor-pointer"
+                className="w-full accent-primary-300 cursor-pointer"
             />
             <div className="flex justify-between mt-1.5">
                 <span className="text-[11.5px] text-ink-muted">{formatDuration(VERBOSITY_MIN)}</span>
