@@ -61,6 +61,10 @@ export default function ContextualMetadata({
         return s === 0 ? `${m}m` : `${m}m ${s}s`;
     }
 
+    function generateMetadata({ sourceIds, context, outputFormats, verbosity }) {
+        console.log({ sourceIds, context, outputFormats, verbosity });
+    }
+
     return (
         <div className={`h-full min-h-0 flex flex-col overflow-hidden bg-white ${className}`}>
             <div className="px-[18px] pt-4 pb-3 border-b border-border shrink-0">
@@ -108,7 +112,7 @@ export default function ContextualMetadata({
                 <button
                     type="button"
                     disabled={!canGenerate}
-                    onClick={() => onGenerate?.({ sourceIds, context, outputFormats, verbosity })}
+                    onClick={() => generateMetadata({ sourceIds, context, outputFormats, verbosity })}
                     className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                     <Sparkles size={14} />
@@ -121,38 +125,12 @@ export default function ContextualMetadata({
 
 function Field({ label, children }) {
     return (
-        <div className="py-4 first:pt-4">
+        <div className="pt-4 first:pt-4">
             <label className="block text-[12.5px] font-semibold text-ink mb-1.5">{label}</label>
             {children}
         </div>
     );
 }
-
-// function VerbositySlider({ value, onChange }) {
-//     return (
-//         <div>
-//             <input
-//                 type="range"
-//                 min={0}
-//                 max={2}
-//                 step={1}
-//                 value={value}
-//                 onChange={(e) => onChange(Number(e.target.value))}
-//                 className="w-full accent-primary cursor-pointer"
-//             />
-//             <div className="flex justify-between mt-1.5">
-//                 {VERBOSITY_STEPS.map((step, i) => (
-//                     <span
-//                         key={step}
-//                         className={`text-[11.5px] ${i === value ? "text-primary font-semibold" : "text-ink-muted"}`}
-//                     >
-//                         {step}
-//                     </span>
-//                 ))}
-//             </div>
-//         </div>
-//     );
-// }
 
 function MultiSelectDropdown({ values, onChange, options }) {
     const [open, setOpen] = useState(false);
