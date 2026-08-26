@@ -566,7 +566,7 @@ const ChatPanel = () => {
 
       setStep(STEPS[1]);
       const payload = {
-        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_id: checkedVideoOrPdfSources[0].source_id, index_id: checkedVideoOrPdfSources[0].index_id },
         selectedOptions: ["graph"],
         inputContext: entityContext,
         ontology,
@@ -575,7 +575,7 @@ const ChatPanel = () => {
         from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoStart) : Number(entityPageFrom),
         to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoEnd) : Number(entityPageTo),
       };
-      let response = await makeApiRequest('/graph', 'POST', payload);
+      let response = await makeApiRequest('/graphs', 'POST', payload);
 
       setStep(STEPS.at(-1));
       setSelectedJsonEntity(response);
