@@ -287,7 +287,7 @@ const ChatPanel = () => {
         source_id: checkedVideo.source_id
       };
 
-      const { data, success, message } = await makeApiRequest(`/segments`, 'POST', JSON.stringify(payload), {
+      const { data, success, message } = await makeApiRequest(`/segments`, 'POST', payload, {
         Authorization: `Bearer ${token}`,
         SessionId: currentChat?.sessionId,
         ProjectId: currentProject?.project_id,
