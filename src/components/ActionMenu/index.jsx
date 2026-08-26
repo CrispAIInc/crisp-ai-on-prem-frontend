@@ -25,7 +25,7 @@ export default function ActionMenu({ actions }) {
       setOpen((previousOpen) => {
         if (!previousOpen) {
           const triggerBounds = ref.current?.getBoundingClientRect();
-          setAlignRight(Boolean(triggerBounds && triggerBounds.right + 160 > window.innerWidth));
+          setAlignRight(Boolean(triggerBounds && triggerBounds.right + 160 <= window.innerWidth));
         }
         return !previousOpen;
       });
