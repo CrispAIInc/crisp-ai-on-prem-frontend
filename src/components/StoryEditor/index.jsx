@@ -121,7 +121,7 @@ function StoryEditor({
     async function handleSaveStory() {
         try {
             setIsPending(true);
-            await makeApiRequest('/stories', "POST", JSON.stringify({ ...selectedStory, story_name: storyTitle || selectedStory?.story_name }));
+            await makeApiRequest('/stories/save', "POST", JSON.stringify({ ...selectedStory, story_name: storyTitle || selectedStory?.story_name }));
             notify({
                 variant: "success",
                 heading: "Story saved successfully!",
