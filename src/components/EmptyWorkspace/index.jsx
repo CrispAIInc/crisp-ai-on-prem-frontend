@@ -11,7 +11,7 @@ const EmptyWorkspace = () => {
         <div className="flex h-full w-full items-center justify-center bg-[#f5f6f8] px-6">
             <div className="flex max-w-xl flex-col items-center text-center">
                 {/* Icon */}
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-200 to-primary-300 shadow-sm">
+                <div className="mt-5 mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-200 to-primary-300 shadow-sm">
                     <Sparkles className="h-5 w-5 text-white" />
                 </div>
 
