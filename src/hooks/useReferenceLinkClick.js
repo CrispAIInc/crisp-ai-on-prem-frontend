@@ -41,7 +41,7 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         //     return window.innerWidth / 3.5;
         // });
         // setIsLeftSidebarOpen(true);
-        workspaceContainer.current.scrollTo({
+        workspaceContainer?.current?.scrollTo({
             top: 0,
             behavior: "smooth",
         });
@@ -59,7 +59,7 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
         setSummary(pdf.summary);
         setSummaries(pdf.topic_summaries);
         setActiveView('resource');
-        workspaceContainer.current.scrollTo({
+        workspaceContainer?.current?.scrollTo({
             top: 0,
             behavior: "smooth",
         });
