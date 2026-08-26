@@ -323,7 +323,7 @@ const ChatPanel = () => {
     async function fetchTimeSegments() {
       try {
         axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-        const { data, success } = await makeApiRequest("/chat/segments", 'GET', null, {
+        const { data, success } = await makeApiRequest("/segments", 'GET', null, {
           ProjectId: currentProject.project_id,
         });
 
