@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Film, Check } from "lucide-react";
+import GsFile from '../GsFile';
 
 /**
  * SourcesDropdown — multi-select for picking which sources to use.
@@ -103,7 +104,7 @@ function Thumb({ source, size, ring = false }) {
     const style = { width: size, height: size };
     const cls = `rounded-md object-cover shrink-0 ${ring ? "ring-2 ring-surface" : ""}`;
     if (source.thumbnail) {
-        return <img src={source.thumbnail} alt="" style={style} className={cls} />;
+        return <GsFile gsUrl={source.thumbnail} alt="" style={style} className={cls} />;
     }
     return (
         <span
