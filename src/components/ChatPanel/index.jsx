@@ -278,9 +278,16 @@ const ChatPanel = () => {
       axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
       axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
 
-      const { data, success, message } = await makeApiRequest(`/segments?${url.toString()}`, 'GET', JSON.stringify({
+      const payload = {
+        isFullSource: isFullSourceDuration,
+        start_timestamp: formatTime(selectedStart),
+        end_timestamp: formatTime(selectedEnd),
+        prompt: promptSegmentDescription,
+        title: segmentTitle,
         source_id: checkedVideo.source_id
-      }), {
+      };
+
+      const { data, success, message } = await makeApiRequest(`/segments`, 'GET', JSON.stringify(payload), {
         Authorization: `Bearer ${token}`,
         SessionId: currentChat?.sessionId,
         ProjectId: currentProject?.project_id,
