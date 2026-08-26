@@ -33,7 +33,7 @@ export function SourceExplorer(props) {
         props.onHide();
     };
 
-    const [itemsFoundInsideCategoryOrFormat, setItemsFoundInsideCategoryOrFormat] = useState(knowledgeBase.length > 0);
+    const itemsFoundInsideCategoryOrFormat = knowledgeBase.length > 0;
 
     // const handleSearch = (e) => {
     //     const value = e.target.value;
