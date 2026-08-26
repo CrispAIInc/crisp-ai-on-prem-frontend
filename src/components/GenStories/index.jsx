@@ -34,7 +34,7 @@ function GenStories({
         const httpPayload = {
             storyContext: storyContext,
             storyline: storyStoryline,
-            with_checked_sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, category: item?.category }))
+            with_checked_sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_id: item?.source_id, index_id: item?.index_id }))
         };
         try {
 
@@ -49,8 +49,8 @@ function GenStories({
             }
 
             const res = await makeApiRequest(
-                "/auto-generate-story",
-                "post",
+                "/stories",
+                "POST",
                 httpPayload
             );
 
