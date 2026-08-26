@@ -30,7 +30,7 @@ const SaveSegmentModal = ({ show, onHide, segment, setSegmentDescriptions, onSav
                 response: { ...segment, title: title.trim() }
             };
 
-            const { success, message, id } = await makeApiRequest('/segment/save', 'POST', payload);
+            const { success, message, id } = await makeApiRequest('/segments/save', 'POST', payload);
 
             if (success) {
                 // Add saved segment to local list (if setter provided)
