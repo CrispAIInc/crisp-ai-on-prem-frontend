@@ -204,9 +204,13 @@ export default function Media() {
     }
 
     function clearAll() {
-        setKnowledgeBase((previous) => previous.map((source) => displayedSources.some((item) => item.source_path === source.source_path)
-            ? { ...source, is_checked: false }
-            : source));
+        setKnowledgeBase(prev => prev.map(item => {
+            return {
+                ...item,
+                is_checked: false,
+                is_selected: false,
+            };
+        }));
     }
 
     return (
@@ -256,19 +260,16 @@ export default function Media() {
                         </span>
                     </label>
 
-                    <button
-                        type="button"
-                        onClick={clearAll}
-                        disabled={!someChecked}
-                        className={[
-                            "text-[13px] font-medium transition-colors",
-                            someChecked
-                                ? "text-red-600 hover:text-red-700"
-                                : "text-gray-300 cursor-not-allowed",
-                        ].join(" ")}
-                    >
-                        Clear all
-                    </button>
+                    {
+                        displayedSources.length > 0 && (
+                            <button
+                                type="button"
+                                onClick={clearAll}
+                                className="text-[13px] font-medium transition-colors text-red-600 hover:text-red-700"
+                            >
+                                Clear all
+                            </button>
+                        )}
                 </div>
             ) : (
                 <NoData message="Select a source to start generating content" classes="mt-4" />
