@@ -65,14 +65,14 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
 
         try {
             const payload = {
-                sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_path: source.source_path, category: Array.isArray(source.category) ? source.category.filter(cat => cat !== "all")[0] : source.category })),
+                sources: displayedSources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
                 selectedOptions: selectedOptions.map(op => op.id),
                 inputContext: context,
                 verbosityValue: verbosityValue
             };
             setSourcesTobeCommited(knowledgeBase.filter(kb => kb.is_checked));
             // setSourcesAfterUncheckCrispWiz(sourcesTobeCommited);
-            let { results } = await makeApiRequest('/gen-metadata', 'post', payload);
+            let { results } = await makeApiRequest('/metadata', 'POST', payload);
 
             setKnowledgeBase(prev => {
                 // Build a lookup map from results
