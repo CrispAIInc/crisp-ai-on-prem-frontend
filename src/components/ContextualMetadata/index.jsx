@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import { MainContext } from '../../contexts/mainContext';
 import { ChevronDown, Sparkles, Check } from "lucide-react";
 import CollapsibleSection from "../CollapsibleSection";
 import SourcesDropdown from "../SourcesDropdown";
@@ -25,7 +26,6 @@ import VerbositySlider from '../VerbositySlider';
  *  - className: extra classes on the root element
  */
 export default function ContextualMetadata({
-    sources = [],
     selectedSourceIds,
     onSelectedSourceIdsChange,
     context: contextProp,
@@ -35,9 +35,15 @@ export default function ContextualMetadata({
     outputFormatOptions = ["Summary", "Detailed", "Structured JSON"],
     verbosity: verbosityProp,
     onVerbosityChange,
-    onGenerate,
     className = "",
 }) {
+
+    const {
+        knowledgeBase
+    } = useContext(MainContext);
+
+    const videoSources = knowledgeBase.filter(item => item.file_type === "video");
+
     const [internalContext, setInternalContext] = useState("");
     const [internalOutputFormats, setInternalOutputFormats] = useState([outputFormatOptions[0]]);
     const [internalVerbosity, setInternalVerbosity] = useState(60);
@@ -75,7 +81,7 @@ export default function ContextualMetadata({
             <div className="flex-1 min-h-0 overflow-y-auto px-[18px]">
                 <Field label="Sources">
                     <SourcesDropdown
-                        sources={sources}
+                        sources={videoSources}
                         selectedSourceIds={sourceIds}
                         onSelectedSourceIdsChange={setSourceIds}
                     />
