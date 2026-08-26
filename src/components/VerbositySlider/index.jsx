@@ -1,7 +1,7 @@
 export default function VerbositySlider({ value, onChange }) {
 
     const VERBOSITY_MIN = 30; // seconds
-    const VERBOSITY_MAX = 120; // seconds
+    const VERBOSITY_MAX = 180; // seconds
 
     function formatDuration(seconds) {
         if (seconds < 60) return `${seconds}s`;
