@@ -658,13 +658,13 @@ const ChatPanel = () => {
       // =============== generating blog ===================
       setStep(STEPS[2]);
       const payload = {
-        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_id: checkedVideoOrPdfSources[0].source_id, index_id: checkedVideoOrPdfSources[0].index_id },
         isFullSource: isFullSourceDurationBlog,
         from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoStart) : Number(pageFrom),
         to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
         context: blogContext
       };
-      const { success, message, ...newBlog } = await makeApiRequest('/blog', 'POST', payload);
+      const { success, message, ...newBlog } = await makeApiRequest('/blogs', 'POST', payload);
 
       if (success) {
         setStep(STEPS[3]);
