@@ -10,7 +10,6 @@ import { MainContext } from "../../contexts/mainContext.jsx";
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
 import useFirebase from '../../hooks/useFirebase.js';
 import { flattenMetadata, timeToSeconds } from '../../utils.js';
-import Accordion from '../Accordion/index.jsx';
 import Chip from '../Chip/index.jsx';
 import CustomSelectTwo from "../CustomSelectTwo";
 import Faqs from '../Faqs';
@@ -31,6 +30,47 @@ import {
   Maximize2,
 } from "lucide-react";
 import BaseHeading from '../BaseHeading/index.jsx';
+
+const MetadataNavigation = ({ sections, theme }) => {
+  const availableSections = sections.filter(({ content }) => content !== undefined && content !== null && content !== false && content !== "");
+  const [activeSection, setActiveSection] = useState(availableSections[0]?.id);
+  const activeContent = availableSections.find(({ id }) => id === activeSection) || availableSections[0];
+
+  if (availableSections.length === 0) {
+    return (
+      <p className={`mt-6 rounded-md border p-4 text-sm ${theme === "light" ? "border-textColor-200/30 text-textColor-300" : "border-textColor-300 text-textColor-100"}`}>
+        Generate metadata to view this source&apos;s summary, highlights, and other insights.
+      </p>
+    );
+  }
+
+  return (
+    <div className="mt-5">
+      <nav className={`flex gap-1 overflow-x-auto border-b ${theme === "light" ? "border-textColor-200/30" : "border-textColor-300"}`} aria-label="Metadata sections">
+        {availableSections.map(({ id, title }) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setActiveSection(id)}
+            className={`shrink-0 border-b-2 px-3 py-2 text-xs font-semibold uppercase tracking-widest transition-colors ${activeContent?.id === id
+              ? "border-primary-300 text-primary-300"
+              : theme === "light"
+                ? "border-transparent text-textColor-300 hover:text-primary-300"
+                : "border-transparent text-textColor-100 hover:text-primary-300"
+              }`}
+            aria-selected={activeContent?.id === id}
+            role="tab"
+          >
+            {title}
+          </button>
+        ))}
+      </nav>
+      <div className="select-text max-h-[500px] overflow-y-auto px-2 py-4 [&::-webkit-scrollbar]:w-1" role="tabpanel">
+        {activeContent.content}
+      </div>
+    </div>
+  );
+};
 
 const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth }) => {
   const {
@@ -416,7 +456,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const [index, setIndex] = useState(0);
 
   return (
-    <div className={`max-w-4xl mx-auto overflow-y-auto [&::-webkit-scrollbar]:h-1
+    <div className={`max-w-4xl mx-auto [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`} ref={metadataPanelContainer}>
 
       {currentResource?.file_type === "video" && (
@@ -476,92 +516,68 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                     className="!border-none"
                   />
                 </div>}
-                <>
-                  {/* {translatedResource?.transcription?.content !== undefined && <> */}
-                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.transcription?.title || "Transcription"}>
-                    <p
-                      className={`text-md ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-                    >
-                      <div className="flex flex-col gap-3">
-                        {
-                          (translatedResource?.transcription?.content &&
-                            Array.isArray(translatedResource?.transcription?.content)) ? translatedResource?.transcription?.content?.map((topic, index) => (
-                              <div key={topic.content} className="flex flex-col">
-                                <div>
-                                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
-                                    setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
-                                    workspaceContainer?.current.scrollTo({
-                                      top: 0,
-                                      behavior: "smooth", // Enables smooth scrolling
-                                    });
-                                  }}>
-                                    <h6 className='mb-0 text-xs font-semibold text-primary-200 '>{topic.start_time} - {topic.end_time}</h6>
-                                  </div>
-                                </div>
-                                <p className="select-text" dangerouslySetInnerHTML={{ __html: topic.content.replace(/\n/g, "<br>") }}></p>
-                              </div>
-                            ))
-                            :
-                            (
-                              <p className="italic">Transcription not available for this source.</p>
-                            )
-                        }
-                      </div>
-                    </p>
-                  </Accordion>
-                  {/* </>} */}
-                  {translatedResource?.summary?.content !== undefined &&
-                    <>
-                      <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.summary?.title}>
-                        <p
-                          className={`text-md ${theme === "light"
-                            ? "text-textColor-300"
-                            : "text-textColor-100"
-                            }`}
-                          dangerouslySetInnerHTML={{ __html: `<p>${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}</p>` }}
-                        ></p>
-                      </Accordion>
-                    </>}
-                </>
-
-                {/* {currentResource.source_path != "Sacred_Valley___PERU.mp4" && ( */}
-                {translatedResource?.chapters?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.chapters?.title}>
-                  {/* {isMobile ? ( */}
-                  <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
-                </Accordion>}
-
-
-                {translatedResource?.highlights?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.highlights?.title}>
-                  <div>
+                <MetadataNavigation
+                  theme={theme}
+                  sections={[
                     {
-                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
-                        <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
-                      ))
+                      id: "transcription",
+                      title: translatedResource?.transcription?.title || "Transcription",
+                      content: Array.isArray(translatedResource?.transcription?.content) && (
+                        <div className="flex flex-col gap-3">
+                          {translatedResource.transcription.content.map((topic) => (
+                            <div key={topic.content} className="flex flex-col">
+                              <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
+                                setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
+                                workspaceContainer?.current.scrollTo({ top: 0, behavior: "smooth" });
+                              }}>
+                                <h6 className="mb-0 text-xs font-semibold text-primary-200">{topic.start_time} - {topic.end_time}</h6>
+                              </div>
+                              <p className="select-text" dangerouslySetInnerHTML={{ __html: topic.content.replace(/\n/g, "<br>") }} />
+                            </div>
+                          ))}
+                        </div>
+                      )
+                    },
+                    {
+                      id: "summary",
+                      title: translatedResource?.summary?.title || "Summary",
+                      content: translatedResource?.summary?.content !== undefined && (
+                        <p className={`text-md ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: translatedResource.summary.content.replace(/\n/gi, '<br />') }} />
+                      )
+                    },
+                    {
+                      id: "chapters",
+                      title: translatedResource?.chapters?.title || "Chapters",
+                      content: translatedResource?.chapters?.content !== undefined && <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource.chapters.content} />
+                    },
+                    {
+                      id: "highlights",
+                      title: translatedResource?.highlights?.title || "Highlights",
+                      content: translatedResource?.highlights?.content !== undefined && (
+                        <div>
+                          {translatedResource.highlights.content.slice(0, visibleHighlightCount).map((highlight) => (
+                            <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
+                          ))}
+                          {translatedResource.highlights.content.slice(0, visibleHighlightCount).length < translatedResource.highlights.content.length && <p className="font-semibold cursor-pointer text-primary-300" onClick={showMoreHighlights}>View more</p>}
+                        </div>
+                      )
+                    },
+                    {
+                      id: "keywords",
+                      title: translatedResource?.keywords?.title || "Keywords",
+                      content: translatedResource?.keywords?.content !== undefined && (
+                        <p className="flex items-center gap-2 flex-wrap">
+                          {translatedResource.keywords.content.map(({ id, keyword }) => <Chip key={id} content={keyword} />)}
+                        </p>
+                      )
+                    },
+                    {
+                      id: "faqs",
+                      title: translatedResource?.faqs?.title || "FAQs",
+                      content: translatedResource?.faqs?.content !== undefined && <Faqs chosenLanguage={chosenLanguage} heading={translatedResource.faqs.title} faqs={translatedResource.faqs.content} />
                     }
-
-                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
-                  </div>
-                </Accordion>}
-
-                {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.keywords?.title}>
-                    <p
-                      className={`flex items-center gap-2 flex-wrap`}
-                    >
-                      {
-                        translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
-                      }
-                    </p>
-                  </Accordion>
-                </>}
-
-
-                {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
-                  <Faqs chosenLanguage={chosenLanguage} heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
-                </div>}
+                  ]}
+                />
               </div>
             ) : (
               <div className="flex items-center gap-3 mt-10">
@@ -581,12 +597,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
             // ref={workspaceContainer}
             // style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
             >
-              {/* <PdfViewer
-                sourcePublicUrl={sourcePublicUrl}
-                resourceURL={resourceURL}
-                fileName={null}
-                ref={pdfRef}
-              /> */}
               <div
                 className="backdrop-blur-md !bg-transparent"
                 style={{
@@ -597,11 +607,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                   // background: "var(--pdf-surface-2)",
                   borderBottom: "1px solid var(--pdf-border)",
                   flexShrink: 0,
-                  position: 'sticky',
-                  left: 0,
-                  top: 0,
-                  width: '100%',
-                  // height: "100%",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, flex: 1 }}>
@@ -610,7 +615,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                 </div>
                 {/* Page jump */}
                 <div style={pillStyle}>
-                  <button disabled={isPrevArrowDisabled} style={iconBtnStyle} className={`${isPrevArrowDisabled ? `!cursor-not-allowed ${(theme === 'light' ? ' !text-gray-400/80' : ' !text-gray-500')}` : ''}`} onClick={handleToPagePrevious} aria-label="Previous page">
+                  <button disabled={isPrevArrowDisabled} style={iconBtnStyle} className={isPrevArrowDisabled ? "!cursor-not-allowed" : ""} onClick={handleToPagePrevious} aria-label="Previous page">
                     <ChevronUp size={15} />
                   </button>
                   <form onSubmit={handlePageInputSubmit} style={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -627,23 +632,11 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                       / {numPages || "—"}
                     </span>
                   </form>
-                  <button disabled={isNextArrowDisabled} style={iconBtnStyle} className={`${isNextArrowDisabled ? `!cursor-not-allowed ${(theme === 'light' ? ' !text-gray-400/80' : ' !text-gray-500')}` : ''}`} onClick={handleToPageNext} aria-label="Next page">
+                  <button disabled={isNextArrowDisabled} style={iconBtnStyle} className={isNextArrowDisabled ? "!cursor-not-allowed" : ""} onClick={handleToPageNext} aria-label="Next page">
                     <ChevronDown size={15} />
                   </button>
                 </div>
 
-                {/* Zoom */}
-                <div style={pillStyle}>
-                  <button style={iconBtnStyle} onClick={zoomOut} aria-label="Zoom out">
-                    <Minus size={14} />
-                  </button>
-                  <span style={{ fontSize: 12, color: "var(--pdf-text-secondary)", minWidth: 36, textAlign: "center" }}>
-                    {Math.round(scale * 100)}%
-                  </span>
-                  <button style={iconBtnStyle} onClick={zoomIn} aria-label="Zoom in">
-                    <Plus size={14} />
-                  </button>
-                </div>
 
                 {/* Actions */}
                 <div style={{ display: "flex", gap: 2 }}>
@@ -717,46 +710,49 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                     className="!border-none"
                   />
                 </div>}
-                {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.summary?.title}>
-                    <p
-                      className={`text-md ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
-                    ></p>
-                  </Accordion>
-                </>}
-                {translatedResource?.chapters?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.chapters?.title}>
-                  {/* {isMobile ? ( */}
-                  <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource?.chapters?.content} />
-                </Accordion>}
-
-                {translatedResource?.highlights?.content !== undefined && <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.highlights?.title}>
-                  <div>
+                <MetadataNavigation
+                  theme={theme}
+                  sections={[
                     {
-                      translatedResource?.highlights?.content.slice(0, visibleHighlightCount).map((highlight) => (
-                        <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
-                      ))
+                      id: "summary",
+                      title: translatedResource?.summary?.title || "Summary",
+                      content: translatedResource?.summary?.content !== undefined && (
+                        <p className={`text-md ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: translatedResource.summary.content.replace(/\n/gi, '<br />') }} />
+                      )
+                    },
+                    {
+                      id: "chapters",
+                      title: translatedResource?.chapters?.title || "Chapters",
+                      content: translatedResource?.chapters?.content !== undefined && <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource.chapters.content} />
+                    },
+                    {
+                      id: "highlights",
+                      title: translatedResource?.highlights?.title || "Highlights",
+                      content: translatedResource?.highlights?.content !== undefined && (
+                        <div>
+                          {translatedResource.highlights.content.slice(0, visibleHighlightCount).map((highlight) => (
+                            <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
+                          ))}
+                          {translatedResource.highlights.content.slice(0, visibleHighlightCount).length < translatedResource.highlights.content.length && <p className="font-semibold cursor-pointer text-primary-300" onClick={showMoreHighlights}>View more</p>}
+                        </div>
+                      )
+                    },
+                    {
+                      id: "keywords",
+                      title: translatedResource?.keywords?.title || "Keywords",
+                      content: translatedResource?.keywords?.content !== undefined && (
+                        <p className="flex items-center gap-2 flex-wrap">
+                          {translatedResource.keywords.content.map(({ id, keyword }) => <Chip key={id} content={keyword} />)}
+                        </p>
+                      )
+                    },
+                    {
+                      id: "faqs",
+                      title: translatedResource?.faqs?.title || "FAQs",
+                      content: translatedResource?.faqs?.content !== undefined && <Faqs chosenLanguage={chosenLanguage} heading={translatedResource.faqs.title} faqs={translatedResource.faqs.content} />
                     }
-
-                    {translatedResource?.highlights?.content.slice(0, visibleHighlightCount).length < translatedResource?.highlights?.content?.length && <p className='font-semibold cursor-pointer text-primary-300' onClick={showMoreHighlights}>View more</p>}
-                  </div>
-                </Accordion>}
-
-                {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.keywords?.title}>
-                    <p
-                      className={`flex items-center gap-2 flex-wrap`}
-                    >
-                      {
-                        translatedResource?.keywords?.content?.map(({ id, keyword }) => <Chip key={id} content={keyword} />)
-                      }
-                    </p>
-                  </Accordion>
-                </>}
+                  ]}
+                />
 
 
 
@@ -811,31 +807,27 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                     className="!border-none"
                   />
                 </div>}
-                {translatedResource?.summary?.content !== undefined && <>
-                  <Accordion isFirstOpen chosenLanguage={chosenLanguage} heading={translatedResource?.summary?.title} >
-                    <p
-                      className={`text-md ${theme === "light"
-                        ? "text-textColor-300"
-                        : "text-textColor-100"
-                        }`}
-
-                      dangerouslySetInnerHTML={{ __html: `${translatedResource?.summary?.content?.replace(/\n/gi, '<br />')}` }}
-                    >
-                    </p>
-                  </Accordion>
-                </>}
-
-                {translatedResource?.keywords?.content !== undefined && <>
-                  <Accordion chosenLanguage={chosenLanguage} heading={translatedResource?.keywords?.title}>
-                    <p
-                      className={`flex items-center gap-2 flex-wrap`}
-                    >
-                      {
-                        translatedResource?.keywords?.content?.map(({ keyword, id }) => <Chip key={id} content={keyword} />)
-                      }
-                    </p>
-                  </Accordion>
-                </>}
+                <MetadataNavigation
+                  theme={theme}
+                  sections={[
+                    {
+                      id: "summary",
+                      title: translatedResource?.summary?.title || "Summary",
+                      content: translatedResource?.summary?.content !== undefined && (
+                        <p className={`text-md ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: translatedResource.summary.content.replace(/\n/gi, '<br />') }} />
+                      )
+                    },
+                    {
+                      id: "keywords",
+                      title: translatedResource?.keywords?.title || "Keywords",
+                      content: translatedResource?.keywords?.content !== undefined && (
+                        <p className="flex items-center gap-2 flex-wrap">
+                          {translatedResource.keywords.content.map(({ keyword, id }) => <Chip key={id} content={keyword} />)}
+                        </p>
+                      )
+                    }
+                  ]}
+                />
               </div>
             ) : (
               <div className="flex items-center gap-3 mt-10">
