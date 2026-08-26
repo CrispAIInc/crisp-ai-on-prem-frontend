@@ -369,7 +369,7 @@ const ChatPanel = () => {
     async function fetchFindMoments() {
       try {
         axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-        const { data, success } = await makeApiRequest("/chat/moment", 'GET', null, {
+        const { data, success } = await makeApiRequest("moments", 'GET', null, {
           ProjectId: currentProject.project_id,
         });
         if (success) {
