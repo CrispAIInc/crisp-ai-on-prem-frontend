@@ -77,15 +77,15 @@ function MetadataGen({ isGeneratingMetadata, setIsGeneratingMetadata, verbosityV
             setKnowledgeBase(prev => {
                 // Build a lookup map from results
                 const resultsMap = new Map(
-                    results.map(r => [r.source_path, r.metadata])
+                    results.map(r => [r.source_id, r.metadata])
                 );
 
                 return prev.map(item => {
                     // If this item exists in results, update metadata
-                    if (resultsMap.has(item.source_path)) {
+                    if (resultsMap.has(item.source_id)) {
                         return {
                             ...item,
-                            metadata: resultsMap.get(item.source_path),
+                            metadata: resultsMap.get(item.source_id),
                         };
                     }
 
