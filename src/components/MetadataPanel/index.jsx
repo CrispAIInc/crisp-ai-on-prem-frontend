@@ -475,19 +475,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
               onDuration={() => setHasDuration(true)}
               playerRef={player}
             />
-
-            {/* video summary */}
-            {!isTranslationLoading ? (
-              <div className="mt-3">
-                <Metadata
-                  translatedResource={translatedResource}
-                />
-              </div>
-            ) : (
-              <div className="flex items-center gap-3 mt-10">
-                <MetadataSkeleton className="w-full" />
-              </div>
-            )}
           </div>
         </>
       )
@@ -547,9 +534,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                   <button style={actionBtnStyle} onClick={handleDownload} aria-label="Download">
                     <Download size={16} />
                   </button>
-                  {/* <button style={actionBtnStyle} onClick={handleFullscreen} aria-label="Fullscreen">
-                    <Maximize2 size={16} />
-                  </button> */}
                 </div>
               </div>
               <div className={`flex-1 h-full overflow-y-auto [&::-webkit-scrollbar]:h-1
@@ -574,174 +558,39 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                         renderTextLayer={true}
                         renderAnnotationLayer={true}
                         scale={scale}
-                      // width={pageWidth}
-                      // onRenderSuccess={() => {
-                      //   if (jumpToPage.page === index + 1) {
-                      //     pageRefs.current[index]?.scrollIntoView({
-                      //       behavior: "smooth",
-                      //     });
-                      //   }
-                      // }}
                       />
-
                     </div>
                   ))}
                 </Document>
               </div>
             </div>
-            {/* PDF summary */}
-            {!isTranslationLoading ? (
-              <div
-                className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
-                  chosenLanguage === "ku" ||
-                  chosenLanguage === "ckb" ||
-                  chosenLanguage === "iw" ||
-                  chosenLanguage === "ur") &&
-                  "text-right"
-                  }`}
-              >
-                {/* search */}
-                <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
-                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mt-5 mb-2 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
-                  <LanguageOutlinedIcon className={`text-primary-300 ml-1`} />
-                  <CustomSelectTwo
-                    withIcon
-                    options={languageOptions}
-                    onChange={(lang) =>
-                      translateMetadata(lang.value, translatedResource, true)
-                    }
-                    placeholder="Select a language"
-                    className="!border-none"
-                  />
-                </div>}
-                <MetadataNavigation
-                  theme={theme}
-                  sections={[
-                    {
-                      id: "summary",
-                      title: translatedResource?.summary?.title || "Summary",
-                      content: translatedResource?.summary?.content !== undefined && (
-                        <p className={`text-md ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: translatedResource.summary.content.replace(/\n/gi, '<br />') }} />
-                      )
-                    },
-                    {
-                      id: "chapters",
-                      title: translatedResource?.chapters?.title || "Chapters",
-                      content: translatedResource?.chapters?.content !== undefined && <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource.chapters.content} />
-                    },
-                    {
-                      id: "highlights",
-                      title: translatedResource?.highlights?.title || "Highlights",
-                      content: translatedResource?.highlights?.content !== undefined && (
-                        <div>
-                          {translatedResource.highlights.content.slice(0, visibleHighlightCount).map((highlight) => (
-                            <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
-                          ))}
-                          {translatedResource.highlights.content.slice(0, visibleHighlightCount).length < translatedResource.highlights.content.length && <p className="font-semibold cursor-pointer text-primary-300" onClick={showMoreHighlights}>View more</p>}
-                        </div>
-                      )
-                    },
-                    {
-                      id: "keywords",
-                      title: translatedResource?.keywords?.title || "Keywords",
-                      content: translatedResource?.keywords?.content !== undefined && (
-                        <p className="flex items-center gap-2 flex-wrap">
-                          {translatedResource.keywords.content.map(({ id, keyword }) => <Chip key={id} content={keyword} />)}
-                        </p>
-                      )
-                    },
-                    {
-                      id: "faqs",
-                      title: translatedResource?.faqs?.title || "FAQs",
-                      content: translatedResource?.faqs?.content !== undefined && <Faqs chosenLanguage={chosenLanguage} heading={translatedResource.faqs.title} faqs={translatedResource.faqs.content} />
-                    }
-                  ]}
-                />
-
-
-
-
-                {translatedResource?.faqs?.content !== undefined && <div className="mt-5 mb-5">
-                  <Faqs chosenLanguage={chosenLanguage} heading={translatedResource?.faqs?.title} faqs={translatedResource?.faqs?.content} />
-                </div>}
-              </div>
-            ) : (
-              <div className="flex items-center gap-3 mt-10">
-                <MetadataSkeleton className="w-full" />
-              </div>
-            )}
           </>
         )}
       {
         currentResource?.file_type === "img" && (
           <div className="pb-10">
-            {/* <div className={`relative pt-[56.25%] w-full max-w-lg mx-auto h-80 ${theme === " light" ? "!border" : "!border !border-textColor-300"} rounded-md overflow-hidden [&::-webkit-scrollbar]:h-1 */}
-            {/* [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}> */}
-            {/* <GsFile
-                className="absolute top-0 left-0 object-contain w-full h-full"
-                gsUrl={currentResource?.thumbnail || resourceURL}
-              /> */}
             <ImageViewer
               src={currentResource?.thumbnail || resourceURL}
               alt={currentResource.source_path}
               eyebrow={currentResource.source_path}
             />
-            {/* </div> */}
-            {/* Image Caption */}
-            {!isTranslationLoading ? (
-              <div
-                className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
-                  chosenLanguage === "ku" ||
-                  chosenLanguage === "ckb" ||
-                  chosenLanguage === "iw" ||
-                  chosenLanguage === "ur") &&
-                  "text-right"
-                  }`}
-              >
-                {/* search */}
-                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-10 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-md`}>
-                  <LanguageOutlinedIcon className={`text-primary-300 ml-1`} />
-                  <CustomSelectTwo
-                    withIcon
-                    options={languageOptions}
-                    onChange={(lang) =>
-                      translateMetadata(lang.value, translatedResource, true)
-                    }
-                    placeholder="Select a language"
-                    className="!border-none"
-                  />
-                </div>}
-                <MetadataNavigation
-                  theme={theme}
-                  sections={[
-                    {
-                      id: "summary",
-                      title: translatedResource?.summary?.title || "Summary",
-                      content: translatedResource?.summary?.content !== undefined && (
-                        <p className={`text-md ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: translatedResource.summary.content.replace(/\n/gi, '<br />') }} />
-                      )
-                    },
-                    {
-                      id: "keywords",
-                      title: translatedResource?.keywords?.title || "Keywords",
-                      content: translatedResource?.keywords?.content !== undefined && (
-                        <p className="flex items-center gap-2 flex-wrap">
-                          {translatedResource.keywords.content.map(({ keyword, id }) => <Chip key={id} content={keyword} />)}
-                        </p>
-                      )
-                    }
-                  ]}
-                />
-              </div>
-            ) : (
-              <div className="flex items-center gap-3 mt-10">
-                <MetadataSkeleton className="w-full" />
-              </div>
-            )}
           </div>
         )
       }
-    </div >
+
+      {/* source metadata */}
+      {!isTranslationLoading ? (
+        <div className="mt-3">
+          <Metadata
+            translatedResource={translatedResource}
+          />
+        </div>
+      ) : (
+        <div className="flex items-center gap-3 mt-10">
+          <MetadataSkeleton className="w-full" />
+        </div>
+      )}
+    </div>
   );
 };
 export default MetadataPanel;
