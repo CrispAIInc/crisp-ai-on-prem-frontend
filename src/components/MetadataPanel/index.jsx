@@ -30,6 +30,7 @@ import {
   Maximize2,
 } from "lucide-react";
 import BaseHeading from '../BaseHeading/index.jsx';
+import Metadata from '../Metadata/index.jsx';
 
 const MetadataNavigation = ({ sections, theme }) => {
   const availableSections = sections.filter(({ content }) => content !== undefined && content !== null && content !== false && content !== "");
@@ -474,110 +475,11 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
               onDuration={() => setHasDuration(true)}
               playerRef={player}
             />
-            {/* <div className={`relative aspect-video w-full overflow-hidden rounded-md shadow-sm ${theme === 'light' ? '!border' : '!border !border-textColor-300'} `}>
-              <ReactPlayer
-                id="react-player"
-                className="absolute top-0 left-0"
-                width="100%"
-                height="100%"
-                playing={video_autoplay}
-                loop={video_loop}
-                url={sourcePublicUrl || resourceURL}
-                onReady={() => setIsPlayerReady(true)}
-                onDuration={() => setHasDuration(true)}
-                ref={player}
-                controls
-              />
-            </div> */}
+
             {/* video summary */}
             {!isTranslationLoading ? (
-              <div
-                className={`mt-10 metadata-container ${(chosenLanguage === "ar" ||
-                  chosenLanguage === "ku" ||
-                  chosenLanguage === "ckb" ||
-                  chosenLanguage === "iw" ||
-                  chosenLanguage === "ur") &&
-                  "text-right"
-                  }`}
-              >
-                {/* search */}
-                {/* {currentResource?.metadata?.embeddings_generated && <SearchSection isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />} */}
-                <SearchSection fromMetadata={true} isGlobalSearch={false} chatLoaded={chatLoaded} className='flex-1' />
-                {/* generate visual/combined summary */}
-                {(currentResource?.metadata && Object.keys(currentResource?.metadata).length > 0 && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")) && <div className={`flex flex-wrap items-center mb-2 mt-6 !border w-fit ${theme === 'light' ? "!border !border-textColor-100/70 bg-light-hover-100/30" : "!border !border-textColor-300 bg-light-hover-200/20 text-textColor-100"} rounded-full`}>
-                  <LanguageOutlinedIcon className={`text-primary-300 ml-1`} />
-                  <CustomSelectTwo
-                    withIcon
-                    options={languageOptions}
-                    onChange={(lang) =>
-                      translateMetadata(lang.value, translatedResource, true)
-                    }
-                    placeholder="Select a language"
-                    className="!border-none"
-                  />
-                </div>}
-                <MetadataNavigation
-                  theme={theme}
-                  sections={[
-                    {
-                      id: "transcription",
-                      title: translatedResource?.transcription?.title || "Transcription",
-                      content: Array.isArray(translatedResource?.transcription?.content) && (
-                        <div className="flex flex-col gap-3">
-                          {translatedResource.transcription.content.map((topic) => (
-                            <div key={topic.content} className="flex flex-col">
-                              <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
-                                setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
-                                workspaceContainer?.current.scrollTo({ top: 0, behavior: "smooth" });
-                              }}>
-                                <h6 className="mb-0 text-xs font-semibold text-primary-200">{topic.start_time} - {topic.end_time}</h6>
-                              </div>
-                              <p className="select-text" dangerouslySetInnerHTML={{ __html: topic.content.replace(/\n/g, "<br>") }} />
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    },
-                    {
-                      id: "summary",
-                      title: translatedResource?.summary?.title || "Summary",
-                      content: translatedResource?.summary?.content !== undefined && (
-                        <p className={`text-md ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: translatedResource.summary.content.replace(/\n/gi, '<br />') }} />
-                      )
-                    },
-                    {
-                      id: "chapters",
-                      title: translatedResource?.chapters?.title || "Chapters",
-                      content: translatedResource?.chapters?.content !== undefined && <TimelineHorizontal workspaceContainer={workspaceContainer} theme={theme} chapters={translatedResource.chapters.content} />
-                    },
-                    {
-                      id: "highlights",
-                      title: translatedResource?.highlights?.title || "Highlights",
-                      content: translatedResource?.highlights?.content !== undefined && (
-                        <div>
-                          {translatedResource.highlights.content.slice(0, visibleHighlightCount).map((highlight) => (
-                            <HorizontalCard key={highlight.id} item={highlight} workspaceContainer={workspaceContainer} />
-                          ))}
-                          {translatedResource.highlights.content.slice(0, visibleHighlightCount).length < translatedResource.highlights.content.length && <p className="font-semibold cursor-pointer text-primary-300" onClick={showMoreHighlights}>View more</p>}
-                        </div>
-                      )
-                    },
-                    {
-                      id: "keywords",
-                      title: translatedResource?.keywords?.title || "Keywords",
-                      content: translatedResource?.keywords?.content !== undefined && (
-                        <p className="flex items-center gap-2 flex-wrap">
-                          {translatedResource.keywords.content.map(({ id, keyword }) => <Chip key={id} content={keyword} />)}
-                        </p>
-                      )
-                    },
-                    {
-                      id: "faqs",
-                      title: translatedResource?.faqs?.title || "FAQs",
-                      content: translatedResource?.faqs?.content !== undefined && <Faqs chosenLanguage={chosenLanguage} heading={translatedResource.faqs.title} faqs={translatedResource.faqs.content} />
-                    }
-                  ]}
-                />
+              <div className="mt-3">
+                <Metadata />
               </div>
             ) : (
               <div className="flex items-center gap-3 mt-10">
