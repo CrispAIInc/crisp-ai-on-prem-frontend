@@ -99,7 +99,11 @@ export default function Metadata({
                         transcriptionObj={translatedResource?.transcription}
                     />
                 )}
-                {activeTab === "summary" && <ComingSoonPane label="Summary" />}
+                {activeTab === "summary" && (
+                    <SummaryPane
+                        summaryObj={translatedResource?.summary}
+                    />
+                )}
             </div>
         </div>
     );
@@ -226,6 +230,38 @@ function TranscriptionPane({ transcriptionObj }) {
                             )) : (
                                 <p className="italic">Transcription not available for this source.</p>
                             )
+                    }
+                </div>
+            </div>
+        </>
+    );
+}
+
+function SummaryPane({ summaryObj }) {
+
+    const {
+
+        setCurrentResource,
+        workspaceContainer
+    } = useContext(MainContext);
+
+    return (
+        <>
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
+                <h3 className="font-display text-[13.5px] font-semibold text-ink">Summary</h3>
+            </div>
+
+            <div className="p-4 flex-1 min-h-0 overflow-y-auto flex flex-col">
+                <div className="flex flex-col gap-3">
+                    {
+                        summaryObj?.content !== undefined ? (
+                            <p
+                                className={`text-md text-textColor-300`}
+                                dangerouslySetInnerHTML={{ __html: `<p>${summaryObj?.content?.replace(/\n/gi, '<br />')}</p>` }}
+                            ></p>
+                        ) : (
+                            <p className="italic">Summary not available for this source. Generate it in Contextual metadata section</p>
+                        )
                     }
                 </div>
             </div>
