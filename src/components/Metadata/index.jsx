@@ -124,7 +124,7 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
 
             <div className="p-4 flex-1 min-h-0 overflow-y-auto flex flex-col">
                 <div className="flex items-center gap-2.5 shrink-0">
-                    <div className="flex-1 flex items-center gap-2 bg-surface-alt rounded-lg px-3 py-2.5">
+                    <div className="flex-1 flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2.5">
                         <Search size={13} className="text-ink-muted shrink-0" />
                         <input
                             type="text"
@@ -138,7 +138,7 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
                     <button
                         type="button"
                         onClick={runSearch}
-                        className="shrink-0 rounded-lg px-5 py-2.5 text-[12.5px] font-bold text-white bg-grad hover:brightness-105"
+                        className="shrink-0 rounded-lg px-3 py-2.5 text-[12.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white hover:brightness-105"
                     >
                         Search
                     </button>
