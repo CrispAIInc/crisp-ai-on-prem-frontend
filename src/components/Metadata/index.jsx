@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { Search, Globe, PlayCircle } from "lucide-react";
 import { MainContext } from '../../contexts/mainContext';
+import TimelineHorizontal from '../TimelineHorizontal';
+import HorizontalCard from '../HorizontalCard';
 
 const TAB_SETS = {
-    video: ["search", "transcription", "summary"],
-    pdf: ["search", "transcription", "summary"],
+    video: ["search", "transcription", "summary", "chapters", "highlights"],
+    pdf: ["search", "transcription", "summary", "chapters", "highlights"],
     image: ["summary", "keywords"],
 };
 
@@ -12,6 +14,8 @@ const TAB_LABELS = {
     search: "Search",
     transcription: "Transcription",
     summary: "Summary",
+    chapters: "Chapters",
+    highlights: "Highlights",
     keywords: "Keywords",
 };
 
@@ -58,13 +62,14 @@ export default function Metadata({
 
     const sourceType = currentResource.file_type;
 
-    const tabs = (TAB_SETS[sourceType] ?? TAB_SETS.video).map((id) => ({ id, label: TAB_LABELS[id] }));
+    const availableTabIds = TAB_SETS[sourceType] ?? TAB_SETS.video;
+    const tabs = availableTabIds.map((id) => ({ id, label: TAB_LABELS[id] }));
     const [activeTab, setActiveTab] = useState(tabs[0].id);
 
     // Reset to the first available tab if the source (and its tab set) changes
     useEffect(() => {
-        if (!tabs.some((t) => t.id === activeTab)) setActiveTab(tabs[0].id);
-    }, [sourceType]);
+        if (!availableTabIds.includes(activeTab)) setActiveTab(availableTabIds[0]);
+    }, [activeTab, availableTabIds]);
 
     return (
         <div className={`h-full min-h-0 flex flex-col gap-3.5 ${className}`}>
@@ -102,6 +107,16 @@ export default function Metadata({
                 {activeTab === "summary" && (
                     <SummaryPane
                         summaryObj={translatedResource?.summary}
+                    />
+                )}
+                {activeTab === "chapters" && (
+                    <ChaptersPane
+                        chapters={translatedResource?.chapters?.content}
+                    />
+                )}
+                {activeTab === "highlights" && (
+                    <HighlightsPane
+                        highlights={translatedResource?.highlights?.content}
                     />
                 )}
             </div>
@@ -212,7 +227,7 @@ function TranscriptionPane({ transcriptionObj }) {
                 <div className="flex flex-col gap-3">
                     {
                         (transcriptionObj?.content && Array.isArray(transcriptionObj?.content)) ?
-                            transcriptionObj?.content?.map((topic, index) => (
+                            transcriptionObj?.content?.map((topic) => (
                                 <div key={topic.content} className="flex flex-col">
                                     <div>
                                         <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
@@ -238,13 +253,6 @@ function TranscriptionPane({ transcriptionObj }) {
 }
 
 function SummaryPane({ summaryObj }) {
-
-    const {
-
-        setCurrentResource,
-        workspaceContainer
-    } = useContext(MainContext);
-
     return (
         <>
             <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
@@ -269,6 +277,58 @@ function SummaryPane({ summaryObj }) {
     );
 }
 
+function ChaptersPane({ chapters }) {
+    const { workspaceContainer } = useContext(MainContext);
+    const chapterItems = Array.isArray(chapters) ? chapters : [];
+
+    return (
+        <>
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
+                <h3 className="font-display text-[13.5px] font-semibold text-ink">Chapters</h3>
+            </div>
+
+            <div className="flex-1 min-h-0 overflow-y-auto">
+                {chapterItems.length > 0 ? (
+                    <TimelineHorizontal
+                        chapters={chapterItems}
+                        workspaceContainer={workspaceContainer}
+                        theme="light"
+                    />
+                ) : (
+                    <p className="p-4 italic">Chapters not available for this source.</p>
+                )}
+            </div>
+        </>
+    );
+}
+
+function HighlightsPane({ highlights }) {
+    const { workspaceContainer } = useContext(MainContext);
+    const highlightItems = Array.isArray(highlights) ? highlights : [];
+
+    return (
+        <>
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
+                <h3 className="font-display text-[13.5px] font-semibold text-ink">Highlights</h3>
+            </div>
+
+            <div className="p-4 flex-1 min-h-0 overflow-y-auto">
+                {highlightItems.length > 0 ? (
+                    highlightItems.map((highlight, index) => (
+                        <HorizontalCard
+                            key={highlight.id ?? index}
+                            item={highlight}
+                            workspaceContainer={workspaceContainer}
+                        />
+                    ))
+                ) : (
+                    <p className="italic">Highlights not available for this source.</p>
+                )}
+            </div>
+        </>
+    );
+}
+
 function EmptyState({ title, description }) {
     return (
         <div className="flex-1 flex flex-col items-center justify-center text-center gap-2.5 py-6 px-4">
@@ -281,12 +341,3 @@ function EmptyState({ title, description }) {
     );
 }
 
-// Placeholder for tabs not built yet — swap for TranscriptionPane / SummaryPane
-// as each one is implemented.
-function ComingSoonPane({ label }) {
-    return (
-        <div className="flex-1 flex items-center justify-center text-[12.5px] text-ink-muted">
-            {label} — coming next
-        </div>
-    );
-}
