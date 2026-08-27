@@ -49,6 +49,7 @@ export default function Metadata({
     onSearch,
     onResultClick,
     className = "",
+    translatedResource
 }) {
 
     const {
@@ -82,7 +83,7 @@ export default function Metadata({
                 ))}
             </div>
 
-            <div className="flex-1 min-h-0 bg-white border border-border rounded-3xl flex flex-col overflow-hidden">
+            <div className="flex-1 min-h-0 bg-white border border-border rounded-xl flex flex-col overflow-hidden">
                 {activeTab === "search" && (
                     <SearchPane
                         query={query}
@@ -93,7 +94,11 @@ export default function Metadata({
                         onResultClick={onResultClick}
                     />
                 )}
-                {activeTab === "transcription" && <ComingSoonPane label="Transcription" />}
+                {activeTab === "transcription" && (
+                    <TranscriptionPane
+                        transcriptionObj={translatedResource?.transcription}
+                    />
+                )}
                 {activeTab === "summary" && <ComingSoonPane label="Summary" />}
             </div>
         </div>
@@ -179,6 +184,49 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
                             ))}
                         </div>
                     )}
+                </div>
+            </div>
+        </>
+    );
+}
+
+function TranscriptionPane({ transcriptionObj }) {
+
+    const {
+
+        setCurrentResource,
+        workspaceContainer
+    } = useContext(MainContext);
+
+    return (
+        <>
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
+                <h3 className="font-display text-[13.5px] font-semibold text-ink">Transcription</h3>
+            </div>
+
+            <div className="p-4 flex-1 min-h-0 overflow-y-auto flex flex-col">
+                <div className="flex flex-col gap-3">
+                    {
+                        (transcriptionObj?.content && Array.isArray(transcriptionObj?.content)) ?
+                            transcriptionObj?.content?.map((topic, index) => (
+                                <div key={topic.content} className="flex flex-col">
+                                    <div>
+                                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
+                                            setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
+                                            workspaceContainer?.current.scrollTo({
+                                                top: 0,
+                                                behavior: "smooth", // Enables smooth scrolling
+                                            });
+                                        }}>
+                                            <h6 className='mb-0 text-xs font-semibold text-primary-200 '>{topic.start_time} - {topic.end_time}</h6>
+                                        </div>
+                                    </div>
+                                    <p className="select-text" dangerouslySetInnerHTML={{ __html: topic.content.replace(/\n/g, "<br>") }}></p>
+                                </div>
+                            )) : (
+                                <p className="italic">Transcription not available for this source.</p>
+                            )
+                    }
                 </div>
             </div>
         </>

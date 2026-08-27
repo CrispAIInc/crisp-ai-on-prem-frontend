@@ -479,7 +479,9 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
             {/* video summary */}
             {!isTranslationLoading ? (
               <div className="mt-3">
-                <Metadata />
+                <Metadata
+                  translatedResource={translatedResource}
+                />
               </div>
             ) : (
               <div className="flex items-center gap-3 mt-10">

@@ -12,14 +12,12 @@ function MainStudio({
         workspaceContainer,
     } = useContext(MainContext);
 
-    const metadataPanelRef = useRef(null);
-
     return (
-        <div ref={metadataPanelRef}>
+        <div ref={workspaceContainer}>
             {currentResource ? (
                 <MetadataPanel
                     workspaceContainer={workspaceContainer}
-                    centerPanelRef={metadataPanelRef}
+                    centerPanelRef={workspaceContainer}
                     leftWidth={panelWidth}
                     maxWidth={720}
                 />
