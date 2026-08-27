@@ -107,6 +107,8 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
     const query = queryProp ?? internalQuery;
     const setQuery = onQueryChange ?? setInternalQuery;
 
+    const canSearch = Boolean(query.trim());
+
     const runSearch = () => {
         setSearched(true);
         onSearch?.(query);
@@ -138,7 +140,8 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
                     <button
                         type="button"
                         onClick={runSearch}
-                        className="shrink-0 rounded-lg px-3 py-2.5 text-[12.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white hover:brightness-105"
+                        disabled={!canSearch}
+                        className={`shrink-0 rounded-lg px-3 py-2.5 text-[12.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed`}
                     >
                         Search
                     </button>
