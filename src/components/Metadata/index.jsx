@@ -222,7 +222,7 @@ function TranscriptionPane({ transcriptionObj }) {
                                                 behavior: "smooth", // Enables smooth scrolling
                                             });
                                         }}>
-                                            <h6 className='mb-0 text-xs font-semibold text-primary-200 '>{topic.start_time} - {topic.end_time}</h6>
+                                            <h6 className='mb-0 text-xs font-semibold text-primary-300 '>{topic.start_time} - {topic.end_time}</h6>
                                         </div>
                                     </div>
                                     <p className="select-text" dangerouslySetInnerHTML={{ __html: topic.content.replace(/\n/g, "<br>") }}></p>
