@@ -178,7 +178,7 @@ function MediaEntertainment({
         setIsReelDeleting(true);
         try {
             const publicReelUrl = await getPublicUrl(reel.reel_video_url);
-            await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
+            await makeApiRequest(`/reels/${reel.id}`, 'DELETE', JSON.stringify({
                 videoUrl: publicReelUrl,
             }));
 

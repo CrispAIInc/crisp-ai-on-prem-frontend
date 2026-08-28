@@ -34,12 +34,12 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
     });
 
     function handleSelectResult(segment) {
-        const segmentSource = knowledgeBase.find(item => item.source_path === segment.video);
+        const segmentSource = knowledgeBase.find(item => item.source_id === segment.source_id);
 
         // if (segmentSource) {
         setCurrentSegment({
             ...segment,
-            timestampText: `${segment.video} | ${segment.start}`,
+            timestampText: `${segmentSource?.source_path} | ${segment.start}`,
             refs: segmentSource ? [{
                 ...segmentSource,
                 timestamp: segment.start
@@ -64,7 +64,7 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
     async function deleteSegment(segmentId) {
         try {
             setIsSegmentDeleting(true);
-            const { success, message } = await makeApiRequest(`/segment/${segmentId}`, 'DELETE');
+            const { success, message } = await makeApiRequest(`/segments/${segmentId}`, 'DELETE');
 
             if (success) {
                 setSegmentDescriptions(prev => prev.filter(item => item.id !== segmentId));

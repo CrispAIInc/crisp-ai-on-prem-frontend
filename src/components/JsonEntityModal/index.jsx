@@ -70,10 +70,10 @@ const JsonEntityModal = ({ show, onHide }) => {
 
             setSelectedJsonEntity(updatedEntity);
 
-            const { success, message, id } = await makeApiRequest("/graph/save", 'POST', updatedEntity.graph);
+            const { success, message, graph_id } = await makeApiRequest("/graphs/save", 'POST', updatedEntity.graph);
             if (success) {
-                setJsonEntities(prev => [...prev, { ...updatedEntity, graph_id: id }]);
-                setSelectedJsonEntity({ ...updatedEntity, graph_id: id });
+                setJsonEntities(prev => [...prev, { ...updatedEntity, graph_id }]);
+                setSelectedJsonEntity({ ...updatedEntity, graph_id });
                 setShowTitleModal(false);
                 notify({
                     variant: "success",

@@ -34,7 +34,7 @@ const JsonEntityItem = ({ jsonEntity, onClick }) => {
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            const { success, message } = await makeApiRequest(`graph/${jsonEntity.graph_id}`, 'DELETE');
+            const { success, message } = await makeApiRequest(`/graphs/${jsonEntity.graph_id}`, 'DELETE');
             if (success) {
                 setJsonEntities(prev => prev.filter(g => g.graph_id !== jsonEntity.graph_id));
                 notify({

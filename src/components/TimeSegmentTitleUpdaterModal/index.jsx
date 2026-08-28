@@ -20,7 +20,7 @@ const TimeSegmentTitleUpdaterModal = ({ show, onHide, segment, setSegmentDescrip
         try {
             setIsLoading(true);
 
-            const { success, message, new_title } = await makeApiRequest(`/segment/${segment.id}`, 'PUT', { title: newSegmentTitle.trim() });
+            const { success, message, new_title } = await makeApiRequest(`/segments/${segment.id}`, 'PATCH', { title: newSegmentTitle.trim() });
 
             if (success) {
                 setSegmentDescriptions(prev => prev.map(item => {
