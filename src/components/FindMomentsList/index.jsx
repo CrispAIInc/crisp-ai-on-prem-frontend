@@ -38,7 +38,7 @@ function FindMomentsList({ setCurrentMoment, setShowList, moments, setMoments })
 
             return {
                 ...result,
-                timestampText: `${result.video} | ${reducedTimestamp}`,
+                timestampText: `${source?.source_path} | ${reducedTimestamp}`,
                 source: {
                     ...source,
                     timestamp: source ? reducedTimestamp : null,

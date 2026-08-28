@@ -34,12 +34,12 @@ function TimeSegmentDescriptionList({ setCurrentSegment, setShowList, segmentDes
     });
 
     function handleSelectResult(segment) {
-        const segmentSource = knowledgeBase.find(item => item.source_path === segment.video);
+        const segmentSource = knowledgeBase.find(item => item.source_id === segment.source_id);
 
         // if (segmentSource) {
         setCurrentSegment({
             ...segment,
-            timestampText: `${segment.video} | ${segment.start}`,
+            timestampText: `${segmentSource?.source_path} | ${segment.start}`,
             refs: segmentSource ? [{
                 ...segmentSource,
                 timestamp: segment.start
