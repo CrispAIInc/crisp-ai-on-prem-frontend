@@ -23,6 +23,9 @@ import RippleButton from '../RippleButton/index.jsx';
 import SegmentDescription from '../SegmentDescription';
 import SegmentDescriptionResult from "../SegmentDescriptionResult";
 import TimeSegmentDescriptionList from "../TimeSegmentDescriptionList";
+import {
+    Info
+} from "lucide-react";
 
 
 const TimeSegmentDescription = ({
@@ -549,7 +552,7 @@ const TimeSegmentDescription = ({
             </div>
 
             {/* is detailed mode checkbox */}
-            <div className={`transition-all duration-200 ease-in-out`}>
+            <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
                 {/* <label className={`flex items-center gap-2 p-2 rounded-xl cursor-pointer !border !border-slate-300`}>
                     <Checkbox
                         className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
@@ -562,7 +565,8 @@ const TimeSegmentDescription = ({
                         Enable Detailed Mode
                     </span>
                 </label> */}
-                <p className="text-xs mt-1 font-medium text-primary-200">
+                <Info size={17} />
+                <p className="text-xs mt-1 font-medium">
                     This asset was ingested using <b>Detailed Mode</b>, so you will get <b>high detailed results</b>.
                     {/* <br />
                     <span className="font-bold text-xs">Processing time may increase.</span> */}
