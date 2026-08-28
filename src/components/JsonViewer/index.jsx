@@ -9,12 +9,16 @@ const JsonViewer = () => {
     const { theme, selectedJsonEntity } = useContext(MainContext);
 
     const {
-        source_id,
-        index_id,
         success,
         message,
-        ...entity
+        ...rest
     } = selectedJsonEntity || {};
+
+    const {
+        source_id,
+        index_id,
+        ...entity
+    } = rest;
 
     return (
         <div>
