@@ -82,8 +82,8 @@ function MediaEntertainment({
         try {
             setIsReelOpen(false);
             setIsGeneratingReel(true);
-            const { success, message, newReel } = await makeApiRequest('/generate-reel', 'POST', JSON.stringify({
-                sources: displayedSources.filter(item => item.is_checked).map(i => ({ filename: i.source_path, category: i.category?.filter(item => item !== 'all')[0] })),
+            const { success, message, newReel } = await makeApiRequest('/reels', 'POST', JSON.stringify({
+                sources: displayedSources.filter(item => item.is_checked).map(i => ({ source_id: i.source_id, index_id: i.index_id })),
                 context,
                 title: reel.title,
                 verbosityValue: verbosityValue.split(" ")[0]?.toLowerCase() || "short"
@@ -178,7 +178,7 @@ function MediaEntertainment({
         setIsReelDeleting(true);
         try {
             const publicReelUrl = await getPublicUrl(reel.reel_video_url);
-            await makeApiRequest('/remove-reel', 'POST', JSON.stringify({
+            await makeApiRequest(`/reels/${reel.id}`, 'DELETE', JSON.stringify({
                 videoUrl: publicReelUrl,
             }));
 

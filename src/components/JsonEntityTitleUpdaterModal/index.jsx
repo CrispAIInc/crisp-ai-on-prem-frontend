@@ -24,7 +24,7 @@ const JsonEntityTitleUpdaterModal = ({ show, onHide, jsonEntity }) => {
         try {
             setIsLoading(true);
 
-            const { success, message } = await makeApiRequest(`/graph/${jsonEntity.graph_id}`, 'PUT', { title: newJsonEntityName.trim() });
+            const { success, message } = await makeApiRequest(`/graphs/${jsonEntity.graph_id}`, 'PATCH', { title: newJsonEntityName.trim() });
 
             if (success) {
                 setJsonEntities(prev => prev.map(graph => {

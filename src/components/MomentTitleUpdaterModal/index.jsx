@@ -20,7 +20,7 @@ const MomentTitleUpdaterModal = ({ show, onHide, moment, setMoments }) => {
         try {
             setIsLoading(true);
 
-            const { success, message, new_title } = await makeApiRequest(`/moment/${moment.id}`, 'PUT', { title: newMomentTitle.trim() });
+            const { success, message, new_title } = await makeApiRequest(`/moments/${moment.id}`, 'PATCH', { title: newMomentTitle.trim() });
 
             if (success) {
                 setMoments(prev => prev.map(item => {

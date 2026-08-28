@@ -163,7 +163,7 @@ export default function VideoProcessingSettings({ value, onChange }) {
       </div>
 
       {/* is detailed mode checkbox */}
-      {/* <div className={`px-3 pb-5 transition-all duration-200 ease-in-out`}>
+      <div className={`px-3 pb-5 transition-all duration-200 ease-in-out`}>
         <label className={`flex items-center gap-2 p-2 rounded-xl cursor-pointer ${theme === 'light' ? '!border !border-slate-300' : '!border !border-textColor-200/50'}`}>
           <Checkbox
             className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
@@ -181,10 +181,10 @@ export default function VideoProcessingSettings({ value, onChange }) {
           <br />
           <span className="font-bold text-xs">Processing time may increase.</span>
         </p>
-      </div> */}
+      </div>
 
       {/* video captioning context input */}
-      {/* <div
+      <div
         className={`px-3 pb-4 transition-all duration-200 ease-in-out`}
       >
         <p className="text-slate-400 text-xs mt-0.5">Provide context to improve video captioning accuracy.</p>
@@ -199,7 +199,7 @@ export default function VideoProcessingSettings({ value, onChange }) {
           className={`w-full py-2 mt-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-28 placeholder:text-neutral-400 *:${theme === 'light' ? 'text-textColor-100 !border !border-textColor-200/20' : 'text-textColor-300 !border !border-textColor-200/20'} rounded-xl px-3 [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}
         />
-      </div> */}
+      </div>
     </div>
   );
 }

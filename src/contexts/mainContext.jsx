@@ -98,8 +98,7 @@ export default function MainProvider({ children, theme, setTheme }) {
             try {
                 axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
                 const data = await makeApiRequest(
-                    "/content",
-                    "GET"
+                    "/assets"
                 );
                 setKnowledgeBase(data);
             } catch (error) {
@@ -1267,7 +1266,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     useEffect(() => {
         async function getJsonEntities() {
-            const { graphs } = await makeApiRequest('/graph');
+            const { graphs } = await makeApiRequest('/graphs');
             setJsonEntities(graphs);
         }
 

@@ -40,7 +40,7 @@ import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
 const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, sourceCategory, oldFilename, filetype }) => {
-    const { theme, setKnowledgeBase } = useContext(MainContext);
+    const { theme, knowledgeBase, setKnowledgeBase } = useContext(MainContext);
 
     const { notify } = useToast();
     const [isLoading, setIsLoading] = useState(false);
@@ -60,12 +60,9 @@ const UpdateFilenameModal = ({ show, onHide, filename, setFilename, extension, s
             setIsLoading(true);
 
             const payload = {
-                category: sourceCategory,
-                oldFilename,
                 newFilename: filename + "." + extension,
-                filetype
             };
-            const response = await makeApiRequest('/rename', 'PATCH', JSON.stringify(payload));
+            const response = await makeApiRequest(`/assets/${knowledgeBase.find(item => item.source_path === oldFilename)?.source_id}`, 'PATCH', JSON.stringify(payload));
 
             const mediaKey = ['video_url', 'pdf_url', 'thumbnail'].find(key => response[key]);
 
@@ -276,7 +273,7 @@ const ContentSection = ({
             // remove source from metadata panel if it's active
             removeSourceFromMetadataPanel(items);
 
-            await makeApiRequest(`/delete`, "post", { sources: payload });
+            await makeApiRequest(`/assets/${items[0].source_id}`, "DELETE");
             setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
 
             notify({
@@ -762,7 +759,7 @@ const ContentSection = ({
 
             files.forEach((file, index) => {
                 formData.append("file", file);
-                formData.append("category", selectedCategory);
+                formData.append("index_id", categoryOptions.find(item => item.value === selectedCategory)?.id);
                 formData.append("fileType", file.type);
                 formData.append("session_id", sessionId);
                 formData.append("isDetailedMode", isDetailedMode);
@@ -782,6 +779,7 @@ const ContentSection = ({
 
                 return {
                     category: [selectedCategory],
+                    index_id: categoryOptions.find(item => item.value === selectedCategory)?.id,
                     file_type: getFileType(file.type),
                     source_path:
                         totalSourcesWithSameFilename > 0
@@ -836,7 +834,7 @@ const ContentSection = ({
             }, 10000);
 
             // await delay(3000);
-            const { uploaded_data } = await makeApiRequest("/upload", "post", formData, { 'Content-type': "multipart/form-data" });
+            const { uploaded_data } = await makeApiRequest("/assets", "POST", formData, { 'Content-type': "multipart/form-data" });
 
             // ----------  Update knowledge base ----------
             setKnowledgeBase(prev => [...uploaded_data, ...prev.slice(totalFiles)]);

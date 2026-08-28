@@ -8,10 +8,22 @@ const JsonViewer = () => {
 
     const { theme, selectedJsonEntity } = useContext(MainContext);
 
+    const {
+        success,
+        message,
+        ...rest
+    } = selectedJsonEntity || {};
+
+    const {
+        source_id,
+        index_id,
+        ...entity
+    } = rest;
+
     return (
         <div>
             <JsonView
-                value={selectedJsonEntity.graph}
+                value={entity}
                 style={theme === 'dark' ? darkTheme : lightTheme}
                 theme="rjv-default"
                 displayDataTypes={false}

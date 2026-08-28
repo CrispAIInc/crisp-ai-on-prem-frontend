@@ -278,7 +278,16 @@ const ChatPanel = () => {
       axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
       axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
 
-      const { data, success, message } = await makeApiRequest(`/segment?${url.toString()}`, 'GET', null, {
+      const payload = {
+        isFullSource: isFullSourceDuration,
+        start_timestamp: formatTime(selectedStart),
+        end_timestamp: formatTime(selectedEnd),
+        prompt: promptSegmentDescription,
+        title: segmentTitle,
+        source_id: checkedVideo.source_id
+      };
+
+      const { data, success, message } = await makeApiRequest(`/segments`, 'POST', payload, {
         Authorization: `Bearer ${token}`,
         SessionId: currentChat?.sessionId,
         ProjectId: currentProject?.project_id,
@@ -314,7 +323,7 @@ const ChatPanel = () => {
     async function fetchTimeSegments() {
       try {
         axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-        const { data, success } = await makeApiRequest("/chat/segment", 'GET', null, {
+        const { data, success } = await makeApiRequest("/segments", 'GET', null, {
           ProjectId: currentProject.project_id,
         });
 
@@ -360,7 +369,7 @@ const ChatPanel = () => {
     async function fetchFindMoments() {
       try {
         axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-        const { data, success } = await makeApiRequest("/chat/moment", 'GET', null, {
+        const { data, success } = await makeApiRequest("moments", 'GET', null, {
           ProjectId: currentProject.project_id,
         });
         if (success) {
@@ -377,10 +386,10 @@ const ChatPanel = () => {
   const [isPending, setIsPending] = useState(false);
 
   async function handleCaptioning(query, momentTitle) {
-    let response = await makeApiRequest('/moment', 'POST', JSON.stringify({
+    let response = await makeApiRequest('/moments', 'POST', JSON.stringify({
       prompt: query,
       title: momentTitle,
-      sources: checkedSources.filter(items => items.file_type === "video"),
+      sources: checkedSources.filter(item => item.file_type === "video").map(item => item.source_id),
       fromCrispWiz: false
     }));
 
@@ -402,7 +411,7 @@ const ChatPanel = () => {
           `/handle-embeddings`,
           "post",
           JSON.stringify({
-            sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_path: item?.source_path, category: item?.category })),
+            sources: checkedSources.filter(items => items.file_type === "video")?.map(item => ({ source_id: item?.source_id, index_id: item?.index_id })),
           })
         );
       }
@@ -471,7 +480,7 @@ const ChatPanel = () => {
     };
 
     try {
-      const { success, message, id } = await makeApiRequest('/moment/save', 'POST', JSON.stringify({ momentWithoutSource }));
+      const { success, message, id } = await makeApiRequest('/moments/save', 'POST', JSON.stringify({ momentWithoutSource }));
 
       if (!success) {
         throw new Error(message);
@@ -557,7 +566,7 @@ const ChatPanel = () => {
 
       setStep(STEPS[1]);
       const payload = {
-        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_id: checkedVideoOrPdfSources[0].source_id, index_id: checkedVideoOrPdfSources[0].index_id },
         selectedOptions: ["graph"],
         inputContext: entityContext,
         ontology,
@@ -566,7 +575,7 @@ const ChatPanel = () => {
         from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoStart) : Number(entityPageFrom),
         to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(entityVideoEnd) : Number(entityPageTo),
       };
-      let response = await makeApiRequest('/graph', 'POST', payload);
+      let response = await makeApiRequest('/graphs', 'POST', payload);
 
       setStep(STEPS.at(-1));
       setSelectedJsonEntity(response);
@@ -649,13 +658,13 @@ const ChatPanel = () => {
       // =============== generating blog ===================
       setStep(STEPS[2]);
       const payload = {
-        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_path: checkedVideoOrPdfSources[0].source_path, category: Array.isArray(checkedVideoOrPdfSources[0].category) ? checkedVideoOrPdfSources[0].category.filter(cat => cat !== "all")[0] : checkedVideoOrPdfSources[0].category },
+        sources: { file_type: checkedVideoOrPdfSources[0].file_type, source_id: checkedVideoOrPdfSources[0].source_id, index_id: checkedVideoOrPdfSources[0].index_id },
         isFullSource: isFullSourceDurationBlog,
         from: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoStart) : Number(pageFrom),
         to: checkedVideoOrPdfSources[0].file_type === "video" ? formatTime(videoEnd) : Number(pageTo),
         context: blogContext
       };
-      const { success, message, ...newBlog } = await makeApiRequest('/blog', 'POST', payload);
+      const { success, message, ...newBlog } = await makeApiRequest('/blogs', 'POST', payload);
 
       if (success) {
         setStep(STEPS[3]);

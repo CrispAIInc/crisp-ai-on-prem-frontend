@@ -24,7 +24,7 @@ const BlogTitleUpdaterModal = ({ show, onHide, blog }) => {
         try {
             setIsLoading(true);
 
-            const { success, message, blog_url, new_title } = await makeApiRequest(`/blog/${blog.blog_id}`, 'PUT', { title: newBlogTitle.trim() });
+            const { success, message, blog_url, new_title } = await makeApiRequest(`/blogs/${blog.blog_id}`, 'PATCH', { title: newBlogTitle.trim() });
 
             if (success) {
                 setBlogs(prev => prev.map(item => {

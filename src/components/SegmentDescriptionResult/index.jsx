@@ -13,7 +13,7 @@ import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegmentDescriptions, setSegmentDescriptions, setShowList, currentSegment, setCurrentSegment }) => {
 
     const {
-        video,
+        source_id,
         start,
         end,
         timestampText,
@@ -30,7 +30,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
     const { handleSourceLinkClick } = useReferenceLinkClick(true, contentPanelContainerRef);
 
-    let source = knowledgeBase.find(item => item.source_path === video) || {};
+    let source = knowledgeBase.find(item => item.source_id === source_id) || {};
 
     function closeResultsTab() {
         setCurrentSegment(null);
@@ -79,7 +79,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
 
                 <div className={`flex items-center gap-1 ${theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]'}`}>
                     <PlayCircleOutlineOutlinedIcon />
-                    <p className={`text-sm/6 font-semibold`}>{video}</p>
+                    <p className={`text-sm/6 font-semibold`}>{source?.source_path}</p>
                 </div>
 
                 <div className={`flex items-center gap-1 ${theme === 'light' ? 'text-textColor-200' : 'text-[#ABAEB4]'}`}>
