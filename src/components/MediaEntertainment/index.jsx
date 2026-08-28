@@ -82,7 +82,7 @@ function MediaEntertainment({
         try {
             setIsReelOpen(false);
             setIsGeneratingReel(true);
-            const { success, message, newReel } = await makeApiRequest('/reels/save', 'POST', JSON.stringify({
+            const { success, message, newReel } = await makeApiRequest('/reels', 'POST', JSON.stringify({
                 sources: displayedSources.filter(item => item.is_checked).map(i => ({ source_id: i.source_id, index_id: i.index_id })),
                 context,
                 title: reel.title,

@@ -287,7 +287,7 @@ function ReelViewer({
             let savedId = reel?.id;
 
             try {
-                const backendResponse = await makeApiRequest('/reel/save', 'POST', JSON.stringify({ ...reel, title: nextTitle }));
+                const backendResponse = await makeApiRequest('/reels/save', 'POST', JSON.stringify({ ...reel, title: nextTitle }));
                 if (backendResponse?.id) {
                     savedId = backendResponse.id;
                 }
