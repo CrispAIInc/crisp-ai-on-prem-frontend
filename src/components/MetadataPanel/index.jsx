@@ -61,7 +61,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
   const { getPublicUrl } = useFirebase();
 
-  const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item.source_path === currentResource.source_path));
+  const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item.source_id === currentResource.source_id));
   // const [generatedResource, setGeneratedResource] = useState(null);
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
   const [numPages, setNumPages] = useState();
@@ -120,7 +120,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
         const updatedResource = {
           ...currentResource,
-          ...generatedResources?.find(item => item.source_path === currentResource.source_path)
+          ...generatedResources?.find(item => item.source_id === currentResource.source_id)
         };
 
         // Update the currentResource state
@@ -132,7 +132,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
         translateMetadata(chosenLanguage, updatedResource);
       }
     }
-  }, [currentResource?.source_path, JSON.stringify(generatedResources)]);
+  }, [currentResource?.source_id, JSON.stringify(generatedResources)]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -252,19 +252,19 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
   useEffect(() => {
     return () => {
-      setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_path));
+      setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_id));
     };
   }, [currentResource]);
 
 
   const areSourcesSame = (arr1, arr2) => {
-    const set1 = new Set(arr1.map(obj => obj.source_path));
-    const set2 = new Set(arr2.map(obj => obj.source_path));
+    const set1 = new Set(arr1.map(obj => obj.source_id));
+    const set2 = new Set(arr2.map(obj => obj.source_id));
 
     if (set1.size !== set2.size) return false; // Different sizes
 
-    for (const path of set1) {
-      if (!set2.has(path)) return false; // Different elements
+    for (const id of set1) {
+      if (!set2.has(id)) return false; // Different elements
     }
 
     return true; // Arrays contain the same objects (ignoring order)
