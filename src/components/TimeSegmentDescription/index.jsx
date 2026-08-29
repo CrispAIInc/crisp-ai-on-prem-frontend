@@ -555,7 +555,7 @@ const TimeSegmentDescription = ({
 
             {/* is detailed mode checkbox */}
             {
-                source?.withDetailedMode && (
+                (isSingleVideoSelected && checkedSources[0].withDetailedMode) && (
                     <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
                         <Info size={17} />
                         <p className="text-xs mt-1 font-medium">
