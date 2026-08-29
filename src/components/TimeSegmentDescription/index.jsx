@@ -136,7 +136,7 @@ const TimeSegmentDescription = ({
     const handleMouseLeave = () => setTooltipVisible(false);
 
     const canGenerate = checkedVideosCount === 1 && !isSegmentPending && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
-    const source = knowledgeBase.find(item => item.source_id === currentSegment.source_id);
+    const source = knowledgeBase.find(item => item.source_id === currentSegment?.source_id);
 
     // Helper function to convert a Base64 string to a Uint8Array (Prevents Word corruption)
     function base64ToUint8Array(base64) { const binaryString = window.atob(base64); const len = binaryString.length; const bytes = new Uint8Array(len); for (let i = 0; i < len; i++) { bytes[i] = binaryString.charCodeAt(i); } return bytes; }
@@ -555,7 +555,7 @@ const TimeSegmentDescription = ({
 
             {/* is detailed mode checkbox */}
             {
-                source.withDetailedMode && (
+                source?.withDetailedMode && (
                     <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
                         <Info size={17} />
                         <p className="text-xs mt-1 font-medium">
