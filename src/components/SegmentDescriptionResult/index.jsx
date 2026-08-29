@@ -100,7 +100,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                 <div>
                     <BaseHeading text="Mood" className="mb-2" />
                     <div className="flex flex-wrap gap-2">
-                        {schema.mood.map((m) => (
+                        {schema?.mood.map((m) => (
                             <span
                                 key={m}
                                 className="px-3 py-1 text-sm bg-blue-500/20 text-blue-500 rounded-full"
@@ -114,7 +114,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                 <div>
                     <BaseHeading text="Shot Type" className="mb-2" />
                     <div className="flex flex-wrap gap-2">
-                        {schema.shot_type.map((s) => (
+                        {schema?.shot_type.map((s) => (
                             <span
                                 key={s}
                                 className="px-3 py-1 text-sm bg-purple-500/20 text-purple-500 rounded-full"
@@ -130,7 +130,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
             {/* Scene Description */}
             <div>
                 <BaseHeading text="generated response" className="mb-1" />
-                <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: schema.action_description.replace(/\r?\n/g, '<br />') }} />
+                <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`} dangerouslySetInnerHTML={{ __html: schema?.action_description.replace(/\r?\n/g, '<br />') }} />
             </div>
 
             <TalkingHeadPanel
@@ -144,7 +144,7 @@ const SegmentDescriptionResult = ({ exportFn, isPending, results, setTimeSegment
                     <BaseHeading text="Detected On-screen Text" className="mb-2" />
 
                     <div className="rounded-lg text-sm flex gap-1 flex-wrap">
-                        {schema.onscreen_text?.text_content?.map((text) => (
+                        {schema?.onscreen_text?.text_content?.map((text) => (
                             // <div
                             //     key={text}
                             //     className="inline-block mr-2 mb-2 px-3 py-1 rounded bg-emerald-500/20 text-emerald-500"
