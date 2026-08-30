@@ -5,9 +5,9 @@ import TimelineHorizontal from '../TimelineHorizontal';
 import HorizontalCard from '../HorizontalCard';
 
 const TAB_SETS = {
-    video: ["search", "transcription", "summary", "chapters", "highlights"],
-    pdf: ["search", "transcription", "summary", "chapters", "highlights"],
-    image: ["summary", "keywords"],
+    video: ["search", "transcription", "summary", "chapters", "highlights", "faqs"],
+    pdf: ["search", "summary", "chapters", "highlights", "faqs"],
+    img: ["search", "summary", "keywords", "faqs"],
 };
 
 const TAB_LABELS = {
@@ -17,6 +17,7 @@ const TAB_LABELS = {
     chapters: "Chapters",
     highlights: "Highlights",
     keywords: "Keywords",
+    faqs: "FAQs"
 };
 
 // "00:00:05" -> "0:05", "00:01:30" -> "1:30", "01:02:03" -> "1:02:03"
