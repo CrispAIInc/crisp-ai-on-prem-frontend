@@ -4,6 +4,10 @@ import { ChevronDown, Sparkles, Check } from "lucide-react";
 import CollapsibleSection from "../CollapsibleSection";
 import SourcesDropdown from "../SourcesDropdown";
 import VerbositySlider from '../VerbositySlider';
+import useMetadata from '../../hooks/useMetadata';
+import makeApiRequest from '../../api';
+import { useToast } from '../../contexts/toastContext';
+import { delay } from '../../utils';
 
 /**
  * ContextualMetadata — "Generate metadata" panel.
@@ -39,8 +43,13 @@ export default function ContextualMetadata({
 }) {
 
     const {
-        knowledgeBase
+        knowledgeBase,
+        setKnowledgeBase
     } = useContext(MainContext);
+
+    const {
+        notify
+    } = useToast();
 
     const videoSources = knowledgeBase.filter(item => item.file_type === "video");
 
@@ -48,6 +57,7 @@ export default function ContextualMetadata({
     const [internalOutputFormats, setInternalOutputFormats] = useState([outputFormatOptions[0]]);
     const [internalVerbosity, setInternalVerbosity] = useState(60);
     const [internalSelectedIds, setInternalSelectedIds] = useState([]);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const context = contextProp ?? internalContext;
     const setContext = onContextChange ?? setInternalContext;
@@ -67,8 +77,66 @@ export default function ContextualMetadata({
         return s === 0 ? `${m}m` : `${m}m ${s}s`;
     }
 
-    function generateMetadata({ sourceIds, context, outputFormats, verbosity }) {
+    async function handleGenerateMetadata({ sourceIds, context, outputFormats, verbosity }) {
         console.log({ sourceIds, context, outputFormats, verbosity });
+        setIsGenerating(true);
+
+        try {
+            // const payload = {
+            //     sourceIds,
+            //     selectedOptions: outputFormats,
+            //     inputContext: context,
+            //     verbosityValue: verbosity,
+            // };
+
+            const payload = {
+                sources: knowledgeBase.filter(i => sourceIds.includes(i.source_id)).map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
+                selectedOptions: outputFormats.map(item => item.toLowerCase()),
+                inputContext: context,
+                verbosityValue: verbosity,
+            };
+
+            let { results, success, message } = await makeApiRequest('/metadata', 'POST', payload);
+            console.log(results);
+
+            // if (!success) {
+            //     throw new Error(message);
+            // }
+
+            setKnowledgeBase(prev => {
+                // Build a lookup map from results
+                const resultsMap = new Map(
+                    results.map(r => [r.source_path, r.metadata])
+                );
+
+                return prev.map(item => {
+                    // If this item exists in results, update metadata
+                    if (resultsMap.has(item.source_path)) {
+                        return {
+                            ...item,
+                            metadata: resultsMap.get(item.source_path),
+                        };
+                    }
+
+                    // Otherwise, leave it unchanged
+                    return item;
+                });
+            });
+
+            notify({
+                variant: "success",
+                heading: message || "Metadata generated successfully!",
+            });
+        } catch (error) {
+            console.error(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error.message || "You must check at least one metadata option",
+            });
+        } finally {
+            setIsGenerating(false);
+        }
     }
 
     return (
@@ -118,11 +186,15 @@ export default function ContextualMetadata({
                 <button
                     type="button"
                     disabled={!canGenerate}
-                    onClick={() => generateMetadata({ sourceIds, context, outputFormats, verbosity })}
+                    onClick={() => handleGenerateMetadata({ sourceIds, context, outputFormats, verbosity })}
                     className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
-                    <Sparkles size={14} />
-                    Generate metadata
+                    <Sparkles size={14} className={`${isGenerating && "animate-customPulse"}`} />
+                    <span className={`${isGenerating && "animate-customPulse"}`}>
+                        {
+                            isGenerating ? "Generating metadata" : "Generate metadata"
+                        }
+                    </span>
                 </button>
             </div>
         </div>
