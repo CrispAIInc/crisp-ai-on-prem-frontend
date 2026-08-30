@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Search, Globe } from "lucide-react";
+import { Search, Globe, SearchX } from "lucide-react";
 import { MainContext } from '../../contexts/mainContext';
 import TimelineHorizontal from '../TimelineHorizontal';
 import HorizontalCard from '../HorizontalCard';
@@ -253,32 +253,19 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
                             title="Search this video's transcript"
                             description="Find the exact moment a topic, name, or phrase comes up — results jump the player straight there."
                         />
-                    ) : results.length === 0 ? (
-                        <EmptyState
-                            title="No matches found"
-                            description={query ? `Nothing matched "${query}". Try a different phrase.` : "Try a different search."}
-                        />
-                    ) : (
-                        <div className="flex flex-col gap-2 overflow-y-auto">
-                            {/* {results.map((r) => (
-                                <button
-                                    key={r.id}
-                                    type="button"
-                                    onClick={() => onResultClick?.(r)}
-                                    className="flex items-start gap-3 text-left border border-border rounded-lg p-3 hover:border-border-strong hover:bg-surface-alt transition-colors"
-                                >
-                                    <span className="flex items-center gap-1 shrink-0 text-[11px] font-mono font-semibold text-primary bg-surface-alt rounded-md px-2 py-1 mt-0.5">
-                                        <PlayCircle size={12} />
-                                        {formatTimestamp(r?.start_time)}
-                                    </span>
-                                    <span className="min-w-0">
-                                        {r?.title && <span className="block text-[12.5px] font-semibold text-ink mb-0.5">{r?.title}</span>}
-                                        <span className="block text-[12.5px] text-ink-secondary line-clamp-2">{r?.content}</span>
-                                    </span>
-                                </button>
-                            ))} */}
-                        </div>
-                    )}
+                    ) : isSearching ? null :
+                        searchOutcome === "not-found" ? (
+                            <EmptyState
+                                title="No matches found"
+                                description={query ? `Nothing matched "${query}". Try a different phrase.` : "Try a different search."}
+                            />
+                        ) : searchOutcome === "error" ? (
+                            <EmptyState
+                                title="Couldn't generate results"
+                                description="Please check your internet and try again later."
+                                isError
+                            />
+                        ) : null}
                 </div>
             </div>
         </>
@@ -405,11 +392,14 @@ function HighlightsPane({ highlights }) {
     );
 }
 
-function EmptyState({ title, description }) {
+function EmptyState({ title, description, isError }) {
+
+    const Icon = isError ? <SearchX size={19} /> : <Search size={19} />;
+
     return (
         <div className="flex-1 flex flex-col items-center justify-center text-center gap-2.5 py-6 px-4">
             <div className="w-11 h-11 rounded-xl bg-surface-alt flex items-center justify-center text-ink-muted">
-                <Search size={19} />
+                {Icon}
             </div>
             <strong className="text-ink text-[13px] font-semibold">{title}</strong>
             <span className="text-[12.5px] text-ink-muted max-w-[320px]">{description}</span>
