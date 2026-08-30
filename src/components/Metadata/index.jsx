@@ -7,10 +7,11 @@ import makeApiRequest from '../../api';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import { useToast } from '../../contexts/toastContext';
 import { timeToSeconds } from '../../utils';
+import Chip from '../Chip';
 
 const TAB_SETS = {
-    video: ["search", "transcription", "summary", "chapters", "highlights", "faqs"],
-    pdf: ["search", "summary", "chapters", "highlights", "faqs"],
+    video: ["search", "transcription", "summary", "chapters", "highlights", "keywords", "faqs"],
+    pdf: ["search", "summary", "chapters", "highlights", "keywords", "faqs"],
     img: ["search", "summary", "keywords", "faqs"],
 };
 
@@ -122,6 +123,11 @@ export default function Metadata({
                 {activeTab === "highlights" && (
                     <HighlightsPane
                         highlights={translatedResource?.highlights?.content}
+                    />
+                )}
+                {activeTab === "keywords" && (
+                    <KeywordsPane
+                        keywords={translatedResource?.keywords?.content}
                     />
                 )}
             </div>
@@ -386,6 +392,37 @@ function HighlightsPane({ highlights }) {
                     ))
                 ) : (
                     <p className="italic">Highlights not available for this source.</p>
+                )}
+            </div>
+        </>
+    );
+}
+
+function KeywordsPane({ keywords }) {
+    const { workspaceContainer } = useContext(MainContext);
+    const keywordItems = Array.isArray(keywords) ? keywords : [];
+
+    return (
+        <>
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
+                <h3 className="font-display text-[13.5px] font-semibold text-ink">Keywords</h3>
+            </div>
+
+            <div className="p-4 flex-1 min-h-0 overflow-y-auto">
+                {keywordItems.length > 0 ? (
+                    <div className="flex items-center flex-wrap gap-1 max-w-full">
+                        {
+                            keywordItems.map((keyword, index) => (
+                                <Chip
+                                    key={keyword.id ?? index}
+                                    content={keyword.keyword}
+                                    cssClasses="bg-primary-100/50 !text-primary-200 !border-none"
+                                />
+                            ))
+                        }
+                    </div>
+                ) : (
+                    <p className="italic">Keywords not available for this source.</p>
                 )}
             </div>
         </>
