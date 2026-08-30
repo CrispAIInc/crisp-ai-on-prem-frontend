@@ -24,12 +24,24 @@ import AppLayout from './components/Layout/AppLayout.jsx';
 import Studio from './components/Studio/index.jsx';
 import MainProvider from './contexts/mainContext.jsx';
 import { ProjectContext } from './contexts/projectContext.jsx';
+import ProjectsPage from './pages/ProjectsPage.jsx';
 
 function ProjectWorkspace({ theme, setTheme }) {
-  const { currentProject } = useContext(ProjectContext);
+  const {
+    projects,
+    setProjects,
+    currentProject,
+    setCurrentProject
+  } = useContext(ProjectContext);
 
   if (!currentProject) {
-    return null;
+    return (
+      <ProjectsPage
+        setCurrentProject={setCurrentProject}
+        projects={projects}
+        setProjects={setProjects}
+      />
+    );
   }
 
   return (
