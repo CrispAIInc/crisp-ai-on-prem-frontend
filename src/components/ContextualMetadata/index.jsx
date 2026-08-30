@@ -97,7 +97,7 @@ export default function ContextualMetadata({
                 verbosityValue: verbosity.toLowerCase(),
             };
 
-            let { results, success, message } = await makeApiRequest('/metadadta', 'POST', payload);
+            let { results, success, message } = await makeApiRequest('/metadata', 'POST', payload);
             console.log(results);
 
             // if (!success) {
