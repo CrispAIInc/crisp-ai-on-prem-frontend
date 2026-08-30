@@ -8,6 +8,7 @@ import useMetadata from '../../hooks/useMetadata';
 import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
 import { delay } from '../../utils';
+import MetadataVerbosity from '../MetadataVerbosity';
 
 /**
  * ContextualMetadata — "Generate metadata" panel.
@@ -93,10 +94,10 @@ export default function ContextualMetadata({
                 sources: knowledgeBase.filter(i => sourceIds.includes(i.source_id)).map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
                 selectedOptions: outputFormats.map(item => item.toLowerCase()),
                 inputContext: context,
-                verbosityValue: verbosity,
+                verbosityValue: verbosity.toLowerCase(),
             };
 
-            let { results, success, message } = await makeApiRequest('/metadata', 'POST', payload);
+            let { results, success, message } = await makeApiRequest('/metadadta', 'POST', payload);
             console.log(results);
 
             // if (!success) {
@@ -172,9 +173,10 @@ export default function ContextualMetadata({
                     <div>
                         <div className="flex items-center gap-2 mb-2">
                             <label className="text-[12px] font-medium text-ink-secondary">Verbosity</label>
-                            <span className="text-[12px] font-semibold px-1 rounded-md bg-primary-100/50 text-primary-300">{formatDuration(verbosity)}</span>
+                            {/* <span className="text-[12px] font-semibold px-1 rounded-md bg-primary-100/50 text-primary-300">{formatDuration(verbosity)}</span> */}
                         </div>
-                        <VerbositySlider value={verbosity} onChange={setVerbosity} />
+                        {/* <VerbositySlider value={verbosity} onChange={setVerbosity} /> */}
+                        <MetadataVerbosity onChange={setVerbosity} />
                         <p className="text-[11.5px] text-ink-muted mt-3">
                             Controls how much detail is included in the generated fields.
                         </p>
