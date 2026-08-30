@@ -22,7 +22,8 @@ function SourceExplorerItem({
     const {
         theme,
         handleCheckboxChange,
-        onThumbnailClick
+        onThumbnailClick,
+        categoryOptions
     } = useContext(MainContext);
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -63,7 +64,7 @@ function SourceExplorerItem({
                 <p className="text-sm font-semibold truncate">{source.source_path}</p>
                 {/* source metadata */}
                 <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden">
-                    <BaseHeading cssClasses={`text-xs`} text={typeof (source.category) === "string" ? source.category : source.category[0]} />
+                    <BaseHeading cssClasses={`text-xs`} text={categoryOptions.find(item => item.id === source.index_id)?.label} />
                     <CircleIcon className="!text-[5px]" />
                     <BaseHeading cssClasses={`text-xs`} text={source.file_type} />
                     {

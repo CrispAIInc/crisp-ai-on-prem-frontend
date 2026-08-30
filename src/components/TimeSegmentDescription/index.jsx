@@ -112,10 +112,11 @@ const TimeSegmentDescription = ({
     const {
         checkedSources,
         theme,
-        displayedSources
+        displayedSources,
+        knowledgeBase
     } = useContext(MainContext);
 
-    const [isDetailedMode, setIsDetailedMode] = useState(false);
+    // const [isDetailedMode, setIsDetailedMode] = useState(false);
 
     const checkedVideosCount = checkedSources.filter(source => source.file_type === "video").length;
     const isSingleVideoSelected = checkedVideosCount === 1;
@@ -135,6 +136,7 @@ const TimeSegmentDescription = ({
     const handleMouseLeave = () => setTooltipVisible(false);
 
     const canGenerate = checkedVideosCount === 1 && !isSegmentPending && prompt && prompt.trim().length > 0 && !isProjectReadOnly;
+    const source = knowledgeBase.find(item => item.source_id === currentSegment?.source_id);
 
     // Helper function to convert a Base64 string to a Uint8Array (Prevents Word corruption)
     function base64ToUint8Array(base64) { const binaryString = window.atob(base64); const len = binaryString.length; const bytes = new Uint8Array(len); for (let i = 0; i < len; i++) { bytes[i] = binaryString.charCodeAt(i); } return bytes; }
@@ -552,26 +554,15 @@ const TimeSegmentDescription = ({
             </div>
 
             {/* is detailed mode checkbox */}
-            <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
-                {/* <label className={`flex items-center gap-2 p-2 rounded-xl cursor-pointer !border !border-slate-300`}>
-                    <Checkbox
-                        className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
-                        checked={isDetailedMode}
-                        onChange={(e) => setIsDetailedMode(e.target.checked)}
-                        onClick={(event) => event.stopPropagation()}
-                        inputProps={{ "aria-label": "detailed mode ingestion" }}
-                    />
-                    <span className={`text-sm font-medium transition-colors ${theme === 'light' ? "text-slate-700" : "text-textColor-100"}`}>
-                        Enable Detailed Mode
-                    </span>
-                </label> */}
-                <Info size={17} />
-                <p className="text-xs mt-1 font-medium">
-                    This asset was ingested using <b>Detailed Mode</b>, so you will get <b>high detailed results</b>.
-                    {/* <br />
-                    <span className="font-bold text-xs">Processing time may increase.</span> */}
-                </p>
-            </div>
+            {
+                (isSingleVideoSelected && checkedSources[0].withDetailedMode) && (
+                    <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
+                        <Info size={17} />
+                        <p className="text-xs mt-1 font-medium">
+                            This asset was ingested using <b>Detailed Mode</b>, so you will get <b>high detailed results</b>.
+                        </p>
+                    </div>
+                )}
 
             <div className="flex items-center">
                 <Checkbox
