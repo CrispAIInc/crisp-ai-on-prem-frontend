@@ -1,8 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Search, Globe, PlayCircle } from "lucide-react";
+import { Search, Globe } from "lucide-react";
 import { MainContext } from '../../contexts/mainContext';
 import TimelineHorizontal from '../TimelineHorizontal';
 import HorizontalCard from '../HorizontalCard';
+import makeApiRequest from '../../api';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
+import { useToast } from '../../contexts/toastContext';
+import { timeToSeconds } from '../../utils';
 
 const TAB_SETS = {
     video: ["search", "transcription", "summary", "chapters", "highlights", "faqs"],
@@ -126,17 +130,87 @@ export default function Metadata({
 }
 
 function SearchPane({ query: queryProp, onQueryChange, language, results, onSearch, onResultClick }) {
+    const {
+        categoryOptions,
+        currentResource,
+        selectedCategory,
+        selectedFormat,
+        setDiscoveredSources,
+        setShowSearchModal,
+        knowledgeBase,
+        isPlayerReady,
+        player,
+    } = useContext(MainContext);
+
+    const { handleSourceLinkClick } = useReferenceLinkClick();
+    const { notify } = useToast();
+
     const [internalQuery, setInternalQuery] = useState("");
     const [searched, setSearched] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
+    const [searchOutcome, setSearchOutcome] = useState(null);
 
     const query = queryProp ?? internalQuery;
     const setQuery = onQueryChange ?? setInternalQuery;
 
     const canSearch = Boolean(query.trim());
 
-    const runSearch = () => {
+    const handleDiscover = async () => {
         setSearched(true);
-        onSearch?.(query);
+
+        setIsSearching(true);
+
+        try {
+
+            const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/discover', 'POST', JSON.stringify({
+                selectedCategory,
+                searchQuestion: query,
+                currentResource,
+                selectedFormat,
+            })
+            );
+
+            if (!success) {
+                throw new Error(message);
+            }
+
+
+            if (!found) {
+                setDiscoveredSources(null);
+                setSearchOutcome("not-found");
+            }
+            else {
+                setSearchOutcome("found");
+                const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
+                setDiscoveredSources({
+                    mainSource: { ...source, timestamp, page: Number(page), score },
+                    additionalSources: additional_sources?.map(item => {
+                        const sourceItem = knowledgeBase.find(el => el.source_path === item?.source_path);
+                        return {
+                            ...sourceItem,
+                            timestamp: item?.timestamp,
+                            page: Number(item?.page) || -1,
+                            score: item?.score
+                        };
+                    })
+                });
+
+                handleSourceLinkClick(null, { ...source, timestamp, page });
+                if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+            }
+
+            setShowSearchModal(true);
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: error.message || "An error occured while discovering",
+            });
+            setSearchOutcome("error");
+        } finally {
+            setIsSearching(false);
+        }
     };
 
     return (
@@ -157,18 +231,19 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && runSearch()}
+                            onKeyDown={(e) => e.key === "Enter" && handleDiscover()}
                             placeholder='e.g. "team collaboration", "career highlights"…'
                             className="flex-1 bg-transparent outline-none text-[12.5px] text-ink placeholder:text-ink-muted"
                         />
                     </div>
                     <button
                         type="button"
-                        onClick={runSearch}
+                        onClick={handleDiscover}
                         disabled={!canSearch}
-                        className={`shrink-0 rounded-lg px-3 py-2.5 text-[12.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed`}
+                        className={`shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-2.5 font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed`}
                     >
-                        Search
+                        <Search size={13} className={`${isSearching && 'animate-customPulse'}`} />
+                        <span className={`text-xs font-bold ${isSearching && 'animate-customPulse'}`}>Search</span>
                     </button>
                 </div>
 
@@ -185,7 +260,7 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
                         />
                     ) : (
                         <div className="flex flex-col gap-2 overflow-y-auto">
-                            {results.map((r) => (
+                            {/* {results.map((r) => (
                                 <button
                                     key={r.id}
                                     type="button"
@@ -194,14 +269,14 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
                                 >
                                     <span className="flex items-center gap-1 shrink-0 text-[11px] font-mono font-semibold text-primary bg-surface-alt rounded-md px-2 py-1 mt-0.5">
                                         <PlayCircle size={12} />
-                                        {formatTimestamp(r.start_time)}
+                                        {formatTimestamp(r?.start_time)}
                                     </span>
                                     <span className="min-w-0">
-                                        {r.title && <span className="block text-[12.5px] font-semibold text-ink mb-0.5">{r.title}</span>}
-                                        <span className="block text-[12.5px] text-ink-secondary line-clamp-2">{r.content}</span>
+                                        {r?.title && <span className="block text-[12.5px] font-semibold text-ink mb-0.5">{r?.title}</span>}
+                                        <span className="block text-[12.5px] text-ink-secondary line-clamp-2">{r?.content}</span>
                                     </span>
                                 </button>
-                            ))}
+                            ))} */}
                         </div>
                     )}
                 </div>
