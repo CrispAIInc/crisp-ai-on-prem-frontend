@@ -15,6 +15,7 @@ import {
 import Media from "../components/Media";
 import Discovery from "../components/Discovery";
 import ContextualMetadata from "../components/ContextualMetadata";
+import Shorts from "../components/Shorts";
 
 
 export const NAV_ITEMS = [
@@ -22,7 +23,7 @@ export const NAV_ITEMS = [
     { key: "discovery", label: "Discovery", icon: Search, component: Discovery },
     { key: "wiz", label: "Interaction", icon: MessageCircle },
     { key: "metadata", label: "Contextual Metadata", icon: Sparkles, component: ContextualMetadata },
-    { key: "shorts", label: "Shorts", icon: Film },
+    { key: "shorts", label: "Shorts", icon: Film, component: Shorts },
     { key: "analytics", label: "Analytics", icon: LineChart },
     { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen },
     { key: "business_intelligence", label: "Business Intelligence", icon: PieChart },
