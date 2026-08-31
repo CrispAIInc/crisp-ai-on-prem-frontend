@@ -78,7 +78,7 @@ export default function Metadata({
     }, [activeTab, availableTabIds]);
 
     return (
-        <div className={`h-full min-h-0 flex flex-col gap-3.5 ${className}`}>
+        <div className={`h-full min-h-0 flex flex-col gap-3.5 overflow-hidden ${className}`}>
             <div className="flex gap-1 bg-surface-alt p-1 rounded-[10px] w-fit bg-gray-200/30 shrink-0">
                 {tabs.map((t) => (
                     <button
@@ -94,7 +94,7 @@ export default function Metadata({
                 ))}
             </div>
 
-            <div className="flex-1 min-h-0 bg-white border border-border rounded-xl flex flex-col overflow-hidden">
+            <div className="flex-1 min-h-0 max-h-[420px] bg-white border border-border rounded-xl flex flex-col overflow-hidden">
                 {activeTab === "search" && (
                     <SearchPane
                         query={query}
