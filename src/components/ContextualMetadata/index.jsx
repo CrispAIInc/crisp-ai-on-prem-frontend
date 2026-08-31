@@ -143,7 +143,7 @@ export default function ContextualMetadata({
                         value={context}
                         onChange={(e) => setContext(e.target.value)}
                         placeholder="Add context to guide the generation — audience, tone, or what to focus on…"
-                        className="w-full min-h-[78px] border border-border rounded-lg px-2.5 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary resize-y"
+                        className="w-full min-h-[78px] border border-border rounded-lg px-2.5 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary resize-y bg-gray-100"
                     />
                 </Field>
 
