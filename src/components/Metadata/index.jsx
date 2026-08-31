@@ -332,10 +332,12 @@ function SummaryPane({ summaryObj }) {
                 <div className="flex flex-col gap-3">
                     {
                         summaryObj?.content !== undefined ? (
-                            <p
-                                className={`text-md text-textColor-300`}
-                                dangerouslySetInnerHTML={{ __html: `<p>${summaryObj?.content?.replace(/\n/gi, '<br />')}</p>` }}
-                            ></p>
+                            <div
+                                className="text-md text-textColor-300"
+                                dangerouslySetInnerHTML={{
+                                    __html: summaryObj?.content?.replace(/\n/gi, "<br />")
+                                }}
+                            />
                         ) : (
                             <p className="italic">Summary not available for this source. Generate it in Contextual metadata section</p>
                         )

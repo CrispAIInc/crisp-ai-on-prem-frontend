@@ -32,47 +32,6 @@ import {
 import BaseHeading from '../BaseHeading/index.jsx';
 import Metadata from '../Metadata/index.jsx';
 
-const MetadataNavigation = ({ sections, theme }) => {
-  const availableSections = sections.filter(({ content }) => content !== undefined && content !== null && content !== false && content !== "");
-  const [activeSection, setActiveSection] = useState(availableSections[0]?.id);
-  const activeContent = availableSections.find(({ id }) => id === activeSection) || availableSections[0];
-
-  if (availableSections.length === 0) {
-    return (
-      <p className={`mt-6 rounded-md border p-4 text-sm ${theme === "light" ? "border-textColor-200/30 text-textColor-300" : "border-textColor-300 text-textColor-100"}`}>
-        Generate metadata to view this source&apos;s summary, highlights, and other insights.
-      </p>
-    );
-  }
-
-  return (
-    <div className="mt-5">
-      <nav className={`flex gap-1 overflow-x-auto border-b ${theme === "light" ? "border-textColor-200/30" : "border-textColor-300"}`} aria-label="Metadata sections">
-        {availableSections.map(({ id, title }) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setActiveSection(id)}
-            className={`shrink-0 border-b-2 px-3 py-2 text-xs font-semibold uppercase tracking-widest transition-colors ${activeContent?.id === id
-              ? "border-primary-300 text-primary-300"
-              : theme === "light"
-                ? "border-transparent text-textColor-300 hover:text-primary-300"
-                : "border-transparent text-textColor-100 hover:text-primary-300"
-              }`}
-            aria-selected={activeContent?.id === id}
-            role="tab"
-          >
-            {title}
-          </button>
-        ))}
-      </nav>
-      <div className="select-text max-h-[500px] overflow-y-auto px-2 py-4 [&::-webkit-scrollbar]:w-1" role="tabpanel">
-        {activeContent.content}
-      </div>
-    </div>
-  );
-};
-
 const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth }) => {
   const {
     currentResource,
@@ -133,15 +92,12 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
         }
       }
     }
-  }, [isPlayerReady, currentResource?.source_path, currentResource?.timestamp, currentResource?.file_type]);
+  }, [isPlayerReady, currentResource?.source_id, currentResource?.timestamp, currentResource?.file_type]);
 
   // pdfRef.current?.goToPage(jumpToPage.page);
   useEffect(() => {
-    console.log(1);
     if (isPdfLoaded && jumpToPage.page > 0 && jumpToPage.page <= numPages) {
-      console.log(2);
       setTimeout(() => {
-        console.log(3);
         const targetRef = pageRefs.current[jumpToPage.page - 1];
         if (targetRef && targetRef.scrollIntoView) {
           targetRef.scrollIntoView({ behavior: "smooth" });
@@ -183,8 +139,10 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const pageRefs = useRef([]);
   const lastSeekContextRef = useRef(null);
 
+  const requestIdRef = useRef(0);
   async function translateMetadata(_chosenLanguage, object, fromTranslateDropdown = false) {
-    // updateContent();
+    const thisRequestId = ++requestIdRef.current; // mark this call as "the latest"
+
     let prevLang = chosenLanguage;
     setChosenLanguage(prev => fromTranslateDropdown ? _chosenLanguage : prev);
     setIsTranslationLoading(true);
@@ -275,7 +233,11 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
         "post",
         httpRequestBody
       );
-      setTranslatedResource({ ...httpResponseBody, lang: _chosenLanguage, prevLang });
+
+      // Only apply this response if no newer call has started since we began
+      if (thisRequestId === requestIdRef.current) {
+        setTranslatedResource({ ...httpResponseBody, lang: _chosenLanguage, prevLang });
+      }
 
     } catch (error) {
       console.log(error);
@@ -393,9 +355,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
 
   const isPrevArrowDisabled = currentPage <= 1;
   const isNextArrowDisabled = currentPage >= numPages;
-
-  const zoomIn = () => setScale((s) => Math.min(2.5, +(s + 0.1).toFixed(2)));
-  const zoomOut = () => setScale((s) => Math.max(0.5, +(s - 0.1).toFixed(2)));
 
 
   useEffect(() => {

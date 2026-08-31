@@ -9,6 +9,7 @@ import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
 import { delay } from '../../utils';
 import MetadataVerbosity from '../MetadataVerbosity';
+import { METADATA_VERBOSITY_OPTIONS } from '../../globals';
 
 /**
  * ContextualMetadata — "Generate metadata" panel.
@@ -31,21 +32,16 @@ import MetadataVerbosity from '../MetadataVerbosity';
  *  - className: extra classes on the root element
  */
 export default function ContextualMetadata({
-    selectedSourceIds,
-    onSelectedSourceIdsChange,
-    context: contextProp,
-    onContextChange,
-    outputFormat: outputFormatsProp,
-    onOutputFormatsChange,
-    outputFormatOptions = ["Summary", "Detailed", "Structured JSON"],
-    verbosity: verbosityProp,
-    onVerbosityChange,
     className = "",
 }) {
 
     const {
         knowledgeBase,
-        setKnowledgeBase
+        setKnowledgeBase,
+        selectedOptions,
+        setSelectedOptions,
+        metadataOptions,
+        setGeneratedResources
     } = useContext(MainContext);
 
     const {
@@ -53,48 +49,32 @@ export default function ContextualMetadata({
     } = useToast();
 
     const videoSources = knowledgeBase.filter(item => item.file_type === "video");
-
-    const [internalContext, setInternalContext] = useState("");
-    const [internalOutputFormats, setInternalOutputFormats] = useState([outputFormatOptions[0]]);
-    const [internalVerbosity, setInternalVerbosity] = useState(60);
-    const [internalSelectedIds, setInternalSelectedIds] = useState([]);
+    const [sourceIds, setSourceIds] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
-
-    const context = contextProp ?? internalContext;
-    const setContext = onContextChange ?? setInternalContext;
-    const outputFormats = outputFormatsProp ?? internalOutputFormats;
-    const setOutputFormats = onOutputFormatsChange ?? setInternalOutputFormats;
-    const verbosity = verbosityProp ?? internalVerbosity;
-    const setVerbosity = onVerbosityChange ?? setInternalVerbosity;
-    const sourceIds = selectedSourceIds ?? internalSelectedIds;
-    const setSourceIds = onSelectedSourceIdsChange ?? setInternalSelectedIds;
+    const [context, setContext] = useState("");
+    const [verbosity, setVerbosity] = useState(METADATA_VERBOSITY_OPTIONS[0]);
 
     const canGenerate = sourceIds.length > 0;
 
-    function formatDuration(seconds) {
-        if (seconds < 60) return `${seconds}s`;
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
-        return s === 0 ? `${m}m` : `${m}m ${s}s`;
+
+    function handleMetadataOptionValuesChange(newValues) {
+        // newValues = ["sum", "high", ...]
+        setSelectedOptions(() => {
+            let newVals = metadataOptions.filter(item => newValues.includes(item.name));
+            return newVals;
+        });
     }
 
-    async function handleGenerateMetadata({ sourceIds, context, outputFormats, verbosity }) {
-        console.log({ sourceIds, context, outputFormats, verbosity });
+    async function handleGenerateMetadata({ sourceIds }) {
         setIsGenerating(true);
 
         try {
-            // const payload = {
-            //     sourceIds,
-            //     selectedOptions: outputFormats,
-            //     inputContext: context,
-            //     verbosityValue: verbosity,
-            // };
 
             const payload = {
                 sources: knowledgeBase.filter(i => sourceIds.includes(i.source_id)).map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
-                selectedOptions: outputFormats.map(item => item.toLowerCase()),
-                inputContext: context,
-                verbosityValue: verbosity.toLowerCase(),
+                context,
+                selectedOptions: selectedOptions.map(({ id }) => id),
+                verboverbosityValue: verbosity.toLowerCase()
             };
 
             let { results, success, message } = await makeApiRequest('/metadata', 'POST', payload);
@@ -123,6 +103,8 @@ export default function ContextualMetadata({
                     return item;
                 });
             });
+
+            setGeneratedResources(results);
 
             notify({
                 variant: "success",
@@ -166,7 +148,7 @@ export default function ContextualMetadata({
                 </Field>
 
                 <Field label="Output format">
-                    <MultiSelectDropdown values={outputFormats} onChange={setOutputFormats} options={outputFormatOptions} />
+                    <MultiSelectDropdown values={selectedOptions.map(item => item.name)} onChange={(vals) => handleMetadataOptionValuesChange(vals)} options={metadataOptions.map(item => item.name)} />
                 </Field>
 
                 <CollapsibleSection title="Advanced settings" defaultOpen>
@@ -188,7 +170,7 @@ export default function ContextualMetadata({
                 <button
                     type="button"
                     disabled={!canGenerate}
-                    onClick={() => handleGenerateMetadata({ sourceIds, context, outputFormats, verbosity })}
+                    onClick={() => handleGenerateMetadata({ sourceIds, context, selectedOptions, setSelectedOptions, verbosity })}
                     className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                     <Sparkles size={14} className={`${isGenerating && "animate-customPulse"}`} />
@@ -237,9 +219,11 @@ function MultiSelectDropdown({ values, onChange, options }) {
                 aria-expanded={open}
                 className="w-full flex items-center justify-between gap-2 border border-border rounded-lg px-3 py-2.5 text-[12.5px] text-ink bg-surface hover:border-border-strong"
             >
-                <span className="truncate">
-                    {values.length === 0 ? <span className="text-ink-muted">Select output format</span> : values.join(", ")}
-                </span>
+                <div className="flex flex-col gap-1">
+                    <span className="truncate">
+                        {values.length === 0 ? <span className="text-ink-muted">Select output format</span> : values.join(", ")}
+                    </span>
+                </div>
                 <ChevronDown size={14} className={`text-ink-muted shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
             </button>
             {open && (

@@ -44,8 +44,9 @@
 // }
 
 import { useState } from "react";
+import { METADATA_VERBOSITY_OPTIONS } from '../../globals';
 
-const OPTIONS = ["Low", "Medium", "High"];
+
 
 /**
  * MetadataVerbosity — self-contained Low/Medium/High segmented control.
@@ -56,7 +57,7 @@ const OPTIONS = ["Low", "Medium", "High"];
  *   <MetadataVerbosity onChange={(verbosity) => console.log(verbosity)} />
  */
 export default function MetadataVerbosity({ onChange }) {
-    const [selected, setSelected] = useState(OPTIONS[0]);
+    const [selected, setSelected] = useState(METADATA_VERBOSITY_OPTIONS[0]);
 
     const handleSelect = (option) => {
         setSelected(option);
@@ -65,7 +66,7 @@ export default function MetadataVerbosity({ onChange }) {
 
     return (
         <div className="flex bg-gray-100 rounded-lg p-[3px] gap-0.5 w-fit">
-            {OPTIONS.map((option) => (
+            {METADATA_VERBOSITY_OPTIONS.map((option) => (
                 <button
                     key={option}
                     type="button"

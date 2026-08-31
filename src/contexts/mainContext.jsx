@@ -1153,10 +1153,10 @@ export default function MainProvider({ children, theme, setTheme }) {
     const metadataOptions = [
         { id: "summary", name: "Summary", description: "Generate concise overview" },
         // { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
-        { id: "highlights", name: "Highlights", description: "Capture key moments" },
         { id: "chapters", name: "Chapters", description: "Divide source into meaningful sections" },
-        { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
+        { id: "highlights", name: "Highlights", description: "Capture key moments" },
         { id: "keywords", name: "Keywords", description: "Extract important terms" },
+        { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
         // { id: "knowledgeGraph", name: "Knowledge graph", description: "Visualize key concepts and relationships" },
         // { id: "embeddings", name: "Embeddings", description: "Create vector representations for search" },
     ];
