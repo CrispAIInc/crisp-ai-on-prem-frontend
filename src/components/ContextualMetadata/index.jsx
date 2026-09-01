@@ -80,9 +80,9 @@ export default function ContextualMetadata({
             let { results, success, message } = await makeApiRequest('/metadata', 'POST', payload);
             console.log(results);
 
-            // if (!success) {
-            //     throw new Error(message);
-            // }
+            if (!success) {
+                throw new Error(message);
+            }
 
             setKnowledgeBase(prev => {
                 // Build a lookup map from results
