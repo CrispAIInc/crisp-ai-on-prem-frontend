@@ -10,13 +10,16 @@ import { useToast } from '../../contexts/toastContext';
 import { convertSecondsToHumanText, delay } from '../../utils';
 import MetadataVerbosity from '../MetadataVerbosity';
 import { METADATA_VERBOSITY_OPTIONS } from '../../globals';
+import { ProjectContext } from '../../contexts/projectContext';
 
 
 export default function Shorts() {
 
+    const { isProjectReadOnly } = useContext(ProjectContext);
     const {
         knowledgeBase,
         setKnowledgeBase,
+        displayedSources,
         selectedOptions,
         setSelectedOptions,
         metadataOptions,
@@ -33,70 +36,41 @@ export default function Shorts() {
     const [context, setContext] = useState("");
     const [title, setTitle] = useState("");
     const [reelDuration, setReelDuration] = useState(30);
-    const [verbosity, setVerbosity] = useState(METADATA_VERBOSITY_OPTIONS[0]);
+    const [reel, setReel] = useState(null);
 
     const canGenerate = sourceIds.length > 0;
 
 
-    function handleMetadataOptionValuesChange(newValues) {
-        // newValues = ["sum", "high", ...]
-        setSelectedOptions(() => {
-            let newVals = metadataOptions.filter(item => newValues.includes(item.name));
-            return newVals;
-        });
-    }
+    async function generateShort() {
+        if (isProjectReadOnly) return;
 
-    async function handleGenerateMetadata({ sourceIds }) {
-        setIsGenerating(true);
+        const payload = {
+            sources: knowledgeBase.filter(i => sourceIds.includes(i.source_id)).map(source => ({ source_id: source.source_id, index_id: source.index_id })),
+            context,
+            title: title,
+            verbosityValue: reelDuration
+        };
 
         try {
+            setIsGenerating(true);
+            const { success, message, newReel } = await makeApiRequest('/reels', 'POST', payload);
+            console.log(newReel);
 
-            const payload = {
-                sources: knowledgeBase.filter(i => sourceIds.includes(i.source_id)).map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
-                context,
-                selectedOptions: selectedOptions.map(({ id }) => id),
-                verboverbosityValue: verbosity.toLowerCase()
-            };
+            if (!success) {
+                throw new Error(message);
+            }
 
-            let { results, success, message } = await makeApiRequest('/metadata', 'POST', payload);
-            console.log(results);
+            setReel(newReel);
 
-            // if (!success) {
-            //     throw new Error(message);
-            // }
+            // setIsReelGenerated(true);
+            setContext('');
 
-            setKnowledgeBase(prev => {
-                // Build a lookup map from results
-                const resultsMap = new Map(
-                    results.map(r => [r.source_path, r.metadata])
-                );
-
-                return prev.map(item => {
-                    // If this item exists in results, update metadata
-                    if (resultsMap.has(item.source_path)) {
-                        return {
-                            ...item,
-                            metadata: resultsMap.get(item.source_path),
-                        };
-                    }
-
-                    // Otherwise, leave it unchanged
-                    return item;
-                });
-            });
-
-            setGeneratedResources(results);
-
-            notify({
-                variant: "success",
-                heading: message || "Metadata generated successfully!",
-            });
         } catch (error) {
-            console.error(error);
+            console.log(error);
             notify({
                 variant: "error",
-                heading: "Oops!",
-                subheading: error.message || "You must check at least one metadata option",
+                heading: "Couldn't generate reel!",
+                subheading: error?.message || "",
             });
         } finally {
             setIsGenerating(false);
@@ -120,7 +94,7 @@ export default function Shorts() {
                 </Field>
 
                 <Field label="Context">
-                    <p className="text-xs text-ink-secondary mb-0.5">When no context or topic is provided, the reel will be based on the existing highlights.</p>
+                    <p className="text-xs text-ink-secondary mb-0.5">When no context or topic is provided, the Short will be based on the existing highlights.</p>
                     <textarea
                         value={context}
                         onChange={(e) => setContext(e.target.value)}
@@ -134,7 +108,7 @@ export default function Shorts() {
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder='Write a title for the reel'
+                        placeholder='Write a title for the Short'
                         className="flex-1 outline-none border border-gray-200 w-full text-[12.5px] text-ink placeholder:text-ink-muted bg-gray-100 rounded-lg px-3 py-2"
                     />
                 </Field>
@@ -142,7 +116,7 @@ export default function Shorts() {
                 <CollapsibleSection title="Advanced settings" defaultOpen>
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <label className="text-sm font-medium text-ink-secondary">Reel duration</label>
+                            <label className="text-sm font-medium text-ink-secondary">Short duration</label>
                             <p className="text-sm p-1 rounded-md font-bolt bg-primary-100/50 text-primary-200">{convertSecondsToHumanText(reelDuration)}</p>
                         </div>
                         <VerbositySlider value={reelDuration} onChange={setReelDuration} />
@@ -157,12 +131,13 @@ export default function Shorts() {
                 <button
                     type="button"
                     disabled={!canGenerate}
+                    onClick={generateShort}
                     className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                     <Sparkles size={14} className={`${isGenerating && "animate-customPulse"}`} />
                     <span className={`${isGenerating && "animate-customPulse"}`}>
                         {
-                            isGenerating ? "Generating reel" : "Generate reel"
+                            isGenerating ? "Generating Short" : "Generate Short"
                         }
                     </span>
                 </button>
