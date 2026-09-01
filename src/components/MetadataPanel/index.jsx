@@ -541,6 +541,7 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
       {!isTranslationLoading ? (
         <div className="mt-3">
           <Metadata
+            translateMetadata={translateMetadata}
             translatedResource={translatedResource}
           />
         </div>

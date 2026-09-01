@@ -8,6 +8,7 @@ import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import { useToast } from '../../contexts/toastContext';
 import { timeToSeconds } from '../../utils';
 import Chip from '../Chip';
+import CustomSelectTwo from "../CustomSelectTwo";
 
 const TAB_SETS = {
     video: ["search", "transcription", "summary", "chapters", "highlights", "keywords", "faqs"],
@@ -59,11 +60,13 @@ export default function Metadata({
     onSearch,
     onResultClick,
     className = "",
-    translatedResource
+    translatedResource,
+    translateMetadata
 }) {
 
     const {
-        currentResource
+        currentResource,
+        languageOptions
     } = useContext(MainContext);
 
     const sourceType = currentResource.file_type;
@@ -92,6 +95,26 @@ export default function Metadata({
                         {t.label}
                     </button>
                 ))}
+
+                {/* translation */}
+                {
+                    (currentResource?.metadata
+                        && Object.keys(currentResource?.metadata).length > 0
+                        && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")
+                    ) && (
+                        <div className={`flex items-center border px-1 border-gray-100 bg-light-hover-100/30 rounded-lg`}>
+                            <Globe size={13} />
+                            <CustomSelectTwo
+                                withIcon
+                                options={languageOptions}
+                                onChange={(lang) =>
+                                    translateMetadata(lang.value, translatedResource, true)
+                                }
+                                placeholder="Language"
+                                className="!border-none"
+                            />
+                        </div>
+                    )}
             </div>
 
             <div className="flex-1 min-h-0 max-h-[420px] bg-white border border-border rounded-xl flex flex-col overflow-hidden">
@@ -137,7 +160,6 @@ export default function Metadata({
 
 function SearchPane({ query: queryProp, onQueryChange, language, results, onSearch, onResultClick }) {
     const {
-        categoryOptions,
         currentResource,
         selectedCategory,
         selectedFormat,
@@ -223,10 +245,6 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
         <>
             <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
                 <h3 className="font-display text-[13.5px] font-semibold text-ink">Search in current source</h3>
-                <div className="flex items-center gap-1.5 border border-border rounded-lg px-2.5 py-1.5 text-[12px] text-ink-secondary">
-                    <Globe size={13} />
-                    {language}
-                </div>
             </div>
 
             <div className="p-4 flex-1 min-h-0 overflow-y-auto flex flex-col">
