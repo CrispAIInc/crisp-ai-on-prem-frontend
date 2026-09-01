@@ -274,8 +274,8 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
                 <div className="flex-1 min-h-0 flex flex-col mt-4">
                     {!searched ? (
                         <EmptyState
-                            title="Search this video's transcript"
-                            description="Find the exact moment a topic, name, or phrase comes up — results jump the player straight there."
+                            title="Search this asset's content"
+                            description="Find the exact moment a topic, name, or phrase comes up — results jump straight to the right section."
                         />
                     ) : isSearching ? null :
                         searchOutcome === "not-found" ? (
@@ -357,7 +357,7 @@ function SummaryPane({ summaryObj }) {
                                 }}
                             />
                         ) : (
-                            <p className="italic">Summary not available for this source. Generate it in Contextual metadata section</p>
+                            <p className="italic">Summary not available for this asset. Generate it in Contextual metadata section</p>
                         )
                     }
                 </div>
