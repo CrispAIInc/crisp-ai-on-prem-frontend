@@ -1,16 +1,24 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { MainContext } from '../../contexts/mainContext';
-import { ChevronDown, Sparkles, Check } from "lucide-react";
+import {
+    Sparkles,
+    Pencil,
+    Trash
+} from "lucide-react";
 import CollapsibleSection from "../CollapsibleSection";
 import SourcesDropdown from "../SourcesDropdown";
 import VerbositySlider from '../VerbositySlider';
-import useMetadata from '../../hooks/useMetadata';
 import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
-import { convertSecondsToHumanText, delay } from '../../utils';
-import MetadataVerbosity from '../MetadataVerbosity';
-import { METADATA_VERBOSITY_OPTIONS } from '../../globals';
+import { convertSecondsToHumanText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
+import FilenameUpdateModal from "../AppSingleValueModal";
 import { ProjectContext } from '../../contexts/projectContext';
+import BaseHeading from '../BaseHeading';
+import useFirebase from '../../hooks/useFirebase';
+import useResources from '../../hooks/useResources';
+import ActionMenu from '../ActionMenu';
+import AnimatedText from '../AnimatedText';
+import LoadingSpinner from '../LoadingSpinner';
 
 
 export default function Shorts() {
@@ -18,17 +26,17 @@ export default function Shorts() {
     const { isProjectReadOnly } = useContext(ProjectContext);
     const {
         knowledgeBase,
-        setKnowledgeBase,
-        displayedSources,
-        selectedOptions,
-        setSelectedOptions,
-        metadataOptions,
-        setGeneratedResources
+        reels,
+        setReels
     } = useContext(MainContext);
 
     const {
         notify
     } = useToast();
+
+    const { getPublicUrl } = useFirebase();
+
+    const { getReels } = useResources({ setReels });
 
     const videoSources = knowledgeBase.filter(item => item.file_type === "video");
     const [sourceIds, setSourceIds] = useState([]);
@@ -39,6 +47,82 @@ export default function Shorts() {
     const [reel, setReel] = useState(null);
 
     const canGenerate = sourceIds.length > 0;
+
+
+
+    const [reelsSearchValue, setReelsSearchValue] = useState("");
+    const [reelsResults, setReelsResults] = useState(reels);
+    useEffect(() => {
+        setReelsResults(sortBySourcePath(reels));
+    }, [reels]);
+    const handleReelsSearch = (e) => {
+        const value = e?.target?.value || "";
+        setReelsSearchValue(value);
+
+        if (value.trim() === "") {
+            setReelsResults(sortArrayOfObjects(reels, "title"));
+        } else {
+            const filtered = searchByKey(reels, "title", value);
+            setReelsResults(sortArrayOfObjects(filtered, "title"));
+        }
+    };
+
+    useEffect(() => {
+        handleReelsSearch();
+    }, [JSON.stringify(reels)]);
+
+    const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
+    function handleOpenFilenameUpdateModal(event, reel) {
+        event.stopPropagation();
+        setReelTitleUpdateValue(reel.title);
+        setShowUpdateReelTitleModal(true);
+    }
+
+    const showSelectedReel = (e, reel, index) => {
+        setReel(reel);
+        // setIsReelOpen(true);
+    };
+
+    const [hoveredReel, setHoveredReel] = useState(null);
+    const hoveredReelRef = useRef(null);
+    const handleMouseEnterReel = (id) => {
+        setHoveredReel(id);
+        hoveredReelRef.current = id;
+    };
+    const handleMouseLeaveReel = () => {
+        setHoveredReel(null);
+    };
+
+    const [isReelDeleting, setIsReelDeleting] = useState(false);
+    async function deleteReel(event, reel) {
+        if (isProjectReadOnly) return;
+        event.preventDefault();
+        setIsReelDeleting(true);
+        try {
+            const publicReelUrl = await getPublicUrl(reel.reel_video_url);
+            await makeApiRequest(`/reels/${reel.id}`, 'DELETE', JSON.stringify({
+                videoUrl: publicReelUrl,
+            }));
+
+            notify({
+                variant: "success",
+                heading: "Reel deleted successfully!",
+            });
+            setReels(prev => prev.filter(item => item.id !== reel.id));
+            // getReels();
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "An error occurred while deleting the reel",
+            });
+        } finally {
+            setIsReelDeleting(false);
+        }
+    }
+
+    const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
 
 
     async function generateShort() {
@@ -78,13 +162,14 @@ export default function Shorts() {
     }
 
     return (
-        <div className="h-full min-h-0 flex flex-col overflow-hidden bg-white">
-            <div className="px-[18px] pt-4 pb-3 border-b border-border shrink-0">
+        <div className="h-full  px-[18px] min-h-0 flex flex-col overflow-hidden bg-white">
+            <div className="pt-4 pb-3 border-b border-border shrink-0">
                 <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate shorts</h2>
                 <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging shorts in minutes.</p>
             </div>
 
-            <div className="flex-1 min-h-0 overflow-y-auto px-[18px]">
+            {/* <CollapsibleSection title="Advanced settings" defaultOpen> */}
+            <div className="flex-1 min-h-0 overflow-y-auto">
                 <Field label="Sources">
                     <SourcesDropdown
                         sources={videoSources}
@@ -127,7 +212,7 @@ export default function Shorts() {
                 </CollapsibleSection>
             </div>
 
-            <div className="px-[18px] py-3.5 border-t border-border shrink-0">
+            <div className="py-3.5 border-t border-border shrink-0">
                 <button
                     type="button"
                     disabled={!canGenerate}
@@ -142,6 +227,9 @@ export default function Shorts() {
                     </span>
                 </button>
             </div>
+            {/* </CollapsibleSection> */}
+
+
         </div>
     );
 }
@@ -151,57 +239,6 @@ function Field({ label, children }) {
         <div className="pt-4 first:pt-4">
             <label className="block text-[12.5px] font-semibold text-ink mb-1.5">{label}</label>
             {children}
-        </div>
-    );
-}
-
-function MultiSelectDropdown({ values, onChange, options }) {
-    const [open, setOpen] = useState(false);
-    const rootRef = useRef(null);
-
-    useEffect(() => {
-        if (!open) return;
-        const handleClick = (e) => {
-            if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false);
-        };
-        document.addEventListener("mousedown", handleClick);
-        return () => document.removeEventListener("mousedown", handleClick);
-    }, [open]);
-
-    const toggleOption = (opt) => {
-        onChange(values.includes(opt) ? values.filter((v) => v !== opt) : [...values, opt]);
-    };
-
-    return (
-        <div ref={rootRef} className="relative">
-            <button
-                type="button"
-                onClick={() => setOpen((v) => !v)}
-                aria-expanded={open}
-                className="w-full flex items-center justify-between gap-2 border border-border rounded-lg px-3 py-2.5 text-[12.5px] text-ink bg-surface hover:border-border-strong"
-            >
-                <div className="flex flex-col gap-1">
-                    <span className="truncate">
-                        {values.length === 0 ? <span className="text-ink-muted">Select output format</span> : values.join(", ")}
-                    </span>
-                </div>
-                <ChevronDown size={14} className={`text-ink-muted shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
-            </button>
-            {open && (
-                <div className="absolute z-30 bg-white top-[calc(100%+6px)] left-0 right-0 bg-surface border border-border rounded-xl shadow-md2 p-1.5">
-                    {options.map((opt) => {
-                        const checked = values.includes(opt);
-                        return (
-                            <button key={opt} type="button" onClick={() => toggleOption(opt)} className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-[12.5px] text-left text-ink hover:bg-surface-alt">
-                                {opt}
-                                <span className={`w-4 h-4 rounded-[5px] border flex items-center justify-center shrink-0 ${checked ? "bg-primary border-primary text-white" : "border-border-strong"}`}>
-                                    {checked && <Check size={10} strokeWidth={3} />}
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
-            )}
         </div>
     );
 }
