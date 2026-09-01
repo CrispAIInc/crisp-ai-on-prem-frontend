@@ -48,7 +48,7 @@ export default function Shorts() {
             sources: knowledgeBase.filter(i => sourceIds.includes(i.source_id)).map(source => ({ source_id: source.source_id, index_id: source.index_id })),
             context,
             title: title,
-            verbosityValue: reelDuration
+            verbosityValue: "low" //reelDuration
         };
 
         try {
