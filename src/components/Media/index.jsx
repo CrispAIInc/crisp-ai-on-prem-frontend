@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import socket from "../../config/socket";
 import { Upload, FolderOpen, Check } from "lucide-react";
 import AddSourceModal from "../AddSourceModal";
 import FileUploaderModal from "../FileUploaderModal";
@@ -9,7 +10,7 @@ import { MainContext } from "../../contexts/mainContext.jsx";
 import { ProjectContext } from "../../contexts/projectContext.jsx";
 import { useToast } from "../../contexts/toastContext.jsx";
 import makeApiRequest from "../../api";
-import { getFileType } from "../../utils.js";
+import { extractThumbnail, generateRandomHash, getFileType } from "../../utils.js";
 import NoData from '../NoData/index.jsx';
 
 /**
@@ -32,7 +33,7 @@ export default function Media() {
         formatOptions,
         currentResource,
         displayedSources = [],
-        frameExtractionRate,
+        setShowMetadata,
         isDetailedMode,
         handleCheckboxChange,
         knowledgeBase,
@@ -46,6 +47,8 @@ export default function Media() {
         setKnowledgeBase,
         setPersistedUploadedFiles,
         videoCaptionContext,
+        setUploadedSources,
+        frameExtractionRate
     } = useContext(MainContext);
     const { isProjectReadOnly } = useContext(ProjectContext);
     const { notify } = useToast();
@@ -102,92 +105,414 @@ export default function Media() {
             : source));
     }
 
-    async function handleUpload(event, fileFormat, files, isFineGrained = false) {
-        const selectedFiles = files || Array.from(event?.target?.files || []);
-        if (selectedFiles.length === 0) return;
+    /**
+     * +++++++++++++ UPLOAD +++++++++++++++
+     */
 
-        setIsFileUploading(true);
-        const formData = new FormData();
-        selectedFiles.forEach((file) => {
-            formData.append("file", file);
-            formData.append("category", selectedCategory);
-            formData.append("fileType", file.type);
-            formData.append("isDetailedMode", isDetailedMode);
-            formData.append("videoCaptionContext", videoCaptionContext);
+    const [isProgressStarted, setIsProgressStarted] = useState(false);
+    const [progressUpdateCount, setProgressUpdateCount] = useState(0);
+    const [isUploadFailed, setIsUploadFailed] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("idle"); // 'idle' | 'uploading' | 'success' | 'error'
+    const [uploadErrorMessage, setuploadErrorMessage] = useState("");
+    const [fileThumbnails, setFileThumbnails] = useState([]);
+
+    function handleProgressUpdate(data) {
+        setProgressUpdateCount(prev => prev + 1);
+        const currentIndex = Number(data?.currentIndex ?? -1);
+
+        // Update knowledgeBase (source of truth); displayedSources is derived from it
+        setKnowledgeBase((prev) => {
+            return prev.map((source) => {
+                const sourceIndex = Number(source?.index ?? -1);
+
+                if (source.progress !== undefined && data.progress_percentage <= 100) {
+                    if (currentIndex === sourceIndex) {
+                        // if current progress is 100 => current source finished uploading => remove progress and step from current source
+                        if (data.progress_percentage === 100) {
+                            const { progress, step, ...rest } = source;
+                            return {
+                                ...rest,
+                                ...data,
+                                is_checked: true
+                            };
+                        }
+                        if (data?.step_name === "Summarizing...") {
+                            return {
+                                ...source,
+                                ...data,
+                                progress: data.progress_percentage,
+                                step: data.step_name,
+                                metadata: {
+                                    ...source.metadata,
+                                    transcription: {
+                                        content: data.content,
+                                        title: "Transcription"
+                                    }
+                                }
+                            };
+                        }
+                        if (data?.step_name === "Generating embeddings...") {
+                            return {
+                                ...source,
+                                ...data,
+                                progress: data.progress_percentage,
+                                step: data.step_name,
+                                metadata: {
+                                    ...source.metadata,
+                                    summary: {
+                                        content: data.content,
+                                        title: data.title,
+                                        verbosity: data.verbosity,
+                                        temperature: data.temperature
+                                    }
+                                }
+                            };
+                        }
+                        const newProgress = Number(data.progress_percentage) || 0;
+                        const currentProgress = Number(source.progress) || 0;
+
+                        return {
+                            ...source,
+                            ...data,
+                            progress: Math.max(currentProgress, newProgress),
+                            step: data.step_name || source.step
+                        };
+                    } else if (currentIndex > sourceIndex) {
+                        const { progress, step, ...rest } = source;
+                        return {
+                            ...rest,
+                            is_checked: true
+                        };
+                    }
+                }
+                return { ...source };
+            });
         });
-        formData.append("isFineGrained", isFineGrained);
-        if (frameExtractionRate) {
-            formData.append("frameExtractionRate", JSON.stringify(frameExtractionRate));
+    }
+
+
+    const sessionIdRef = useRef(null);
+
+    function startSocket() {
+        if (!socket.connected) {
+            socket.connect();
+        }
+        console.log("connecting to socket");
+
+        socket.off('connect');
+        socket.off('connected');
+        socket.off('progress_update');
+        socket.off('upload_error');
+        socket.off('upload_complete');
+        socket.off('session_joined');
+        socket.off('error');
+
+        socket.on('connect', () => {
+            console.log('🔌 Socket connected with ID:', socket.id);
+            const sessionId = sessionIdRef.current;
+            if (sessionId) {
+                console.log('🔄 Joining session after connect:', sessionId);
+                socket.emit('join_upload_session', { session_id: sessionId });
+            }
+        });
+
+        socket.on('connected', (data) => {
+            console.log('Server confirmation:', data);
+        });
+
+        socket.io.on('reconnect_attempt', () => {
+            console.log('reconnect_attempt...');
+        });
+
+        socket.io.on('reconnect', () => {
+            console.log('reconnect...');
+        });
+
+        socket.on('progress_update', handleProgressUpdate);
+
+        socket.on('upload_error', (data) => {
+            console.log('Upload error:', data);
+            setIsUploadFailed(true);
+            setUploadStatus('error');
+            setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
+        });
+
+        socket.on('upload_complete', (data) => {
+            console.log('*****************************Upload complete:*********************', data);
+            if (data.success) {
+                setUploadStatus('success');
+                setIsFileUploading(false);
+                setIsProgressStarted(false);
+                setKnowledgeBase((prev) => prev.map((source) => {
+                    const sourceIndex = Number(source?.index ?? -1);
+                    const completedIndex = Number(data?.currentIndex ?? -1);
+                    if (completedIndex >= 0 && sourceIndex === completedIndex) {
+                        const { progress, step, ...rest } = source;
+                        return { ...rest, is_checked: true };
+                    }
+                    return source;
+                }));
+            } else {
+                setIsUploadFailed(true);
+                setUploadStatus('error');
+            }
+        });
+
+        socket.on('session_joined', (data) => {
+            if (data.session_id && data.session_id === sessionIdRef.current) {
+                localStorage.setItem('sessionId', data.session_id);
+                console.log('💾 Session ID saved to localStorage:', data.session_id);
+            }
+        });
+
+        socket.on('error', (data) => {
+            console.log('General error:', data);
+        });
+    }
+
+    function disconnectSocket() {
+        console.log("disconnecting from socket");
+        socket.on('disconnect', (reason) => {
+            console.log('🔌 Socket disconnected:', reason);
+        });
+
+        socket.off('connect');
+        socket.off('disconnect');
+        socket.off('connect_error');
+        socket.off('connected');
+        socket.off('progress_update');
+        socket.off('upload_error');
+        socket.off('upload_complete');
+        socket.off('session_joined');
+        socket.off('error');
+        socket.disconnect();
+    }
+
+    function addHashToFilename(filename, hash) {
+        const lastDotIndex = filename.lastIndexOf(".");
+
+        // If no extension
+        if (lastDotIndex === -1) {
+            return `${filename}_${hash}`;
         }
 
-        const pendingSources = selectedFiles.map((file) => ({
-            category: [selectedCategory],
-            file_type: getFileType(file.type),
-            source_path: file.name,
-            thumbnail: null,
-            is_checked: false,
-            is_selected: true,
-            progress: 0,
-            step: "Initialize ingestion...",
-        }));
+        const name = filename.slice(0, lastDotIndex);
+        const extension = filename.slice(lastDotIndex);
 
-        setPersistedUploadedFiles(pendingSources);
-        setKnowledgeBase((previous) => [...pendingSources, ...previous]);
-        setShowAddModal(false);
-        setShowUploadModal(false);
+        return `${name}_${hash}${extension}`;
+    }
 
+    const handleUpload = async (event, fileFormat, _files, isFineGrained = false) => {
+        console.log("Starting upload...");
+
+        const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        sessionIdRef.current = sessionId;
+        localStorage.setItem("sessionId", sessionId);
+        console.log("🆕 Created new session_id for this upload batch:", sessionId);
+
+        startSocket();
         try {
-            const { uploaded_data: uploadedData = [] } = await makeApiRequest(
-                "/upload",
-                "post",
-                formData,
-                { "Content-type": "multipart/form-data" }
-            );
-            setKnowledgeBase((previous) => [
-                ...uploadedData,
-                ...previous.filter((item) => !pendingSources.some((pending) => pending.source_path === item.source_path)),
-            ]);
-            setCurrentResource((previous) => previous && uploadedData[0]);
-            if (uploadedData.length > 0) setActiveView("resource");
-            notify({ variant: "success", heading: "Source uploaded successfully!" });
+            setUploadStatus("uploading");
+            setIsUploadFailed(false);
+            setIsFileUploading(true);
+            setIsProgressStarted(true);
+            setShowAddModal(false);
+            setFileThumbnails([]);
+            setProgressUpdateCount(0); // Reset progress update counter
+
+            const files = _files || Array.from(event.target.files);
+            const processedFiles = files.map(file => file.name);
+
+            setUploadedSources(processedFiles);
+
+            const formData = new FormData();
+
+            console.log("Joining session room before upload:", sessionId);
+            console.log("Current socket ID:", socket.id);
+            socket.emit("join_upload_session", { session_id: sessionId });
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            files.forEach((file, index) => {
+                formData.append("file", file);
+                formData.append("index_id", categoryOptions.find(item => item.value === selectedCategory)?.id);
+                formData.append("fileType", file.type);
+                formData.append("session_id", sessionId);
+                formData.append("isDetailedMode", isDetailedMode);
+                formData.append("videoCaptionContext", videoCaptionContext);
+                formData.append("fileIndex", String(index));
+            });
+            formData.append("isFineGrained", isFineGrained);
+            if (frameExtractionRate) {
+                formData.append("frameExtractionRate", JSON.stringify(frameExtractionRate));
+            }
+
+            //TODO: loop throught files and populate the "initialSources" with the initial properties
+
+
+            const fileSources = files.map((file, index) => {
+                const totalSourcesWithSameFilename = knowledgeBase.filter(item => item.source_path === file.name).length;
+
+                return {
+                    category: [selectedCategory],
+                    index_id: categoryOptions.find(item => item.value === selectedCategory)?.id,
+                    file_type: getFileType(file.type),
+                    source_path:
+                        totalSourcesWithSameFilename > 0
+                            ? addHashToFilename(file.name, generateRandomHash(3))
+                            : file.name,
+                    thumbnail: extractThumbnail(file) || null,
+                    is_checked: false,
+                    is_selected: true,
+                    progress: 0,
+                    originalSourceLanguage: "en",
+                    step: "Initialize ingestion...",
+                    metadata: {
+                        chapters: {},
+                        embeddings_generated: false,
+                        faqs: [],
+                        highlights: {},
+                        keywords: [],
+                        summary: {},
+                        transcription: {}
+                    },
+                    index
+                };
+            });
+
+            // count files to be uploaded
+            const totalFiles = files.length;
+
+            setPersistedUploadedFiles(fileSources);
+            setKnowledgeBase((prev) => {
+                // Merge existing knowledgeBase with new fileSources, avoiding duplicates
+                const existingPaths = new Set(prev.map(item => item.source_path));
+                const newSources = fileSources.filter(item => !existingPaths.has(item.source_path));
+                return [...newSources, ...prev];
+            });
+
+            // If real progress is still < 3% after 10s, show a 3% pre-processing cue
+            setTimeout(() => {
+                setKnowledgeBase(prev => prev.map(item => {
+                    if (!('progress' in item)) return item;
+
+                    const currentProgress = Number(item.progress) || 0;
+                    if (currentProgress < 3) {
+                        return {
+                            ...item,
+                            progress: 3,
+                            step: "Source pre-processing..."
+                        };
+                    }
+
+                    return item;
+                }));
+            }, 10000);
+
+            // await delay(3000);
+            const { uploaded_data } = await makeApiRequest("/assets", "POST", formData, { 'Content-type': "multipart/form-data" });
+
+            // ----------  Update knowledge base ----------
+            setKnowledgeBase(prev => [...uploaded_data, ...prev.slice(totalFiles)]);
+
+            // show success message
+            notify({
+                variant: "success",
+                heading: "Source uploaded successfully!",
+            });
+
+            setCurrentResource(prev => prev && uploaded_data[0]);
+
+            if (uploaded_data.length > 0) {
+                setActiveView('resource');
+            }
+
+
         } catch (error) {
-            setKnowledgeBase((previous) => previous.filter((item) => !pendingSources.includes(item)));
+            setIsUploadFailed(true);
+            setUploadStatus("error");
             notify({
                 variant: "error",
                 heading: "Oops!",
-                subheading: error?.response?.data?.error || "Failed to upload new source. Please try again.",
+                subheading: "Failed to upload new source. Please try again.",
             });
+            setuploadErrorMessage(error?.response?.data?.error || 'Upload failed. Please try again.');
+            setKnowledgeBase(prev => prev.filter(item => !('progress' in item)));
         } finally {
+            disconnectSocket();
             setIsFileUploading(false);
+            setIsProgressStarted(false);
+        }
+    };
+
+    useEffect(() => {
+        if (uploadStatus === "success" || uploadStatus === "error") {
+            const timer = setTimeout(() => {
+                setUploadStatus("idle"); // unmount toast
+            }, 4000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [uploadStatus]);
+
+    function removeSourceFromMetadataPanel(sources) {
+        // 1: retrieve all source paths from sources
+        const removedSourcePaths = sources.map(source => source.source_path);
+
+        // 2: check if source's filename exists in the array
+        const sourceExists = removedSourcePaths.includes(currentResource?.source_path);
+
+        // 3: clear currentResource if exist
+        if (sourceExists) {
+            setCurrentResource(null);
+            setShowMetadata(false);
         }
     }
 
-    async function deleteResource(event, items) {
+    const deleteResource = async (event, items) => {
+        // console.log("deleting source...", items);
         try {
             setIsDeleting(true);
             setClickedIndex(items[0]);
-            const payload = items.map((item) => ({
-                category: item.category,
-                fileName: item.source_path,
-                fileType: item.file_type,
-            }));
-            await makeApiRequest("/delete", "post", { sources: payload });
-            const deletedPaths = new Set(payload.map((item) => item.fileName));
-            setDisplayedSources((previous) => previous.filter((item) => !deletedPaths.has(item.source_path)));
-            setKnowledgeBase((previous) => previous.filter((item) => !deletedPaths.has(item.source_path)));
-            setGeneratedResources((previous) => previous?.filter((item) => !deletedPaths.has(item.source_path)));
-            if (items.some((item) => item.source_path === currentResource?.source_path)) {
+
+            const payload = items.map((item) => {
+                return {
+                    category: item.category,
+                    fileName: item.source_path,
+                    fileType: item.file_type,
+                };
+            });
+
+            // remove source from metadata panel if it's active
+            removeSourceFromMetadataPanel(items);
+
+            await makeApiRequest(`/assets/${items[0].source_id}`, "DELETE");
+            setDisplayedSources(prev => prev.filter(item => item.source_path !== items[0].source_path));
+
+            notify({
+                variant: "success",
+                heading: "Source deleted successfully!",
+            });
+            if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
-                setActiveView(null);
             }
-            notify({ variant: "success", heading: "Source deleted successfully!" });
+
+            // reflect changes to knowledgeBase
+            setKnowledgeBase(prev => {
+                let deletedSourcePaths = payload.map(item => item.fileName);
+                return prev.filter(item => !deletedSourcePaths.includes(item.source_path));
+            });
+
+            // setCurrentResource(null);
+            setActiveView(null);
         } catch (error) {
-            notify({ variant: "error", heading: "Unable to delete source." });
+            setIsDeleting(false);
+            console.log(error);
         } finally {
             setIsDeleting(false);
-            setClickedIndex(null);
+            setGeneratedResources(prev => prev?.filter(item => item.source_path !== items[0].source_path));
         }
-    }
+    };
 
     function handleSelectAllCheckboxChange(sources, isChecked) {
         const paths = new Set(sources.map((source) => source.source_path));
