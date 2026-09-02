@@ -17,7 +17,7 @@ export default function NavTabs({ active = "media", onChange = () => { } }) {
           const description = key === "interaction"
             ? "Ask questions and interact with your content conversationally."
             : key === "analytics"
-              ? "Analyze specific assets and generate precise information from video segments."
+              ? "Search and analyze specific assets and generate precise information from video segments."
               : null;
           return (
             <li key={key} className="shrink-0">
