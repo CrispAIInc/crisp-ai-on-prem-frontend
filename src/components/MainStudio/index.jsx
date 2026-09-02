@@ -16,12 +16,7 @@ function MainStudio({ panelWidth }) {
         <div ref={workspaceContainer}>
             {
                 activeStudioPanel === MAIN_STUDIO_PANELS.SHORTS ? (
-                    <ShortsList
-                        workspaceContainer={workspaceContainer}
-                        centerPanelRef={workspaceContainer}
-                        leftWidth={panelWidth}
-                        maxWidth={720}
-                    />
+                    <ShortsList />
                 ) : !currentResource ? (
                     <EmptyWorkspace />
                 ) :

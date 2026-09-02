@@ -29,6 +29,7 @@ export default function Shorts() {
         knowledgeBase,
         reels,
         setReels,
+        setSelectedReel,
         setActiveStudioPanel
     } = useContext(MainContext);
 
@@ -46,10 +47,8 @@ export default function Shorts() {
     const [context, setContext] = useState("");
     const [title, setTitle] = useState("");
     const [reelDuration, setReelDuration] = useState(30);
-    const [reel, setReel] = useState(null);
 
     const canGenerate = sourceIds.length > 0;
-
 
 
     const [reelsSearchValue, setReelsSearchValue] = useState("");
@@ -81,7 +80,7 @@ export default function Shorts() {
     }
 
     const showSelectedReel = (e, reel, index) => {
-        setReel(reel);
+        setSelectedReel(reel);
         // setIsReelOpen(true);
     };
 
@@ -146,7 +145,7 @@ export default function Shorts() {
                 throw new Error(message);
             }
 
-            setReel(newReel);
+            setSelectedReel(newReel);
 
             // setIsReelGenerated(true);
             setContext('');

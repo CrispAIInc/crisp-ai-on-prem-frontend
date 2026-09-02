@@ -1311,7 +1311,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const categoryOptionsWithoutAll = categoryOptions.filter(item => item.value !== 'all');
     const [searchQuestion, setSearchQuestion] = useState('');
 
-
+    const [selectedReel, setSelectedReel] = useState(null);
 
     /**
      * ON PREM NEW LAYOUT APP STATE
@@ -1336,6 +1336,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // create value object with all the states
     const value = {
+        selectedReel, setSelectedReel,
         activeStudioPanel,
         setActiveStudioPanel,
         pdfRef,
