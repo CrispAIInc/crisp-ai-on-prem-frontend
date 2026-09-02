@@ -465,8 +465,6 @@ export const extractThumbnail = (file) => {
                 ? (import.meta.env.VITE_APP_ENV === "production" ? import.meta.env.VITE_STAGING_FRONTEND_URL + '/PDF-file-thumbnail.png' : "http://localhost:3000" + '/PDF-file-thumbnail.png')
                 : null;
     return preview;
-    // });
-    // setFileThumbnails((prev) => [...prev, ...thumbnails]);
 };
 
 export const toSeconds = ({ h, m, s }) =>
