@@ -22,7 +22,7 @@ export default function CircularProgressWithLabel({ value, variant, isUploadFail
                 size={50}
                 thickness={3.5}
                 sx={{
-                    color: isUploadFailed ? "error.main" : "dodgerblue"
+                    color: isUploadFailed ? "error.main" : "#755bea"
                 }}
             />
             <Box
