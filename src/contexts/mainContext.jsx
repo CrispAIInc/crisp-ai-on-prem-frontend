@@ -1149,6 +1149,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     const workspaceContainer = useRef(null);
     const [showMetadata, setShowMetadata] = useState(false);
 
+    useEffect(() => {
+        if (!showMetadata) {
+            setCurrentResource(null);
+        }
+    }, [showMetadata]);
+
 
     const metadataOptions = [
         { id: "summary", name: "Summary", description: "Generate concise overview" },

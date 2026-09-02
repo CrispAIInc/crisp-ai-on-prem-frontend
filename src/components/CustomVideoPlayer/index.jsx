@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useContext } from 'react';
 import ReactPlayer from 'react-player';
 import {
     Play,
@@ -12,8 +12,10 @@ import {
     Maximize,
     Minimize,
     Dot,
+    X
 } from 'lucide-react';
 import CustomVideoPlayerSettings from '../CustomVideoPlayerSettings';
+import { MainContext } from '../../contexts/mainContext';
 
 const formatTime = (seconds = 0) => {
     if (!Number.isFinite(seconds)) return '0:00';
@@ -44,6 +46,11 @@ export default function CustomVideoPlayer({
     playerRef,
     title
 }) {
+
+    const {
+        setShowMetadata
+    } = useContext(MainContext);
+
     const internalRef = useRef(null);
     const containerRef = useRef(null);
     const settingsMenuRef = useRef(null);
@@ -220,6 +227,10 @@ export default function CustomVideoPlayer({
         }
     };
 
+    const onClose = () => {
+        setShowMetadata(false);
+    };
+
     return (
         <div
             ref={containerRef}
@@ -254,10 +265,18 @@ export default function CustomVideoPlayer({
             />
 
             {/* video name */}
-            {showControls && <div className="absolute inset-0 top-2 left-2 w-fit max-w-[60%] truncate self-start flex items-center gap-2 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-[13px] backdrop-blur-sm">
-                <Play className="w-[18px] h-[18px] text-primary-300" strokeWidth={4} />
-                <span className="truncate font-medium text-sm text-white/90" >{title}</span>
-            </div>}
+            {showControls && (
+                <div className="absolute z-1 w-[98%] top-2 left-2 right-2  flex items-center justify-between">
+                    <div className="px-2 py-1 w-fit max-w-[60%] truncate self-start flex items-center gap-2 overflow-hidden bg-black/40 text-[13px] backdrop-blur-sm rounded-md">
+                        <Play className="w-[18px] h-[18px] text-primary-300" strokeWidth={4} />
+                        <span className="truncate font-medium text-sm text-white/90" >{title}</span>
+                    </div>
+
+                    <div className="px-2 py-1 w-fit bg-black/40 text-white text-[13px] backdrop-blur-sm rounded-md cursor-pointer" onClick={onClose}>
+                        <X size={15} />
+                    </div>
+                </div>
+            )}
 
             {/* Center play/pause tap target */}
             <button
