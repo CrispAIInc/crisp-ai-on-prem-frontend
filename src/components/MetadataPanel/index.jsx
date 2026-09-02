@@ -32,7 +32,7 @@ import {
 import BaseHeading from '../BaseHeading/index.jsx';
 import Metadata from '../Metadata/index.jsx';
 
-const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth }) => {
+const MetadataPanel = ({ workspaceContainer }) => {
   const {
     currentResource,
     setCurrentResource,
@@ -59,6 +59,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const { getPublicUrl } = useFirebase();
 
   const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item.source_id === currentResource.source_id));
+  const [metadataActiveTab, setMetadataActiveTab] = useState("search");
+
   // const [generatedResource, setGeneratedResource] = useState(null);
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
   const [numPages, setNumPages] = useState();
@@ -127,6 +129,12 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
       }
     }
   }, [currentResource?.source_id, JSON.stringify(generatedResources)]);
+
+  useEffect(() => {
+    if (!currentResource) return;
+
+    setMetadataActiveTab("search");
+  }, [currentResource?.source_id]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -526,6 +534,8 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
           <Metadata
             translateMetadata={translateMetadata}
             translatedResource={translatedResource}
+            activeTab={metadataActiveTab}
+            onTabChange={setMetadataActiveTab}
           />
         </div>
       ) : (

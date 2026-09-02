@@ -61,7 +61,9 @@ export default function Metadata({
     onResultClick,
     className = "",
     translatedResource,
-    translateMetadata
+    translateMetadata,
+    activeTab: controlledActiveTab,
+    onTabChange,
 }) {
 
     const {
@@ -69,16 +71,35 @@ export default function Metadata({
         languageOptions
     } = useContext(MainContext);
 
-    const sourceType = currentResource.file_type;
+    const sourceType = currentResource?.file_type ?? "video";
 
     const availableTabIds = TAB_SETS[sourceType] ?? TAB_SETS.video;
     const tabs = availableTabIds.map((id) => ({ id, label: TAB_LABELS[id] }));
-    const [activeTab, setActiveTab] = useState(tabs[0].id);
+    const [internalTab, setInternalTab] = useState(tabs[0].id);
+    const activeTab = controlledActiveTab ?? internalTab;
+
+    const setActiveTab = (nextTab) => {
+        if (onTabChange) {
+            onTabChange(nextTab);
+            return;
+        }
+
+        setInternalTab(nextTab);
+    };
 
     // Reset to the first available tab if the source (and its tab set) changes
     useEffect(() => {
-        if (!availableTabIds.includes(activeTab)) setActiveTab(availableTabIds[0]);
-    }, [activeTab, availableTabIds]);
+        const nextTab = availableTabIds[0];
+
+        if (!availableTabIds.includes(activeTab)) {
+            if (onTabChange) {
+                onTabChange(nextTab);
+                return;
+            }
+
+            setInternalTab(nextTab);
+        }
+    }, [activeTab, availableTabIds, onTabChange]);
 
     return (
         <div className={`h-full min-h-0 flex flex-col gap-3.5 overflow-hidden ${className}`}>
