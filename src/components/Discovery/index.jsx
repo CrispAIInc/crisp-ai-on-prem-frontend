@@ -115,7 +115,7 @@ export default function Discovery({
                 });
 
                 handleSourceLinkClick(null, { ...source, timestamp, page });
-                if (isPlayerReady) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+                if (isPlayerReady && Boolean(timestamp)) player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             }
 
             setShowSearchModal(true);
