@@ -20,7 +20,7 @@ export default function NavTabs({ active = "media", onChange = () => { } }) {
                 className={[
                   "flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium border-b-2 -mb-px transition-colors whitespace-nowrap",
                   isActive
-                    ? "border-violet-600 text-violet-700"
+                    ? "border-primary-300 text-primary-300"
                     : "border-transparent text-gray-500 hover:text-gray-800",
                 ].join(" ")}
               >
