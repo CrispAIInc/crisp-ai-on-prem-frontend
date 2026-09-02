@@ -14,7 +14,7 @@ import FaqItem from '../FaqItem';
 const TAB_SETS = {
     video: ["search", "transcription", "summary", "chapters", "highlights", "keywords", "faqs"],
     pdf: ["search", "summary", "chapters", "highlights", "keywords", "faqs"],
-    img: ["search", "summary", "keywords"],
+    img: ["summary", "keywords"],
 };
 
 const TAB_LABELS = {
