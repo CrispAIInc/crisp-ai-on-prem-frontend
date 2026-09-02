@@ -13,7 +13,7 @@ import CustomSelectTwo from "../CustomSelectTwo";
 const TAB_SETS = {
     video: ["search", "transcription", "summary", "chapters", "highlights", "keywords", "faqs"],
     pdf: ["search", "summary", "chapters", "highlights", "keywords", "faqs"],
-    img: ["search", "summary", "keywords", "faqs"],
+    img: ["search", "summary", "keywords"],
 };
 
 const TAB_LABELS = {
