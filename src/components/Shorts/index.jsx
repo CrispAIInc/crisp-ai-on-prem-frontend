@@ -19,6 +19,7 @@ import useResources from '../../hooks/useResources';
 import ActionMenu from '../ActionMenu';
 import AnimatedText from '../AnimatedText';
 import LoadingSpinner from '../LoadingSpinner';
+import { MAIN_STUDIO_PANELS } from '../../globals';
 
 
 export default function Shorts() {
@@ -27,7 +28,8 @@ export default function Shorts() {
     const {
         knowledgeBase,
         reels,
-        setReels
+        setReels,
+        setActiveStudioPanel
     } = useContext(MainContext);
 
     const {
@@ -164,7 +166,7 @@ export default function Shorts() {
     return (
         <div className="h-full  px-[18px] min-h-0 flex flex-col overflow-hidden bg-white">
             <div className="pt-4 pb-3 border-b border-border shrink-0">
-                <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate shorts</h2>
+                <h2 className="font-display text-[14.5px] font-semibold text-ink" onClick={() => setActiveStudioPanel(MAIN_STUDIO_PANELS.SHORTS)}>Generate shorts</h2>
                 <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging shorts in minutes.</p>
             </div>
 

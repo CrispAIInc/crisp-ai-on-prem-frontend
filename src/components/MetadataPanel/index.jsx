@@ -87,7 +87,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
           setTimeout(() => {
             player.current?.seekTo(redirectedTimestamp, "seconds");
-          }, 1500);
+          }, 800);
         }
       }
     }

@@ -11,6 +11,7 @@ import { delay, generateRandomId, pick } from '../utils';
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
 import { NAV_ITEMS } from '../navigation/navitems.js';
+import { MAIN_STUDIO_PANELS } from '../globals.js';
 
 export const MainContext = createContext({});
 
@@ -353,7 +354,6 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         // set jumpToPage to 1 so that the PDF reader displays all the pages from page 1 and not jump to a specific page like the case when clicking on a reference
-        console.log(file, fileToCommit);
         if (fileToCommit.file_type === "pdf") {
             await delay(1000);
             setJumpToPage({ page: file?.page || 1 });
@@ -361,6 +361,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         setActiveView('resource');
         if (!isFromCheckbox) { setShowMetadata(true); }
     };
+
+
 
     const handleCheckboxChange = (isChecked, file) => {
 
@@ -1155,6 +1157,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
     }, [showMetadata]);
 
+    const [activeStudioPanel, setActiveStudioPanel] = useState(null); // "metadata" | "shorts"
+
 
     const metadataOptions = [
         { id: "summary", name: "Summary", description: "Generate concise overview" },
@@ -1326,9 +1330,14 @@ export default function MainProvider({ children, theme, setTheme }) {
 ];
      */
     const [activeTab, setActiveTab] = useState(NAV_ITEMS[0]?.key || "media");
+    useEffect(() => {
+        setActiveStudioPanel(MAIN_STUDIO_PANELS.METADATA);
+    }, [currentResource]);
 
     // create value object with all the states
     const value = {
+        activeStudioPanel,
+        setActiveStudioPanel,
         pdfRef,
         searchQuestion, setSearchQuestion,
         categoryOptionsWithoutAll,
