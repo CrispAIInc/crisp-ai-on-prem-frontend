@@ -86,7 +86,7 @@ export default function SourcesDropdown({
                                 <Thumb source={s} size={30} />
                                 <span className="flex-1 min-w-0 text-[12.5px] text-ink truncate">{s.source_path}</span>
                                 <span
-                                    className={`w-4 h-4 rounded-[5px] border flex items-center justify-center shrink-0 ${checked ? "bg-primary border-primary text-white" : "border-border-strong"
+                                    className={`w-4 h-4 rounded-[5px] border flex items-center justify-center shrink-0 ${checked ? "bg-primary-300 border-primary-200 text-white" : "border-border-strong"
                                         }`}
                                 >
                                     {checked && <Check size={10} strokeWidth={3} />}
