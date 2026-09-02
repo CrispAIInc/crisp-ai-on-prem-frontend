@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import BaseHeading from '../BaseHeading';
 import { MainContext } from '../../contexts/mainContext';
 import Chip from '../Chip';
@@ -42,15 +42,53 @@ function SourceExplorerBody({
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
-    const { getIndexes } = useResources({ setCategoryOptions });
+    useResources({ setCategoryOptions });
     const { notify } = useToast();
 
     const [searchValue, setSearchValue] = useState("");
-    const [filteredSources, setFilteredSources] = useState(knowledgeBase);
     const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
     const [isIndexDeleting, setIsIndexDeleting] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState("");
     const [sourcesToDelete, setSourcesToDelete] = useState([]);
+
+    const filteredSources = useMemo(() => {
+        let filtered = knowledgeBase;
+
+        if (selectedCategory === "all") {
+            if (selectedFormat === "all") {
+                filtered = knowledgeBase;
+            } else {
+                filtered = knowledgeBase.filter(source => source.file_type === selectedFormat);
+            }
+        } else if (selectedFormat === "all") {
+            filtered = knowledgeBase.filter(source => {
+                if (typeof source.category === "string") {
+                    return source.category === selectedCategory;
+                }
+
+                if (Array.isArray(source.category)) {
+                    return source.category.includes(selectedCategory);
+                }
+
+                return false;
+            });
+        } else {
+            filtered = knowledgeBase.filter(source => {
+                if (typeof source.category === "string") {
+                    return source.category === selectedCategory && source.file_type === selectedFormat;
+                }
+
+                if (Array.isArray(source.category)) {
+                    return source.category.includes(selectedCategory) && source.file_type === selectedFormat;
+                }
+
+                return false;
+            });
+        }
+
+        const foundSources = searchByKey(filtered, "source_path", searchValue);
+        return sortArrayOfObjects(foundSources, "source_path");
+    }, [knowledgeBase, searchValue, selectedCategory, selectedFormat]);
 
 
     function removeIndex(e, indexValue) {
@@ -122,45 +160,8 @@ function SourceExplorerBody({
     };
 
     useEffect(() => {
-        let filtered = knowledgeBase;
-
-        // if category is 'all', we return all the sources that match the selected format
-        // if format is 'all', we return all the sources that match the selected category, if category is all, we return all sources in knowledgebase
-
-        if (selectedCategory === "all") {
-            if (selectedFormat === "all") {
-                filtered = knowledgeBase;
-            } else {
-                filtered = knowledgeBase.filter(source => source.file_type === selectedFormat);
-            }
-        } else {
-            if (selectedFormat === "all") {
-                filtered = knowledgeBase.filter(source => {
-                    if (typeof source.category === "string") {
-                        return source.category === selectedCategory;
-                    } else if (Array.isArray(source.category)) {
-                        return source.category.includes(selectedCategory);
-                    }
-                    return false;
-                });
-            } else {
-                filtered = knowledgeBase.filter(source => {
-                    if (typeof source.category === "string") {
-                        return source.category === selectedCategory && source.file_type === selectedFormat;
-                    } else if (Array.isArray(source.category)) {
-                        return source.category.includes(selectedCategory) && source.file_type === selectedFormat;
-                    }
-                    return false;
-                });
-            }
-        }
-
-        const foundSources = searchByKey(filtered, "source_path", searchValue);
-        const sortedSources = sortArrayOfObjects(foundSources, "source_path");
-
-        setFilteredSources(sortedSources);
-        onFilteredSourcesChange?.(sortedSources);
-    }, [selectedCategory, selectedFormat, knowledgeBase, searchValue, onFilteredSourcesChange]);
+        onFilteredSourcesChange?.(filteredSources);
+    }, [filteredSources, onFilteredSourcesChange]);
 
     return (
         <div className="flex flex-col gap-3 overflow-hidden">
@@ -171,7 +172,7 @@ function SourceExplorerBody({
                 <div className={`flex items-center gap-2 overflow-x-auto [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
                     {
-                        categoryOptions.map((option, index) => {
+                        categoryOptions.map((option) => {
                             return (
                                 <Chip
                                     key={option.id}
