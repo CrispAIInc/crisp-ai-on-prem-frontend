@@ -573,15 +573,15 @@ export default function Media() {
                             className={[
                                 "w-4 h-4 rounded flex items-center justify-center border transition-colors",
                                 allChecked
-                                    ? "bg-violet-600 border-violet-600"
+                                    ? "bg-primary-300 border-primary-300"
                                     : someChecked
-                                        ? "bg-violet-100 border-violet-400"
+                                        ? "bg-primary-100 border-primary-200"
                                         : "bg-white border-gray-300",
                             ].join(" ")}
                         >
                             {allChecked && <Check size={11} className="text-white" strokeWidth={3} />}
                             {!allChecked && someChecked && (
-                                <span className="w-1.5 h-1.5 rounded-sm bg-violet-500" />
+                                <span className="w-1.5 h-1.5 rounded-sm bg-primary-300" />
                             )}
                         </span>
                         {allChecked ? "Deselect all" : "Select all"}

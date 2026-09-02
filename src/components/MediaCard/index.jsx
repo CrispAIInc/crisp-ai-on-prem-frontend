@@ -12,7 +12,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
     return (
         <div
             className={`group relative rounded-xl border bg-white shadow-sm transition-colors cursor-pointer ${isChecked
-                ? "border-primary-300 ring-2 ring-violet-100"
+                ? "border-primary-300 ring-2 ring-primary-100"
                 : "border-gray-100 hover:border-gray-200"
                 }`}
             onClick={(event) => onOpen(event, source)}

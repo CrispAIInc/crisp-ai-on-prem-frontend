@@ -87,7 +87,7 @@ export default function VideoProcessingSettings({ value, onChange }) {
               {/* Radio dot */}
               <span
                 className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all
-                  ${isActive ? "border-primary-300" : "border-slate-300 group-hover:border-violet-400"}`}
+                  ${isActive ? "border-primary-300" : "border-slate-300 group-hover:border-primary-300"}`}
               >
               </span>
 
@@ -101,7 +101,7 @@ export default function VideoProcessingSettings({ value, onChange }) {
               {!isCustomOption && (
                 <span className={`text-xs px-2 py-1 rounded-lg font-mono transition-colors
                   ${isActive
-                    ? "bg-violet-200 text-primary-300"
+                    ? "bg-primary-100 text-primary-300"
                     : ""
                   }`}>
                   {preset.description}
