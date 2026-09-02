@@ -237,11 +237,11 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
             }
             else {
                 setSearchOutcome("found");
-                const source = knowledgeBase?.find(item => item.source_path === rest.source_path);
+                const source = knowledgeBase?.find(item => item.source_id === rest.source_id);
                 setDiscoveredSources({
                     mainSource: { ...source, timestamp, page: Number(page), score },
                     additionalSources: additional_sources?.map(item => {
-                        const sourceItem = knowledgeBase.find(el => el.source_path === item?.source_path);
+                        const sourceItem = knowledgeBase.find(el => el.source_id === item?.source_id);
                         return {
                             ...sourceItem,
                             timestamp: item?.timestamp,
