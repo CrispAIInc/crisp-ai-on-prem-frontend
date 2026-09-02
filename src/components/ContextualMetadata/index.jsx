@@ -48,7 +48,7 @@ export default function ContextualMetadata({
         notify
     } = useToast();
 
-    const videoSources = knowledgeBase.filter(item => item.file_type === "video");
+    // const videoSources = knowledgeBase.filter(item => item.file_type === "video");
     const [sourceIds, setSourceIds] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [context, setContext] = useState("");
@@ -132,7 +132,7 @@ export default function ContextualMetadata({
             <div className="flex-1 min-h-0 overflow-y-auto px-[18px]">
                 <Field label="Sources">
                     <SourcesDropdown
-                        sources={videoSources}
+                        sources={knowledgeBase}
                         selectedSourceIds={sourceIds}
                         onSelectedSourceIdsChange={setSourceIds}
                     />
