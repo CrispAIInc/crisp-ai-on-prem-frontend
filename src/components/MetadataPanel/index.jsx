@@ -27,7 +27,7 @@ import {
   Minus,
   Plus,
   Download,
-  Maximize2,
+  X,
 } from "lucide-react";
 import BaseHeading from '../BaseHeading/index.jsx';
 import Metadata from '../Metadata/index.jsx';
@@ -37,23 +37,20 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     currentResource,
     setCurrentResource,
     resourceURL,
-    chatLoaded,
     sourcesWithExclusive, setSourcesWithExclusive,
     player,
     setIsSourceUncheckedOrClosed,
-    languageOptions,
     isPlayerReady,
     setIsPlayerReady,
-    hasDuration,
     setHasDuration,
-    pdfRef,
     jumpToPage,
     committedSources,
     activeView,
     theme,
     generatedResources,
     metadataPanelContainer,
-    setJumpToPage
+    setJumpToPage,
+    setShowMetadata
   } = useContext(MainContext);
 
 
@@ -140,6 +137,13 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   const lastSeekContextRef = useRef(null);
 
   const requestIdRef = useRef(0);
+
+  useEffect(() => {
+    return () => {
+      setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_id));
+    };
+  }, [currentResource]);
+
   async function translateMetadata(_chosenLanguage, object, fromTranslateDropdown = false) {
     const thisRequestId = ++requestIdRef.current; // mark this call as "the latest"
 
@@ -246,32 +250,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     }
   }
 
-  const [visibleHighlightCount, setVisibleHighlightCount] = useState(3);
-  const showMoreHighlights = () => {
-    setVisibleHighlightCount((prevCount) => prevCount + 3);
-  };
-
-  const [visibleChaptersCount, setVisibleChaptersCount] = useState(3);
-
-  useEffect(() => {
-    return () => {
-      setSourcesWithExclusive(prev => prev?.filter(item => item !== currentResource?.source_id));
-    };
-  }, [currentResource]);
-
-
-  const areSourcesSame = (arr1, arr2) => {
-    const set1 = new Set(arr1.map(obj => obj.source_id));
-    const set2 = new Set(arr2.map(obj => obj.source_id));
-
-    if (set1.size !== set2.size) return false; // Different sizes
-
-    for (const id of set1) {
-      if (!set2.has(id)) return false; // Different elements
-    }
-
-    return true; // Arrays contain the same objects (ignoring order)
-  };
   const [isChecked, setIsChecked] = useState(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length));
 
   const [sourcesAfterCheckCrispWiz, setSourcesAfterCheckCrispWiz] = useState([]);
@@ -293,7 +271,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
   }, []);
 
   const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(video_autoplay);
   const [thumbnailPublicUrl, setThumbnailPublicUrl] = useState(null);
 
   const handleDownload = async () => {
@@ -322,6 +299,9 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     }
   };
 
+  const onClose = () => {
+    setShowMetadata(false);
+  };
 
   useEffect(() => {
     if (!currentResource) return;
@@ -413,8 +393,6 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
     // setPageInput(newPage);
   };
 
-  const [index, setIndex] = useState(0);
-
   return (
     <div className={`max-w-4xl mx-auto [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`} ref={metadataPanelContainer}>
@@ -493,8 +471,13 @@ const MetadataPanel = ({ workspaceContainer, centerPanelRef, leftWidth, maxWidth
                   <button style={actionBtnStyle} onClick={handleDownload} aria-label="Download">
                     <Download size={16} />
                   </button>
+                  <button style={actionBtnStyle} onClick={onClose} aria-label="Close">
+                    <X size={16} />
+                  </button>
                 </div>
               </div>
+
+              {/* PDF renderer */}
               <div className={`flex-1 h-full overflow-y-auto [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
                 <Document
