@@ -82,7 +82,7 @@ export default function Metadata({
 
     return (
         <div className={`h-full min-h-0 flex flex-col gap-3.5 overflow-hidden ${className}`}>
-            <div className="flex gap-1 bg-surface-alt p-1 rounded-[10px] w-fit bg-gray-200/30 shrink-0">
+            <div className="flex gap-1 bg-surface-alt p-1 rounded-[10px] w-full bg-gray-200/30 shrink-0">
                 {tabs.map((t) => (
                     <button
                         key={t.id}
@@ -102,7 +102,7 @@ export default function Metadata({
                         && Object.keys(currentResource?.metadata).length > 0
                         && Object.keys(currentResource?.metadata).some(key => key !== "embeddings_generated")
                     ) && (
-                        <div className={`flex items-center border px-1 border-gray-100 bg-light-hover-100/30 rounded-lg`}>
+                        <div className={`flex items-center border px-1 border-gray-100 bg-light-hover-100/30 rounded-lg ml-auto`}>
                             <Globe size={13} />
                             <CustomSelectTwo
                                 withIcon
