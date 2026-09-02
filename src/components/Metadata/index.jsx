@@ -89,7 +89,7 @@ export default function Metadata({
                         type="button"
                         onClick={() => setActiveTab(t.id)}
                         aria-current={activeTab === t.id ? "page" : undefined}
-                        className={`rounded-[7px] px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors ${activeTab === t.id ? "bg-white text-primary shadow-sm2" : "bg-transparent backdrop-blur-sm text-ink-secondary hover:text-ink"
+                        className={`rounded-[7px] px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors ${activeTab === t.id ? "bg-white text-primary-300 shadow-sm" : "bg-transparent backdrop-blur-sm text-ink-secondary hover:text-ink"
                             }`}
                     >
                         {t.label}
