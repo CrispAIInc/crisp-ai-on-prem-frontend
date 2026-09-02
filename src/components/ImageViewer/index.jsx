@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useContext } from "react";
 import {
     ZoomIn,
     ZoomOut,
@@ -9,6 +9,7 @@ import {
     Image
 } from "lucide-react";
 import GsFile from '../GsFile';
+import { MainContext } from '../../contexts/mainContext';
 
 /* ---------------------------------------------------------
    ImageViewer
@@ -28,6 +29,11 @@ const MAX_SCALE = 4;
 const SCALE_STEP = 0.5;
 
 function ImageViewer({ src, alt, title, eyebrow = "Now viewing" }) {
+
+    const {
+        setShowMetadata
+    } = useContext(MainContext);
+
     const [scale, setScale] = useState(1);
     const [pos, setPos] = useState({ x: 0, y: 0 });
     const [dragging, setDragging] = useState(false);
@@ -109,6 +115,10 @@ function ImageViewer({ src, alt, title, eyebrow = "Now viewing" }) {
 
     const zoomPct = Math.round(scale * 100);
 
+    function onClose() {
+        setShowMetadata(false);
+    }
+
     return (
         <div
             ref={containerRef}
@@ -146,18 +156,6 @@ function ImageViewer({ src, alt, title, eyebrow = "Now viewing" }) {
                         <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-[#A694F3]" />
                     </div>
                 )}
-                {/* <img
-                    src={src}
-                    alt={alt || title || "image"}
-                    draggable={false}
-                    onLoad={() => setLoaded(true)}
-                    className={`h-full w-full object-contain transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"
-                        }`}
-                    style={{
-                        transform: `translate(${pos.x}px, ${pos.y}px) scale(${scale})`,
-                        transition: dragging ? "none" : "transform 220ms cubic-bezier(.2,.8,.2,1)",
-                    }}
-                /> */}
                 <GsFile
                     gsUrl={src}
                     alt={alt || title || "image"}
@@ -174,15 +172,15 @@ function ImageViewer({ src, alt, title, eyebrow = "Now viewing" }) {
 
             {/* title, top-left */}
             {(alt && isMouseEnter) && (
-                <div className="absolute left-3 top-3 min-w-0 max-w-[60%] flex items-center gap-2 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-[13px] backdrop-blur-sm">
-                    <Image className="w-[15px] h-[15px] text-primary-300" strokeWidth={2} />
-                    <span className="truncate font-medium text-sm text-white/90">{alt}</span>
+                <div className="absolute left-3 top-3 right-3 flex items-center justify-between gap-1 w-[98%]">
+                    <div className="min-w-0 max-w-[60%] flex items-center gap-2 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-[13px] backdrop-blur-sm">
+                        <Image className="w-[15px] h-[15px] text-primary-300" strokeWidth={2} />
+                        <span className="truncate font-medium text-sm text-white/90">{alt}</span>
+                    </div>
+                    <div className="min-w-0 overflow-hidden rounded-md bg-black/40 px-2 py-1 text-white text-[13px] backdrop-blur-sm cursor-pointer" onClick={onClose}>
+                        <X size={15} />
+                    </div>
                 </div>
-                // <div className="absolute left-4 top-4 max-w-[70%]">
-                //     <h3 className="mt-1 truncate text-base font-semibold text-white sm:text-lg">
-                //         {alt}
-                //     </h3>
-                // </div>
             )}
 
             {/* fullscreen exit */}
