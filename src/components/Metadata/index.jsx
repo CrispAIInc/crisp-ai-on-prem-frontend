@@ -222,6 +222,7 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
             const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/discover', 'POST', JSON.stringify({
                 searchQuestion: query,
                 source_id: currentResource.source_id,
+                format: currentResource.file_type
             })
             );
 
