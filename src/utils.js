@@ -461,7 +461,9 @@ export const extractThumbnail = (file) => {
     const preview =
         type.startsWith('image/') || type.startsWith('video/')
             ? URL.createObjectURL(file)
-            : null;
+            : type.startsWith('application/pdf')
+                ? (import.meta.env.VITE_APP_ENV === "production" ? import.meta.env.VITE_STAGING_FRONTEND_URL + '/PDF-file-thumbnail.png' : "http://localhost:3000" + '/PDF-file-thumbnail.png')
+                : null;
     return preview;
     // });
     // setFileThumbnails((prev) => [...prev, ...thumbnails]);
