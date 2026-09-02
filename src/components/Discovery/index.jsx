@@ -80,10 +80,8 @@ export default function Discovery({
         try {
 
             const { found, additional_sources, score, timestamp, page, message, success, ...rest } = await makeApiRequest('/discover', 'POST', JSON.stringify({
-                selectedCategory,
                 searchQuestion: q,
                 currentResource: null,
-                selectedFormat,
                 indexes: indexes.map(item => {
                     let indexId = categoryOptions.find(idx => idx.value === item)?.id;
                     return indexId;
