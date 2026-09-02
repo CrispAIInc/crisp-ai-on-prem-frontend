@@ -536,6 +536,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
             translatedResource={translatedResource}
             activeTab={metadataActiveTab}
             onTabChange={setMetadataActiveTab}
+            chosenLanguage={chosenLanguage}
           />
         </div>
       ) : (

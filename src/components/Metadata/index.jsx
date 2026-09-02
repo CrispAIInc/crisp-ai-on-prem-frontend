@@ -9,6 +9,7 @@ import { useToast } from '../../contexts/toastContext';
 import { timeToSeconds } from '../../utils';
 import Chip from '../Chip';
 import CustomSelectTwo from "../CustomSelectTwo";
+import FaqItem from '../FaqItem';
 
 const TAB_SETS = {
     video: ["search", "transcription", "summary", "chapters", "highlights", "keywords", "faqs"],
@@ -64,6 +65,7 @@ export default function Metadata({
     translateMetadata,
     activeTab: controlledActiveTab,
     onTabChange,
+    chosenLanguage
 }) {
 
     const {
@@ -172,6 +174,12 @@ export default function Metadata({
                 {activeTab === "keywords" && (
                     <KeywordsPane
                         keywords={translatedResource?.keywords?.content}
+                    />
+                )}
+                {activeTab === "faqs" && (
+                    <FaqsPane
+                        faqs={translatedResource?.faqs?.content}
+                        chosenLanguage={chosenLanguage}
                     />
                 )}
             </div>
@@ -351,7 +359,7 @@ function TranscriptionPane({ transcriptionObj }) {
                                     <p className="select-text" dangerouslySetInnerHTML={{ __html: topic.content.replace(/\n/g, "<br>") }}></p>
                                 </div>
                             )) : (
-                                <p className="italic">Transcription not available for this source.</p>
+                                <p className="italic">Transcription not available for this asset.</p>
                             )
                     }
                 </div>
@@ -405,7 +413,7 @@ function ChaptersPane({ chapters }) {
                         theme="light"
                     />
                 ) : (
-                    <p className="p-4 italic">Chapters not available for this source.</p>
+                    <p className="p-4 italic">Chapters not available for this asset.</p>
                 )}
             </div>
         </>
@@ -432,7 +440,7 @@ function HighlightsPane({ highlights }) {
                         />
                     ))
                 ) : (
-                    <p className="italic">Highlights not available for this source.</p>
+                    <p className="italic">Highlights not available for this asset.</p>
                 )}
             </div>
         </>
@@ -463,7 +471,34 @@ function KeywordsPane({ keywords }) {
                         }
                     </div>
                 ) : (
-                    <p className="italic">Keywords not available for this source.</p>
+                    <p className="italic">Keywords not available for this asset.</p>
+                )}
+            </div>
+        </>
+    );
+}
+
+function FaqsPane({ faqs, chosenLanguage }) {
+    const { workspaceContainer } = useContext(MainContext);
+    const faqItems = Array.isArray(faqs) ? faqs : [];
+
+    return (
+        <>
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
+                <h3 className="font-display text-[13.5px] font-semibold text-ink">FAQs</h3>
+            </div>
+
+            <div className="p-4 flex-1 min-h-0 overflow-y-auto">
+                {faqItems.length > 0 ? (
+                    <div className="flex items-center flex-wrap gap-1 max-w-full">
+                        {
+                            faqItems.map((faq, index) => (
+                                <FaqItem chosenLanguage={chosenLanguage} key={faq.id ?? index} item={faq} isBoxed />
+                            ))
+                        }
+                    </div>
+                ) : (
+                    <p className="italic">FAQs not available for this asset.</p>
                 )}
             </div>
         </>
