@@ -33,7 +33,7 @@ export default function UserMenu({ firstName, lastName, onLogout }) {
         "
       >
         {/* Avatar */}
-        <div className="flex items-center justify-center text-sm font-semibold text-white rounded-full w-7 h-7 bg-gradient-to-br from-indigo-500 to-cyan-400">
+        <div className="flex items-center justify-center text-sm font-semibold text-white rounded-full w-7 h-7 bg-gradient-to-br from-primary-200 to-primary-300">
           {firstName[0]?.toUpperCase()}{lastName[0]?.toUpperCase()}
         </div>
 
