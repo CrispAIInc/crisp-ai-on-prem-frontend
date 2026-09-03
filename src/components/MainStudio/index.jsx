@@ -13,7 +13,7 @@ function MainStudio({ panelWidth }) {
     } = useContext(MainContext);
 
     return (
-        <div ref={workspaceContainer}>
+        <div ref={workspaceContainer} className="h-full min-h-0">
             {
                 activeStudioPanel === MAIN_STUDIO_PANELS.SHORTS ? (
                     <ShortsList />

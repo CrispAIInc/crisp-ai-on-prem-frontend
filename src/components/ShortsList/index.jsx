@@ -70,7 +70,6 @@ export default function ShortsList({
 
     const [internalSelectedId, setInternalSelectedId] = useState(null);
     const selectedId = selectedIdProp ?? internalSelectedId;
-    const setSelectedId = onSelectedShortIdChange ?? setInternalSelectedId;
 
     return (
         <div className={`h-full min-h-0 flex overflow-hidden ${className}`}>
@@ -85,7 +84,7 @@ export default function ShortsList({
                             <ShortListItem
                                 key={key}
                                 short={short}
-                                active={key === selectedId}
+                                active={short.id === selectedShort.id}
                                 onClick={() => setSelectedShort(short)}
                             />
                         );
@@ -129,8 +128,7 @@ function ShortListItem({ short, active, onClick }) {
             type="button"
             onClick={onClick}
             aria-current={active ? "true" : undefined}
-            className={`w-full flex items-center gap-3 rounded-lg p-2 text-left border transition-colors ${active ? "border-primary bg-[#F6F3FE]" : "border-border hover:border-border-strong hover:bg-surface-alt"
-                }`}
+            className={`w-full flex items-center gap-3 bg-white shadow-sm rounded-lg p-2 text-left transition-colors !border hover:!border-primary-300 ${active && "!border !border-primary-300"}`}
         >
             <GsFile className="!w-12 !h-12 !rounded-md" gsUrl={short.thumbnail_url ?? short.thumbnail} alt={short.title || short.filename} />
             <span className="min-w-0 flex-1">
