@@ -316,12 +316,12 @@ function ReelViewer({
             setShowSaveTitleModal(false);
             notify({
                 variant: "success",
-                heading: "Reel saved successfully!",
+                heading: "Short saved successfully!",
             });
         } catch (error) {
             notify({
                 variant: "error",
-                heading: "Couldn't save reel",
+                heading: "Couldn't save short",
                 subheading: error?.message || ""
             });
         }
@@ -414,10 +414,10 @@ function ReelViewer({
                     <Modal.Header className={`border-0 pb-0 ${theme === 'dark' ? '!bg-textColor-300 !text-white' : ''}`}>
                         <div className="flex flex-col gap-1">
                             <Modal.Title className={`text-lg font-semibold ${theme === 'dark' ? 'text-textColor-100' : 'text-gray-900'}`}>
-                                Save reel
+                                Save Short
                             </Modal.Title>
                             <p className={`text-sm m-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>
-                                Choose a title before saving this reel.
+                                Choose a title before saving this short.
                             </p>
                         </div>
                     </Modal.Header>
@@ -426,7 +426,7 @@ function ReelViewer({
                         <div className='flex flex-col items-start justify-center gap-3'>
                             <div className="flex flex-col w-full">
                                 <label htmlFor="reelTitle" className={`block text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                                    Reel title
+                                    Short title
                                 </label>
                                 <input
                                     type="text"
@@ -434,7 +434,7 @@ function ReelViewer({
                                     id="reelTitle"
                                     value={saveTitleValue}
                                     onChange={(e) => setSaveTitleValue(e.target.value)}
-                                    placeholder="Enter a title for this reel"
+                                    placeholder="Enter a title for this short"
                                     className={`flex-1 block w-full p-2 mt-1 rounded-xl outline-none transition ${theme === 'dark'
                                         ? '!border !border-textColor-200 bg-textColor-300 text-white placeholder:text-gray-400'
                                         : '!border !border-gray-300 bg-white text-gray-900'}`}
@@ -466,7 +466,7 @@ function ReelViewer({
                             disabled={!saveTitleValue.trim()}
                         >
                             <span className="select-none font-medium">
-                                Save reel
+                                Save
                             </span>
                         </button>
                     </Modal.Footer>
