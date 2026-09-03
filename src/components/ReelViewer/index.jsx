@@ -367,10 +367,6 @@ function ReelViewer({
                                 <AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} />
                             </div>
                         )}
-
-                        <div title="Reel properties">
-                            <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
-                        </div>
                         {!isProjectReadOnly && <div onClick={() => setShowDownloadOption(prev => !prev)} >
                             {isDownloading ? <LoadingSpinner isSmall /> : (
                                 <>
