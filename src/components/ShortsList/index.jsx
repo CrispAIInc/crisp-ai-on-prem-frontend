@@ -144,7 +144,7 @@ function ShortListItem({ short, active, onClick }) {
                     </span>
                     <span className="flex items-center gap-1 text-[11px] text-ink-muted">
                         <Layers size={11} />
-                        {clipCount} clip{clipCount === 1 ? "" : "s"}
+                        {clipCount} segment{clipCount === 1 ? "" : "s"}
                     </span>
                 </span>
                 <span className="block text-[10.5px] text-ink-muted mt-0.5">{formatDate(short.created_at)}</span>
