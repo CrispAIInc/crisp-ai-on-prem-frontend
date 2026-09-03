@@ -1,8 +1,15 @@
 import { useContext, useState } from "react";
-import { Film, Clock, Layers, PlayCircle } from "lucide-react";
+import { Film, Clock, Layers, PlayCircle, Pencil, Trash } from "lucide-react";
 import { MainContext } from '../../contexts/mainContext';
 import ReelViewer from '../ReelViewer';
 import GsFile from '../GsFile';
+import ActionMenu from '../ActionMenu';
+import AnimatedText from '../AnimatedText';
+import LoadingSpinner from '../LoadingSpinner';
+import { ProjectContext } from '../../contexts/projectContext';
+import useFirebase from '../../hooks/useFirebase';
+import makeApiRequest from '../../api';
+import { useToast } from '../../contexts/toastContext';
 
 function isHttpUrl(url) {
     return typeof url === "string" && /^https?:\/\//.test(url);
@@ -32,28 +39,6 @@ function totalDuration(short) {
     return short.segments?.reduce((sum, seg) => sum + (seg.duration || 0), 0) ?? 0;
 }
 
-/**
- * ShortsList — two-column shorts browser.
- *
- * Left column: scrollable list of shorts (thumbnail, title, clip count,
- * total duration, created date). Right column: the selected short's
- * player on top and its info panel below, using your existing
- * `PlayerComponent` / `InfoComponent`.
- *
- * Fills 100% of its parent's height (parent needs a bounded height, e.g.
- * flex + min-h-0) — each column scrolls independently and the whole thing
- * never overflows the app shell.
- *
- * Props:
- *  - shorts: [reel] — array shaped like the `newReel` object you shared
- *  - selectedShortId, onSelectedShortIdChange: controlled selection
- *    (optional — falls back to internal state if omitted)
- *  - PlayerComponent: your existing video player component, rendered as
- *    `<PlayerComponent short={selectedShort} src={selectedShort.reel_video_url} />`
- *  - InfoComponent: your existing short-details component, rendered as
- *    `<InfoComponent short={selectedShort} />`
- *  - className: extra classes on the root element
- */
 export default function ShortsList({
     selectedShortId: selectedIdProp,
     onSelectedShortIdChange,
@@ -121,7 +106,51 @@ export default function ShortsList({
 }
 
 function ShortListItem({ short, active, onClick }) {
+    const { isProjectReadOnly } = useContext(ProjectContext);
+    const { setReels } = useContext(MainContext);
+    const { getPublicUrl } = useFirebase();
+    const { notify } = useToast();
+
+    const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
+    const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
+    const [isReelDeleting, setIsReelDeleting] = useState(false);
+
     const clipCount = short.segments?.length ?? 0;
+
+
+    function handleOpenFilenameUpdateModal(event, reel) {
+        event.stopPropagation();
+        setReelTitleUpdateValue(reel.title);
+        setShowUpdateReelTitleModal(true);
+    }
+
+    async function deleteReel(event, reel) {
+        if (isProjectReadOnly) return;
+        event.preventDefault();
+        setIsReelDeleting(true);
+        try {
+            const publicReelUrl = await getPublicUrl(reel.reel_video_url);
+            await makeApiRequest(`/reels/${reel.id}`, 'DELETE', JSON.stringify({
+                videoUrl: publicReelUrl,
+            }));
+
+            notify({
+                variant: "success",
+                heading: "Reel deleted successfully!",
+            });
+            setReels(prev => prev.filter(item => item.id !== reel.id));
+            // getReels();
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Oops!",
+                subheading: "An error occurred while deleting the reel",
+            });
+        } finally {
+            setIsReelDeleting(false);
+        }
+    }
 
     return (
         <button
@@ -132,9 +161,33 @@ function ShortListItem({ short, active, onClick }) {
         >
             <GsFile className="!w-12 !h-12 !rounded-md" gsUrl={short.thumbnail_url ?? short.thumbnail} alt={short.title || short.filename} />
             <span className="min-w-0 flex-1">
-                <span className="block text-[12.5px] font-semibold text-ink truncate">
-                    {short.title || short.filename}
-                </span>
+                <div className="flex items-center justify-between gap-1">
+                    <span className="block text-[12.5px] font-semibold text-ink truncate">
+                        {short.title || short.filename}
+                    </span>
+
+                    {
+                        !isProjectReadOnly && (
+                            <ActionMenu
+                                actions={[
+                                    {
+                                        label: "Edit title",
+                                        icon: <Pencil size={13} />,
+                                        onClick: (e) => {
+                                            e.stopPropagation();
+                                            handleOpenFilenameUpdateModal(e, short);
+                                        },
+                                    },
+                                    {
+                                        label: isReelDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
+                                        icon: isReelDeleting ? <LoadingSpinner isSmall /> : <Trash size={13} />,
+                                        onClick: (e) => deleteReel(e, short),
+                                    },
+                                ]}
+                            />
+                        )
+                    }
+                </div>
                 <span className="flex items-center gap-3 mt-1">
                     <span className="flex items-center gap-1 text-[11px] text-ink-muted">
                         <Clock size={11} />
