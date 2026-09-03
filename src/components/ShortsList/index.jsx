@@ -63,6 +63,7 @@ export default function ShortsList({
     const {
         reels: shorts,
         selectedReel: selectedShort,
+        setSelectedReel: setSelectedShort
     } = useContext(MainContext);
 
     const [internalSelectedId, setInternalSelectedId] = useState(null);
@@ -83,7 +84,7 @@ export default function ShortsList({
                                 key={key}
                                 short={short}
                                 active={key === selectedId}
-                                onClick={() => setSelectedId(key)}
+                                onClick={() => setSelectedShort(short)}
                             />
                         );
                     })
