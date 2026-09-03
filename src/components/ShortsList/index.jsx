@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { Film, Clock, Layers, PlayCircle } from "lucide-react";
 import { MainContext } from '../../contexts/mainContext';
+import ReelViewer from '../ReelViewer';
+import GsFile from '../GsFile';
 
 function isHttpUrl(url) {
     return typeof url === "string" && /^https?:\/\//.test(url);
@@ -105,13 +107,7 @@ export default function ShortsList({
                     </div>
                 ) : (
                     <div className="p-4 flex flex-col gap-4">
-                        {PlayerComponent ? (
-                            <PlayerComponent short={selectedShort} src={selectedShort.reel_video_url} />
-                        ) : (
-                            <div className="aspect-video rounded-xl2 bg-surface-alt flex items-center justify-center text-ink-muted text-[12.5px]">
-                                PlayerComponent not provided
-                            </div>
-                        )}
+                        <ReelViewer />
 
                         {InfoComponent ? (
                             <InfoComponent short={selectedShort} />
@@ -136,7 +132,7 @@ function ShortListItem({ short, active, onClick }) {
             className={`w-full flex items-center gap-3 rounded-lg p-2 text-left border transition-colors ${active ? "border-primary bg-[#F6F3FE]" : "border-border hover:border-border-strong hover:bg-surface-alt"
                 }`}
         >
-            <Thumb src={short.thumbnail_url ?? short.thumbnail} size={52} />
+            <GsFile className="!w-12 !h-12 !rounded-md" gsUrl={short.thumbnail_url ?? short.thumbnail} alt={short.title || short.filename} />
             <span className="min-w-0 flex-1">
                 <span className="block text-[12.5px] font-semibold text-ink truncate">
                     {short.title || short.filename}

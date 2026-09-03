@@ -25,15 +25,15 @@ import makeApiRequest from '../../api/index.js';
 
 function ReelViewer({
     closeReel,
-    reel,
-    setReel
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
     const {
         theme,
         reels,
-        setReels
+        setReels,
+        selectedReel: reel,
+        setSelectedReel: setReel
     } = useContext(MainContext);
     const { getPublicUrl, getDownloadableUrl } = useFirebase();
 
@@ -330,94 +330,78 @@ function ReelViewer({
 
     return (
         <>
-            <div className={`fixed top-0 left-0 !z-[999999] flex flex-col items-center justify-center w-full h-full ${!isOutsideClickEnabled ? 'bg-black bg-opacity-75' : 'bg-transparent bg-opacity-0 pointer-events-none'}`} onClick={e => handleOutsideClick(e)}>
-                {/* Reel viewer container */}
-                <div className="reel-viewer relative w-full max-w-sm aspect-[9/16] bg-slate-200 rounded-2xl overflow-hidden sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:w-[30vw] 2xl:h-[80%] pointer-events-auto shadow-[0px_2px_15px_-5px_rgba(82,79,79,0.6)]">
+            {/* <div className={`fixed top-0 left-0 !z-[999999] flex flex-col items-center justify-center w-full h-full ${!isOutsideClickEnabled ? 'bg-black bg-opacity-75' : 'bg-transparent bg-opacity-0 pointer-events-none'}`} onClick={e => handleOutsideClick(e)}> */}
+            {/* Reel viewer container */}
+            <div className="reel-viewer relative w-full max-w-sm aspect-[9/16] bg-slate-200 rounded-2xl overflow-hidden sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:w-[30vw] h-auto 2xl:h-[80%] pointer-events-auto shadow-[0px_2px_15px_-5px_rgba(82,79,79,0.6)]">
 
-                    <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/2 top-10 z-10 blur-[160px]"></div>
-                    <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-[50%] z-10 blur-[160px]"></div>
-                    <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-[100%] z-10 blur-[160px]"></div>
+                <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-3/2 top-10 z-10 blur-[160px]"></div>
+                <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-[50%] z-10 blur-[160px]"></div>
+                <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-[100%] z-10 blur-[160px]"></div>
 
-                    <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-3">
-                        {areReelControlsVisible && <SwitchTransition mode="out-in">
-                            <CSSTransition
-                                key={currentTitle + '-key'}
-                                classNames="fade"
-                                timeout={300}
-                            >
-                                <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
-                            </CSSTransition>
-                        </SwitchTransition>}
-                        <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
-                            {
-                                (!isProjectReadOnly && reels.find(item => item.id === reel.id) === undefined) && (
-                                    <Save onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSaveTitleValue(reel?.title || '');
-                                        setShowSaveTitleModal(true);
-                                    }} size={30} className="p-2 z-50 text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
-                                )
-                            }
-                            {areReelControlsVisible ? (
-                                <div title="Collapse">
-                                    <PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} />
-                                </div>
-                            ) : (
-                                <div title="Expand">
-                                    <AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} />
-                                </div>
-                            )}
-
-                            <div title="Reel properties">
-                                <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
-                            </div>
-                            {!isProjectReadOnly && <div onClick={() => setShowDownloadOption(prev => !prev)} >
-                                {isDownloading ? <LoadingSpinner isSmall /> : (
-                                    <>
-                                        <div title="Download">
-                                            <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
-                                        </div>
-                                        {
-                                            showDownloadOption && (
-                                                <>
-                                                    {downloadOptions()}
-                                                </>
-                                            )
-                                        }
-                                    </>
-                                )}
-                            </div>}
-                            <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
-                        </div>
-                    </div>
-                    <ReactPlayer
-                        id="react-player"
-                        width="100%"
-                        height="100%"
-                        className="relative z-50"
-                        playing={video_autoplay}
-                        url={sourcePublicUrl}
-                        loop={video_loop}
-                        onProgress={handleProgress}
-                        onDuration={handleDuration}
-                        controls
-                    />
-                </div>
-
-                {/* reel properties side drawer */}
-                <style>
-                    {`
-                        .MuiPaper-root {
-                            border-top-left-radius: 32px;
-                            border-bottom-left-radius: 32px;
-                            box-shadow: 0px 0px 20px -7px;
-                            border: none;
+                <div className="absolute left-0 flex items-center justify-between w-full gap-3 p-1 top-3">
+                    {areReelControlsVisible && <SwitchTransition mode="out-in">
+                        <CSSTransition
+                            key={currentTitle + '-key'}
+                            classNames="fade"
+                            timeout={300}
+                        >
+                            <p className="!ml-3 text-white break-words text-md !bg-slate-500/60 px-2 py-1 rounded-md">{currentTitle}</p>
+                        </CSSTransition>
+                    </SwitchTransition>}
+                    <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
+                        {
+                            (!isProjectReadOnly && reels.find(item => item.id === reel.id) === undefined) && (
+                                <Save onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSaveTitleValue(reel?.title || '');
+                                    setShowSaveTitleModal(true);
+                                }} size={30} className="p-2 z-50 text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
+                            )
                         }
-                    `}
-                </style>
-                <Drawer className='pointer-events-auto' slotProps={{ backdrop: { invisible: true } }} anchor="right" variant="persistent" open={isReelPropsOpen} onClose={handleCloseReelProps}>
-                    <ReelProps reel={reel} closeReelProps={handleCloseReelProps} />
-                </Drawer>
+                        {areReelControlsVisible ? (
+                            <div title="Collapse">
+                                <PictureInPictureAltIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleCollapseReel} />
+                            </div>
+                        ) : (
+                            <div title="Expand">
+                                <AspectRatioIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleExpandReel} />
+                            </div>
+                        )}
+
+                        <div title="Reel properties">
+                            <InfoIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={handleToggleReelProps} />
+                        </div>
+                        {!isProjectReadOnly && <div onClick={() => setShowDownloadOption(prev => !prev)} >
+                            {isDownloading ? <LoadingSpinner isSmall /> : (
+                                <>
+                                    <div title="Download">
+                                        <FileDownloadIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
+                                    </div>
+                                    {
+                                        showDownloadOption && (
+                                            <>
+                                                {downloadOptions()}
+                                            </>
+                                        )
+                                    }
+                                </>
+                            )}
+                        </div>}
+                        <CloseIcon className="p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" onClick={(e) => handleCloseReel(e)} />
+                    </div>
+                </div>
+                <ReactPlayer
+                    id="react-player"
+                    width="100%"
+                    height="100%"
+                    className="relative z-50"
+                    playing={video_autoplay}
+                    url={sourcePublicUrl}
+                    loop={video_loop}
+                    onProgress={handleProgress}
+                    onDuration={handleDuration}
+                    controls
+                />
             </div>
             {showSaveTitleModal && (
                 <Modal
@@ -488,39 +472,6 @@ function ReelViewer({
                     </Modal.Footer>
                 </Modal>
             )}
-
-            <Moveable
-                target={document.querySelector(".reel-viewer")}
-                container={null}
-                origin={true}
-
-                /* Resize event edges */
-                edge={true}
-
-                /* draggable */
-                draggable={!areReelControlsVisible}
-                throttleDrag={0}
-                onDrag={({
-                    target,
-                    transform,
-                }) => {
-                    target.style.transform = transform;
-                }}
-
-                /* When resize or scale, keeps a ratio of the width, height. */
-                keepRatio={true}
-
-                /* resizable*/
-                /* Only one of resizable, scalable, warpable can be used. */
-                resizable={false}
-                throttleResize={0}
-                onResize={({ target, width, height }) => {
-                    // Apply size to target
-                    // const el = target.current;
-                    target.style.width = `${width}px`;
-                    target.style.height = `${height}px`;
-                }}
-            />
         </>
     );
 }
