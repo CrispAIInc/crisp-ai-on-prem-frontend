@@ -11,6 +11,7 @@ import { ProjectContext } from '../../contexts/projectContext';
 import useFirebase from '../../hooks/useFirebase';
 import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
+import ReelProps from '../ReelProps';
 
 function isHttpUrl(url) {
     return typeof url === "string" && /^https?:\/\//.test(url);
@@ -94,11 +95,7 @@ export default function ShortsList({
                     <div className="p-4 flex flex-col gap-4">
                         <ReelViewer />
 
-                        {InfoComponent ? (
-                            <InfoComponent short={selectedShort} />
-                        ) : (
-                            <div className="text-[12.5px] text-ink-muted">InfoComponent not provided</div>
-                        )}
+                        <ReelProps />
                     </div>
                 )}
             </div>
