@@ -23,9 +23,7 @@ import { ProjectContext } from '../../contexts/projectContext.jsx';
 import { Save } from "lucide-react";
 import makeApiRequest from '../../api/index.js';
 
-function ReelViewer({
-    closeReel,
-}) {
+function ReelViewer() {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
     const {
@@ -61,7 +59,7 @@ function ReelViewer({
 
     const handleCloseReel = (e) => {
         e.stopPropagation();
-        closeReel();
+        setReel(null);
     };
 
     const handleDownload = async (e, _url, urlFileExtension) => {

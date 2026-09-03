@@ -70,7 +70,7 @@ export default function ShortsList({
                             <ShortListItem
                                 key={key}
                                 short={short}
-                                active={short.id === selectedShort.id}
+                                active={short.id === selectedShort?.id}
                                 onClick={() => setSelectedShort(short)}
                             />
                         );
