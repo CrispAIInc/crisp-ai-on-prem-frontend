@@ -147,6 +147,7 @@ export default function Shorts() {
             }
 
             setSelectedReel(newReel);
+            setActiveStudioPanel(MAIN_STUDIO_PANELS.SHORTS);
 
             // setIsReelGenerated(true);
             setContext('');
