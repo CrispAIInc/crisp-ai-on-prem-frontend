@@ -43,9 +43,6 @@ function totalDuration(short) {
 
 export default function ShortsList({
     selectedShortId: selectedIdProp,
-    onSelectedShortIdChange,
-    PlayerComponent,
-    InfoComponent,
     className = "",
 }) {
 
