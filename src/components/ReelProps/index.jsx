@@ -20,7 +20,7 @@ function ReelProps() {
         selectedReel: reel
     } = useContext(MainContext);
 
-    const { filename, id, reel_video_url, thumbnail, thumbnail_url, user_id, combined_video_info, original_sources, video_filename, edl_url, source_frame_rates, reel_frame_rate, project_id, source_id, index_id, reel_url, category, ...rest } = reel;
+    const { filename, id, reel_video_url, draft_id, thumbnail, thumbnail_url, user_id, combined_video_info, original_sources, video_filename, edl_url, source_frame_rates, reel_frame_rate, project_id, source_id, index_id, reel_url, category, ...rest } = reel;
     const {
         theme,
         knowledgeBase,
