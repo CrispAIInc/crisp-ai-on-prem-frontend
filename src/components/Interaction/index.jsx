@@ -113,8 +113,9 @@ const ChatMessage = ({ text, refs, timestamps }) => {
     );
 };
 
-const CopilotSection = () => {
+const Interaction = () => {
     const {
+        knowledgeBase,
         theme,
         currentResource,
         fromChat, setFromChat,
@@ -152,6 +153,7 @@ const CopilotSection = () => {
         setResponseIndex(currentChat?.messages?.length - 1 || -1);
     }, [currentChat]);
     const [input, setInput] = useState("");
+    const [sourceIds, setSourceIds] = useState([]);
 
     // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
@@ -239,12 +241,20 @@ const CopilotSection = () => {
 
         try {
             // add or remove embeddings from Vector store
-            if (!displayedSources?.every(item => item?.is_checked === false)) {
+            if (sourceIds.length > 0) {
+
+                const sourcesUsed = knowledgeBase
+                    .filter(({ source_id }) => sourceIds.includes(source_id))
+                    .map(({ source_id, index_id }) => ({
+                        source_id,
+                        index_id
+                    }));
+
                 await makeApiRequest(
                     `/handle-embeddings`,
                     "post",
                     JSON.stringify({
-                        sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_id: item?.source_id, index_id: item?.index_id })),
+                        sources: sourcesUsed,
                     })
                 );
             }
@@ -631,6 +641,8 @@ const CopilotSection = () => {
                             onChange={value => setInput(value)}
                             showCursor={showCursor}
                             isFetchingRefs={isFetchingRefs}
+                            sourceIds={sourceIds}
+                            setSourceIds={setSourceIds}
                         />
                     </div>
                 </div>
@@ -640,4 +652,4 @@ const CopilotSection = () => {
     );
 };
 
-export default CopilotSection;
+export default Interaction;

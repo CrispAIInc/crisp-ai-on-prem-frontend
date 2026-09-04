@@ -323,7 +323,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
             `/handle-embeddings`,
             "post",
             JSON.stringify({
-              sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_path: item?.source_path, index_id: item?.index_id })),
+              sources: displayedSources?.filter(item => item?.is_checked)?.map(item => ({ source_id: item?.source_id, index_id: item?.index_id })),
             })
           );
         }
@@ -360,6 +360,7 @@ const CopilotSection = ({ selectedLanguage, setSelectedLanguage, sidebarWidth, c
 
           // add or remove embeddings from Vector store
           if (!displayedSources?.every(item => item?.is_checked === false)) {
+
             await makeApiRequest(
               `/handle-embeddings`,
               "post",
@@ -1076,22 +1077,6 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                                   : "text-textColor-200"
                                   }`}
                               >
-                                {/* {!isProjectReadOnly && <AddOptionsModal
-                                  models={["dall-e-3"]}
-                                  text={message?.img}
-                                  addToNewNote={addToNewNote}
-                                  addToExistingNote={addToExistingNote}
-                                  setExistingNote={setExistingNote}
-                                  question={message?.question}
-                                  existingNote={existingNote}
-                                  onHide={onHide}
-                                  isNewNote={isNewNote}
-                                  setShowNoteModal={setShowNoteModal}
-                                  updateSelectedNote={setSelectedNote}
-                                  showNoteModal={showNoteModal}
-                                  selectedNote={selectedNote}
-                                  notes={notes} />
-                                } */}
                               </span>
                             </div>
                             <div className="flex flex-wrap items-center gap-1 mt-3">
@@ -1143,26 +1128,6 @@ ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} dangerously
                           {
                             (!isFoundationLlm && isFetchingRefs && index == responseIndex) && <AnimatedText text='Fetching references...' />
                           }
-
-                          {/* {!isProjectReadOnly && <AddOptionsModal
-                            text={
-                              message?.botText
-                            }
-                            addToNewNote={addToNewNote}
-                            refs={message?.refs}
-                            addToExistingNote={addToExistingNote}
-                            setExistingNote={setExistingNote}
-                            question={message.question}
-                            existingNote={existingNote}
-                            onHide={onHide}
-                            isNewNote={isNewNote}
-                            setShowNoteModal={setShowNoteModal}
-                            updateSelectedNote={setSelectedNote}
-                            showNoteModal={showNoteModal}
-                            selectedNote={selectedNote}
-                            notes={notes}
-                          />
-                          } */}
                         </>
                       )}
                     </div>

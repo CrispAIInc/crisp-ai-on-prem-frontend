@@ -15,7 +15,9 @@ export default function ChatInput({
     handleKeyDown,
     crispWizInputContainerRef,
     showCursor,
-    isFetchingRefs
+    isFetchingRefs,
+    sourceIds,
+    setSourceIds
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -110,7 +112,12 @@ export default function ChatInput({
             {/* bottom part of crisp wiz */}
             {/* chat history */}
             <div className="flex items-center justify-between w-full">
-                <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
+                <ChatHistory
+                    crispWizInputRef={crispWizInputRef}
+                    crispWizInputContainerRef={crispWizInputContainerRef}
+                    sourceIds={sourceIds}
+                    setSourceIds={setSourceIds}
+                />
             </div>
         </div>
     );
