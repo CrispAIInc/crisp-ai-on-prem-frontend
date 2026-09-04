@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { ChevronDown, Film, Check } from "lucide-react";
 import GsFile from '../GsFile';
 
@@ -20,7 +20,10 @@ export default function SourcesDropdown({
 }) {
     const [internalSelected, setInternalSelected] = useState([]);
     const [open, setOpen] = useState(false);
+    const [placement, setPlacement] = useState("bottom");
+    const [menuMaxHeight, setMenuMaxHeight] = useState(240);
     const rootRef = useRef(null);
+    const menuRef = useRef(null);
 
     const selectedSourceIds = selectedProp ?? internalSelected;
     const setSelectedSourceIds = onSelectedSourceIdsChange ?? setInternalSelected;
@@ -33,6 +36,31 @@ export default function SourcesDropdown({
         document.addEventListener("mousedown", handleClick);
         return () => document.removeEventListener("mousedown", handleClick);
     }, [open]);
+
+    useLayoutEffect(() => {
+        if (!open || !rootRef.current || !menuRef.current) return;
+
+        const positionMenu = () => {
+            const triggerRect = rootRef.current.getBoundingClientRect();
+            const menuHeight = menuRef.current.scrollHeight;
+            const gap = 6;
+            const spaceAbove = Math.max(0, triggerRect.top - gap);
+            const spaceBelow = Math.max(0, window.innerHeight - triggerRect.bottom - gap);
+            const shouldOpenAbove = spaceBelow < menuHeight && spaceAbove > spaceBelow;
+            const availableSpace = shouldOpenAbove ? spaceAbove : spaceBelow;
+
+            setPlacement(shouldOpenAbove ? "top" : "bottom");
+            setMenuMaxHeight(Math.min(240, Math.max(0, availableSpace)));
+        };
+
+        positionMenu();
+        window.addEventListener("resize", positionMenu);
+        window.addEventListener("scroll", positionMenu, true);
+        return () => {
+            window.removeEventListener("resize", positionMenu);
+            window.removeEventListener("scroll", positionMenu, true);
+        };
+    }, [open, sources.length]);
 
     const toggleSource = (id) => {
         setSelectedSourceIds(
@@ -70,7 +98,11 @@ export default function SourcesDropdown({
             </button>
 
             {open && (
-                <div className="absolute z-30 bg-white top-[calc(100%+6px)] left-0 right-0 bg-surface border border-border rounded-xl shadow-md2 p-1.5 max-h-60 overflow-y-auto">
+                <div
+                    ref={menuRef}
+                    style={{ maxHeight: menuMaxHeight }}
+                    className={`absolute z-30 left-0 bg-white right-0 bg-surface border border-border rounded-xl shadow-md2 p-1.5 overflow-y-auto ${placement === "top" ? "bottom-[calc(100%+6px)]" : "top-[calc(100%+6px)]"}`}
+                >
                     {sources.length === 0 && (
                         <div className="px-2.5 py-3 text-[12.5px] text-ink-muted text-center">No sources available</div>
                     )}
