@@ -48,7 +48,7 @@ const CategoriesModal = (props) => {
             >
                 <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        <BaseHeading text="Ingest sources" className="text-xl" />
+                        <BaseHeading text="Ingest assets" className="text-xl" />
                         <p className="text-slate-400 text-sm mt-0.5">Choose where you&apos;d like to upload your sources.</p>
                     </Modal.Title>
                 </Modal.Header>
