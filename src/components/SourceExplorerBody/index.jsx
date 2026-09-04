@@ -55,35 +55,23 @@ function SourceExplorerBody({
         let filtered = knowledgeBase;
 
         if (selectedCategory === "all") {
-            if (selectedFormat === "all") {
-                filtered = knowledgeBase;
-            } else {
-                filtered = knowledgeBase.filter(source => source.file_type === selectedFormat);
-            }
-        } else if (selectedFormat === "all") {
-            filtered = knowledgeBase.filter(source => {
-                if (typeof source.category === "string") {
-                    return source.category === selectedCategory;
-                }
-
-                if (Array.isArray(source.category)) {
-                    return source.category.includes(selectedCategory);
-                }
-
-                return false;
-            });
+            filtered = knowledgeBase;
         } else {
             filtered = knowledgeBase.filter(source => {
                 if (typeof source.category === "string") {
-                    return source.category === selectedCategory && source.file_type === selectedFormat;
+                    return source.category.toLowerCase() === selectedCategory.toLowerCase();
                 }
-
                 if (Array.isArray(source.category)) {
-                    return source.category.includes(selectedCategory) && source.file_type === selectedFormat;
+                    return source.category.some(
+                        c => c.toLowerCase() === selectedCategory.toLowerCase()
+                    );
                 }
-
                 return false;
             });
+        }
+
+        if (selectedFormat !== "all") {
+            filtered = filtered.filter(source => source.file_type === selectedFormat);
         }
 
         const foundSources = searchByKey(filtered, "source_path", searchValue);
