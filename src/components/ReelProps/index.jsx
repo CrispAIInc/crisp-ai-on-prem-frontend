@@ -10,6 +10,10 @@ import ViewWeekOutlinedIcon from '@mui/icons-material/ViewWeekOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import GsFile from '../GsFile';
 import Chip from '../Chip';
+import {
+    Info
+} from "lucide-react";
+import BaseHeading from '../BaseHeading';
 
 function ReelProps() {
 
@@ -24,9 +28,10 @@ function ReelProps() {
         categoryOptions
     } = useContext(MainContext);
     return (
-        <div className={`p-4 w-full ${theme === 'light' ? "text-textColor-300 bg-[#f0f0f0]" : "text-textColor-100 bg-textColor-300"} flex-1 flex flex-col gap-3`}>
-            <div className="flex items-center justify-between">
-                <h5 className='mb-0 text-primary-300'>Reel Properties</h5>
+        <div className={`p-4 w-full  flex-1 flex flex-col gap-3`}>
+            <div className="flex items-center gap-1">
+                <Info size={20} className="text-textColor-200" />
+                <BaseHeading text="Reel Properties" className='!text-lg font-semibold' />
             </div>
             <div className='flex flex-col flex-1'>
                 {/* reel metadata */}
