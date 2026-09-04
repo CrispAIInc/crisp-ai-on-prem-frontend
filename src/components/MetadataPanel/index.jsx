@@ -1,50 +1,36 @@
-import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
+import {
+  ChevronDown,
+  ChevronUp,
+  Download,
+  FileText,
+  X
+} from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import ReactPlayer from "react-player";
-import ImageViewer from "../ImageViewer";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext.jsx";
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
 import useFirebase from '../../hooks/useFirebase.js';
 import { flattenMetadata, timeToSeconds } from '../../utils.js';
-import Chip from '../Chip/index.jsx';
-import CustomSelectTwo from "../CustomSelectTwo";
-import Faqs from '../Faqs';
-import GsFile from "../GsFile";
-import HorizontalCard from '../HorizontalCard/index.jsx';
-import SearchSection from '../SearchSection';
-import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
-import TimelineHorizontal from '../TimelineHorizontal/index.jsx';
-import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
-import PdfViewer from '../PdfViewer/';
-import {
-  FileText,
-  ChevronUp,
-  ChevronDown,
-  Minus,
-  Plus,
-  Download,
-  X,
-} from "lucide-react";
 import BaseHeading from '../BaseHeading/index.jsx';
+import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
+import ImageViewer from "../ImageViewer";
 import Metadata from '../Metadata/index.jsx';
+import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
     currentResource,
     setCurrentResource,
     resourceURL,
-    sourcesWithExclusive, setSourcesWithExclusive,
+    setSourcesWithExclusive,
     player,
-    setIsSourceUncheckedOrClosed,
     isPlayerReady,
     setIsPlayerReady,
     setHasDuration,
     jumpToPage,
-    committedSources,
     activeView,
     theme,
     generatedResources,
@@ -258,28 +244,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
   }
 
-  const [isChecked, setIsChecked] = useState(Boolean(sourcesWithExclusive?.find(item => item === currentResource?.source_path)?.length));
-
-  const [sourcesAfterCheckCrispWiz, setSourcesAfterCheckCrispWiz] = useState([]);
-
-  useEffect(() => {
-    setIsSourceUncheckedOrClosed(!isChecked);
-
-    if (isChecked) {
-      setSourcesAfterCheckCrispWiz(committedSources);
-    }
-  }, [isChecked]);
-
-  const [parentWidth, setParentWidth] = useState(0);
-
-  useEffect(() => {
-    if (metadataPanelContainer.current) {
-      setParentWidth(metadataPanelContainer.current.offsetWidth);
-    }
-  }, []);
-
   const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
-  const [thumbnailPublicUrl, setThumbnailPublicUrl] = useState(null);
 
   const handleDownload = async () => {
 
@@ -329,17 +294,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
     }
   }, [currentResource]);
 
-  useEffect(() => {
-    if (currentResource?.thumbnail) {
-      getPublicUrl(currentResource.thumbnail)
-        .then(setThumbnailPublicUrl)
-        .catch(console.error);
-    }
-  }, [currentResource]);
-
   const [pageInput, setPageInput] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [scale, setScale] = useState(1.1);
 
   const isPrevArrowDisabled = currentPage <= 1;
   const isNextArrowDisabled = currentPage >= numPages;
@@ -402,12 +358,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
   };
 
   return (
-    <div className={`max-w-4xl mx-auto [&::-webkit-scrollbar]:h-1
-        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`} ref={metadataPanelContainer}>
+    <div className={`max-w-4xl mx-auto`} ref={metadataPanelContainer}>
 
       {currentResource?.file_type === "video" && (
         <>
-          <div className="relative ">
+          <div className="relative">
             <CustomVideoPlayer
               sourcePublicUrl={sourcePublicUrl}
               resourceURL={resourceURL}
@@ -428,10 +383,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
         currentResource?.file_type === "pdf" && (
           <>
             <div
-              className={`relative w-[90%] h-[500px] mx-auto overflow-y-hidden ${theme === "light" ? "!border !border-textColor-200/20" : "!border !border-textColor-300"} flex flex-col rounded-md overflow-x-auto shadow-sm [&::-webkit-scrollbar]:h-1
-        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}
-            // ref={workspaceContainer}
-            // style={{ height: leftWidth === maxWidth ? parentWidth * 1.3 : parentWidth * 1.4 }}
+              className={`relative w-[90%] h-[500px] mx-auto overflow-y-hidden !border !border-textColor-200/20 flex flex-col rounded-md overflow-x-auto shadow-sm`}
             >
               <div
                 className="backdrop-blur-md !bg-transparent"
@@ -440,7 +392,6 @@ const MetadataPanel = ({ workspaceContainer }) => {
                   alignItems: "center",
                   gap: 16,
                   padding: "8px 14px",
-                  // background: "var(--pdf-surface-2)",
                   borderBottom: "1px solid var(--pdf-border)",
                   flexShrink: 0,
                 }}
@@ -486,8 +437,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               </div>
 
               {/* PDF renderer */}
-              <div className={`flex-1 h-full overflow-y-auto [&::-webkit-scrollbar]:h-1
-        [&::-webkit-scrollbar-thumb]:rounded-full ${theme === "light" ? '[&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500' : '[&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-700'}`}>
+              <div className={`flex-1 h-full overflow-y-auto`}>
                 <Document
                   className="!w-full mx-auto relative "
                   file={sourcePublicUrl || resourceURL}
@@ -507,7 +457,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
                         pageNumber={index + 1}
                         renderTextLayer={true}
                         renderAnnotationLayer={true}
-                        scale={scale}
+                        scale={1.1}
                       />
                     </div>
                   ))}
