@@ -1,18 +1,13 @@
-import { useContext, useEffect, useRef, useState } from "react";
 import NorthIcon from '@mui/icons-material/North';
 import StopIcon from '@mui/icons-material/Stop';
+import { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from '../../contexts/mainContext';
 // import AppTooltip from '../AppTooltip';
-import ChatHistory from '../ChatHistory';
-import CrispWizModels from '../CrispWizModels';
-import Chip from '../Chip';
 import { Tooltip } from 'react-tooltip';
 import { ProjectContext } from '../../contexts/projectContext';
+import ChatHistory from '../ChatHistory';
 
 export default function ChatInput({
-    crispModels,
-    selectedModel,
-    setSelectedModel,
     onSend,
     value,
     onChange,
@@ -83,7 +78,7 @@ export default function ChatInput({
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     onKeyDown={e => handleKeyDown(e)}
-                    placeholder={crispModels.find(model => model.value === selectedModel)?.placeholder || "Ask Crisp Wiz anything..."}
+                    placeholder="Ask Crisp Wiz anything..."
                     className="w-[95%] py-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-40 placeholder:text-neutral-400"
                 />
 
@@ -113,19 +108,9 @@ export default function ChatInput({
             </div>
 
             {/* bottom part of crisp wiz */}
-            <div className="flex items-center justify-between px-2">
-                {/* crisp wiz models */}
-                <div className="flex items-center gap-2">
-                    {/* <CrispWizModels crispModels={crispModels} selectedModel={selectedModel} setSelectedModel={setSelectedModel} /> */}
-
-                    {/* selected crisp wiz model */}
-                    {/* <Chip content={crispModels.find(model => model.value === selectedModel)?.name || crispModels[0].name} cssClasses="text-gradient-x" /> */}
-                </div>
-
-                {/* chat history */}
-                <div className="flex items-center justify-between">
-                    <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
-                </div>
+            {/* chat history */}
+            <div className="flex items-center justify-between w-full">
+                <ChatHistory crispWizInputRef={crispWizInputRef} crispWizInputContainerRef={crispWizInputContainerRef} />
             </div>
         </div>
     );

@@ -180,7 +180,6 @@ export default function Shorts() {
                 <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging shorts in minutes.</p>
             </div>
 
-            {/* <CollapsibleSection title="Advanced settings" defaultOpen> */}
             <div className="flex-1 min-h-0 overflow-y-auto">
                 <Field label="Sources">
                     <SourcesDropdown
@@ -239,9 +238,6 @@ export default function Shorts() {
                     </span>
                 </button>
             </div>
-            {/* </CollapsibleSection> */}
-
-
         </div>
     );
 }

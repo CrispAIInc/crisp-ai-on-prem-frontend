@@ -75,7 +75,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
     }
 
     return (
-        <div className={`flex gap-1 p-2 ${currentChat ? 'w-full' : 'ml-auto'}`}>
+        <div className={`flex items-center justify-between gap-1 p-2 ${currentChat ? 'w-full' : 'ml-auto'}`}>
             {/* current chat name */}
             {(currentChat && currentChat?.title) && (
                 <div className="flex items-center flex-1 gap-1">
@@ -86,7 +86,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
                                 <p className="font-bold !text-[11px]">{currentChat.title}</p>
                             </>
                         )}
-                        cssClasses='flex items-center gap-1'
+                        cssClasses='flex items-center gap-1 rounded-xl !text-sm'
                     />
                 </div>
             )}
