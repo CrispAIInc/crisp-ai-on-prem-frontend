@@ -3,6 +3,7 @@ import { Pencil, Check, Film, Image as ImageIcon } from "lucide-react";
 import ActionMenu from "../ActionMenu";
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import GsFile from "../GsFile";
+import BaseHeading from '../BaseHeading';
 
 export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete, isProjectReadOnly }) {
     const isChecked = Boolean(source?.is_checked);
@@ -82,6 +83,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 {isUploading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/45">
                         <CircularProgressWithLabel value={source.progress} variant="determinate" isUploadFailed={false} />
+                        <BaseHeading text={source.step} className="!text-primary-300 !text-[10px] !font-medium !mt-1" />
                     </div>
                 )}
                 {typeof source?.score === "number" && (
