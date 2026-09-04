@@ -101,7 +101,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef }) {
             {/* Chat history popup */}
             <div className="relative">
                 {isChatHistoryPopupOpen && <div ref={ChatHistoryPopupRef}> <ChatHistoryPopup crispWizInputContainerRef={crispWizInputContainerRef}
-                    crispWizInputRef={crispWizInputRef} chatTitleUpdaterModalRef={chatTitleUpdaterModalRef} createNewChat={createNewChat} twClasses={`absolute top-full right-0 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
+                    crispWizInputRef={crispWizInputRef} chatTitleUpdaterModalRef={chatTitleUpdaterModalRef} createNewChat={createNewChat} twClasses={`absolute bottom-full right-0 mb-2 h-[45vh] ${theme === 'light' ? 'shadow-[0px_0px_14px_-6px]' : 'shadow-[0px_0px_14px_-6px_#666]'} border-md`} close={closePopup} /> </div>}
                 <ScheduleOutlinedIcon ref={keyboardArrowUpRef} className={`cursor-pointer ${theme === 'light' ? 'text-[#666]' : 'text-[#ABAEB4]'}`} onClick={() => setIsChatHistoryPopupOpen(prev => !prev)} />
             </div>
 
