@@ -20,7 +20,7 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, ch
                 className={`flex items-center justify-between  w-full p-2 text-lg font-medium text-left text-gray-700 focus:outline-none ${isRtlLanguage(chosenLanguage) && 'flex-row-reverse'}`}
             >
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 text-primary-300">
                     {IconComponent && <span className="mr-2">{IconComponent}</span>}
                     <span className={`select-none  uppercase text-sm font-bold tracking-widest`}>{heading}</span>
                 </div>
