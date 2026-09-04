@@ -271,7 +271,7 @@ function ReelViewer() {
                 title: nextTitle,
                 reel_video_url: reel?.reel_video_url,
                 index_id: reel?.index_id,
-                staging_id: reel?.staging_id,
+                draft_id: reel?.draft_id,
                 filename: reel?.filename,
             };
 
