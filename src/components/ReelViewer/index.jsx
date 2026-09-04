@@ -276,7 +276,7 @@ function ReelViewer() {
             notify({
                 variant: "error",
                 heading: "Title required",
-                subheading: "Please enter a title before saving the reel."
+                subheading: "Please enter a title before saving the Short."
             });
             return;
         }
@@ -286,6 +286,7 @@ function ReelViewer() {
 
             try {
                 const backendResponse = await makeApiRequest('/reels/save', 'POST', JSON.stringify({ ...reel, title: nextTitle }));
+
                 if (backendResponse?.id) {
                     savedId = backendResponse.id;
                 }
@@ -319,7 +320,7 @@ function ReelViewer() {
         } catch (error) {
             notify({
                 variant: "error",
-                heading: "Couldn't save short",
+                heading: "Couldn't save Short",
                 subheading: error?.message || ""
             });
         }

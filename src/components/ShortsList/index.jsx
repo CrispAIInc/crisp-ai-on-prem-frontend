@@ -34,7 +34,7 @@ function formatDate(isoString) {
 // The reel payload has no stable `id` field — fall back to a URL that's
 // unique per reel. Swap this for a real id as soon as the backend has one.
 function shortKey(short) {
-    return short.id ?? short.reel_url ?? short.edl_url ?? short.thumbnail_url;
+    return short.id ?? short.reel_video_url ?? short.edl_url ?? short.thumbnail_url;
 }
 
 function totalDuration(short) {
