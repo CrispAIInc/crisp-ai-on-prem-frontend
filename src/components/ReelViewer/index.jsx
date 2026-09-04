@@ -106,12 +106,6 @@ function ReelViewer() {
 
     const [currentTitle, setCurrentTitle] = useState('');
     const [isOutsideClickEnabled, setIsOutsideClickEnabled] = useState(false);
-    const handleOutsideClick = (e) => {
-        if (e.target === e.currentTarget) {
-            closeReel();
-            // setIsOutsideClickEnabled(true);
-        }
-    };
 
     const handleDuration = () => {
         // intentionally kept for media lifecycle hooks
@@ -129,16 +123,6 @@ function ReelViewer() {
         if (currentSegment && currentSegment.title !== currentTitle) {
             setCurrentTitle(currentSegment.title);
         }
-    };
-
-    const [isReelPropsOpen, setIsReelPropsOpen] = useState(false);
-    const handleToggleReelProps = (e) => {
-        e.stopPropagation();
-        setIsReelPropsOpen(prev => !prev);
-    };
-
-    const handleCloseReelProps = () => {
-        setIsReelPropsOpen(false);
     };
 
     const [showDownloadOption, setShowDownloadOption] = useState(false);
@@ -283,9 +267,16 @@ function ReelViewer() {
 
         try {
             let savedId = reel?.id;
+            let payload = {
+                title: nextTitle,
+                reel_video_url: reel?.reel_video_url,
+                index_id: reel?.index_id,
+                staging_id: reel?.staging_id,
+                filename: reel?.filename,
+            };
 
             try {
-                const backendResponse = await makeApiRequest('/reels/save', 'POST', JSON.stringify({ ...reel, title: nextTitle }));
+                const backendResponse = await makeApiRequest('/reels/save', 'POST', JSON.stringify(payload));
 
                 if (backendResponse?.id) {
                     savedId = backendResponse.id;
