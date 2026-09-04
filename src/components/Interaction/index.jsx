@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import ReplayOutlinedIcon from "@mui/icons-material/ReplayOutlined";
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -513,6 +514,18 @@ const CopilotSection = () => {
                 <h2 className="font-display text-[14.5px] font-semibold text-ink">Crisp Wiz interaction</h2>
                 <p className="text-xs text-ink-secondary mt-0.5">Ask Crisp Wiz questions and interact with your content conversationally.</p>
             </div>
+
+            {messages?.length === 0 && (
+                <div className="h-full flex flex-col items-center justify-center text-center gap-2.5 px-6">
+                    <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-ink-muted shrink-0">
+                        <InfoOutlinedIcon className="mt-0.5 shrink-0" fontSize="small" />
+                    </div>
+                    <strong className="text-ink text-[13px] font-semibold">Crisp Wiz</strong>
+                    <span className="text-[12.5px] text-ink-muted max-w-[260px]">
+                        No messages yet. Ask Crisp Wiz a question to start a conversation.
+                    </span>
+                </div>
+            )}
 
             {messages?.length > 0 && <section
                 className={`flex-1 min-h-0 rounded-3xl overflow-hidden ${theme === "light" ? "!border" : "!border !border-textColor-300"
