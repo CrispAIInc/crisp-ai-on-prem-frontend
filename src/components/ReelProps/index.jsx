@@ -2,16 +2,15 @@ import React, { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import { formatDuration, formatReadableDate } from '../../utils';
 import TitleIcon from '@mui/icons-material/Title';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import Accordion from "../Accordion";
-import ViewWeekOutlinedIcon from '@mui/icons-material/ViewWeekOutlined';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import GsFile from '../GsFile';
 import Chip from '../Chip';
 import {
-    Info
+    Info,
+    Layers,
+    CirclePlay,
+    BookOpen
 } from "lucide-react";
 import BaseHeading from '../BaseHeading';
 
@@ -35,7 +34,7 @@ function ReelProps() {
             </div>
             <div className='flex flex-col flex-1'>
                 {/* reel metadata */}
-                <Accordion IconComponent={<InfoOutlinedIcon fontSize='small' className="text-purple-700" />} fromReelProps chosenLanguage={"en"} heading="Reel metadata" isFirstOpen>
+                <Accordion IconComponent={<BookOpen size={15} />} fromReelProps chosenLanguage={"en"} heading="Short metadata" isFirstOpen>
                     <div className="pl-3">
                         {
                             Object.entries(rest).filter(([key]) => (key !== "editing_history" && key !== "sources" && key !== "segments")).map(([key, value]) => {
@@ -57,7 +56,7 @@ function ReelProps() {
                     </div>
                 </Accordion>
                 {/* videos used */}
-                <Accordion IconComponent={<PlayCircleOutlineIcon fontSize='small' className="text-purple-700" />} fromReelProps chosenLanguage={"en"} heading="Sources used in this reel">
+                <Accordion IconComponent={<CirclePlay size={15} />} fromReelProps chosenLanguage={"en"} heading="Assets used in this Short">
                     <div>
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
@@ -84,7 +83,7 @@ function ReelProps() {
                 </Accordion>
 
                 {/* Reel segments */}
-                <Accordion IconComponent={<ViewWeekOutlinedIcon fontSize='small' className="text-purple-700" />} fromReelProps chosenLanguage={"en"} heading="Reel segments">
+                <Accordion IconComponent={<Layers size={15} />} fromReelProps chosenLanguage={"en"} heading="Reel segments">
                     <div className='mb-4'>
                         {/* <strong className='inline-block mb-2'>Videos Used:</strong> */}
                         <div className='flex flex-col flex-wrap gap-2'>
@@ -102,7 +101,7 @@ function ReelProps() {
                                             <h6 className="mb-0 text-sm break-all">{segment?.original_video_start_time} - {segment?.original_video_end_time}</h6>
                                         </div>
                                         <div className="flex items-center gap-1">
-                                            <PlayCircleOutlineIcon fontSize='small' style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
+                                            <CirclePlay size={15} style={{ color: `${theme === 'light' ? '#333' : '#ABAEB4'}` }} />
                                             <h6 className="mb-0 text-sm break-all">{segment?.source_filename}</h6>
                                         </div>
                                     </div>

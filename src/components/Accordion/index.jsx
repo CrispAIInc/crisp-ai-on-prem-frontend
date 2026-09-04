@@ -20,15 +20,15 @@ function Accordion({ heading, children, isBoxed = false, isFirstOpen = false, ch
                 className={`flex items-center justify-between  w-full p-2 text-lg font-medium text-left text-gray-700 focus:outline-none ${isRtlLanguage(chosenLanguage) && 'flex-row-reverse'}`}
             >
 
-                <div>
+                <div className="flex items-center gap-1">
                     {IconComponent && <span className="mr-2">{IconComponent}</span>}
-                    <span className={`select-none ${theme === 'dark' && 'text-textColor-100'} uppercase text-sm font-bold tracking-widest ${fromReelProps && 'text-gradient-x'}`}>{heading}</span>
+                    <span className={`select-none  uppercase text-sm font-bold tracking-widest`}>{heading}</span>
                 </div>
                 <svg
                     className={`w-6 h-6 transform transition-transform ${isOpen ? "rotate-180" : ""
                         } `}
                     fill="none"
-                    stroke="#755BEA"
+                    stroke="#755bea"
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                 >
