@@ -413,7 +413,10 @@ export default function Media() {
             const { uploaded_data } = await makeApiRequest("/assets", "POST", formData, { 'Content-type': "multipart/form-data" });
 
             // ----------  Update knowledge base ----------
-            setKnowledgeBase(prev => [...uploaded_data, ...prev.slice(totalFiles)]);
+            setKnowledgeBase(prev => [...uploaded_data.map(item => ({
+                category: [categoryOptions.find(cat => cat.id === item.index_id)?.value || selectedCategory],
+                ...item,
+            })), ...prev.slice(totalFiles)]);
 
             // show success message
             notify({
