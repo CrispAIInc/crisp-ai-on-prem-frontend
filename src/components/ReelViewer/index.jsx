@@ -271,20 +271,33 @@ function ReelViewer() {
                 filename: reel?.filename,
             };
 
+            let backendResponse;
+
             try {
-                const backendResponse = await makeApiRequest('/reels/save', 'POST', JSON.stringify(payload));
+                backendResponse = await makeApiRequest('/reels/save', 'POST', JSON.stringify(payload));
+
+                if (!backendResponse?.success) {
+                    throw new Error(backendResponse?.message);
+                }
 
                 if (backendResponse?.id) {
                     savedId = backendResponse.id;
                 }
             } catch (backendError) {
-                console.warn('Reel save endpoint not available; continuing with local reel save flow.', backendError);
+                console.log('Reel save endpoint not available; continuing with local reel save flow.', backendError);
+
+                notify({
+                    variant: "error",
+                    heading: "Couldn't save Short",
+                    subheading: backendError?.message || ""
+                });
             }
 
             const savedReel = {
                 ...reel,
                 id: savedId || reel?.id,
                 title: nextTitle,
+                thumbnail_url: backendResponse?.thumbnail_url || reel?.thumbnail_url || null,
             };
 
             setReel(savedReel);
