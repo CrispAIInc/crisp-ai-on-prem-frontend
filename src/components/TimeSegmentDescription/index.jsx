@@ -139,7 +139,15 @@ const TimeSegmentDescription = ({
     const source = knowledgeBase.find(item => item.source_id === currentSegment?.source_id);
 
     // Helper function to convert a Base64 string to a Uint8Array (Prevents Word corruption)
-    function base64ToUint8Array(base64) { const binaryString = window.atob(base64); const len = binaryString.length; const bytes = new Uint8Array(len); for (let i = 0; i < len; i++) { bytes[i] = binaryString.charCodeAt(i); } return bytes; }
+    function base64ToUint8Array(base64) {
+        const binaryString = window.atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes;
+    }
 
     // Helper: Generate inline chips with "Fake Padding" using borders
     function createChipSection(title, tagsArray, bgColor, textColor, fontFamily) {

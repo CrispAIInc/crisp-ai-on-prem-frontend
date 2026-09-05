@@ -1348,7 +1348,73 @@ export default function MainProvider({ children, theme, setTheme }) {
                 });
 
                 if (success) {
-                    setSegmentDescriptions(data);
+                    setSegmentDescriptions([
+                        {
+                            created_at: "Sat, 05 Sep 2026 07:20:12 GMT",
+                            end: "00:03:00",
+                            id: "edhxz9LG71n9CwtG2Xjr",
+                            query: "bill gates",
+                            response_format: {
+                                schema: {
+                                    action_description: "The video features Bill Gates as a guest on The Ellen DeGeneres Show. The segment begins with Gates and host Ellen DeGeneres seated on white armchairs on a set decorated with palm trees and purple flowers. Gates, initially wearing a red sweater, discusses his nervousness about his entrance and a dance rehearsal he performed earlier. The video cuts to a clip of Gates dancing energetically on stage in a grey sweater and khaki pants, which he describes as a rehearsal. The scene returns to the interview where Gates, now in a red sweater, talks about his past as the youngest self-made billionaire at age 21. He explains that his focus was always on software and hiring people rather than money, though he admits to being conservative about finances to ensure payroll could be met. He mentions his only indulgences were buying a Porsche and a private plane. Later, Gates changes into a pink sweater and discusses the Bill & Melinda Gates Foundation, highlighting their focus on global health (reducing child mortality) and improving the US education system. He encourages viewers to mentor children in local schools. The segment is filled with laughter, hand gestures, and audience reactions.",
+                                    mood: [
+                                        "joyful",
+                                        "engaging",
+                                        "informative",
+                                        "lively"
+                                    ],
+                                    onscreen_text: {
+                                        detected: true,
+                                        text_content: [
+                                            "ellentube"
+                                        ]
+                                    },
+                                    shot_type: [
+                                        "medium shot",
+                                        "wide shot",
+                                        "close-up",
+                                        "transition screen"
+                                    ],
+                                    talking_head: [
+                                        {
+                                            character_name: "Ellen DeGeneres",
+                                            detected: true,
+                                            talking: true,
+                                            text_content: "[00:00:00-00:00:20] im so happy to have you here. this is the first time having you on so thanks. so i know you were nervous about the entrance. you thought i think people feel like theyre supposed to dance and so... and i was really surprised because i was here earlier today for your rehearsal and then you abandoned it. but we should at least show them the rehearsal because it was really good."
+                                        },
+                                        {
+                                            character_name: "Bill Gates",
+                                            detected: true,
+                                            talking: true,
+                                            text_content: "[00:00:20-00:00:46] shout out to them people. people. people. come on. i feel it with the im and put your eyes where the city and listen and explain thank you. thank you. ill tell you who i am. yeah! well... it was good. thank you."
+                                        },
+                                        {
+                                            character_name: "Ellen DeGeneres",
+                                            detected: true,
+                                            talking: true,
+                                            text_content: "[00:00:49-00:01:29] oh your daughters looking at you like ive never seen you dance like that. um hi. so the last time we saw each other was at the white house. we both were receiving the... the medal of freedom and that was quite a day wasnt it? that was an amazing group. yeah really fun. so you are here with your daughter who is 21 right? and you were 21 when you became a billionaire. is that right? almost there. alright so around that age you were like the youngest person to become a billionaire. is that right? yeah in terms of my own earning it on my own yeah. right. mmhmm. okay so what is the most important thing? yeah so did you when you were a kid did you? did you care about money or you just cared about technology and thats it just happened?"
+                                        },
+                                        {
+                                            character_name: "Bill Gates",
+                                            detected: true,
+                                            talking: true,
+                                            text_content: "[00:01:35-00:02:29] mostly i love software. i do remember at the private school i went to there were other kids whose families were better off like they had a porsche or something but it wasnt that bad. big of a deal. my thing was that i just loved doing software i loved hiring people and i was stunned when it ended up being so valuable. really? yeah. that surprised you? yeah because i always had to be careful that we wouldnt hire too many people. i was always worried because i was people who worked for me were older than me and they had kids and i always thought well what if we dont get paid? will i be able to meet the payroll so i was always very conservative about the finances and then when we did go public was i 30 by then the government had to go public with the i was kind of stunned at what it multiplied out to. right. so when you became a billionaire at what point did you start start relaxing. were you still nervous when you became a billionaire like i gotta watch this?"
+                                        },
+                                        {
+                                            character_name: "Bill Gates",
+                                            detected: true,
+                                            talking: true,
+                                            text_content: "[00:02:34-00:03:00] well i always wanted to have enough money in the bank so that even if our customers didnt pay us for a year we could still keep paying everybody and do the rd. so i still ill be viewed as conservative. you know i dont have that many things that are extravagant taste so didnt change too much. so nothing really changed. you didnt say oh im gonna buy a porsche. i did. okay alright yeah."
+                                        }
+                                    ]
+                                },
+                                type: "json_schema"
+                            },
+                            start: "00:00:00",
+                            title: "bill gates",
+                            video: "bill gates1.mp4"
+                        }
+                    ]);
                 }
             } catch (error) {
                 console.log(error);
