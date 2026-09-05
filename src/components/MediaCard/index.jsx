@@ -4,8 +4,9 @@ import ActionMenu from "../ActionMenu";
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import GsFile from "../GsFile";
 import BaseHeading from '../BaseHeading';
+import LoadingSpinner from '../LoadingSpinner';
 
-export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete, isProjectReadOnly }) {
+export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete, isDeleting, isProjectReadOnly }) {
     const isChecked = Boolean(source?.is_checked);
     const isUploading = Object.prototype.hasOwnProperty.call(source || {}, "progress");
     const Icon = source?.file_type === "video" ? Film : ImageIcon;
@@ -108,7 +109,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                                 },
                                 {
                                     label: "Delete",
-                                    icon: <DeleteOutlineOutlinedIcon fontSize="small" />,
+                                    icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon fontSize="small" />,
                                     onClick: (event) => onDelete(event, [source]),
                                 }
                             ]}

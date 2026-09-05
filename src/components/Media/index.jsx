@@ -669,6 +669,7 @@ export default function Media() {
                             onToggle={handleCheckboxChange}
                             onUpdate={openSourceUpdate}
                             onDelete={deleteResource}
+                            isDeleting={isDeleting}
                             isProjectReadOnly={isProjectReadOnly}
                         />
                     ))}
