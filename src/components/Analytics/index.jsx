@@ -4,6 +4,11 @@ import SourcesDropdown from "../SourcesDropdown";
 import { MainContext } from '../../contexts/mainContext';
 import SegmentDescription from '../SegmentDescription';
 import TimestampPicker from '../TimestampPicker';
+import { ProjectContext } from '../../contexts/projectContext';
+import { formatTime, toSeconds } from '../../utils';
+import makeApiRequest, { axiosInstance } from '../../api';
+import useAuth from '../../hooks/useAuth';
+import { useToast } from '../../contexts/toastContext';
 
 // No props coming in — replace this with real data from wherever your app
 // keeps its sources (context, a store, a fetch, etc).
@@ -81,16 +86,113 @@ function TimeSegmentPane({
 }) {
 
     const {
-        knowledgeBase
+        currentProject,
+        isProjectReadOnly
+    } = useContext(ProjectContext);
+
+    const {
+        knowledgeBase,
+        currentChat,
+        setCurrentSegment
     } = useContext(MainContext);
 
-    const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
+    const { token } = useAuth();
+
+    const { notify } = useToast();
 
     const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
     const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
     const [context, setContext] = useState("");
     const [title, setTitle] = useState("");
     const [fullLength, setFullLength] = useState(false);
+    const [isPending, setIsPending] = useState(false);
+    const [resultsDescription, setResultsDescription] = useState({
+        start: formatTime(start),
+        end: formatTime(end),
+        description: "",
+        refs: []
+    });
+
+    const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
+    const canGenerate = !isProjectReadOnly && source && title.trim() !== "";
+
+
+    async function generateTimeSegmentDescription() {
+        try {
+            if (!canGenerate) {
+                throw new Error('Make sure you provide video sources and context');
+            }
+
+            if (!fullLength && toSeconds(end) <= toSeconds(start)) {
+                throw new Error("Your timestamp range is invalid.");
+            }
+
+            setIsPending(true);
+            setResultsDescription(prev => ({
+                ...prev,
+                start: formatTime(start),
+                end: formatTime(end),
+                refs: []
+            }));
+
+            let url = new URLSearchParams();
+
+            if (fullLength) {
+                url.append("isFullSource", "true");
+            } else {
+                url.append("start_timestamp", formatTime(start));
+                url.append("end_timestamp", formatTime(end));
+            }
+
+            url.append("video_filename", source.source_path);
+            url.append("prompt", context);
+            url.append("title", title);
+
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
+            axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+
+            const payload = {
+                isFullSource: fullLength,
+                start_timestamp: formatTime(start),
+                end_timestamp: formatTime(end),
+                prompt: context,
+                title: title,
+                source_id: source.source_id
+            };
+
+            const { data, success, message } = await makeApiRequest(`/segments`, 'POST', payload, {
+                Authorization: `Bearer ${token}`,
+                SessionId: currentChat?.sessionId,
+                ProjectId: currentProject?.project_id,
+            });
+
+            if (success) {
+
+                notify({
+                    variant: "success",
+                    heading: "Description generated successfully",
+                });
+
+                // Do not persist generated segment automatically; user must explicitly save.
+                console.log(data);
+                setCurrentSegment(data);
+                // setShowSegmentList(false);
+            } else {
+                throw new Error(message);
+            }
+
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Couldn't generate description",
+                subheading: error?.message
+            });
+        } finally {
+            setIsPending(false);
+        }
+    }
 
     return (
         <div className="flex flex-col gap-3">
@@ -146,7 +248,7 @@ function TimeSegmentPane({
                 )
             }
 
-            <GenerateButton disabled={!title.trim()} onClick={() => { /* wire up generation here */ }} />
+            <GenerateButton disabled={!canGenerate} onClick={generateTimeSegmentDescription} />
         </div>
     );
 }

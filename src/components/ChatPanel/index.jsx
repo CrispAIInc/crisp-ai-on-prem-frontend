@@ -242,7 +242,7 @@ const ChatPanel = () => {
   async function generateDescription() {
     try {
       if (!canGenerate) {
-        throw new Error('Make sure you provided video sources and prompt');
+        throw new Error('Make sure you provide video sources and prompt');
       }
 
       const checkedVideo = checkedSources.find(item => item.file_type === "video");

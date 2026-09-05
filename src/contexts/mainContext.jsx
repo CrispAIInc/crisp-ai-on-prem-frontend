@@ -1334,8 +1334,12 @@ export default function MainProvider({ children, theme, setTheme }) {
         setActiveStudioPanel(MAIN_STUDIO_PANELS.METADATA);
     }, [currentResource]);
 
+    // ANALYTICS
+    const [currentSegment, setCurrentSegment] = useState(null);
+
     // create value object with all the states
     const value = {
+        currentSegment, setCurrentSegment,
         selectedReel, setSelectedReel,
         activeStudioPanel,
         setActiveStudioPanel,
