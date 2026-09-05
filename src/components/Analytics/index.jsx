@@ -256,7 +256,7 @@ function TimeSegmentPane({
                 disabled={!canGenerate}
                 onClick={generateTimeSegmentDescription}
             />
-            <button onClick={() => setActiveStudioPanel(MAIN_STUDIO_PANELS.TIME_SEGMENTS)}>Show segments</button>
+            {/* <button onClick={() => setActiveStudioPanel(MAIN_STUDIO_PANELS.TIME_SEGMENTS)}>Show segments</button> */}
         </div>
     );
 }

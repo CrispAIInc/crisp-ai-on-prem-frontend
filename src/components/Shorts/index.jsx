@@ -78,13 +78,13 @@ export default function Shorts() {
                 <div className="flex items-center justify-between gap-2">
                     <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate shorts</h2>
 
-                    <button
+                    {/* <button
                         type="button"
                         onClick={() => setActiveStudioPanel(MAIN_STUDIO_PANELS.SHORTS)}
                         className="shrink-0 rounded-[10px] p-2.5 text-xs font-bold text-white bg-gradient-to-r from-primary-200 to-primary-300 hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
                     >
                         Saved Shorts
-                    </button>
+                    </button> */}
                 </div>
                 <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging shorts in minutes.</p>
             </div>
