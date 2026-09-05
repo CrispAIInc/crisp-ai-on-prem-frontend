@@ -24,9 +24,9 @@ export const NAV_ITEMS = [
     { key: "media", label: "Media", icon: FolderOpen, component: Media },
     { key: "discovery", label: "Discovery", icon: Search, component: Discovery },
     { key: "interaction", label: "Interaction", icon: MessageCircle, component: Interaction },
-    { key: "metadata", label: "Contextual Metadata", icon: Sparkles, component: ContextualMetadata },
-    { key: "shorts", label: "Shorts", icon: Film, component: Shorts },
-    { key: "analytics", label: "Analytics", icon: LineChart, component: Analytics },
+    { key: "metadata", label: "Contextual Metadata", icon: Sparkles, component: ContextualMetadata, tab: "metadata" },
+    { key: "shorts", label: "Shorts", icon: Film, component: Shorts, tab: "shorts" },
+    { key: "analytics", label: "Analytics", icon: LineChart, component: Analytics, tab: "time-segments" },
     { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen },
     { key: "business_intelligence", label: "Business Intelligence", icon: PieChart },
 ];

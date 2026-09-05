@@ -1,18 +1,31 @@
 import { NAV_ITEMS } from "../../navigation/navitems.js";
 import { Info } from "lucide-react";
+import { useContext } from 'react';
 import { Tooltip } from "react-tooltip";
+import { MainContext } from '../../contexts/mainContext.jsx';
 
 /**
  * NavTabs - the primary section navigation, rendered directly
  * beneath the TopBar. Purely presentational aside from the
  * controlled `active` tab, so it can be reused on any page.
  */
-export default function NavTabs({ active = "media", onChange = () => { } }) {
+export default function NavTabs({ active = "media" }) {
+
+  const {
+    setActiveTab,
+    setActiveStudioPanel
+  } = useContext(MainContext);
+
+  function handleNavClick(key, tab) {
+    setActiveTab(key);
+    setActiveStudioPanel(tab);
+  }
+
   return (
     <nav className="bg-white border-b border-gray-100">
       <ul className="flex items-center px-6 overflow-y-hidden overflow-x-auto [&::-webkit-scrollbar]:h-1
         [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-neutral-400 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-        {NAV_ITEMS.map(({ key, label, icon: Icon }) => {
+        {NAV_ITEMS.map(({ key, label, icon: Icon, tab }) => {
           const isActive = key === active;
           const description = key === "interaction"
             ? "Ask questions and interact with your content conversationally."
@@ -23,7 +36,7 @@ export default function NavTabs({ active = "media", onChange = () => { } }) {
             <li key={key} className="shrink-0">
               <button
                 type="button"
-                onClick={() => onChange(key)}
+                onClick={() => handleNavClick(key, tab)}
                 className={[
                   "flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium border-b-2 -mb-px transition-colors whitespace-nowrap",
                   isActive

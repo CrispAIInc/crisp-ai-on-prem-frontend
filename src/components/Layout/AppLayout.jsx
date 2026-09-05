@@ -13,13 +13,12 @@ export default function AppLayout({ children }) {
 
   const {
     activeTab,
-    setActiveTab
   } = useContext(MainContext);
 
   return (
     <div className="h-screen overflow-hidden bg-gray-50 flex flex-col">
       <TopBar />
-      <NavTabs active={activeTab} onChange={setActiveTab} />
+      <NavTabs active={activeTab} />
       <main className="flex-1 min-h-0 h-full">{children}</main>
     </div>
   );
