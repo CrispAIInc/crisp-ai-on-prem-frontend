@@ -224,7 +224,7 @@ export default function TimestampPicker({ isPending, start, setStart, end, setEn
         </div>
       </div>
 
-      {(!isProjectReadOnly) && (
+      {/* {(!isProjectReadOnly) && (
         <div className="flex shrink-0 justify-end pt-1 sm:ml-auto sm:pt-0">
           {
             isPending ? <LoadingSpinner isSmall cssClasses="ml-2" /> : <CheckIcon
@@ -234,7 +234,7 @@ export default function TimestampPicker({ isPending, start, setStart, end, setEn
           }
         </div>
       )
-      }
+      } */}
     </div >
   );
 }

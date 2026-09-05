@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { Sparkles, Info, Clock, Search, Check } from "lucide-react";
 import SourcesDropdown from "../SourcesDropdown";
 import { MainContext } from '../../contexts/mainContext';
+import SegmentDescription from '../SegmentDescription';
+import TimestampPicker from '../TimestampPicker';
 
 // No props coming in — replace this with real data from wherever your app
 // keeps its sources (context, a store, a fetch, etc).
@@ -84,7 +86,9 @@ function TimeSegmentPane({
 
     const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
 
-    const [instructions, setInstructions] = useState("");
+    const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
+    const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
+    const [context, setContext] = useState("");
     const [title, setTitle] = useState("");
     const [fullLength, setFullLength] = useState(false);
 
@@ -92,8 +96,8 @@ function TimeSegmentPane({
         <div className="flex flex-col gap-3">
             <Field label="Context">
                 <InstructionsInput
-                    value={instructions}
-                    onChange={setInstructions}
+                    value={context}
+                    onChange={setContext}
                     actionIcon={Sparkles}
                     onAction={() => {
                         /* wire up generation here */
@@ -120,9 +124,15 @@ function TimeSegmentPane({
                 />
                 Include full asset length
             </label>
-            <p className="text-[11.5px] text-ink-muted -mt-2">Only one checked source (video)</p>
 
-            {!fullLength && <TimeRangeInput />}
+            {!fullLength && (
+                <TimestampPicker
+                    start={start}
+                    setStart={setStart}
+                    end={end}
+                    setEnd={setEnd}
+                />
+            )}
 
             {/* is detailed mode */}
             {
@@ -142,14 +152,14 @@ function TimeSegmentPane({
 }
 
 function FindMomentsPane() {
-    const [instructions, setInstructions] = useState("");
+    const [context, setContext] = useState("");
     const [title, setTitle] = useState("");
 
     return (
         <div className="flex flex-col gap-3">
             <InstructionsInput
-                value={instructions}
-                onChange={setInstructions}
+                value={context}
+                onChange={setContext}
                 actionIcon={Search}
                 onAction={() => {
                     /* wire up the moment search here */

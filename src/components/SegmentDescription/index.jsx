@@ -9,9 +9,6 @@ import { useToast } from '../../contexts/toastContext';
 const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPending, isDisabled = false }) => {
 
     const {
-        displayedSources,
-        theme,
-        checkedSourcesCount,
         checkedSources
     } = useContext(MainContext);
 
@@ -21,7 +18,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPe
 
     const checkedVideos = checkedSources.filter(item => item.file_type === "video");
 
-    const canGenerate = checkedVideos.length === 1;
+    const canGenerate = !isDisabled;
 
     const currentVideo = checkedVideos[0];
 
@@ -51,7 +48,7 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPe
     };
 
     return (
-        <div className={`relative flex flex-col ${(!canGenerate || isDisabled)
+        <div className={`relative flex flex-col ${(!canGenerate)
             ? 'pointer-events-none opacity-50 select-none'
             : 'pointer-events-auto opacity-100 select-all'
             }`}>
@@ -60,7 +57,6 @@ const SegmentDescription = ({ start, setStart, end, setEnd, handleGenerate, isPe
                     text={canGenerate ? `Video: ${currentVideo?.source_path}` : "Only one checked source (video)"}
                 />
                 <TimestampPicker
-                    // sourceDuration={Math.ceil(displayedSources.find(s => s.is_checked)?.source_duration || 0)}
                     start={start}
                     setStart={setStart}
                     end={end}
