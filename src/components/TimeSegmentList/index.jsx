@@ -19,8 +19,14 @@ import TalkingHeadPanel from '../TalkingHeadPanel';
 import Chip from '../Chip';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import RippleButton from '../RippleButton';
-import { urlToBase64 } from '../../utils';
+import { sortByDate, urlToBase64 } from '../../utils';
 import SaveSegmentModal from '../SaveSegmentModal';
+import ActionMenu from '../ActionMenu';
+import AnimatedText from '../AnimatedText';
+import LoadingSpinner from '../LoadingSpinner';
+import makeApiRequest from '../../api';
+import { ProjectContext } from '../../contexts/projectContext';
+import { ToastContext } from '../../contexts/toastContext';
 
 function TimeSegmentList() {
 
@@ -73,15 +79,118 @@ function TimeSegmentList() {
 }
 
 function SegmentListItem({ segment, active, onClick }) {
+
+    const {
+        isProjectReadOnly
+    } = useContext(ProjectContext);
+
+    const {
+        knowledgeBase,
+        segmentDescriptions,
+        setSegmentDescriptions,
+        setCurrentSegment
+    } = useContext(MainContext);
+
+    const {
+        notify
+    } = useContext(ToastContext);
+
+    const [isSegmentDeleting, setIsSegmentDeleting] = useState(false);
+    const [hoveredSegment, setHoveredSegment] = useState(null);
+    const [selectedSegment, setSelectedSegment] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+    const handleMouseEnterSegment = (id) => {
+        setHoveredSegment(id);
+    };
+    const handleMouseLeaveSegment = () => {
+        setHoveredSegment(null);
+    };
+
+    function handleSelectResult(segment) {
+        const segmentSource = knowledgeBase.find(item => item.source_id === segment.source_id);
+
+        // if (segmentSource) {
+        setCurrentSegment({
+            ...segment,
+            timestampText: `${segmentSource?.source_path} | ${segment.start}`,
+            refs: segmentSource ? [{
+                ...segmentSource,
+                timestamp: segment.start
+            }] : []
+        });
+    }
+
+    async function deleteSegment(segmentId) {
+        try {
+            setIsSegmentDeleting(true);
+            const { success, message } = await makeApiRequest(`/segments/${segmentId}`, 'DELETE');
+
+            if (success) {
+                setSegmentDescriptions(prev => prev.filter(item => item.id !== segmentId));
+                notify({
+                    variant: "success",
+                    heading: "Video segment deleted!"
+                });
+            } else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: "Couldn't delete video segment",
+                subheading: error.message || "",
+            });
+        } finally {
+            setIsSegmentDeleting(false);
+        }
+    }
+
     return (
-        <div
-            className={`flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-all ${active ? "bg-primary-100" : "hover:bg-surface-alt"}`}
-            onClick={onClick}
-        >
-            <div className="flex-1 min-w-0">
-                <p className="text-[12.5px] font-semibold text-ink truncate">{segment.title}</p>
-                <p className="text-[11.5px] text-ink-secondary truncate">{segment.description}</p>
-            </div>
+        <div className={`flex flex-col gap-1 bg-white rounded-md ${active ? 'border border-primary-300' : 'border border-transparent'} p-2 cursor-pointer hover:bg-gray-100`}>
+            {
+                sortByDate(segmentDescriptions, "created_at", "desc").map(segment => (
+                    <div key={segment.id}
+                        className={`flex items-center  gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
+                        onClick={() => handleSelectResult(segment)}
+                        onMouseEnter={() => handleMouseEnterSegment(segment.id)}
+                        onMouseLeave={handleMouseLeaveSegment}
+                    >
+
+                        {
+                            !isProjectReadOnly && (
+                                hoveredSegment === segment.id && (<ActionMenu
+                                    direction="right"
+                                    actions={[
+                                        {
+                                            label: "Edit title",
+                                            icon: <Pencil size={13} />,
+                                            onClick: (e) => {
+                                                e.stopPropagation();
+                                                setSelectedSegment(segment);
+                                                setIsModalOpen(true);
+                                            },
+                                        },
+                                        {
+                                            label: isSegmentDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
+                                            icon: isSegmentDeleting ? <LoadingSpinner isSmall /> : <Trash size={13} />,
+                                            onClick: () => deleteSegment(segment.id),
+                                        },
+                                    ]}
+                                />)
+                            )
+                        }
+
+                        <div className="overflow-x-hidden">
+                            <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema?.talking_head?.length > 0 ? `${segment.response_format.schema?.talking_head?.length} ${segment.response_format.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs !font-bold !italic" />
+
+                            <p className={`text-textColor-300 cursor-pointer w-full truncate`} key={segment.id}>{segment?.title}</p>
+                        </div>
+                    </div>
+                ))
+            }
         </div>
     );
 }
@@ -489,12 +598,12 @@ function SegmentDetails() {
                 </div>
 
                 <div className={`flex items-center gap-1 text-textColor-200`}>
-                    <PlayCircle />
+                    <PlayCircle size={15} />
                     <p className={`text-sm/6 font-semibold`}>{source?.source_path}</p>
                 </div>
 
                 <div className={`flex items-center gap-1 text-textColor-200`}>
-                    <Clock />
+                    <Clock size={15} />
                     <p className={`text-sm/6 font-semibold`}>{start} - {end}</p>
                 </div>
             </div>

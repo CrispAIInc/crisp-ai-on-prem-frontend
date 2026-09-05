@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useContext } from "react";
 import { MainContext } from '../../contexts/mainContext';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 
-export default function ActionMenu({ actions }) {
+export default function ActionMenu({ actions, direction = 'auto' }) {
   const { theme } = useContext(MainContext);
   const [open, setOpen] = useState(false);
   const [alignRight, setAlignRight] = useState(false);
@@ -33,7 +33,7 @@ export default function ActionMenu({ actions }) {
       <MoreVertOutlinedIcon className="text-primary-300" />
 
       {open && (
-        <div className={`absolute ${alignRight ? 'right-0' : 'left-0'} w-40 z-10 mt-1 ${theme === 'light' ? 'bg-white' : 'bg-gray-800'} top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]`}>
+        <div className={`absolute ${direction === 'right' ? 'left-0' : direction === 'left' ? 'right-0' : alignRight ? 'right-0' : 'left-0'} w-40 z-10 mt-1 ${theme === 'light' ? 'bg-white' : 'bg-gray-800'} top-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)]`}>
           {actions.map((action) => (
             <button
               key={action.label}
