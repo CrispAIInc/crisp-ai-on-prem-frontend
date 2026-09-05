@@ -44,16 +44,11 @@ function TimeSegmentList() {
                 {segmentDescriptions.length === 0 ? (
                     <p className="text-center text-[12.5px] font-semibold text-ink-secondary py-8">No segments found</p>
                 ) : (
-                    segmentDescriptions.map((segment) => {
-                        return (
-                            <SegmentListItem
-                                key={segment.id}
-                                segment={segment}
-                                active={segment.id === currentSegment?.id}
-                                onClick={() => setCurrentSegment(segment)}
-                            />
-                        );
-                    })
+                    // segmentDescriptions.map((segment) => {
+                    //     return (
+                    <SegmentListItem />
+                    //     );
+                    // })
                 )}
             </div>
 
