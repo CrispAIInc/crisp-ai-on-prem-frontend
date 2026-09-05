@@ -145,16 +145,16 @@ function InstructionsInput({ value, onChange, actionIcon: ActionIcon, onAction }
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="Add more instructions for better results"
-                className="w-full min-h-[70px] border border-border rounded-lg pl-3 pr-12 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary resize-y"
+                className="w-full min-h-[70px] border border-border rounded-lg pl-3 pr-12 py-2.5 text-[12.5px] text-ink bg-gray-100 placeholder:text-ink-muted outline-none focus:border-primary resize-y"
             />
-            <button
+            {/* <button
                 type="button"
                 onClick={onAction}
                 aria-label="Run"
                 className="absolute bottom-2 right-2 w-8 h-8 rounded-lg bg-grad text-white flex items-center justify-center hover:brightness-105"
             >
                 <ActionIcon size={14} />
-            </button>
+            </button> */}
         </div>
     );
 }
