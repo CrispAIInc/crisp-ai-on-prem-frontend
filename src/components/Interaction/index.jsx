@@ -182,11 +182,11 @@ const Interaction = () => {
             fromChat &&
             isPlayerReady &&
             resourceURL &&
-            currentResource.file_type === "video"
+            currentResource?.file_type === "video"
         ) {
             const timestamp = currentResource?.timestamp; // Make sure you have the timestamp here
             if (timestamp !== undefined && timestamp !== null) {
-                player.current.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
+                player?.current?.seekTo(typeof timestamp === "number" ? timestamp : timeToSeconds(timestamp));
             }
             setFromChat(false);
         }

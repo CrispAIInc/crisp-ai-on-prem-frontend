@@ -44,8 +44,7 @@ export default function CustomVideoPlayer({
     onReady,
     onDuration,
     playerRef,
-    title,
-    setCurrentTime
+    title
 }) {
 
     const {
@@ -258,7 +257,6 @@ export default function CustomVideoPlayer({
                     onDuration?.(d);
                 }}
                 onProgress={(state) => {
-                    setCurrentTime(state.playedSeconds);
                     if (!seeking) setPlayed(state.played);
                 }}
                 onClick={togglePlay}
