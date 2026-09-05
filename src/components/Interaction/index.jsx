@@ -260,7 +260,7 @@ const Interaction = () => {
             }
 
             let sessionID = null; // Variable to store the session ID
-            const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}`, {
+            const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${sourceIds.length > 0 ? false : true}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     SessionId: currentChat?.sessionId,
