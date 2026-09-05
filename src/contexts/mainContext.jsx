@@ -1348,7 +1348,8 @@ export default function MainProvider({ children, theme, setTheme }) {
                 });
 
                 if (success) {
-                    setSegmentDescriptions([
+                    /**
+                     * [
                         {
                             created_at: "Sat, 05 Sep 2026 07:20:12 GMT",
                             end: "00:03:00",
@@ -1479,7 +1480,9 @@ export default function MainProvider({ children, theme, setTheme }) {
                             title: "testt",
                             video: "testt1.mp4"
                         }
-                    ]);
+                    ]
+                     */
+                    setSegmentDescriptions(data);
                 }
             } catch (error) {
                 console.log(error);
