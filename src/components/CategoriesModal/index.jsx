@@ -11,7 +11,8 @@ const CategoriesModal = (props) => {
     const {
         setSelectedCategory,
         theme,
-        knowledgeBase
+        knowledgeBase,
+        categoryOptions
     } = useContext(MainContext);
 
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -53,19 +54,19 @@ const CategoriesModal = (props) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
-                    {props.categoryOptions.filter(cat => cat.value !== "all").length > 0 ? (
+                    {categoryOptions.filter(cat => cat.value !== "all").length > 0 ? (
                         <div className='max-h-[55vh] overflow-y-auto w-full space-y-2'>
                             {
-                                props.categoryOptions.map(({ value, label }, index) => {
+                                categoryOptions.map(({ id, value, label }) => {
                                     if (value === "all") return null;
-                                    let sourcesCount = knowledgeBase.filter(item => item.category?.includes(value)).length;
+                                    let sourcesCount = knowledgeBase.filter(item => item.index_id === id).length;
                                     return (
-                                        <div key={index} className={`source-explorer px-2 py-2 rounded-md cursor-pointer w-full ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/5'}`} onClick={() => handleCategoryClick(value)}>
+                                        <div key={id} className={`source-explorer px-2 py-2 rounded-md cursor-pointer w-full ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/5'}`} onClick={() => handleCategoryClick(value)}>
                                             <div className="flex items-center gap-2">
                                                 <FolderOpenOutlinedIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} font-bold !text-2xl`} />
                                                 <div className="flex flex-col">
                                                     <BaseHeading text={label} className="!text-lg !mb-0" />
-                                                    <span className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Contains {sourcesCount} source{sourcesCount !== 1 ? 's' : ''}.</span>
+                                                    <span className={`text-slate-500 text-sm mt-0.5`}>Contains {sourcesCount} source{sourcesCount !== 1 ? 's' : ''}.</span>
                                                 </div>
                                             </div>
                                         </div>

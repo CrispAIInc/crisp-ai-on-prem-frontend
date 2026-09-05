@@ -97,7 +97,6 @@ export default function AddSourceModal(props) {
                 <CategoriesModal
                     show={showCategoriesModal}
                     onHide={() => setShowCategoriesModal(false)}
-                    categoryOptions={categoryOptions}
                     setShowFileFormatsModal={setShowFileFormatsModal}
                     handleUpload={props?.handleUpload}
                 />
