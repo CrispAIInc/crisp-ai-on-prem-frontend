@@ -1338,6 +1338,26 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [currentSegment, setCurrentSegment] = useState(null);
     const [segmentDescriptions, setSegmentDescriptions] = useState([]);
 
+    useEffect(() => {
+
+        async function fetchTimeSegments() {
+            try {
+                axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+                const { data, success } = await makeApiRequest("/segments", 'GET', null, {
+                    ProjectId: currentProject.project_id,
+                });
+
+                if (success) {
+                    setSegmentDescriptions(data);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchTimeSegments();
+    }, []);
+
     // create value object with all the states
     const value = {
         currentSegment, setCurrentSegment,
