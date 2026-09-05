@@ -10,6 +10,7 @@ import makeApiRequest, { axiosInstance } from '../../api';
 import useAuth from '../../hooks/useAuth';
 import { useToast } from '../../contexts/toastContext';
 import LoadingSpinner from '../LoadingSpinner';
+import { MAIN_STUDIO_PANELS } from '../../globals';
 
 // No props coming in — replace this with real data from wherever your app
 // keeps its sources (context, a store, a fetch, etc).
@@ -94,7 +95,8 @@ function TimeSegmentPane({
     const {
         knowledgeBase,
         currentChat,
-        setCurrentSegment
+        setCurrentSegment,
+        setActiveStudioPanel
     } = useContext(MainContext);
 
     const { token } = useAuth();
@@ -178,7 +180,7 @@ function TimeSegmentPane({
                 // Do not persist generated segment automatically; user must explicitly save.
                 console.log(data);
                 setCurrentSegment(data);
-                // setShowSegmentList(false);
+                setActiveStudioPanel(MAIN_STUDIO_PANELS.TIME_SEGMENTS);
             } else {
                 throw new Error(message);
             }
@@ -254,6 +256,7 @@ function TimeSegmentPane({
                 disabled={!canGenerate}
                 onClick={generateTimeSegmentDescription}
             />
+            <button onClick={() => setActiveStudioPanel(MAIN_STUDIO_PANELS.TIME_SEGMENTS)}>Show segments</button>
         </div>
     );
 }
@@ -303,27 +306,6 @@ function InstructionsInput({ value, onChange, actionIcon: ActionIcon, onAction }
             >
                 <ActionIcon size={14} />
             </button> */}
-        </div>
-    );
-}
-
-function TimeRangeInput() {
-    const [from, setFrom] = useState({ h: "00", m: "00", s: "00" });
-    const [to, setTo] = useState({ h: "00", m: "00", s: "00" });
-
-    return (
-        <div className="flex items-center gap-2 flex-wrap bg-surface-alt rounded-lg px-3 py-2.5">
-            <span className="text-[11.5px] text-ink-secondary shrink-0">From</span>
-            <TimeParts value={from} onChange={setFrom} />
-            <span className="text-[11.5px] text-ink-secondary shrink-0">To</span>
-            <TimeParts value={to} onChange={setTo} />
-            <button
-                type="button"
-                aria-label="Apply time range"
-                className="ml-auto w-7 h-7 rounded-lg flex items-center justify-center text-primary hover:bg-surface"
-            >
-                <Check size={16} />
-            </button>
         </div>
     );
 }

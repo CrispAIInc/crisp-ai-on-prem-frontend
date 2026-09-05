@@ -1336,10 +1336,12 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // ANALYTICS
     const [currentSegment, setCurrentSegment] = useState(null);
+    const [segmentDescriptions, setSegmentDescriptions] = useState([]);
 
     // create value object with all the states
     const value = {
         currentSegment, setCurrentSegment,
+        segmentDescriptions, setSegmentDescriptions,
         selectedReel, setSelectedReel,
         activeStudioPanel,
         setActiveStudioPanel,
