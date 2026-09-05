@@ -117,7 +117,7 @@ function TimeSegmentPane({
     });
 
     const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
-    const canGenerate = !isProjectReadOnly && source && title.trim() !== "";
+    const canGenerate = !isProjectReadOnly && source && context.trim() !== "";
 
 
     async function generateTimeSegmentDescription() {
