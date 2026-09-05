@@ -3,7 +3,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
-import InfoIcon from '@mui/icons-material/Info';
 import useFirebase from '../../hooks/useFirebase.js';
 import { useToast } from "../../contexts/toastContext";
 import { useContext, useState, useEffect } from 'react';
@@ -12,15 +11,12 @@ import LoadingSpinner from "../LoadingSpinner";
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import './fade.css';
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
-import { Drawer } from '@mui/material';
 import Modal from 'react-bootstrap/Modal';
-import ReelProps from '../ReelProps/index.jsx';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import Moveable from "react-moveable";
 import PictureInPictureAltIcon from '@mui/icons-material/PictureInPictureAlt';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
-import { Save } from "lucide-react";
+import { Check } from "lucide-react";
 import makeApiRequest from '../../api/index.js';
 
 function ReelViewer() {
@@ -341,7 +337,7 @@ function ReelViewer() {
                     <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
                         {
                             (!isProjectReadOnly && reels.find(item => item.id === reel.id) === undefined) && (
-                                <Save onClick={(e) => {
+                                <Check onClick={(e) => {
                                     e.stopPropagation();
                                     setSaveTitleValue(reel?.title || '');
                                     setShowSaveTitleModal(true);
