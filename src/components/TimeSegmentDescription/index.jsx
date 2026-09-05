@@ -553,7 +553,7 @@ const TimeSegmentDescription = ({
                 />
             </div>
 
-            {/* is detailed mode checkbox */}
+            {/* is detailed mode */}
             {
                 (isSingleVideoSelected && checkedSources[0].withDetailedMode) && (
                     <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>

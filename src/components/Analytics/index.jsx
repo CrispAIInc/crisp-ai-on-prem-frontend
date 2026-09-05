@@ -63,12 +63,27 @@ export default function Analytics() {
                 })}
             </div>
 
-            {activeTab === "segment" ? <TimeSegmentPane /> : <FindMomentsPane />}
+            {activeTab === "segment" ? (
+                <TimeSegmentPane
+                    sourceIds={sourceIds}
+                />
+            ) : (
+                <FindMomentsPane />
+            )}
         </div>
     );
 }
 
-function TimeSegmentPane() {
+function TimeSegmentPane({
+    sourceIds
+}) {
+
+    const {
+        knowledgeBase
+    } = useContext(MainContext);
+
+    const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
+
     const [instructions, setInstructions] = useState("");
     const [title, setTitle] = useState("");
     const [fullLength, setFullLength] = useState(false);
@@ -108,6 +123,18 @@ function TimeSegmentPane() {
             <p className="text-[11.5px] text-ink-muted -mt-2">Only one checked source (video)</p>
 
             {!fullLength && <TimeRangeInput />}
+
+            {/* is detailed mode */}
+            {
+                source?.withDetailedMode && (
+                    <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
+                        <Info size={17} />
+                        <p className="text-xs mt-1 font-medium">
+                            This asset was ingested using <b>Detailed Mode</b>, therefore you will get <b>high detailed results</b>.
+                        </p>
+                    </div>
+                )
+            }
 
             <GenerateButton disabled={!title.trim()} onClick={() => { /* wire up generation here */ }} />
         </div>
@@ -215,7 +242,7 @@ function GenerateButton({ disabled, onClick }) {
             type="button"
             disabled={disabled}
             onClick={onClick}
-            className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold text-white bg-grad hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
             <Sparkles size={14} />
             Generate
