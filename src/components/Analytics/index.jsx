@@ -9,6 +9,7 @@ import { formatTime, toSeconds } from '../../utils';
 import makeApiRequest, { axiosInstance } from '../../api';
 import useAuth from '../../hooks/useAuth';
 import { useToast } from '../../contexts/toastContext';
+import LoadingSpinner from '../LoadingSpinner';
 
 // No props coming in — replace this with real data from wherever your app
 // keeps its sources (context, a store, a fetch, etc).
@@ -248,7 +249,11 @@ function TimeSegmentPane({
                 )
             }
 
-            <GenerateButton disabled={!canGenerate} onClick={generateTimeSegmentDescription} />
+            <GenerateButton
+                isPending={isPending}
+                disabled={!canGenerate}
+                onClick={generateTimeSegmentDescription}
+            />
         </div>
     );
 }
@@ -348,7 +353,7 @@ function TimeParts({ value, onChange }) {
     );
 }
 
-function GenerateButton({ disabled, onClick }) {
+function GenerateButton({ isPending, disabled, onClick }) {
     return (
         <button
             type="button"
@@ -356,7 +361,13 @@ function GenerateButton({ disabled, onClick }) {
             onClick={onClick}
             className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
-            <Sparkles size={14} />
+            {
+                isPending ? (
+                    <LoadingSpinner isSmall />
+                ) : (
+                    <Sparkles size={14} />
+                )
+            }
             Generate
         </button>
     );

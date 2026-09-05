@@ -9,7 +9,7 @@
   content: "";
   width: 14px;
   height: 14px;
-  border: 2px solid #ccc;
+  border: 2px solid #ffffff;
   position: absolute;
   left: 0;
   top: 0;
@@ -17,7 +17,7 @@
   animation: rotation 2s ease-in-out infinite;
 }
 .loader::after {
-  border-color: #ca77e4;
+  border-color: #a694f3;
   animation-delay: 1s;
 }
 
