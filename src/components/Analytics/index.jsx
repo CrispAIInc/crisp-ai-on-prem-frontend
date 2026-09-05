@@ -11,7 +11,7 @@ const MOCK_SOURCES = [
 ];
 
 const TABS = [
-    { id: "segment", label: "Time segment description", icon: Sparkles, info: true },
+    { id: "segment", label: "Time segment description", icon: Sparkles, info: "Analyze a specific video time range and generate precise breakdown." },
     { id: "moments", label: "Find moments", icon: Clock },
 ];
 
@@ -51,12 +51,12 @@ export default function Analytics() {
                                 type="button"
                                 onClick={() => setActiveTab(tab.id)}
                                 aria-current={active ? "page" : undefined}
-                                className={`flex items-center gap-1.5 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary" : "text-ink"
+                                className={`flex items-center gap-1.5 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300" : "text-ink"
                                     }`}
                             >
                                 <Icon size={14} />
                                 {tab.label}
-                                {tab.info && <Info size={13} className="text-ink-muted" />}
+                                {/* {tab.info && <Info size={13} className="text-ink-muted" />} */}
                             </button>
                         </div>
                     );
