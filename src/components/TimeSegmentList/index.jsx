@@ -70,7 +70,7 @@ function TimeSegmentList() {
     );
 }
 
-function SegmentListItem({ segment, active, onClick }) {
+function SegmentListItem() {
 
     const {
         isProjectReadOnly
@@ -80,6 +80,7 @@ function SegmentListItem({ segment, active, onClick }) {
         knowledgeBase,
         segmentDescriptions,
         setSegmentDescriptions,
+        currentSegment,
         setCurrentSegment
     } = useContext(MainContext);
 
@@ -141,11 +142,11 @@ function SegmentListItem({ segment, active, onClick }) {
     }
 
     return (
-        <div className={`flex flex-col gap-1 bg-white rounded-md ${active ? 'border border-primary-300' : 'border border-transparent'} p-2 cursor-pointer hover:bg-gray-100`}>
+        <div className={`flex flex-col gap-1 bg-white rounded-md p-2 cursor-pointer hover:bg-gray-100`}>
             {
                 sortByDate(segmentDescriptions, "created_at", "desc").map(segment => (
                     <div key={segment.id}
-                        className={`flex items-center  gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
+                        className={`flex items-center ${segment?.id === currentSegment?.id ? '!border !border-primary-300' : '!border !border-transparent'} gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
                         onClick={() => handleSelectResult(segment)}
                         onMouseEnter={() => handleMouseEnterSegment(segment.id)}
                         onMouseLeave={handleMouseLeaveSegment}
