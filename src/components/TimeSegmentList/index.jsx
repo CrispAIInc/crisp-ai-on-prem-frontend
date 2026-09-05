@@ -27,6 +27,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import makeApiRequest from '../../api';
 import { ProjectContext } from '../../contexts/projectContext';
 import { ToastContext } from '../../contexts/toastContext';
+import TimeSegmentTitleUpdaterModal from '../TimeSegmentTitleUpdaterModal';
 
 function TimeSegmentList() {
 
@@ -191,6 +192,12 @@ function SegmentListItem({ segment, active, onClick }) {
                     </div>
                 ))
             }
+
+            {
+                isModalOpen && (
+                    <TimeSegmentTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} segment={selectedSegment} setSegmentDescriptions={setSegmentDescriptions} />
+                )
+            }
         </div>
     );
 }
@@ -221,7 +228,7 @@ function SegmentDetails() {
     let source = knowledgeBase.find(item => item.source_id === source_id) || {};
 
 
-    // Helper function to convert a Base64 string to a Uint8Array (Prevents Word corruption)
+
     function base64ToUint8Array(base64) {
         const binaryString = window.atob(base64);
         const len = binaryString.length;
