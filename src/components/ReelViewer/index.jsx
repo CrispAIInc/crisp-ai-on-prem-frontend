@@ -269,6 +269,8 @@ function ReelViewer() {
                 index_id: reel?.index_id,
                 draft_id: reel?.draft_id,
                 filename: reel?.filename,
+                sources: reel?.sources,
+                segments: reel?.segments
             };
 
             let backendResponse;
