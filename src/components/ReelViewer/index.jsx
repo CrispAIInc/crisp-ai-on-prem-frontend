@@ -298,6 +298,7 @@ function ReelViewer() {
                 id: savedId || reel?.id,
                 title: nextTitle,
                 thumbnail_url: backendResponse?.thumbnail_url || reel?.thumbnail_url || null,
+                reel_video_url: backendResponse?.reel_video_url || reel?.reel_video_url || null
             };
 
             setReel(savedReel);
