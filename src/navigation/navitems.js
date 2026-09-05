@@ -17,6 +17,7 @@ import Discovery from "../components/Discovery";
 import ContextualMetadata from "../components/ContextualMetadata";
 import Shorts from "../components/Shorts";
 import Interaction from "../components/Interaction";
+import Analytics from "../components/Analytics";
 
 
 export const NAV_ITEMS = [
@@ -25,7 +26,7 @@ export const NAV_ITEMS = [
     { key: "interaction", label: "Interaction", icon: MessageCircle, component: Interaction },
     { key: "metadata", label: "Contextual Metadata", icon: Sparkles, component: ContextualMetadata },
     { key: "shorts", label: "Shorts", icon: Film, component: Shorts },
-    { key: "analytics", label: "Analytics", icon: LineChart },
+    { key: "analytics", label: "Analytics", icon: LineChart, component: Analytics },
     { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen },
     { key: "business_intelligence", label: "Business Intelligence", icon: PieChart },
 ];
