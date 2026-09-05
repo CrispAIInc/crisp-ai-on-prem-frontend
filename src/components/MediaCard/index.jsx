@@ -81,13 +81,13 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 )}
 
                 {isUploading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/45">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/65">
                         <CircularProgressWithLabel value={source.progress} variant="determinate" isUploadFailed={false} />
-                        <BaseHeading text={source.step} className="!text-primary-300 !text-[10px] !font-medium !mt-1" />
+                        <BaseHeading text={source.step} className="!text-primary-300 !text-[10px] !font-bold !mt-1" />
                     </div>
                 )}
                 {typeof source?.score === "number" && (
-                    <span className="absolute bottom-2 left-2 rounded bg-primary-100/80 px-1.5 py-0.5 text-[10px] font-medium text-primary-300">
+                    <span className="absolute bottom-2 left-2 rounded bg-primary-100/80 px-1.5 py-0.5 text-[10px] font-bold text-primary-300">
                         {Math.round(source.score * 10)}% score
                     </span>
                 )}

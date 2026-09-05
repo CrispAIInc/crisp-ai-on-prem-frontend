@@ -40,7 +40,7 @@ export default function CircularProgressWithLabel({ value, variant, isUploadFail
                 <Typography
                     variant="caption"
                     component="div"
-                    sx={{ color: isUploadFailed ? "error.main" : "dodgerblue", fontWeight: "bold" }}
+                    sx={{ color: isUploadFailed ? "error.main" : "#755bea", fontWeight: "bold" }}
                 >
                     {`${Math.round(value)}%`}
                 </Typography>
