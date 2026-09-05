@@ -37,7 +37,7 @@ export default function Analytics() {
     return (
         <div className="h-full min-h-0 overflow-y-auto px-[18px] bg-white py-4 flex flex-col gap-4">
             <Field label="Sources">
-                <SourcesDropdown sources={videoAssets} selectedSourceIds={sourceIds} onSelectedSourceIdsChange={setSourceIds} />
+                <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={sourceIds} onSelectedSourceIdsChange={setSourceIds} />
             </Field>
 
             <div className="flex items-center gap-4">

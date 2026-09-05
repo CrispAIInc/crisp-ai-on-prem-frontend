@@ -2,21 +2,12 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { ChevronDown, Film, Check } from "lucide-react";
 import GsFile from '../GsFile';
 
-/**
- * SourcesDropdown — multi-select for picking which sources to use.
- *
- * Each source is shaped like { source_id, source_path, thumbnail, ...rest }.
- * `thumbnail` is optional — falls back to a generic file icon when missing.
- *
- * Controlled-or-uncontrolled selection, same pattern as the rest of the app:
- * pass `selectedSourceIds` + `onSelectedSourceIdsChange` to control it, or
- * omit both to let it manage its own state.
- */
 export default function SourcesDropdown({
     sources = [],
     selectedSourceIds: selectedProp,
     onSelectedSourceIdsChange,
     placeholder = "Select sources",
+    isMultiple = true,
 }) {
     const [internalSelected, setInternalSelected] = useState([]);
     const [open, setOpen] = useState(false);
@@ -62,7 +53,20 @@ export default function SourcesDropdown({
         };
     }, [open, sources.length]);
 
+    // const toggleSource = (id) => {
+    //     setSelectedSourceIds(
+    //         selectedSourceIds.includes(id)
+    //             ? selectedSourceIds.filter((s) => s !== id)
+    //             : [...selectedSourceIds, id]
+    //     );
+    // };
+
     const toggleSource = (id) => {
+        if (!isMultiple) {
+            setSelectedSourceIds(selectedSourceIds.includes(id) ? [] : [id]);
+            setOpen(false);
+            return;
+        }
         setSelectedSourceIds(
             selectedSourceIds.includes(id)
                 ? selectedSourceIds.filter((s) => s !== id)
