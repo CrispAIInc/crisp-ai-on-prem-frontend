@@ -75,22 +75,26 @@ function TimeSegmentPane() {
 
     return (
         <div className="flex flex-col gap-3">
-            <InstructionsInput
-                value={instructions}
-                onChange={setInstructions}
-                actionIcon={Sparkles}
-                onAction={() => {
-                    /* wire up generation here */
-                }}
-            />
+            <Field label="Context">
+                <InstructionsInput
+                    value={instructions}
+                    onChange={setInstructions}
+                    actionIcon={Sparkles}
+                    onAction={() => {
+                        /* wire up generation here */
+                    }}
+                />
+            </Field>
 
-            <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Write a title for this segment"
-                className="w-full border border-border rounded-lg px-3 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary"
-            />
+            <Field label="Title">
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder='Write a title for this segment'
+                    className="flex-1 outline-none border border-gray-200 w-full text-[12.5px] text-ink placeholder:text-ink-muted bg-gray-100 rounded-lg px-3 py-2"
+                />
+            </Field>
 
             <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer">
                 <input
@@ -99,7 +103,7 @@ function TimeSegmentPane() {
                     onChange={(e) => setFullLength(e.target.checked)}
                     className="w-4 h-4 rounded accent-primary"
                 />
-                Include full source length
+                Include full asset length
             </label>
             <p className="text-[11.5px] text-ink-muted -mt-2">Only one checked source (video)</p>
 
