@@ -1,36 +1,13 @@
-import { useState, useRef, useEffect, useContext } from "react";
-import { MainContext } from '../../contexts/mainContext';
-import { ChevronDown, Sparkles, Check } from "lucide-react";
-import CollapsibleSection from "../CollapsibleSection";
-import SourcesDropdown from "../SourcesDropdown";
-import VerbositySlider from '../VerbositySlider';
-import useMetadata from '../../hooks/useMetadata';
+import { Check, ChevronDown, Sparkles } from "lucide-react";
+import { useContext, useEffect, useRef, useState } from "react";
 import makeApiRequest from '../../api';
+import { MainContext } from '../../contexts/mainContext';
 import { useToast } from '../../contexts/toastContext';
-import { delay } from '../../utils';
-import MetadataVerbosity from '../MetadataVerbosity';
 import { METADATA_VERBOSITY_OPTIONS } from '../../globals';
+import CollapsibleSection from "../CollapsibleSection";
+import MetadataVerbosity from '../MetadataVerbosity';
+import SourcesDropdown from "../SourcesDropdown";
 
-/**
- * ContextualMetadata — "Generate metadata" panel.
- *
- * Fills 100% of its parent's height (parent must have a bounded height,
- * e.g. flex + min-h-0) and scrolls internally in the body only — header
- * and the Generate footer stay fixed, so it never grows the surrounding
- * app layout.
- *
- * Props:
- *  - sources: [{ source_id, source_path, thumbnail, ... }] — options for
- *    the sources dropdown
- *  - selectedSourceIds, onSelectedSourceIdsChange: controlled selection
- *    (optional — falls back to internal state if omitted)
- *  - context, onContextChange: controlled context text (optional)
- *  - outputFormat, onOutputFormatChange: controlled output format (optional)
- *  - outputFormatOptions: string[] (default ["Summary", "Detailed", "Structured JSON"])
- *  - verbosity, onVerbosityChange: controlled verbosity index 0–2 (optional)
- *  - onGenerate({ sourceIds, context, outputFormat, verbosity }): fired on click
- *  - className: extra classes on the root element
- */
 export default function ContextualMetadata({
     className = "",
 }) {

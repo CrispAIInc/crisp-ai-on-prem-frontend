@@ -11,31 +11,6 @@ import { useToast } from '../../contexts/toastContext';
 import MediaCard from '../MediaCard';
 import AnimatedText from '../AnimatedText';
 
-/**
- * Discovery — search results panel (header + search box + grouped results).
- *
- * Card rendering is NOT this component's job: pass already-built card
- * elements in via `groups[].cards`. This component only owns the search
- * bar, the empty/no-results states, group headers, and the grid/scroll
- * shell around whatever cards you give it.
- *
- * Fills 100% of its parent's height (parent must have a bounded height,
- * e.g. flex + min-h-0) and scrolls internally — it never grows the
- * surrounding app layout.
- *
- * Props:
- *  - query, onQueryChange: controlled search text (optional — falls back
- *    to internal state if omitted)
- *  - indexOptions: [{ id, value, name }] — optional list of indexes the user can
- *    filter by, shown as removable chips. Omit/leave empty to hide index
- *    selection entirely and fall back to a plain search bar.
- *  - selectedIndexes, onSelectedIndexesChange: controlled index selection
- *    (optional — falls back to internal state if omitted)
- *  - onDiscover(query, selectedIndexes): fired when "Discover" runs
- *  - hasSearched: force the "not searched yet" vs "results" state. If
- *    omitted, inferred from whether Discover has been triggered yet.
- *  - className: extra classes on the root element
- */
 export default function Discovery({
     query,
     onQueryChange,
@@ -47,9 +22,6 @@ export default function Discovery({
 
     const {
         categoryOptions,
-        currentResource,
-        selectedCategory,
-        selectedFormat,
         discoveredSources,
         setDiscoveredSources,
         setShowSearchModal,

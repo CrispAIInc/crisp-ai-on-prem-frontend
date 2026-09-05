@@ -81,7 +81,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef, sourceIds, s
     }
 
     return (
-        <div className={`flex items-center justify-between gap-1 p-2 ${currentChat ? 'w-full' : 'ml-auto'}`}>
+        <div className={`flex items-center justify-between flex-wrap gap-1 p-2 ${currentChat ? 'w-full' : 'ml-auto'}`}>
             <div>
                 <SourcesDropdown
                     sources={knowledgeBase}
@@ -90,7 +90,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef, sourceIds, s
                 />
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="ml-auto flex items-center gap-1">
                 {/* current chat name */}
                 {(currentChat && currentChat?.title) && (
                     <div className="flex items-center flex-1 gap-1">

@@ -13,15 +13,6 @@ import makeApiRequest from "../../api";
 import { extractThumbnail, generateRandomHash, getFileType } from "../../utils.js";
 import NoData from '../NoData/index.jsx';
 
-/**
- * Media - Upload / Collection sub-navigation above a grid of
- * source cards (thumbnail + filename + checkbox), with
- * select-all / clear-all controls above the grid.
- *
- * Presentational only — no upload, filtering, or persistence
- * logic is wired up.
- */
-
 const MEDIA_NAV = [
     { key: "ingest", label: "Ingest", icon: Upload },
     { key: "collection", label: "Collection", icon: FolderOpen },

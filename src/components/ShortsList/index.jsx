@@ -41,10 +41,7 @@ function totalDuration(short) {
     return short.segments?.reduce((sum, seg) => sum + (seg.duration || 0), 0) ?? 0;
 }
 
-export default function ShortsList({
-    selectedShortId: selectedIdProp,
-    className = "",
-}) {
+export default function ShortsList() {
 
     const {
         reels: shorts,
@@ -52,11 +49,8 @@ export default function ShortsList({
         setSelectedReel: setSelectedShort
     } = useContext(MainContext);
 
-    const [internalSelectedId, setInternalSelectedId] = useState(null);
-    const selectedId = selectedIdProp ?? internalSelectedId;
-
     return (
-        <div className={`h-full min-h-0 flex overflow-hidden ${className}`}>
+        <div className={`h-full min-h-0 flex overflow-hidden`}>
             {/* Left column — list */}
             <div className="w-[280px] shrink-0 border-r border-border h-full min-h-0 overflow-y-auto p-3 flex flex-col gap-2">
                 {shorts.length === 0 ? (

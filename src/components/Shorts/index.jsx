@@ -1,26 +1,16 @@
-import { useState, useRef, useEffect, useContext } from "react";
-import { MainContext } from '../../contexts/mainContext';
 import {
-    Sparkles,
-    Pencil,
-    Trash
+    Sparkles
 } from "lucide-react";
+import { useContext, useState } from "react";
+import makeApiRequest from '../../api';
+import { MainContext } from '../../contexts/mainContext';
+import { ProjectContext } from '../../contexts/projectContext';
+import { useToast } from '../../contexts/toastContext';
+import { MAIN_STUDIO_PANELS } from '../../globals';
+import { convertSecondsToHumanText } from '../../utils';
 import CollapsibleSection from "../CollapsibleSection";
 import SourcesDropdown from "../SourcesDropdown";
 import VerbositySlider from '../VerbositySlider';
-import makeApiRequest from '../../api';
-import { useToast } from '../../contexts/toastContext';
-import { convertSecondsToHumanText, searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils';
-import FilenameUpdateModal from "../AppSingleValueModal";
-import { ProjectContext } from '../../contexts/projectContext';
-import BaseHeading from '../BaseHeading';
-import useFirebase from '../../hooks/useFirebase';
-import useResources from '../../hooks/useResources';
-import ActionMenu from '../ActionMenu';
-import AnimatedText from '../AnimatedText';
-import LoadingSpinner from '../LoadingSpinner';
-import { MAIN_STUDIO_PANELS } from '../../globals';
-import RippleButton from '../RippleButton';
 
 
 export default function Shorts() {
@@ -28,8 +18,6 @@ export default function Shorts() {
     const { isProjectReadOnly } = useContext(ProjectContext);
     const {
         knowledgeBase,
-        reels,
-        setReels,
         setSelectedReel,
         setActiveStudioPanel
     } = useContext(MainContext);
@@ -37,10 +25,6 @@ export default function Shorts() {
     const {
         notify
     } = useToast();
-
-    const { getPublicUrl } = useFirebase();
-
-    const { getReels } = useResources({ setReels });
 
     const videoSources = knowledgeBase.filter(item => item.file_type === "video");
     const [sourceIds, setSourceIds] = useState([]);
@@ -50,82 +34,6 @@ export default function Shorts() {
     const [reelDuration, setReelDuration] = useState(30);
 
     const canGenerate = sourceIds.length > 0;
-
-
-    const [reelsSearchValue, setReelsSearchValue] = useState("");
-    const [reelsResults, setReelsResults] = useState(reels);
-    useEffect(() => {
-        setReelsResults(sortBySourcePath(reels));
-    }, [reels]);
-    const handleReelsSearch = (e) => {
-        const value = e?.target?.value || "";
-        setReelsSearchValue(value);
-
-        if (value.trim() === "") {
-            setReelsResults(sortArrayOfObjects(reels, "title"));
-        } else {
-            const filtered = searchByKey(reels, "title", value);
-            setReelsResults(sortArrayOfObjects(filtered, "title"));
-        }
-    };
-
-    useEffect(() => {
-        handleReelsSearch();
-    }, [JSON.stringify(reels)]);
-
-    const [showUpdateReelTitleModal, setShowUpdateReelTitleModal] = useState(false);
-    function handleOpenFilenameUpdateModal(event, reel) {
-        event.stopPropagation();
-        setReelTitleUpdateValue(reel.title);
-        setShowUpdateReelTitleModal(true);
-    }
-
-    const showSelectedReel = (e, reel, index) => {
-        setSelectedReel(reel);
-        // setIsReelOpen(true);
-    };
-
-    const [hoveredReel, setHoveredReel] = useState(null);
-    const hoveredReelRef = useRef(null);
-    const handleMouseEnterReel = (id) => {
-        setHoveredReel(id);
-        hoveredReelRef.current = id;
-    };
-    const handleMouseLeaveReel = () => {
-        setHoveredReel(null);
-    };
-
-    const [isReelDeleting, setIsReelDeleting] = useState(false);
-    async function deleteReel(event, reel) {
-        if (isProjectReadOnly) return;
-        event.preventDefault();
-        setIsReelDeleting(true);
-        try {
-            const publicReelUrl = await getPublicUrl(reel.reel_video_url);
-            await makeApiRequest(`/reels/${reel.id}`, 'DELETE', JSON.stringify({
-                videoUrl: publicReelUrl,
-            }));
-
-            notify({
-                variant: "success",
-                heading: "Reel deleted successfully!",
-            });
-            setReels(prev => prev.filter(item => item.id !== reel.id));
-            // getReels();
-        } catch (error) {
-            console.log(error);
-            notify({
-                variant: "error",
-                heading: "Oops!",
-                subheading: "An error occurred while deleting the reel",
-            });
-        } finally {
-            setIsReelDeleting(false);
-        }
-    }
-
-    const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');
-
 
     async function generateShort() {
         if (isProjectReadOnly) return;
