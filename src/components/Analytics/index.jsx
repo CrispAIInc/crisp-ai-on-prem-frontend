@@ -12,26 +12,11 @@ import { useToast } from '../../contexts/toastContext';
 import LoadingSpinner from '../LoadingSpinner';
 import { MAIN_STUDIO_PANELS } from '../../globals';
 
-// No props coming in — replace this with real data from wherever your app
-// keeps its sources (context, a store, a fetch, etc).
-const MOCK_SOURCES = [
-    { source_id: "ast_1", source_path: "Usain Bolt.mp4", thumbnail: "" },
-    { source_id: "ast_2", source_path: "Bill Gates.mp4", thumbnail: "" },
-];
-
 const TABS = [
     { id: "segment", label: "Time segment description", icon: Sparkles, info: "Analyze a specific video time range and generate precise breakdown." },
     { id: "moments", label: "Find moments", icon: Clock },
 ];
 
-/**
- * Analytics — "Time segment description" / "Find moments" panel.
- *
- * Fully self-contained: no props in, everything lives in local state.
- * Fills 100% of its parent's height (parent needs a bounded height, e.g.
- * flex + min-h-0) and scrolls internally so it never overflows the app
- * shell.
- */
 export default function Analytics() {
 
     const {
@@ -77,7 +62,9 @@ export default function Analytics() {
                     sourceIds={sourceIds}
                 />
             ) : (
-                <FindMomentsPane />
+                <FindMomentsPane
+                    sourceIds={sourceIds}
+                />
             )}
         </div>
     );
@@ -261,30 +248,54 @@ function TimeSegmentPane({
     );
 }
 
-function FindMomentsPane() {
+function FindMomentsPane({
+    sourceIds
+}) {
+
+    const {
+        isProjectReadOnly
+    } = useContext(ProjectContext);
+
+    const {
+        knowledgeBase
+    } = useContext(MainContext);
+
+
     const [context, setContext] = useState("");
     const [title, setTitle] = useState("");
+    const [isPending, setIsPending] = useState(false);
+
+
+    const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
+    const canGenerate = !isProjectReadOnly && source && context.trim() !== "";
 
     return (
         <div className="flex flex-col gap-3">
-            <InstructionsInput
-                value={context}
-                onChange={setContext}
-                actionIcon={Search}
-                onAction={() => {
-                    /* wire up the moment search here */
-                }}
-            />
+            <Field label="Context">
+                <InstructionsInput
+                    value={context}
+                    onChange={setContext}
+                    actionIcon={Sparkles}
+                    onAction={() => {
+                        /* wire up generation here */
+                    }}
+                />
+            </Field>
 
-            <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Write a title for this moment"
-                className="w-full border border-border rounded-lg px-3 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary"
+            <Field label="Title">
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder='Write a title for this segment'
+                    className="flex-1 outline-none border border-gray-200 w-full text-[12.5px] text-ink placeholder:text-ink-muted bg-gray-100 rounded-lg px-3 py-2"
+                />
+            </Field>
+            <GenerateButton
+                isPending={isPending}
+                disabled={!canGenerate}
+                onClick={() => { }}
             />
-
-            <GenerateButton disabled={!title.trim()} onClick={() => { /* wire up the moment search here */ }} />
         </div>
     );
 }
