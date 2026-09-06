@@ -11,6 +11,7 @@ import { convertSecondsToHumanText } from '../../utils';
 import CollapsibleSection from "../CollapsibleSection";
 import SourcesDropdown from "../SourcesDropdown";
 import VerbositySlider from '../VerbositySlider';
+import Field from '../Field';
 
 
 export default function Shorts() {
@@ -77,14 +78,6 @@ export default function Shorts() {
             <div className="pt-4 pb-3 border-b border-border shrink-0">
                 <div className="flex items-center justify-between gap-2">
                     <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate shorts</h2>
-
-                    {/* <button
-                        type="button"
-                        onClick={() => setActiveStudioPanel(MAIN_STUDIO_PANELS.SHORTS)}
-                        className="shrink-0 rounded-[10px] p-2.5 text-xs font-bold text-white bg-gradient-to-r from-primary-200 to-primary-300 hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
-                    >
-                        Saved Shorts
-                    </button> */}
                 </div>
                 <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging shorts in minutes.</p>
             </div>
@@ -147,15 +140,6 @@ export default function Shorts() {
                     </span>
                 </button>
             </div>
-        </div>
-    );
-}
-
-function Field({ label, children }) {
-    return (
-        <div className="pt-4 first:pt-4">
-            <label className="block text-[12.5px] font-semibold text-ink mb-1.5">{label}</label>
-            {children}
         </div>
     );
 }

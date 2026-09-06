@@ -11,6 +11,7 @@ import useAuth from '../../hooks/useAuth';
 import { useToast } from '../../contexts/toastContext';
 import LoadingSpinner from '../LoadingSpinner';
 import { MAIN_STUDIO_PANELS } from '../../globals';
+import Field from '../Field';
 
 const TABS = [
     { id: "time-segments", label: "Time segment description", icon: Sparkles, info: "Analyze a specific video time range and generate precise breakdown." },
@@ -435,14 +436,5 @@ function GenerateButton({ isPending, disabled, onClick }) {
             }
             Generate
         </button>
-    );
-}
-
-function Field({ label, children }) {
-    return (
-        <div>
-            <label className="block text-[12.5px] font-semibold text-ink mb-1.5">{label}</label>
-            {children}
-        </div>
     );
 }

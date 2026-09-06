@@ -7,6 +7,7 @@ import { METADATA_VERBOSITY_OPTIONS } from '../../globals';
 import CollapsibleSection from "../CollapsibleSection";
 import MetadataVerbosity from '../MetadataVerbosity';
 import SourcesDropdown from "../SourcesDropdown";
+import Field from '../Field';
 
 export default function ContextualMetadata({
     className = "",
@@ -157,15 +158,6 @@ export default function ContextualMetadata({
                     </span>
                 </button>
             </div>
-        </div>
-    );
-}
-
-function Field({ label, children }) {
-    return (
-        <div className="pt-4 first:pt-4">
-            <label className="block text-[12.5px] font-semibold text-ink mb-1.5">{label}</label>
-            {children}
         </div>
     );
 }
