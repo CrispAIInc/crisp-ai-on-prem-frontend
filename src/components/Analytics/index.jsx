@@ -39,7 +39,7 @@ export default function Analytics() {
                 <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={sourceIds} onSelectedSourceIdsChange={setSourceIds} />
             </Field>
 
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
                 {TABS.map((tab, i) => {
                     const Icon = tab.icon;
                     const active = activeTab === tab.id;
@@ -55,12 +55,33 @@ export default function Analytics() {
                             >
                                 <Icon size={14} />
                                 {tab.label}
-                                {/* {tab.info && <Info size={13} className="text-ink-muted" />} */}
+                                {tab.info && <Info size={13} className="text-ink-muted" />}
                             </button>
                         </div>
                     );
                 })}
-            </div>
+            </div> */}
+
+            {/* Sub-navigation */}
+            <nav className="pt-3.5 flex items-center gap-6">
+                {TABS.map(({ id, label, icon: Icon }) => {
+                    const active = activeTab === id;
+
+                    return (
+                        <button
+                            key={id}
+                            type="button"
+                            aria-current={active ? "page" : undefined}
+                            className={`flex items-center gap-2 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300 !border-b-primary-300" : "text-ink"
+                                } pb-3 border-b -mb-px transition-colors`}
+                            onClick={() => setActiveTab(id)}
+                        >
+                            <Icon size={14} strokeWidth={2} />
+                            {label}
+                        </button>
+                    );
+                })}
+            </nav>
 
             {activeTab === TABS[0].id ? (
                 <TimeSegmentPane
