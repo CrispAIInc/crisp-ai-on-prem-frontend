@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import { Film, Clock, Layers, PlayCircle, Pencil, Trash } from "lucide-react";
+import MomentTitleUpdaterModal from "../MomentTitleUpdaterModal";
 import {
     AlignmentType,
     BorderStyle,
@@ -190,11 +191,11 @@ function MomentListItem() {
                 ))
             }
 
-            {/* {
+            {
                 isModalOpen && (
-                    <MomentTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} moment={selectedMoment} setMomentDescriptions={setMoments} />
+                    <MomentTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} moment={selectedMoment} setMoments={setMoments} />
                 )
-            } */}
+            }
         </div>
     );
 }
