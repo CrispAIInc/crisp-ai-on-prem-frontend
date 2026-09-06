@@ -35,24 +35,6 @@ function formatTimestamp(value) {
     return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}` : `${m}:${s}`;
 }
 
-/**
- * Metadata — tabbed Search / Transcription / Summary panel for the current
- * source. Built one tab at a time: Search is implemented now, the other
- * two tabs are wired up as placeholders until they're built out.
- *
- * Fills 100% of its parent's height (parent needs a bounded height, e.g.
- * flex + min-h-0) — the tab bar stays put, only each pane's own content
- * scrolls.
- *
- * Search props:
- *  - query, onQueryChange: controlled search text (optional)
- *  - language: current transcript language label shown top-right
- *  - results: [{ id, title, content, start_time, end_time }] — matches the
- *    transcription/chapter shape (search hits pulled from the transcript)
- *  - onSearch(query): fired when Search is clicked / Enter is pressed
- *  - onResultClick(result): fired when a result row is clicked (e.g. to
- *    seek the player to that timestamp)
- */
 export default function Metadata({
     query,
     onQueryChange,
@@ -347,9 +329,9 @@ function TranscriptionPane({ transcriptionObj }) {
                                     <div>
                                         <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                                             setCurrentResource(prev => ({ ...prev, timestamp: topic.start_time }));
-                                            workspaceContainer?.current.scrollTo({
-                                                top: 0,
-                                                behavior: "smooth", // Enables smooth scrolling
+                                            workspaceContainer?.current?.scrollIntoView({
+                                                behavior: "smooth",
+                                                block: "start",
                                             });
                                         }}>
                                             <h6 className='mb-0 text-xs font-semibold text-primary-300 '>{topic.start_time} - {topic.end_time}</h6>
