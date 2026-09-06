@@ -144,11 +144,11 @@ function SegmentListItem() {
     }
 
     return (
-        <div className={`flex flex-col gap-1 bg-white rounded-md p-2 cursor-pointer hover:bg-gray-100`}>
+        <div className={`flex flex-col gap-1 bg-gray-200/20 rounded-md p-2 cursor-pointer hover:bg-gray-100`}>
             {
                 sortByDate(segmentDescriptions, "created_at", "desc").map(segment => (
                     <div key={segment.id}
-                        className={`flex items-center ${segment?.id === currentSegment?.id ? '!border !border-primary-300' : '!border !border-transparent'} gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
+                        className={`flex items-center ${segment?.id === currentSegment?.id ? ' bg-gray-200' : '!border !border-transparent'} gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
                         onClick={() => handleSelectResult(segment)}
                         onMouseEnter={() => handleMouseEnterSegment(segment.id)}
                         onMouseLeave={handleMouseLeaveSegment}
@@ -179,7 +179,7 @@ function SegmentListItem() {
                         }
 
                         <div className="overflow-x-hidden">
-                            <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema?.talking_head?.length > 0 ? `${segment.response_format.schema?.talking_head?.length} ${segment.response_format.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs !font-bold !italic" />
+                            <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema?.talking_head?.length > 0 ? `${segment.response_format.schema?.talking_head?.length} ${segment.response_format.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs !font-bold !italic !text-primary-300" />
 
                             <p className={`text-textColor-300 cursor-pointer w-full truncate`} key={segment.id}>{segment?.title}</p>
                         </div>
