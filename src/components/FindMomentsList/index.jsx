@@ -158,11 +158,11 @@ function MomentListItem() {
     }
 
     return (
-        <div className={`flex flex-col gap-1 bg-white rounded-md p-2 cursor-pointer hover:bg-gray-100`}>
+        <div className={`flex flex-col gap-1 bg-gray-200/20 rounded-md p-2 cursor-pointer hover:bg-gray-100`}>
             {
                 sortByDate(moments, "created_at", "desc").map(moment => (
                     <div key={moment.id}
-                        className={`flex items-center ${moment?.id === currentMoment?.id ? '!border !border-primary-300' : '!border !border-transparent'} gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
+                        className={`flex items-center ${moment?.id === currentMoment?.id ? 'bg-gray-200' : '!border !border-transparent'} gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
                         onClick={() => handleSelectResult(moment)}
                         onMouseEnter={() => handleMouseEnterMoment(moment.id)}
                         onMouseLeave={handleMouseLeaveMoment}
@@ -195,11 +195,11 @@ function MomentListItem() {
                         <div className="overflow-x-hidden">
                             {/* creation date */}
                             <div className="flex items-center gap-1">
-                                <Clock size={13} />
-                                <BaseHeading text={`${formatReadableDate(moment.created_at)}`} className="text-xs !font-bold !italic" />
+                                <Clock size={13} className="text-primary-300" />
+                                <BaseHeading text={`${formatReadableDate(moment.created_at)}`} className="text-xs !font-bold !italic !text-primary-300" />
                             </div>
 
-                            <p className={`text-textColor-300 cursor-pointer w-full truncate`} key={moment.id}>{moment?.title}</p>
+                            <label className="block cursor-pointer text-[12.5px] font-semibold text-ink" key={moment.id}>{moment?.title}</label>
                         </div>
                     </div>
                 ))

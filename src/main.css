@@ -4,7 +4,7 @@
 
 @layer utilities {
   .text-gradient-x {
-    background-image: linear-gradient(to right, #755bea, #b76894);
+    background-image: linear-gradient(to right, #A694F3, #755BEA);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
