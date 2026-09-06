@@ -5,6 +5,7 @@ import EmptyWorkspace from '../EmptyWorkspace';
 import ShortsList from "../ShortsList";
 import { MAIN_STUDIO_PANELS } from '../../globals';
 import TimeSegmentList from '../TimeSegmentList';
+import FindMomentsList from '../FindMomentsList';
 
 function MainStudio({ panelWidth }) {
     const {
@@ -18,6 +19,7 @@ function MainStudio({ panelWidth }) {
         [MAIN_STUDIO_PANELS.SHORTS]: false,
         [MAIN_STUDIO_PANELS.METADATA]: true,
         [MAIN_STUDIO_PANELS.TIME_SEGMENTS]: false,
+        [MAIN_STUDIO_PANELS.FIND_MOMENTS]: false,
     };
 
     function renderStudioPanel() {
@@ -40,6 +42,9 @@ function MainStudio({ panelWidth }) {
 
             case MAIN_STUDIO_PANELS.TIME_SEGMENTS:
                 return <TimeSegmentList />;
+
+            case MAIN_STUDIO_PANELS.FIND_MOMENTS:
+                return <FindMomentsList />;
 
             default:
                 return <EmptyWorkspace />;

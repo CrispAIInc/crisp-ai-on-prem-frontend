@@ -1492,10 +1492,64 @@ export default function MainProvider({ children, theme, setTheme }) {
         fetchTimeSegments();
     }, []);
 
+
+    // MOMENTS
+    const [currentMoment, setCurrentMoment] = useState(null);
+    const [moments, setMoments] = useState([]);
+
+    useEffect(() => {
+
+        async function fetchFindMoments() {
+            try {
+                axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+                const { data, success } = await makeApiRequest("/moments", 'GET', null, {
+                    ProjectId: currentProject.project_id,
+                });
+                if (success) {
+                    // setMoments(data);
+                    setMoments([
+                        {
+                            created_at: "Sun, 06 Sep 2026 03:24:50 GMT",
+                            id: "1IquAuWLxyFBiEPRoX1F",
+                            prompt: "Bill gates",
+                            results: [
+                                {
+                                    context: "you start relaxing. Were you still nervous when you became a billionaire? Like, I gotta watch this? Well, I always wanted to have enough money in the bank so that even if our customers didn't pay us for a year, we could still keep paying everybody and do the R&D. So I still be viewed as conservative. I don't have that many things that are extravagant.",
+                                    source_id: "WptZseM4s6FrcPVvT57n",
+                                    timestamp: "00:00:32",
+                                    video: "bill gates.mp4"
+                                },
+                                {
+                                    context: "At the White House, we both were receiving the Medal of Freedom, and that was quite a day, wasn't it? That was an amazing group. Yeah, really fun. So you are here with your daughter who is 21, right? And you were 21 when you became a billionaire. Is that right? Almost, yep. Alright. So I was thinking of a deal. My thing was that I just love doing software, I love hiring people, and I was stunned when it ended up being so valuable. You. Really? Thank you. Yeah. That surprised you? because I always had to be careful that",
+                                    source_id: "WptZseM4s6FrcPVvT57n",
+                                    timestamp: "00:00:00",
+                                    video: "bill gates.mp4"
+                                },
+                                {
+                                    context: "A wide shot of the stage featuring Bill Gates and Ellen DeGeneres seated on white armchairs. Behind them, a large screen displays an image of Bill Gates receiving an award medal from another man. The stage has blue lighting accents and white orchid arrangements on either side. The 'ellentube' watermark is visible in the bottom left corner.",
+                                    source_id: "WptZseM4s6FrcPVvT57n",
+                                    timestamp: "00:00:09",
+                                    video: "bill gates.mp4"
+                                }
+                            ],
+                            title: "Bill gates"
+                        }
+                    ]);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchFindMoments();
+    }, []);
+
     // create value object with all the states
     const value = {
         currentSegment, setCurrentSegment,
         segmentDescriptions, setSegmentDescriptions,
+        currentMoment, setCurrentMoment,
+        moments, setMoments,
         selectedReel, setSelectedReel,
         activeStudioPanel,
         setActiveStudioPanel,

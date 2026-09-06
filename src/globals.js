@@ -5,4 +5,5 @@ export const MAIN_STUDIO_PANELS = {
     METADATA: "metadata",
     SHORTS: "shorts",
     TIME_SEGMENTS: "time-segments",
+    FIND_MOMENTS: "find-moments"
 };

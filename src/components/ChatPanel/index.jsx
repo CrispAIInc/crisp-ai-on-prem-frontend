@@ -369,7 +369,7 @@ const ChatPanel = () => {
     async function fetchFindMoments() {
       try {
         axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-        const { data, success } = await makeApiRequest("moments", 'GET', null, {
+        const { data, success } = await makeApiRequest("/moments", 'GET', null, {
           ProjectId: currentProject.project_id,
         });
         if (success) {
@@ -398,14 +398,6 @@ const ChatPanel = () => {
   async function handleCaptionSubmit() {
     try {
       setIsPending(true);
-      // if (!momentTitle) {
-      //   notify({
-      //     variant: "error",
-      //     heading: "Moment title is required"
-      //   });
-      //   setIsPending(false);
-      //   return;
-      // }
       if (!displayedSources?.every(item => item?.is_checked === false)) {
         await makeApiRequest(
           `/handle-embeddings`,

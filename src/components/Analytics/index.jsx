@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Sparkles, Info, Clock, Search, Check } from "lucide-react";
 import SourcesDropdown from "../SourcesDropdown";
 import { MainContext } from '../../contexts/mainContext';
@@ -13,20 +13,25 @@ import LoadingSpinner from '../LoadingSpinner';
 import { MAIN_STUDIO_PANELS } from '../../globals';
 
 const TABS = [
-    { id: "segment", label: "Time segment description", icon: Sparkles, info: "Analyze a specific video time range and generate precise breakdown." },
-    { id: "moments", label: "Find moments", icon: Clock },
+    { id: "time-segments", label: "Time segment description", icon: Sparkles, info: "Analyze a specific video time range and generate precise breakdown." },
+    { id: "find-moments", label: "Find moments", icon: Clock },
 ];
 
 export default function Analytics() {
 
     const {
-        knowledgeBase
+        knowledgeBase,
+        setActiveStudioPanel
     } = useContext(MainContext);
 
-    const [activeTab, setActiveTab] = useState("segment");
+    const [activeTab, setActiveTab] = useState(TABS[0].id);
     const [sourceIds, setSourceIds] = useState([]);
 
     const videoAssets = knowledgeBase.filter(item => item.file_type === "video");
+
+    useEffect(() => {
+        setActiveStudioPanel(activeTab);
+    }, [activeTab]);
 
     return (
         <div className="h-full min-h-0 overflow-y-auto px-[18px] bg-white py-4 flex flex-col gap-4">
@@ -57,7 +62,7 @@ export default function Analytics() {
                 })}
             </div>
 
-            {activeTab === "segment" ? (
+            {activeTab === TABS[0].id ? (
                 <TimeSegmentPane
                     sourceIds={sourceIds}
                 />
@@ -257,8 +262,11 @@ function FindMomentsPane({
     } = useContext(ProjectContext);
 
     const {
-        knowledgeBase
+        knowledgeBase,
+        setCurrentMoment
     } = useContext(MainContext);
+
+    const { notify } = useToast();
 
 
     const [context, setContext] = useState("");
@@ -269,6 +277,86 @@ function FindMomentsPane({
     const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
     const canGenerate = !isProjectReadOnly && source && context.trim() !== "";
 
+
+    async function handleCaptioning(context, title) {
+        let response = await makeApiRequest('/moments', 'POST', JSON.stringify({
+            prompt: context,
+            title: title,
+            sources: [source.source_id],
+            fromCrispWiz: false
+        }));
+
+        return response;
+    }
+
+    async function generateMoment() {
+        try {
+            setIsPending(true);
+            if (sourceIds.length > 0) {
+                await makeApiRequest(
+                    `/handle-embeddings`,
+                    "post",
+                    JSON.stringify({
+                        sources: [{
+                            source_id: source?.source_id,
+                            index_id: source?.index_id
+                        }],
+                    })
+                );
+            }
+            let { results, success, message, ...rest } = await handleCaptioning(context, title);
+
+            if (success) {
+                if (results.length > 0) {
+                    const finalResults = results.map((segment) => {
+                        const source = knowledgeBase.find(item => item.source_id === segment.source_id);
+
+                        if (!source) return null;
+
+                        return {
+                            ...segment,
+                            timestampText: `${source.source_path} | ${segment.timestamp}`,
+                            source: {
+                                ...source,
+                                timestamp: segment.timestamp
+                            }
+                        };
+                    }).filter(Boolean);
+                    const moment = {
+                        ...rest,
+                        title: title,
+                        results: finalResults
+                    };
+
+                    console.log(moment);
+
+                    setCurrentMoment(moment);
+
+                    setContext("");
+                    setTitle("");
+                } else {
+                    notify({
+                        variant: "info",
+                        heading: "No moments found with the prompt you provided",
+                        subheading: "Try providing another prompt for better results"
+                    });
+                }
+            }
+            else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            notify({
+                variant: "error",
+                heading: "Couldn't generate moment",
+                subheading: error?.message || ""
+            });
+            console.log(error);
+        } finally {
+            setIsPending(false);
+        }
+    }
+
     return (
         <div className="flex flex-col gap-3">
             <Field label="Context">
@@ -276,9 +364,6 @@ function FindMomentsPane({
                     value={context}
                     onChange={setContext}
                     actionIcon={Sparkles}
-                    onAction={() => {
-                        /* wire up generation here */
-                    }}
                 />
             </Field>
 
@@ -294,7 +379,7 @@ function FindMomentsPane({
             <GenerateButton
                 isPending={isPending}
                 disabled={!canGenerate}
-                onClick={() => { }}
+                onClick={generateMoment}
             />
         </div>
     );
@@ -317,31 +402,6 @@ function InstructionsInput({ value, onChange, actionIcon: ActionIcon, onAction }
             >
                 <ActionIcon size={14} />
             </button> */}
-        </div>
-    );
-}
-
-function TimeParts({ value, onChange }) {
-    const handlePart = (part, raw) => {
-        const num = Math.max(0, Math.min(59, Number(raw.replace(/\D/g, "")) || 0));
-        onChange({ ...value, [part]: String(num).padStart(2, "0") });
-    };
-
-    return (
-        <div className="flex items-center gap-1 shrink-0">
-            {["h", "m", "s"].map((part, i) => (
-                <span key={part} className="flex items-center gap-1">
-                    {i > 0 && <span className="text-ink-muted text-[11.5px]">:</span>}
-                    <input
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={2}
-                        value={value[part]}
-                        onChange={(e) => handlePart(part, e.target.value)}
-                        className="w-8 text-center bg-surface border border-border rounded-md px-1 py-1 text-[12px] text-ink outline-none focus:border-primary"
-                    />
-                </span>
-            ))}
         </div>
     );
 }
