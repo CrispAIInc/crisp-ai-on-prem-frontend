@@ -57,9 +57,9 @@ function TimelineHorizontal({ theme, chapters, workspaceContainer }) {
                                     chapter.timestamp ? <h5 className="mb-0 text-[9px] cursor-pointer text-primary-300 w-fit" onClick={() => {
 
                                         setCurrentResource(prev => ({ ...prev, timestamp: chapter.timestamp[0] }));
-                                        workspaceContainer.current.scrollTo({
-                                            top: 0,
-                                            behavior: "smooth", // Enables smooth scrolling
+                                        workspaceContainer?.current?.scrollIntoView({
+                                            behavior: "smooth",
+                                            block: "start",
                                         });
                                     }}>
                                         <AccessTimeIcon size="small" /> {chapter.timestamp[0]} -{' '}

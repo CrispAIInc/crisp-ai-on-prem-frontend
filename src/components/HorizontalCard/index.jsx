@@ -29,9 +29,9 @@ function HorizontalCard({ item, workspaceContainer }) {
                     item.timestamp ? <div className='flex items-center gap-1 mb-0 cursor-pointer select-none text-primary-300 w-fit' onClick={() => {
 
                         setCurrentResource(prev => ({ ...prev, timestamp: item.timestamp[0] }));
-                        workspaceContainer.current.scrollTo({
-                            top: 0,
+                        workspaceContainer?.current?.scrollIntoView({
                             behavior: "smooth",
+                            block: "start",
                         });
                     }}>
                         <AccessTimeIcon style={{ fontSize: "15px", fontWeight: "semibold" }} />
