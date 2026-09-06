@@ -6,7 +6,7 @@ import {
     LineChart,
     BookOpen,
     FolderOpen,
-    PieChart,
+    Braces,
 } from "lucide-react";
 
 /**
@@ -18,6 +18,7 @@ import ContextualMetadata from "../components/ContextualMetadata";
 import Shorts from "../components/Shorts";
 import Interaction from "../components/Interaction";
 import Analytics from "../components/Analytics";
+import BusinessIntelligence from "../components/BusinessIntelligence";
 
 
 export const NAV_ITEMS = [
@@ -28,5 +29,5 @@ export const NAV_ITEMS = [
     { key: "shorts", label: "Shorts", icon: Film, component: Shorts, tab: "shorts" },
     { key: "analytics", label: "Analytics", icon: LineChart, component: Analytics, tab: "time-segments" },
     { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen },
-    { key: "business_intelligence", label: "Business Intelligence", icon: PieChart },
+    { key: "business_intelligence", label: "Business Intelligence", icon: Braces, component: BusinessIntelligence },
 ];
