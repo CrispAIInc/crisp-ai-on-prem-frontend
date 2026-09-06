@@ -21,7 +21,11 @@ export default function Analytics() {
 
     const {
         knowledgeBase,
-        setActiveStudioPanel
+        setActiveStudioPanel,
+        setCurrentSegment,
+        segmentDescriptions,
+        setCurrentMoment,
+        moments
     } = useContext(MainContext);
 
     const [activeTab, setActiveTab] = useState(TABS[0].id);
@@ -31,6 +35,11 @@ export default function Analytics() {
 
     useEffect(() => {
         setActiveStudioPanel(activeTab);
+
+        switch (activeTab) {
+            case "time-segments":
+                setCurrentSegment(segmentDescriptions[0]);
+        }
     }, [activeTab]);
 
     return (
@@ -38,29 +47,6 @@ export default function Analytics() {
             <Field label="Sources">
                 <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={sourceIds} onSelectedSourceIdsChange={setSourceIds} />
             </Field>
-
-            {/* <div className="flex items-center gap-4">
-                {TABS.map((tab, i) => {
-                    const Icon = tab.icon;
-                    const active = activeTab === tab.id;
-                    return (
-                        <div key={tab.id} className="flex items-center gap-4">
-                            {i > 0 && <span className="w-px h-4 bg-border" />}
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab(tab.id)}
-                                aria-current={active ? "page" : undefined}
-                                className={`flex items-center gap-1.5 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300" : "text-ink"
-                                    }`}
-                            >
-                                <Icon size={14} />
-                                {tab.label}
-                                {tab.info && <Info size={13} className="text-ink-muted" />}
-                            </button>
-                        </div>
-                    );
-                })}
-            </div> */}
 
             {/* Sub-navigation */}
             <nav className="pt-3.5 flex items-center gap-6">

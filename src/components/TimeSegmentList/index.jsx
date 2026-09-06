@@ -146,7 +146,7 @@ function SegmentListItem() {
     return (
         <div className={`flex flex-col gap-1 bg-gray-200/20 rounded-md p-2 cursor-pointer hover:bg-gray-100`}>
             {
-                sortByDate(segmentDescriptions, "created_at", "desc").map(segment => (
+                segmentDescriptions.map(segment => (
                     <div key={segment.id}
                         className={`flex items-center ${segment?.id === currentSegment?.id ? ' bg-gray-200' : '!border !border-transparent'} gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
                         onClick={() => handleSelectResult(segment)}
