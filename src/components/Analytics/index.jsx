@@ -39,6 +39,11 @@ export default function Analytics() {
         switch (activeTab) {
             case "time-segments":
                 setCurrentSegment(segmentDescriptions[0]);
+                break;
+
+            case "find-moments":
+                setCurrentMoment(moments[0]);
+                break;
         }
     }, [activeTab]);
 

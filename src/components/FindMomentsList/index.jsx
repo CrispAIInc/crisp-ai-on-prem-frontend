@@ -105,30 +105,24 @@ function MomentListItem() {
     };
 
     function handleSelectResult(moment) {
-        const finalResults = moment.results.map((moment) => {
-            const source = knowledgeBase.find(item => item.source_id === moment.source_id);
+        // const finalResults = moment.results.map((moment) => {
+        //     const source = knowledgeBase.find(item => item.source_id === moment.source_id);
 
-            if (!source) return null;
+        //     if (!source) return null;
 
-            return {
-                ...moment,
-                timestampText: `${source.source_path} | ${moment.timestamp}`,
-                source: {
-                    ...source,
-                    timestamp: moment.timestamp
-                }
-            };
-        }).filter(Boolean);
+        //     return {
+        //         ...moment,
+        //         timestampText: `${source.source_path} | ${moment.timestamp}`,
+        //         source: {
+        //             ...source,
+        //             timestamp: moment.timestamp
+        //         }
+        //     };
+        // }).filter(Boolean);
 
-        console.log({
-            ...moment,
-            results: finalResults
-        });
+        console.log(moment);
 
-        setCurrentMoment({
-            ...moment,
-            results: finalResults
-        });
+        setCurrentMoment(moment);
     }
 
     async function deleteMoment(momentId) {
