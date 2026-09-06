@@ -1506,7 +1506,31 @@ export default function MainProvider({ children, theme, setTheme }) {
                     ProjectId: currentProject.project_id,
                 });
                 if (success) {
-                    // setMoments(data);
+
+                    let formattedData = data.map((d) => {
+                        const finalResults = d.results.map((moment) => {
+                            const source = knowledgeBase.find(item => item.source_id === moment.source_id);
+
+                            if (!source) return null;
+
+                            return {
+                                ...moment,
+                                timestampText: `${source.source_path} | ${moment.timestamp}`,
+                                source: {
+                                    ...source,
+                                    timestamp: moment.timestamp
+                                }
+                            };
+                        }).filter(Boolean);
+
+                        return {
+                            ...d,
+                            results: finalResults
+                        };
+                    });
+
+                    setMoments(formattedData);
+
                     setMoments([
                         {
                             created_at: "Sun, 06 Sep 2026 03:24:50 GMT",
