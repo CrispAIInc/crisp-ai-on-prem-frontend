@@ -13,7 +13,7 @@ const ProjectsHeader = () => {
   return (
     <div className="flex items-center justify-between py-4 mb-6 border-b border-gray-200 bg-white/70 backdrop-blur-xl">
       <div>
-        <img src={AppLogo} className="w-40 h-auto" alt="Crisp AI logo" />
+        <img src="/new-crips-ai-logo-black-resize.png" className="w-40 h-auto" alt="Crisp AI logo" />
       </div>
       <UserMenu
         firstName={user.firstName}

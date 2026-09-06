@@ -8,8 +8,7 @@ function AuthLayout({ children }) {
             {/* left showcase => gradient wave design*/}
             <div className='relative hidden xl:block p-[4px] w-1/2 max-w-1/2 3xl:w-1/3 4xl:w-1/4 h-screen max-h-screen'>
                 <div className='select-none flex items-center text-white absolute top-[5%] left-[5%] z-10'>
-                    <img src='/imgs/app-logo-white.png' alt='logo' className='w-16 h-16 ' />
-                    <p className='text-3xl'>CrispAI</p>
+                    <img src='/new-crips-ai-logo-white-resize.png' alt='logo' className='w-52 h-auto' />
                 </div>
                 <img src='/imgs/wave-1.jpg' alt='wave' className='object-cover w-full h-full rounded-3xl' />
                 <h2 className="select-none absolute bg-black/50 w-fit right-[5%] text-opacity-50 z-10 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent font-bold bottom-[5%] py-3 px-5 rounded-3xl backdrop-blur-[5px]">The X factor in Rich Media <br /> understanding</h2>

@@ -83,7 +83,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                 style={{
                     backgroundImage: project.thumbnail
                         ? `url('${projectThumbnail}')`
-                        : 'url("/new-crisp-logo-resized.png")',
+                        : 'url("/new-crips-ai-logo.png")',
                     backgroundSize: project.thumbnail ? 'cover' : '185px auto',
                 }}
                 className={`bg-no-repeat bg-center relative rounded-2xl p-3 min-w-80 h-48 cursor-pointer ${project?.is_shared && 'animate-glow-multiple'
