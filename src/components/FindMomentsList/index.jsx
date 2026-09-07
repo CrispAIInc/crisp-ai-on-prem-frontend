@@ -15,6 +15,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import MomentTitleUpdaterModal from "../MomentTitleUpdaterModal";
 import RippleButton from '../RippleButton';
 import ScoreChip from '../ScoreChip';
+import Modal from 'react-bootstrap/Modal';
 
 function FindMomentsList() {
 
@@ -301,7 +302,7 @@ function MomentDetails() {
                 </div>
             </div>
 
-            {/* <Modal
+            <Modal
                 show={showSaveTitleModal}
                 onHide={() => setShowSaveTitleModal(false)}
                 size="md"
@@ -367,7 +368,7 @@ function MomentDetails() {
                         </span>
                     </button>
                 </Modal.Footer>
-            </Modal> */}
+            </Modal>
 
             <div>
                 <BaseHeading text="Result" className="text-sm text-gradient-x mt-3 mb-1" />
