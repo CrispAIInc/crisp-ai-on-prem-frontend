@@ -12,18 +12,32 @@ import BaseHeading from '../BaseHeading';
 import TimestampPicker from '../TimestampPicker';
 import PageNumbersPicker from '../PageNumbersPicker';
 import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals';
+import useMetadata from '../../hooks/useMetadata';
+import { formatTime } from '../../utils';
+import makeApiRequest from '../../api';
+
+
+const STEPS = [
+    "Generating metadata...",
+    "Generating business intelligence...",
+    "Generating graph content...",
+    "Almost there..."
+];
 
 function BusinessIntelligence() {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
-        knowledgeBase
+        knowledgeBase,
+        setSelectedJsonEntity
     } = useContext(MainContext);
 
     const {
         notify
     } = useToast();
+
+    const { generateMetadata } = useMetadata();
 
     const [sourceIds, setSourceIds] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
@@ -31,7 +45,7 @@ function BusinessIntelligence() {
     const [title, setTitle] = useState("");
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
     const [formatted, setFormatted] = useState("");
-    const [input, setInput] = useState("");
+    const [jsonInput, setJsonInput] = useState("");
     const fileInputRef = useRef(null);
     const [error, setError] = useState("");
     const [fullLength, setFullLength] = useState(false);
@@ -42,10 +56,12 @@ function BusinessIntelligence() {
     const selectedSources = sources.filter(item => sourceIds.includes(item.source_id));
     const [from, setFrom] = useState("1");
     const [to, setTo] = useState(selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
+    const [step, setStep] = useState(""); // This state displays the current process description during the generation phase.
 
 
     const selectedSourceType = selectedSources[0]?.file_type;
     const canGenerate = !isProjectReadOnly && sourceIds.length > 0;
+    const sourceHasMetadata = Boolean(selectedSources[0]?.metadata?.summary?.content?.length > 0 && selectedSources[0]?.metadata?.highlights?.content?.length > 0 && selectedSources[0]?.metadata?.chapters?.content?.length > 0);
 
 
     const formatJSON = (json) => {
@@ -90,12 +106,12 @@ function BusinessIntelligence() {
 
             if (e.shiftKey) {
                 // Remove tab
-                const before = input.substring(0, start);
+                const before = jsonInput.substring(0, start);
                 if (before.endsWith("\t")) {
                     const newValue =
-                        input.substring(0, start - 1) +
-                        input.substring(end);
-                    setInput(newValue);
+                        jsonInput.substring(0, start - 1) +
+                        jsonInput.substring(end);
+                    setJsonInput(newValue);
 
                     setTimeout(() => {
                         e.target.selectionStart = e.target.selectionEnd = start - 1;
@@ -104,11 +120,11 @@ function BusinessIntelligence() {
             } else {
                 // Add tab
                 const newValue =
-                    input.substring(0, start) +
+                    jsonInput.substring(0, start) +
                     "\t" +
-                    input.substring(end);
+                    jsonInput.substring(end);
 
-                setInput(newValue);
+                setJsonInput(newValue);
 
                 setTimeout(() => {
                     e.target.selectionStart = e.target.selectionEnd = start + 1;
@@ -117,18 +133,43 @@ function BusinessIntelligence() {
         }
     };
 
-    function handleGenerateEntity() {
-        console.log({
-            selectedSources,
-            context,
-            input,
-            fullLength,
-            start,
-            end,
-            from,
-            to,
-            title
-        });
+    async function handleGenerateEntity(isContextRequired = true) {
+        try {
+            if (!canGenerate) return;
+
+            setIsGenerating(true);
+            setStep("");
+
+            if (!sourceHasMetadata) {
+                setStep(STEPS[0]);
+                await generateMetadata("", "medium", [{ id: "summary" }, { id: "highlights" }, { id: "chapters" }], [selectedSources[0]], { isGraph: true });
+            }
+
+            setStep(STEPS[1]);
+            const payload = {
+                sources: { file_type: selectedSources[0].file_type, source_id: selectedSources[0].source_id, index_id: selectedSources[0].index_id },
+                selectedOptions: ["graph"],
+                inputContext: context,
+                ontology: jsonInput,
+                title,
+                isFullSource: fullLength,
+                from: selectedSources[0].file_type === "video" ? formatTime(start) : Number(from),
+                to: selectedSources[0].file_type === "video" ? formatTime(end) : Number(to),
+            };
+            let response = await makeApiRequest('/graphs', 'POST', payload);
+
+            setStep(STEPS.at(-1));
+            setSelectedJsonEntity(response);
+            // setJsonEntities(prev => [...prev, response]);
+            // setShowGraphModal(true);
+            setContext("");
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsGenerating(false);
+            setStep("");
+        }
+
     }
 
 
@@ -180,7 +221,7 @@ function BusinessIntelligence() {
                         <input type="file" ref={fileInputRef} accept=".json" style={{ display: 'none' }} onChange={handleFileUpload} />
                     </div>
                     <textarea
-                        value={input}
+                        value={jsonInput}
                         onChange={handleChange}
                         placeholder="Paste or type business schema here (in JSON format)..."
                         className="w-full min-h-[78px] border border-border rounded-lg px-2.5 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary resize-y bg-gray-100"
@@ -188,7 +229,7 @@ function BusinessIntelligence() {
                     />
 
                     {/* Error */}
-                    {(error && input.trim().length > 0) && (
+                    {(error && jsonInput.trim().length > 0) && (
                         <BaseHeading className="!text-red-500 font-medium" text={error} />
                     )}
                 </div>
@@ -253,7 +294,7 @@ function BusinessIntelligence() {
                     <Sparkles size={14} className={`${isGenerating && "animate-customPulse"}`} />
                     <span className={`${isGenerating && "animate-customPulse"}`}>
                         {
-                            isGenerating ? "Generating" : "Generate"
+                            isGenerating ? `${step}` : "Generate"
                         }
                     </span>
                 </button>

@@ -294,7 +294,10 @@ function KnowledgeGraph({
                             fullWidth
                             cssClasses='flex items-center mt-2 gap-1 disabled:cursor-not-allowed p-2'
                             disabled={isGeneratingGraph || !canGenerate}>
-                            {isGeneratingGraph ? <><AutoAwesomeIcon color="white" className="animate-customPulse" /> <span className="animate-customPulse">{step}</span></> : 'Generate'}
+                            {isGeneratingGraph ? <>
+                                <AutoAwesomeIcon color="white" className="animate-customPulse" />
+                                <span className="animate-customPulse">{step}</span>
+                            </> : 'Generate'}
                         </RippleButton>
 
                         {/* tooltip */}
