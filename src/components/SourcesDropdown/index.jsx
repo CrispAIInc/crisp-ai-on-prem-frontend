@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useContext } from "react";
 import { ChevronDown, Film, Check } from "lucide-react";
 import GsFile from '../GsFile';
+import { MainContext } from '../../contexts/mainContext';
+import AnimatedText from '../AnimatedText';
 
 export default function SourcesDropdown({
     sources = [],
@@ -9,6 +11,11 @@ export default function SourcesDropdown({
     placeholder = "Select sources",
     isMultiple = true,
 }) {
+
+    const {
+        isKnowledgeBaseFetching
+    } = useContext(MainContext);
+
     const [internalSelected, setInternalSelected] = useState([]);
     const [open, setOpen] = useState(false);
     const [placement, setPlacement] = useState("bottom");
@@ -107,9 +114,16 @@ export default function SourcesDropdown({
                     style={{ maxHeight: menuMaxHeight }}
                     className={`absolute z-30 left-0 bg-white right-0 bg-surface border border-border rounded-xl shadow-md2 p-1.5 overflow-y-auto ${placement === "top" ? "bottom-[calc(100%+6px)]" : "top-[calc(100%+6px)]"}`}
                 >
-                    {sources.length === 0 && (
+                    {isKnowledgeBaseFetching && (
+                        <div className="flex justify-center">
+                            <AnimatedText text='Preparing your knowledge base...' cssClasses="font-semibold text-[12.5px] text-ink-muted text-center" />
+                        </div>
+                    )}
+
+                    {(!isKnowledgeBaseFetching && !sources.length) === 0 && (
                         <div className="px-2.5 py-3 text-[12.5px] text-ink-muted text-center">No sources available</div>
                     )}
+
                     {sources.map((s) => {
                         const checked = selectedSourceIds.includes(s.source_id);
                         return (
