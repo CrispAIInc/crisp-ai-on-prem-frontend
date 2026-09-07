@@ -16,6 +16,8 @@ import { ProjectContext } from '../../contexts/projectContext';
 import BaseHeading from '../BaseHeading';
 import { formatReadableDate } from '../../utils';
 import JsonEntityTitleUpdaterModal from '../JsonEntityTitleUpdaterModal';
+import makeApiRequest from '../../api';
+import { useToast } from '../../contexts/toastContext';
 
 function BusinessIntelligenceList() {
 
@@ -69,16 +71,46 @@ function BusinessIntelligenceListItem() {
 
     const {
         jsonEntities,
+        setJsonEntities,
         selectedJsonEntity,
         setSelectedJsonEntity
     } = useContext(MainContext);
+
+    const { notify } = useToast();
 
 
     const [isEntityDeleting, setIsEntityDeleting] = useState(false);
     const [hoveredEntity, setHoveredEntity] = useState(null);
     const [selectedEntity, setSelectedEntity] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [showJsonEntityModal, setShowJsonEntityModal] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+
+    const deleteEntity = async (jsonEntity) => {
+        setIsDeleting(true);
+        try {
+            const { success, message } = await makeApiRequest(`/graphs/${jsonEntity.graph_id}`, 'DELETE');
+            if (success) {
+                setJsonEntities(prev => prev.filter(g => g.graph_id !== jsonEntity.graph_id));
+                notify({
+                    variant: 'success',
+                    heading: 'Entity deleted',
+                });
+            }
+            else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            console.error("Error deleting entity:", error.message);
+            notify({
+                variant: 'error',
+                heading: 'Error deleting entity',
+                subheading: error.message || "An error occurred while deleting the entity. Please try again.",
+            });
+        } finally {
+            setIsDeleting(false);
+        }
+    };
 
 
     return (
@@ -112,7 +144,7 @@ function BusinessIntelligenceListItem() {
                                             {
                                                 label: isEntityDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
                                                 icon: isEntityDeleting ? <LoadingSpinner isSmall /> : <Trash size={13} />,
-                                                // onClick: () => deleteEntity(entity.graph_id),
+                                                onClick: () => deleteEntity(entity.graph_id),
                                             },
                                         ]}
                                     />)
