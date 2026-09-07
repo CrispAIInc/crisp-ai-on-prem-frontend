@@ -6,6 +6,7 @@ import {
     Braces,
     Pencil,
     Trash,
+    Check,
     Clock,
     Sparkles
 } from "lucide-react";
@@ -20,6 +21,7 @@ import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
 import JsonViewer from '../JsonViewer';
 import RippleButton from '../RippleButton';
+import Modal from 'react-bootstrap/Modal';
 
 function BusinessIntelligenceList() {
 
@@ -188,10 +190,19 @@ function BusinessIntelligenceListItem() {
 function BusinessIntelligenceDetails() {
 
     const {
-        selectedJsonEntity
+        selectedJsonEntity,
+        setSelectedJsonEntity,
+        setJsonEntities
     } = useContext(MainContext);
 
+    const { notify } = useToast();
+
+    const [showTitleModal, setShowTitleModal] = useState(false);
+    const [entityTitleValue, setEntityTitleValue] = useState(selectedJsonEntity?.title || '');
+    const [isEntitySaving, setIsEntitySaving] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
+
+
     const handleDownload = () => {
         setIsDownloading(true);
         try {
@@ -214,6 +225,53 @@ function BusinessIntelligenceDetails() {
         }
     };
 
+    const saveEntity = async (titleOverride = selectedJsonEntity?.title || '') => {
+        const nextTitle = (titleOverride || '').trim();
+
+        if (!nextTitle) {
+            notify({
+                variant: "error",
+                heading: "Title required",
+                subheading: "Please enter a title before saving the entity.",
+            });
+            return;
+        }
+
+        try {
+            setIsEntitySaving(true);
+
+            const updatedEntity = {
+                ...selectedJsonEntity,
+                title: nextTitle,
+            };
+
+            setSelectedJsonEntity(updatedEntity);
+
+            const { success, message, graph_id } = await makeApiRequest("/graphs/save", 'POST', updatedEntity.graph);
+            if (success) {
+                setJsonEntities(prev => [...prev, { ...updatedEntity, graph_id }]);
+                setSelectedJsonEntity({ ...updatedEntity, graph_id });
+                setShowTitleModal(false);
+                notify({
+                    variant: "success",
+                    heading: "Entity saved!",
+                    subheading: "Your entity has been saved successfully.",
+                });
+            } else {
+                throw new Error(message);
+            }
+        } catch (error) {
+            console.error("Failed to save entity:", error.message);
+            notify({
+                variant: "error",
+                heading: "Failed to save entity!",
+                subheading: error?.message || "An error occurred while saving the entity.",
+            });
+        } finally {
+            setIsEntitySaving(false);
+        }
+    };
+
     return (
         <div className="flex flex-col gap-2">
             <div id="contained-modal-title-vcenter" className="flex items-center justify-between w-full">
@@ -222,13 +280,88 @@ function BusinessIntelligenceDetails() {
                     <p>JSON Structure</p>
                 </div>
                 <div>
-                    <RippleButton cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                        disabled={isDownloading} onClick={handleDownload}>
-                        {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Export JSON'}
-                    </RippleButton>
+                    {
+                        (selectedJsonEntity?.graph_id === null || selectedJsonEntity?.graph_id === undefined) ? (
+                            <RippleButton cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                                disabled={isEntitySaving} onClick={handleDownload}>
+                                <Check size={20} />
+                                {
+                                    isEntitySaving ? <span className="animate-customPulse">Saving...</span> : "Save entity"
+                                }
+                            </RippleButton>
+                        ) : (
+                            <RippleButton cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                                disabled={isDownloading} onClick={handleDownload}>
+                                {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Export JSON'}
+                            </RippleButton>
+                        )
+                    }
                 </div>
             </div>
             <JsonViewer />
+
+            {/* saving modal */}
+            <Modal
+                show={showTitleModal}
+                onHide={() => setShowTitleModal(false)}
+                size="md"
+                centered
+                dialogClassName='text-left'
+            >
+                <Modal.Header>
+                    <div className="flex flex-col gap-1">
+                        <Modal.Title className={`text-lg font-semibold text-gray-900`}>
+                            Save entity
+                        </Modal.Title>
+                        <p className={`text-sm m-0 text-gray-500`}>
+                            Choose a title before saving this JSON entity.
+                        </p>
+                    </div>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <div className="flex flex-col w-full">
+                        <label htmlFor="entityTitle" className={`block text-sm font-medium text-gray-700`}>
+                            Entity title
+                        </label>
+                        <input
+                            type="text"
+                            id="entityTitle"
+                            name="entityTitle"
+                            value={entityTitleValue}
+                            onChange={(e) => setEntityTitleValue(e.target.value)}
+                            placeholder="Enter a title for this entity"
+                            className={`flex-1 block w-full p-2 mt-1 rounded-xl outline-none transition border border-gray-300 bg-white text-gray-900`}
+                            onKeyDown={(e) => e.key === 'Enter' && saveEntity(entityTitleValue)}
+                        />
+                    </div>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <button
+                        type="button"
+                        className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 w-fit transition hover:bg-light-hover-100`}
+                        onClick={() => setShowTitleModal(false)}
+                    >
+                        <span className={`select-none font-medium text-textColor-100`}>
+                            Cancel
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 w-fit transition ${!entityTitleValue.trim()
+                            ? 'cursor-not-allowed text-gray-400'
+                            : 'hover:bg-purple-50 text-purple-600'}`}
+                        onClick={() => saveEntity(entityTitleValue)}
+                        disabled={!entityTitleValue.trim()}
+                    >
+                        <span className="select-none font-medium">
+                            Save entity
+                        </span>
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
