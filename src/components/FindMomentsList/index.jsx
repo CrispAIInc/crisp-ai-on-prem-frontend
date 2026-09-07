@@ -1,35 +1,19 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { MainContext } from '../../contexts/mainContext';
-import { Film, Clock, Layers, PlayCircle, Pencil, Trash } from "lucide-react";
-import MomentTitleUpdaterModal from "../MomentTitleUpdaterModal";
-import {
-    AlignmentType,
-    BorderStyle,
-    Document,
-    HeadingLevel,
-    ImageRun,
-    Packer,
-    Paragraph,
-    ShadingType,
-    TextRun
-} from "docx";
-import { saveAs } from "file-saver";
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import BaseHeading from '../BaseHeading';
-import TalkingHeadPanel from '../TalkingHeadPanel';
-import Chip from '../Chip';
-import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
-import RippleButton from '../RippleButton';
-import { formatReadableDate, sortByDate, urlToBase64 } from '../../utils';
-import SaveSegmentModal from '../SaveSegmentModal';
-import ActionMenu from '../ActionMenu';
-import AnimatedText from '../AnimatedText';
-import LoadingSpinner from '../LoadingSpinner';
+import { Clock, Info, Layers, Pencil, Trash } from "lucide-react";
+import { useContext, useEffect, useRef, useState } from 'react';
 import makeApiRequest from '../../api';
+import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import { ToastContext, useToast } from '../../contexts/toastContext';
-import TimeSegmentTitleUpdaterModal from '../TimeSegmentTitleUpdaterModal';
-import { Modal } from '@mui/material';
+import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
+import { formatReadableDate, sortByDate } from '../../utils';
+import ActionMenu from '../ActionMenu';
+import AnimatedText from '../AnimatedText';
+import BaseHeading from '../BaseHeading';
+import Chip from '../Chip';
+import EmptyState from '../EmptyState';
+import LoadingSpinner from '../LoadingSpinner';
+import MomentTitleUpdaterModal from "../MomentTitleUpdaterModal";
+import RippleButton from '../RippleButton';
 import ScoreChip from '../ScoreChip';
 
 function FindMomentsList() {
@@ -45,7 +29,11 @@ function FindMomentsList() {
             {/* Left column — list */}
             <div className="w-[280px] shrink-0 border-r border-border h-full min-h-0 overflow-y-auto p-3 flex flex-col gap-2">
                 {segmentDescriptions.length === 0 ? (
-                    <p className="text-center text-[12.5px] font-semibold text-ink-secondary py-8">No moments found</p>
+                    <EmptyState
+                        icon={<Info size={20} />}
+                        title="No moments found"
+                        description="Use left panel to start generating moments."
+                    />
                 ) : (
                     <MomentListItem />
                 )}
