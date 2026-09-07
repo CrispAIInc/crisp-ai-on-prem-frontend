@@ -60,7 +60,7 @@ function BusinessIntelligence() {
 
 
     const selectedSourceType = selectedSources[0]?.file_type;
-    const canGenerate = !isProjectReadOnly && sourceIds.length > 0;
+    const canGenerate = !isProjectReadOnly && sourceIds.length > 0 && context.trim().length > 0;
     const sourceHasMetadata = Boolean(selectedSources[0]?.metadata?.summary?.content?.length > 0 && selectedSources[0]?.metadata?.highlights?.content?.length > 0 && selectedSources[0]?.metadata?.chapters?.content?.length > 0);
 
 

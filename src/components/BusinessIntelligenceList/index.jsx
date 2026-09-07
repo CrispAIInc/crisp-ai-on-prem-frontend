@@ -224,7 +224,7 @@ function BusinessIntelligenceDetails() {
                 <div>
                     <RippleButton cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
                         disabled={isDownloading} onClick={handleDownload}>
-                        {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Download JSON'}
+                        {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Export JSON'}
                     </RippleButton>
                 </div>
             </div>

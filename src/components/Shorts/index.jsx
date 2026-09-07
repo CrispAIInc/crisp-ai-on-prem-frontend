@@ -92,7 +92,7 @@ export default function Shorts() {
                 </Field>
 
                 <Field label="Context">
-                    <p className="text-xs text-ink-secondary mb-0.5">When no context or topic is provided, the Short will be based on the existing highlights.</p>
+                    <p className="text-xs text-ink-secondary mt-1 mb-2">When no context or topic is provided, the Short will be based on the existing highlights.</p>
                     <textarea
                         value={context}
                         onChange={(e) => setContext(e.target.value)}
