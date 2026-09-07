@@ -34,7 +34,7 @@ export default function Shorts() {
     const [title, setTitle] = useState("");
     const [reelDuration, setReelDuration] = useState(30);
 
-    const canGenerate = sourceIds.length > 0;
+    const canGenerate = !isProjectReadOnly && sourceIds.length > 0;
 
     async function generateShort() {
         if (isProjectReadOnly) return;
