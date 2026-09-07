@@ -181,7 +181,7 @@ function SegmentListItem() {
                         <div className="overflow-x-hidden">
                             <BaseHeading text={`${segment.start}-${segment.end} • ${segment.response_format.schema?.talking_head?.length > 0 ? `${segment.response_format.schema?.talking_head?.length} ${segment.response_format.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : 'no people detected'}`} className="text-xs !font-bold !italic !text-primary-300" />
 
-                            <p className={`text-textColor-300 cursor-pointer w-full truncate`} key={segment.id}>{segment?.title}</p>
+                            <p className="block cursor-pointer text-[12.5px] font-semibold text-ink" key={segment.id}>{segment?.title}</p>
                         </div>
                     </div>
                 ))

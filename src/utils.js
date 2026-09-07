@@ -353,9 +353,9 @@ export function formatReadableDate(value) {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
+        // hour: 'numeric',
+        // minute: '2-digit',
+        // hour12: true
     };
 
     return date.toLocaleString('en-US', options).replace(',', ' –');
