@@ -16,7 +16,7 @@ export default function useMetadata() {
     const generateMetadata = useCallback(async (context, verbosityValue, selectedOptions, sources, ...restPayload) => {
         try {
             const payload = {
-                sources: sources.filter(item => item.is_checked).map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
+                sources: sources.map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
                 selectedOptions: selectedOptions.map(op => op.id),
                 inputContext: context,
                 verbosityValue: verbosityValue,
