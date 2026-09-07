@@ -49,7 +49,14 @@ export default function Analytics() {
     }, [activeTab]);
 
     return (
-        <div className="h-full min-h-0 overflow-y-auto px-[18px] bg-white py-4 flex flex-col gap-4">
+        <div className="h-full px-[14px] min-h-0 flex flex-col overflow-hidden bg-white">
+            <div className="pt-4 pb-3 border-b border-border shrink-0">
+                <div className="flex items-center justify-between gap-2">
+                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate analytics</h2>
+                </div>
+                <p className="text-xs text-ink-secondary mt-0.5">Analyze content to identify important information, events, and insights, linked directly to the timestamp or page where they appear.</p>
+            </div>
+
             <Field label="Sources">
                 <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={sourceIds} onSelectedSourceIdsChange={setSourceIds} />
             </Field>
