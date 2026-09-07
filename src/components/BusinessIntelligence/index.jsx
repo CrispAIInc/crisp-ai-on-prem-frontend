@@ -9,6 +9,9 @@ import {
     Info
 } from "lucide-react";
 import BaseHeading from '../BaseHeading';
+import TimestampPicker from '../TimestampPicker';
+import PageNumbersPicker from '../PageNumbersPicker';
+import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals';
 
 function BusinessIntelligence() {
 
@@ -32,9 +35,15 @@ function BusinessIntelligence() {
     const fileInputRef = useRef(null);
     const [error, setError] = useState("");
     const [fullLength, setFullLength] = useState(false);
+    const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
+    const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
+    const [from, setFrom] = useState({ h: "00", m: "00", s: "00" });
+    const [to, setTo] = useState({ h: "00", m: "00", s: "00" });
 
 
     const sources = knowledgeBase.filter(item => item.file_type === "video" || item.file_type === "pdf");
+    const selectedSources = sources.filter(item => sourceIds.includes(item.source_id));
+    const selectedSourceType = selectedSources[0]?.file_type;
     const canGenerate = !isProjectReadOnly && sourceIds.length > 0;
 
 
@@ -170,15 +179,45 @@ function BusinessIntelligence() {
                 </div>
 
                 {/* FULL ASSET LENGTH */}
-                <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer w-fit">
-                    <input
-                        type="checkbox"
-                        checked={fullLength}
-                        onChange={(e) => setFullLength(e.target.checked)}
-                        className="w-4 h-4 rounded accent-primary"
-                    />
-                    Include full asset length
-                </label>
+                {
+                    selectedSources.length > 0 && (
+                        <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer w-fit">
+                            <input
+                                type="checkbox"
+                                checked={fullLength}
+                                onChange={(e) => setFullLength(e.target.checked)}
+                                className="w-4 h-4 rounded accent-primary"
+                            />
+                            Include full asset length
+                        </label>
+                    )
+                }
+
+                {
+                    !fullLength && (
+                        <>
+                            {
+                                selectedSourceType === "video" ? (
+                                    <TimestampPicker
+                                        start={start}
+                                        setStart={setStart}
+                                        end={end}
+                                        setEnd={setEnd}
+                                    />
+                                ) : selectedSourceType === "pdf" ? (
+                                    <div>
+                                        <PageNumbersPicker
+                                            totalPages={selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
+                                            setStart={from}
+                                            setEnd={to}
+                                            isDisabled={fullLength}
+                                        />
+                                    </div>
+                                ) : null
+                            }
+                        </>
+                    )
+                }
 
                 <Field label="Title (Optional)">
                     <input
