@@ -1,12 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Field from "../Field";
 import SourcesDropdown from '../SourcesDropdown';
 import { MainContext } from '../../contexts/mainContext';
 import { useToast } from '../../contexts/toastContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import {
-    Sparkles
+    Sparkles,
+    Info
 } from "lucide-react";
+import BaseHeading from '../BaseHeading';
 
 function BusinessIntelligence() {
 
@@ -24,22 +26,98 @@ function BusinessIntelligence() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [context, setContext] = useState("");
     const [title, setTitle] = useState("");
+    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+    const [formatted, setFormatted] = useState("");
+    const [input, setInput] = useState("");
+    const fileInputRef = useRef(null);
+
+    const [error, setError] = useState("");
 
 
     const sources = knowledgeBase.filter(item => item.file_type === "video" || item.file_type === "pdf");
     const canGenerate = !isProjectReadOnly && sourceIds.length > 0;
 
 
+    const formatJSON = (json) => {
+        try {
+            const parsed = JSON.parse(json);
+            const pretty = JSON.stringify(parsed, null, 2);
+            setFormatted(pretty);
+            setError("");
+        } catch (err) {
+            setError("Invalid business schema!");
+            setFormatted("");
+        }
+    };
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setInput(value);
+        formatJSON(value);
+    };
+
+    const handleFileUpload = (e) => {
+
+        const file = e.target.files[0];
+        if (!file) return;
+
+        console.log("sd");
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const text = event.target.result;
+            setInput(text);
+            formatJSON(text);
+        };
+        reader.readAsText(file);
+    };
+
+    const handleTabClick = (e) => {
+        if (e.key === "Tab") {
+            e.preventDefault();
+
+            const start = e.target.selectionStart;
+            const end = e.target.selectionEnd;
+
+            if (e.shiftKey) {
+                // Remove tab
+                const before = input.substring(0, start);
+                if (before.endsWith("\t")) {
+                    const newValue =
+                        input.substring(0, start - 1) +
+                        input.substring(end);
+                    setInput(newValue);
+
+                    setTimeout(() => {
+                        e.target.selectionStart = e.target.selectionEnd = start - 1;
+                    }, 0);
+                }
+            } else {
+                // Add tab
+                const newValue =
+                    input.substring(0, start) +
+                    "\t" +
+                    input.substring(end);
+
+                setInput(newValue);
+
+                setTimeout(() => {
+                    e.target.selectionStart = e.target.selectionEnd = start + 1;
+                }, 0);
+            }
+        }
+    };
+
+
     return (
-        <div className="h-full  px-[18px] min-h-0 flex flex-col overflow-hidden bg-white">
+        <div className="h-full  px-[14px] min-h-0 flex flex-col overflow-hidden bg-white">
             <div className="pt-4 pb-3 border-b border-border shrink-0">
                 <div className="flex items-center justify-between gap-2">
-                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate shorts</h2>
+                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Business Intelligence</h2>
                 </div>
-                <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging shorts in minutes.</p>
+                <p className="text-xs text-ink-secondary mt-0.5">Analyze videos and documents and turn their content into detailed, machine-readable JSON format.</p>
             </div>
 
-            <div className="flex-1 min-h-0 overflow-y-auto">
+            <div className="flex-1 min-h-0 mb-3 overflow-y-auto">
                 <Field label="Sources">
                     <SourcesDropdown
                         sources={sources}
@@ -57,7 +135,41 @@ function BusinessIntelligence() {
                     />
                 </Field>
 
-                <Field label="Title">
+                {/* JSON INPUT */}
+                <div className="relative w-full pt-4">
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className="relative flex items-center gap-1 flex-1">
+                            <label className="block text-[12.5px] font-semibold text-ink">Business Schema (optional)</label>
+                            <Info onMouseOver={() => setIsInfoTooltipOpen(true)} onMouseLeave={() => setIsInfoTooltipOpen(false)} className={`!relative !w-5`} />
+
+                            {
+                                isInfoTooltipOpen && (
+                                    <div className={`absolute right-0 p-2 bg-background_workspace shadow-lg rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full text-textColor-200 !border !border-textColor-100/50 text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
+                                )
+                            }
+                        </div>
+                        <button className={`font-medium text-sm p-2 bg-transparent border border-textColor-100 rounded-lg focus:outline-none`}
+                            onClick={() => fileInputRef.current.click()}
+                        >
+                            Upload JSON
+                        </button>
+                        <input type="file" ref={fileInputRef} accept=".json" style={{ display: 'none' }} onChange={handleFileUpload} />
+                    </div>
+                    <textarea
+                        value={input}
+                        onChange={handleChange}
+                        placeholder="Paste or type business schema here (in JSON format)..."
+                        className="w-full min-h-[78px] border border-border rounded-lg px-2.5 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary resize-y bg-gray-100"
+                        onKeyDown={handleTabClick}
+                    />
+
+                    {/* Error */}
+                    {(error && input.trim().length > 0) && (
+                        <BaseHeading className="!text-red-500 font-medium" text={error} />
+                    )}
+                </div>
+
+                <Field label="Title (Optional)">
                     <input
                         type="text"
                         value={title}
