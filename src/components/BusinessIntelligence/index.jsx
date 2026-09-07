@@ -133,7 +133,7 @@ function BusinessIntelligence() {
         }
     };
 
-    async function handleGenerateEntity(isContextRequired = true) {
+    async function handleGenerateEntity() {
         try {
             if (!canGenerate) return;
 

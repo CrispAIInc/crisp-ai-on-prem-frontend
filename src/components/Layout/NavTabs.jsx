@@ -13,12 +13,18 @@ export default function NavTabs({ active = "media" }) {
 
   const {
     setActiveTab,
-    setActiveStudioPanel
+    setActiveStudioPanel,
+    jsonEntities,
+    setSelectedJsonEntity
   } = useContext(MainContext);
 
   function handleNavClick(key, tab) {
     setActiveTab(key);
     setActiveStudioPanel(tab);
+
+    if (tab === "business-intelligence") {
+      setSelectedJsonEntity(jsonEntities[0]);
+    }
   }
 
   return (

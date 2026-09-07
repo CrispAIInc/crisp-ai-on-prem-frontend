@@ -88,7 +88,7 @@ function BusinessIntelligenceListItem() {
                     return (
                         <div key={entity.graph_id}
                             className={`flex items-center ${entity.graph_id === selectedJsonEntity?.graph_id ? ' bg-gray-200' : '!border !border-transparent'} gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
-                            onClick={setSelectedJsonEntity(entity)}
+                            onClick={() => setSelectedJsonEntity(entity)}
                             onMouseEnter={() => setHoveredEntity(entity.graph_id)}
                             onMouseLeave={() => setHoveredEntity(null)}
                         >
