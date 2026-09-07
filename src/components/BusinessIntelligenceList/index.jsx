@@ -285,9 +285,9 @@ function BusinessIntelligenceDetails() {
                             <RippleButton
                                 cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
                                 disabled={isEntitySaving}
-                                onClick={() => setShowTitleModal(false)}
+                                onClick={() => setShowTitleModal(true)}
                             >
-                                <Check size={20} />
+                                <Check size={18} />
                                 {
                                     isEntitySaving ? <span className="animate-customPulse">Saving...</span> : "Save entity"
                                 }
