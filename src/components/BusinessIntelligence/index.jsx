@@ -30,8 +30,8 @@ function BusinessIntelligence() {
     const [formatted, setFormatted] = useState("");
     const [input, setInput] = useState("");
     const fileInputRef = useRef(null);
-
     const [error, setError] = useState("");
+    const [fullLength, setFullLength] = useState(false);
 
 
     const sources = knowledgeBase.filter(item => item.file_type === "video" || item.file_type === "pdf");
@@ -168,6 +168,17 @@ function BusinessIntelligence() {
                         <BaseHeading className="!text-red-500 font-medium" text={error} />
                     )}
                 </div>
+
+                {/* FULL ASSET LENGTH */}
+                <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer w-fit">
+                    <input
+                        type="checkbox"
+                        checked={fullLength}
+                        onChange={(e) => setFullLength(e.target.checked)}
+                        className="w-4 h-4 rounded accent-primary"
+                    />
+                    Include full asset length
+                </label>
 
                 <Field label="Title (Optional)">
                     <input
