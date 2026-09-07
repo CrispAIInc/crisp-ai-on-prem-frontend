@@ -42,15 +42,12 @@ function FindMomentsList() {
             {/* Right column — selected segment */}
             <div className="flex-1 min-w-0 h-full min-h-0 overflow-y-auto">
                 {currentMoment === null ? (
-                    <div className="h-full flex flex-col items-center justify-center text-center gap-2.5 px-6">
-                        <div className="w-11 h-11 rounded-xl bg-surface-alt flex items-center justify-center text-ink-muted">
-                            <Layers size={19} />
-                        </div>
-                        <strong className="text-ink text-[13px] font-semibold">Select a moment</strong>
-                        <span className="text-[12.5px] text-ink-muted max-w-[260px]">
-                            Pick a moment from the list to see its details.
-                        </span>
-                    </div>
+                    <EmptyState
+                        twClasses='flex-1 h-full'
+                        icon={<Layers size={20} />}
+                        title="Select a moment"
+                        description="Pick a moment from the list to see its details."
+                    />
                 ) : (
                     <div className="p-4 flex flex-col gap-4">
                         <MomentDetails />
