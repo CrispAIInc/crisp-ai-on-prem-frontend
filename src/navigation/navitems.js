@@ -2,11 +2,11 @@ import {
     Search,
     Sparkles,
     MessageCircle,
-    Film,
     LineChart,
     BookOpen,
     FolderOpen,
     Braces,
+    Clapperboard,
 } from "lucide-react";
 
 /**
@@ -19,7 +19,7 @@ import Shorts from "../components/Shorts";
 import Interaction from "../components/Interaction";
 import Analytics from "../components/Analytics";
 import BusinessIntelligence from "../components/BusinessIntelligence";
-import StoriesBlogs from "../components/StoriesBlogs";
+import Blogs from "../components/Blogs";
 
 
 export const NAV_ITEMS = [
@@ -27,8 +27,8 @@ export const NAV_ITEMS = [
     { key: "discovery", label: "Discovery", icon: Search, component: Discovery },
     { key: "interaction", label: "Interaction", icon: MessageCircle, component: Interaction },
     { key: "metadata", label: "Contextual Metadata", icon: Sparkles, component: ContextualMetadata, tab: "metadata" },
-    { key: "shorts", label: "Shorts", icon: Film, component: Shorts, tab: "shorts" },
+    { key: "shorts", label: "Shorts", icon: Clapperboard, component: Shorts, tab: "shorts" },
     { key: "analytics", label: "Analytics", icon: LineChart, component: Analytics, tab: "time-segments" },
-    { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen, component: StoriesBlogs },
+    { key: "blogs", label: "Blogs", icon: BookOpen, component: Blogs },
     { key: "business_intelligence", label: "Business Intelligence", icon: Braces, component: BusinessIntelligence, tab: "business-intelligence" },
 ];
