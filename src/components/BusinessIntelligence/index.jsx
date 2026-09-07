@@ -37,12 +37,13 @@ function BusinessIntelligence() {
     const [fullLength, setFullLength] = useState(false);
     const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
     const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
-    const [from, setFrom] = useState({ h: "00", m: "00", s: "00" });
-    const [to, setTo] = useState({ h: "00", m: "00", s: "00" });
-
 
     const sources = knowledgeBase.filter(item => item.file_type === "video" || item.file_type === "pdf");
     const selectedSources = sources.filter(item => sourceIds.includes(item.source_id));
+    const [from, setFrom] = useState("1");
+    const [to, setTo] = useState(selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
+
+
     const selectedSourceType = selectedSources[0]?.file_type;
     const canGenerate = !isProjectReadOnly && sourceIds.length > 0;
 
@@ -115,6 +116,20 @@ function BusinessIntelligence() {
             }
         }
     };
+
+    function handleGenerateEntity() {
+        console.log({
+            selectedSources,
+            context,
+            input,
+            fullLength,
+            start,
+            end,
+            from,
+            to,
+            title
+        });
+    }
 
 
     return (
@@ -205,14 +220,12 @@ function BusinessIntelligence() {
                                         setEnd={setEnd}
                                     />
                                 ) : selectedSourceType === "pdf" ? (
-                                    <div>
-                                        <PageNumbersPicker
-                                            totalPages={selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
-                                            setStart={from}
-                                            setEnd={to}
-                                            isDisabled={fullLength}
-                                        />
-                                    </div>
+                                    <PageNumbersPicker
+                                        totalPages={selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
+                                        setStart={setFrom}
+                                        setEnd={setTo}
+                                        isDisabled={fullLength}
+                                    />
                                 ) : null
                             }
                         </>
@@ -234,7 +247,7 @@ function BusinessIntelligence() {
                 <button
                     type="button"
                     disabled={!canGenerate}
-                    // onClick={generateShort}
+                    onClick={handleGenerateEntity}
                     className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                     <Sparkles size={14} className={`${isGenerating && "animate-customPulse"}`} />

@@ -105,8 +105,8 @@ const PageNumbersPicker = ({ totalPages, setStart, setEnd, isDisabled }) => {
             className={`p-3 rounded-2xl select-none flex items-center gap-4 w-fit ${theme === 'light'
                 ? 'bg-white !border'
                 : 'bg-textColor-300 !border !border-textColor-200/40'} ${isDisabled
-                    ? 'pointer-events-none opacity-50 select-none'
-                    : 'pointer-events-auto opacity-100 select-all'
+                    ? 'pointer-events-none opacity-50'
+                    : 'pointer-events-auto opacity-100'
                 }`}
         >
 
