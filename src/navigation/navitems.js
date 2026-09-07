@@ -29,5 +29,5 @@ export const NAV_ITEMS = [
     { key: "shorts", label: "Shorts", icon: Film, component: Shorts, tab: "shorts" },
     { key: "analytics", label: "Analytics", icon: LineChart, component: Analytics, tab: "time-segments" },
     { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen },
-    { key: "business_intelligence", label: "Business Intelligence", icon: Braces, component: BusinessIntelligence },
+    { key: "business_intelligence", label: "Business Intelligence", icon: Braces, component: BusinessIntelligence, tab: "business-intelligence" },
 ];
