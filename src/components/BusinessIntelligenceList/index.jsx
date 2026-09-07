@@ -18,6 +18,7 @@ import { formatReadableDate } from '../../utils';
 import JsonEntityTitleUpdaterModal from '../JsonEntityTitleUpdaterModal';
 import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
+import JsonViewer from '../JsonViewer';
 
 function BusinessIntelligenceList() {
 
@@ -55,7 +56,8 @@ function BusinessIntelligenceList() {
                     </div>
                 ) : (
                     <div className="p-4 flex flex-col gap-4">
-                        {/* <MomentDetails /> */}
+                        {/* <BusinessIntelligenceDetails /> */}
+                        <JsonViewer />
                     </div>
                 )}
             </div>
@@ -182,5 +184,10 @@ function BusinessIntelligenceListItem() {
         </div>
     );
 }
+
+// function BusinessIntelligenceDetails() {
+
+//     return
+// }
 
 export default BusinessIntelligenceList;
