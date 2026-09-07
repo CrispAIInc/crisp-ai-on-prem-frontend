@@ -19,7 +19,7 @@ import ScoreChip from '../ScoreChip';
 function FindMomentsList() {
 
     const {
-        segmentDescriptions,
+        moments,
         currentMoment,
         setCurrentMoment
     } = useContext(MainContext);
@@ -28,7 +28,7 @@ function FindMomentsList() {
         <div className={`h-full min-h-0 flex overflow-hidden`}>
             {/* Left column — list */}
             <div className="w-[280px] shrink-0 border-r border-border h-full min-h-0 overflow-y-auto p-3 flex flex-col gap-2">
-                {segmentDescriptions.length === 0 ? (
+                {moments.length === 0 ? (
                     <EmptyState
                         icon={<Info size={20} />}
                         title="No moments found"
@@ -41,7 +41,7 @@ function FindMomentsList() {
 
             {/* Right column — selected segment */}
             <div className="flex-1 min-w-0 h-full min-h-0 overflow-y-auto">
-                {currentMoment === null ? (
+                {(currentMoment === null || currentMoment === undefined) ? (
                     <EmptyState
                         twClasses='flex-1 h-full'
                         icon={<Layers size={20} />}
@@ -211,7 +211,7 @@ function MomentDetails() {
     const [momentTitle, setMomentTitle] = useState(currentMoment?.title || "");
     const [isSaving, setIsSaving] = useState(false);
 
-    const isContentEmpty = !currentMoment.refs || currentMoment.refs.length === 0;
+    const isContentEmpty = !currentMoment?.refs || currentMoment?.refs?.length === 0;
 
     // auto scroll down whenever description changes
     useEffect(() => {
@@ -284,10 +284,10 @@ function MomentDetails() {
             <div className="flex items-start justify-between gap-2">
                 <div>
                     <BaseHeading text="Prompt" className="text-sm text-gradient-x" />
-                    <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{currentMoment.prompt}</p>
+                    <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{currentMoment?.prompt}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    {!('id' in currentMoment) && (
+                    {(currentMoment?.id === undefined || currentMoment?.id === null) && (
                         <RippleButton
                             onClick={() => {
                                 setMomentTitle(currentMoment?.title || "");
