@@ -17,13 +17,15 @@ const JsonViewer = () => {
     const {
         source_id,
         index_id,
+        graph_id,
+        title,
         ...entity
     } = rest;
 
     return (
         <div>
             <JsonView
-                value={entity}
+                value={entity.graph}
                 style={theme === 'dark' ? darkTheme : lightTheme}
                 theme="rjv-default"
                 displayDataTypes={false}
