@@ -15,6 +15,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import { ProjectContext } from '../../contexts/projectContext';
 import BaseHeading from '../BaseHeading';
 import { formatReadableDate } from '../../utils';
+import JsonEntityTitleUpdaterModal from '../JsonEntityTitleUpdaterModal';
 
 function BusinessIntelligenceList() {
 
@@ -77,6 +78,7 @@ function BusinessIntelligenceListItem() {
     const [hoveredEntity, setHoveredEntity] = useState(null);
     const [selectedEntity, setSelectedEntity] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showJsonEntityModal, setShowJsonEntityModal] = useState(false);
 
 
     return (
@@ -121,14 +123,26 @@ function BusinessIntelligenceListItem() {
                                 {/* creation date */}
                                 <div className="flex flex-col gap-1">
                                     <div className="flex items-center gap-2">
-                                        <BaseHeading text={`${formatReadableDate(entity?.created_at || new Date())}`} className="text-xs !font-bold !italic" />
-                                        <BaseHeading text="•" />
+                                        {
+                                            entity?.created_at !== undefined && (
+                                                <>
+                                                    <BaseHeading text={`${formatReadableDate(entity?.created_at)}`} className="text-xs !font-bold !italic" />
+                                                    <BaseHeading text="•" />
+                                                </>
+                                            )
+                                        }
                                         <BaseHeading text={`${entityObjectKeysCount} Key insights`} className="!text-primary-300" />
                                     </div>
 
                                     <label className="block cursor-pointer text-[12.5px] font-semibold text-ink" key={entity.graph_id}>{entity?.title}</label>
                                 </div>
                             </div>
+
+                            {
+                                isModalOpen && (
+                                    <JsonEntityTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} jsonEntity={selectedEntity} />
+                                )
+                            }
                         </div>
                     );
                 })
