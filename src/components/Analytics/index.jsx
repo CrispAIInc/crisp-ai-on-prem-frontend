@@ -56,41 +56,42 @@ export default function Analytics() {
                 </div>
                 <p className="text-xs text-ink-secondary mt-0.5">Analyze content to identify important information, events, and insights, linked directly to the timestamp or page where they appear.</p>
             </div>
+            <div className="flex-1 min-h-0 overflow-y-auto pb-3">
+                {/* Sub-navigation */}
+                <nav className="pt-3.5 flex items-center gap-6">
+                    {TABS.map(({ id, label, icon: Icon }) => {
+                        const active = activeTab === id;
 
-            <Field label="Sources">
-                <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={sourceIds} onSelectedSourceIdsChange={setSourceIds} />
-            </Field>
+                        return (
+                            <button
+                                key={id}
+                                type="button"
+                                aria-current={active ? "page" : undefined}
+                                className={`flex items-center gap-2 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300 !border-b-primary-300" : "text-ink"
+                                    } pb-3 border-b -mb-px transition-colors`}
+                                onClick={() => setActiveTab(id)}
+                            >
+                                <Icon size={14} strokeWidth={2} />
+                                {label}
+                            </button>
+                        );
+                    })}
+                </nav>
 
-            {/* Sub-navigation */}
-            <nav className="pt-3.5 flex items-center gap-6">
-                {TABS.map(({ id, label, icon: Icon }) => {
-                    const active = activeTab === id;
+                <Field label="Sources">
+                    <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={sourceIds} onSelectedSourceIdsChange={setSourceIds} />
+                </Field>
 
-                    return (
-                        <button
-                            key={id}
-                            type="button"
-                            aria-current={active ? "page" : undefined}
-                            className={`flex items-center gap-2 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300 !border-b-primary-300" : "text-ink"
-                                } pb-3 border-b -mb-px transition-colors`}
-                            onClick={() => setActiveTab(id)}
-                        >
-                            <Icon size={14} strokeWidth={2} />
-                            {label}
-                        </button>
-                    );
-                })}
-            </nav>
-
-            {activeTab === TABS[0].id ? (
-                <TimeSegmentPane
-                    sourceIds={sourceIds}
-                />
-            ) : (
-                <FindMomentsPane
-                    sourceIds={sourceIds}
-                />
-            )}
+                {activeTab === TABS[0].id ? (
+                    <TimeSegmentPane
+                        sourceIds={sourceIds}
+                    />
+                ) : (
+                    <FindMomentsPane
+                        sourceIds={sourceIds}
+                    />
+                )}
+            </div>
         </div>
     );
 }
@@ -210,7 +211,7 @@ function TimeSegmentPane({
     }
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col">
             <Field label="Context">
                 <InstructionsInput
                     value={context}
@@ -232,36 +233,43 @@ function TimeSegmentPane({
                 />
             </Field>
 
-            <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer">
-                <input
-                    type="checkbox"
-                    checked={fullLength}
-                    onChange={(e) => setFullLength(e.target.checked)}
-                    className="w-4 h-4 rounded accent-primary"
-                />
-                Include full asset length
-            </label>
 
-            {!fullLength && (
-                <TimestampPicker
-                    start={start}
-                    setStart={setStart}
-                    end={end}
-                    setEnd={setEnd}
-                />
-            )}
 
-            {/* is detailed mode */}
-            {
-                source?.withDetailedMode && (
-                    <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
-                        <Info size={17} />
-                        <p className="text-xs mt-1 font-medium">
-                            This asset was ingested using <b>Detailed Mode</b>, therefore you will get <b>high detailed results</b>.
-                        </p>
-                    </div>
-                )
-            }
+            <Field label="">
+                <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer">
+                    <input
+                        type="checkbox"
+                        checked={fullLength}
+                        onChange={(e) => setFullLength(e.target.checked)}
+                        className="w-4 h-4 rounded accent-primary"
+                    />
+                    Include full asset length
+                </label>
+
+
+                {!fullLength && (
+                    <TimestampPicker
+                        start={start}
+                        setStart={setStart}
+                        end={end}
+                        setEnd={setEnd}
+                    />
+                )}
+
+                {/* is detailed mode */}
+                {
+                    source?.withDetailedMode && (
+                        <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
+                            <Info size={17} />
+                            <p className="text-xs mt-1 font-medium">
+                                This asset was ingested using <b>Detailed Mode</b>, therefore you will get <b>high detailed results</b>.
+                            </p>
+                        </div>
+                    )
+                }
+            </Field>
+
+            <Field label=""></Field>
 
             <GenerateButton
                 isPending={isPending}
@@ -378,7 +386,7 @@ function FindMomentsPane({
     }
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col">
             <Field label="Context">
                 <InstructionsInput
                     value={context}
@@ -392,10 +400,13 @@ function FindMomentsPane({
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder='Write a title for this segment'
+                    placeholder='Write a title for this moment'
                     className="flex-1 outline-none border border-gray-200 w-full text-[12.5px] text-ink placeholder:text-ink-muted bg-gray-100 rounded-lg px-3 py-2"
                 />
             </Field>
+
+            <Field label=""></Field>
+
             <GenerateButton
                 isPending={isPending}
                 disabled={!canGenerate}

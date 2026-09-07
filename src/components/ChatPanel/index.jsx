@@ -539,7 +539,7 @@ const ChatPanel = () => {
   const STEPS = [
     "Generating metadata...",
     "Generating business intelligence...",
-    "Generating graph content...",
+    "Generating blog content...",
     "Almost there..."
   ];
   const [step, setStep] = useState(""); // This state displays the current process description during the generation phase.

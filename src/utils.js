@@ -361,6 +361,18 @@ export function formatReadableDate(value) {
     return date.toLocaleString('en-US', options).replace(',', ' –');
 }
 
+export function isValidTimeFrame(sourceLength, start, end) {
+    const startInSeconds = toSeconds(start);
+    const endInSeconds = toSeconds(end);
+    return startInSeconds >= 0 && endInSeconds <= sourceLength && startInSeconds < endInSeconds;
+}
+
+export function isValidPageFrame(totalPages, from, to) {
+    const fromPage = Number(from);
+    const toPage = Number(to);
+    return fromPage >= 1 && toPage <= totalPages && fromPage < toPage;
+}
+
 
 /**
  * Group or format chat history items into date buckets: Today, Yesterday, Last week, Older

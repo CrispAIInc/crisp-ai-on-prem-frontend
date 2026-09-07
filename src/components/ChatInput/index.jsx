@@ -66,7 +66,7 @@ export default function ChatInput({
                 transition-all duration-200
                 focus-within:ring-2 focus-within:ring-neutral-300
                 bg-transparent
-                ${theme === 'light' ? "!border !border-textColor-100/50" : " !border !border-textColor-300/50"}
+                border border-textColor-100/50
             `}
         >
             {/* upper part of crisp wiz */}
