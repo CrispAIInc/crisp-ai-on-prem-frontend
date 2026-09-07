@@ -19,6 +19,7 @@ import Shorts from "../components/Shorts";
 import Interaction from "../components/Interaction";
 import Analytics from "../components/Analytics";
 import BusinessIntelligence from "../components/BusinessIntelligence";
+import StoriesBlogs from "../components/StoriesBlogs";
 
 
 export const NAV_ITEMS = [
@@ -28,6 +29,6 @@ export const NAV_ITEMS = [
     { key: "metadata", label: "Contextual Metadata", icon: Sparkles, component: ContextualMetadata, tab: "metadata" },
     { key: "shorts", label: "Shorts", icon: Film, component: Shorts, tab: "shorts" },
     { key: "analytics", label: "Analytics", icon: LineChart, component: Analytics, tab: "time-segments" },
-    { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen },
+    { key: "stories_blogs", label: "Stories & Blogs", icon: BookOpen, component: StoriesBlogs },
     { key: "business_intelligence", label: "Business Intelligence", icon: Braces, component: BusinessIntelligence, tab: "business-intelligence" },
 ];
