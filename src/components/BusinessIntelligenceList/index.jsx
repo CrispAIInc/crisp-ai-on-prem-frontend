@@ -19,6 +19,7 @@ import JsonEntityTitleUpdaterModal from '../JsonEntityTitleUpdaterModal';
 import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
 import JsonViewer from '../JsonViewer';
+import RippleButton from '../RippleButton';
 
 function BusinessIntelligenceList() {
 
@@ -56,8 +57,7 @@ function BusinessIntelligenceList() {
                     </div>
                 ) : (
                     <div className="p-4 flex flex-col gap-4">
-                        {/* <BusinessIntelligenceDetails /> */}
-                        <JsonViewer />
+                        <BusinessIntelligenceDetails />
                     </div>
                 )}
             </div>
@@ -185,9 +185,52 @@ function BusinessIntelligenceListItem() {
     );
 }
 
-// function BusinessIntelligenceDetails() {
+function BusinessIntelligenceDetails() {
 
-//     return
-// }
+    const {
+        selectedJsonEntity
+    } = useContext(MainContext);
+
+    const [isDownloading, setIsDownloading] = useState(false);
+    const handleDownload = () => {
+        setIsDownloading(true);
+        try {
+            const jsonString = JSON.stringify(selectedJsonEntity.graph, null, 2); // formatted
+            const blob = new Blob([jsonString], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `${selectedJsonEntity.title}.json`;
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsDownloading(false);
+        }
+    };
+
+    return (
+        <div className="flex flex-col gap-2">
+            <div id="contained-modal-title-vcenter" className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-1">
+                    <Braces size={20} />
+                    <p>JSON Structure</p>
+                </div>
+                <div>
+                    <RippleButton cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                        disabled={isDownloading} onClick={handleDownload}>
+                        {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Download JSON'}
+                    </RippleButton>
+                </div>
+            </div>
+            <JsonViewer />
+        </div>
+    );
+}
 
 export default BusinessIntelligenceList;
