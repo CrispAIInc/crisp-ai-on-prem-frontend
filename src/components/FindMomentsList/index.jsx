@@ -118,6 +118,10 @@ function MomentListItem() {
 
             if (success) {
                 setMoments(prev => prev.filter(item => item.id !== momentId));
+                //SET CURRENT MOMENT TO NULL IF IT'S THE ONE BEING DELETED
+                if (currentMoment.id === momentId) {
+                    setCurrentMoment(null);
+                }
                 notify({
                     variant: "success",
                     heading: "Video segment deleted!"

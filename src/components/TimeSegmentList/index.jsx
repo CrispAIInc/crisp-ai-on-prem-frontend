@@ -124,7 +124,7 @@ function SegmentListItem() {
 
             if (success) {
                 setSegmentDescriptions(prev => prev.filter(item => item.id !== segmentId));
-                // SET CURRENT SEGMENT TO NULL OF IT'S THE ONE BEING DELETED
+                // SET CURRENT SEGMENT TO NULL IF IT'S THE ONE BEING DELETED
                 if (currentSegment.id === segmentId) {
                     setCurrentSegment(null);
                 }
