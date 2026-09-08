@@ -90,12 +90,12 @@ function BusinessIntelligenceListItem() {
     const [isDeleting, setIsDeleting] = useState(false);
 
 
-    const deleteEntity = async (jsonEntity) => {
+    const deleteEntity = async (jsonEntityId) => {
         setIsDeleting(true);
         try {
-            const { success, message } = await makeApiRequest(`/graphs/${jsonEntity.graph_id}`, 'DELETE');
+            const { success, message } = await makeApiRequest(`/graphs/${jsonEntityId}`, 'DELETE');
             if (success) {
-                setJsonEntities(prev => prev.filter(g => g.graph_id !== jsonEntity.graph_id));
+                setJsonEntities(prev => prev.filter(g => g.graph_id !== jsonEntityId));
                 notify({
                     variant: 'success',
                     heading: 'Entity deleted',
