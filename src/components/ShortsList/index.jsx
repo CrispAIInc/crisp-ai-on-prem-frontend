@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { Film, Clock, Layers, PlayCircle, Pencil, Trash } from "lucide-react";
+import { Film, Clock, Layers, PlayCircle, Pencil, Trash, Info } from "lucide-react";
 import { MainContext } from '../../contexts/mainContext';
 import ReelViewer from '../ReelViewer';
 import GsFile from '../GsFile';
@@ -12,6 +12,7 @@ import useFirebase from '../../hooks/useFirebase';
 import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
 import ReelProps from '../ReelProps';
+import EmptyState from "../EmptyState";
 
 function isHttpUrl(url) {
     return typeof url === "string" && /^https?:\/\//.test(url);
@@ -54,7 +55,11 @@ export default function ShortsList() {
             {/* Left column — list */}
             <div className="w-[280px] shrink-0 border-r border-border h-full min-h-0 overflow-y-auto p-3 flex flex-col gap-2">
                 {shorts.length === 0 ? (
-                    <p className="text-center text-[12.5px] font-semibold text-ink-secondary py-8">No shorts found</p>
+                    <EmptyState
+                        icon={<Info size={20} />}
+                        title="No Shorts found"
+                        description="Use left panel to start generating Shorts."
+                    />
                 ) : (
                     shorts.map((short) => {
                         const key = shortKey(short);
@@ -73,15 +78,12 @@ export default function ShortsList() {
             {/* Right column — selected short */}
             <div className="flex-1 min-w-0 h-full min-h-0 overflow-y-auto">
                 {!selectedShort ? (
-                    <div className="h-full flex flex-col items-center justify-center text-center gap-2.5 px-6">
-                        <div className="w-11 h-11 rounded-xl bg-surface-alt flex items-center justify-center text-ink-muted">
-                            <PlayCircle size={19} />
-                        </div>
-                        <strong className="text-ink text-[13px] font-semibold">Select a short</strong>
-                        <span className="text-[12.5px] text-ink-muted max-w-[260px]">
-                            Pick a short from the list to preview it and see its details.
-                        </span>
-                    </div>
+                    <EmptyState
+                        icon={<PlayCircle size={20} />}
+                        title="Select a Short"
+                        description="Pick a short from the list to preview it and see its details."
+                        twClasses="!flex-1 !h-full"
+                    />
                 ) : (
                     <div className="p-4 flex flex-col gap-4">
                         <ReelViewer />
