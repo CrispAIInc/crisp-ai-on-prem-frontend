@@ -52,7 +52,14 @@ function MainStudio({ panelWidth }) {
                 return <BusinessIntelligenceList />;
 
             default:
-                return <EmptyWorkspace />;
+                return (
+                    <MetadataPanel
+                        workspaceContainer={workspaceContainer}
+                        centerPanelRef={workspaceContainer}
+                        leftWidth={panelWidth}
+                        maxWidth={720}
+                    />
+                );
         }
     }
 
