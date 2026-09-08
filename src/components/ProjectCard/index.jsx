@@ -124,6 +124,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
                                             onClick: () => setIsDeleteConfirmationOpen(true),
                                         },
                                     ]}
+                                    direction="right"
                                 />
                                 <div className="relative flex flex-col p-2 rounded-full shadow-lg cursor-pointer hover:bg-white/20 backdrop-blur">
                                     <ArrowForwardIosIcon onClick={handleProjectClick} className="font-bold text-purple-500 cursor-pointer backdrop-blur" />
