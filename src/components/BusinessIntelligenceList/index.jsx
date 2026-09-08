@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import EmptyState from '../EmptyState';
 import {
@@ -202,6 +202,10 @@ function BusinessIntelligenceDetails() {
     const [isEntitySaving, setIsEntitySaving] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
 
+    useEffect(() => {
+        setEntityTitleValue(selectedJsonEntity?.title);
+    }, [selectedJsonEntity?.graph_id, selectedJsonEntity?.title, show]);
+
 
     const handleDownload = () => {
         setIsDownloading(true);
@@ -251,12 +255,12 @@ function BusinessIntelligenceDetails() {
             if (success) {
                 setJsonEntities(prev => [...prev, { ...updatedEntity, graph_id }]);
                 setSelectedJsonEntity({ ...updatedEntity, graph_id });
-                setShowTitleModal(false);
                 notify({
                     variant: "success",
                     heading: "Entity saved!",
                     subheading: "Your entity has been saved successfully.",
                 });
+                setShowTitleModal(false);
             } else {
                 throw new Error(message);
             }
@@ -280,28 +284,28 @@ function BusinessIntelligenceDetails() {
                     <p>JSON Structure</p>
                 </div>
                 <div>
-                    {
-                        (selectedJsonEntity?.graph_id === null || selectedJsonEntity?.graph_id === undefined) ? (
-                            <RippleButton
-                                cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                                disabled={isEntitySaving}
-                                onClick={() => setShowTitleModal(true)}
-                            >
-                                <Check size={18} />
-                                {
-                                    isEntitySaving ? <span className="animate-customPulse">Saving...</span> : "Save entity"
-                                }
-                            </RippleButton>
-                        ) : (
-                            <RippleButton
-                                cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                                disabled={isDownloading}
-                                onClick={handleDownload}
-                            >
-                                {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Export JSON'}
-                            </RippleButton>
-                        )
-                    }
+                    {/* {
+                        (selectedJsonEntity?.graph_id === null || selectedJsonEntity?.graph_id === undefined) ? ( */}
+                    <RippleButton
+                        cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                        disabled={isEntitySaving}
+                        onClick={() => setShowTitleModal(true)}
+                    >
+                        <Check size={18} />
+                        {
+                            isEntitySaving ? <span className="animate-customPulse">Saving...</span> : "Save entity"
+                        }
+                    </RippleButton>
+                    {/* //     ) : (
+                    //         <RippleButton
+                    //             cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                    //             disabled={isDownloading}
+                    //             onClick={handleDownload}
+                    //         >
+                    //             {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Export JSON'}
+                    //         </RippleButton>
+                    //     )
+                    // } */}
                 </div>
             </div>
             <JsonViewer />
