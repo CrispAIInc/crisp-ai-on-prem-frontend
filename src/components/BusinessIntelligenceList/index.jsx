@@ -204,7 +204,7 @@ function BusinessIntelligenceDetails() {
 
     useEffect(() => {
         setEntityTitleValue(selectedJsonEntity?.title);
-    }, [selectedJsonEntity?.graph_id, selectedJsonEntity?.title, show]);
+    }, [selectedJsonEntity?.graph_id, selectedJsonEntity?.title, showTitleModal]);
 
 
     const handleDownload = () => {
