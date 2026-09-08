@@ -284,28 +284,28 @@ function BusinessIntelligenceDetails() {
                     <p>JSON Structure</p>
                 </div>
                 <div>
-                    {/* {
-                        (selectedJsonEntity?.graph_id === null || selectedJsonEntity?.graph_id === undefined) ? ( */}
-                    <RippleButton
-                        cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                        disabled={isEntitySaving}
-                        onClick={() => setShowTitleModal(true)}
-                    >
-                        <Check size={18} />
-                        {
-                            isEntitySaving ? <span className="animate-customPulse">Saving...</span> : "Save entity"
-                        }
-                    </RippleButton>
-                    {/* //     ) : (
-                    //         <RippleButton
-                    //             cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
-                    //             disabled={isDownloading}
-                    //             onClick={handleDownload}
-                    //         >
-                    //             {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Export JSON'}
-                    //         </RippleButton>
-                    //     )
-                    // } */}
+                    {
+                        (selectedJsonEntity?.graph_id === null || selectedJsonEntity?.graph_id === undefined) ? (
+                            <RippleButton
+                                cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                                disabled={isEntitySaving}
+                                onClick={() => setShowTitleModal(true)}
+                            >
+                                <Check size={18} />
+                                {
+                                    isEntitySaving ? <span className="animate-customPulse">Saving...</span> : "Save entity"
+                                }
+                            </RippleButton>
+                        ) : (
+                            <RippleButton
+                                cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                                disabled={isDownloading}
+                                onClick={handleDownload}
+                            >
+                                {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Export JSON'}
+                            </RippleButton>
+                        )
+                    }
                 </div>
             </div>
             <JsonViewer />
