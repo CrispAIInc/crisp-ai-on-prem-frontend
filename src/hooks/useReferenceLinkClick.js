@@ -70,7 +70,18 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
     const handleSourceLinkClick = (event, source) => {
         if (!source) return;
 
-        const sourceExist = knowledgeBase.find(item => item.source_id === source?.source_id);
+        const sourceId = source?.source_id ?? source?.id;
+        const sourceExist = knowledgeBase.find(item => {
+            const itemId = item?.source_id ?? item?.id;
+
+            return (sourceId != null && itemId != null && String(itemId) === String(sourceId))
+                || (source?.source_path && item?.source_path === source.source_path);
+        });
+
+        console.log({
+            source,
+            sourceExist
+        });
 
         if (!sourceExist) {
             notify({
@@ -82,8 +93,10 @@ export default function useReferenceLinkClick(isFromChat = false, contentPanelCo
 
         if (event) event.preventDefault();
 
-        if (source.file_type === "video") handleVideoLinkClick(source);
-        else handlePDFLinkClick(source);
+        const resolvedSource = { ...sourceExist, ...source };
+
+        if (resolvedSource.file_type === "video") handleVideoLinkClick(resolvedSource);
+        else handlePDFLinkClick(resolvedSource);
     };
 
     return {
