@@ -216,10 +216,11 @@ function SegmentDetails() {
         end,
         timestampText,
         query,
+        video,
         response_format: { schema }
     } = currentSegment;
 
-    let source = knowledgeBase.find(item => item.source_id === source_id) || {};
+    let source = knowledgeBase.find(item => (item.source_id === source_id || item.source_path === video)) || {};
 
 
 
@@ -600,7 +601,7 @@ function SegmentDetails() {
 
                 <div className={`flex items-center gap-1 text-textColor-200`}>
                     <PlayCircle size={15} />
-                    <p className={`text-sm/6 font-semibold`}>{source?.source_path}</p>
+                    <p className={`text-sm/6 font-semibold`}>{source?.source_path || video}</p>
                 </div>
 
                 <div className={`flex items-center gap-1 text-textColor-200`}>
