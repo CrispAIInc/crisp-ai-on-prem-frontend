@@ -163,8 +163,15 @@ export default function ContextualMetadata({
 }
 
 function MultiSelectDropdown({ values, onChange, options }) {
+
+    const {
+        metadataOptions
+    } = useContext(MainContext);
+
     const [open, setOpen] = useState(false);
     const rootRef = useRef(null);
+
+    const metadataOptionsDescriptions = metadataOptions.map(item => item.description);
 
     useEffect(() => {
         if (!open) return;
@@ -196,11 +203,16 @@ function MultiSelectDropdown({ values, onChange, options }) {
             </button>
             {open && (
                 <div className="absolute z-30 bg-white top-[calc(100%+6px)] left-0 right-0 bg-surface border border-border rounded-xl shadow-md2 p-1.5">
-                    {options.map((opt) => {
+                    {options.map((opt, index) => {
                         const checked = values.includes(opt);
                         return (
                             <button key={opt} type="button" onClick={() => toggleOption(opt)} className="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-[12.5px] text-left text-ink hover:bg-surface-alt">
-                                {opt}
+                                <div className="flex flex-col gap-1">
+                                    {opt}
+                                    <p className="text-xs text-ink-secondary mt-0.5">
+                                        {metadataOptionsDescriptions[index]}
+                                    </p>
+                                </div>
                                 <span className={`w-4 h-4 rounded-[5px] border flex items-center justify-center shrink-0 ${checked ? "bg-primary border-primary text-white" : "border-border-strong"}`}>
                                     {checked && <Check size={10} strokeWidth={3} />}
                                 </span>
