@@ -29,6 +29,6 @@ export const NAV_ITEMS = [
     { key: "metadata", label: "Contextual Metadata", icon: Sparkles, component: ContextualMetadata, tab: "metadata" },
     { key: "shorts", label: "Shorts", icon: Clapperboard, component: Shorts, tab: "shorts" },
     { key: "analytics", label: "Analytics", icon: LineChart, component: Analytics, tab: "time-segments" },
-    { key: "blogs", label: "Blogs", icon: BookOpen, component: Blogs },
+    { key: "blogs", label: "Blogs", icon: BookOpen, component: Blogs, disabled: true },
     { key: "business_intelligence", label: "Business Intelligence", icon: Braces, component: BusinessIntelligence, tab: "business-intelligence" },
 ];
