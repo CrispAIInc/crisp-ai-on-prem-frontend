@@ -133,7 +133,7 @@ export default function IndexSearchBar({
             </div>
 
             {hasIndexOptions && dropdownOpen && (
-                <div className="absolute z-20 top-[calc(100%+6px)] left-0 right-0 bg-surface border border-border rounded-xl shadow-md2 p-1.5 max-h-56 overflow-y-auto">
+                <div className="absolute z-20 top-[calc(100%+6px)] z-2 left-0 right-0 bg-surface bg-gray-100 border border-border rounded-xl shadow-md2 p-1.5 max-h-56 overflow-y-auto">
                     <button
                         type="button"
                         onClick={toggleAll}
