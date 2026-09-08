@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
-import { Info, Clock, Layers, PlayCircle, Pencil, Trash } from "lucide-react";
+import { Info, Clock, Layers, PlayCircle, Pencil, Trash, ChevronDown } from "lucide-react";
 import {
     AlignmentType,
     BorderStyle,
@@ -13,13 +13,12 @@ import {
     TextRun
 } from "docx";
 import { saveAs } from "file-saver";
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import BaseHeading from '../BaseHeading';
 import TalkingHeadPanel from '../TalkingHeadPanel';
 import Chip from '../Chip';
 import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import RippleButton from '../RippleButton';
-import { sortByDate, urlToBase64 } from '../../utils';
+import { urlToBase64 } from '../../utils';
 import SaveSegmentModal from '../SaveSegmentModal';
 import ActionMenu from '../ActionMenu';
 import AnimatedText from '../AnimatedText';
@@ -223,6 +222,11 @@ function SegmentDetails() {
         video,
         response_format: { schema }
     } = currentSegment;
+
+    // reset/update saved flag when currentSegment changes
+    useEffect(() => {
+        setIsSaved(Boolean(currentSegment && currentSegment.id));
+    }, [currentSegment]);
 
     let source = knowledgeBase.find(item => (item.source_id === source_id || item.source_path === video)) || {};
 
@@ -599,10 +603,58 @@ function SegmentDetails() {
     return (
         <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center justify-between gap-3">
                     <BaseHeading text="Scene analysis" className="text-md" />
-                </div>
+                    <div className="flex items-center gap-2">
+                        {/* action buttons */}
+                        <div className="flex items-center gap-2 relative">
+                            <div className="relative inline-block">
+                                <RippleButton
+                                    cssClasses="px-2 flex items-center gap-1 py-2 text-sm rounded"
+                                    onClick={() => setExportMenuOpen((prev) => !prev)}
+                                >
+                                    Export as
+                                    <ChevronDown size={16} className={`transition-transform ${exportMenuOpen && 'rotate-180'}`} />
+                                </RippleButton>
 
+                                {exportMenuOpen && (
+                                    <div className={`absolute right-0 top-full mt-2 min-w-[180px] rounded-lg border-textColor-300/20 shadow-xl z-10 mb-5 bg-background_workspace text-textColor-100`}>
+                                        <button
+                                            type="button"
+                                            className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-300/50`}
+                                            onClick={() => {
+                                                exportSceneAnalysisToDocx(currentSegment);
+                                                setExportMenuOpen(false);
+                                            }}
+                                        >
+                                            DOCX format
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-300/50`}
+                                            onClick={() => {
+                                                exportSegmentAsJson(currentSegment);
+                                                setExportMenuOpen(false);
+                                            }}
+                                        >
+                                            JSON format
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+
+                        <div>
+                            {!isSaved && (
+                                <RippleButton cssClasses="px-2 flex items-center gap-1 py-2 text-sm rounded" onClick={() => setIsSaveModalOpen(true)}>
+                                    Save
+                                </RippleButton>
+                            )}
+                        </div>
+                    </div>
+
+                </div>
                 <div className={`flex items-center gap-1 text-textColor-200`}>
                     <PlayCircle size={15} />
                     <p className={`text-sm/6 font-semibold`}>{source?.source_path || video}</p>
@@ -696,54 +748,6 @@ function SegmentDetails() {
                 </div>
             )}
 
-
-
-            {/* action buttons */}
-            <div className="flex items-center gap-2 relative">
-                <div className="relative inline-block">
-                    <RippleButton
-                        cssClasses="px-2 flex items-center gap-1 py-1 text-sm rounded"
-                        onClick={() => setExportMenuOpen((prev) => !prev)}
-                    >
-                        Export as
-                        <UnfoldMoreIcon />
-                    </RippleButton>
-
-                    {exportMenuOpen && (
-                        <div className={`absolute left-0 bottom-0 mt-2 min-w-[180px] rounded-lg border-textColor-300/20 shadow-xl z-10 mb-5 bg-background_workspace text-textColor-100`}>
-                            <button
-                                type="button"
-                                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-300/50`}
-                                onClick={() => {
-                                    exportSceneAnalysisToDocx(currentSegment);
-                                    setExportMenuOpen(false);
-                                }}
-                            >
-                                DOCX format
-                            </button>
-                            <button
-                                type="button"
-                                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-300/50`}
-                                onClick={() => {
-                                    exportSegmentAsJson(currentSegment);
-                                    setExportMenuOpen(false);
-                                }}
-                            >
-                                JSON format
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-
-            <div>
-                {!isSaved && (
-                    <RippleButton cssClasses="px-2 flex items-center gap-1 py-1 text-sm rounded" onClick={() => setIsSaveModalOpen(true)}>
-                        Save
-                    </RippleButton>
-                )}
-            </div>
             {isSaveModalOpen && (
                 <SaveSegmentModal
                     show={isSaveModalOpen}
