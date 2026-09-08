@@ -96,6 +96,10 @@ function BusinessIntelligenceListItem() {
             const { success, message } = await makeApiRequest(`/graphs/${jsonEntityId}`, 'DELETE');
             if (success) {
                 setJsonEntities(prev => prev.filter(g => g.graph_id !== jsonEntityId));
+                //SET CURRENT ENTITY TO NULL IF IT'S THE ONE BEING DELETED
+                if (selectedJsonEntity.graph_id === jsonEntityId) {
+                    setSelectedJsonEntity(null);
+                }
                 notify({
                     variant: 'success',
                     heading: 'Entity deleted',
