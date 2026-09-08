@@ -47,7 +47,7 @@ function BusinessIntelligenceList() {
 
             {/* Right column — selected segment */}
             <div className="flex-1 min-w-0 h-full min-h-0 overflow-y-auto">
-                {selectedJsonEntity === null ? (
+                {(selectedJsonEntity === undefined || selectedJsonEntity === null) ? (
                     <div className="h-full flex flex-col items-center justify-center text-center gap-2.5 px-6">
                         <div className="w-11 h-11 rounded-xl bg-surface-alt flex items-center justify-center text-ink-muted">
                             <Braces size={20} />
@@ -121,7 +121,7 @@ function BusinessIntelligenceListItem() {
         <div className={`flex flex-col gap-2 bg-gray-200/20 rounded-md p-2 cursor-pointer hover:bg-gray-100`}>
             {
                 jsonEntities.map(entity => {
-                    const entityObjectKeysCount = Object.keys(entity.graph).length;
+                    const entityObjectKeysCount = Object.keys(entity?.graph ?? {}).length;
 
                     return (
                         <div key={entity.graph_id}
@@ -230,7 +230,7 @@ function BusinessIntelligenceDetails() {
     };
 
     const saveEntity = async (titleOverride = selectedJsonEntity?.title || '') => {
-        const nextTitle = (titleOverride || '').trim();
+        const nextTitle = (titleOverride || '')?.trim();
 
         if (!nextTitle) {
             notify({
@@ -360,11 +360,11 @@ function BusinessIntelligenceDetails() {
 
                     <button
                         type="button"
-                        className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 w-fit transition ${!entityTitleValue.trim()
+                        className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 w-fit transition ${!entityTitleValue?.trim()
                             ? 'cursor-not-allowed text-gray-400'
                             : 'hover:bg-purple-50 text-purple-600'}`}
                         onClick={() => saveEntity(entityTitleValue)}
-                        disabled={!entityTitleValue.trim()}
+                        disabled={!entityTitleValue?.trim()}
                     >
                         <span className="select-none font-medium">
                             Save entity

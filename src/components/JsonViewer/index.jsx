@@ -20,16 +20,21 @@ const JsonViewer = () => {
         graph_id,
         title,
         ...entity
-    } = rest;
+    } = rest || {};
 
     return (
         <div>
-            <JsonView
-                value={entity.graph}
-                style={theme === 'dark' ? darkTheme : lightTheme}
-                theme="rjv-default"
-                displayDataTypes={false}
-            />
+            {entity ? (
+                <JsonView
+                    value={entity?.graph}
+                    style={theme === 'dark' ? darkTheme : lightTheme}
+                    theme="rjv-default"
+                    displayDataTypes={false}
+                />
+            ) : (
+                <p>json viewer not ready</p>
+            )
+            }
         </div>
     );
 };
