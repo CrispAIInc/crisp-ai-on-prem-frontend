@@ -99,7 +99,7 @@ export default function ShortsList() {
 function ShortListItem({ short, active, onClick }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
-    const { reels, setReels } = useContext(MainContext);
+    const { reels, setReels, selectedReel, setSelectedReel } = useContext(MainContext);
     const { getPublicUrl } = useFirebase();
     const { notify } = useToast();
 
@@ -136,6 +136,11 @@ function ShortListItem({ short, active, onClick }) {
             await makeApiRequest(`/reels/${reel.id}`, 'DELETE', JSON.stringify({
                 videoUrl: publicReelUrl,
             }));
+
+            //SET CURRENT REEL TO NULL IF IT'S THE ONE BEING DELETED
+            if (selectedReel.id === reel.id) {
+                setSelectedReel(null);
+            }
 
             notify({
                 variant: "success",
