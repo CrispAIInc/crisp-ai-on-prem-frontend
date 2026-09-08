@@ -6,10 +6,31 @@ import GsFile from "../GsFile";
 import BaseHeading from '../BaseHeading';
 import LoadingSpinner from '../LoadingSpinner';
 
-export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete, isDeleting, isProjectReadOnly }) {
+function formatTimestamp(value) {
+    if (value === null || value === undefined || value === "") return "";
+    if (typeof value !== "number") return value;
+
+    const totalSeconds = Math.max(0, Math.round(value));
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return hours > 0
+        ? `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+        : `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete, isDeleting, isProjectReadOnly, isDiscoveryResult = false }) {
     const isChecked = Boolean(source?.is_checked);
     const isUploading = Object.prototype.hasOwnProperty.call(source || {}, "progress");
     const Icon = source?.file_type === "video" ? Film : ImageIcon;
+    const discoveryLocation = isDiscoveryResult
+        ? source?.file_type === "pdf" && Number.isFinite(source?.page)
+            ? `Page ${source.page}`
+            : source?.file_type === "video" && source?.timestamp !== null && source?.timestamp !== undefined
+                ? `Timestamp ${formatTimestamp(source.timestamp)}`
+                : null
+        : null;
 
     return (
         <div
@@ -95,9 +116,16 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
             </div>
 
             <div className="relative border-t border-gray-100 px-2.5 py-2 flex items-center justify-between gap-2">
-                <p className="truncate text-[12px] text-gray-700" title={source?.source_path}>
-                    {source?.source_path?.replace(/\.[^/.]+$/, "")}
-                </p>
+                <div className="min-w-0">
+                    <p className="truncate text-[12px] text-gray-700" title={source?.source_path}>
+                        {source?.source_path?.replace(/\.[^/.]+$/, "")}
+                    </p>
+                    {discoveryLocation && (
+                        <p className="mt-0.5 truncate text-[10px] text-gray-500">
+                            {discoveryLocation}
+                        </p>
+                    )}
+                </div>
                 {!isUploading && !isProjectReadOnly && (
                     <div>
                         <ActionMenu

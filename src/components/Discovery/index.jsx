@@ -158,6 +158,7 @@ export default function Discovery({
                                 <MediaCard
                                     key={discoveredSources.mainSource.source_path}
                                     source={discoveredSources.mainSource}
+                                    isDiscoveryResult
                                     onOpen={onThumbnailClick}
                                     onToggle={handleCheckboxChange}
                                     isProjectReadOnly={true}
@@ -172,6 +173,7 @@ export default function Discovery({
                                 <MediaCard
                                     key={`${source.source_path}-${index}`}
                                     source={source}
+                                    isDiscoveryResult
                                     onOpen={onThumbnailClick}
                                     onToggle={handleCheckboxChange}
                                     isProjectReadOnly={true}
