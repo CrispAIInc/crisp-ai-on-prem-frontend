@@ -87,7 +87,7 @@ export default function Metadata({
 
     return (
         <div className={`h-full min-h-0 flex flex-col gap-3.5 overflow-hidden ${className}`}>
-            <div className="flex gap-1 bg-surface-alt p-1 rounded-[10px] w-full bg-gray-200/30 shrink-0">
+            <div className="flex gap-1 bg-surface-alt p-1 rounded-[10px] w-full bg-gray-200/30 shrink-0 overflow-x-auto">
                 {tabs.map((t) => (
                     <button
                         key={t.id}
