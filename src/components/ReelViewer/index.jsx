@@ -270,7 +270,8 @@ function ReelViewer() {
                 draft_id: reel?.draft_id,
                 filename: reel?.filename,
                 sources: reel?.sources,
-                segments: reel?.segments
+                segments: reel?.segments,
+                user_prompt: reel?.user_prompt
             };
 
             let backendResponse;
