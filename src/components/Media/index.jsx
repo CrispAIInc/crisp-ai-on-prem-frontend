@@ -39,7 +39,10 @@ export default function Media() {
         setPersistedUploadedFiles,
         videoCaptionContext,
         setUploadedSources,
-        frameExtractionRate
+        frameExtractionRate,
+        setFrameExtractionRate,
+        setIsDetailedMode,
+        setVideoCaptionContext,
     } = useContext(MainContext);
     const { isProjectReadOnly } = useContext(ProjectContext);
     const { notify } = useToast();
@@ -421,6 +424,11 @@ export default function Media() {
             if (uploaded_data.length > 0) {
                 setActiveView('resource');
             }
+
+            // RESET VIDEO PROESSING SETTINGS
+            setFrameExtractionRate({ mode: "medium", frames: 1, interval: 3 });
+            setIsDetailedMode(false);
+            setVideoCaptionContext("");
 
 
         } catch (error) {
