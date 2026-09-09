@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Search, Globe, SearchX } from "lucide-react";
+import { Search, Globe, SearchX, SearchAlert } from "lucide-react";
 import { MainContext } from '../../contexts/mainContext';
 import TimelineHorizontal from '../TimelineHorizontal';
 import HorizontalCard from '../HorizontalCard';
@@ -340,7 +340,11 @@ function TranscriptionPane({ transcriptionObj }) {
                                     <p className="select-text" dangerouslySetInnerHTML={{ __html: topic.content.replace(/\n/g, "<br>") }}></p>
                                 </div>
                             )) : (
-                                <p className="italic">Transcription not available for this asset.</p>
+                                <EmptyState
+                                    title="Transcription not available for this asset."
+                                    description="You can generate transcription using the Contextual Metadata panel."
+                                    icon={<SearchAlert size={19} />}
+                                />
                             )
                     }
                 </div>
@@ -367,7 +371,11 @@ function SummaryPane({ summaryObj }) {
                                 }}
                             />
                         ) : (
-                            <p className="italic">Summary not available for this asset. Generate it in Contextual metadata section</p>
+                            <EmptyState
+                                title="Summary not available for this asset."
+                                description="You can generate summary using the Contextual Metadata panel."
+                                icon={<SearchAlert size={19} />}
+                            />
                         )
                     }
                 </div>
@@ -394,7 +402,11 @@ function ChaptersPane({ chapters }) {
                         theme="light"
                     />
                 ) : (
-                    <p className="p-4 italic">Chapters not available for this asset.</p>
+                    <EmptyState
+                        title="Chapters not available for this asset."
+                        description="You can generate chapters using the Contextual Metadata panel."
+                        icon={<SearchAlert size={19} />}
+                    />
                 )}
             </div>
         </>
@@ -421,7 +433,11 @@ function HighlightsPane({ highlights }) {
                         />
                     ))
                 ) : (
-                    <p className="italic">Highlights not available for this asset.</p>
+                    <EmptyState
+                        title="Highlights not available for this asset."
+                        description="You can generate highlights using the Contextual Metadata panel."
+                        icon={<SearchAlert size={19} />}
+                    />
                 )}
             </div>
         </>
@@ -452,7 +468,11 @@ function KeywordsPane({ keywords }) {
                         }
                     </div>
                 ) : (
-                    <p className="italic">Keywords not available for this asset.</p>
+                    <EmptyState
+                        title="Keywords not available for this asset."
+                        description="You can generate keywords using the Contextual Metadata panel."
+                        icon={<SearchAlert size={19} />}
+                    />
                 )}
             </div>
         </>
@@ -479,21 +499,25 @@ function FaqsPane({ faqs, chosenLanguage }) {
                         }
                     </div>
                 ) : (
-                    <p className="italic">FAQs not available for this asset.</p>
+                    <EmptyState
+                        title="FAQs not available for this asset."
+                        description="You can generate FAQs using the Contextual Metadata panel."
+                        icon={<SearchAlert size={19} />}
+                    />
                 )}
             </div>
         </>
     );
 }
 
-function EmptyState({ title, description, isError }) {
+function EmptyState({ title, description, isError = false, icon }) {
 
-    const Icon = isError ? <SearchX size={19} /> : <Search size={19} />;
+    const IconEl = icon ?? (isError ? <SearchX size={19} /> : <Search size={19} />);
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center text-center gap-2.5 py-6 px-4">
             <div className="w-11 h-11 rounded-xl bg-primary-100/50 flex items-center justify-center text-ink-muted">
-                {Icon}
+                {IconEl}
             </div>
             <strong className="text-ink text-[13px] font-semibold">{title}</strong>
             <span className="text-[12.5px] text-ink-muted max-w-[320px]">{description}</span>
