@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import socket from "../../config/socket";
-import { Upload, FolderOpen, Check } from "lucide-react";
+import { Upload, FolderOpen, Check, SquareMinus } from "lucide-react";
 import AddSourceModal from "../AddSourceModal";
 import FileUploaderModal from "../FileUploaderModal";
 import SourceExplorer from "../SourceExplorer";
@@ -56,6 +56,7 @@ export default function Media() {
     const checkedSources = displayedSources.filter((source) => source?.is_checked);
     const allChecked = displayedSources.length > 0 && checkedSources.length === displayedSources.length;
     const someChecked = checkedSources.length > 0;
+    const selectedSourcesLength = displayedSources.length;
 
     function handleMediaNavClick(key) {
         if (key === "ingest" && !isProjectReadOnly) {
@@ -561,30 +562,17 @@ export default function Media() {
             {/* Selection controls */}
             {displayedSources.length > 0 ? (
                 <div className="flex items-center justify-between mb-4">
-                    <label className="flex items-center gap-2 text-[13px] text-gray-600 cursor-pointer select-none">
-                        <span
-                            onClick={toggleAll}
-                            className={[
-                                "w-4 h-4 rounded flex items-center justify-center border transition-colors",
-                                allChecked
-                                    ? "bg-primary-300 border-primary-300"
-                                    : someChecked
-                                        ? "bg-primary-100 border-primary-200"
-                                        : "bg-white border-gray-300",
-                            ].join(" ")}
-                        >
-                            {allChecked && <Check size={11} className="text-white" strokeWidth={3} />}
-                            {!allChecked && someChecked && (
-                                <span className="w-1.5 h-1.5 rounded-sm bg-primary-300" />
-                            )}
-                        </span>
-                        {allChecked ? "Deselect all" : "Select all"}
-                        <span className="text-gray-400">
-                            {someChecked ? `(${checkedSources.length} selected)` : `(${displayedSources.length})`}
+                    <label className="flex items-center gap-2 cursor-pointer select-none" onClick={clearAll}>
+                        <div className="flex items-center gap-1">
+                            <SquareMinus size={13} />
+                            <span className="text-xs">Clear all</span>
+                        </div>
+                        <span className="text-xs text-gray-400">
+                            ({selectedSourcesLength} asset{selectedSourcesLength !== 1 ? 's' : ''})
                         </span>
                     </label>
 
-                    {
+                    {/* {
                         displayedSources.length > 0 && (
                             <button
                                 type="button"
@@ -593,7 +581,7 @@ export default function Media() {
                             >
                                 Clear all
                             </button>
-                        )}
+                        )} */}
                 </div>
             ) : (
                 <NoData message="Select a source to start generating content" classes="mt-4" />
