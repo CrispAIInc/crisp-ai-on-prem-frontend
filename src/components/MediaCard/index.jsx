@@ -1,5 +1,5 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Pencil, Check, Film, Image as ImageIcon } from "lucide-react";
+import { Pencil, SquareMinus, Film, Image as ImageIcon } from "lucide-react";
 import ActionMenu from "../ActionMenu";
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import GsFile from "../GsFile";
@@ -41,6 +41,11 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
             onClick={(event) => onOpen(event, source)}
         >
             <div
+                className={`absolute top-2.5 left-2.5 z-1 h-5 w-5 bg-black/50 text-white/80 flex flex-col items-center justify-center`}
+            >
+                <SquareMinus size={23} color="#FFFFFF" className="w-fit" />
+            </div>
+            {/* <div
                 className={`absolute top-2.5 left-2.5 z-1 flex h-5 w-5 items-center justify-center rounded border transition-colors ${isChecked
                     ? "border-primary-300 bg-primary-300"
                     : "border-gray-300 bg-white/90 group-hover:border-gray-400"
@@ -61,7 +66,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 }}
             >
                 {isChecked && <Check size={12} className="text-white" strokeWidth={3} />}
-            </div>
+            </div> */}
 
             <div className="relative flex aspect-video items-center justify-center rounded-t-xl bg-gray-900">
                 {source?.thumbnail ? (
