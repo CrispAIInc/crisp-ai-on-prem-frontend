@@ -1,5 +1,5 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Pencil, SquareMinus, Film, Image as ImageIcon } from "lucide-react";
+import { Pencil, Minus, Film, Image as ImageIcon } from "lucide-react";
 import ActionMenu from "../ActionMenu";
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import GsFile from "../GsFile";
@@ -69,10 +69,11 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
             onClick={(event) => onOpen(event, source)}
         >
             {!isDiscoveryResult && <div
-                className={`absolute top-2.5 left-2.5 z-1 h-5 w-5 bg-black/50 text-white/80 flex flex-col items-center justify-center`}
+                className={`absolute top-2.5 left-2.5 z-1 h-5 w-5 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center rounded-full`}
                 onClick={handleClearSingleSource}
+                title="remove from list"
             >
-                <SquareMinus size={23} color="#FFFFFF" className="w-fit" />
+                <Minus size={24} color="#333333" className="w-fit" />
             </div>}
             {/* <div
                 className={`absolute top-2.5 left-2.5 z-1 flex h-5 w-5 items-center justify-center rounded border transition-colors ${isChecked
