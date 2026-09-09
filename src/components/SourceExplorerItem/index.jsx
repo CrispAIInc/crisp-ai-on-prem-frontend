@@ -23,10 +23,13 @@ function SourceExplorerItem({
         theme,
         handleCheckboxChange,
         onThumbnailClick,
-        categoryOptions
+        categoryOptions,
+        displayedSources
     } = useContext(MainContext);
 
     const { isProjectReadOnly } = useContext(ProjectContext);
+
+    const isSourceSelected = !!displayedSources.find(item => item.source_id === source.source_id);
 
     const handleDeleteSource = (event, source) => {
         event.stopPropagation();
@@ -77,12 +80,17 @@ function SourceExplorerItem({
             </div>
 
             {/* checkbox` */}
-            <Checkbox
+            {/* <Checkbox
                 className={`p-0 !ml-1 !border-primary-300 !text-primary-300`}
                 checked={source.is_checked}
                 onClick={(e) => e.stopPropagation()}
                 onChange={(e) => handleCheckboxChange(e.target?.checked, source)}
                 inputProps={{ "aria-label": "Select source" }}
+            /> */}
+
+            <BaseHeading
+                text={isSourceSelected ? 'Unselect' : 'Select'}
+                classNam="!text-primary-300 py-1"
             />
         </div>
     );
