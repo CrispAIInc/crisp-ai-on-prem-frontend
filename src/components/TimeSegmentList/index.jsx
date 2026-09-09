@@ -308,7 +308,7 @@ function SegmentDetails() {
     async function exportSceneAnalysisToDocx(data) {
         try {
             /* ---------- LOAD LOGO ---------- */
-            const logoBase64 = await urlToBase64("/new-crisp-logo-resized.png");
+            const logoBase64 = await urlToBase64("/new-crips-ai-logo-black-resize.png");
             const logoBuffer = base64ToUint8Array(logoBase64.split(",")[1]);
 
             // 1. Extract and map data from your new JSON structure
