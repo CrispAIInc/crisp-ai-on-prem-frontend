@@ -39,7 +39,7 @@ function ReelViewer() {
     const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
     const [showSaveTitleModal, setShowSaveTitleModal] = useState(false);
     const [saveTitleValue, setSaveTitleValue] = useState(reel?.title || '');
-    // const [isPending, setIsPending] = useState(false);
+    const [isReelSaving, setIsReelSaving] = useState(false);
 
     useEffect(() => {
         setSaveTitleValue(reel?.title || '');
@@ -262,6 +262,8 @@ function ReelViewer() {
         }
 
         try {
+            setIsReelSaving(true);
+
             let savedId = reel?.id;
             let payload = {
                 title: nextTitle,
@@ -327,6 +329,8 @@ function ReelViewer() {
                 heading: "Couldn't save Short",
                 subheading: error?.message || ""
             });
+        } finally {
+            setIsReelSaving(false);
         }
     }
 
@@ -466,6 +470,11 @@ function ReelViewer() {
                             onClick={() => saveReel(saveTitleValue)}
                             disabled={!saveTitleValue.trim()}
                         >
+                            {
+                                isReelSaving && (
+                                    <LoadingSpinner isSmall />
+                                )
+                            }
                             <span className="select-none font-medium">
                                 Save
                             </span>
