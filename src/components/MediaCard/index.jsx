@@ -97,12 +97,12 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 {isChecked && <Check size={12} className="text-white" strokeWidth={3} />}
             </div> */}
 
-            <div className="relative flex aspect-video items-center justify-center rounded-t-xl bg-gray-900">
+            <div className="relative flex aspect-video items-center justify-center rounded-t-xl bg-gray-900 overflow-hidden">
                 {source?.thumbnail ? (
                     source.thumbnail.startsWith("blob") && source.file_type === "video" ? (
                         <video
                             src={source.thumbnail}
-                            className="h-full w-full object-cover rounded-xl"
+                            className="h-full w-full object-cover "
                             muted
                             controls={false}
                             aria-label={source.source_path}
@@ -110,7 +110,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                     ) : (
                         <GsFile
                             gsUrl={source.thumbnail}
-                            className="h-full w-full object-cover rounded-xl"
+                            className="h-full w-full object-cover "
                             alt={source.source_path}
                             isPrivate
                         />
