@@ -90,7 +90,7 @@ function SourceExplorerItem({
 
             <BaseHeading
                 text={isSourceSelected ? 'Unselect' : 'Select'}
-                classNam="!text-primary-300 py-1"
+                className="!text-primary-300 p-2 rounded-md"
             />
         </div>
     );
