@@ -342,7 +342,6 @@ function TranscriptionPane({ transcriptionObj }) {
                             )) : (
                                 <EmptyState
                                     title="Transcription not available for this asset."
-                                    description="You can generate transcription using the Contextual Metadata panel."
                                     icon={<SearchAlert size={19} />}
                                 />
                             )
