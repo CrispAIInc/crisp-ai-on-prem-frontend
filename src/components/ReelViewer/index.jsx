@@ -354,11 +354,13 @@ function ReelViewer() {
                     <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
                         {
                             (!isProjectReadOnly && reels.find(item => item.id === reel.id) === undefined) && (
-                                <Check onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSaveTitleValue(reel?.title || '');
-                                    setShowSaveTitleModal(true);
-                                }} size={30} className="p-2 z-50 text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
+                                <div title="Save reel">
+                                    <Check onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSaveTitleValue(reel?.title || '');
+                                        setShowSaveTitleModal(true);
+                                    }} size={30} className="p-2 z-50 text-white rounded-full cursor-pointer bg-slate-500/80 right-5 top-10" />
+                                </div>
                             )
                         }
                         {areReelControlsVisible ? (
