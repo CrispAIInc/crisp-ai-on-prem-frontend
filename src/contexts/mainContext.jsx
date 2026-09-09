@@ -407,7 +407,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
         // update checked sources
         setCheckedSources(checkedSources);
-    }, [knowledgeBase]);
+    }, [knowledgeBase, currentProject.project_id, setProjects]);
 
     // const [selectedCategory] = useState("all");
 

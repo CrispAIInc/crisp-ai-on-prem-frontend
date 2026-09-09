@@ -221,7 +221,7 @@ function SourceExplorerBody({
             <div className="overflow-hidden flex flex-col">
 
                 <div className="flex items-center justify-between">
-                    <BaseHeading text={`Sources${!isKnowledgeBaseFetching ? ` (${filteredSources.length})` : ''}`} className={`mb-2 flex-1`} />
+                    <BaseHeading text={`Assets${!isKnowledgeBaseFetching ? ` (${filteredSources.length})` : ''}`} className={`mb-2 flex-1`} />
 
                     <div className='flex items-center gap-2'>
 
@@ -229,7 +229,7 @@ function SourceExplorerBody({
                             <Search size={23} className={`pl-2 pr-0 mr-0 !text-primary-300`} />
                             <input
                                 type="text"
-                                placeholder="Search by source name..."
+                                placeholder="Search by asset name..."
                                 value={searchValue}
                                 onChange={handleSearch}
                                 className={`max-w-60 px-2 !py-[8px] outline-none text-sm rounded-md border-none bg-transparent`}
@@ -243,7 +243,7 @@ function SourceExplorerBody({
                                 className={`inline-flex items-center gap-1 rounded-lg p-2 text-sm font-semibold shadow-sm transition ${theme === "dark" ? "!border !border-textColor-200/20 bg-textColor-300 text-textColor-100 hover:bg-background_workspace" : "!border !border-slate-300/80 bg-white text-textColor-300 hover:bg-light-hover-100"}`}
                             >
                                 <UploadIcon className={`text-[10px] text-primary-300`} />
-                                <span className="text-sm">New source</span>
+                                <span className="text-sm">New asset</span>
                             </button>
                         )}
                     </div>

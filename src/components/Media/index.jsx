@@ -535,8 +535,8 @@ export default function Media() {
     return (
         <div className="flex h-full min-h-0 max-w-[1400px] flex-col overflow-hidden mx-auto px-6 py-6 bg-white">
             <div className="pb-3 border-b border-border shrink-0">
-                <h2 className="font-display text-[14.5px] font-semibold text-ink">Media sources</h2>
-                <p className="text-xs text-ink-secondary mt-0.5">Ingest and handle your uploaded sources here.</p>
+                <h2 className="font-display text-[14.5px] font-semibold text-ink">Media assets</h2>
+                <p className="text-xs text-ink-secondary mt-0.5">Ingest and handle your uploaded assets here.</p>
             </div>
 
             {/* Sub-navigation */}

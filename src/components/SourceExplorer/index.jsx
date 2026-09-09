@@ -14,6 +14,7 @@ export function SourceExplorer(props) {
         theme,
         sourcesTobeCommited,
         knowledgeBase,
+        setKnowledgeBase,
     } = useContext(MainContext);
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -34,6 +35,21 @@ export function SourceExplorer(props) {
     };
 
     const itemsFoundInsideCategoryOrFormat = knowledgeBase.length > 0;
+
+    const areAllSourcesSelected =
+        knowledgeBase.length > 0 &&
+        knowledgeBase.every(item => item.is_selected);
+
+    const handleToggleAllSources = () => {
+        setKnowledgeBase(prev => {
+            const shouldSelectAll = !areAllSourcesSelected;
+
+            return prev.map(item => ({
+                ...item,
+                is_selected: shouldSelectAll
+            }));
+        });
+    };
 
     // const handleSearch = (e) => {
     //     const value = e.target.value;
@@ -60,8 +76,8 @@ export function SourceExplorer(props) {
             >
                 <div className="flex w-full items-center justify-between gap-3">
                     <Modal.Title id="contained-modal-title-vcenter" className="flex flex-col gap-0">
-                        <BaseHeading text="Source Explorer" className="text-xl" />
-                        <p className="text-slate-400 text-sm mt-0.5">Select sources to add to your workspace, enabling metadata extraction and deeper insights.</p>
+                        <BaseHeading text="Media Explorer" className="text-xl" />
+                        <p className="text-slate-400 text-sm mt-0.5">Select assets to add to your workspace, enabling metadata extraction and deeper insights.</p>
                     </Modal.Title>
                     {!isProjectReadOnly && (
                         <button
@@ -92,7 +108,7 @@ export function SourceExplorer(props) {
             </Modal.Body>
 
             <Modal.Footer className={`${itemsFoundInsideCategoryOrFormat && 'flex !items-center !justify-between'}  ${theme === "dark" && "!bg-textColor-300 !text-white !border-t !border-t-textColor-200/20"} z-20`}>
-                {itemsFoundInsideCategoryOrFormat && (
+                {/* {itemsFoundInsideCategoryOrFormat && (
                     <div
                         className={`flex items-center gap-1 cursor-pointer px-1 py-1.5 rounded-md ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
                         onClick={() => props.handleSelectAllCheckboxChange(filteredSourcesForSelectAll, !filteredSourcesForSelectAll.every(item => item.is_checked))}
@@ -106,7 +122,21 @@ export function SourceExplorer(props) {
                         />
                         <BaseHeading text="Select all sources" />
                     </div>
-                )}
+                )} */}
+
+                <div
+                    className={`flex items-center gap-1 cursor-pointer px-2 py-1.5 rounded-md ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
+                    onClick={handleToggleAllSources}
+                >
+                    {/* <Checkbox
+                        className={`p-0 !border-primary-300 !text-primary-300`}
+                        checked={areAllSourcesSelected}
+                        onChange={handleToggleAllSources}
+                        inputProps={{ "aria-label": "Select all sources" }}
+                        label="Select All Sources"
+                    /> */}
+                    <BaseHeading className="!text-primary-300" text={`${areAllSourcesSelected ? 'Unselect' : 'Select'} all assets`} />
+                </div>
                 <div
                     className={`flex items-center justify-center gap-2 p-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
                     onClick={props.onHide}

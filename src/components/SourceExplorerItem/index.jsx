@@ -22,6 +22,7 @@ function SourceExplorerItem({
     const {
         theme,
         handleCheckboxChange,
+        setKnowledgeBase,
         onThumbnailClick,
         categoryOptions,
         displayedSources,
@@ -39,19 +40,29 @@ function SourceExplorerItem({
 
     const handleSourceToggleSelect = (event) => {
         event.stopPropagation();
-        setDisplayedSources(prev => {
-            if (isSourceSelected) {
-                return [...prev.filter(item => item.source_id !== source.source_id)];
-            }
+        // setDisplayedSources(prev => {
 
-            return [
-                ...prev,
-                {
-                    ...source,
-                    is_selected: true
-                }
-            ];
-        });
+        // update is_selected value in knwoledgeBase to get the up-to-date value
+        setKnowledgeBase(prev =>
+            prev.map(item =>
+                item.source_id === source.source_id
+                    ? { ...item, is_selected: isSourceSelected ? false : true }
+                    : item
+            )
+        );
+
+        // if (isSourceSelected) {
+        //     return [...prev.filter(item => item.source_id !== source.source_id)];
+        // }
+
+        // return [
+        //     ...prev,
+        //     {
+        //         ...source,
+        //         is_selected: true
+        //     }
+        // ];
+        // });
     };
 
     return (
