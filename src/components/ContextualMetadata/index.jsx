@@ -135,7 +135,7 @@ export default function ContextualMetadata({
                             {/* <span className="text-[12px] font-semibold px-1 rounded-md bg-primary-100/50 text-primary-300">{formatDuration(verbosity)}</span> */}
                         </div>
                         {/* <VerbositySlider value={verbosity} onChange={setVerbosity} /> */}
-                        <MetadataVerbosity onChange={setVerbosity} />
+                        <MetadataVerbosity options={VERBOSITY_OPTIONS} onChange={setVerbosity} />
                         <p className="text-[11.5px] text-ink-muted mt-3">
                             Controls how much detail is included in the generated fields.
                         </p>

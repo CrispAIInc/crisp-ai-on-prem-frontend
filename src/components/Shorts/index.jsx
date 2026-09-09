@@ -6,12 +6,13 @@ import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from '../../contexts/toastContext';
-import { MAIN_STUDIO_PANELS } from '../../globals';
+import { MAIN_STUDIO_PANELS, REEL_VERBOSITY_OPTIONS, VERBOSITY_OPTIONS } from '../../globals';
 import { convertSecondsToHumanText } from '../../utils';
 import CollapsibleSection from "../CollapsibleSection";
 import SourcesDropdown from "../SourcesDropdown";
 import VerbositySlider from '../VerbositySlider';
 import Field from '../Field';
+import MetadataVerbosity from '../MetadataVerbosity';
 
 
 export default function Shorts() {
@@ -33,6 +34,7 @@ export default function Shorts() {
     const [context, setContext] = useState("");
     const [title, setTitle] = useState("");
     const [reelDuration, setReelDuration] = useState(30);
+    const [verbosity, setVerbosity] = useState(REEL_VERBOSITY_OPTIONS[0]);
 
     const canGenerate = !isProjectReadOnly && sourceIds.length > 0;
 
@@ -43,7 +45,7 @@ export default function Shorts() {
             sources: knowledgeBase.filter(i => sourceIds.includes(i.source_id)).map(source => ({ source_id: source.source_id, index_id: source.index_id })),
             context,
             title: title,
-            verbosityValue: "low" //reelDuration
+            verbosityValue: verbosity //reelDuration
         };
 
         try {
@@ -115,9 +117,10 @@ export default function Shorts() {
                     <div>
                         <div className="flex items-center gap-2 mb-2">
                             <label className="text-sm font-medium text-ink-secondary">Short duration</label>
-                            <p className="text-sm p-1 rounded-md font-bolt bg-primary-100/50 text-primary-200">{convertSecondsToHumanText(reelDuration)}</p>
+                            {/* <p className="text-sm p-1 rounded-md font-bolt bg-primary-100/50 text-primary-200">{convertSecondsToHumanText(reelDuration)}</p> */}
                         </div>
-                        <VerbositySlider value={reelDuration} onChange={setReelDuration} />
+                        {/* <VerbositySlider value={reelDuration} onChange={setReelDuration} /> */}
+                        <MetadataVerbosity options={REEL_VERBOSITY_OPTIONS} onChange={setVerbosity} />
                         <p className="text-[11.5px] text-ink-muted mt-3">
                             Controls how much detail is included in the generated Short.
                         </p>
