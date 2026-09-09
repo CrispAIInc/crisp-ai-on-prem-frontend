@@ -44,7 +44,6 @@
 // }
 
 import { useState } from "react";
-import { VERBOSITY_OPTIONS } from '../../globals';
 
 export default function MetadataVerbosity({ options, onChange }) {
     const [selected, setSelected] = useState(options[0]);

@@ -6,13 +6,11 @@ import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from '../../contexts/toastContext';
-import { MAIN_STUDIO_PANELS, REEL_VERBOSITY_OPTIONS, VERBOSITY_OPTIONS } from '../../globals';
-import { convertSecondsToHumanText } from '../../utils';
+import { MAIN_STUDIO_PANELS, REEL_VERBOSITY_OPTIONS } from '../../globals';
 import CollapsibleSection from "../CollapsibleSection";
-import SourcesDropdown from "../SourcesDropdown";
-import VerbositySlider from '../VerbositySlider';
 import Field from '../Field';
 import MetadataVerbosity from '../MetadataVerbosity';
+import SourcesDropdown from "../SourcesDropdown";
 
 
 export default function Shorts() {
