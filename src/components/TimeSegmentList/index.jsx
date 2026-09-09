@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
-import { Info, Clock, Layers, PlayCircle, Pencil, Trash, ChevronDown } from "lucide-react";
+import { Info, Clock, Layers, PlayCircle, Pencil, Trash, ChevronDown, FileText, Braces } from "lucide-react";
 import {
     AlignmentType,
     BorderStyle,
@@ -618,26 +618,28 @@ function SegmentDetails() {
                                 </RippleButton>
 
                                 {exportMenuOpen && (
-                                    <div className={`absolute right-0 top-full mt-2 min-w-[180px] rounded-lg border-textColor-300/20 shadow-xl z-10 mb-5 bg-background_workspace text-textColor-100`}>
+                                    <div className={`absolute right-0 top-full mt-2 min-w-[180px] rounded-lg border-textColor-300/20 shadow-xl z-10 mb-5 bg-background_workspace text-textColor-200`}>
                                         <button
                                             type="button"
-                                            className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-300/50`}
+                                            className={`flex items-center gap-1 w-full text-left px-3 py-2 hover:bg-gray-300/50`}
                                             onClick={() => {
                                                 exportSceneAnalysisToDocx(currentSegment);
                                                 setExportMenuOpen(false);
                                             }}
                                         >
-                                            DOCX format
+                                            <FileText size={18} />
+                                            <span className="text-sm">DOCX format</span>
                                         </button>
                                         <button
                                             type="button"
-                                            className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-300/50`}
+                                            className={`flex items-center gap-1 w-full text-left px-3 py-2 hover:bg-gray-300/50`}
                                             onClick={() => {
                                                 exportSegmentAsJson(currentSegment);
                                                 setExportMenuOpen(false);
                                             }}
                                         >
-                                            JSON format
+                                            <Braces size={18} />
+                                            <span className="text-sm">JSON format</span>
                                         </button>
                                     </div>
                                 )}
