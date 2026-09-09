@@ -24,7 +24,8 @@ function SourceExplorerItem({
         handleCheckboxChange,
         onThumbnailClick,
         categoryOptions,
-        displayedSources
+        displayedSources,
+        setDisplayedSources,
     } = useContext(MainContext);
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -34,6 +35,23 @@ function SourceExplorerItem({
     const handleDeleteSource = (event, source) => {
         event.stopPropagation();
         deleteResource(event, [source]);
+    };
+
+    const handleSourceToggleSelect = (event) => {
+        event.stopPropagation();
+        setDisplayedSources(prev => {
+            if (isSourceSelected) {
+                return [...prev.filter(item => item.source_id !== source.source_id)];
+            }
+
+            return [
+                ...prev,
+                {
+                    ...source,
+                    is_selected: true
+                }
+            ];
+        });
     };
 
     return (
@@ -91,6 +109,7 @@ function SourceExplorerItem({
             <BaseHeading
                 text={isSourceSelected ? 'Unselect' : 'Select'}
                 className="!text-primary-300 p-2 rounded-md"
+                onClick={handleSourceToggleSelect}
             />
         </div>
     );
