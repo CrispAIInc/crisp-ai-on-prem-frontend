@@ -5,6 +5,8 @@ import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import GsFile from "../GsFile";
 import BaseHeading from '../BaseHeading';
 import LoadingSpinner from '../LoadingSpinner';
+import { useContext } from 'react';
+import { MainContext } from '../../contexts/mainContext';
 
 function formatTimestamp(value) {
     if (value === null || value === undefined || value === "") return "";
@@ -21,6 +23,13 @@ function formatTimestamp(value) {
 }
 
 export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete, isDeleting, isProjectReadOnly, isDiscoveryResult = false }) {
+
+
+    const {
+        setKnowledgeBase
+    } = useContext(MainContext);
+
+
     const isChecked = Boolean(source?.is_checked);
     const isUploading = Object.prototype.hasOwnProperty.call(source || {}, "progress");
     const Icon = source?.file_type === "video" ? Film : ImageIcon;
@@ -32,6 +41,25 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 : null
         : null;
 
+
+    function handleClearSingleSource(e) {
+        e.stopPropagation();
+
+        setKnowledgeBase(prev => {
+            return prev.map(item => {
+                if (item.source_id === source.source_id) {
+                    return {
+                        ...item,
+                        is_selected: false,
+                        is_checked: false,
+                    };
+                }
+
+                return item;
+            });
+        });
+    }
+
     return (
         <div
             className={`group relative rounded-xl border bg-white shadow-sm transition-colors cursor-pointer ${isChecked
@@ -40,11 +68,12 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 }`}
             onClick={(event) => onOpen(event, source)}
         >
-            <div
+            {!isDiscoveryResult && <div
                 className={`absolute top-2.5 left-2.5 z-1 h-5 w-5 bg-black/50 text-white/80 flex flex-col items-center justify-center`}
+                onClick={handleClearSingleSource}
             >
                 <SquareMinus size={23} color="#FFFFFF" className="w-fit" />
-            </div>
+            </div>}
             {/* <div
                 className={`absolute top-2.5 left-2.5 z-1 flex h-5 w-5 items-center justify-center rounded border transition-colors ${isChecked
                     ? "border-primary-300 bg-primary-300"
