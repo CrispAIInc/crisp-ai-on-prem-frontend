@@ -5,20 +5,6 @@ import MainStudio from '../MainStudio';
 import ContextualMetadata from '../ContextualMetadata';
 import useMetadata from '../../hooks/useMetadata';
 
-
-{/* <button
-    type="button"
-    aria-label="Resize panel"
-    title="Resize panel"
-    className="absolute -left-3 top-0 z-10 hidden h-full w-6 items-center justify-center lg:flex"
-    onPointerDown={(event) => {
-        event.preventDefault();
-        setIsDragging(true);
-    }}
->
-    <span className="h-16 w-2 cursor-col-resize rounded-full bg-gray-300 transition-colors hover:bg-primary-200" />
-</button> */}
-
 function Studio() {
 
     const studioRef = useRef(null);
@@ -70,7 +56,7 @@ function Studio() {
             if (!studioBounds) return;
 
             const maxWidth = Math.min(720, studioBounds.width * 0.7);
-            const nextWidth = studioBounds.right - event.clientX;
+            const nextWidth = studioBounds.left + event.clientX;
             setPanelWidth(Math.min(maxWidth, Math.max(280, nextWidth)));
         };
 
@@ -90,9 +76,9 @@ function Studio() {
     }, [isDragging]);
 
     return (
-        <div ref={studioRef} className="max-w-[1400px] mx-auto h-full min-h-0 overflow-hidden">
+        <div ref={studioRef} className="relative max-w-[1400px] mx-auto h-full min-h-0 overflow-hidden">
             <div
-                className="grid h-full min-h-0 grid-cols-1 bg-gray-100 items-start lg:grid-cols-[var(--studio-panel-width)_minmax(0,1fr)]"
+                className=" grid h-full min-h-0 grid-cols-1 bg-gray-100 items-start lg:grid-cols-[var(--studio-panel-width)_minmax(0,1fr)]"
                 style={{ '--studio-panel-width': `${panelWidth}px` }}
             >
                 <div className="relative h-full min-h-0 min-w-0">
@@ -107,7 +93,19 @@ function Studio() {
                             <ActiveComponent />
                         ))}
                     </div>
+
+                    <button
+                        type="button"
+                        aria-label="Resize panel"
+                        title="Resize panel"
+                        className="absolute top-1/2 -translate-y-1/2 left-[calc(100%-2px)] h-16 z-10 hidden bg-gray-300/70 items-center justify-center lg:flex rounded-full w-1 transition-colors !cursor-col-resize hover:bg-primary-200"
+                        onPointerDown={(event) => {
+                            event.preventDefault();
+                            setIsDragging(true);
+                        }}
+                    ></button>
                 </div>
+
                 <div className="py-4 h-full min-h-0 min-w-0 overflow-x-hidden overflow-y-auto">
                     <MainStudio
                         panelWidth={panelWidth}
