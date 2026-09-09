@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import { useToast } from '../../contexts/toastContext';
-import { METADATA_VERBOSITY_OPTIONS } from '../../globals';
+import { VERBOSITY_OPTIONS } from '../../globals';
 import CollapsibleSection from "../CollapsibleSection";
 import MetadataVerbosity from '../MetadataVerbosity';
 import SourcesDropdown from "../SourcesDropdown";
@@ -30,7 +30,7 @@ export default function ContextualMetadata({
     const [sourceIds, setSourceIds] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [context, setContext] = useState("");
-    const [verbosity, setVerbosity] = useState(METADATA_VERBOSITY_OPTIONS[0]);
+    const [verbosity, setVerbosity] = useState(VERBOSITY_OPTIONS[0]);
 
     const canGenerate = sourceIds.length > 0;
 
