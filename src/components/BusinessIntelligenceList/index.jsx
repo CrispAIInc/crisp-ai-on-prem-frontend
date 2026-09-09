@@ -7,8 +7,7 @@ import {
     Pencil,
     Trash,
     Check,
-    Clock,
-    Sparkles
+    Download,
 } from "lucide-react";
 import ActionMenu from '../ActionMenu';
 import AnimatedText from '../AnimatedText';
@@ -306,6 +305,7 @@ function BusinessIntelligenceDetails() {
                                 disabled={isDownloading}
                                 onClick={handleDownload}
                             >
+                                <Download size={16} />
                                 {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Export JSON'}
                             </RippleButton>
                         )
