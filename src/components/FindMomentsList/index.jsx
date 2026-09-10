@@ -291,7 +291,7 @@ function MomentDetails() {
                     <BaseHeading text="Prompt" className="text-sm text-gradient-x" />
                     <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{currentMoment?.prompt}</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                     {(currentMoment?.id === undefined || currentMoment?.id === null) && (
                         <RippleButton
                             onClick={() => {

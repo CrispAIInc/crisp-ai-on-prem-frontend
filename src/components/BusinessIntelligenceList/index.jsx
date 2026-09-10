@@ -8,6 +8,7 @@ import {
     Trash,
     Check,
     Download,
+    X
 } from "lucide-react";
 import ActionMenu from '../ActionMenu';
 import AnimatedText from '../AnimatedText';
@@ -286,7 +287,7 @@ function BusinessIntelligenceDetails() {
                     <Braces size={20} />
                     <p>JSON Structure</p>
                 </div>
-                <div>
+                <div className="flex items-center gap-2">
                     {
                         (selectedJsonEntity?.graph_id === null || selectedJsonEntity?.graph_id === undefined) ? (
                             <RippleButton
@@ -310,6 +311,14 @@ function BusinessIntelligenceDetails() {
                             </RippleButton>
                         )
                     }
+
+                    <RippleButton
+                        cssClasses="px-2 flex items-center gap-1 py-2 text-sm rounded"
+                        onClick={() => setSelectedJsonEntity(null)}
+                    >
+                        <X size={16} />
+                        Close
+                    </RippleButton>
                 </div>
             </div>
             <JsonViewer />
