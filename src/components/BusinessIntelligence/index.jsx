@@ -78,7 +78,7 @@ function BusinessIntelligence() {
 
     const handleChange = (e) => {
         const value = e.target.value;
-        setInput(value);
+        setJsonInput(value);
         formatJSON(value);
     };
 
@@ -91,7 +91,7 @@ function BusinessIntelligence() {
         const reader = new FileReader();
         reader.onload = (event) => {
             const text = event.target.result;
-            setInput(text);
+            setJsonInput(text);
             formatJSON(text);
         };
         reader.readAsText(file);
