@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Sparkles, Info, Clock, Search, Check } from "lucide-react";
 import SourcesDropdown from "../SourcesDropdown";
 import { MainContext } from '../../contexts/mainContext';
@@ -26,18 +26,19 @@ export default function Analytics() {
         setCurrentSegment,
         segmentDescriptions,
         setCurrentMoment,
-        moments
+        moments,
+        analyticsActiveTab,
+        setAnalyticsActiveTab,
+        analyticsSourceIds,
+        setAnalyticsSourceIds
     } = useContext(MainContext);
-
-    const [activeTab, setActiveTab] = useState(TABS[0].id);
-    const [sourceIds, setSourceIds] = useState([]);
 
     const videoAssets = knowledgeBase.filter(item => item.file_type === "video");
 
     useEffect(() => {
-        setActiveStudioPanel(activeTab);
+        setActiveStudioPanel(analyticsActiveTab);
 
-        switch (activeTab) {
+        switch (analyticsActiveTab) {
             case "time-segments":
                 setCurrentSegment(segmentDescriptions[0]);
                 break;
@@ -46,7 +47,7 @@ export default function Analytics() {
                 setCurrentMoment(moments[0]);
                 break;
         }
-    }, [activeTab]);
+    }, [analyticsActiveTab]);
 
     return (
         <div className="h-full px-[14px] min-h-0 flex flex-col overflow-hidden bg-white">
@@ -60,7 +61,7 @@ export default function Analytics() {
                 {/* Sub-navigation */}
                 <nav className="pt-3.5 flex items-center gap-6">
                     {TABS.map(({ id, label, icon: Icon }) => {
-                        const active = activeTab === id;
+                        const active = analyticsActiveTab === id;
 
                         return (
                             <button
@@ -69,7 +70,7 @@ export default function Analytics() {
                                 aria-current={active ? "page" : undefined}
                                 className={`flex items-center gap-2 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300 !border-b-primary-300" : "text-ink"
                                     } pb-3 border-b -mb-px transition-colors`}
-                                onClick={() => setActiveTab(id)}
+                                onClick={() => setAnalyticsActiveTab(id)}
                             >
                                 <Icon size={14} strokeWidth={2} />
                                 {label}
@@ -79,16 +80,16 @@ export default function Analytics() {
                 </nav>
 
                 <Field label="Sources">
-                    <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={sourceIds} onSelectedSourceIdsChange={setSourceIds} />
+                    <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
                 </Field>
 
-                {activeTab === TABS[0].id ? (
+                {analyticsActiveTab === TABS[0].id ? (
                     <TimeSegmentPane
-                        sourceIds={sourceIds}
+                        sourceIds={analyticsSourceIds}
                     />
                 ) : (
                     <FindMomentsPane
-                        sourceIds={sourceIds}
+                        sourceIds={analyticsSourceIds}
                     />
                 )}
             </div>
@@ -109,28 +110,29 @@ function TimeSegmentPane({
         knowledgeBase,
         currentChat,
         setCurrentSegment,
-        setActiveStudioPanel
+        setActiveStudioPanel,
+        timeSegmentStart,
+        setTimeSegmentStart,
+        timeSegmentEnd,
+        setTimeSegmentEnd,
+        timeSegmentContext,
+        setTimeSegmentContext,
+        timeSegmentTitle,
+        setTimeSegmentTitle,
+        timeSegmentFullLength,
+        setTimeSegmentFullLength,
+        isGeneratingTimeSegment,
+        setIsGeneratingTimeSegment,
+        timeSegmentResultsDescription,
+        setTimeSegmentResultsDescription
     } = useContext(MainContext);
 
     const { token } = useAuth();
 
     const { notify } = useToast();
 
-    const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
-    const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
-    const [context, setContext] = useState("");
-    const [title, setTitle] = useState("");
-    const [fullLength, setFullLength] = useState(false);
-    const [isPending, setIsPending] = useState(false);
-    const [resultsDescription, setResultsDescription] = useState({
-        start: formatTime(start),
-        end: formatTime(end),
-        description: "",
-        refs: []
-    });
-
     const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
-    const canGenerate = !isProjectReadOnly && source && context.trim() !== "";
+    const canGenerate = !isProjectReadOnly && source && timeSegmentContext.trim() !== "";
 
 
     async function generateTimeSegmentDescription() {
@@ -139,41 +141,41 @@ function TimeSegmentPane({
                 throw new Error('Make sure you provide video sources and context');
             }
 
-            if (!fullLength && toSeconds(end) <= toSeconds(start)) {
+            if (!timeSegmentFullLength && toSeconds(timeSegmentEnd) <= toSeconds(timeSegmentStart)) {
                 throw new Error("Your timestamp range is invalid.");
             }
 
-            setIsPending(true);
-            setResultsDescription(prev => ({
+            setIsGeneratingTimeSegment(true);
+            setTimeSegmentResultsDescription(prev => ({
                 ...prev,
-                start: formatTime(start),
-                end: formatTime(end),
+                start: formatTime(timeSegmentStart),
+                end: formatTime(timeSegmentEnd),
                 refs: []
             }));
 
             let url = new URLSearchParams();
 
-            if (fullLength) {
+            if (timeSegmentFullLength) {
                 url.append("isFullSource", "true");
             } else {
-                url.append("start_timestamp", formatTime(start));
-                url.append("end_timestamp", formatTime(end));
+                url.append("start_timestamp", formatTime(timeSegmentStart));
+                url.append("end_timestamp", formatTime(timeSegmentEnd));
             }
 
             url.append("video_filename", source.source_path);
-            url.append("prompt", context);
-            url.append("title", title);
+            url.append("prompt", timeSegmentContext);
+            url.append("title", timeSegmentTitle);
 
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             axiosInstance.defaults.headers.common['SessionId'] = currentChat?.sessionId;
             axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
 
             const payload = {
-                isFullSource: fullLength,
-                start_timestamp: formatTime(start),
-                end_timestamp: formatTime(end),
-                prompt: context,
-                title: title,
+                isFullSource: timeSegmentFullLength,
+                start_timestamp: formatTime(timeSegmentStart),
+                end_timestamp: formatTime(timeSegmentEnd),
+                prompt: timeSegmentContext,
+                title: timeSegmentTitle,
                 source_id: source.source_id
             };
 
@@ -206,7 +208,7 @@ function TimeSegmentPane({
                 subheading: error?.message
             });
         } finally {
-            setIsPending(false);
+            setIsGeneratingTimeSegment(false);
         }
     }
 
@@ -214,8 +216,8 @@ function TimeSegmentPane({
         <div className="flex flex-col">
             <Field label="Context">
                 <InstructionsInput
-                    value={context}
-                    onChange={setContext}
+                    value={timeSegmentContext}
+                    onChange={setTimeSegmentContext}
                     actionIcon={Sparkles}
                     onAction={() => {
                         /* wire up generation here */
@@ -226,8 +228,8 @@ function TimeSegmentPane({
             <Field label="Title">
                 <input
                     type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={timeSegmentTitle}
+                    onChange={(e) => setTimeSegmentTitle(e.target.value)}
                     placeholder='Write a title for this segment'
                     className="flex-1 outline-none border border-gray-200 w-full text-[12.5px] text-ink placeholder:text-ink-muted bg-gray-100 rounded-lg px-3 py-2"
                 />
@@ -239,20 +241,20 @@ function TimeSegmentPane({
                 <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer">
                     <input
                         type="checkbox"
-                        checked={fullLength}
-                        onChange={(e) => setFullLength(e.target.checked)}
+                        checked={timeSegmentFullLength}
+                        onChange={(e) => setTimeSegmentFullLength(e.target.checked)}
                         className="w-4 h-4 rounded accent-primary"
                     />
                     Include full asset length
                 </label>
 
 
-                {!fullLength && (
+                {!timeSegmentFullLength && (
                     <TimestampPicker
-                        start={start}
-                        setStart={setStart}
-                        end={end}
-                        setEnd={setEnd}
+                        start={timeSegmentStart}
+                        setStart={setTimeSegmentStart}
+                        end={timeSegmentEnd}
+                        setEnd={setTimeSegmentEnd}
                     />
                 )}
 
@@ -272,7 +274,7 @@ function TimeSegmentPane({
             <Field label=""></Field>
 
             <GenerateButton
-                isPending={isPending}
+                isPending={isGeneratingTimeSegment}
                 disabled={!canGenerate}
                 onClick={generateTimeSegmentDescription}
             />
@@ -291,19 +293,20 @@ function FindMomentsPane({
 
     const {
         knowledgeBase,
-        setCurrentMoment
+        setCurrentMoment,
+        findMomentsContext,
+        setFindMomentsContext,
+        findMomentsTitle,
+        setFindMomentsTitle,
+        isGeneratingMoments,
+        setIsGeneratingMoments
     } = useContext(MainContext);
 
     const { notify } = useToast();
 
 
-    const [context, setContext] = useState("");
-    const [title, setTitle] = useState("");
-    const [isPending, setIsPending] = useState(false);
-
-
     const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
-    const canGenerate = !isProjectReadOnly && source && context.trim() !== "";
+    const canGenerate = !isProjectReadOnly && source && findMomentsContext.trim() !== "";
 
 
     async function handleCaptioning(context, title) {
@@ -319,7 +322,7 @@ function FindMomentsPane({
 
     async function generateMoment() {
         try {
-            setIsPending(true);
+            setIsGeneratingMoments(true);
             if (sourceIds.length > 0) {
                 await makeApiRequest(
                     `/handle-embeddings`,
@@ -332,7 +335,7 @@ function FindMomentsPane({
                     })
                 );
             }
-            let { results, success, message, ...rest } = await handleCaptioning(context, title);
+            let { results, success, message, ...rest } = await handleCaptioning(findMomentsContext, findMomentsTitle);
 
             if (success) {
                 if (results.length > 0) {
@@ -352,7 +355,7 @@ function FindMomentsPane({
                     }).filter(Boolean);
                     const moment = {
                         ...rest,
-                        title: title,
+                        title: findMomentsTitle,
                         results: finalResults
                     };
 
@@ -360,8 +363,8 @@ function FindMomentsPane({
 
                     setCurrentMoment(moment);
 
-                    setContext("");
-                    setTitle("");
+                    setFindMomentsContext("");
+                    setFindMomentsTitle("");
                 } else {
                     notify({
                         variant: "info",
@@ -381,7 +384,7 @@ function FindMomentsPane({
             });
             console.log(error);
         } finally {
-            setIsPending(false);
+            setIsGeneratingMoments(false);
         }
     }
 
@@ -389,8 +392,8 @@ function FindMomentsPane({
         <div className="flex flex-col">
             <Field label="Context">
                 <InstructionsInput
-                    value={context}
-                    onChange={setContext}
+                    value={findMomentsContext}
+                    onChange={setFindMomentsContext}
                     actionIcon={Sparkles}
                 />
             </Field>
@@ -398,8 +401,8 @@ function FindMomentsPane({
             <Field label="Title">
                 <input
                     type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={findMomentsTitle}
+                    onChange={(e) => setFindMomentsTitle(e.target.value)}
                     placeholder='Write a title for this moment'
                     className="flex-1 outline-none border border-gray-200 w-full text-[12.5px] text-ink placeholder:text-ink-muted bg-gray-100 rounded-lg px-3 py-2"
                 />
@@ -408,7 +411,7 @@ function FindMomentsPane({
             <Field label=""></Field>
 
             <GenerateButton
-                isPending={isPending}
+                isPending={isGeneratingMoments}
                 disabled={!canGenerate}
                 onClick={generateMoment}
             />

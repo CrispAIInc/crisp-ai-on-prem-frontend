@@ -253,6 +253,22 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [shortsTitle, setShortsTitle] = useState('');
     const [shortsVerbosity, setShortsVerbosity] = useState('Short');
 
+    // Analytics state - persists across tab switches
+    const [analyticsActiveTab, setAnalyticsActiveTab] = useState('time-segments');
+    const [analyticsSourceIds, setAnalyticsSourceIds] = useState([]);
+    // Time segment pane state
+    const [timeSegmentStart, setTimeSegmentStart] = useState({ h: "00", m: "00", s: "00" });
+    const [timeSegmentEnd, setTimeSegmentEnd] = useState({ h: "00", m: "00", s: "00" });
+    const [timeSegmentContext, setTimeSegmentContext] = useState('');
+    const [timeSegmentTitle, setTimeSegmentTitle] = useState('');
+    const [timeSegmentFullLength, setTimeSegmentFullLength] = useState(false);
+    const [isGeneratingTimeSegment, setIsGeneratingTimeSegment] = useState(false);
+    const [timeSegmentResultsDescription, setTimeSegmentResultsDescription] = useState({ start: "00:00:00", end: "00:00:00", description: "", refs: [] });
+    // Find moments pane state
+    const [findMomentsContext, setFindMomentsContext] = useState('');
+    const [findMomentsTitle, setFindMomentsTitle] = useState('');
+    const [isGeneratingMoments, setIsGeneratingMoments] = useState(false);
+
     const [displayedSources, setDisplayedSources] = useState([]);
 
     const llmModels = [
@@ -1750,7 +1766,19 @@ export default function MainProvider({ children, theme, setTheme }) {
         isGeneratingShorts, setIsGeneratingShorts,
         shortsContext, setShortsContext,
         shortsTitle, setShortsTitle,
-        shortsVerbosity, setShortsVerbosity
+        shortsVerbosity, setShortsVerbosity,
+        analyticsActiveTab, setAnalyticsActiveTab,
+        analyticsSourceIds, setAnalyticsSourceIds,
+        timeSegmentStart, setTimeSegmentStart,
+        timeSegmentEnd, setTimeSegmentEnd,
+        timeSegmentContext, setTimeSegmentContext,
+        timeSegmentTitle, setTimeSegmentTitle,
+        timeSegmentFullLength, setTimeSegmentFullLength,
+        isGeneratingTimeSegment, setIsGeneratingTimeSegment,
+        timeSegmentResultsDescription, setTimeSegmentResultsDescription,
+        findMomentsContext, setFindMomentsContext,
+        findMomentsTitle, setFindMomentsTitle,
+        isGeneratingMoments, setIsGeneratingMoments
     };
 
     return (
