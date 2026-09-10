@@ -1,5 +1,5 @@
-import { Clock, Info, Layers, Pencil, Trash } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from 'react';
+import { Clock, Info, Layers, Pencil, Trash, X } from "lucide-react";
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
@@ -303,6 +303,14 @@ function MomentDetails() {
                             Save
                         </RippleButton>
                     )}
+
+                    <RippleButton
+                        cssClasses="px-2 flex items-center gap-1 py-2 text-sm rounded"
+                        onClick={() => setCurrentMoment(null)}
+                    >
+                        <X size={16} />
+                        Close
+                    </RippleButton>
                 </div>
             </div>
 
