@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
-import { Info, Clock, Layers, PlayCircle, Pencil, Trash, ChevronDown, FileText, Braces } from "lucide-react";
+import { Info, Clock, Layers, PlayCircle, Pencil, Trash, ChevronDown, FileText, Braces, X } from "lucide-react";
 import {
     AlignmentType,
     BorderStyle,
@@ -203,6 +203,7 @@ function SegmentDetails() {
 
     const {
         currentSegment,
+        setCurrentSegment,
         knowledgeBase,
         setSegmentDescriptions
     } = useContext(MainContext);
@@ -644,6 +645,14 @@ function SegmentDetails() {
                                     </div>
                                 )}
                             </div>
+
+                            <RippleButton
+                                cssClasses="px-2 flex items-center gap-1 py-2 text-sm rounded"
+                                onClick={() => setCurrentSegment(null)}
+                            >
+                                <X size={16} />
+                                Close
+                            </RippleButton>
                         </div>
 
 
