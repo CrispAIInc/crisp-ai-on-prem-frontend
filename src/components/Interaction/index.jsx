@@ -205,10 +205,11 @@ const Interaction = () => {
     };
 
     const sendMessage = async (message, isRepeated = false) => {
+        console.log(message);
 
-        if (message.trim() === "" && input.trim() === "") return;
+        if (message.trim() === "" && input.trim() === "" && !isRepeated) return;
 
-        if (input.trim() === '' && !isRepeated) return;
+        if (message.trim() === "" && isRepeated) return;
 
         if (showCursor === true || isFetchingRefs === true) return;
 
@@ -566,7 +567,7 @@ const Interaction = () => {
                                             <b className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} user-select-none`}>You: </b>
                                             {!isProjectReadOnly && <div
                                                 className="cursor-pointer"
-                                                onClick={() => sendMessage(message)}
+                                                onClick={() => sendMessage(message?.text, true)}
                                             >
                                                 <ReplayOutlinedIcon className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-200'}`} />
                                             </div>
