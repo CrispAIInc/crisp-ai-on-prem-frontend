@@ -196,6 +196,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     // Additional Sources to show in the search modal (second most relevant, third most relevant, etc).
     // In the search modal, we show n videos, n pdfs, n images, in total. For now n = 3 (can be changed later).
     const [discoveredSources, setDiscoveredSources] = useState([]);
+    const [discoveryTriggered, setDiscoveryTriggered] = useState(false);
+    const [discoveryLastQuery, setDiscoveryLastQuery] = useState("");
+    const [discoverySearchOutcome, setDiscoverySearchOutcome] = useState(null);
+    const [discoveryQuery, setDiscoveryQuery] = useState("");
+    const [discoverySelectedIndexes, setDiscoverySelectedIndexes] = useState([]);
+    const [isDiscoverySearching, setIsDiscoverySearching] = useState([]);
     const [showSearchModal, setShowSearchModal] = useState(false);
     const [selectedNote, setSelectedNote] = useState({
         note_id: "",
@@ -1695,6 +1701,18 @@ export default function MainProvider({ children, theme, setTheme }) {
         setSelectedFormat,
         discoveredSources,
         setDiscoveredSources,
+        discoveryTriggered,
+        setDiscoveryTriggered,
+        discoveryLastQuery,
+        setDiscoveryLastQuery,
+        discoverySearchOutcome,
+        setDiscoverySearchOutcome,
+        discoveryQuery,
+        setDiscoveryQuery,
+        discoverySelectedIndexes,
+        setDiscoverySelectedIndexes,
+        isDiscoverySearching,
+        setIsDiscoverySearching,
         showSearchModal,
         setShowSearchModal,
         selectedNote,

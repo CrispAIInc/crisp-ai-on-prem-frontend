@@ -12,11 +12,6 @@ import MediaCard from '../MediaCard';
 import AnimatedText from '../AnimatedText';
 
 export default function Discovery({
-    query,
-    onQueryChange,
-    selectedIndexes,
-    onSelectedIndexesChange,
-    hasSearched: hasSearchedProp,
     className = "",
 }) {
 
@@ -24,30 +19,38 @@ export default function Discovery({
         categoryOptions,
         discoveredSources,
         setDiscoveredSources,
+        discoveryTriggered,
+        setDiscoveryTriggered,
+        discoveryLastQuery,
+        setDiscoveryLastQuery,
+        discoverySearchOutcome,
+        setDiscoverySearchOutcome,
+        discoveryQuery,
+        setDiscoveryQuery,
+        discoverySelectedIndexes,
+        setDiscoverySelectedIndexes,
         setShowSearchModal,
         knowledgeBase,
         isPlayerReady,
         player,
         handleCheckboxChange,
-        onThumbnailClick
+        onThumbnailClick,
+        isDiscoverySearching,
+        setIsDiscoverySearching
     } = useContext(MainContext);
     const { handleSourceLinkClick } = useReferenceLinkClick();
     const { notify } = useToast();
 
 
-    const [triggered, setTriggered] = useState(false);
-    const [lastQuery, setLastQuery] = useState("");
-    const [isSearching, setIsSearching] = useState(false);
-    const [searchOutcome, setSearchOutcome] = useState(null);
 
-    const hasSearched = hasSearchedProp ?? triggered;
+    const hasSearched = discoveryTriggered;
 
     const handleDiscover = async (q, indexes) => {
-        setTriggered(true);
-        setLastQuery(q);
-        setSearchOutcome(null);
+        setDiscoveryTriggered(true);
+        setDiscoveryLastQuery(q);
+        setDiscoverySearchOutcome(null);
 
-        setIsSearching(true);
+        setIsDiscoverySearching(true);
 
         try {
 
@@ -68,10 +71,10 @@ export default function Discovery({
 
             if (!found) {
                 setDiscoveredSources(null);
-                setSearchOutcome("not-found");
+                setDiscoverySearchOutcome("not-found");
             }
             else {
-                setSearchOutcome("found");
+                setDiscoverySearchOutcome("found");
                 const source = knowledgeBase?.find(item => item.source_id === rest.source_id);
                 setDiscoveredSources({
                     mainSource: { ...source, timestamp, page: Number(page), score },
@@ -98,9 +101,9 @@ export default function Discovery({
                 heading: "Oops!",
                 subheading: error.message || "An error occured while discovering",
             });
-            setSearchOutcome("error");
+            setDiscoverySearchOutcome("error");
         } finally {
-            setIsSearching(false);
+            setIsDiscoverySearching(false);
         }
     };
 
@@ -115,13 +118,13 @@ export default function Discovery({
             {/* Search bar — index selection is optional, see indexOptions above */}
             <div className="px-[18px] pt-3.5 pb-3 shrink-0">
                 <IndexSearchBar
-                    query={query}
-                    onQueryChange={onQueryChange}
+                    query={discoveryQuery}
+                    onQueryChange={setDiscoveryQuery}
                     indexOptions={categoryOptions?.filter(item => item.value !== "all")}
-                    selectedIndexes={selectedIndexes}
-                    onSelectedIndexesChange={onSelectedIndexesChange}
+                    selectedIndexes={discoverySelectedIndexes}
+                    onSelectedIndexesChange={setDiscoverySelectedIndexes}
                     onDiscover={handleDiscover}
-                    isSearching={isSearching}
+                    isSearching={isDiscoverySearching}
                 />
             </div>
 
@@ -132,20 +135,20 @@ export default function Discovery({
                         title="Search to discover sources"
                         description="Type a topic, name, or phrase above to find matching moments across your catalog."
                     />
-                ) : isSearching ? (
+                ) : isDiscoverySearching ? (
                     <StatePlaceholder
                         title="Searching your sources"
                         description="Looking for matching moments across your catalog."
                     />
-                ) : searchOutcome === "error" ? (
+                ) : discoverySearchOutcome === "error" ? (
                     <StatePlaceholder
                         title="Couldn't generate results"
                         description="Please check your internet and try again later."
                         hasError
                     />
-                ) : searchOutcome === "not-found" ? (
+                ) : discoverySearchOutcome === "not-found" ? (
                     <div className="mt-4">
-                        <DiscoveryNotFound searchQuestion={lastQuery} />
+                        <DiscoveryNotFound searchQuestion={discoveryLastQuery} />
                     </div>
                 ) : discoveredSources?.mainSource ? (
                     <>
