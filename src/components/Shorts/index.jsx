@@ -77,9 +77,9 @@ export default function Shorts() {
         <div className="h-full  px-[18px] min-h-0 flex flex-col overflow-hidden bg-white">
             <div className="pt-4 pb-3 border-b border-border shrink-0">
                 <div className="flex items-center justify-between gap-2">
-                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate shorts</h2>
+                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate Shorts</h2>
                 </div>
-                <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging shorts in minutes.</p>
+                <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging Shorts in minutes.</p>
             </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto">
