@@ -115,10 +115,10 @@ export const UpdateFilenameModal = ({ show, onHide, filename, setFilename, exten
             <Modal.Header className={`border-0 pb-0 ${theme === 'dark' ? '!bg-textColor-300 !text-white' : ''}`}>
                 <div className="flex flex-col gap-1">
                     <Modal.Title id="contained-modal-title-vcenter" className={`text-lg font-semibold ${theme === 'dark' ? 'text-textColor-100' : 'text-gray-900'}`}>
-                        Rename source
+                        Rename asset
                     </Modal.Title>
                     <p className={`text-sm m-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>
-                        Choose a clear filename for this source before saving.
+                        Choose a clear filename for this asset before saving.
                     </p>
                 </div>
             </Modal.Header>
