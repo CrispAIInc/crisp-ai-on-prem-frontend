@@ -21,7 +21,15 @@ export default function ContextualMetadata({
         metadataOptions,
         setGeneratedResources,
         currentResource,
-        setCurrentResource
+        setCurrentResource,
+        contextualMetadataSourceIds,
+        setContextualMetadataSourceIds,
+        isGeneratingMetadata,
+        setIsGeneratingMetadata,
+        contextualMetadataContext,
+        setContextualMetadataContext,
+        contextualMetadataVerbosity,
+        setContextualMetadataVerbosity
     } = useContext(MainContext);
 
     const {
@@ -29,12 +37,8 @@ export default function ContextualMetadata({
     } = useToast();
 
     // const videoSources = knowledgeBase.filter(item => item.file_type === "video");
-    const [sourceIds, setSourceIds] = useState([]);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [context, setContext] = useState("");
-    const [verbosity, setVerbosity] = useState(VERBOSITY_OPTIONS[0]);
 
-    const canGenerate = sourceIds.length > 0;
+    const canGenerate = contextualMetadataSourceIds.length > 0;
 
 
     function handleMetadataOptionValuesChange(newValues) {
@@ -46,16 +50,16 @@ export default function ContextualMetadata({
     }
 
     async function handleGenerateMetadata({ sourceIds }) {
-        setIsGenerating(true);
+        setIsGeneratingMetadata(true);
         const sourcesUsed = knowledgeBase.filter(i => sourceIds.includes(i.source_id));
 
         try {
 
             const payload = {
                 sources: sourcesUsed.map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
-                context,
+                context: contextualMetadataContext,
                 selectedOptions: selectedOptions.map(({ id }) => id),
-                verboverbosityValue: verbosity.toLowerCase()
+                verboverbosityValue: contextualMetadataVerbosity.toLowerCase()
             };
 
             let { results, success, message } = await makeApiRequest('/metadata', 'POST', payload);
@@ -104,7 +108,7 @@ export default function ContextualMetadata({
                 subheading: error.message || "You must check at least one metadata option",
             });
         } finally {
-            setIsGenerating(false);
+            setIsGeneratingMetadata(false);
         }
     }
 
@@ -119,15 +123,15 @@ export default function ContextualMetadata({
                 <Field label="Sources">
                     <SourcesDropdown
                         sources={knowledgeBase}
-                        selectedSourceIds={sourceIds}
-                        onSelectedSourceIdsChange={setSourceIds}
+                        selectedSourceIds={contextualMetadataSourceIds}
+                        onSelectedSourceIdsChange={setContextualMetadataSourceIds}
                     />
                 </Field>
 
                 <Field label="Context">
                     <textarea
-                        value={context}
-                        onChange={(e) => setContext(e.target.value)}
+                        value={contextualMetadataContext}
+                        onChange={(e) => setContextualMetadataContext(e.target.value)}
                         placeholder="Add context to guide the generation — audience, tone, or what to focus on…"
                         className="w-full min-h-[78px] border border-border rounded-lg px-2.5 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary resize-y bg-gray-100"
                     />
@@ -143,8 +147,8 @@ export default function ContextualMetadata({
                             <label className="text-[12px] font-medium text-ink-secondary">Verbosity</label>
                             {/* <span className="text-[12px] font-semibold px-1 rounded-md bg-primary-100/50 text-primary-300">{formatDuration(verbosity)}</span> */}
                         </div>
-                        {/* <VerbositySlider value={verbosity} onChange={setVerbosity} /> */}
-                        <MetadataVerbosity options={VERBOSITY_OPTIONS} onChange={setVerbosity} />
+                        {/* <VerbositySlider value={contextualMetadataVerbosity} onChange={setContextualMetadataVerbosity} /> */}
+                        <MetadataVerbosity options={VERBOSITY_OPTIONS} onChange={setContextualMetadataVerbosity} />
                         <p className="text-[11.5px] text-ink-muted mt-3">
                             Controls how much detail is included in the generated fields.
                         </p>
@@ -156,13 +160,13 @@ export default function ContextualMetadata({
                 <button
                     type="button"
                     disabled={!canGenerate}
-                    onClick={() => handleGenerateMetadata({ sourceIds, context, selectedOptions, setSelectedOptions, verbosity })}
+                    onClick={() => handleGenerateMetadata({ sourceIds: contextualMetadataSourceIds, context: contextualMetadataContext, selectedOptions, setSelectedOptions, verbosity: contextualMetadataVerbosity })}
                     className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
-                    <Sparkles size={14} className={`${isGenerating && "animate-customPulse"}`} />
-                    <span className={`${isGenerating && "animate-customPulse"}`}>
+                    <Sparkles size={14} className={`${isGeneratingMetadata && "animate-customPulse"}`} />
+                    <span className={`${isGeneratingMetadata && "animate-customPulse"}`}>
                         {
-                            isGenerating ? "Generating metadata" : "Generate metadata"
+                            isGeneratingMetadata ? "Generating metadata" : "Generate metadata"
                         }
                     </span>
                 </button>

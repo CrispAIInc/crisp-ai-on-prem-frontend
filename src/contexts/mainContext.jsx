@@ -240,6 +240,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [storyStoryline, setStoryStoryline] = useState('');
     const [isGeneratingStory, setIsGeneratingStory] = useState(false);
 
+    // ContextualMetadata state - persists across tab switches
+    const [contextualMetadataSourceIds, setContextualMetadataSourceIds] = useState([]);
+    const [isGeneratingMetadata, setIsGeneratingMetadata] = useState(false);
+    const [contextualMetadataContext, setContextualMetadataContext] = useState('');
+    const [contextualMetadataVerbosity, setContextualMetadataVerbosity] = useState('Low');
+
     const [displayedSources, setDisplayedSources] = useState([]);
 
     const llmModels = [
@@ -1728,7 +1734,11 @@ export default function MainProvider({ children, theme, setTheme }) {
         showStoryDetails, setShowStoryDetails, isFoundationLlm, setIsFoundationLlm,
         storyContext, setStoryContext,
         storyStoryline, setStoryStoryline,
-        isGeneratingStory, setIsGeneratingStory
+        isGeneratingStory, setIsGeneratingStory,
+        contextualMetadataSourceIds, setContextualMetadataSourceIds,
+        isGeneratingMetadata, setIsGeneratingMetadata,
+        contextualMetadataContext, setContextualMetadataContext,
+        contextualMetadataVerbosity, setContextualMetadataVerbosity
     };
 
     return (
