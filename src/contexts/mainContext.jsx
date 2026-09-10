@@ -246,6 +246,13 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [contextualMetadataContext, setContextualMetadataContext] = useState('');
     const [contextualMetadataVerbosity, setContextualMetadataVerbosity] = useState('Low');
 
+    // Shorts state - persists across tab switches
+    const [shortsSourceIds, setShortsSourceIds] = useState([]);
+    const [isGeneratingShorts, setIsGeneratingShorts] = useState(false);
+    const [shortsContext, setShortsContext] = useState('');
+    const [shortsTitle, setShortsTitle] = useState('');
+    const [shortsVerbosity, setShortsVerbosity] = useState('Short');
+
     const [displayedSources, setDisplayedSources] = useState([]);
 
     const llmModels = [
@@ -1738,7 +1745,12 @@ export default function MainProvider({ children, theme, setTheme }) {
         contextualMetadataSourceIds, setContextualMetadataSourceIds,
         isGeneratingMetadata, setIsGeneratingMetadata,
         contextualMetadataContext, setContextualMetadataContext,
-        contextualMetadataVerbosity, setContextualMetadataVerbosity
+        contextualMetadataVerbosity, setContextualMetadataVerbosity,
+        shortsSourceIds, setShortsSourceIds,
+        isGeneratingShorts, setIsGeneratingShorts,
+        shortsContext, setShortsContext,
+        shortsTitle, setShortsTitle,
+        shortsVerbosity, setShortsVerbosity
     };
 
     return (

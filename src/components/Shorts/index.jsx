@@ -1,7 +1,7 @@
 import {
     Sparkles
 } from "lucide-react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
@@ -19,7 +19,17 @@ export default function Shorts() {
     const {
         knowledgeBase,
         setSelectedReel,
-        setActiveStudioPanel
+        setActiveStudioPanel,
+        shortsSourceIds,
+        setShortsSourceIds,
+        isGeneratingShorts,
+        setIsGeneratingShorts,
+        shortsContext,
+        setShortsContext,
+        shortsTitle,
+        setShortsTitle,
+        shortsVerbosity,
+        setShortsVerbosity
     } = useContext(MainContext);
 
     const {
@@ -27,27 +37,21 @@ export default function Shorts() {
     } = useToast();
 
     const videoSources = knowledgeBase.filter(item => item.file_type === "video");
-    const [sourceIds, setSourceIds] = useState([]);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [context, setContext] = useState("");
-    const [title, setTitle] = useState("");
-    const [reelDuration, setReelDuration] = useState(30);
-    const [verbosity, setVerbosity] = useState(REEL_VERBOSITY_OPTIONS[0]);
 
-    const canGenerate = !isProjectReadOnly && sourceIds.length > 0;
+    const canGenerate = !isProjectReadOnly && shortsSourceIds.length > 0;
 
     async function generateShort() {
         if (isProjectReadOnly) return;
 
         const payload = {
-            sources: knowledgeBase.filter(i => sourceIds.includes(i.source_id)).map(source => ({ source_id: source.source_id, index_id: source.index_id })),
-            context,
-            title: title,
-            verbosityValue: verbosity //reelDuration
+            sources: knowledgeBase.filter(i => shortsSourceIds.includes(i.source_id)).map(source => ({ source_id: source.source_id, index_id: source.index_id })),
+            context: shortsContext,
+            title: shortsTitle,
+            verbosityValue: shortsVerbosity //shortsReelDuration
         };
 
         try {
-            setIsGenerating(true);
+            setIsGeneratingShorts(true);
             const { success, message, newReel } = await makeApiRequest('/reels', 'POST', payload);
             console.log(newReel);
 
@@ -59,7 +63,7 @@ export default function Shorts() {
             setActiveStudioPanel(MAIN_STUDIO_PANELS.SHORTS);
 
             // setIsReelGenerated(true);
-            setContext('');
+            setShortsContext('');
 
         } catch (error) {
             console.log(error);
@@ -69,7 +73,7 @@ export default function Shorts() {
                 subheading: error?.message || "",
             });
         } finally {
-            setIsGenerating(false);
+            setIsGeneratingShorts(false);
         }
     }
 
@@ -86,16 +90,16 @@ export default function Shorts() {
                 <Field label="Sources">
                     <SourcesDropdown
                         sources={videoSources}
-                        selectedSourceIds={sourceIds}
-                        onSelectedSourceIdsChange={setSourceIds}
+                        selectedSourceIds={shortsSourceIds}
+                        onSelectedSourceIdsChange={setShortsSourceIds}
                     />
                 </Field>
 
                 <Field label="Context">
                     <p className="text-xs text-ink-secondary mt-1 mb-2">When no context or topic is provided, the Short will be based on the existing highlights.</p>
                     <textarea
-                        value={context}
-                        onChange={(e) => setContext(e.target.value)}
+                        value={shortsContext}
+                        onChange={(e) => setShortsContext(e.target.value)}
                         placeholder="Add context to guide the generation — audience, tone, or what to focus on…"
                         className="w-full min-h-[78px] border border-border rounded-lg px-2.5 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary resize-y bg-gray-100"
                     />
@@ -104,8 +108,8 @@ export default function Shorts() {
                 <Field label="Title">
                     <input
                         type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        value={shortsTitle}
+                        onChange={(e) => setShortsTitle(e.target.value)}
                         placeholder='Write a title for the Short'
                         className="flex-1 outline-none border border-gray-200 w-full text-[12.5px] text-ink placeholder:text-ink-muted bg-gray-100 rounded-lg px-3 py-2"
                     />
@@ -117,8 +121,8 @@ export default function Shorts() {
                             <label className="text-sm font-medium text-ink-secondary">Short duration</label>
                             {/* <p className="text-sm p-1 rounded-md font-bolt bg-primary-100/50 text-primary-200">{convertSecondsToHumanText(reelDuration)}</p> */}
                         </div>
-                        {/* <VerbositySlider value={reelDuration} onChange={setReelDuration} /> */}
-                        <MetadataVerbosity options={REEL_VERBOSITY_OPTIONS} onChange={setVerbosity} />
+                        {/* <VerbositySlider value={shortsReelDuration} onChange={setShortsReelDuration} /> */}
+                        <MetadataVerbosity options={REEL_VERBOSITY_OPTIONS} onChange={setShortsVerbosity} />
                         <p className="text-[11.5px] text-ink-muted mt-3">
                             Controls how much detail is included in the generated Short.
                         </p>
@@ -133,10 +137,10 @@ export default function Shorts() {
                     onClick={generateShort}
                     className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
-                    <Sparkles size={14} className={`${isGenerating && "animate-customPulse"}`} />
-                    <span className={`${isGenerating && "animate-customPulse"}`}>
+                    <Sparkles size={14} className={`${isGeneratingShorts && "animate-customPulse"}`} />
+                    <span className={`${isGeneratingShorts && "animate-customPulse"}`}>
                         {
-                            isGenerating ? "Generating Short" : "Generate Short"
+                            isGeneratingShorts ? "Generating Short" : "Generate Short"
                         }
                     </span>
                 </button>
