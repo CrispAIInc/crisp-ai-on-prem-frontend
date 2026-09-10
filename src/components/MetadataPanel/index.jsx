@@ -274,6 +274,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const onClose = () => {
     setShowMetadata(false);
+    setCurrentResource(null);
   };
 
   useEffect(() => {
