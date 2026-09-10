@@ -19,7 +19,9 @@ export default function ContextualMetadata({
         selectedOptions,
         setSelectedOptions,
         metadataOptions,
-        setGeneratedResources
+        setGeneratedResources,
+        currentResource,
+        setCurrentResource
     } = useContext(MainContext);
 
     const {
@@ -45,11 +47,12 @@ export default function ContextualMetadata({
 
     async function handleGenerateMetadata({ sourceIds }) {
         setIsGenerating(true);
+        const sourcesUsed = knowledgeBase.filter(i => sourceIds.includes(i.source_id));
 
         try {
 
             const payload = {
-                sources: knowledgeBase.filter(i => sourceIds.includes(i.source_id)).map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
+                sources: sourcesUsed.map(source => ({ file_type: source.file_type, source_id: source.source_id, index_id: source.index_id })),
                 context,
                 selectedOptions: selectedOptions.map(({ id }) => id),
                 verboverbosityValue: verbosity.toLowerCase()
@@ -82,6 +85,12 @@ export default function ContextualMetadata({
                 });
             });
             setGeneratedResources(results);
+
+            // SHOW FIRST ASSET IN MAIN STUDIO IF THERE IS NO ASSET ALREADY
+            const firstSourceUsed = knowledgeBase.find(item => item.source_id === sourcesUsed[0].source_id);
+            if (!currentResource || currentResource.source_id !== firstSourceUsed?.source_id) {
+                setCurrentResource(firstSourceUsed);
+            }
 
             notify({
                 variant: "success",
