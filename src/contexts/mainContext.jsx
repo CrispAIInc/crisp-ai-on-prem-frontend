@@ -11,7 +11,7 @@ import { delay, generateRandomId, pick, sortByDate } from '../utils';
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
 import { NAV_ITEMS } from '../navigation/navitems.js';
-import { MAIN_STUDIO_PANELS } from '../globals.js';
+import { DEFAULT_TOTAL_PDF_PAGES, MAIN_STUDIO_PANELS } from '../globals.js';
 
 export const MainContext = createContext({});
 
@@ -1629,8 +1629,39 @@ export default function MainProvider({ children, theme, setTheme }) {
         fetchFindMoments();
     }, []);
 
+    const [sourceIds, setSourceIds] = useState([]);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [context, setContext] = useState("");
+    const [title, setTitle] = useState("");
+    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+    const [formatted, setFormatted] = useState("");
+    const [jsonInput, setJsonInput] = useState("");
+    const fileInputRef = useRef(null);
+    const [error, setError] = useState("");
+    const [fullLength, setFullLength] = useState(false);
+    const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
+    const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
+    const [from, setFrom] = useState("1");
+    const [to, setTo] = useState(selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
+    const [step, setStep] = useState("");
+
     // create value object with all the states
     const value = {
+        sourceIds, setSourceIds,
+        isGenerating, setIsGenerating,
+        context, setContext,
+        title, setTitle,
+        isInfoTooltipOpen, setIsInfoTooltipOpen,
+        formatted, setFormatted,
+        jsonInput, setJsonInput,
+        fileInputRef,
+        error, setError,
+        fullLength, setFullLength,
+        start, setStart,
+        end, setEnd,
+        from, setFrom,
+        to, setTo,
+        step, setStep,
         currentSegment, setCurrentSegment,
         segmentDescriptions, setSegmentDescriptions,
         currentMoment, setCurrentMoment,

@@ -30,7 +30,22 @@ function BusinessIntelligence() {
 
     const {
         knowledgeBase,
-        setSelectedJsonEntity
+        setSelectedJsonEntity,
+        sourceIds, setSourceIds,
+        isGenerating, setIsGenerating,
+        context, setContext,
+        title, setTitle,
+        isInfoTooltipOpen, setIsInfoTooltipOpen,
+        formatted, setFormatted,
+        jsonInput, setJsonInput,
+        fileInputRef,
+        error, setError,
+        fullLength, setFullLength,
+        start, setStart,
+        end, setEnd,
+        from, setFrom,
+        to, setTo,
+        step, setStep,
     } = useContext(MainContext);
 
     const {
@@ -39,24 +54,11 @@ function BusinessIntelligence() {
 
     const { generateMetadata } = useMetadata();
 
-    const [sourceIds, setSourceIds] = useState([]);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [context, setContext] = useState("");
-    const [title, setTitle] = useState("");
-    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-    const [formatted, setFormatted] = useState("");
-    const [jsonInput, setJsonInput] = useState("");
-    const fileInputRef = useRef(null);
-    const [error, setError] = useState("");
-    const [fullLength, setFullLength] = useState(false);
-    const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
-    const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
+
 
     const sources = knowledgeBase.filter(item => item.file_type === "video" || item.file_type === "pdf");
     const selectedSources = sources.filter(item => sourceIds.includes(item.source_id));
-    const [from, setFrom] = useState("1");
-    const [to, setTo] = useState(selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
-    const [step, setStep] = useState(""); // This state displays the current process description during the generation phase.
+    // This state displays the current process description during the generation phase.
 
 
     const selectedSourceType = selectedSources[0]?.file_type;
@@ -160,8 +162,10 @@ function BusinessIntelligence() {
 
             setStep(STEPS.at(-1));
             setSelectedJsonEntity(response);
-            // setJsonEntities(prev => [...prev, response]);
-            // setShowGraphModal(true);
+            notify({
+                variant: "success",
+                heading: "Entity generated successfully!"
+            });
             setContext("");
         } catch (error) {
             console.log(error);
