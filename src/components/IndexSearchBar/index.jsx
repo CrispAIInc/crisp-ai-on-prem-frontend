@@ -23,7 +23,7 @@ import LoadingSpinner from '../LoadingSpinner';
  *  - onDiscover(query, selectedIndexes): fired when "Discover" is clicked
  */
 export default function IndexSearchBar({
-    label = "Search in all sources",
+    label = "Search in all assets",
     query: queryProp,
     onQueryChange,
     indexOptions = [],

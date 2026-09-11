@@ -120,7 +120,7 @@ export default function ContextualMetadata({
             </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto px-[18px]">
-                <Field label="Sources">
+                <Field label="assets">
                     <SourcesDropdown
                         sources={knowledgeBase}
                         selectedSourceIds={contextualMetadataSourceIds}

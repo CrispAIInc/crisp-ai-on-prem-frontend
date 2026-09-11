@@ -8,7 +8,7 @@ export default function SourcesDropdown({
     sources = [],
     selectedSourceIds: selectedProp,
     onSelectedSourceIdsChange,
-    placeholder = "Select sources",
+    placeholder = "Select asset(s)",
     isMultiple = true,
 }) {
 

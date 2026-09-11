@@ -103,7 +103,7 @@ const SearchSection = ({ className = '', isGlobalSearch = true, fromMetadata = f
                         textareaRef.current = el;
                     }}
                     rows={2}
-                    placeholder={isGlobalSearch ? "Search in all sources" : "Search in current source"}
+                    placeholder={isGlobalSearch ? "Search in all assets" : "Search in current source"}
                     value={fromMetadata ? currentSourceSearchQuesry : searchQuestion}
                     onChange={(event) => fromMetadata ? setCurrentSourceSearchQuery(event.target.value) : setSearchQuestion(event.target.value)}
                     className={`w-full p-2 overflow-y-auto leading-6 bg-transparent outline-none resize-none text-md max-h-28 placeholder:text-neutral-400 ${theme === 'dark' ? 'text-textColor-100' : 'text-textColor-300'}`}

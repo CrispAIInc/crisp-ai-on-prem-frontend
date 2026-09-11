@@ -132,12 +132,12 @@ export default function Discovery({
             <div className="flex-1 min-h-0 overflow-y-auto px-[18px] pb-4">
                 {!hasSearched ? (
                     <StatePlaceholder
-                        title="Search to discover sources"
+                        title="Search to discover assets"
                         description="Type a topic, name, or phrase above to find matching moments across your catalog."
                     />
                 ) : isDiscoverySearching ? (
                     <StatePlaceholder
-                        title="Searching your sources"
+                        title="Searching your assets"
                         description="Looking for matching moments across your catalog."
                     />
                 ) : discoverySearchOutcome === "error" ? (
@@ -169,7 +169,7 @@ export default function Discovery({
                             ]}
                         />
                         <ResultGroup
-                            label="Additional sources"
+                            label="Additional assets"
                             icon={Star}
                             count={discoveredSources.additionalSources?.length || 0}
                             cards={(discoveredSources.additionalSources || []).map((source, index) => (

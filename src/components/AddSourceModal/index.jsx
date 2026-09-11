@@ -69,7 +69,7 @@ export default function AddSourceModal(props) {
                         <AddIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} font-bold !text-2xl`} />
                         <BaseHeading text="Create new Index" className="!text-lg !mb-0" />
                     </div>
-                    <p className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Organize your sources into a new index.</p>
+                    <p className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Organize your assets into a new index.</p>
 
                 </div>
                 {categoryOptions?.filter(cat => cat.value !== "all").length > 0 && (
@@ -87,7 +87,7 @@ export default function AddSourceModal(props) {
                                 <BaseHeading text="Ingest" className="!text-lg !mb-0" />
                             </div>
                             <div className="flex flex-col">
-                                <p className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Upload sources to an index you&apos;ve created.</p>
+                                <p className={`text-slate-500 text-sm mt-0.5 ${theme === 'dark' && 'font-semibold'}`}>Upload assets to an index you&apos;ve created.</p>
                             </div>
                         </div>
                     </div>

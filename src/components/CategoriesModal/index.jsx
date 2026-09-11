@@ -50,7 +50,7 @@ const CategoriesModal = (props) => {
                 <Modal.Header closeButton className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white !border-b-textColor-200'}`}>
                     <Modal.Title id="contained-modal-title-vcenter">
                         <BaseHeading text="Ingest assets" className="text-xl" />
-                        <p className="text-slate-400 text-sm mt-0.5">Choose where you&apos;d like to upload your sources.</p>
+                        <p className="text-slate-400 text-sm mt-0.5">Choose where you&apos;d like to upload your assets.</p>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={`${theme === 'light' ? '' : 'bg-textColor-300 text-white'}`}>
@@ -66,7 +66,7 @@ const CategoriesModal = (props) => {
                                                 <FolderOpenOutlinedIcon className={`${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'} font-bold !text-2xl`} />
                                                 <div className="flex flex-col">
                                                     <BaseHeading text={label} className="!text-lg !mb-0" />
-                                                    <span className={`text-slate-500 text-sm mt-0.5`}>Contains {sourcesCount} source{sourcesCount !== 1 ? 's' : ''}.</span>
+                                                    <span className={`text-slate-500 text-sm mt-0.5`}>Contains {sourcesCount} asset{sourcesCount !== 1 ? 's' : ''}.</span>
                                                 </div>
                                             </div>
                                         </div>

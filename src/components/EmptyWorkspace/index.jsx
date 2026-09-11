@@ -22,7 +22,7 @@ const EmptyWorkspace = () => {
 
                 {/* Description */}
                 <p className="mt-2 max-w-md text-[13px] leading-5 text-gray-500">
-                    Select a source from your collection to explore its content,
+                    Select an asset from your collection to explore its content,
                     metadata, and AI-powered insights.
                 </p>
 
@@ -49,7 +49,7 @@ const EmptyWorkspace = () => {
 
                 {/* Hint */}
                 <div className="mt-7 flex items-center gap-1.5 text-[12px] text-primary-300">
-                    <span>Select a source from the left panel</span>
+                    <span>Select an asset from the left panel</span>
                 </div>
             </div>
         </div>
