@@ -30,13 +30,15 @@ export default function Analytics() {
         analyticsActiveTab,
         setAnalyticsActiveTab,
         analyticsSourceIds,
-        setAnalyticsSourceIds
+        setAnalyticsSourceIds,
+        setAnalyticsTab
     } = useContext(MainContext);
 
     const videoAssets = knowledgeBase.filter(item => item.file_type === "video");
 
     useEffect(() => {
         setActiveStudioPanel(analyticsActiveTab);
+        setAnalyticsTab(analyticsActiveTab);
 
         switch (analyticsActiveTab) {
             case "time-segments":

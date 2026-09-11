@@ -28,7 +28,7 @@ const MIN_SCALE = 1;
 const MAX_SCALE = 4;
 const SCALE_STEP = 0.5;
 
-function ImageViewer({ src, alt, title, eyebrow = "Now viewing" }) {
+function ImageViewer({ src, alt, title, onClose }) {
 
     const {
         setShowMetadata
@@ -115,9 +115,9 @@ function ImageViewer({ src, alt, title, eyebrow = "Now viewing" }) {
 
     const zoomPct = Math.round(scale * 100);
 
-    function onClose() {
-        setShowMetadata(false);
-    }
+    // function onClose() {
+    //     setShowMetadata(false);
+    // }
 
     return (
         <div

@@ -19,6 +19,7 @@ import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
 import ImageViewer from "../ImageViewer";
 import Metadata from '../Metadata/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
+import { MAIN_STUDIO_PANELS } from '../../globals.js';
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
@@ -36,7 +37,10 @@ const MetadataPanel = ({ workspaceContainer }) => {
     generatedResources,
     metadataPanelContainer,
     setJumpToPage,
-    setShowMetadata
+    setShowMetadata,
+    activeTab,
+    setActiveStudioPanel,
+    analyticsActiveTab
   } = useContext(MainContext);
 
 
@@ -273,8 +277,11 @@ const MetadataPanel = ({ workspaceContainer }) => {
   };
 
   const onClose = () => {
-    setShowMetadata(false);
+    if (activeTab === "analytics") {
+      setActiveStudioPanel(analyticsActiveTab);
+    }
     setCurrentResource(null);
+    setShowMetadata(false);
   };
 
   useEffect(() => {
@@ -375,6 +382,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               onReady={() => setIsPlayerReady(true)}
               onDuration={() => setHasDuration(true)}
               playerRef={player}
+              onClose={onClose}
             />
           </div>
         </>
@@ -474,6 +482,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
               src={currentResource?.thumbnail || resourceURL}
               alt={currentResource.source_path}
               eyebrow={currentResource.source_path}
+              onClose={onClose}
             />
           </div>
         )

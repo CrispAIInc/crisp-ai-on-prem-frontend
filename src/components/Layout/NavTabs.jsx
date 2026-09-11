@@ -3,6 +3,7 @@ import { Info } from "lucide-react";
 import { useContext } from 'react';
 import { Tooltip } from "react-tooltip";
 import { MainContext } from '../../contexts/mainContext.jsx';
+import { ANALYTICS_TABS } from '../../globals.js';
 
 /**
  * NavTabs - the primary section navigation, rendered directly
@@ -15,7 +16,8 @@ export default function NavTabs({ active = "media" }) {
     setActiveTab,
     setActiveStudioPanel,
     jsonEntities,
-    setSelectedJsonEntity
+    setSelectedJsonEntity,
+    setAnalyticsTab
   } = useContext(MainContext);
 
   function handleNavClick(key, tab) {
@@ -24,6 +26,10 @@ export default function NavTabs({ active = "media" }) {
 
     if (tab === "business-intelligence") {
       setSelectedJsonEntity(jsonEntities[0]);
+    }
+
+    if (tab === "time-segments") {
+      setAnalyticsTab(ANALYTICS_TABS.TIME_SEGMENTS);
     }
   }
 

@@ -11,7 +11,7 @@ import { delay, generateRandomId, pick, sortByDate } from '../utils';
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
 import { NAV_ITEMS } from '../navigation/navitems.js';
-import { DEFAULT_TOTAL_PDF_PAGES, MAIN_STUDIO_PANELS } from '../globals.js';
+import { ANALYTICS_TABS, DEFAULT_TOTAL_PDF_PAGES, MAIN_STUDIO_PANELS } from '../globals.js';
 
 export const MainContext = createContext({});
 
@@ -1366,7 +1366,9 @@ export default function MainProvider({ children, theme, setTheme }) {
      */
     const [activeTab, setActiveTab] = useState(NAV_ITEMS[0]?.key || "media");
     useEffect(() => {
-        setActiveStudioPanel(MAIN_STUDIO_PANELS.METADATA);
+        if (currentResource) {
+            setActiveStudioPanel(MAIN_STUDIO_PANELS.METADATA);
+        }
     }, [currentResource]);
 
     // ANALYTICS
@@ -1645,8 +1647,11 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [to, setTo] = useState(selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
     const [step, setStep] = useState("");
 
+
+    const [analyticsTab, setAnalyticsTab] = useState(ANALYTICS_TABS.TIME_SEGMENTS);
     // create value object with all the states
     const value = {
+        analyticsTab, setAnalyticsTab,
         sourceIds, setSourceIds,
         isGenerating, setIsGenerating,
         context, setContext,

@@ -44,7 +44,8 @@ export default function CustomVideoPlayer({
     onReady,
     onDuration,
     playerRef,
-    title
+    title,
+    onClose
 }) {
 
     const {
@@ -227,9 +228,9 @@ export default function CustomVideoPlayer({
         }
     };
 
-    const onClose = () => {
-        setShowMetadata(false);
-    };
+    // const onClose = () => {
+    //     setShowMetadata(false);
+    // };
 
     return (
         <div

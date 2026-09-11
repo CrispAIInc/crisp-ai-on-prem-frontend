@@ -9,3 +9,7 @@ export const MAIN_STUDIO_PANELS = {
     FIND_MOMENTS: "find-moments",
     BUSINESS_INTELLIGENCE: "business-intelligence"
 };
+export const ANALYTICS_TABS = {
+    TIME_SEGMENTS: "time-segments",
+    FIND_MOMENTS: "find-moments"
+};
