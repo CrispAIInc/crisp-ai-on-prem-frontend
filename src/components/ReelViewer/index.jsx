@@ -16,7 +16,7 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 import PictureInPictureAltIcon from '@mui/icons-material/PictureInPictureAlt';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
-import { Check } from "lucide-react";
+import { SaveCheck } from "lucide-react";
 import makeApiRequest from '../../api/index.js';
 
 function ReelViewer() {
@@ -358,8 +358,8 @@ function ReelViewer() {
                     <div className="flex items-center gap-2 ml-auto !mr-2 z-[51]">
                         {
                             (!isProjectReadOnly && reels.find(item => item.id === reel.id) === undefined) && (
-                                <div title="Save reel">
-                                    <Check onClick={(e) => {
+                                <div title="Save Short">
+                                    <SaveCheck onClick={(e) => {
                                         e.stopPropagation();
                                         setSaveTitleValue(reel?.title || '');
                                         setShowSaveTitleModal(true);
