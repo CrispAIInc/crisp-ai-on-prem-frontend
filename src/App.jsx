@@ -36,11 +36,13 @@ function ProjectWorkspace({ theme, setTheme }) {
 
   if (!currentProject) {
     return (
-      <ProjectsPage
-        setCurrentProject={setCurrentProject}
-        projects={projects}
-        setProjects={setProjects}
-      />
+      <SettingsProvider>
+        <ProjectsPage
+          setCurrentProject={setCurrentProject}
+          projects={projects}
+          setProjects={setProjects}
+        />
+      </SettingsProvider>
     );
   }
 
