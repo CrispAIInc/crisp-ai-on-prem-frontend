@@ -131,7 +131,15 @@ const Interaction = () => {
         currentChat,
         chatHistory,
         setChatHistory,
-        metadataPanelContainer
+        metadataPanelContainer,
+        messages, setMessages,
+        responseIndex, setResponseIndex,
+        input, setInput,
+        sourceIdsAnalytics: sourceIds, setSourceIdsAnalytics: setSourceIds,
+        originalQueries, setOriginalQueries,
+        originalResponses, setOriginalResponses,
+        showCursor, setShowCursor,
+        isFetchingRefs, setIsFetchingRefs,
     } = useContext(MainContext);
 
     const { currentProject, isProjectReadOnly } = useContext(ProjectContext);
@@ -146,24 +154,14 @@ const Interaction = () => {
 
     const chatAppRef = useRef();
 
-    const [messages, setMessages] = useState(currentChat?.messages || []);
-    const [responseIndex, setResponseIndex] = useState(currentChat?.messages?.length - 1 || -1);
-    useEffect(() => {
-        setMessages(currentChat?.messages || []);
-        setResponseIndex(currentChat?.messages?.length - 1 || -1);
-    }, [currentChat]);
-    const [input, setInput] = useState("");
-    const [sourceIds, setSourceIds] = useState([]);
-
     // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
-    const [originalQueries, setOriginalQueries] = useState([]);
-    const [originalResponses, setOriginalResponses] = useState([]);
+
 
     const crispWizInputRef = useRef(null);
     const crispWizInputContainerRef = useRef(null);
 
-    const [showCursor, setShowCursor] = useState(false);
+
 
     useEffect(() => {
         if (messages?.length > 0 && chatAppRef.current) {
@@ -192,7 +190,7 @@ const Interaction = () => {
         }
     }, [isPlayerReady, currentResource, currentResource?.timestamp]);
 
-    const [isFetchingRefs, setIsFetchingRefs] = useState(false);
+
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {

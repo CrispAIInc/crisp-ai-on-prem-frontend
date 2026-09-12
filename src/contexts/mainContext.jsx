@@ -1648,9 +1648,57 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [step, setStep] = useState("");
 
 
+
+    const [messages, setMessages] = useState(currentChat?.messages || []);
+    const [responseIndex, setResponseIndex] = useState(currentChat?.messages?.length - 1 || -1);
+    const [input, setInput] = useState("");
+    const [sourceIdsAnalytics, setSourceIdsAnalytics] = useState([]);
+    const [originalQueries, setOriginalQueries] = useState([]);
+    const [originalResponses, setOriginalResponses] = useState([]);
+    const [showCursor, setShowCursor] = useState(false);
+    const [isFetchingRefs, setIsFetchingRefs] = useState(false);
+
+    const interactionSessionIdRef = useRef(null);
+
+    useEffect(() => {
+        interactionSessionIdRef.current = null;
+    }, [currentProject.project_id]);
+    // Hydrate interaction messages when switching chats, not when remounting the Interaction tab mid-stream.
+    useEffect(() => {
+        const sessionId = currentChat?.sessionId;
+        if (!sessionId || interactionSessionIdRef.current === sessionId) {
+            return;
+        }
+        interactionSessionIdRef.current = sessionId;
+        const chatMessages = currentChat?.messages || [];
+        setMessages(chatMessages);
+        setResponseIndex(chatMessages.length > 0 ? chatMessages.length - 1 : -1);
+    }, [currentChat?.sessionId, currentChat?.messages]);
+
+    // Hydrate interaction messages when switching chats, not when remounting the Interaction tab mid-stream.
+    useEffect(() => {
+        const sessionId = currentChat?.sessionId;
+        if (!sessionId || interactionSessionIdRef.current === sessionId) {
+            return;
+        }
+        interactionSessionIdRef.current = sessionId;
+        const chatMessages = currentChat?.messages || [];
+        setMessages(chatMessages);
+        setResponseIndex(chatMessages.length > 0 ? chatMessages.length - 1 : -1);
+    }, [currentChat?.sessionId, currentChat?.messages]);
+
+
     const [analyticsTab, setAnalyticsTab] = useState(ANALYTICS_TABS.TIME_SEGMENTS);
     // create value object with all the states
     const value = {
+        messages, setMessages,
+        responseIndex, setResponseIndex,
+        input, setInput,
+        sourceIdsAnalytics, setSourceIdsAnalytics,
+        originalQueries, setOriginalQueries,
+        originalResponses, setOriginalResponses,
+        showCursor, setShowCursor,
+        isFetchingRefs, setIsFetchingRefs,
         analyticsTab, setAnalyticsTab,
         sourceIds, setSourceIds,
         isGenerating, setIsGenerating,
