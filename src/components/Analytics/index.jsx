@@ -12,6 +12,7 @@ import { useToast } from '../../contexts/toastContext';
 import LoadingSpinner from '../LoadingSpinner';
 import { MAIN_STUDIO_PANELS } from '../../globals';
 import Field from '../Field';
+import BaseHeading from '../BaseHeading';
 
 const TABS = [
     { id: "time-segments", label: "Time segment description", icon: Sparkles, info: "Analyze a specific video time range and generate precise breakdown." },
@@ -126,7 +127,16 @@ function TimeSegmentPane({
         isGeneratingTimeSegment,
         setIsGeneratingTimeSegment,
         timeSegmentResultsDescription,
-        setTimeSegmentResultsDescription
+        setTimeSegmentResultsDescription,
+        isInfoTooltipOpenTimeSegment,
+        setIsInfoTooltipOpenTimeSegment,
+        formattedTimeSegment,
+        setFormattedTimeSegment,
+        jsonInputTimeSegment,
+        setJsonInputTimeSegment,
+        fileInputTimeSegmentRef,
+        errorTimeSegment,
+        setErrorTimeSegment,
     } = useContext(MainContext);
 
     const { token } = useAuth();
@@ -135,6 +145,76 @@ function TimeSegmentPane({
 
     const source = knowledgeBase.find(item => item.source_id === sourceIds[0]);
     const canGenerate = !isProjectReadOnly && source && timeSegmentContext.trim() !== "";
+
+
+    const formatJSON = (json) => {
+        try {
+            const parsed = JSON.parse(json);
+            const pretty = JSON.stringify(parsed, null, 2);
+            setFormattedTimeSegment(pretty);
+            setErrorTimeSegment("");
+        } catch (err) {
+            setErrorTimeSegment("Invalid business schema!");
+            setFormattedTimeSegment("");
+        }
+    };
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setJsonInputTimeSegment(value);
+        formatJSON(value);
+    };
+
+    const handleFileUpload = (e) => {
+
+        const file = e.target.files[0];
+        if (!file) return;
+
+        console.log("sd");
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const text = event.target.result;
+            setJsonInputTimeSegment(text);
+            formatJSON(text);
+        };
+        reader.readAsText(file);
+    };
+
+    const handleTabClick = (e) => {
+        if (e.key === "Tab") {
+            e.preventDefault();
+
+            const start = e.target.selectionStart;
+            const end = e.target.selectionEnd;
+
+            if (e.shiftKey) {
+                // Remove tab
+                const before = jsonInputTimeSegment.substring(0, start);
+                if (before.endsWith("\t")) {
+                    const newValue =
+                        jsonInputTimeSegment.substring(0, start - 1) +
+                        jsonInputTimeSegment.substring(end);
+                    setJsonInputTimeSegment(newValue);
+
+                    setTimeout(() => {
+                        e.target.selectionStart = e.target.selectionEnd = start - 1;
+                    }, 0);
+                }
+            } else {
+                // Add tab
+                const newValue =
+                    jsonInputTimeSegment.substring(0, start) +
+                    "\t" +
+                    jsonInputTimeSegment.substring(end);
+
+                setJsonInputTimeSegment(newValue);
+
+                setTimeout(() => {
+                    e.target.selectionStart = e.target.selectionEnd = start + 1;
+                }, 0);
+            }
+        }
+    };
 
 
     async function generateTimeSegmentDescription() {
@@ -178,7 +258,8 @@ function TimeSegmentPane({
                 end_timestamp: formatTime(timeSegmentEnd),
                 prompt: timeSegmentContext,
                 title: timeSegmentTitle,
-                source_id: source.source_id
+                source_id: source.source_id,
+                ontology: jsonInputTimeSegment
             };
 
             const { data, success, message } = await makeApiRequest(`/segments`, 'POST', payload, {
@@ -227,7 +308,41 @@ function TimeSegmentPane({
                 />
             </Field>
 
-            <Field label="Title">
+            {/* JSON INPUT */}
+            <div className="relative w-full pt-4">
+                <div className="flex items-center gap-2 mb-1">
+                    <div className="relative flex items-center gap-1 flex-1">
+                        <label className="block text-[12.5px] font-semibold text-ink">Business Schema (optional)</label>
+                        <Info onMouseOver={() => setIsInfoTooltipOpenTimeSegment(true)} onMouseLeave={() => setIsInfoTooltipOpenTimeSegment(false)} className={`!relative !w-5`} />
+
+                        {
+                            isInfoTooltipOpenTimeSegment && (
+                                <div className={`absolute right-0 p-2 bg-background_workspace shadow-lg rounded-md w-[300px] max-w-[300px] left-0 z-40 top-full text-textColor-200 !border !border-textColor-100/50 text-sm`}>If no business schema was provided, the generation will be based on the context.</div>
+                            )
+                        }
+                    </div>
+                    <button className={`font-medium text-sm p-2 bg-transparent border border-textColor-100 rounded-lg focus:outline-none`}
+                        onClick={() => fileInputTimeSegmentRef.current.click()}
+                    >
+                        Upload JSON
+                    </button>
+                    <input type="file" ref={fileInputTimeSegmentRef} accept=".json" style={{ display: 'none' }} onChange={handleFileUpload} />
+                </div>
+                <textarea
+                    value={jsonInputTimeSegment}
+                    onChange={handleChange}
+                    placeholder="Paste or type business schema here (in JSON format)..."
+                    className="w-full min-h-[78px] border border-border rounded-lg px-2.5 py-2.5 text-[12.5px] text-ink placeholder:text-ink-muted outline-none focus:border-primary resize-y bg-gray-100"
+                    onKeyDown={handleTabClick}
+                />
+
+                {/* Error */}
+                {(errorTimeSegment && jsonInputTimeSegment.trim().length > 0) && (
+                    <BaseHeading className="!text-red-500 font-medium" text={errorTimeSegment} />
+                )}
+            </div>
+
+            <Field label="Title (Optional)">
                 <input
                     type="text"
                     value={timeSegmentTitle}

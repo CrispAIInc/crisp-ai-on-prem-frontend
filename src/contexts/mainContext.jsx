@@ -1648,6 +1648,13 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [step, setStep] = useState("");
 
 
+    const [isInfoTooltipOpenTimeSegment, setIsInfoTooltipOpenTimeSegment] = useState(false);
+    const [formattedTimeSegment, setFormattedTimeSegment] = useState("");
+    const [jsonInputTimeSegment, setJsonInputTimeSegment] = useState("");
+    const fileInputTimeSegmentRef = useRef(null);
+    const [errorTimeSegment, setErrorTimeSegment] = useState("");
+
+
 
     const [messages, setMessages] = useState(currentChat?.messages || []);
     const [responseIndex, setResponseIndex] = useState(currentChat?.messages?.length - 1 || -1);
@@ -1691,6 +1698,15 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [analyticsTab, setAnalyticsTab] = useState(ANALYTICS_TABS.TIME_SEGMENTS);
     // create value object with all the states
     const value = {
+        isInfoTooltipOpenTimeSegment,
+        setIsInfoTooltipOpenTimeSegment,
+        formattedTimeSegment,
+        setFormattedTimeSegment,
+        jsonInputTimeSegment,
+        setJsonInputTimeSegment,
+        fileInputTimeSegmentRef,
+        errorTimeSegment,
+        setErrorTimeSegment,
         messages, setMessages,
         responseIndex, setResponseIndex,
         input, setInput,
