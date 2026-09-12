@@ -12,9 +12,9 @@ import CustomSelectTwo from "../CustomSelectTwo";
 import FaqItem from '../FaqItem';
 
 const TAB_SETS = {
-    video: ["search", "transcription", "summary", "chapters", "highlights", "keywords", "faqs"],
-    pdf: ["search", "summary", "chapters", "highlights", "keywords", "faqs"],
-    img: ["summary", "keywords"],
+    video: ["search", "transcription", "summary", "chapters", "highlights", "topics", "faqs"],
+    pdf: ["search", "summary", "chapters", "highlights", "topics", "faqs"],
+    img: ["summary", "topics"],
 };
 
 const TAB_LABELS = {
@@ -23,7 +23,7 @@ const TAB_LABELS = {
     summary: "Summary",
     chapters: "Chapters",
     highlights: "Highlights",
-    keywords: "Keywords",
+    topics: "Topics",
     faqs: "FAQs"
 };
 
@@ -153,7 +153,7 @@ export default function Metadata({
                         highlights={translatedResource?.highlights?.content}
                     />
                 )}
-                {activeTab === "keywords" && (
+                {activeTab === "topics" && (
                     <KeywordsPane
                         keywords={translatedResource?.keywords?.content}
                     />
@@ -450,7 +450,7 @@ function KeywordsPane({ keywords }) {
     return (
         <>
             <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
-                <h3 className="font-display text-[13.5px] font-semibold text-ink">Keywords</h3>
+                <h3 className="font-display text-[13.5px] font-semibold text-ink">Topics</h3>
             </div>
 
             <div className="p-4 flex-1 min-h-0 overflow-y-auto">
@@ -468,8 +468,8 @@ function KeywordsPane({ keywords }) {
                     </div>
                 ) : (
                     <EmptyState
-                        title="Keywords not available for this asset."
-                        description="You can generate keywords using the Contextual Metadata panel."
+                        title="Topics not available for this asset."
+                        description="You can generate Topics using the Contextual Metadata panel."
                         icon={<SearchAlert size={19} />}
                     />
                 )}

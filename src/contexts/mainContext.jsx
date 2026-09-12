@@ -1200,7 +1200,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         // { id: "transcription", name: "Transcription", description: "Generate audio transcription for source" },
         { id: "chapters", name: "Chapters", description: "Divide source into meaningful sections" },
         { id: "highlights", name: "Highlights", description: "Capture key moments" },
-        { id: "keywords", name: "Keywords", description: "Extract important terms" },
+        { id: "keywords", name: "Topics", description: "Extract important terms" },
         { id: "faqs", name: "FAQs", description: "Frequently asked questions" },
         // { id: "knowledgeGraph", name: "Knowledge graph", description: "Visualize key concepts and relationships" },
         // { id: "embeddings", name: "Embeddings", description: "Create vector representations for search" },
