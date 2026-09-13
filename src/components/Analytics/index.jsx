@@ -355,15 +355,19 @@ function TimeSegmentPane({
 
 
             <Field label="">
-                <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer">
-                    <input
-                        type="checkbox"
-                        checked={timeSegmentFullLength}
-                        onChange={(e) => setTimeSegmentFullLength(e.target.checked)}
-                        className="w-4 h-4 rounded accent-primary"
-                    />
-                    Include full asset length
-                </label>
+                {
+                    sourceIds.length > 0 && (
+                        <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={timeSegmentFullLength}
+                                onChange={(e) => setTimeSegmentFullLength(e.target.checked)}
+                                className="w-4 h-4 rounded accent-primary"
+                            />
+                            Include full asset length
+                        </label>
+                    )
+                }
 
 
                 {!timeSegmentFullLength && (
@@ -390,12 +394,21 @@ function TimeSegmentPane({
 
             <Field label=""></Field>
 
-            <GenerateButton
-                isPending={isGeneratingTimeSegment}
-                disabled={!canGenerate}
-                onClick={generateTimeSegmentDescription}
-            />
-            {/* <button onClick={() => setActiveStudioPanel(MAIN_STUDIO_PANELS.TIME_SEGMENTS)}>Show segments</button> */}
+            <div className="py-3.5 border-t border-border shrink-0">
+                <button
+                    type="button"
+                    disabled={!canGenerate}
+                    onClick={generateTimeSegmentDescription}
+                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                >
+                    <Sparkles size={14} className={`${isGeneratingTimeSegment && "animate-customPulse"}`} />
+                    <span className={`${isGeneratingTimeSegment && "animate-customPulse"}`}>
+                        {
+                            isGeneratingTimeSegment ? "Generating time segments" : "Generate"
+                        }
+                    </span>
+                </button>
+            </div>
         </div>
     );
 }
@@ -527,11 +540,21 @@ function FindMomentsPane({
 
             <Field label=""></Field>
 
-            <GenerateButton
-                isPending={isGeneratingMoments}
-                disabled={!canGenerate}
-                onClick={generateMoment}
-            />
+            <div className="py-3.5 border-t border-border shrink-0">
+                <button
+                    type="button"
+                    disabled={!canGenerate}
+                    onClick={generateMoment}
+                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                >
+                    <Sparkles size={14} className={`${isGeneratingMoments && "animate-customPulse"}`} />
+                    <span className={`${isGeneratingMoments && "animate-customPulse"}`}>
+                        {
+                            isGeneratingMoments ? "Generating moments" : "Generate"
+                        }
+                    </span>
+                </button>
+            </div>
         </div>
     );
 }
@@ -554,25 +577,5 @@ function InstructionsInput({ value, onChange, actionIcon: ActionIcon, onAction }
                 <ActionIcon size={14} />
             </button> */}
         </div>
-    );
-}
-
-function GenerateButton({ isPending, disabled, onClick }) {
-    return (
-        <button
-            type="button"
-            disabled={disabled}
-            onClick={onClick}
-            className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-        >
-            {
-                isPending ? (
-                    <LoadingSpinner isSmall />
-                ) : (
-                    <Sparkles size={14} />
-                )
-            }
-            Generate
-        </button>
     );
 }
