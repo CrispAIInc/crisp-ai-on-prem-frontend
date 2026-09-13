@@ -195,6 +195,47 @@ function BusinessIntelligence() {
                     />
                 </Field>
 
+                <Field label="">
+                    {/* FULL ASSET LENGTH */}
+                    {
+                        selectedSources.length > 0 && (
+                            <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer w-fit">
+                                <input
+                                    type="checkbox"
+                                    checked={fullLength}
+                                    onChange={(e) => setFullLength(e.target.checked)}
+                                    className="w-4 h-4 rounded accent-primary"
+                                />
+                                Include full asset length
+                            </label>
+                        )
+                    }
+
+                    {
+                        !fullLength && (
+                            <>
+                                {
+                                    selectedSourceType === "video" ? (
+                                        <TimestampPicker
+                                            start={start}
+                                            setStart={setStart}
+                                            end={end}
+                                            setEnd={setEnd}
+                                        />
+                                    ) : selectedSourceType === "pdf" ? (
+                                        <PageNumbersPicker
+                                            totalPages={selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
+                                            setStart={setFrom}
+                                            setEnd={setTo}
+                                            isDisabled={fullLength}
+                                        />
+                                    ) : null
+                                }
+                            </>
+                        )
+                    }
+                </Field>
+
                 <Field label="Context">
                     <textarea
                         value={context}
@@ -237,45 +278,6 @@ function BusinessIntelligence() {
                         <BaseHeading className="!text-red-500 font-medium" text={error} />
                     )}
                 </div>
-
-                {/* FULL ASSET LENGTH */}
-                {
-                    selectedSources.length > 0 && (
-                        <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer w-fit">
-                            <input
-                                type="checkbox"
-                                checked={fullLength}
-                                onChange={(e) => setFullLength(e.target.checked)}
-                                className="w-4 h-4 rounded accent-primary"
-                            />
-                            Include full asset length
-                        </label>
-                    )
-                }
-
-                {
-                    !fullLength && (
-                        <>
-                            {
-                                selectedSourceType === "video" ? (
-                                    <TimestampPicker
-                                        start={start}
-                                        setStart={setStart}
-                                        end={end}
-                                        setEnd={setEnd}
-                                    />
-                                ) : selectedSourceType === "pdf" ? (
-                                    <PageNumbersPicker
-                                        totalPages={selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES}
-                                        setStart={setFrom}
-                                        setEnd={setTo}
-                                        isDisabled={fullLength}
-                                    />
-                                ) : null
-                            }
-                        </>
-                    )
-                }
 
                 <Field label="Title (Optional)">
                     <input

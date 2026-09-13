@@ -297,6 +297,44 @@ function TimeSegmentPane({
 
     return (
         <div className="flex flex-col">
+            <Field label="">
+                {
+                    sourceIds.length > 0 && (
+                        <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={timeSegmentFullLength}
+                                onChange={(e) => setTimeSegmentFullLength(e.target.checked)}
+                                className="w-4 h-4 rounded accent-primary"
+                            />
+                            Include full asset length
+                        </label>
+                    )
+                }
+
+
+                {!timeSegmentFullLength && (
+                    <TimestampPicker
+                        start={timeSegmentStart}
+                        setStart={setTimeSegmentStart}
+                        end={timeSegmentEnd}
+                        setEnd={setTimeSegmentEnd}
+                    />
+                )}
+
+                {/* is detailed mode */}
+                {
+                    source?.withDetailedMode && (
+                        <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
+                            <Info size={17} />
+                            <p className="text-xs mt-1 font-medium">
+                                This asset was ingested using <b>Detailed Mode</b>, therefore you will get <b>high detailed results</b>.
+                            </p>
+                        </div>
+                    )
+                }
+            </Field>
+
             <Field label="Context">
                 <InstructionsInput
                     value={timeSegmentContext}
@@ -350,46 +388,6 @@ function TimeSegmentPane({
                     placeholder='Write a title for this segment'
                     className="flex-1 outline-none border border-gray-200 w-full text-[12.5px] text-ink placeholder:text-ink-muted bg-gray-100 rounded-lg px-3 py-2"
                 />
-            </Field>
-
-
-
-            <Field label="">
-                {
-                    sourceIds.length > 0 && (
-                        <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink cursor-pointer">
-                            <input
-                                type="checkbox"
-                                checked={timeSegmentFullLength}
-                                onChange={(e) => setTimeSegmentFullLength(e.target.checked)}
-                                className="w-4 h-4 rounded accent-primary"
-                            />
-                            Include full asset length
-                        </label>
-                    )
-                }
-
-
-                {!timeSegmentFullLength && (
-                    <TimestampPicker
-                        start={timeSegmentStart}
-                        setStart={setTimeSegmentStart}
-                        end={timeSegmentEnd}
-                        setEnd={setTimeSegmentEnd}
-                    />
-                )}
-
-                {/* is detailed mode */}
-                {
-                    source?.withDetailedMode && (
-                        <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
-                            <Info size={17} />
-                            <p className="text-xs mt-1 font-medium">
-                                This asset was ingested using <b>Detailed Mode</b>, therefore you will get <b>high detailed results</b>.
-                            </p>
-                        </div>
-                    )
-                }
             </Field>
 
             <Field label=""></Field>
