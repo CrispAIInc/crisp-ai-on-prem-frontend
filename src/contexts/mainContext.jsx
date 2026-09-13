@@ -261,7 +261,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [timeSegmentEnd, setTimeSegmentEnd] = useState({ h: "00", m: "00", s: "00" });
     const [timeSegmentContext, setTimeSegmentContext] = useState('');
     const [timeSegmentTitle, setTimeSegmentTitle] = useState('');
-    const [timeSegmentFullLength, setTimeSegmentFullLength] = useState(false);
+    const [timeSegmentFullLength, setTimeSegmentFullLength] = useState(true);
     const [isGeneratingTimeSegment, setIsGeneratingTimeSegment] = useState(false);
     const [timeSegmentResultsDescription, setTimeSegmentResultsDescription] = useState({ start: "00:00:00", end: "00:00:00", description: "", refs: [] });
     // Find moments pane state
