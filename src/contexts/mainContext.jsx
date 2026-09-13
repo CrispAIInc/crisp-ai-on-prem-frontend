@@ -1640,7 +1640,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [jsonInput, setJsonInput] = useState("");
     const fileInputRef = useRef(null);
     const [error, setError] = useState("");
-    const [fullLength, setFullLength] = useState(false);
+    const [fullLength, setFullLength] = useState(true);
     const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
     const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
     const [from, setFrom] = useState("1");
