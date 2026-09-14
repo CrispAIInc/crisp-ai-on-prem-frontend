@@ -259,14 +259,25 @@ export function pluck(arr, key) {
     return arr.map(obj => obj?.[key]);
 }
 
-export function sortArrayOfObjects(data, key) {
+export function sortArrayOfObjects(data, key, direction = "asc") {
     return [...data].sort((a, b) => {
-        const pathA = a[key] || "";
-        const pathB = b[key] || "";
-        return pathA.localeCompare(pathB, undefined, {
-            numeric: true,
-            sensitivity: "base",
-        });
+        const valueA = a[key];
+        const valueB = b[key];
+
+        // Handle dates
+        const dateA = new Date(valueA);
+        const dateB = new Date(valueB);
+        if (!isNaN(dateA) && !isNaN(dateB)) {
+            const result = dateA.getTime() - dateB.getTime();
+            return direction === "desc" ? -result : result;
+        }
+
+        // Fallback to string/numeric sorting
+        const pathA = valueA || "";
+        const pathB = valueB || "";
+        const result = pathA.localeCompare(pathB, undefined, { numeric: true, sensitivity: "base", });
+
+        return direction === "desc" ? -result : result;
     });
 }
 

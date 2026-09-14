@@ -17,7 +17,7 @@ export default function useResources(config = {}) {
         getReels: async () => {
             try {
                 const data = await makeApiRequest("/reels", "get");
-                const sortedData = sortArrayOfObjects(data, 'title');
+                const sortedData = sortArrayOfObjects(data, 'created_at', 'desc');
                 if (config.setReels) {
                     config.setReels(sortedData);
                 }
