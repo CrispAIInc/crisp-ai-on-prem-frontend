@@ -12,7 +12,7 @@ import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals.js';
 import useAuth from '../../hooks/useAuth.js';
 import useMetadata from '../../hooks/useMetadata.js';
 import { useResizableSidebar } from '../../hooks/useResizableSidebar';
-import { formatTime, fromSeconds, toSeconds } from '../../utils.js';
+import { formatTime, fromSeconds, sortArrayOfObjects, toSeconds } from '../../utils.js';
 import KnowledgeGraph from '../Entities/index.jsx';
 import InsightEditor from '../InsightEditor/index.jsx';
 import MediaEntertainment from '../MediaEntertainment';
@@ -328,7 +328,7 @@ const ChatPanel = () => {
         });
 
         if (success) {
-          setSegmentDescriptions(data);
+          setSegmentDescriptions(sortArrayOfObjects(data, "created_at", "desc"));
         }
       } catch (error) {
         console.log(error);

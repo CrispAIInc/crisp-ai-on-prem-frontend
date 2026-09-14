@@ -7,7 +7,7 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import useResources from '../hooks/useResources';
 import { AuthContext } from './authContext';
-import { delay, generateRandomId, pick, sortByDate } from '../utils';
+import { delay, generateRandomId, pick, sortArrayOfObjects, sortByDate } from '../utils';
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
 import { NAV_ITEMS } from '../navigation/navitems.js';
@@ -1566,7 +1566,7 @@ export default function MainProvider({ children, theme, setTheme }) {
                         };
                     });
 
-                    setMoments(formattedData);
+                    setMoments(sortArrayOfObjects(formattedData, "created_at", "desc"));
 
                     // setMoments([
                     //     {
