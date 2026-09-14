@@ -1311,7 +1311,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     useEffect(() => {
         async function getJsonEntities() {
             const { graphs } = await makeApiRequest('/graphs');
-            setJsonEntities(graphs);
+            setJsonEntities(sortArrayOfObjects(graphs, "created_at", "desc"));
         }
 
         getJsonEntities();
