@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import JsonView from '@uiw/react-json-view';
+import { lightTheme } from '@uiw/react-json-view/light';
 import { Info, Clock, Layers, PlayCircle, Pencil, Trash, ChevronDown, FileText, Braces, X } from "lucide-react";
 import {
     AlignmentType,
@@ -666,7 +668,7 @@ function SegmentDetails() {
                     </div>
 
                 </div>
-                <div className={`flex items-center gap-1 text-textColor-200`}>
+                {/* <div className={`flex items-center gap-1 text-textColor-200`}>
                     <PlayCircle size={15} />
                     <p className={`text-sm/6 font-semibold`}>{source?.source_path || video}</p>
                 </div>
@@ -674,18 +676,25 @@ function SegmentDetails() {
                 <div className={`flex items-center gap-1 text-textColor-200`}>
                     <Clock size={15} />
                     <p className={`text-sm/6 font-semibold`}>{start} - {end}</p>
-                </div>
+                </div> */}
             </div>
 
+            <JsonView
+                value={currentSegment}
+                style={lightTheme}
+                theme="rjv-default"
+                displayDataTypes={false}
+            />
+
             {/* query prompt */}
-            <div>
+            {/* <div>
                 <BaseHeading text="Prompt" />
                 <p className={`text-sm/6 text-textColor-300`} dangerouslySetInnerHTML={{ __html: query }} />
-            </div>
+            </div> */}
 
 
             {/* Tags */}
-            <div className="grid grid-cols-2 gap-6">
+            {/* <div className="grid grid-cols-2 gap-6">
 
                 <div>
                     <BaseHeading text="Mood" className="mb-2" />
@@ -715,24 +724,24 @@ function SegmentDetails() {
                     </div>
                 </div>
 
-            </div>
+            </div> */}
 
 
 
             {/* Scene Description */}
-            <div>
+            {/* <div>
                 <BaseHeading text="generated response" className="mb-1" />
                 <p className={`text-sm/6 text-textColor-300`} dangerouslySetInnerHTML={{ __html: schema?.action_description.replace(/\r?\n/g, '<br />') }} />
-            </div>
+            </div> */}
 
-            <TalkingHeadPanel
+            {/* <TalkingHeadPanel
                 talkingHeads={schema?.talking_head}
                 source={source}
-            />
+            /> */}
 
 
             {/* Onscreen Text */}
-            {schema?.onscreen_text?.detected && (
+            {/* {schema?.onscreen_text?.detected && (
                 <div>
                     <BaseHeading text="Detected On-screen Text" className="mb-2" />
 
@@ -742,11 +751,11 @@ function SegmentDetails() {
                         ))}
                     </div>
                 </div>
-            )}
+            )} */}
 
 
             {/* refs */}
-            {source && source.length > 0 && (
+            {/* {source && source.length > 0 && (
                 <div>
                     <BaseHeading text="References" className="font-bold text-sm mb-2" />
                     <ul className="list-disc list-inside text-sm/6 text-textColor-300">
@@ -757,7 +766,7 @@ function SegmentDetails() {
                         })}
                     </ul>
                 </div>
-            )}
+            )} */}
 
             {isSaveModalOpen && (
                 <SaveSegmentModal
