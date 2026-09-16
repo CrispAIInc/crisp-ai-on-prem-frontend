@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onIdTokenChanged, signOut } from "firebase/auth";
+import { clearStoredCurrentProject } from "../globals";
 
 export default function useAuth() {
     const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function useAuth() {
         loading,
         login: () => { },
         logout: async (redirectUrl = "/login", redirectOptions = {}) => {
+            clearStoredCurrentProject();
             await signOut(auth);
             setToken(null);
             navigate(redirectUrl, {

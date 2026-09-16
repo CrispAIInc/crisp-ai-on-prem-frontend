@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
 import makeApiRequest, { axiosInstance } from '../api';
 import { AuthContext } from './authContext';
+import { CURRENT_PROJECT_STORAGE_KEY, readStoredCurrentProject } from '../globals';
 import { pick } from '../utils';
 
 export const ProjectContext = createContext();
@@ -9,7 +10,7 @@ export default function ProjectProvider({ theme, setTheme, children }) {
 
     const { user, setUser } = useContext(AuthContext);
     const [projects, setProjects] = useState([]);
-    const [currentProject, setCurrentProject] = useState(JSON.parse(localStorage.getItem('current_project')));
+    const [currentProject, setCurrentProject] = useState(readStoredCurrentProject);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
     // GET USER INFO
@@ -43,9 +44,25 @@ export default function ProjectProvider({ theme, setTheme, children }) {
         fetchProjects();
     }, []);
 
+    useEffect(() => {
+        if (!currentProject || projects.length === 0) {
+            return;
+        }
+        const projectStillAccessible = projects.some(
+            (project) => project.project_id === currentProject.project_id
+        );
+        if (!projectStillAccessible) {
+            setCurrentProject(null);
+        }
+    }, [projects]);
+
     // ADD/REMOVE PROJECTID HEADER FROM AXIOS
     useLayoutEffect(() => {
-        localStorage.setItem('current_project', JSON.stringify(currentProject));
+        if (currentProject) {
+            localStorage.setItem(CURRENT_PROJECT_STORAGE_KEY, JSON.stringify(currentProject));
+        } else {
+            localStorage.removeItem(CURRENT_PROJECT_STORAGE_KEY);
+        }
 
         if (!currentProject) return;
 

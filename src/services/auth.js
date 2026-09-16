@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, signOut, onIdTokenChanged, signInWithCustomToken, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { TOKEN_NAME } from '../globals';
+import { clearStoredCurrentProject, TOKEN_NAME } from '../globals';
 import { auth, provider } from '../config/firebase';
 import makeApiRequest, { axiosInstance } from '../api';
 
@@ -27,6 +27,7 @@ export const createUserWithFirestore = async (email, password) => {
 export const signInWithGoogle = async () => {
     try {
         const result = await signInWithPopup(auth, provider);
+        clearStoredCurrentProject();
         const user = result.user;
         const token = await user.getIdToken(true); // Firebase ID token
         // simulate a sleep for 1 second
@@ -41,6 +42,7 @@ export const loginWithUsernameAndPassword = async (userInfo) => {
     const { success, accessToken, message } = await makeApiRequest('/login', 'POST', JSON.stringify(userInfo));
 
     if (success) {
+        clearStoredCurrentProject();
         // Step 3: Exchange custom token for Firebase ID token
         await signInWithCustomToken(auth, accessToken);
 
