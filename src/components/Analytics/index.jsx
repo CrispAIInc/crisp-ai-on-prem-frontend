@@ -61,6 +61,10 @@ export default function Analytics() {
                 <p className="text-xs text-ink-secondary mt-0.5">Analyze content to identify important information, events, and insights, linked directly to the timestamp or page where they appear.</p>
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto pb-3">
+                <Field label="Sources">
+                    <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
+                </Field>
+
                 {/* Sub-navigation */}
                 <nav className="pt-3.5 flex items-center gap-6">
                     {TABS.map(({ id, label, icon: Icon }) => {
@@ -81,10 +85,6 @@ export default function Analytics() {
                         );
                     })}
                 </nav>
-
-                <Field label="Sources">
-                    <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
-                </Field>
 
                 {analyticsActiveTab === TABS[0].id ? (
                     <TimeSegmentPane
@@ -325,7 +325,7 @@ function TimeSegmentPane({
                 {/* is detailed mode */}
                 {
                     source?.withDetailedMode && (
-                        <div className={`flex items-center gap-1 p-2 rounded-md bg-primary-100/50 text-primary-300`}>
+                        <div className={`flex items-center gap-1 p-2 mt-2 rounded-md bg-primary-100/50 text-primary-300`}>
                             <Info size={17} />
                             <p className="text-xs mt-1 font-medium">
                                 This asset was ingested using <b>Detailed Mode</b>, therefore you will get <b>high detailed results</b>.
