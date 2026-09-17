@@ -87,7 +87,7 @@ export default function Shorts() {
             </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto">
-                <Field label="Sources">
+                <Field label="Assets">
                     <SourcesDropdown
                         sources={videoSources}
                         selectedSourceIds={shortsSourceIds}

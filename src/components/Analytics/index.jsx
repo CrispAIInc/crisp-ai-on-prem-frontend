@@ -61,7 +61,7 @@ export default function Analytics() {
                 <p className="text-xs text-ink-secondary mt-0.5">Analyze content to identify important information, events, and insights, linked directly to the timestamp or page where they appear.</p>
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto pb-3">
-                <Field label="Sources">
+                <Field label="Assets">
                     <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
                 </Field>
 

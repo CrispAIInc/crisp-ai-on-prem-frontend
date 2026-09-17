@@ -592,7 +592,7 @@ export default function Media() {
                         )} */}
                 </div>
             ) : (
-                <NoData message="Select a source to start generating content" classes="mt-4" />
+                <NoData message="Select an asset to start generating content" classes="mt-4" />
             )}
 
             <AddSourceModal

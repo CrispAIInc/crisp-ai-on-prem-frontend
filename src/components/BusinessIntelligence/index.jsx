@@ -187,7 +187,7 @@ function BusinessIntelligence() {
             </div>
 
             <div className="flex-1 min-h-0 mb-3 overflow-y-auto">
-                <Field label="Sources">
+                <Field label="Assets">
                     <SourcesDropdown
                         sources={sources}
                         selectedSourceIds={sourceIds}

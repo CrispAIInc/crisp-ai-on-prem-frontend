@@ -101,7 +101,7 @@ export default function SourcesDropdown({
                             ))}
                         </span>
                         <span className="truncate">
-                            {selected.length} source{selected.length > 1 ? "s" : ""} selected
+                            {selected.length} asset{selected.length > 1 ? "s" : ""} selected
                         </span>
                     </span>
                 )}
@@ -121,7 +121,7 @@ export default function SourcesDropdown({
                     )}
 
                     {(!isKnowledgeBaseFetching && !sources.length) === 0 && (
-                        <div className="px-2.5 py-3 text-[12.5px] text-ink-muted text-center">No sources available</div>
+                        <div className="px-2.5 py-3 text-[12.5px] text-ink-muted text-center">No assets available</div>
                     )}
 
                     {sources.map((s) => {
