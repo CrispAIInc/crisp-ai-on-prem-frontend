@@ -1642,7 +1642,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [error, setError] = useState("");
     const [fullLength, setFullLength] = useState(true);
     const [start, setStart] = useState({ h: "00", m: "00", s: "00" });
-    const [end, setEnd] = useState({ h: "00", m: "00", s: "00" });
+    const [end, setEnd] = useState({ h: "00", m: "00", s: "05" });
     const [from, setFrom] = useState("1");
     const [to, setTo] = useState(selectedSources[0]?.total_pages || DEFAULT_TOTAL_PDF_PAGES);
     const [step, setStep] = useState("");
