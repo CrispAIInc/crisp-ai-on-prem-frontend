@@ -330,7 +330,7 @@ export default function Media() {
 
             files.forEach((file, index) => {
                 formData.append("file", file);
-                formData.append("index_id", categoryOptions.find(item => item.value === selectedCategory)?.id);
+                formData.append("index_id", categoryOptions.find(item => item.value.toLowerCase() === selectedCategory.toLowerCase())?.id);
                 formData.append("fileType", file.type);
                 formData.append("session_id", sessionId);
                 formData.append("isDetailedMode", isDetailedMode);
