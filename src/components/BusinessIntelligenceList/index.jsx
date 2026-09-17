@@ -6,7 +6,7 @@ import {
     Braces,
     Pencil,
     Trash,
-    Check,
+    SaveCheck,
     Download,
     X
 } from "lucide-react";
@@ -295,7 +295,7 @@ function BusinessIntelligenceDetails() {
                                 disabled={isEntitySaving}
                                 onClick={() => setShowTitleModal(true)}
                             >
-                                <Check size={18} />
+                                <SaveCheck size={18} />
                                 {
                                     isEntitySaving ? <span className="animate-customPulse">Saving...</span> : "Save entity"
                                 }
