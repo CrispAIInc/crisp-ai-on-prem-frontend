@@ -258,12 +258,12 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [analyticsSourceIds, setAnalyticsSourceIds] = useState([]);
     // Time segment pane state
     const [timeSegmentStart, setTimeSegmentStart] = useState({ h: "00", m: "00", s: "00" });
-    const [timeSegmentEnd, setTimeSegmentEnd] = useState({ h: "00", m: "00", s: "00" });
+    const [timeSegmentEnd, setTimeSegmentEnd] = useState({ h: "00", m: "00", s: "05" });
     const [timeSegmentContext, setTimeSegmentContext] = useState('');
     const [timeSegmentTitle, setTimeSegmentTitle] = useState('');
     const [timeSegmentFullLength, setTimeSegmentFullLength] = useState(true);
     const [isGeneratingTimeSegment, setIsGeneratingTimeSegment] = useState(false);
-    const [timeSegmentResultsDescription, setTimeSegmentResultsDescription] = useState({ start: "00:00:00", end: "00:00:00", description: "", refs: [] });
+    const [timeSegmentResultsDescription, setTimeSegmentResultsDescription] = useState({ start: "00:00:00", end: "00:00:05", description: "", refs: [] });
     // Find moments pane state
     const [findMomentsContext, setFindMomentsContext] = useState('');
     const [findMomentsTitle, setFindMomentsTitle] = useState('');
