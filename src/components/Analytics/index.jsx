@@ -313,7 +313,7 @@ function TimeSegmentPane({
                 }
 
 
-                {!timeSegmentFullLength && (
+                {(!timeSegmentFullLength && sourceIds.length > 0) && (
                     <TimestampPicker
                         start={timeSegmentStart}
                         setStart={setTimeSegmentStart}
