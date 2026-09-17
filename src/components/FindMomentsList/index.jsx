@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Clock, Info, Layers, Pencil, Trash, X } from "lucide-react";
+import { Clock, Info, Layers, Pencil, Trash, X, SaveCheck } from "lucide-react";
 import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
@@ -298,8 +298,9 @@ function MomentDetails() {
                                 setMomentTitle(currentMoment?.title || "");
                                 setShowSaveTitleModal(true);
                             }}
-                            cssClasses="p-2 text-[8px]"
+                            cssClasses="p-2 flex items-center gap-1 text-[8px]"
                         >
+                            <SaveCheck size={16} />
                             Save
                         </RippleButton>
                     )}
