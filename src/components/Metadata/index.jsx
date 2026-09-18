@@ -10,6 +10,7 @@ import { timeToSeconds } from '../../utils';
 import Chip from '../Chip';
 import CustomSelectTwo from "../CustomSelectTwo";
 import FaqItem from '../FaqItem';
+import MetadataExportButton from './MetadataExportButton';
 
 const TAB_SETS = {
     video: ["search", "transcription", "summary", "chapters", "highlights", "topics", "faqs"],
@@ -306,6 +307,15 @@ function SearchPane({ query: queryProp, onQueryChange, language, results, onSear
     );
 }
 
+function MetadataPaneHeader({ title, exportButton }) {
+    return (
+        <div className="flex items-center justify-between gap-3 px-4 py-3.5 border-b border-border shrink-0">
+            <h3 className="font-display text-[13.5px] font-semibold text-ink">{title}</h3>
+            {exportButton}
+        </div>
+    );
+}
+
 function TranscriptionPane({ transcriptionObj }) {
 
     const {
@@ -314,11 +324,21 @@ function TranscriptionPane({ transcriptionObj }) {
         workspaceContainer
     } = useContext(MainContext);
 
+    const segments = Array.isArray(transcriptionObj?.content) ? transcriptionObj.content : [];
+    const hasContent = segments.length > 0;
+
     return (
         <>
-            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
-                <h3 className="font-display text-[13.5px] font-semibold text-ink">Transcription</h3>
-            </div>
+            <MetadataPaneHeader
+                title="Transcription"
+                exportButton={
+                    <MetadataExportButton
+                        metadataType="transcription"
+                        disabled={!hasContent}
+                        buildPayload={() => ({ segments })}
+                    />
+                }
+            />
 
             <div className="p-4 flex-1 min-h-0 overflow-y-auto flex flex-col">
                 <div className="flex flex-col gap-3">
@@ -353,11 +373,20 @@ function TranscriptionPane({ transcriptionObj }) {
 }
 
 function SummaryPane({ summaryObj }) {
+    const hasContent = summaryObj?.content !== undefined;
+
     return (
         <>
-            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
-                <h3 className="font-display text-[13.5px] font-semibold text-ink">Summary</h3>
-            </div>
+            <MetadataPaneHeader
+                title="Summary"
+                exportButton={
+                    <MetadataExportButton
+                        metadataType="summary"
+                        disabled={!hasContent}
+                        buildPayload={() => ({ content: summaryObj?.content })}
+                    />
+                }
+            />
 
             <div className="p-4 flex-1 min-h-0 overflow-y-auto flex flex-col">
                 <div className="flex flex-col gap-3">
@@ -389,9 +418,16 @@ function ChaptersPane({ chapters }) {
 
     return (
         <>
-            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
-                <h3 className="font-display text-[13.5px] font-semibold text-ink">Chapters</h3>
-            </div>
+            <MetadataPaneHeader
+                title="Chapters"
+                exportButton={
+                    <MetadataExportButton
+                        metadataType="chapters"
+                        disabled={chapterItems.length === 0}
+                        buildPayload={() => ({ chapters: chapterItems })}
+                    />
+                }
+            />
 
             <div className="flex-1 min-h-0 overflow-y-auto">
                 {chapterItems.length > 0 ? (
@@ -418,9 +454,16 @@ function HighlightsPane({ highlights }) {
 
     return (
         <>
-            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
-                <h3 className="font-display text-[13.5px] font-semibold text-ink">Highlights</h3>
-            </div>
+            <MetadataPaneHeader
+                title="Highlights"
+                exportButton={
+                    <MetadataExportButton
+                        metadataType="highlights"
+                        disabled={highlightItems.length === 0}
+                        buildPayload={() => ({ highlights: highlightItems })}
+                    />
+                }
+            />
 
             <div className="p-4 flex-1 min-h-0 overflow-y-auto">
                 {highlightItems.length > 0 ? (
@@ -449,9 +492,16 @@ function KeywordsPane({ keywords }) {
 
     return (
         <>
-            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
-                <h3 className="font-display text-[13.5px] font-semibold text-ink">Topics</h3>
-            </div>
+            <MetadataPaneHeader
+                title="Topics"
+                exportButton={
+                    <MetadataExportButton
+                        metadataType="topics"
+                        disabled={keywordItems.length === 0}
+                        buildPayload={() => ({ keywords: keywordItems })}
+                    />
+                }
+            />
 
             <div className="p-4 flex-1 min-h-0 overflow-y-auto">
                 {keywordItems.length > 0 ? (
@@ -484,9 +534,16 @@ function FaqsPane({ faqs, chosenLanguage }) {
 
     return (
         <>
-            <div className="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
-                <h3 className="font-display text-[13.5px] font-semibold text-ink">FAQs</h3>
-            </div>
+            <MetadataPaneHeader
+                title="FAQs"
+                exportButton={
+                    <MetadataExportButton
+                        metadataType="faqs"
+                        disabled={faqItems.length === 0}
+                        buildPayload={() => ({ faqs: faqItems })}
+                    />
+                }
+            />
 
             <div className="p-4 flex-1 min-h-0 overflow-y-auto">
                 {faqItems.length > 0 ? (
