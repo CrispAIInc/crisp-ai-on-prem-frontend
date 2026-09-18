@@ -38,7 +38,7 @@ export default function MetadataExportButton({ metadataType, disabled, buildPayl
         >
             <FileDown size={14} className={isExporting ? "animate-customPulse" : ""} />
             <span className={`text-sm ${isExporting ? "animate-customPulse" : ""}`}>
-                {isExporting ? "Exporting…" : "Export PDF"}
+                {isExporting ? "Exporting…" : "Export as PDF"}
             </span>
         </RippleButton>
     );
