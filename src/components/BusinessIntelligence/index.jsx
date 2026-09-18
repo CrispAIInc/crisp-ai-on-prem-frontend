@@ -24,7 +24,7 @@ const STEPS = [
     "Almost there..."
 ];
 
-function BusinessIntelligence() {
+function BusinessIntelligence({ embedded = false }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
@@ -177,16 +177,20 @@ function BusinessIntelligence() {
     }
 
 
-    return (
-        <div className="h-full  px-[14px] min-h-0 flex flex-col overflow-hidden bg-white">
-            <div className="pt-4 pb-3 border-b border-border shrink-0">
-                <div className="flex items-center justify-between gap-2">
-                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Business Intelligence</h2>
-                </div>
-                <p className="text-xs text-ink-secondary mt-0.5">Analyze videos and documents and turn their content into detailed, machine-readable JSON format.</p>
-            </div>
+    const horizontalPadding = "px-[14px]";
 
-            <div className="flex-1 min-h-0 mb-3 overflow-y-auto">
+    return (
+        <div className={`h-full min-h-0 flex flex-col overflow-hidden bg-white ${embedded ? "" : horizontalPadding}`}>
+            {!embedded && (
+                <div className="pt-4 pb-3 border-b border-border shrink-0">
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="font-display text-[14.5px] font-semibold text-ink">Business Intelligence</h2>
+                    </div>
+                    <p className="text-xs text-ink-secondary mt-0.5">Analyze videos and documents and turn their content into detailed, machine-readable JSON format.</p>
+                </div>
+            )}
+
+            <div className={`flex-1 min-h-0 overflow-y-auto ${embedded ? `${horizontalPadding} pt-3.5 pb-3` : "mb-3"}`}>
                 <Field label="Assets">
                     <SourcesDropdown
                         sources={sources}
@@ -290,7 +294,7 @@ function BusinessIntelligence() {
                 </Field>
             </div>
 
-            <div className="py-3.5 border-t border-border shrink-0">
+            <div className={`py-3.5 border-t border-border shrink-0 ${embedded ? horizontalPadding : ""}`}>
                 <button
                     type="button"
                     disabled={!canGenerate}

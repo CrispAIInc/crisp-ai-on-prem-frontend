@@ -253,6 +253,9 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [shortsTitle, setShortsTitle] = useState('');
     const [shortsVerbosity, setShortsVerbosity] = useState('Short');
 
+    // Enrich state - persists across tab switches
+    const [enrichActiveTab, setEnrichActiveTab] = useState('metadata');
+
     // Analytics state - persists across tab switches
     const [analyticsActiveTab, setAnalyticsActiveTab] = useState('time-segments');
     const [analyticsSourceIds, setAnalyticsSourceIds] = useState([]);
@@ -1867,6 +1870,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         shortsContext, setShortsContext,
         shortsTitle, setShortsTitle,
         shortsVerbosity, setShortsVerbosity,
+        enrichActiveTab, setEnrichActiveTab,
         analyticsActiveTab, setAnalyticsActiveTab,
         analyticsSourceIds, setAnalyticsSourceIds,
         timeSegmentStart, setTimeSegmentStart,

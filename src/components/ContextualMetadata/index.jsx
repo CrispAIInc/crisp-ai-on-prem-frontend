@@ -11,6 +11,7 @@ import Field from '../Field';
 
 export default function ContextualMetadata({
     className = "",
+    embedded = false,
 }) {
 
     const {
@@ -112,14 +113,18 @@ export default function ContextualMetadata({
         }
     }
 
+    const horizontalPadding = embedded ? "px-[14px]" : "px-[18px]";
+
     return (
         <div className={`h-full min-h-0 flex flex-col overflow-hidden bg-white ${className}`}>
-            <div className="px-[18px] pt-4 pb-3 border-b border-border shrink-0">
-                <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate metadata</h2>
-                <p className="text-xs text-ink-secondary mt-0.5">Create structured metadata for the selected assets.</p>
-            </div>
+            {!embedded && (
+                <div className={`${horizontalPadding} pt-4 pb-3 border-b border-border shrink-0`}>
+                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate metadata</h2>
+                    <p className="text-xs text-ink-secondary mt-0.5">Create structured metadata for the selected assets.</p>
+                </div>
+            )}
 
-            <div className="flex-1 min-h-0 overflow-y-auto px-[18px]">
+            <div className={`flex-1 min-h-0 overflow-y-auto ${horizontalPadding} ${embedded ? "pt-3.5 pb-3" : ""}`}>
                 <Field label="Assets">
                     <SourcesDropdown
                         sources={knowledgeBase}
@@ -156,7 +161,7 @@ export default function ContextualMetadata({
                 </CollapsibleSection>
             </div>
 
-            <div className="px-[18px] py-3.5 border-t border-border shrink-0">
+            <div className={`${horizontalPadding} py-3.5 border-t border-border shrink-0`}>
                 <button
                     type="button"
                     disabled={!canGenerate}

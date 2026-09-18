@@ -2,9 +2,6 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { NAV_ITEMS } from '../../navigation/navitems';
 import { MainContext } from '../../contexts/mainContext';
 import MainStudio from '../MainStudio';
-import ContextualMetadata from '../ContextualMetadata';
-import useMetadata from '../../hooks/useMetadata';
-
 function Studio() {
 
     const studioRef = useRef(null);
@@ -13,40 +10,13 @@ function Studio() {
 
     const {
         activeTab,
-        knowledgeBase,
-        metadataOptions,
-        selectedOptions,
     } = useContext(MainContext);
-
-    const { generateMetadata } = useMetadata();
 
     const activeItem = NAV_ITEMS.find(
         (item) => item.key === activeTab
     );
 
     const ActiveComponent = activeItem?.component;
-
-    const metadataSources = knowledgeBase.map((source) => ({
-        ...source,
-        source_id: source.source_id ?? source.source_path,
-    }));
-
-    async function handleMetadataGenerate({ sourceIds, context, verbosity }) {
-        const selectedSources = metadataSources
-            .filter((source) => sourceIds.includes(source.source_id))
-            .map((source) => ({ ...source, is_checked: true }));
-
-        const options = selectedOptions?.length
-            ? selectedOptions
-            : [metadataOptions?.[0]];
-
-        await generateMetadata(
-            context,
-            ['low', 'medium', 'high'][verbosity] ?? 'low',
-            options.filter(Boolean),
-            selectedSources,
-        );
-    }
 
     useEffect(() => {
         if (!isDragging) return undefined;
@@ -83,15 +53,7 @@ function Studio() {
             >
                 <div className="relative h-full min-h-0 min-w-0">
                     <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden">
-                        {ActiveComponent && (activeTab === 'metadata' ? (
-                            <ContextualMetadata
-                                sources={metadataSources}
-                                outputFormatOptions={metadataOptions.map((option) => option.name)}
-                                onGenerate={handleMetadataGenerate}
-                            />
-                        ) : (
-                            <ActiveComponent />
-                        ))}
+                        {ActiveComponent && <ActiveComponent />}
                     </div>
 
                     <button

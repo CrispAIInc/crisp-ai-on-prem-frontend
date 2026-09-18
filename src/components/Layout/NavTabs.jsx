@@ -15,18 +15,12 @@ export default function NavTabs({ active = "media" }) {
   const {
     setActiveTab,
     setActiveStudioPanel,
-    jsonEntities,
-    setSelectedJsonEntity,
     setAnalyticsTab
   } = useContext(MainContext);
 
   function handleNavClick(key, tab) {
     setActiveTab(key);
     setActiveStudioPanel(tab);
-
-    if (tab === "business-intelligence") {
-      setSelectedJsonEntity(jsonEntities[0]);
-    }
 
     if (tab === "time-segments") {
       setAnalyticsTab(ANALYTICS_TABS.TIME_SEGMENTS);

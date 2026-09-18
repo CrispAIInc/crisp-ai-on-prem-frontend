@@ -47,3 +47,7 @@ export const ANALYTICS_TABS = {
     TIME_SEGMENTS: "time-segments",
     FIND_MOMENTS: "find-moments"
 };
+export const ENRICH_TABS = {
+    METADATA: "metadata",
+    BUSINESS_INTELLIGENCE: "business-intelligence"
+};
