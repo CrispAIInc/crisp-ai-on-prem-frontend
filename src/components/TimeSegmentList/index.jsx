@@ -151,45 +151,50 @@ function SegmentListItem() {
     return (
         <div className={`flex flex-col gap-1 bg-gray-200/20 rounded-md p-2 cursor-pointer hover:bg-gray-100`}>
             {
-                segmentDescriptions.map(segment => (
-                    <div key={segment.id}
-                        className={`flex items-center ${segment?.id === currentSegment?.id ? ' bg-gray-200' : '!border !border-transparent'} gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
-                        onClick={() => handleSelectResult(segment)}
-                        onMouseEnter={() => handleMouseEnterSegment(segment.id)}
-                        onMouseLeave={handleMouseLeaveSegment}
-                    >
+                segmentDescriptions.map(segment => {
+                    const source = knowledgeBase.find(item => item.source_id === segment?.source_id);
 
-                        {
-                            !isProjectReadOnly && (
-                                hoveredSegment === segment.id && (<ActionMenu
-                                    direction="right"
-                                    actions={[
-                                        {
-                                            label: "Edit title",
-                                            icon: <Pencil size={13} />,
-                                            onClick: (e) => {
-                                                e.stopPropagation();
-                                                setSelectedSegment(segment);
-                                                setIsModalOpen(true);
+                    return (
+                        <div key={segment.id}
+                            className={`flex items-center ${segment?.id === currentSegment?.id ? ' bg-gray-200' : '!border !border-transparent'} gap-2 hover:bg-textColor-100/25 cursor-pointer p-2 rounded-md select-none`}
+                            onClick={() => handleSelectResult(segment)}
+                            onMouseEnter={() => handleMouseEnterSegment(segment.id)}
+                            onMouseLeave={handleMouseLeaveSegment}
+                        >
+
+                            {
+                                !isProjectReadOnly && (
+                                    hoveredSegment === segment.id && (<ActionMenu
+                                        direction="right"
+                                        actions={[
+                                            {
+                                                label: "Edit title",
+                                                icon: <Pencil size={13} />,
+                                                onClick: (e) => {
+                                                    e.stopPropagation();
+                                                    setSelectedSegment(segment);
+                                                    setIsModalOpen(true);
+                                                },
                                             },
-                                        },
-                                        {
-                                            label: isSegmentDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
-                                            icon: isSegmentDeleting ? <LoadingSpinner isSmall /> : <Trash size={13} />,
-                                            onClick: () => deleteSegment(segment.id),
-                                        },
-                                    ]}
-                                />)
-                            )
-                        }
+                                            {
+                                                label: isSegmentDeleting ? <AnimatedText text='Deleting...' cssClasses="!font-semibold !text-sm" /> : "Delete",
+                                                icon: isSegmentDeleting ? <LoadingSpinner isSmall /> : <Trash size={13} />,
+                                                onClick: () => deleteSegment(segment.id),
+                                            },
+                                        ]}
+                                    />)
+                                )
+                            }
 
-                        <div className="overflow-x-hidden">
-                            <BaseHeading text={`${segment.start}-${segment.end} ${segment.response_format?.schema?.talking_head?.length > 0 ? `• ${segment.response_format?.schema?.talking_head?.length} ${segment.response_format?.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : (segment.response_format?.schema?.talking_head !== undefined && segment.response_format?.schema?.talking_head !== null) ? '• no people detected' : ''}`} className="text-xs !font-bold !italic !text-primary-300" />
+                            <div className="overflow-x-hidden">
+                                {/* <BaseHeading text={`${segment.start}-${segment.end} ${segment.response_format?.schema?.talking_head?.length > 0 ? `• ${segment.response_format?.schema?.talking_head?.length} ${segment.response_format?.schema?.talking_head?.length === 1 ? 'person' : 'people'}` : (segment.response_format?.schema?.talking_head !== undefined && segment.response_format?.schema?.talking_head !== null) ? '• no people detected' : ''}`} className="text-xs !font-bold !italic !text-primary-300" /> */}
+                                <BaseHeading text={source?.source_path} className="text-xs !font-bold !italic !text-primary-300" />
 
-                            <p className="block cursor-pointer text-[12.5px] font-semibold text-ink" key={segment.id}>{segment?.title}</p>
+                                <p className="block cursor-pointer text-[12.5px] font-semibold text-ink" key={segment.id}>{segment?.title}</p>
+                            </div>
                         </div>
-                    </div>
-                ))
+                    );
+                })
             }
 
             {
