@@ -105,17 +105,17 @@ function SegmentListItem() {
     };
 
     function handleSelectResult(segment) {
-        const segmentSource = knowledgeBase.find(item => item.source_id === segment.source_id);
+        // const segmentSource = knowledgeBase.find(item => item.source_id === segment.source_id);
 
-        // if (segmentSource) {
-        setCurrentSegment({
-            ...segment,
-            timestampText: `${segmentSource?.source_path} | ${segment.start}`,
-            refs: segmentSource ? [{
-                ...segmentSource,
-                timestamp: segment.start
-            }] : []
-        });
+        // setCurrentSegment({
+        //     ...segment,
+        //     timestampText: `${segmentSource?.source_path} | ${segment.start}`,
+        //     refs: segmentSource ? [{
+        //         ...segmentSource,
+        //         timestamp: segment.start
+        //     }] : []
+        // });
+        setCurrentSegment(segment);
     }
 
     async function deleteSegment(segmentId) {
