@@ -11,7 +11,7 @@ import { delay, generateRandomId, pick, sortArrayOfObjects, sortByDate } from '.
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
 import { NAV_ITEMS } from '../navigation/navitems.js';
-import { ANALYTICS_TABS, DEFAULT_TOTAL_PDF_PAGES, MAIN_STUDIO_PANELS } from '../globals.js';
+import { ANALYTICS_TABS, DEFAULT_TOTAL_PDF_PAGES, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../globals.js';
 
 export const MainContext = createContext({});
 
@@ -1369,10 +1369,24 @@ export default function MainProvider({ children, theme, setTheme }) {
      */
     const [activeTab, setActiveTab] = useState(NAV_ITEMS[0]?.key || "media");
     useEffect(() => {
-        if (currentResource) {
-            setActiveStudioPanel(MAIN_STUDIO_PANELS.METADATA);
+        if (!currentResource) return;
+
+        if (activeTab === "enrich") {
+            setActiveStudioPanel(
+                enrichActiveTab === ENRICH_TABS.BUSINESS_INTELLIGENCE
+                    ? MAIN_STUDIO_PANELS.BUSINESS_INTELLIGENCE
+                    : MAIN_STUDIO_PANELS.METADATA
+            );
+            return;
         }
-    }, [currentResource]);
+
+        if (activeTab === "analytics") {
+            setActiveStudioPanel(analyticsActiveTab);
+            return;
+        }
+
+        setActiveStudioPanel(MAIN_STUDIO_PANELS.METADATA);
+    }, [currentResource, activeTab, enrichActiveTab, analyticsActiveTab]);
 
     // ANALYTICS
     const [currentSegment, setCurrentSegment] = useState(null);

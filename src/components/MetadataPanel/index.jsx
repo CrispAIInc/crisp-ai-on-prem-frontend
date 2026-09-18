@@ -19,7 +19,7 @@ import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
 import ImageViewer from "../ImageViewer";
 import Metadata from '../Metadata/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
-import { MAIN_STUDIO_PANELS } from '../../globals.js';
+import { ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
@@ -40,7 +40,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setShowMetadata,
     activeTab,
     setActiveStudioPanel,
-    analyticsActiveTab
+    analyticsActiveTab,
+    enrichActiveTab,
   } = useContext(MainContext);
 
 
@@ -279,6 +280,12 @@ const MetadataPanel = ({ workspaceContainer }) => {
   const onClose = () => {
     if (activeTab === "analytics") {
       setActiveStudioPanel(analyticsActiveTab);
+    } else if (activeTab === "enrich") {
+      setActiveStudioPanel(
+        enrichActiveTab === ENRICH_TABS.BUSINESS_INTELLIGENCE
+          ? MAIN_STUDIO_PANELS.BUSINESS_INTELLIGENCE
+          : MAIN_STUDIO_PANELS.METADATA
+      );
     }
     setCurrentResource(null);
     setShowMetadata(false);

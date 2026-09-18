@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Sparkles, Braces } from "lucide-react";
 import { MainContext } from "../../contexts/mainContext";
-import { MAIN_STUDIO_PANELS } from "../../globals";
+import { ENRICH_TABS, MAIN_STUDIO_PANELS } from "../../globals";
 import ContextualMetadata from "../ContextualMetadata";
 import BusinessIntelligence from "../BusinessIntelligence";
 
@@ -19,17 +19,26 @@ export default function Enrich() {
         setSelectedJsonEntity,
     } = useContext(MainContext);
 
-    useEffect(() => {
+    function syncStudioPanel(tabId) {
         setActiveStudioPanel(
-            enrichActiveTab === "business-intelligence"
+            tabId === ENRICH_TABS.BUSINESS_INTELLIGENCE
                 ? MAIN_STUDIO_PANELS.BUSINESS_INTELLIGENCE
                 : MAIN_STUDIO_PANELS.METADATA
         );
 
-        if (enrichActiveTab === "business-intelligence" && jsonEntities?.[0]) {
+        if (tabId === ENRICH_TABS.BUSINESS_INTELLIGENCE && jsonEntities?.[0]) {
             setSelectedJsonEntity(jsonEntities[0]);
         }
+    }
+
+    useEffect(() => {
+        syncStudioPanel(enrichActiveTab);
     }, [enrichActiveTab]);
+
+    function handleSubTabChange(tabId) {
+        setEnrichActiveTab(tabId);
+        syncStudioPanel(tabId);
+    }
 
     return (
         <div className="h-full px-[14px] min-h-0 flex flex-col overflow-hidden bg-white">
@@ -53,7 +62,7 @@ export default function Enrich() {
                             aria-current={active ? "page" : undefined}
                             className={`flex items-center gap-2 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300 !border-b-primary-300" : "text-ink"
                                 } pb-3 border-b -mb-px transition-colors`}
-                            onClick={() => setEnrichActiveTab(id)}
+                            onClick={() => handleSubTabChange(id)}
                         >
                             <Icon size={14} strokeWidth={2} />
                             {label}
