@@ -124,19 +124,20 @@ export function SourceExplorer(props) {
                     </div>
                 )} */}
 
-                <div
-                    className={`flex items-center gap-1 cursor-pointer px-2 py-1.5 rounded-md ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
-                    onClick={handleToggleAllSources}
-                >
-                    {/* <Checkbox
+                {
+                    itemsFoundInsideCategoryOrFormat && <div
+                        className={`flex items-center gap-1 cursor-pointer px-2 py-1.5 rounded-md ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
+                        onClick={handleToggleAllSources}
+                    >
+                        {/* <Checkbox
                         className={`p-0 !border-primary-300 !text-primary-300`}
                         checked={areAllSourcesSelected}
                         onChange={handleToggleAllSources}
                         inputProps={{ "aria-label": "Select all sources" }}
                         label="Select All Sources"
                     /> */}
-                    <BaseHeading className="!text-primary-300" text={`${areAllSourcesSelected ? 'Unselect' : 'Select'} all assets`} />
-                </div>
+                        <BaseHeading className="!text-primary-300" text={`${areAllSourcesSelected ? 'Unselect' : 'Select'} all assets`} />
+                    </div>}
                 <div
                     className={`flex items-center justify-center gap-2 p-2 rounded-md cursor-pointer w-fit ${theme === 'light' ? 'hover:bg-primary-100/50' : 'hover:bg-primary-100/15'}`}
                     onClick={props.onHide}
