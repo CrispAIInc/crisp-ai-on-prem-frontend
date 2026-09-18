@@ -616,7 +616,7 @@ function SegmentDetails() {
     //     URL.revokeObjectURL(url);
     // }
 
-
+    const { source_id, ...displayableSegmentJson } = currentSegment;
 
     return (
         <div className="flex flex-col gap-3">
@@ -696,7 +696,7 @@ function SegmentDetails() {
             </div>
 
             <JsonView
-                value={currentSegment}
+                value={displayableSegmentJson}
                 style={lightTheme}
                 theme="rjv-default"
                 displayDataTypes={false}
