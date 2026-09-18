@@ -98,11 +98,11 @@ function ProjectSwitcherDropdown() {
     return (
         <div className="relative select-none" ref={projectsDropdownRef}>
             {/* dropdown header */}
-            <div className={`cursor-pointer flex items-center w-56 shadow-sm gap-10 px-2 py-2 rounded-lg justify-between border border-textColor-100/20`}
+            <div className={`cursor-pointer flex items-center w-56 shadow-sm overflow-x-hidden gap-10 px-2 py-2 rounded-lg justify-between border border-textColor-100/20`}
                 onClick={() => setShowProjects(!showProjects)}>
-                <div className="flex items-center gap-1">
+                <div className="flex-1 w-full flex items-center gap-2">
                     <FolderOpenDot size={16} />
-                    <p>{currentProject?.name || "Untitled Project"}</p>
+                    <p className="truncate">{currentProject?.name || "Untitled Project"}</p>
                 </div>
                 <ChevronDown size={16} className={`transition-transform ${showProjects && 'rotate-180'}`} />
             </div>
