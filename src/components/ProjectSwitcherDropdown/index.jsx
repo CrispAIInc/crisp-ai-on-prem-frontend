@@ -108,7 +108,7 @@ function ProjectSwitcherDropdown() {
             </div>
 
             {/* List of projects dropdown */}
-            {showProjects && <div className={`absolute top-full left-0 w-full h-[40vh] z-50 flex flex-col flex-1 px-3 py-0 gap-3 overflow-y-auto shadow-sm bg-background_workspace`}>
+            {showProjects && <div className={`absolute top-full left-0 w-full h-[40vh] z-50 flex flex-col flex-1 py-0 gap-3 overflow-y-auto shadow-sm bg-background_workspace`}>
                 {grouped.map(group => (
                     <div key={group.key} className="">
                         <div className={`sticky top-0 px-1 py-1 z-10 bg-gray-100`}>
