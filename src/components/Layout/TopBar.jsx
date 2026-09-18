@@ -1,25 +1,26 @@
 import {
-  Settings,
-  LogOut
+  LogOut,
+  Settings
 } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../../contexts/authContext';
 import { ProjectContext } from '../../contexts/projectContext';
-import { SettingsModal } from '../Settings/SettingsModal';
 import useAuth from '../../hooks/useAuth';
+import ProjectSwitcherDropdown from '../ProjectSwitcherDropdown';
+import { SettingsModal } from '../Settings/SettingsModal';
 
-/**
- * TopBar - the uppermost strip of the shared app.
- * Contains the product mark on the left and account-level
- * controls (settings, avatar) on the right.
- */
 export default function TopBar() {
 
   const { logout } = useAuth();
   const { user } = useContext(AuthContext);
-  const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
+
+  const {
+    isSettingsModalOpen,
+    setIsSettingsModalOpen,
+  } = useContext(ProjectContext);
 
   const [menuOpen, setMenuOpen] = useState(false);
+
   const menuRef = useRef(null);
 
   // Close the dropdown on outside click or Escape.
@@ -67,44 +68,48 @@ export default function TopBar() {
         </div>
 
         {/* Account controls */}
-        <div className="relative" ref={menuRef}>
-          <button
-            type="button"
-            aria-label="Account menu"
-            aria-haspopup="menu"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((v) => !v)}
-            className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs font-semibold flex items-center justify-center hover:opacity-90 transition-opacity"
-          >
-            {user?.firstName[0]?.toUpperCase()}{user?.lastName[0]?.toUpperCase()}
-          </button>
+        <div className="flex items-center gap-3">
+          <ProjectSwitcherDropdown />
 
-          {menuOpen && (
-            <div
-              role="menu"
-              className="absolute right-0 top-10 w-44 bg-white border border-gray-100 rounded-lg shadow-md py-1 z-50"
+          <div className="relative" ref={menuRef}>
+            <button
+              type="button"
+              aria-label="Account menu"
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((v) => !v)}
+              className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs font-semibold flex items-center justify-center hover:opacity-90 transition-opacity"
             >
-              <button
-                type="button"
-                role="menuitem"
-                onClick={handleSettingsModalState}
-                className="w-full flex items-center gap-2 px-3 py-1 text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
+              {user?.firstName[0]?.toUpperCase()}{user?.lastName[0]?.toUpperCase()}
+            </button>
+
+            {menuOpen && (
+              <div
+                role="menu"
+                className="absolute right-0 top-10 w-44 bg-white border border-gray-100 rounded-lg shadow-md py-1 z-50"
               >
-                <Settings size={14} className="text-gray-700" />
-                Settings
-              </button>
-              <div className="my-1 border-t border-gray-100" />
-              <button
-                type="button"
-                role="menuitem"
-                onClick={handleLogout}
-                className="w-full flex items-center gap-2 px-3 py-1 text-[13px] text-red-600 hover:bg-red-50 transition-colors"
-              >
-                <LogOut size={14} />
-                Log out
-              </button>
-            </div>
-          )}
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={handleSettingsModalState}
+                  className="w-full flex items-center gap-2 px-3 py-1 text-[13px] text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <Settings size={14} className="text-gray-700" />
+                  Settings
+                </button>
+                <div className="my-1 border-t border-gray-100" />
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-3 py-1 text-[13px] text-red-600 hover:bg-red-50 transition-colors"
+                >
+                  <LogOut size={14} />
+                  Log out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
