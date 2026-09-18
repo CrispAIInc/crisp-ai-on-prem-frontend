@@ -616,7 +616,7 @@ function SegmentDetails() {
     //     URL.revokeObjectURL(url);
     // }
 
-    const { source_id, ...displayableSegmentJson } = currentSegment;
+    const { id, source_id, ...displayableSegmentJson } = currentSegment;
 
     return (
         <div className="flex flex-col gap-3">
