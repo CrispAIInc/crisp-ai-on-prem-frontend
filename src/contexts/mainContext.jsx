@@ -1385,7 +1385,9 @@ export default function MainProvider({ children, theme, setTheme }) {
             return;
         }
 
-        setActiveStudioPanel(MAIN_STUDIO_PANELS.METADATA);
+        if (currentResource) {
+            setActiveStudioPanel(MAIN_STUDIO_PANELS.METADATA);
+        }
     }, [currentResource, activeTab, enrichActiveTab, analyticsActiveTab]);
 
     // ANALYTICS
