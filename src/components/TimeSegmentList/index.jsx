@@ -30,6 +30,9 @@ import { ProjectContext } from '../../contexts/projectContext';
 import { ToastContext } from '../../contexts/toastContext';
 import TimeSegmentTitleUpdaterModal from '../TimeSegmentTitleUpdaterModal';
 import EmptyState from '../EmptyState';
+import CustomVideoPlayer from '../CustomVideoPlayer';
+import useFirebase from '../../hooks/useFirebase';
+import { SettingsContext } from '../../contexts/settingsContext';
 
 function TimeSegmentList() {
 
@@ -208,18 +211,31 @@ function SegmentListItem() {
 
 function SegmentDetails() {
 
+    const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
+
     const {
         currentSegment,
         setCurrentSegment,
         knowledgeBase,
-        setSegmentDescriptions
+        setSegmentDescriptions,
+        resourceURL,
+        currentResource,
+        setIsPlayerReady,
+        setHasDuration,
+        player
     } = useContext(MainContext);
+
+    const { getPublicUrl } = useFirebase();
 
     const { handleSourceLinkClick } = useReferenceLinkClick(true);
 
     const [exportMenuOpen, setExportMenuOpen] = useState(false);
     const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
     const [isSaved, setIsSaved] = useState(Boolean(currentSegment && currentSegment.id));
+    const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
+    const [showVideoPlayer, setShowVideoPlayer] = useState(true);
+
+    const { id, source_id, ...displayableSegmentJson } = currentSegment;
 
     // useEffect(() => {
     //     setCurrentSegment({
@@ -246,8 +262,13 @@ function SegmentDetails() {
         setIsSaved(Boolean(currentSegment && currentSegment.id));
     }, [currentSegment]);
 
-    // let source = knowledgeBase.find(item => (item.source_id === source_id || item.source_path === video)) || {};
+    let source = { ...knowledgeBase.find(item => item.source_id === source_id), timestamp: displayableSegmentJson?.start || "00:00:00" } || {};
 
+    useEffect(() => {
+        getPublicUrl(source.video_url)
+            .then(setSourcePublicUrl)
+            .catch(console.error);
+    }, [currentSegment, source.video_url, getPublicUrl]);
 
 
     // function base64ToUint8Array(base64) {
@@ -298,7 +319,7 @@ function SegmentDetails() {
     //                 font: fontFamily,
     //                 size: 20,
     //                 bold: true,
-    //                 // The "Secret Sauce" for padding: 
+    //                 // The "Secret Sauce" for padding:
     //                 // Adding a border the same color as the background expands the chip area
     //                 border: {
     //                     color: bgColor,
@@ -616,7 +637,9 @@ function SegmentDetails() {
     //     URL.revokeObjectURL(url);
     // }
 
-    const { id, source_id, ...displayableSegmentJson } = currentSegment;
+    function onClose() {
+        setShowVideoPlayer(false);
+    }
 
     return (
         <div className="flex flex-col gap-3">
@@ -694,6 +717,23 @@ function SegmentDetails() {
                     <p className={`text-sm/6 font-semibold`}>{start} - {end}</p>
                 </div> */}
             </div>
+
+            {/* asset player */}
+            {showVideoPlayer && <div className="relative">
+                <CustomVideoPlayer
+                    sourcePublicUrl={sourcePublicUrl}
+                    resourceURL={resourceURL}
+                    video_autoplay={video_autoplay}
+                    video_loop={video_loop}
+                    title={source?.source_path}
+                    chapters={source?.metadata?.chapters?.content || []}
+                    highlights={source?.metadata?.highlights?.content || []}
+                    onReady={() => setIsPlayerReady(true)}
+                    onDuration={() => setHasDuration(true)}
+                    playerRef={player}
+                    onClose={onClose}
+                />
+            </div>}
 
             <JsonView
                 value={displayableSegmentJson}
