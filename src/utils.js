@@ -589,3 +589,16 @@ export function convertSecondsToHumanText(seconds) {
 
     return parts.join(" ");
 }
+
+export function formatShortDuration(totalSeconds) {
+    const m = Math.floor(totalSeconds / 60);
+    const s = Math.round(totalSeconds % 60);
+    return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+export function formatDate(isoString) {
+    if (!isoString) return "";
+    const d = new Date(isoString);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
