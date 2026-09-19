@@ -22,18 +22,25 @@ export default function NavTabs({ active = "media" }) {
   } = useContext(MainContext);
 
   function handleNavClick(key, tab) {
+    console.log(key, tab);
     setActiveTab(key);
 
     if (key === "enrich") {
+
       const enrichPanel =
         enrichActiveTab === ENRICH_TABS.BUSINESS_INTELLIGENCE
           ? MAIN_STUDIO_PANELS.BUSINESS_INTELLIGENCE
           : MAIN_STUDIO_PANELS.METADATA;
+
       setActiveStudioPanel(enrichPanel);
+
       if (enrichActiveTab === ENRICH_TABS.BUSINESS_INTELLIGENCE && jsonEntities?.[0]) {
         setSelectedJsonEntity(jsonEntities[0]);
       }
-    } else {
+
+    }
+
+    else {
       setActiveStudioPanel(tab);
     }
 

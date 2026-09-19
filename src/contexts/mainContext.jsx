@@ -1388,7 +1388,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         if (currentResource) {
             setActiveStudioPanel(MAIN_STUDIO_PANELS.METADATA);
         }
-    }, [currentResource, activeTab, enrichActiveTab, analyticsActiveTab]);
+    }, [currentResource]);
 
     // ANALYTICS
     const [currentSegment, setCurrentSegment] = useState(null);
