@@ -92,7 +92,7 @@ function FindMomentsList() {
                     />
                 ) : (
                     <div className="p-4 flex flex-col gap-4">
-                        <MomentDetails momentDetailsRef={momentDetailsRef} />
+                        <MomentDetails key={new Date()} momentDetailsRef={momentDetailsRef} />
                     </div>
                 )}
             </div>
