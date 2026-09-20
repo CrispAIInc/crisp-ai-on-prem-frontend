@@ -1,11 +1,10 @@
 import JsonView from '@uiw/react-json-view';
 import { lightTheme } from '@uiw/react-json-view/light';
-import { SaveCheck, X } from "lucide-react";
+import { SaveCheck, X, Download } from "lucide-react";
 import { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import { SettingsContext } from '../../contexts/settingsContext';
 import useFirebase from '../../hooks/useFirebase';
-import useReferenceLinkClick from '../../hooks/useReferenceLinkClick';
 import BaseHeading from '../BaseHeading';
 import CustomVideoPlayer from '../CustomVideoPlayer';
 import RippleButton from '../RippleButton';
@@ -22,7 +21,6 @@ export default function SegmentDetails() {
         knowledgeBase,
         setSegmentDescriptions,
         resourceURL,
-        currentResource,
         setIsPlayerReady,
         setHasDuration,
         player
@@ -30,35 +28,13 @@ export default function SegmentDetails() {
 
     const { getPublicUrl } = useFirebase();
 
-    const { handleSourceLinkClick } = useReferenceLinkClick(true);
-
-    const [exportMenuOpen, setExportMenuOpen] = useState(false);
     const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
     const [isSaved, setIsSaved] = useState(Boolean(currentSegment && currentSegment.id));
     const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
     const [showVideoPlayer, setShowVideoPlayer] = useState(true);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const { id, source_id, ...displayableSegmentJson } = currentSegment;
-
-    // useEffect(() => {
-    //     setCurrentSegment({
-    //         segment: {
-    //             frame_by_fram_descriotion: {
-    //                 d: "A close-up shot of actor Al Pacino as Michael Corleone, wearing a dark suit and striped tie, with a visible black eye on his left side. He looks slightly to his right with a serious expression in a dimly lit indoor restaurant setting. A red logo with the letter 'B' is visible in the top left corner. Audio indicates he is stating what is most important to him."
-    //             }
-    //         }
-    //     });
-    // });
-
-    // const {
-    //     source_id,
-    //     start,
-    //     end,
-    //     timestampText,
-    //     query,
-    //     video,
-    //     response_format: { schema }
-    // } = currentSegment;
 
     // reset/update saved flag when currentSegment changes
     useEffect(() => {
@@ -440,6 +416,28 @@ export default function SegmentDetails() {
     //     URL.revokeObjectURL(url);
     // }
 
+    const handleDownload = () => {
+        setIsDownloading(true);
+        try {
+            const jsonString = JSON.stringify(currentSegment, null, 2); // formatted
+            const blob = new Blob([jsonString], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `${currentSegment.title}.json`;
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsDownloading(false);
+        }
+    };
+
     function onClose() {
         setShowVideoPlayer(false);
     }
@@ -451,43 +449,15 @@ export default function SegmentDetails() {
                     <BaseHeading text="Scene analysis" className="text-md" />
                     <div className="flex items-center gap-2">
                         {/* action buttons */}
+                        <RippleButton
+                            cssClasses='flex items-center gap-1 disabled:cursor-not-allowed p-2'
+                            disabled={isDownloading}
+                            onClick={handleDownload}
+                        >
+                            <Download size={16} />
+                            {isDownloading ? <span className="animate-customPulse">Downloading...</span> : 'Export JSON'}
+                        </RippleButton>
                         <div className="flex items-center gap-2 relative">
-                            {/* <div className="relative inline-block">
-                                <RippleButton
-                                    cssClasses="px-2 flex items-center gap-1 py-2 text-sm rounded"
-                                    onClick={() => setExportMenuOpen((prev) => !prev)}
-                                >
-                                    Export as
-                                    <ChevronDown size={16} className={`transition-transform ${exportMenuOpen && 'rotate-180'}`} />
-                                </RippleButton>
-
-                                {exportMenuOpen && (
-                                    <div className={`absolute right-0 top-full mt-2 min-w-[180px] rounded-lg border-textColor-300/20 shadow-xl z-10 mb-5 bg-background_workspace text-textColor-200`}>
-                                        <button
-                                            type="button"
-                                            className={`flex items-center gap-1 w-full text-left px-3 py-2 hover:bg-gray-300/50`}
-                                            onClick={() => {
-                                                exportSceneAnalysisToDocx(currentSegment);
-                                                setExportMenuOpen(false);
-                                            }}
-                                        >
-                                            <FileText size={18} />
-                                            <span className="text-sm">DOCX format</span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className={`flex items-center gap-1 w-full text-left px-3 py-2 hover:bg-gray-300/50`}
-                                            onClick={() => {
-                                                exportSegmentAsJson(currentSegment);
-                                                setExportMenuOpen(false);
-                                            }}
-                                        >
-                                            <Braces size={18} />
-                                            <span className="text-sm">JSON format</span>
-                                        </button>
-                                    </div>
-                                )}
-                            </div> */}
 
                             <RippleButton
                                 cssClasses="px-2 flex items-center gap-1 py-2 text-sm rounded"
@@ -510,15 +480,6 @@ export default function SegmentDetails() {
                     </div>
 
                 </div>
-                {/* <div className={`flex items-center gap-1 text-textColor-200`}>
-                    <PlayCircle size={15} />
-                    <p className={`text-sm/6 font-semibold`}>{source?.source_path || video}</p>
-                </div>
-
-                <div className={`flex items-center gap-1 text-textColor-200`}>
-                    <Clock size={15} />
-                    <p className={`text-sm/6 font-semibold`}>{start} - {end}</p>
-                </div> */}
             </div>
 
             {/* asset player */}
@@ -544,88 +505,6 @@ export default function SegmentDetails() {
                 theme="rjv-default"
                 displayDataTypes={false}
             />
-
-            {/* query prompt */}
-            {/* <div>
-                <BaseHeading text="Prompt" />
-                <p className={`text-sm/6 text-textColor-300`} dangerouslySetInnerHTML={{ __html: query }} />
-            </div> */}
-
-
-            {/* Tags */}
-            {/* <div className="grid grid-cols-2 gap-6">
-
-                <div>
-                    <BaseHeading text="Mood" className="mb-2" />
-                    <div className="flex flex-wrap gap-2">
-                        {schema?.mood.map((m) => (
-                            <span
-                                key={m}
-                                className="px-3 py-1 text-sm bg-blue-500/20 text-blue-500 rounded-full"
-                            >
-                                {m}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-
-                <div>
-                    <BaseHeading text="Shot Type" className="mb-2" />
-                    <div className="flex flex-wrap gap-2">
-                        {schema?.shot_type.map((s) => (
-                            <span
-                                key={s}
-                                className="px-3 py-1 text-sm bg-purple-500/20 text-purple-500 rounded-full"
-                            >
-                                {s}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-
-            </div> */}
-
-
-
-            {/* Scene Description */}
-            {/* <div>
-                <BaseHeading text="generated response" className="mb-1" />
-                <p className={`text-sm/6 text-textColor-300`} dangerouslySetInnerHTML={{ __html: schema?.action_description.replace(/\r?\n/g, '<br />') }} />
-            </div> */}
-
-            {/* <TalkingHeadPanel
-                talkingHeads={schema?.talking_head}
-                source={source}
-            /> */}
-
-
-            {/* Onscreen Text */}
-            {/* {schema?.onscreen_text?.detected && (
-                <div>
-                    <BaseHeading text="Detected On-screen Text" className="mb-2" />
-
-                    <div className="rounded-lg text-sm flex gap-1 flex-wrap">
-                        {schema?.onscreen_text?.text_content?.map((text) => (
-                            <Chip key={text} content={text.trim()} cssClasses="w-fit" />
-                        ))}
-                    </div>
-                </div>
-            )} */}
-
-
-            {/* refs */}
-            {/* {source && source.length > 0 && (
-                <div>
-                    <BaseHeading text="References" className="font-bold text-sm mb-2" />
-                    <ul className="list-disc list-inside text-sm/6 text-textColor-300">
-                        {source.map((ref, index) => {
-                            return (
-                                <Chip key={index} content={timestampText} data-object={ref} handleClick={(event) => handleSourceLinkClick(event, ref)} cssClasses="ml-0 cursor-pointer text-gradient-x" />
-                            );
-                        })}
-                    </ul>
-                </div>
-            )} */}
 
             {isSaveModalOpen && (
                 <SaveSegmentModal
