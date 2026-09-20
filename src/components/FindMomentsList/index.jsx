@@ -1,5 +1,5 @@
 import { Info, Layers } from "lucide-react";
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import EmptyState from '../EmptyState';
 import MomentDetails from "../MomentDetails";
@@ -20,6 +20,8 @@ function FindMomentsList() {
         setMoments,
         knowledgeBase
     } = useContext(MainContext);
+
+    const momentDetailsRef = useRef(null);
 
 
     useEffect(() => {
@@ -80,7 +82,7 @@ function FindMomentsList() {
             </div>
 
             {/* Right column — selected segment */}
-            <div className="flex-1 min-w-0 h-full min-h-0 overflow-y-auto">
+            <div ref={momentDetailsRef} className="flex-1 min-w-0 h-full min-h-0 overflow-y-auto">
                 {(currentMoment === null || currentMoment === undefined) ? (
                     <EmptyState
                         twClasses='flex-1 h-full'
@@ -90,7 +92,7 @@ function FindMomentsList() {
                     />
                 ) : (
                     <div className="p-4 flex flex-col gap-4">
-                        <MomentDetails />
+                        <MomentDetails momentDetailsRef={momentDetailsRef} />
                     </div>
                 )}
             </div>

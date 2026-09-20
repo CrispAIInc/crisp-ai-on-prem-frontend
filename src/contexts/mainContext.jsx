@@ -110,6 +110,7 @@ export default function MainProvider({ children, theme, setTheme }) {
             }
         };
         makeRequest();
+        fetchFindMoments();
     }, [currentProject.project_id]);
 
     useEffect(() => {
@@ -1419,47 +1420,42 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [currentMoment, setCurrentMoment] = useState(null);
     const [moments, setMoments] = useState([]);
 
-    // useEffect(() => {
+    async function fetchFindMoments() {
+        try {
+            axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
+            const { data, success } = await makeApiRequest("/moments", 'GET', null, {
+                ProjectId: currentProject.project_id,
+            });
+            if (success) {
 
-    //     async function fetchFindMoments() {
-    //         try {
-    //             axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
-    //             const { data, success } = await makeApiRequest("/moments", 'GET', null, {
-    //                 ProjectId: currentProject.project_id,
-    //             });
-    //             if (success) {
+                let formattedData = data.map((d) => {
+                    const finalResults = d.results.map((moment) => {
+                        const source = knowledgeBase.find(item => item.source_id === moment.source_id);
 
-    //                 let formattedData = data.map((d) => {
-    //                     const finalResults = d.results.map((moment) => {
-    //                         const source = knowledgeBase.find(item => item.source_id === moment.source_id);
+                        if (!source) return null;
 
-    //                         if (!source) return null;
+                        return {
+                            ...moment,
+                            timestampText: `${source.source_path} | ${moment.timestamp}`,
+                            source: {
+                                ...source,
+                                timestamp: moment.timestamp
+                            }
+                        };
+                    }).filter(Boolean);
 
-    //                         return {
-    //                             ...moment,
-    //                             timestampText: `${source.source_path} | ${moment.timestamp}`,
-    //                             source: {
-    //                                 ...source,
-    //                                 timestamp: moment.timestamp
-    //                             }
-    //                         };
-    //                     }).filter(Boolean);
+                    return {
+                        ...d,
+                        results: finalResults
+                    };
+                });
 
-    //                     return {
-    //                         ...d,
-    //                         results: finalResults
-    //                     };
-    //                 });
-
-    //                 setMoments(sortArrayOfObjects(formattedData, "created_at", "desc"));
-    //             }
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-
-    //     fetchFindMoments();
-    // }, []);
+                setMoments(sortArrayOfObjects(formattedData, "created_at", "desc"));
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const [sourceIds, setSourceIds] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);

@@ -12,9 +12,10 @@ import ScoreChip from '../ScoreChip';
 import CustomVideoPlayer from '../CustomVideoPlayer';
 import { SettingsContext } from '../../contexts/settingsContext';
 import useFirebase from '../../hooks/useFirebase';
+import { timeToSeconds } from '../../utils';
 
 
-export default function MomentDetails() {
+export default function MomentDetails({ momentDetailsRef }) {
 
     const {
         theme,
@@ -37,7 +38,6 @@ export default function MomentDetails() {
     const [showSaveTitleModal, setShowSaveTitleModal] = useState(false);
     const [momentTitle, setMomentTitle] = useState(currentMoment?.title || "");
     const [isSaving, setIsSaving] = useState(false);
-    const [currentTimestamp, setCurrentTimestamp] = useState(null);
     const [sourcePublicUrl, setSourcePublicUrl] = useState(null);
     const [source, setSource] = useState(null);
 
@@ -123,6 +123,15 @@ export default function MomentDetails() {
             .catch(console.error);
 
         setSource(_source);
+
+        setTimeout(() => {
+            player?.current?.seekTo(typeof timestamp === "number" ? _source.timestamp : timeToSeconds(_source.timestamp));
+
+            momentDetailsRef?.current?.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+        }, 1000);
     }
 
 
@@ -250,7 +259,7 @@ export default function MomentDetails() {
                             <p className={`text-sm/6 mb-2 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{moment.context}</p>
 
                             <div className="flex items-center gap-2 flex-wrap">
-                                <Chip content={moment.timestampText} data-object={moment?.source} handleClick={(event) => handleTimestampClick(event, moment?.source?.source_id)} cssClasses="ml-0 cursor-pointer " />
+                                <Chip content={moment.timestampText} data-object={moment?.source} handleClick={(event) => handleTimestampClick(event, moment?.source)} cssClasses="ml-0 cursor-pointer " />
                                 {
                                     moment?.score !== undefined && (
                                         <ScoreChip score={moment.score * 100} />

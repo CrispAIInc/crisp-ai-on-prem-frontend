@@ -47,7 +47,7 @@ export default function Analytics() {
                 break;
 
             case "find-moments":
-                setCurrentMoment(moments[0]);
+                setCurrentMoment(moments[0]?.results?.length > 0 ? moments[0] : null);
                 break;
         }
     }, [analyticsActiveTab]);
