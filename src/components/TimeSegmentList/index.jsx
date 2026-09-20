@@ -39,7 +39,7 @@ export default function TimeSegmentList() {
                     />
                 ) : (
                     <div className="p-4 flex flex-col gap-4">
-                        <SegmentDetails />
+                        <SegmentDetails key={new Date()} />
                     </div>
                 )}
             </div>
