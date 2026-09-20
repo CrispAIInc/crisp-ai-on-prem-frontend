@@ -61,9 +61,6 @@ export default function Analytics() {
                 <p className="text-xs text-ink-secondary mt-0.5">Analyze content to identify important information, events, and insights, linked directly to the timestamp or page where they appear.</p>
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto pb-3">
-                <Field label="Assets">
-                    <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
-                </Field>
 
                 {/* Sub-navigation */}
                 <nav className="pt-3.5 flex items-center gap-6">
@@ -85,6 +82,10 @@ export default function Analytics() {
                         );
                     })}
                 </nav>
+
+                <Field label="Assets">
+                    <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
+                </Field>
 
                 {analyticsActiveTab === TABS[0].id ? (
                     <TimeSegmentPane
