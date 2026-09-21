@@ -103,6 +103,7 @@ export default function MainProvider({ children, theme, setTheme }) {
                     "/assets"
                 );
                 setKnowledgeBase(data);
+                fetchFindMoments(data);
             } catch (error) {
                 console.warn(error);
             } finally {
@@ -110,7 +111,6 @@ export default function MainProvider({ children, theme, setTheme }) {
             }
         };
         makeRequest();
-        fetchFindMoments();
     }, [currentProject.project_id]);
 
     useEffect(() => {
@@ -1420,7 +1420,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [currentMoment, setCurrentMoment] = useState(null);
     const [moments, setMoments] = useState([]);
 
-    async function fetchFindMoments() {
+    async function fetchFindMoments(_knowledgeBase) {
         try {
             axiosInstance.defaults.headers.common['ProjectId'] = currentProject.project_id;
             const { data, success } = await makeApiRequest("/moments", 'GET', null, {
@@ -1430,7 +1430,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
                 let formattedData = data.map((d) => {
                     const finalResults = d.results.map((moment) => {
-                        const source = knowledgeBase.find(item => item.source_id === moment.source_id);
+                        const source = _knowledgeBase.find(item => item.source_id === moment.source_id);
 
                         if (!source) return null;
 
