@@ -58,7 +58,7 @@ export default function ShortListItem({ short, active, onClick }) {
             }));
 
             //SET CURRENT REEL TO NULL IF IT'S THE ONE BEING DELETED
-            if (selectedReel.id === reel.id) {
+            if (selectedReel && selectedReel?.id === reel.id) {
                 setSelectedReel(null);
             }
 
