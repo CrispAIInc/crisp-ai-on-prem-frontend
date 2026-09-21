@@ -133,7 +133,7 @@ export default function MomentDetails({ momentDetailsRef }) {
                 top: 0,
                 behavior: "smooth",
             });
-        }, isPlayerReady ? 500 : 3000);
+        }, isPlayerReady ? 300 : 4000);
     }
 
 
