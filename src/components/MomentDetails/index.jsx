@@ -1,4 +1,4 @@
-import { SaveCheck, X } from "lucide-react";
+import { SaveCheck, X, FileDown } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import makeApiRequest from '../../api';
@@ -13,6 +13,7 @@ import CustomVideoPlayer from '../CustomVideoPlayer';
 import { SettingsContext } from '../../contexts/settingsContext';
 import useFirebase from '../../hooks/useFirebase';
 import { timeToSeconds } from '../../utils';
+import { ExportPdfButton } from '../ExportMomentToPdf';
 
 
 export default function MomentDetails({ momentDetailsRef }) {
@@ -144,6 +145,16 @@ export default function MomentDetails({ momentDetailsRef }) {
                     <p className={`text-sm/6 ${theme === "light" ? "text-textColor-300" : "text-textColor-100"}`}>{currentMoment?.prompt}</p>
                 </div>
                 <div className="flex items-center gap-2">
+
+                    {/* <RippleButton
+                        cssClasses="px-2 flex items-center gap-1 py-2 text-sm rounded"
+                        onClick={() => setCurrentMoment(null)}
+                    >
+                        <FileDown size={14} className={isExporting ? "animate-customPulse" : ""} />
+                        Export as PDF
+                    </RippleButton>  */}
+                    <ExportPdfButton currentMoment={currentMoment} logoPath="/new-crips-ai-logo-white-resize.png" appName="Crisp AI" />
+
                     {(currentMoment?.id === undefined || currentMoment?.id === null) && (
                         <RippleButton
                             onClick={() => {
