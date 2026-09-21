@@ -26,6 +26,7 @@ export default function MomentDetails({ momentDetailsRef }) {
         setIsPlayerReady,
         setHasDuration,
         player,
+        isPlayerReady
     } = useContext(MainContext);
 
     const { notify } = useToast();
@@ -131,7 +132,7 @@ export default function MomentDetails({ momentDetailsRef }) {
                 top: 0,
                 behavior: "smooth",
             });
-        }, 1000);
+        }, isPlayerReady ? 500 : 3000);
     }
 
 
