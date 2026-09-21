@@ -210,18 +210,18 @@ export async function exportMomentToPDF(currentMoment, options = {}) {
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(18);
         setText(doc, BRAND.ink);
-        const title = currentMoment.title || 'Untitled Moment';
+        const title = currentMoment?.title || 'Untitled Moment';
         const titleLines = doc.splitTextToSize(title, PAGE.contentWidth);
         titleLines.forEach((line) => {
             doc.text(line, PAGE.margin, cursorY);
             cursorY += 7;
         });
 
-        if (currentMoment.prompt) {
+        if (currentMoment?.prompt) {
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(10);
             setText(doc, BRAND.muted);
-            doc.text(`"${currentMoment.prompt}"`, PAGE.margin, cursorY);
+            doc.text(`"${currentMoment?.prompt}"`, PAGE.margin, cursorY);
             cursorY += 6;
         }
 
@@ -232,11 +232,11 @@ export async function exportMomentToPDF(currentMoment, options = {}) {
 
     const drawOverviewStats = () => {
         const stats = [
-            { label: 'Created', value: formatDate(currentMoment.created_at) },
-            { label: 'Results Found', value: String(currentMoment.results?.length ?? 0) },
+            { label: 'Created', value: formatDate(currentMoment?.created_at) },
+            { label: 'Results Found', value: String(currentMoment?.results?.length ?? 0) },
             {
                 label: 'Asset Duration',
-                value: formatDuration(currentMoment.results?.[0]?.source?.source_duration),
+                value: formatDuration(currentMoment?.results?.[0]?.source?.source_duration),
             },
         ];
 
@@ -268,7 +268,7 @@ export async function exportMomentToPDF(currentMoment, options = {}) {
 
     /* ---------- summary (from first result's source metadata, if present) ---------- */
 
-    const metadata = currentMoment.results?.[0]?.source?.metadata;
+    const metadata = currentMoment?.results?.[0]?.source?.metadata;
 
     const drawSummary = () => {
         const summary = metadata?.summary?.content;
@@ -370,7 +370,7 @@ export async function exportMomentToPDF(currentMoment, options = {}) {
     /* ---------- detected moments / search results ---------- */
 
     const drawResults = () => {
-        const results = currentMoment.results;
+        const results = currentMoment?.results;
         if (!results?.length) return;
         sectionTitle(`Detected Moments (${results.length})`);
 
@@ -457,7 +457,7 @@ export async function exportMomentToPDF(currentMoment, options = {}) {
     drawFooter();
 
     const outName =
-        fileName || `${(currentMoment.title || 'moment').trim().replace(/\s+/g, '-').toLowerCase()}-report.pdf`;
+        fileName || `${(currentMoment?.title || 'moment').trim().replace(/\s+/g, '-').toLowerCase()}-report.pdf`;
     doc.save(outName);
     return doc;
 }

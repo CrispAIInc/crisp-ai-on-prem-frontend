@@ -146,13 +146,6 @@ export default function MomentDetails({ momentDetailsRef }) {
                 </div>
                 <div className="flex items-center gap-2">
 
-                    {/* <RippleButton
-                        cssClasses="px-2 flex items-center gap-1 py-2 text-sm rounded"
-                        onClick={() => setCurrentMoment(null)}
-                    >
-                        <FileDown size={14} className={isExporting ? "animate-customPulse" : ""} />
-                        Export as PDF
-                    </RippleButton>  */}
                     <ExportPdfButton currentMoment={currentMoment} logoPath="/new-crips-ai-logo-white-resize.png" appName="Crisp AI" />
 
                     {(currentMoment?.id === undefined || currentMoment?.id === null) && (
