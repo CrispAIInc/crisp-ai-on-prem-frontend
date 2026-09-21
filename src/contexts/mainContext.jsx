@@ -25,6 +25,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         { value: "pdf", label: "PDFs" },
         { value: "img", label: "Images" },
     ];
+    const [activeTab, setActiveTab] = useState(NAV_ITEMS[0]?.key || "media");
     const [reels, setReels] = useState([]);
     const [stories, setStories] = useState([]);
     const [notes, setNotes] = useState([]);
@@ -1368,7 +1369,6 @@ export default function MainProvider({ children, theme, setTheme }) {
   { key: "business_intelligence", label: "Business Intelligence", icon: PieChart },
 ];
      */
-    const [activeTab, setActiveTab] = useState(NAV_ITEMS[0]?.key || "media");
     useEffect(() => {
         if (!currentResource) return;
 
