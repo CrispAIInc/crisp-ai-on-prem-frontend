@@ -85,14 +85,17 @@ export default function IndexSearchBar({
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && canDiscover && onDiscover?.(query, selectedIndexes)}
-                        placeholder={selectedIndexes.length === 0 ? label : ""}
+                        placeholder={label}
                         className="flex-1 min-w-[80px] bg-transparent outline-none text-[12.5px] text-ink placeholder:text-ink-muted"
                     />
 
                     {hasIndexOptions && (
                         <button
                             type="button"
-                            onClick={() => setDropdownOpen((v) => !v)}
+                            onClick={() => {
+                                setDropdownOpen((v) => !v);
+                                queryInputRef?.current?.focus();
+                            }}
                             aria-label="Choose indexes"
                             aria-expanded={dropdownOpen}
                             className="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-ink-muted hover:bg-surface-alt hover:text-ink"
