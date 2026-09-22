@@ -2,26 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { X, ChevronDown, Search } from "lucide-react";
 import LoadingSpinner from '../LoadingSpinner';
 
-/**
- * IndexSearchBar — "Search in all sources" input that optionally supports
- * picking one or more indexes as removable chips, plus a Discover action.
- *
- * Index selection is entirely optional: if `indexOptions` is omitted or
- * empty, the chevron/dropdown never renders and this behaves like a plain
- * search-and-discover bar. When `indexOptions` is provided, a chevron opens
- * a checklist and picks turn into removable chips inline with the input.
- *
- * Controlled-or-uncontrolled for both `query` and `selectedIndexes` — pass
- * the prop + its `on...Change` handler to control it, or omit both to let
- * the component manage its own state.
- *
- * Props:
- *  - label: caption shown above the field (default "Search in all sources")
- *  - query, onQueryChange
- *  - indexOptions: [{ id, label }] — omit/empty to hide index picking entirely
- *  - selectedIndexes, onSelectedIndexesChange: array of index ids
- *  - onDiscover(query, selectedIndexes): fired when "Discover" is clicked
- */
 export default function IndexSearchBar({
     label = "Search in all assets",
     query: queryProp,
@@ -35,7 +15,9 @@ export default function IndexSearchBar({
     const [internalQuery, setInternalQuery] = useState("");
     const [internalSelected, setInternalSelected] = useState([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
     const rootRef = useRef(null);
+    const queryInputRef = useRef(null);
 
     const query = queryProp ?? internalQuery;
     const setQuery = onQueryChange ?? setInternalQuery;
@@ -54,6 +36,10 @@ export default function IndexSearchBar({
         document.addEventListener("mousedown", handleClick);
         return () => document.removeEventListener("mousedown", handleClick);
     }, [dropdownOpen]);
+
+    useEffect(() => {
+        queryInputRef?.current?.focus();
+    }, [selectedIndexes.length]);
 
     const toggleIndex = (id) => {
         setSelectedIndexes(
@@ -94,6 +80,7 @@ export default function IndexSearchBar({
                     })}
 
                     <input
+                        ref={queryInputRef}
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
