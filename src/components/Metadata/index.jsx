@@ -60,7 +60,7 @@ export default function Metadata({
 
     const availableTabIds = TAB_SETS[sourceType] ?? TAB_SETS.video;
     const tabs = availableTabIds.map((id) => ({ id, label: TAB_LABELS[id] }));
-    const [internalTab, setInternalTab] = useState(tabs[0].id);
+    const [internalTab, setInternalTab] = useState(sourceType === "video" ? tabs[1].id : tabs[0].id);
     const activeTab = controlledActiveTab ?? internalTab;
 
     const setActiveTab = (nextTab) => {
