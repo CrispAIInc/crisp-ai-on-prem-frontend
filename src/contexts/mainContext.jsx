@@ -1522,8 +1522,10 @@ export default function MainProvider({ children, theme, setTheme }) {
 
 
     const [analyticsTab, setAnalyticsTab] = useState(ANALYTICS_TABS.TIME_SEGMENTS);
+    const [keys, setKeys] = useState([]);
     // create value object with all the states
     const value = {
+        keys, setKeys,
         isInfoTooltipOpenTimeSegment,
         setIsInfoTooltipOpenTimeSegment,
         formattedTimeSegment,

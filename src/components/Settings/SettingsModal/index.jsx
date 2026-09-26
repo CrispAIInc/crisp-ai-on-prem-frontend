@@ -6,10 +6,12 @@ import { ProjectContext } from '../../../contexts/projectContext.jsx';
 
 import {
     Settings,
-    UserShield
+    UserShield,
+    KeyRound
 } from "lucide-react";
 
 import CloseIcon from '@mui/icons-material/Close';
+import ApiKeysManager from '../../ApiKeysManager/index.jsx';
 
 export function SettingsModal(props) {
 
@@ -25,6 +27,10 @@ export function SettingsModal(props) {
         {
             name: "Account",
             icon: UserShield
+        },
+        {
+            name: "API keys",
+            icon: KeyRound
         }
     ];
 
@@ -34,6 +40,8 @@ export function SettingsModal(props) {
                 return <GeneralSettings hideTheme={props?.hideTheme} />;
             case "Account":
                 return <AccountSettings />;
+            case "API keys":
+                return <ApiKeysManager />;
             default:
                 return null;
         }
