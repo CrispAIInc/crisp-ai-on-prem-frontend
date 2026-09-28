@@ -16,7 +16,7 @@ import AssetCollection from '../AssetCollection/index.jsx';
 
 const MEDIA_NAV = [
     { key: "ingest", label: "Ingest", icon: Upload },
-    { key: "collection", label: "Collection", icon: FolderOpen },
+    // { key: "collection", label: "Collection", icon: FolderOpen },
 ];
 
 export default function Media() {
@@ -525,23 +525,6 @@ export default function Media() {
             : item));
     }
 
-    function toggleAll() {
-        const sourcePaths = new Set(displayedSources.map((source) => source.source_path));
-        setKnowledgeBase((previous) => previous.map((source) => sourcePaths.has(source.source_path)
-            ? { ...source, is_checked: !allChecked, is_selected: true }
-            : source));
-    }
-
-    function clearAll() {
-        setKnowledgeBase(prev => prev.map(item => {
-            return {
-                ...item,
-                is_checked: false,
-                is_selected: false,
-            };
-        }));
-    }
-
     return (
         <div className="flex h-full min-h-0 max-w-[1400px] flex-col overflow-hidden mx-auto px-6 py-6 bg-white">
             <div className="pb-3 border-b border-border shrink-0">
@@ -576,23 +559,6 @@ export default function Media() {
                 isDeleting={isDeleting}
                 isProjectReadOnly={isProjectReadOnly}
             />
-
-            {/* Selection controls */}
-            {/* {displayedSources.length > 0 ? (
-                <div className="flex items-center justify-between mb-4">
-                    <label className="flex items-center gap-2 cursor-pointer select-none" onClick={clearAll}>
-                        <div className="flex items-center gap-1">
-                            <SquareMinus size={13} />
-                            <span className="text-xs">Clear all</span>
-                        </div>
-                        <span className="text-xs text-gray-400">
-                            ({selectedSourcesLength} asset{selectedSourcesLength !== 1 ? 's' : ''})
-                        </span>
-                    </label>
-                </div>
-            ) : (
-                <NoData message="Select an asset to start generating content" classes="mt-4" />
-            )} */}
 
             <AddSourceModal
                 show={showAddModal}
@@ -643,24 +609,6 @@ export default function Media() {
                     onUpdated={handleSourceUpdated}
                 />
             )}
-
-            {/* Card grid */}
-            {/* <div className="min-h-0 flex-1 overflow-y-auto pr-1">
-                <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))]">
-                    {displayedSources.map((source) => (
-                        <MediaCard
-                            key={source.source_path}
-                            source={source}
-                            onOpen={onThumbnailClick}
-                            onToggle={handleCheckboxChange}
-                            onUpdate={openSourceUpdate}
-                            onDelete={deleteResource}
-                            isDeleting={isDeleting}
-                            isProjectReadOnly={isProjectReadOnly}
-                        />
-                    ))}
-                </div>
-            </div> */}
         </div>
     );
 }

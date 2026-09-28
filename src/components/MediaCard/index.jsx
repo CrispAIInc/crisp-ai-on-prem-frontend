@@ -68,14 +68,6 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 }`}
             onClick={(event) => onOpen(event, source)}
         >
-            {(!isDiscoveryResult && !('progress' in source)) && <div
-                className={`absolute top-2.5 left-2.5 z-1 h-5 w-5 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center rounded-full`}
-                onClick={handleClearSingleSource}
-                title="remove from list"
-            >
-                <Minus size={24} color="#333333" className="w-fit" />
-            </div>}
-
             <div className="relative flex aspect-video items-center justify-center rounded-t-xl bg-gray-900 overflow-hidden">
                 {source?.thumbnail ? (
                     source.thumbnail.startsWith("blob") && source.file_type === "video" ? (
