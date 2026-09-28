@@ -12,10 +12,11 @@ import { useToast } from "../../contexts/toastContext.jsx";
 import makeApiRequest from "../../api";
 import { extractThumbnail, generateRandomHash, getFileType } from "../../utils.js";
 import NoData from '../NoData/index.jsx';
+import AssetCollection from '../AssetCollection/index.jsx';
 
 const MEDIA_NAV = [
     { key: "ingest", label: "Ingest", icon: Upload },
-    { key: "collection", label: "Collection", icon: FolderOpen },
+    // { key: "collection", label: "Collection", icon: FolderOpen },
 ];
 
 export default function Media() {
@@ -494,7 +495,7 @@ export default function Media() {
 
             notify({
                 variant: "success",
-                heading: "Source deleted successfully!",
+                heading: "Asset deleted successfully!",
             });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
@@ -524,23 +525,6 @@ export default function Media() {
             : item));
     }
 
-    function toggleAll() {
-        const sourcePaths = new Set(displayedSources.map((source) => source.source_path));
-        setKnowledgeBase((previous) => previous.map((source) => sourcePaths.has(source.source_path)
-            ? { ...source, is_checked: !allChecked, is_selected: true }
-            : source));
-    }
-
-    function clearAll() {
-        setKnowledgeBase(prev => prev.map(item => {
-            return {
-                ...item,
-                is_checked: false,
-                is_selected: false,
-            };
-        }));
-    }
-
     return (
         <div className="flex h-full min-h-0 max-w-[1400px] flex-col overflow-hidden mx-auto px-6 py-6 bg-white">
             <div className="pb-3 border-b border-border shrink-0">
@@ -567,33 +551,14 @@ export default function Media() {
                 })}
             </nav>
 
-            {/* Selection controls */}
-            {displayedSources.length > 0 ? (
-                <div className="flex items-center justify-between mb-4">
-                    <label className="flex items-center gap-2 cursor-pointer select-none" onClick={clearAll}>
-                        <div className="flex items-center gap-1">
-                            <SquareMinus size={13} />
-                            <span className="text-xs">Clear all</span>
-                        </div>
-                        <span className="text-xs text-gray-400">
-                            ({selectedSourcesLength} asset{selectedSourcesLength !== 1 ? 's' : ''})
-                        </span>
-                    </label>
-
-                    {/* {
-                        displayedSources.length > 0 && (
-                            <button
-                                type="button"
-                                onClick={clearAll}
-                                className="text-[13px] font-medium transition-colors text-red-600 hover:text-red-700"
-                            >
-                                Clear all
-                            </button>
-                        )} */}
-                </div>
-            ) : (
-                <NoData message="Select an asset to start generating content" classes="mt-4" />
-            )}
+            <AssetCollection
+                onThumbnailClick={onThumbnailClick}
+                handleCheckboxChange={handleCheckboxChange}
+                openSourceUpdate={openSourceUpdate}
+                deleteResource={deleteResource}
+                isDeleting={isDeleting}
+                isProjectReadOnly={isProjectReadOnly}
+            />
 
             <AddSourceModal
                 show={showAddModal}
@@ -644,24 +609,6 @@ export default function Media() {
                     onUpdated={handleSourceUpdated}
                 />
             )}
-
-            {/* Card grid */}
-            <div className="min-h-0 flex-1 overflow-y-auto pr-1">
-                <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))]">
-                    {displayedSources.map((source) => (
-                        <MediaCard
-                            key={source.source_path}
-                            source={source}
-                            onOpen={onThumbnailClick}
-                            onToggle={handleCheckboxChange}
-                            onUpdate={openSourceUpdate}
-                            onDelete={deleteResource}
-                            isDeleting={isDeleting}
-                            isProjectReadOnly={isProjectReadOnly}
-                        />
-                    ))}
-                </div>
-            </div>
         </div>
     );
 }
