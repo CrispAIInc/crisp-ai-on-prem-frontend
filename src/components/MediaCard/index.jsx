@@ -68,35 +68,13 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 }`}
             onClick={(event) => onOpen(event, source)}
         >
-            {!isDiscoveryResult && <div
+            {(!isDiscoveryResult && !('progress' in source)) && <div
                 className={`absolute top-2.5 left-2.5 z-1 h-5 w-5 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center rounded-full`}
                 onClick={handleClearSingleSource}
                 title="remove from list"
             >
                 <Minus size={24} color="#333333" className="w-fit" />
             </div>}
-            {/* <div
-                className={`absolute top-2.5 left-2.5 z-1 flex h-5 w-5 items-center justify-center rounded border transition-colors ${isChecked
-                    ? "border-primary-300 bg-primary-300"
-                    : "border-gray-300 bg-white/90 group-hover:border-gray-400"
-                    }`}
-                onClick={(event) => {
-                    event.stopPropagation();
-                    onToggle(!isChecked, source);
-                }}
-                role="checkbox"
-                aria-checked={isChecked}
-                tabIndex={0}
-                onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        onToggle(!isChecked, source);
-                    }
-                }}
-            >
-                {isChecked && <Check size={12} className="text-white" strokeWidth={3} />}
-            </div> */}
 
             <div className="relative flex aspect-video items-center justify-center rounded-t-xl bg-gray-900 overflow-hidden">
                 {source?.thumbnail ? (

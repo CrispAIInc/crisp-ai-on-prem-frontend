@@ -495,7 +495,7 @@ export default function Media() {
 
             notify({
                 variant: "success",
-                heading: "Source deleted successfully!",
+                heading: "Asset deleted successfully!",
             });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);

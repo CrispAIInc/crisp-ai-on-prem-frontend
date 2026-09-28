@@ -98,7 +98,7 @@ export default function AssetCollection({
                             <div className="pl-6 pb-2">
                                 {indexSources.length === 0 && (
                                     <p className="px-3 py-2 text-xs italic text-slate-500">
-                                        No sources in this folder
+                                        No assets in this folder
                                     </p>
                                 )}
 

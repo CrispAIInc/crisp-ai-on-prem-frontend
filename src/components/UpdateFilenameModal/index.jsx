@@ -57,7 +57,7 @@ export default function UpdateFilenameModal({ show, onHide, filename, setFilenam
             onHide();
             notify({
                 variant: "success",
-                heading: "Source renamed successfully!",
+                heading: "Asset renamed successfully!",
             });
         } catch (error) {
             console.log(error);
