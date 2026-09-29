@@ -1,18 +1,17 @@
+import { Upload } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
+import makeApiRequest from "../../api";
 import socket from "../../config/socket";
-import { Upload, FolderOpen, Check, SquareMinus } from "lucide-react";
-import AddSourceModal from "../AddSourceModal";
-import FileUploaderModal from "../FileUploaderModal";
-import SourceExplorer from "../SourceExplorer";
-import MediaCard from "../MediaCard";
-import { UpdateFilenameModal } from "../ContentSection";
 import { MainContext } from "../../contexts/mainContext.jsx";
 import { ProjectContext } from "../../contexts/projectContext.jsx";
 import { useToast } from "../../contexts/toastContext.jsx";
-import makeApiRequest from "../../api";
 import { extractThumbnail, generateRandomHash, getFileType } from "../../utils.js";
-import NoData from '../NoData/index.jsx';
+import AddSourceModal from "../AddSourceModal";
 import AssetCollection from '../AssetCollection/index.jsx';
+import { UpdateFilenameModal } from "../ContentSection";
+import FileUploaderModal from "../FileUploaderModal";
+import SourceExplorer from "../SourceExplorer";
+import ConfirmationModal from '../ConfirmationModal/index.jsx';
 
 const MEDIA_NAV = [
     { key: "ingest", label: "Ingest", icon: Upload },
@@ -44,6 +43,8 @@ export default function Media() {
         setFrameExtractionRate,
         setIsDetailedMode,
         setVideoCaptionContext,
+        setSelectedCategory,
+        setCategoryOptions
     } = useContext(MainContext);
     const { isProjectReadOnly } = useContext(ProjectContext);
     const { notify } = useToast();
@@ -56,11 +57,10 @@ export default function Media() {
     const [clickedIndex, setClickedIndex] = useState(null);
     const [sourceToUpdate, setSourceToUpdate] = useState(null);
     const [filename, setFilename] = useState("");
-
-    const checkedSources = displayedSources.filter((source) => source?.is_checked);
-    const allChecked = displayedSources.length > 0 && checkedSources.length === displayedSources.length;
-    const someChecked = checkedSources.length > 0;
-    const selectedSourcesLength = displayedSources.length;
+    const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
+    const [isIndexDeleting, setIsIndexDeleting] = useState(false);
+    const [indexToRemove, setIndexToRemove] = useState("");
+    const [sourcesToDelete, setSourcesToDelete] = useState([]);
 
     function handleMediaNavClick(key) {
         if (key === "ingest" && !isProjectReadOnly) {
@@ -105,12 +105,8 @@ export default function Media() {
      * +++++++++++++ UPLOAD +++++++++++++++
      */
 
-    const [isProgressStarted, setIsProgressStarted] = useState(false);
-    const [progressUpdateCount, setProgressUpdateCount] = useState(0);
-    const [isUploadFailed, setIsUploadFailed] = useState(false);
+
     const [uploadStatus, setUploadStatus] = useState("idle"); // 'idle' | 'uploading' | 'success' | 'error'
-    const [uploadErrorMessage, setuploadErrorMessage] = useState("");
-    const [fileThumbnails, setFileThumbnails] = useState([]);
 
     function handleProgressUpdate(data) {
         setProgressUpdateCount(prev => prev + 1);
@@ -309,12 +305,8 @@ export default function Media() {
         startSocket();
         try {
             setUploadStatus("uploading");
-            setIsUploadFailed(false);
             setIsFileUploading(true);
-            setIsProgressStarted(true);
             setShowAddModal(false);
-            setFileThumbnails([]);
-            setProgressUpdateCount(0); // Reset progress update counter
 
             const files = _files || Array.from(event.target.files);
             const processedFiles = files.map(file => file.name);
@@ -525,6 +517,52 @@ export default function Media() {
             : item));
     }
 
+    function removeIndex(e, indexId) {
+        e?.stopPropagation();
+        const indexValue = categoryOptions.find(item => item.id === indexId)?.value;
+        setIndexToRemove(indexValue);
+        const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(indexValue));
+        setSourcesToDelete(itemsToBeDeleted);
+        setShowRemoveIndexModal(true);
+    }
+
+    async function deleteIndex() {
+        try {
+            setIsIndexDeleting(true);
+
+            // remove sources before index
+            if (sourcesToDelete.length > 0) {
+                await deleteResource(null, sourcesToDelete);
+            }
+
+            const { success, message } = await makeApiRequest(`/indexes/${categoryOptions.find(idx => idx.value === indexToRemove)?.id}`, 'DELETE');
+
+            if (!success) {
+                throw new Error(message);
+            }
+
+            // CHANGE CURRENTCATEGORY IF IT IS THE DELETING ONE
+            if (selectedCategory === indexToRemove) {
+                setSelectedCategory("all");
+            }
+
+            setCategoryOptions(prev => [...prev.filter(item => item.value !== indexToRemove)]);
+            notify({
+                variant: "success",
+                heading: message || "Index deleted!",
+            });
+            setShowRemoveIndexModal(false);
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: error.message || "Couldn't delete index. Please try again later.",
+            });
+        } finally {
+            setIsIndexDeleting(false);
+        }
+    }
+
     return (
         <div className="flex h-full min-h-0 max-w-[1400px] flex-col overflow-hidden mx-auto px-6 py-6 bg-white">
             <div className="pb-3 border-b border-border shrink-0">
@@ -558,6 +596,19 @@ export default function Media() {
                 deleteResource={deleteResource}
                 isDeleting={isDeleting}
                 isProjectReadOnly={isProjectReadOnly}
+                onDeleteIndex={(index) => removeIndex(null, index)}
+            />
+
+            {/* DELETE INDEX MODAL */}
+            <ConfirmationModal
+                show={showRemoveIndexModal}
+                onHide={() => setShowRemoveIndexModal(false)}
+                targetName={indexToRemove}
+                itemCount={sourcesToDelete.length}
+                itemLabel="sources"
+                requireTypedConfirmation={true}
+                confirmedFn={deleteIndex}
+                isDeleting={isIndexDeleting}
             />
 
             <AddSourceModal

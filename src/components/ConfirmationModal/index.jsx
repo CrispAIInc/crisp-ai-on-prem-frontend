@@ -9,9 +9,9 @@ export default function ConfirmationModal({
     onHide,
     heading,
     subheading,
-    targetName,           // e.g. "O-I" — the specific resource being deleted
-    itemCount,            // e.g. 2 — optional, how many things get deleted
-    itemLabel = "items",  // e.g. "sources"
+    targetName,
+    itemCount,
+    itemLabel = "items",
     requireTypedConfirmation = false,
     confirmedFn,
     isDeleting,
