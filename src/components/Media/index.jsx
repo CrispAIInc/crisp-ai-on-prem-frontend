@@ -12,6 +12,8 @@ import { UpdateFilenameModal } from "../ContentSection";
 import FileUploaderModal from "../FileUploaderModal";
 import SourceExplorer from "../SourceExplorer";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
+import NoData from '../NoData/index.jsx';
+import AnimatedText from '../AnimatedText/index.jsx';
 
 const MEDIA_NAV = [
     { key: "ingest", label: "Ingest", icon: Upload },
@@ -23,7 +25,7 @@ export default function Media() {
         categoryOptions,
         formatOptions,
         currentResource,
-        displayedSources = [],
+        isKnowledgeBaseFetching,
         setShowMetadata,
         isDetailedMode,
         handleCheckboxChange,
@@ -389,7 +391,7 @@ export default function Media() {
                         return {
                             ...item,
                             progress: 3,
-                            step: "Source pre-processing..."
+                            step: "Asset pre-processing..."
                         };
                     }
 
@@ -425,19 +427,16 @@ export default function Media() {
 
 
         } catch (error) {
-            setIsUploadFailed(true);
             setUploadStatus("error");
             notify({
                 variant: "error",
                 heading: "Oops!",
                 subheading: "Failed to upload new source. Please try again.",
             });
-            setuploadErrorMessage(error?.response?.data?.error || 'Upload failed. Please try again.');
             setKnowledgeBase(prev => prev.filter(item => !('progress' in item)));
         } finally {
             disconnectSocket();
             setIsFileUploading(false);
-            setIsProgressStarted(false);
         }
     };
 
@@ -589,15 +588,20 @@ export default function Media() {
                 })}
             </nav>
 
-            <AssetCollection
-                onThumbnailClick={onThumbnailClick}
-                handleCheckboxChange={handleCheckboxChange}
-                openSourceUpdate={openSourceUpdate}
-                deleteResource={deleteResource}
-                isDeleting={isDeleting}
-                isProjectReadOnly={isProjectReadOnly}
-                onDeleteIndex={(index) => removeIndex(null, index)}
-            />
+            {isKnowledgeBaseFetching ? (
+                <AnimatedText text="Loading your knowledge base..." />
+            ) : knowledgeBase.length > 0 ? (
+                <AssetCollection
+                    onThumbnailClick={onThumbnailClick}
+                    handleCheckboxChange={handleCheckboxChange}
+                    openSourceUpdate={openSourceUpdate}
+                    deleteResource={deleteResource}
+                    isDeleting={isDeleting}
+                    isProjectReadOnly={isProjectReadOnly}
+                    onDeleteIndex={(index) => removeIndex(null, index)}
+                />) : (
+                <NoData message="No asset was found in your knowledge base. Start ingesting now to generate content." classes="mt-4" />
+            )}
 
             {/* DELETE INDEX MODAL */}
             <ConfirmationModal
