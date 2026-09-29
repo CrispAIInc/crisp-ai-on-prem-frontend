@@ -46,7 +46,7 @@ function Studio() {
     }, [isDragging]);
 
     return (
-        <div ref={studioRef} className="relative max-w-[1400px] mx-auto h-full min-h-0 overflow-hidden">
+        <div ref={studioRef} className="relative mx-auto h-full min-h-0 overflow-hidden">
             <div
                 className=" grid h-full min-h-0 grid-cols-1 bg-gray-100 items-start lg:grid-cols-[var(--studio-panel-width)_minmax(0,1fr)]"
                 style={{ '--studio-panel-width': `${panelWidth}px` }}
