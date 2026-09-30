@@ -1,9 +1,6 @@
-import { useContext, useRef } from 'react';
-import { MainContext } from '../../contexts/mainContext.jsx';
+import { useRef } from 'react';
 
 const RippleButton = ({ children, fullWidth = false, cssClasses = "", noBg = false, disabled = false, onClick = () => null }) => {
-
-    const { theme } = useContext(MainContext);
     const buttonRef = useRef(null);
 
     const createRipple = (event) => {

@@ -479,7 +479,6 @@ export function sortByDate(array, dateKey = "created_at", order = "asc") {
 }
 
 export const extractThumbnail = (file) => {
-    // const thumbnails = files.map((file) => {
     const type = file.type;
     const preview =
         type.startsWith('image/') || type.startsWith('video/')
