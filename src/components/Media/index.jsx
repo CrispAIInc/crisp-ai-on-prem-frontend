@@ -589,7 +589,9 @@ export default function Media() {
             </nav>
 
             {isKnowledgeBaseFetching ? (
-                <AnimatedText text="Loading your knowledge base..." />
+                // <div className="flex flex-col gap-2 items-center justify-center">
+                <NoData pulse={true} message="Loading your knowledge base..." classes="mt-4" iconUrl="/data-processing.svg" />
+                // </div>
             ) : knowledgeBase.length > 0 ? (
                 <AssetCollection
                     onThumbnailClick={onThumbnailClick}
