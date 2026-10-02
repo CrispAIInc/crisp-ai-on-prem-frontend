@@ -7,7 +7,6 @@ import Workspace from "../Workspace";
 import { Helmet } from 'react-helmet';
 import Joyride from 'react-joyride';
 
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./MainWorkspace.css";
 
 
