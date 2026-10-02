@@ -20,7 +20,7 @@ export function ChapterDetailsModal({ show, onHide, chapter }) {
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
-            className="relative note-modal"
+            className="note-modal"
         >
             <div className="w-56 h-56 bg-blue-500 rounded-full absolute left-1/2 top-10 -z-0 blur-[160px]"></div>
             <div className="w-56 h-56 bg-purple-500 rounded-full absolute left-35 top-40 -z-0 blur-[160px]"></div>

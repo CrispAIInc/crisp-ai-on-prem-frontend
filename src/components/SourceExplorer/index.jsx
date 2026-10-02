@@ -66,7 +66,6 @@ export function SourceExplorer(props) {
             aria-labelledby="contained-modal-title-vcenter"
             scrollable={true}
             centered
-            className="relative"
         >
             {/* <div className="w-56 h-56 bg-pink-400 rounded-full absolute left-1/2 top-10 z-10 blur-[180px]"></div>
             <div className="w-56 h-56 bg-purple-400 rounded-full absolute left-0 top-80 z-10 blur-[180px]"></div> */}
