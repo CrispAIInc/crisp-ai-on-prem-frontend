@@ -60,7 +60,6 @@ const TimeSegmentDescription = ({
                 {
                     file_type: "video",
                     source_path: "bill gates.mp4",
-                    video_url: "gs://crispai-app-462614.firebasestorage.app/video_uploads/videos/oussama-i1/bill gates.mp4",
                     timestamp: "00:00:00",
                     thumbnail: "bill gates.mp4.jpg",
                     category: "oussama-i1",

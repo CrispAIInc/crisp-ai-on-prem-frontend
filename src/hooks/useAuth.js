@@ -1,37 +1,30 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth, onIdTokenChanged, signOut } from "firebase/auth";
-import { clearStoredCurrentProject } from "../globals";
+import { AUTH_TOKEN_CHANGED_EVENT, clearStoredCurrentProject, TOKEN_NAME } from "../globals";
 
 export default function useAuth() {
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const auth = getAuth();
+    const [token, setToken] = useState(() => localStorage.getItem(TOKEN_NAME));
 
     useEffect(() => {
-        // Subscribe to token changes
-        const unsubscribe = onIdTokenChanged(auth, async (user) => {
-            if (user) {
-                const idToken = await user.getIdToken();
-                setToken(idToken);
-            } else {
-                setToken(null);
-            }
-            setLoading(false); // ✅ done checking
-        });
-
-        return () => unsubscribe();
-    }, [auth]);
+        const syncToken = () => setToken(localStorage.getItem(TOKEN_NAME));
+        window.addEventListener("storage", syncToken);
+        window.addEventListener(AUTH_TOKEN_CHANGED_EVENT, syncToken);
+        return () => {
+            window.removeEventListener("storage", syncToken);
+            window.removeEventListener(AUTH_TOKEN_CHANGED_EVENT, syncToken);
+        };
+    }, []);
 
     return {
         token,
         isAuthenticated: token !== null,
-        loading,
+        loading: false,
         login: () => { },
         logout: async (redirectUrl = "/login", redirectOptions = {}) => {
             clearStoredCurrentProject();
-            await signOut(auth);
+            localStorage.removeItem(TOKEN_NAME);
+            window.dispatchEvent(new Event(AUTH_TOKEN_CHANGED_EVENT));
             setToken(null);
             navigate(redirectUrl, {
                 state: {

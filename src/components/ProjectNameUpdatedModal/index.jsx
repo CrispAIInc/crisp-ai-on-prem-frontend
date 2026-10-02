@@ -3,7 +3,7 @@ import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { useEffect, useRef, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import makeApiRequest, { axiosInstance } from '../../api';
-import useFirebase from '../../hooks/useFirebase';
+import useMediaUrls from '../../hooks/useMediaUrls';
 import { extractThumbnail } from '../../utils';
 import LoadingSpinner from '../LoadingSpinner';
 
@@ -16,7 +16,7 @@ const ProjectNameUpdaterModal = ({ show, onHide, project, setProjects }) => {
     const projectThumbnailRef = useRef(null);
 
     // convert gs thumbnail url to public url
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
     useEffect(() => {
         async function convertUrl() {
             const publicUrl = await getPublicUrl(project.thumbnail);

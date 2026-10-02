@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext';
 
-import useFirebase from '../../hooks/useFirebase';
+import useMediaUrls from '../../hooks/useMediaUrls';
 import RippleButton from '../RippleButton';
 
 import { renderAsync } from "docx-preview";
@@ -21,7 +21,7 @@ function BlogViewerModal({ show, onHide }) {
         selectedBlog,
     } = useContext(MainContext);
 
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
 
     const [isDownloading, setIsDownloading] = useState(false);
     const viewer = useRef(null);

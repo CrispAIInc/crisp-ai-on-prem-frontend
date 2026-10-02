@@ -4,7 +4,7 @@ import makeApiRequest from '../../api';
 import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from '../../contexts/toastContext';
-import useFirebase from '../../hooks/useFirebase';
+import useMediaUrls from '../../hooks/useMediaUrls';
 import ActionMenu from '../ActionMenu';
 import AnimatedText from '../AnimatedText';
 import FilenameUpdateModal from "../AppSingleValueModal";
@@ -16,7 +16,7 @@ export default function ShortListItem({ short, active, onClick }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
     const { reels, setReels, selectedReel, setSelectedReel } = useContext(MainContext);
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
     const { notify } = useToast();
 
     const [reelTitleUpdateValue, setReelTitleUpdateValue] = useState('');

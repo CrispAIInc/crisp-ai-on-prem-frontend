@@ -1,12 +1,8 @@
 import { Alert } from '@mui/material';
-import { onIdTokenChanged } from "firebase/auth";
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { auth } from "../../config/firebase.js";
 import { loginWithUsernameAndPassword } from '../../services/auth.js';
 import AnimatedInput from '../AnimatedInput';
-import GoogleAuthButton from "../Auth/GoogleAuthButton";
-import HorizontalOrText from '../HorizontalOrText';
 import RippleButton from "../RippleButton";
 
 export default function Login() {
@@ -30,38 +26,12 @@ export default function Login() {
 
             await loginWithUsernameAndPassword(userInfo);
 
-            const idToken = await new Promise((resolve, reject) => {
-                const unsubscribe = onIdTokenChanged(auth, async (user) => {
-                    if (user) {
-                        try {
-                            const token = await user.getIdToken();
-                            unsubscribe();
-                            resolve(token);
-                        } catch (err) {
-                            unsubscribe();
-                            reject(err);
-                        }
-                    }
-                });
-
-                // safety timeout: reject after 10s
-                const timeout = setTimeout(() => {
-                    try { unsubscribe(); } catch (e) { console.log(""); }
-                    reject(new Error("Timed out waiting for Firebase token"));
-                }, 10000);
+            setUserInfo({
+                pseudo: "",
+                password: "",
             });
-
-            setTimeout(() => {
-                // Reset userInfo after registration attempt
-                setUserInfo({
-                    // email: "",
-                    // username: "",
-                    pseudo: "",
-                    password: "",
-                });
-                setIsPending(false);
-                navigate('/');
-            }, 3000);
+            setIsPending(false);
+            navigate('/');
         } catch (e) {
             setError(e.message || "Please verify your data and try again.");
             setIsPending(false);
@@ -117,8 +87,6 @@ export default function Login() {
             </p>
             <p className='text-sm font-bold text-center text-textColor-200'>Don&apos;t  have an account? <Link className="text-primary-300" to="/sign-up">Sign up</Link></p>
 
-            <HorizontalOrText />
-            <GoogleAuthButton />
         </div>
     );
 }

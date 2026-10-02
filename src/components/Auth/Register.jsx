@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
 import makeApiRequest from '../../api';
-import GoogleAuthButton from "../Auth/GoogleAuthButton";
-import HorizontalOrText from '../HorizontalOrText';
 import { isValidEmail } from "../../utils.js";
 import Alert from '@mui/material/Alert';
 
@@ -38,18 +36,9 @@ export default function Register() {
                 throw new Error("Passwords do not match.");
             }
 
-            // create user in firebase first
-            // const userCredential = await createUserWithFirestore(userInfo.email, userInfo.password);
-            // send email verification to the user
-
-
-            // Here you would typically make an API call to register the user
             const { success, message } = await makeApiRequest('/sign-up', 'POST', JSON.stringify(userInfo));
 
             if (success) {
-                // const user = await loginWithAccessAndRefreshToken(userInfo.email, userInfo.password);
-                // await sendEmail(user);
-                //show user a info card letting them know that a verification email has been send to their email
                 setError(false);
                 setTimeout(() => {
                     navigate('/verify', {
@@ -63,7 +52,6 @@ export default function Register() {
                 throw new Error(message || "Registration failed. Please try again.");
             }
 
-            // Reset userInfo after registration attempt
             setUserInfo(prev => ({ email: prev.email, firstName: "", lastName: "", password: "", confirmPassword: "" }));
         } catch (e) {
             if (e.code === "auth/email-already-in-use") {
@@ -180,8 +168,6 @@ export default function Register() {
             </div>
             <p className='mt-2 text-sm font-bold text-center text-textColor-200'>Already have an account? <Link className="text-primary-300" to="/login">Sign in</Link></p>
 
-            <HorizontalOrText />
-            <GoogleAuthButton />
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import useFirebase from '../../../hooks/useFirebase';
+import useMediaUrls from '../../../hooks/useMediaUrls';
 import ActionMenu from '../../ActionMenu';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -16,7 +16,7 @@ export default function ProjectRow({ project, recent }) {
     const { setProjects, setCurrentProject } = useContext(ProjectContext);
 
     // Custom Hooks
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
     const { deleteProject } = useProject();
 
     const [publicThumbnailUrl, setPublicThumbnailUrl] = useState("");

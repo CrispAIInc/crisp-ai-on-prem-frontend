@@ -11,7 +11,7 @@ import RippleButton from '../RippleButton';
 import ScoreChip from '../ScoreChip';
 import CustomVideoPlayer from '../CustomVideoPlayer';
 import { SettingsContext } from '../../contexts/settingsContext';
-import useFirebase from '../../hooks/useFirebase';
+import useMediaUrls from '../../hooks/useMediaUrls';
 import { timeToSeconds } from '../../utils';
 import { ExportPdfButton } from '../ExportMomentToPdf';
 
@@ -34,7 +34,7 @@ export default function MomentDetails({ momentDetailsRef }) {
 
     const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
 
 
     const [showSaveTitleModal, setShowSaveTitleModal] = useState(false);

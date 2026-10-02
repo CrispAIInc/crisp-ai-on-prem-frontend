@@ -12,7 +12,7 @@ import "react-pdf/dist/Page/TextLayer.css";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext.jsx";
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
-import useFirebase from '../../hooks/useFirebase.js';
+import useMediaUrls from '../../hooks/useMediaUrls.js';
 import { flattenMetadata, timeToSeconds } from '../../utils.js';
 import BaseHeading from '../BaseHeading/index.jsx';
 import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
@@ -47,7 +47,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
-  const { getPublicUrl } = useFirebase();
+  const { getPublicUrl } = useMediaUrls();
 
   const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item.source_id === currentResource.source_id));
   const [metadataActiveTab, setMetadataActiveTab] = useState("search");

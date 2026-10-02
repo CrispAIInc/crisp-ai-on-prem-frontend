@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
-import useFirebase from '../../hooks/useFirebase.js';
+import useMediaUrls from '../../hooks/useMediaUrls.js';
 import { useToast } from "../../contexts/toastContext";
 import { useContext, useState, useEffect } from 'react';
 import { timeToSeconds } from "../../utils.js";
@@ -29,7 +29,7 @@ function ReelViewer() {
         selectedReel: reel,
         setSelectedReel: setReel
     } = useContext(MainContext);
-    const { getPublicUrl, getDownloadableUrl } = useFirebase();
+    const { getPublicUrl, getDownloadableUrl } = useMediaUrls();
 
     const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import useFirebase from "../../hooks/useFirebase.js";
+import useMediaUrls from "../../hooks/useMediaUrls.js";
 
 export default function GsFile({ gsUrl, type = "img", alt = "", ...props }) {
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
 
     const [url, setUrl] = useState("");
 

@@ -4,7 +4,7 @@ import { SaveCheck, X, Download } from "lucide-react";
 import { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../../contexts/mainContext';
 import { SettingsContext } from '../../contexts/settingsContext';
-import useFirebase from '../../hooks/useFirebase';
+import useMediaUrls from '../../hooks/useMediaUrls';
 import BaseHeading from '../BaseHeading';
 import CustomVideoPlayer from '../CustomVideoPlayer';
 import RippleButton from '../RippleButton';
@@ -26,7 +26,7 @@ export default function SegmentDetails() {
         player
     } = useContext(MainContext);
 
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
 
     const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
     const [isSaved, setIsSaved] = useState(Boolean(currentSegment && currentSegment.id));

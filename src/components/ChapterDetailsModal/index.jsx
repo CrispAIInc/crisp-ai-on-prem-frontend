@@ -1,25 +1,16 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { MainContext } from '../../contexts/mainContext.jsx';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import useFirebase from '../../hooks/useFirebase.js';
 import GsFile from '../GsFile/index.jsx';
 
 export function ChapterDetailsModal({ show, onHide, chapter }) {
 
     const { theme, setCurrentResource, setJumpToPage, workspaceContainer } = useContext(MainContext);
 
-    // const { getPublicUrl } = useFirebase();
-
-    // const [url, setUrl] = useState("");
     const [expanded, setExpanded] = useState(false);
     const CONTENT_TRUNCATE_LENGTH = 400;
-
-    // useEffect(() => {
-    //     if (!chapter?.keyframe_url) return;
-    //     getPublicUrl(chapter?.keyframe_url).then(setUrl).catch(console.error);
-    // }, [chapter?.keyframe_url]);
 
     return (
         <Modal

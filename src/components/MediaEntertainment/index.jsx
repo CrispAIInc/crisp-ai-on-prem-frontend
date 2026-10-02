@@ -14,7 +14,7 @@ import LoadingSpinner from '../LoadingSpinner/index.jsx';
 import BaseHeading from '../BaseHeading/index.jsx';
 import { searchByKey, sortArrayOfObjects, sortBySourcePath } from '../../utils.js';
 import FilenameUpdateModal from "../AppSingleValueModal";
-import useFirebase from '../../hooks/useFirebase.js';
+import useMediaUrls from '../../hooks/useMediaUrls.js';
 import { ProjectContext } from '../../contexts/projectContext.jsx';
 import AnimatedText from '../AnimatedText/index.jsx';
 import ActionMenu from '../ActionMenu/index.jsx';
@@ -36,7 +36,7 @@ function MediaEntertainment({
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
 
     const { getReels } = useResources({ setReels });
 

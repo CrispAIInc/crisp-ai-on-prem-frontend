@@ -1,4 +1,5 @@
-export const TOKEN_NAME = "idToken";
+export const TOKEN_NAME = "accessToken";
+export const AUTH_TOKEN_CHANGED_EVENT = "auth-token-changed";
 export const CURRENT_PROJECT_STORAGE_KEY = "current_project";
 export function clearStoredCurrentProject() {
     localStorage.removeItem(CURRENT_PROJECT_STORAGE_KEY);

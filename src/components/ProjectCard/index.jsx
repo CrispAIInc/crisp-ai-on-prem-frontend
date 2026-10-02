@@ -3,7 +3,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import AnimatedText from "../AnimatedText";
-import useFirebase from '../../hooks/useFirebase';
+import useMediaUrls from '../../hooks/useMediaUrls';
 import { formatReadableDate } from '../../utils';
 import ActionMenu from '../ActionMenu';
 import ConfirmationModal from '../ConfirmationModal';
@@ -65,7 +65,7 @@ const ProjectCard = ({ recent = false, project, setProjects, setCurrentProject }
     };
 
     // convert gs thumbnail url to public url
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
     useEffect(() => {
         async function convertUrl() {
             const publicUrl = await getPublicUrl(project.thumbnail);
