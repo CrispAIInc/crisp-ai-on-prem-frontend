@@ -1,7 +1,6 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 
 import makeApiRequest from '../../../api';
-import { MainContext } from "../../../contexts/mainContext";
 import { useToast } from "../../../contexts/toastContext";
 import RippleButton from "../../RippleButton";
 
@@ -12,8 +11,6 @@ function AccountSettings() {
     const isProd = import.meta.env.VITE_APP_ENV === "production";
 
     const { logout } = useAuth();
-
-    const { theme } = useContext(MainContext);
 
     const { notify } = useToast();
 
@@ -49,7 +46,7 @@ function AccountSettings() {
             {
                 !isProd && (
                     <>
-                        <div className={`flex flex-col gap-2 ${theme === 'dark' && 'text-textColor-100'}`}>
+                        <div className={`flex flex-col gap-2`}>
                             <h6 className={`mb-0 pb-0`}>Delete my account</h6>
                             <p className={`mb-1  text-md w-full lg:w-1/2 max-w-[90%]`}>Deleting your account will remove all of your assets (e.g. sources, metadata, media, etc.)</p>
 
