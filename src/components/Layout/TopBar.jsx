@@ -8,9 +8,11 @@ import { ProjectContext } from '../../contexts/projectContext';
 import useAuth from '../../hooks/useAuth';
 import ProjectSwitcherDropdown from '../ProjectSwitcherDropdown';
 import { SettingsModal } from '../Settings/SettingsModal';
+import { useNavigate } from 'react-router';
 
 export default function TopBar() {
 
+  const navigate = useNavigate();
   const { logout } = useAuth();
   const { user } = useContext(AuthContext);
 
@@ -49,14 +51,9 @@ export default function TopBar() {
     setMenuOpen(false);
   }
 
-  async function log() {
-    localStorage.setItem('current_project', null);
-    await logout();
-  }
-
-  function handleLogout() {
+  async function handleLogout() {
     setMenuOpen(false);
-    log();
+    await logout(navigate);
   }
 
   return (

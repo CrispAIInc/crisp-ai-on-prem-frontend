@@ -4,16 +4,16 @@ import { ProjectContext } from '../../contexts/projectContext';
 import useAuth from '../../hooks/useAuth';
 import { SettingsModal } from "../Settings/SettingsModal";
 import UserMenu from '../UserMenu';
-import AppLogo from "/new-crisp-ai-slogan.png";
+import { useNavigate } from 'react-router';
 
 const ProjectsHeader = () => {
+  const navigate = useNavigate();
   const { isSettingsModalOpen, setIsSettingsModalOpen } = useContext(ProjectContext);
   const { user } = useContext(AuthContext);
   const { logout } = useAuth();
 
   async function handleLogout() {
-    localStorage.setItem('current_project', null);
-    await logout();
+    await logout(navigate);
   }
 
   return (

@@ -6,9 +6,12 @@ import RippleButton from "../../RippleButton";
 
 import useAuth from '../../../hooks/useAuth';
 import LoadingSpinner from "../../LoadingSpinner";
+import { useNavigate } from 'react-router';
 
 function AccountSettings() {
     const isProd = import.meta.env.VITE_APP_ENV === "production";
+
+    const navigate = useNavigate();
 
     const { logout } = useAuth();
 
@@ -25,7 +28,7 @@ function AccountSettings() {
                 heading: "Account deleted successfully",
             });
 
-            await logout('/sign-up', {
+            await logout(navigate, '/sign-up', {
                 accountDeleted: true
             });
         } catch (error) {
