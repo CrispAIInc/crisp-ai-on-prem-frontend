@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
+import axios from 'axios';
 import { tokenStorage } from '../utils/tokenStorage';
-import makeApiRequest from '../api';
 
 const REFRESH_BUFFER_MS = 30_000; // refresh 30s before actual expiry
+const BACKEND_URL = import.meta.env.VITE_API_ENDPOINT;
 
 export default function useTokenRefreshSchedule(isLoggedIn) {
     useEffect(() => {
@@ -17,7 +18,10 @@ export default function useTokenRefreshSchedule(isLoggedIn) {
             timeoutId = setTimeout(async () => {
                 try {
                     const refreshToken = tokenStorage.getRefreshToken();
-                    const { data } = await makeApiRequest('/refresh', 'POST', { refreshToken });
+                    if (!refreshToken) throw new Error('No refresh token available');
+
+                    // Plain axios — same as the 401 interceptor, avoids interceptor recursion
+                    const { data } = await axios.post(`${BACKEND_URL}/refresh`, { refreshToken });
                     tokenStorage.setTokens({
                         accessToken: data.accessToken,
                         refreshToken: data.refreshToken,
@@ -26,7 +30,7 @@ export default function useTokenRefreshSchedule(isLoggedIn) {
                     scheduleRefresh(); // chain the next one
                 } catch {
                     tokenStorage.clear();
-                    window.location.href = '/';
+                    window.location.href = '/login';
                 }
             }, delay);
         }
