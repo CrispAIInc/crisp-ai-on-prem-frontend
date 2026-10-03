@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { AUTH_TOKEN_CHANGED_EVENT, clearStoredCurrentProject } from "../globals";
 import makeApiRequest from '../api';
 import { tokenStorage } from '../utils/tokenStorage';
