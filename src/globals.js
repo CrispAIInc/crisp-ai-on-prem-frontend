@@ -1,4 +1,6 @@
-export const TOKEN_NAME = "accessToken";
+export const ACCESS_TOKEN_KEY = 'accessToken';
+export const REFRESH_TOKEN_KEY = 'refreshToken';
+export const EXPIRES_AT_KEY = 'expiresAt';
 export const AUTH_TOKEN_CHANGED_EVENT = "auth-token-changed";
 export const CURRENT_PROJECT_STORAGE_KEY = "current_project";
 export function clearStoredCurrentProject() {

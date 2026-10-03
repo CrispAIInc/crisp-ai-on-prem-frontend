@@ -1,6 +1,4 @@
-const ACCESS_TOKEN_KEY = 'accessToken';
-const REFRESH_TOKEN_KEY = 'refreshToken';
-const EXPIRES_AT_KEY = 'expiresAt';
+import { ACCESS_TOKEN_KEY, EXPIRES_AT_KEY, REFRESH_TOKEN_KEY } from '../globals';
 
 export const tokenStorage = {
     setTokens({ accessToken, refreshToken, expiresIn }) {

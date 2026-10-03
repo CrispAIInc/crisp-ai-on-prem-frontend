@@ -1,10 +1,17 @@
 import { createContext, useEffect, useState } from "react";
 import makeApiRequest from '../api';
 import { pick } from '../utils';
+import useTokenRefreshSchedule from '../hooks/useTokenRefresSchedule';
+import useAuth from '../hooks/useAuth';
 
 export const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
+
+    const {
+        isAuthenticated
+    } = useAuth();
+
     const [user, setUser] = useState({
         userId: "",
         username: "",
@@ -24,6 +31,8 @@ export default function AuthProvider({ children }) {
             emailVerified: false,
         });
     }
+
+    useTokenRefreshSchedule(isAuthenticated);
 
     // const [authReady, setAuthReady] = useState(false);
     // useEffect(() => {

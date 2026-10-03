@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { getJwt } from '../services/auth.js';
 import { tokenStorage } from '../utils/tokenStorage.js';
 
 

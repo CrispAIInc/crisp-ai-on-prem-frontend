@@ -11,18 +11,23 @@ import { useNavigate } from 'react-router';
 import makeApiRequest from '../../../api';
 import { Alert } from '@mui/material';
 import LoadingSpinner from '../../LoadingSpinner';
-import { logOut } from '../../../services/auth';
 
 import {
     User,
     Settings2
 } from "lucide-react";
+import useAuth from '../../../hooks/useAuth';
 
 function GeneralSettings({ hideTheme = false }) {
     const navigate = useNavigate();
     const { theme } = useContext(ProjectContext);
     const { user, setUser } = useContext(AuthContext);
     const { generalSettings, setGeneralSettings } = useContext(SettingsContext);
+
+    const {
+        logout
+    } = useAuth();
+
     const [isSendingEmailPending, setIsSendingEmailPending] = useState(false);
     const [error, setError] = useState(null);
 
@@ -84,7 +89,7 @@ function GeneralSettings({ hideTheme = false }) {
 
             setInterval(() => {
                 localStorage.setItem('current_project', null);
-                logOut();
+                logout(navigate);
                 navigate('/verify', {
                     state: {
                         email: user.email

@@ -1,11 +1,14 @@
 import { Alert } from '@mui/material';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { loginWithUsernameAndPassword } from '../../services/auth.js';
 import AnimatedInput from '../AnimatedInput';
 import RippleButton from "../RippleButton";
+import useAuth from '../../hooks/useAuth';
 
 export default function Login() {
+    const {
+        loginWithUsernameAndPassword
+    } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const { redirectedFromAccountVerification = false } = location.state || {};
