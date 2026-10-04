@@ -588,9 +588,11 @@ export default function Media() {
 
 
             {isKnowledgeBaseFetching ? (
-                <AnimatedText text="Loading your knowledge base..." />
+                <NoData pulse={true} message="Preparing your knowledge base..." classes="mt-4" iconUrl="/data-processing.svg" />
             ) : knowledgeBase.length > 0 ? (
                 <AssetCollection
+                    onThumbnailClick={onThumbnailClick}
+                    handleCheckboxChange={handleCheckboxChange}
                     openSourceUpdate={openSourceUpdate}
                     deleteResource={deleteResource}
                     isDeleting={isDeleting}
