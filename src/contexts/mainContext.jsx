@@ -1310,7 +1310,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     };
     useEffect(() => {
         getCombinedSum();
-    }, [currentProject.project_id]);
+    }, [currentProject?.project_id]);
     // }, [displayedSources, selectedLanguage]);
 
     useEffect(() => {
@@ -1320,7 +1320,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         getJsonEntities();
-    }, []);
+    }, [currentProject?.project_id]);
 
     const [blogs, setBlogs] = useState([]);
     const [selectedBlog, setSelectedBlog] = useState(null);
@@ -1331,7 +1331,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         fetchBlogs();
-    }, []);
+    }, [currentProject?.project_id]);
 
     const metadataPanelContainer = useRef(null);
     const [jsonEntities, setJsonEntities] = useState([]);
@@ -1413,7 +1413,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         fetchTimeSegments();
-    }, []);
+    }, [currentProject?.project_id]);
 
 
     // MOMENTS

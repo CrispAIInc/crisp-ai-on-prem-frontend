@@ -194,8 +194,6 @@ const ProjectDrawer = ({ onHide, contentPanelContainerRef }) => {
                     {isModalOpen && <CreateProjectModal
                         show={isModalOpen}
                         onHide={() => setIsModalOpen(false)}
-                        setProjects={setProjects}
-                        setCurrentProject={setCurrentProject}
                         hideProjectDrawer={onHide}
                         theme={theme}
                     />}
