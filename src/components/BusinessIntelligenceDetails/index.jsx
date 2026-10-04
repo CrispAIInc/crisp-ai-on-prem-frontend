@@ -54,10 +54,10 @@ export default function BusinessIntelligenceDetails() {
         }
     };
 
-    const saveEntity = async (titleOverride = selectedJsonEntity?.title || '') => {
-        const nextTitle = (titleOverride || '')?.trim();
+    const saveEntity = async () => {
+        const nextTitle = (entityTitleValue || selectedJsonEntity?.title)?.trim();
 
-        if (!nextTitle) {
+        if (nextTitle === undefined || nextTitle === null || nextTitle.length === 0) {
             notify({
                 variant: "error",
                 heading: "Title required",
@@ -176,7 +176,7 @@ export default function BusinessIntelligenceDetails() {
                             onChange={(e) => setEntityTitleValue(e.target.value)}
                             placeholder="Enter a title for this entity"
                             className={`flex-1 block w-full p-2 mt-1 rounded-xl outline-none transition border border-gray-300 bg-white text-gray-900`}
-                            onKeyDown={(e) => e.key === 'Enter' && saveEntity(entityTitleValue)}
+                            onKeyDown={(e) => e.key === 'Enter' && saveEntity()}
                         />
                     </div>
                 </Modal.Body>
@@ -197,7 +197,7 @@ export default function BusinessIntelligenceDetails() {
                         className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 w-fit transition ${!entityTitleValue?.trim()
                             ? 'cursor-not-allowed text-gray-400'
                             : 'hover:bg-purple-50 text-purple-600'}`}
-                        onClick={() => saveEntity(entityTitleValue)}
+                        onClick={saveEntity}
                         disabled={!entityTitleValue?.trim()}
                     >
                         <span className="select-none font-medium">
