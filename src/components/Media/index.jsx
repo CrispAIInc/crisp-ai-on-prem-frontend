@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import socket from "../../config/socket";
-import { Upload, FolderOpen, Check, SquareMinus } from "lucide-react";
+import { Upload, FolderOpen } from "lucide-react";
 import AddSourceModal from "../AddSourceModal";
 import FileUploaderModal from "../FileUploaderModal";
 import SourceExplorer from "../SourceExplorer";
@@ -12,6 +12,9 @@ import { useToast } from "../../contexts/toastContext.jsx";
 import makeApiRequest from "../../api";
 import { extractThumbnail, generateRandomHash, getFileType } from "../../utils.js";
 import NoData from '../NoData/index.jsx';
+import AssetCollection from '../AssetCollection/index.jsx';
+import AnimatedText from '../AnimatedText/index.jsx';
+import ConfirmationModal from '../ConfirmationModal/index.jsx';
 
 const MEDIA_NAV = [
     { key: "ingest", label: "Ingest", icon: Upload },
@@ -43,6 +46,9 @@ export default function Media() {
         setFrameExtractionRate,
         setIsDetailedMode,
         setVideoCaptionContext,
+        isKnowledgeBaseFetching,
+        setSelectedCategory,
+        setCategoryOptions
     } = useContext(MainContext);
     const { isProjectReadOnly } = useContext(ProjectContext);
     const { notify } = useToast();
@@ -55,11 +61,10 @@ export default function Media() {
     const [clickedIndex, setClickedIndex] = useState(null);
     const [sourceToUpdate, setSourceToUpdate] = useState(null);
     const [filename, setFilename] = useState("");
-
-    const checkedSources = displayedSources.filter((source) => source?.is_checked);
-    const allChecked = displayedSources.length > 0 && checkedSources.length === displayedSources.length;
-    const someChecked = checkedSources.length > 0;
-    const selectedSourcesLength = displayedSources.length;
+    const [showRemoveIndexModal, setShowRemoveIndexModal] = useState(false);
+    const [isIndexDeleting, setIsIndexDeleting] = useState(false);
+    const [indexToRemove, setIndexToRemove] = useState("");
+    const [sourcesToDelete, setSourcesToDelete] = useState([]);
 
     function handleMediaNavClick(key) {
         if (key === "ingest" && !isProjectReadOnly) {
@@ -104,15 +109,9 @@ export default function Media() {
      * +++++++++++++ UPLOAD +++++++++++++++
      */
 
-    const [isProgressStarted, setIsProgressStarted] = useState(false);
-    const [progressUpdateCount, setProgressUpdateCount] = useState(0);
-    const [isUploadFailed, setIsUploadFailed] = useState(false);
-    const [uploadStatus, setUploadStatus] = useState("idle"); // 'idle' | 'uploading' | 'success' | 'error'
-    const [uploadErrorMessage, setuploadErrorMessage] = useState("");
-    const [fileThumbnails, setFileThumbnails] = useState([]);
+    const [uploadStatus, setUploadStatus] = useState("idle");
 
     function handleProgressUpdate(data) {
-        setProgressUpdateCount(prev => prev + 1);
         const currentIndex = Number(data?.currentIndex ?? -1);
 
         // Update knowledgeBase (source of truth); displayedSources is derived from it
@@ -227,9 +226,7 @@ export default function Media() {
 
         socket.on('upload_error', (data) => {
             console.log('Upload error:', data);
-            setIsUploadFailed(true);
             setUploadStatus('error');
-            setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
         });
 
         socket.on('upload_complete', (data) => {
@@ -237,7 +234,6 @@ export default function Media() {
             if (data.success) {
                 setUploadStatus('success');
                 setIsFileUploading(false);
-                setIsProgressStarted(false);
                 setKnowledgeBase((prev) => prev.map((source) => {
                     const sourceIndex = Number(source?.index ?? -1);
                     const completedIndex = Number(data?.currentIndex ?? -1);
@@ -248,7 +244,6 @@ export default function Media() {
                     return source;
                 }));
             } else {
-                setIsUploadFailed(true);
                 setUploadStatus('error');
             }
         });
@@ -308,12 +303,8 @@ export default function Media() {
         startSocket();
         try {
             setUploadStatus("uploading");
-            setIsUploadFailed(false);
             setIsFileUploading(true);
-            setIsProgressStarted(true);
-            setShowAddModal(false);
-            setFileThumbnails([]);
-            setProgressUpdateCount(0); // Reset progress update counter
+            setShowAddModal(false); // Reset progress update counter
 
             const files = _files || Array.from(event.target.files);
             const processedFiles = files.map(file => file.name);
@@ -396,7 +387,7 @@ export default function Media() {
                         return {
                             ...item,
                             progress: 3,
-                            step: "Source pre-processing..."
+                            step: "Asset pre-processing..."
                         };
                     }
 
@@ -432,19 +423,17 @@ export default function Media() {
 
 
         } catch (error) {
-            setIsUploadFailed(true);
             setUploadStatus("error");
             notify({
                 variant: "error",
                 heading: "Oops!",
                 subheading: "Failed to upload new source. Please try again.",
             });
-            setuploadErrorMessage(error?.response?.data?.error || 'Upload failed. Please try again.');
+
             setKnowledgeBase(prev => prev.filter(item => !('progress' in item)));
         } finally {
             disconnectSocket();
             setIsFileUploading(false);
-            setIsProgressStarted(false);
         }
     };
 
@@ -524,21 +513,50 @@ export default function Media() {
             : item));
     }
 
-    function toggleAll() {
-        const sourcePaths = new Set(displayedSources.map((source) => source.source_path));
-        setKnowledgeBase((previous) => previous.map((source) => sourcePaths.has(source.source_path)
-            ? { ...source, is_checked: !allChecked, is_selected: true }
-            : source));
+    function removeIndex(e, indexId) {
+        e?.stopPropagation();
+        const indexValue = categoryOptions.find(item => item.id === indexId)?.value;
+        setIndexToRemove(indexValue);
+        const itemsToBeDeleted = knowledgeBase.filter((item) => item.category.includes(indexValue));
+        setSourcesToDelete(itemsToBeDeleted);
+        setShowRemoveIndexModal(true);
     }
 
-    function clearAll() {
-        setKnowledgeBase(prev => prev.map(item => {
-            return {
-                ...item,
-                is_checked: false,
-                is_selected: false,
-            };
-        }));
+    async function deleteIndex() {
+        try {
+            setIsIndexDeleting(true);
+
+            // remove sources before index
+            if (sourcesToDelete.length > 0) {
+                await deleteResource(null, sourcesToDelete);
+            }
+
+            const { success, message } = await makeApiRequest(`/indexes/${categoryOptions.find(idx => idx.value === indexToRemove)?.id}`, 'DELETE');
+
+            if (!success) {
+                throw new Error(message);
+            }
+
+            // CHANGE CURRENTCATEGORY IF IT IS THE DELETING ONE
+            if (selectedCategory === indexToRemove) {
+                setSelectedCategory("all");
+            }
+
+            setCategoryOptions(prev => [...prev.filter(item => item.value !== indexToRemove)]);
+            notify({
+                variant: "success",
+                heading: message || "Index deleted!",
+            });
+            setShowRemoveIndexModal(false);
+        } catch (error) {
+            console.log(error);
+            notify({
+                variant: "error",
+                heading: error.message || "Couldn't delete index. Please try again later.",
+            });
+        } finally {
+            setIsIndexDeleting(false);
+        }
     }
 
     return (
@@ -567,33 +585,32 @@ export default function Media() {
                 })}
             </nav>
 
-            {/* Selection controls */}
-            {displayedSources.length > 0 ? (
-                <div className="flex items-center justify-between mb-4">
-                    <label className="flex items-center gap-2 cursor-pointer select-none" onClick={clearAll}>
-                        <div className="flex items-center gap-1">
-                            <SquareMinus size={13} />
-                            <span className="text-xs">Clear all</span>
-                        </div>
-                        <span className="text-xs text-gray-400">
-                            ({selectedSourcesLength} asset{selectedSourcesLength !== 1 ? 's' : ''})
-                        </span>
-                    </label>
 
-                    {/* {
-                        displayedSources.length > 0 && (
-                            <button
-                                type="button"
-                                onClick={clearAll}
-                                className="text-[13px] font-medium transition-colors text-red-600 hover:text-red-700"
-                            >
-                                Clear all
-                            </button>
-                        )} */}
-                </div>
-            ) : (
-                <NoData message="Select an asset to start generating content" classes="mt-4" />
+
+            {isKnowledgeBaseFetching ? (
+                <AnimatedText text="Loading your knowledge base..." />
+            ) : knowledgeBase.length > 0 ? (
+                <AssetCollection
+                    openSourceUpdate={openSourceUpdate}
+                    deleteResource={deleteResource}
+                    isDeleting={isDeleting}
+                    isProjectReadOnly={isProjectReadOnly}
+                    onDeleteIndex={(index) => removeIndex(null, index)}
+                />) : (
+                <NoData message="No asset was found in your knowledge base. Start ingesting now to generate content." classes="mt-4" />
             )}
+
+            {/* DELETE INDEX MODAL */}
+            <ConfirmationModal
+                show={showRemoveIndexModal}
+                onHide={() => setShowRemoveIndexModal(false)}
+                targetName={indexToRemove}
+                itemCount={sourcesToDelete.length}
+                itemLabel="sources"
+                requireTypedConfirmation={true}
+                confirmedFn={deleteIndex}
+                isDeleting={isIndexDeleting}
+            />
 
             <AddSourceModal
                 show={showAddModal}

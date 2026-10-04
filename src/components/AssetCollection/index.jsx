@@ -8,6 +8,7 @@ import {
     FileText,
     Image as ImageIcon,
     Layers,
+    Trash2
 } from "lucide-react";
 import { MainContext } from '../../contexts/mainContext';
 import MediaCard from '../MediaCard';
@@ -27,23 +28,25 @@ const FORMAT_ICONS = {
 };
 
 export default function AssetCollection({
-    onThumbnailClick,
-    handleCheckboxChange,
     openSourceUpdate,
     deleteResource,
     isDeleting,
     isProjectReadOnly,
+    onDeleteIndex
 }) {
 
     const {
         categoryOptions,
-        knowledgeBase
+        knowledgeBase,
+        onThumbnailClick,
+        handleCheckboxChange
     } = useContext(MainContext);
 
     const indexes = categoryOptions.filter(item => item.value !== "all");
 
     const [openIndexes, setOpenIndexes] = useState({});
     const [openFormats, setOpenFormats] = useState({});
+    const [confirmingId, setConfirmingId] = useState(null);
 
     const toggleIndex = (id) =>
         setOpenIndexes((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -63,6 +66,12 @@ export default function AssetCollection({
             ? indexSources
             : indexSources.filter((s) => s.file_type === formatValue);
 
+
+    const handleDelete = async (index) => {
+        await onDeleteIndex?.(index);
+        setConfirmingId(null);
+    };
+
     return (
         <div className="w-full max-w-xl rounded-lg overflow-y-auto h-full">
             {indexes.map((index) => {
@@ -71,28 +80,45 @@ export default function AssetCollection({
 
                 return (
                     <div key={index.id}>
-                        <button
-                            type="button"
-                            onClick={() => toggleIndex(index.id)}
-                            className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-slate-200/60 transition-colors"
+                        <div
+                            className="flex items-center justify-between gap-1 hover:bg-slate-200/60 transition-colors"
+                            onMouseEnter={() => setConfirmingId(index.id)}
+                            onMouseLeave={() => setConfirmingId(null)}
                         >
-                            {isIndexOpen ? (
-                                <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
-                            ) : (
-                                <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+                            <button
+                                type="button"
+                                onClick={() => toggleIndex(index.id)}
+                                className="w-full flex items-center gap-2 px-3 py-2.5 text-left"
+                            >
+                                {isIndexOpen ? (
+                                    <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+                                ) : (
+                                    <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+                                )}
+                                {isIndexOpen ? (
+                                    <FolderOpen className="w-4 h-4 text-primary-200 shrink-0" />
+                                ) : (
+                                    <Folder className="w-4 h-4 text-primary-200 shrink-0" />
+                                )}
+                                <span className="text-sm font-medium text-textColor-300 truncate">
+                                    {index.label}
+                                </span>
+                                <span className="ml-auto text-xs text-slate-500">
+                                    {indexSources.length}
+                                </span>
+                            </button>
+
+                            {confirmingId === index.id && (
+                                <button
+                                    type="button"
+                                    aria-label={`Delete ${index.label}`}
+                                    onClick={() => handleDelete(index.id)}
+                                    className="mr-2 rounded p-1.5 hover:bg-red-200"
+                                >
+                                    <Trash2 className="w-4 h-4 text-red-400" />
+                                </button>
                             )}
-                            {isIndexOpen ? (
-                                <FolderOpen className="w-4 h-4 text-primary-200 shrink-0" />
-                            ) : (
-                                <Folder className="w-4 h-4 text-primary-200 shrink-0" />
-                            )}
-                            <span className="text-sm font-medium text-textColor-300 truncate">
-                                {index.label}
-                            </span>
-                            <span className="ml-auto text-xs text-slate-500">
-                                {indexSources.length}
-                            </span>
-                        </button>
+                        </div>
 
                         {isIndexOpen && (
                             <div className="pl-6 pb-2">
