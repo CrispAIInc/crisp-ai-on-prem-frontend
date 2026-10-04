@@ -81,6 +81,11 @@ export default function ConfirmationModal({
                                 type="text"
                                 value={typedValue}
                                 onChange={(e) => setTypedValue(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        handleConfirm();
+                                    }
+                                }}
                                 disabled={isDeleting}
                                 className={`mt-1 w-full rounded-md  px-3 py-2 text-sm outline-none  ${isLight ? '!border !border-gray-300 bg-white' : '!border !border-textColor-200/20 bg-textColor-300'
                                     }`}
