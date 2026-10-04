@@ -130,7 +130,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         intializeContent();
-    }, [currentProject.project_id]);
+    }, [currentProject?.project_id]);
 
     useEffect(() => {
         getIndexes();
@@ -1263,7 +1263,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         getChatHistory();
-    }, [currentProject.project_id]);
+    }, [currentProject?.project_id]);
 
     useEffect(() => {
         // if (Array.isArray(currentChat)) {
@@ -1310,7 +1310,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     };
     useEffect(() => {
         getCombinedSum();
-    }, [currentProject.project_id]);
+    }, [currentProject?.project_id]);
     // }, [displayedSources, selectedLanguage]);
 
     useEffect(() => {
@@ -1320,7 +1320,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         getJsonEntities();
-    }, []);
+    }, [currentProject?.project_id]);
 
     const [blogs, setBlogs] = useState([]);
     const [selectedBlog, setSelectedBlog] = useState(null);
@@ -1331,7 +1331,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         fetchBlogs();
-    }, []);
+    }, [currentProject?.project_id]);
 
     const metadataPanelContainer = useRef(null);
     const [jsonEntities, setJsonEntities] = useState([]);
@@ -1413,7 +1413,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         fetchTimeSegments();
-    }, []);
+    }, [currentProject?.project_id]);
 
 
     // MOMENTS
@@ -1495,7 +1495,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     useEffect(() => {
         interactionSessionIdRef.current = null;
-    }, [currentProject.project_id]);
+    }, [currentProject?.project_id]);
     // Hydrate interaction messages when switching chats, not when remounting the Interaction tab mid-stream.
     useEffect(() => {
         const sessionId = currentChat?.sessionId;

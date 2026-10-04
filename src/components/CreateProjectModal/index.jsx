@@ -1,13 +1,17 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import makeApiRequest from '../../api';
 import Modal from 'react-bootstrap/Modal';
 import AddIcon from '@mui/icons-material/Add';
 import LoadingSpinner from '../LoadingSpinner';
-
+import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from "../../contexts/toastContext";
 
-const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hideProjectDrawer, theme }) => {
+const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme }) => {
 
+    const {
+        setProjects,
+        setCurrentProject
+    } = useContext(ProjectContext);
     const { notify } = useToast();
 
     const [newProjectName, setNewProjectName] = useState("");
@@ -31,9 +35,7 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hide
                     heading: "Project created successfully."
                 });
                 hideProjectDrawer?.();
-                // TODO: add the newly created project to the projects list
                 setProjects((prevProjects) => [project, ...prevProjects]);
-                // TODO: set current project value and redirect to dashboard
                 setCurrentProject(project);
                 onHide();
             } else {
@@ -127,7 +129,7 @@ const CreateProjectModal = ({ show, onHide, setProjects, setCurrentProject, hide
                     type="button"
                     disabled={isCreateDisabled || isLoading}
                     onClick={handleSave}
-                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isCreateDisabled || isLoading ? (theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-textColor-100/25 text-gray-700') : 'bg-[linear-gradient(90deg,#755bea,#b76894)] text-white hover:opacity-90'} ${isCreateDisabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isCreateDisabled || isLoading ? (theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-textColor-100/25 text-gray-700') : 'bg-gradient-to-br from-primary-200 to-primary-300 text-white hover:opacity-90'} ${isCreateDisabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                     {isLoading ? <LoadingSpinner isSmall /> : <span className="font-medium">Create project</span>}
                 </button>

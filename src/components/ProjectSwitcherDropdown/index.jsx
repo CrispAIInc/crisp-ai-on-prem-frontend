@@ -1,7 +1,8 @@
 import {
     Check,
     ChevronDown,
-    FolderOpenDot
+    FolderOpenDot,
+    Plus
 } from "lucide-react";
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -10,6 +11,8 @@ import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import { formatChatHistoryByDate, formatReadableDate } from '../../utils';
 import LoadingSpinner from '../LoadingSpinner';
+import CreateProjectModal from '../CreateProjectModal';
+import RippleButton from '../RippleButton';
 
 function ProjectSwitcherDropdown() {
 
@@ -17,13 +20,17 @@ function ProjectSwitcherDropdown() {
     const {
         currentProject,
         projects,
-        setCurrentProject
+        setCurrentProject,
+        setProjects,
     } = useContext(ProjectContext);
     const {
         currentChat,
         knowledgeBase
     } = useContext(MainContext);
+
+
     const [showProjects, setShowProjects] = useState(false);
+    const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
 
     const projectsDropdownRef = useRef(null);
 
@@ -46,19 +53,6 @@ function ProjectSwitcherDropdown() {
             document.removeEventListener("keydown", handleKeyDown);
         };
     }, [showProjects]);
-
-    // useEffect(() => {
-    //     const handleClickOutside = (event) => {
-    //         if (projectsDropdownRef.current && !projectsDropdownRef.current.contains(event.target)) {
-    //             setShowProjects(false);
-    //         }
-    //     };
-
-    //     document.addEventListener("mousedown", handleClickOutside);
-    //     return () => {
-    //         document.removeEventListener("mousedown", handleClickOutside);
-    //     };
-    // }, []);
     const [wantedProjectId, setWantedProjectId] = useState(null);
     const [isSwitchingPending, setIsSwitchingPending] = useState(false);
 
@@ -107,10 +101,23 @@ function ProjectSwitcherDropdown() {
                 <ChevronDown size={16} className={`transition-transform ${showProjects && 'rotate-180'}`} />
             </div>
 
+            {isNewProjectModalOpen && <CreateProjectModal
+                show={isNewProjectModalOpen}
+                onHide={() => setIsNewProjectModalOpen(false)}
+            />}
+
             {/* List of projects dropdown */}
-            {showProjects && <div className={`absolute top-full left-0 w-full rounded-lg h-[30vh] z-50 flex flex-col flex-1 py-0 gap-3 overflow-y-auto shadow-md bg-background_workspace`}>
+            {showProjects && <div className={`absolute top-full left-0 w-full rounded-lg h-[30vh] z-50 flex flex-col flex-1 py-0 overflow-y-auto shadow-md bg-background_workspace p-1 mt-1`}>
+                <button
+                    // className="flex items-center justify-center px-1 py-2 bg-red-400 text-white font-semibold text-center text-xs m-1 rounded-md"
+                    className={`select-none py-1.5 px-2 text-white text-sm rounded-lg bg-gradient-to-br from-primary-200 to-primary-300 transition duration-300 flex items-center justify-center w-full`}
+                    onClick={() => setIsNewProjectModalOpen(true)}
+                >
+                    <Plus size={16} />
+                    <span className="text-xs">New project</span>
+                </button>
                 {grouped.map(group => (
-                    <div key={group.key} className="">
+                    <div key={group.key} className="mb-2">
                         <div className={`sticky top-0 px-1 py-1 z-10 bg-gray-100`}>
                             <h6 className="text-xs font-semibold text-gradient-x  mb-0">{group.label} {group.items.length > 0 && <span className="text-xs text-textColor-400">({group.items.length})</span>}</h6>
                         </div>
