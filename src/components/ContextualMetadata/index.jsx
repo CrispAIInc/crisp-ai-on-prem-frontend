@@ -22,6 +22,7 @@ export default function ContextualMetadata({
         metadataOptions,
         setGeneratedResources,
         currentResource,
+        currentAssets, setCurrentAssets,
         setCurrentResource,
         contextualMetadataSourceIds,
         setContextualMetadataSourceIds,
@@ -93,9 +94,10 @@ export default function ContextualMetadata({
 
             // SHOW FIRST ASSET IN MAIN STUDIO IF THERE IS NO ASSET ALREADY
             const firstSourceUsed = knowledgeBase.find(item => item.source_id === sourcesUsed[0].source_id);
-            if (!currentResource || currentResource.source_id !== firstSourceUsed?.source_id) {
-                setCurrentResource(firstSourceUsed);
-            }
+            // if (!currentResource || currentResource.source_id !== firstSourceUsed?.source_id) {
+            setCurrentResource(firstSourceUsed);
+            setCurrentAssets(sourcesUsed);
+            // }
 
             notify({
                 variant: "success",

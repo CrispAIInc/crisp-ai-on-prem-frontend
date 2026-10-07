@@ -33,6 +33,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
     const [currentResource, setCurrentResource] = useState(null); // The Selected Source (Videos, PDFs, Images) to display in the workspace
+    const [currentAssets, setCurrentAssets] = useState([]);
     const [resourceURL, setResourceURL] = useState(null); // The Selected Resource Direct URL
 
     const [videoTimestamp, setVideoTimestamp] = useState(null); // The video timestamp coming from search results
@@ -1627,6 +1628,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         currentResource,
         sourcesTobeCommited, setSourcesTobeCommited,
         setCurrentResource,
+        currentAssets, setCurrentAssets,
         noteReferences, setNoteReferences,
         resourceURL,
         setResourceURL,

@@ -1,4 +1,5 @@
 import * as pdfjsLib from 'pdfjs-dist';
+import { FILE_TYPES } from './globals';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -476,6 +477,21 @@ export function sortByDate(array, dateKey = "created_at", order = "asc") {
             ? dateA - dateB
             : dateB - dateA;
     });
+}
+
+export function getFileTyleLabel(fileType) {
+    return FILE_TYPES[fileType];
+}
+
+export function assetLength(asset) {
+    switch (asset.file_type) {
+        case "video":
+            return formatDuration(asset.source_duration);
+        case "pdf":
+            return `${asset?.total_pages || 0} pages`;
+        default:
+            return null;
+    }
 }
 
 export const extractThumbnail = (file) => {

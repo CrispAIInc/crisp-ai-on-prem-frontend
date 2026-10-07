@@ -7,6 +7,7 @@ import BaseHeading from '../BaseHeading';
 import LoadingSpinner from '../LoadingSpinner';
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import { assetLength } from '../../utils';
 
 function formatTimestamp(value) {
     if (value === null || value === undefined || value === "") return "";
@@ -89,20 +90,28 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 ) : (
                     <Icon size={30} className="text-white/40" />
                 )}
+
+
+                {
+                    source.file_type !== "img" && (
+                        <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">{assetLength(source)}</span>
+                    )
+                }
+
                 {source?.file_type === "video" && (
-                    <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
+                    <span className="absolute top-2 left-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
                         Video
                     </span>
                 )}
 
                 {source?.file_type === "img" && (
-                    <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
+                    <span className="absolute top-2 left-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
                         Image
                     </span>
                 )}
 
                 {source?.file_type === "pdf" && (
-                    <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
+                    <span className="absolute top-2 left-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
                         PDF
                     </span>
                 )}

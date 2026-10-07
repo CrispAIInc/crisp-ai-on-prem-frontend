@@ -22,6 +22,7 @@ export default function NavTabs({ active = "media" }) {
   } = useContext(MainContext);
 
   function handleNavClick(key, tab) {
+    console.log(key, tab);
     setActiveTab(key);
 
     if (key === "enrich") {

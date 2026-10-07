@@ -48,10 +48,6 @@ export default function CustomVideoPlayer({
     onClose
 }) {
 
-    const {
-        setShowMetadata
-    } = useContext(MainContext);
-
     const internalRef = useRef(null);
     const containerRef = useRef(null);
     const settingsMenuRef = useRef(null);
