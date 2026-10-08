@@ -4,7 +4,6 @@ import { formatDuration, formatReadableDate } from '../../utils';
 import TitleIcon from '@mui/icons-material/Title';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Accordion from "../Accordion";
-import GsFile from '../GsFile';
 import Chip from '../Chip';
 import {
     Info,
@@ -62,8 +61,13 @@ function ReelProps() {
                         <div className='flex flex-col flex-wrap gap-2'>
                             {reel?.sources?.map((video, index) => (
                                 <div key={index} className='flex items-start gap-2 p-1 rounded'>
-                                    {/* <img src={video.thumbnail} alt={video.source_path} className='w-12 h-12 rounded' /> */}
-                                    <GsFile gsUrl={video.thumbnail} alt={reel.title} className="w-12 h-12 rounded" />
+                                    {(video.thumbnail_url || video.thumbnail || thumbnail_url || thumbnail) && (
+                                        <img
+                                            src={video.thumbnail_url || video.thumbnail || thumbnail_url || thumbnail}
+                                            alt={reel.title}
+                                            className="w-12 h-12 rounded object-cover"
+                                        />
+                                    )}
                                     <div className="flex flex-col">
                                         <p className='text-sm font-semibold break-all'>{knowledgeBase.find(item => item.source_id === video.source_id)?.source_path}</p>
                                         {!Array.isArray(video?.category) ? <Chip className="text-xs italic" cssClasses="italic !text-[10px] !px-1 !py-1" content={categoryOptions.find(item => item.id === video.index_id)?.label} />
