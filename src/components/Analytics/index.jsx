@@ -63,7 +63,7 @@ export default function Analytics() {
             <div className="flex-1 min-h-0 overflow-y-auto pb-3">
 
                 {/* Sub-navigation */}
-                <nav className="pt-3.5 flex items-center gap-6">
+                <nav className="pt-3.5 flex items-center gap-6 overflow-x-auto overflow-y-hidden">
                     {TABS.map(({ id, label, icon: Icon }) => {
                         const active = analyticsActiveTab === id;
 

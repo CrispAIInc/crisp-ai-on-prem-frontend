@@ -51,7 +51,7 @@ export default function Enrich() {
                 </p>
             </div>
 
-            <nav className="pt-3.5 flex items-center gap-6 shrink-0">
+            <nav className="pt-3.5 flex items-center gap-6 shrink-0 overflow-x-auto overflow-y-hidden">
                 {TABS.map(({ id, label, icon: Icon }) => {
                     const active = enrichActiveTab === id;
 

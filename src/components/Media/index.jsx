@@ -567,7 +567,7 @@ export default function Media() {
             </div>
 
             {/* Sub-navigation */}
-            <nav className="pt-3.5 flex items-center gap-6 border-b border-gray-100 mb-5">
+            <nav className="pt-3.5 flex items-center gap-6 border-b border-gray-100 mb-5 overflow-x-auto overflow-y-hidden">
                 {MEDIA_NAV.map(({ key, label, icon: Icon }) => {
                     return (
                         <button
