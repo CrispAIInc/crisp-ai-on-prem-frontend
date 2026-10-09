@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect, useContext } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import {
     Play,
@@ -15,7 +15,6 @@ import {
     X
 } from 'lucide-react';
 import CustomVideoPlayerSettings from '../CustomVideoPlayerSettings';
-import { MainContext } from '../../contexts/mainContext';
 
 const formatTime = (seconds = 0) => {
     if (!Number.isFinite(seconds)) return '0:00';
@@ -47,10 +46,6 @@ export default function CustomVideoPlayer({
     title,
     onClose
 }) {
-
-    const {
-        setShowMetadata
-    } = useContext(MainContext);
 
     const internalRef = useRef(null);
     const containerRef = useRef(null);

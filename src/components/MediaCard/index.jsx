@@ -7,6 +7,7 @@ import BaseHeading from '../BaseHeading';
 import LoadingSpinner from '../LoadingSpinner';
 import { useContext } from 'react';
 import { MainContext } from '../../contexts/mainContext';
+import { assetLength } from '../../utils';
 
 function formatTimestamp(value) {
     if (value === null || value === undefined || value === "") return "";
@@ -75,28 +76,6 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
             >
                 <Minus size={24} color="#333333" className="w-fit" />
             </div>}
-            {/* <div
-                className={`absolute top-2.5 left-2.5 z-1 flex h-5 w-5 items-center justify-center rounded border transition-colors ${isChecked
-                    ? "border-primary-300 bg-primary-300"
-                    : "border-gray-300 bg-white/90 group-hover:border-gray-400"
-                    }`}
-                onClick={(event) => {
-                    event.stopPropagation();
-                    onToggle(!isChecked, source);
-                }}
-                role="checkbox"
-                aria-checked={isChecked}
-                tabIndex={0}
-                onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        onToggle(!isChecked, source);
-                    }
-                }}
-            >
-                {isChecked && <Check size={12} className="text-white" strokeWidth={3} />}
-            </div> */}
 
             <div className="relative flex aspect-video items-center justify-center rounded-t-xl bg-gray-900 overflow-hidden">
                 {source?.thumbnail ? (
@@ -119,20 +98,27 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                 ) : (
                     <Icon size={30} className="text-white/40" />
                 )}
+
+                {
+                    source.file_type !== "img" && (
+                        <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">{assetLength(source)}</span>
+                    )
+                }
+
                 {source?.file_type === "video" && (
-                    <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
+                    <span className="absolute top-2 left-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
                         Video
                     </span>
                 )}
 
                 {source?.file_type === "img" && (
-                    <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
+                    <span className="absolute top-2 left-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
                         Image
                     </span>
                 )}
 
                 {source?.file_type === "pdf" && (
-                    <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
+                    <span className="absolute top-2 left-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">
                         PDF
                     </span>
                 )}

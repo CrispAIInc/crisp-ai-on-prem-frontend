@@ -54,3 +54,9 @@ export const ENRICH_TABS = {
     METADATA: "metadata",
     BUSINESS_INTELLIGENCE: "business-intelligence"
 };
+
+export const FILE_TYPES = {
+    video: "Video",
+    img: "Image",
+    pdf: "PDF"
+};

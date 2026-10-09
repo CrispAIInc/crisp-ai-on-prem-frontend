@@ -3,7 +3,8 @@ import {
   ChevronUp,
   Download,
   FileText,
-  X
+  X,
+  CirclePlay
 } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
@@ -20,6 +21,7 @@ import ImageViewer from "../ImageViewer";
 import Metadata from '../Metadata/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import { ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
+import VideoStack from '../VideoStack/index.jsx';
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
@@ -42,6 +44,8 @@ const MetadataPanel = ({ workspaceContainer }) => {
     setActiveStudioPanel,
     analyticsActiveTab,
     enrichActiveTab,
+    currentAssets,
+    onThumbnailClick
   } = useContext(MainContext);
 
 
@@ -49,7 +53,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
   const { getPublicUrl } = useMediaUrls();
 
-  const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item.source_id === currentResource.source_id));
+  const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item?.source_id === currentResource?.source_id));
   const [metadataActiveTab, setMetadataActiveTab] = useState("search");
 
   // const [generatedResource, setGeneratedResource] = useState(null);
@@ -107,7 +111,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
         const updatedResource = {
           ...currentResource,
-          ...generatedResources?.find(item => item.source_id === currentResource.source_id)
+          ...generatedResources?.find(item => item?.source_id === currentResource?.source_id)
         };
 
         // Update the currentResource state
@@ -373,7 +377,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   };
 
   return (
-    <div className={`max-w-4xl mx-auto`} ref={metadataPanelContainer}>
+    <div className={`max-w-4xl mx-auto ${currentAssets.length > 0 && 'flex flex-col gap-2'}`} ref={metadataPanelContainer}>
 
       {currentResource?.file_type === "video" && (
         <>

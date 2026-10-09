@@ -48,7 +48,7 @@ const ChatMessage = ({ text, refs, timestamps }) => {
                     )}
 
                 {/* Video links */}
-                {refs?.videoLinks?.length > 0 && (
+                {/* {refs?.videoLinks?.length > 0 && (
                     <ul className="flex flex-col gap-1 pl-1 text-sm break-all whitespace-normal">
                         {refs.videoLinks.map((video, index) => {
                             return (
@@ -61,6 +61,20 @@ const ChatMessage = ({ text, refs, timestamps }) => {
                                 />
                             );
                         })}
+                    </ul>
+                )} */}
+                {refs?.videoLinks?.length > 0 && (
+                    <ul className="flex flex-col gap-1 pl-1 text-sm min-w-0">
+                        {refs.videoLinks.map((video, index) => (
+                            <li
+                                key={video.source_path + '' + index}
+                                className={`chip px-2 py-1 max-w-full w-fit min-w-0 bg-background_workspace capitalize text-sm font-medium rounded-full select-none cursor-pointer whitespace-normal break-words [overflow-wrap:anywhere] ${!video.score && 'text-gradient-x'}`}
+                                data-object={video}
+                                onClick={(e) => handleSourceLinkClick(e, video)}
+                            >
+                                {`${video.source_path} | Timestamp: ${video.timestamp}`}
+                            </li>
+                        ))}
                     </ul>
                 )}
 
