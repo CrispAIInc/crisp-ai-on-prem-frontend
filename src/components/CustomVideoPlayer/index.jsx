@@ -380,8 +380,8 @@ export default function CustomVideoPlayer({
                                     top: '37%',
                                     left: `${activeRange.start * 100}%`,
                                     width: `${Math.max(0.5, (activeRange.end - activeRange.start) * 100)}%`,
-                                    background: 'rgba(244, 114, 182, 0.5)',
-                                    boxShadow: '0 0 6px rgba(244, 114, 182, 0.5)',
+                                    background: 'rgba(244, 114, 182, 0.6)',
+                                    // boxShadow: '0 0 6px rgba(244, 114, 182, 0.5)',
                                 }}
                             />
                         )}
