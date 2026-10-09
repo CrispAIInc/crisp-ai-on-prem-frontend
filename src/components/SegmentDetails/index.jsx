@@ -496,6 +496,8 @@ export default function SegmentDetails() {
                     onDuration={() => setHasDuration(true)}
                     playerRef={player}
                     onClose={onClose}
+                    highlightTimestamp={[currentSegment?.start, currentSegment?.end]}
+                    seekToHighlight={true}
                 />
             </div>}
 

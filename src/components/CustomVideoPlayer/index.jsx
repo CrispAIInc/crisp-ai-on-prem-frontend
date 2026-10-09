@@ -44,8 +44,12 @@ export default function CustomVideoPlayer({
     onDuration,
     playerRef,
     title,
-    onClose
+    onClose,
+    highlightTimestamp,
+    seekToHighlight
 }) {
+
+
 
     const internalRef = useRef(null);
     const containerRef = useRef(null);
@@ -216,6 +220,28 @@ export default function CustomVideoPlayer({
             }))
             : [];
 
+    // Accepts "HH:MM:SS" strings or raw seconds
+    const toSeconds = (v) => (typeof v === 'number' ? v : parseTimestamp(v));
+
+    const activeRange = (() => {
+        if (!Array.isArray(highlightTimestamp) || duration <= 0) return null;
+        const startSec = toSeconds(highlightTimestamp[0]);
+        const endSec = toSeconds(highlightTimestamp[1] ?? highlightTimestamp[0]);
+        const start = Math.min(1, Math.max(0, startSec / duration));
+        const end = Math.min(1, Math.max(start, endSec / duration));
+        return { start, end, startSec };
+    })();
+
+    // Jump to the highlighted timestamp whenever it changes
+    const highlightKey = Array.isArray(highlightTimestamp) ? highlightTimestamp.join('-') : '';
+    useEffect(() => {
+        if (!seekToHighlight || !activeRange || !internalRef.current) return;
+        internalRef.current.seekTo(activeRange.startSec, 'seconds');
+        setPlayed(activeRange.start);
+        setPlaying(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [highlightKey, duration > 0]);
+
     const handleMouseLeave = () => {
         if (playing) {
             setShowControls(false);
@@ -345,6 +371,20 @@ export default function CustomVideoPlayer({
                             className="pointer-events-none absolute top-1/2 h-3 w-3 -translate-y-1/2 -translate-x-1/2 rounded-full bg-white opacity-0 shadow group-hover:opacity-100"
                             style={{ left: `${played * 100}%` }}
                         />
+
+                        {/* active timestamp highlight band */}
+                        {activeRange && (
+                            <span
+                                className="pointer-events-none absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full"
+                                style={{
+                                    top: '37%',
+                                    left: `${activeRange.start * 100}%`,
+                                    width: `${Math.max(0.5, (activeRange.end - activeRange.start) * 100)}%`,
+                                    background: 'rgba(244, 114, 182, 0.5)',
+                                    boxShadow: '0 0 6px rgba(244, 114, 182, 0.5)',
+                                }}
+                            />
+                        )}
                     </div>
 
                     {/* Highlight strip */}
