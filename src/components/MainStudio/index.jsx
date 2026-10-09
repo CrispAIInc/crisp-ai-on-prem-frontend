@@ -31,10 +31,6 @@ function MainStudio({ panelWidth }) {
         [MAIN_STUDIO_PANELS.BUSINESS_INTELLIGENCE]: false,
     };
 
-    const REQUIRES_VIDEO_STACK = {
-        [MAIN_STUDIO_PANELS.METADATA]: true,
-    };
-
     function renderStudioPanel() {
         const needsResource = REQUIRES_ASSETS[activeStudioPanel] ?? true;
 
