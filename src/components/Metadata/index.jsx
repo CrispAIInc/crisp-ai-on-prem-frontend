@@ -10,7 +10,7 @@ import { timeToSeconds } from '../../utils';
 import Chip from '../Chip';
 import CustomSelectTwo from "../CustomSelectTwo";
 import FaqItem from '../FaqItem';
-import MetadataExportButton from './MetadataExportButton';
+import { ExportAssetPdfButton } from '../ExportAllAssetMetadata';
 
 const TAB_SETS = {
     video: ["search", "transcription", "summary", "chapters", "highlights", "topics", "faqs"],
@@ -27,14 +27,6 @@ const TAB_LABELS = {
     topics: "Topics",
     faqs: "FAQs"
 };
-
-// "00:00:05" -> "0:05", "00:01:30" -> "1:30", "01:02:03" -> "1:02:03"
-function formatTimestamp(value) {
-    if (!value) return "";
-    const parts = value.split(":").map(Number);
-    const [h, m, s] = parts.length === 3 ? parts : [0, parts[0], parts[1]];
-    return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}` : `${m}:${s}`;
-}
 
 export default function Metadata({
     query,
@@ -170,11 +162,9 @@ export default function Metadata({
     );
 }
 
-function SearchPane({ query: queryProp, onQueryChange, language, results, onSearch, onResultClick }) {
+function SearchPane({ query: queryProp, onQueryChange }) {
     const {
         currentResource,
-        selectedCategory,
-        selectedFormat,
         setDiscoveredSources,
         setShowSearchModal,
         knowledgeBase,
@@ -319,23 +309,18 @@ function MetadataPaneHeader({ title, exportButton }) {
 function TranscriptionPane({ transcriptionObj }) {
 
     const {
-
+        currentResource,
         setCurrentResource,
         workspaceContainer
     } = useContext(MainContext);
-
-    const segments = Array.isArray(transcriptionObj?.content) ? transcriptionObj.content : [];
-    const hasContent = segments.length > 0;
 
     return (
         <>
             <MetadataPaneHeader
                 title="Transcription"
                 exportButton={
-                    <MetadataExportButton
-                        metadataType="transcription"
-                        disabled={!hasContent}
-                        buildPayload={() => ({ segments })}
+                    <ExportAssetPdfButton
+                        asset={currentResource}
                     />
                 }
             />
@@ -373,17 +358,17 @@ function TranscriptionPane({ transcriptionObj }) {
 }
 
 function SummaryPane({ summaryObj }) {
-    const hasContent = summaryObj?.content !== undefined;
+    const {
+        currentResource
+    } = useContext(MainContext);
 
     return (
         <>
             <MetadataPaneHeader
                 title="Summary"
                 exportButton={
-                    <MetadataExportButton
-                        metadataType="summary"
-                        disabled={!hasContent}
-                        buildPayload={() => ({ content: summaryObj?.content })}
+                    <ExportAssetPdfButton
+                        asset={currentResource}
                     />
                 }
             />
@@ -413,7 +398,7 @@ function SummaryPane({ summaryObj }) {
 }
 
 function ChaptersPane({ chapters }) {
-    const { workspaceContainer } = useContext(MainContext);
+    const { workspaceContainer, currentResource } = useContext(MainContext);
     const chapterItems = Array.isArray(chapters) ? chapters : [];
 
     return (
@@ -421,10 +406,8 @@ function ChaptersPane({ chapters }) {
             <MetadataPaneHeader
                 title="Chapters"
                 exportButton={
-                    <MetadataExportButton
-                        metadataType="chapters"
-                        disabled={chapterItems.length === 0}
-                        buildPayload={() => ({ chapters: chapterItems })}
+                    <ExportAssetPdfButton
+                        asset={currentResource}
                     />
                 }
             />
@@ -449,7 +432,7 @@ function ChaptersPane({ chapters }) {
 }
 
 function HighlightsPane({ highlights }) {
-    const { workspaceContainer } = useContext(MainContext);
+    const { workspaceContainer, currentResource } = useContext(MainContext);
     const highlightItems = Array.isArray(highlights) ? highlights : [];
 
     return (
@@ -457,10 +440,8 @@ function HighlightsPane({ highlights }) {
             <MetadataPaneHeader
                 title="Highlights"
                 exportButton={
-                    <MetadataExportButton
-                        metadataType="highlights"
-                        disabled={highlightItems.length === 0}
-                        buildPayload={() => ({ highlights: highlightItems })}
+                    <ExportAssetPdfButton
+                        asset={currentResource}
                     />
                 }
             />
@@ -487,7 +468,7 @@ function HighlightsPane({ highlights }) {
 }
 
 function KeywordsPane({ keywords }) {
-    const { workspaceContainer } = useContext(MainContext);
+    const { currentResource } = useContext(MainContext);
     const keywordItems = Array.isArray(keywords) ? keywords : [];
 
     return (
@@ -495,10 +476,8 @@ function KeywordsPane({ keywords }) {
             <MetadataPaneHeader
                 title="Topics"
                 exportButton={
-                    <MetadataExportButton
-                        metadataType="topics"
-                        disabled={keywordItems.length === 0}
-                        buildPayload={() => ({ keywords: keywordItems })}
+                    <ExportAssetPdfButton
+                        asset={currentResource}
                     />
                 }
             />
@@ -529,7 +508,7 @@ function KeywordsPane({ keywords }) {
 }
 
 function FaqsPane({ faqs, chosenLanguage }) {
-    const { workspaceContainer } = useContext(MainContext);
+    const { currentResource } = useContext(MainContext);
     const faqItems = Array.isArray(faqs) ? faqs : [];
 
     return (
@@ -537,10 +516,8 @@ function FaqsPane({ faqs, chosenLanguage }) {
             <MetadataPaneHeader
                 title="FAQs"
                 exportButton={
-                    <MetadataExportButton
-                        metadataType="faqs"
-                        disabled={faqItems.length === 0}
-                        buildPayload={() => ({ faqs: faqItems })}
+                    <ExportAssetPdfButton
+                        asset={currentResource}
                     />
                 }
             />
