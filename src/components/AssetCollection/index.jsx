@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
     ChevronRight,
     ChevronDown,
@@ -47,6 +47,57 @@ export default function AssetCollection({
     const [openIndexes, setOpenIndexes] = useState({});
     const [openFormats, setOpenFormats] = useState({});
     const [confirmingId, setConfirmingId] = useState(null);
+    const autoOpenedUploads = useRef(new Set());
+
+    useEffect(() => {
+        const uploadingSources = knowledgeBase.filter((source) => source.progress !== undefined);
+        const activeUploadKeys = new Set(uploadingSources.map((source) =>
+            `${source.index_id ?? source.category}:${source.index ?? source.source_path}`
+        ));
+        const newlyUploading = uploadingSources.filter((source) => {
+            const key = `${source.index_id ?? source.category}:${source.index ?? source.source_path}`;
+            if (autoOpenedUploads.current.has(key)) return false;
+            autoOpenedUploads.current.add(key);
+            return true;
+        });
+
+        autoOpenedUploads.current.forEach((key) => {
+            if (!activeUploadKeys.has(key)) autoOpenedUploads.current.delete(key);
+        });
+
+        if (newlyUploading.length === 0) return;
+
+        const indexesToOpen = new Set();
+        const formatsToOpen = new Set();
+
+        newlyUploading.forEach((source) => {
+            const index = indexes.find((item) =>
+                source.index_id === item.id ||
+                source.category?.includes(item.value) ||
+                source.category === item.value
+            );
+            if (!index) return;
+
+            indexesToOpen.add(index.id);
+            const format = FORMATS.some((item) => item.value === source.file_type && item.value !== "all")
+                ? source.file_type
+                : "all";
+            formatsToOpen.add(`${index.id}:${format}`);
+        });
+
+        if (indexesToOpen.size > 0) {
+            setOpenIndexes((previous) => ({
+                ...previous,
+                ...Object.fromEntries([...indexesToOpen].map((id) => [id, true]))
+            }));
+        }
+        if (formatsToOpen.size > 0) {
+            setOpenFormats((previous) => ({
+                ...previous,
+                ...Object.fromEntries([...formatsToOpen].map((key) => [key, true]))
+            }));
+        }
+    }, [knowledgeBase, indexes]);
 
     const toggleIndex = (id) =>
         setOpenIndexes((prev) => ({ ...prev, [id]: !prev[id] }));
