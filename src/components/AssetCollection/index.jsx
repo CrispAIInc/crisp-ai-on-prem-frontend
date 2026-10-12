@@ -1,4 +1,194 @@
-import React, { useContext, useState } from "react";
+// import React, { useContext, useState } from "react";
+// import {
+//     ChevronRight,
+//     ChevronDown,
+//     Folder,
+//     FolderOpen,
+//     PlayCircle,
+//     FileText,
+//     Image as ImageIcon,
+//     Layers,
+//     Trash2
+// } from "lucide-react";
+// import { MainContext } from '../../contexts/mainContext';
+// import MediaCard from '../MediaCard';
+
+// const FORMATS = [
+//     { value: "all", label: "All" },
+//     { value: "video", label: "Videos" },
+//     { value: "pdf", label: "PDFs" },
+//     { value: "img", label: "Images" },
+// ];
+
+// const FORMAT_ICONS = {
+//     all: Layers,
+//     video: PlayCircle,
+//     pdf: FileText,
+//     img: ImageIcon,
+// };
+
+// export default function AssetCollection({
+//     onThumbnailClick,
+//     handleCheckboxChange,
+//     openSourceUpdate,
+//     deleteResource,
+//     isDeleting,
+//     isProjectReadOnly,
+//     onDeleteIndex
+// }) {
+
+//     const {
+//         categoryOptions,
+//         knowledgeBase
+//     } = useContext(MainContext);
+
+//     const indexes = categoryOptions.filter(item => item.value !== "all");
+
+//     const [openIndexes, setOpenIndexes] = useState({});
+//     const [openFormats, setOpenFormats] = useState({});
+//     const [confirmingId, setConfirmingId] = useState(null);
+
+//     const toggleIndex = (id) =>
+//         setOpenIndexes((prev) => ({ ...prev, [id]: !prev[id] }));
+
+//     const toggleFormat = (indexId, formatValue) => {
+//         const key = `${indexId}:${formatValue}`;
+//         setOpenFormats((prev) => ({ ...prev, [key]: !prev[key] }));
+//     };
+
+//     const sourcesForIndex = (index) =>
+//         knowledgeBase.filter(
+//             (s) => s.index_id === index.id || s.category?.includes(index.value)
+//         );
+
+//     const sourcesForFormat = (indexSources, formatValue) =>
+//         formatValue === "all"
+//             ? indexSources
+//             : indexSources.filter((s) => s.file_type === formatValue);
+
+//     const handleDelete = async (index) => {
+//         await onDeleteIndex?.(index);
+//         setConfirmingId(null);
+//     };
+
+//     return (
+//         <div className="w-full max-w-xl rounded-lg overflow-y-auto h-full">
+//             {indexes.map((index) => {
+//                 const isIndexOpen = !!openIndexes[index.id];
+//                 const indexSources = sourcesForIndex(index);
+
+//                 return (
+//                     <div key={index.id}>
+//                         <div
+//                             className="flex items-center justify-between gap-1 hover:bg-slate-200/60 transition-colors"
+//                             onMouseEnter={() => setConfirmingId(index.id)}
+//                             onMouseLeave={() => setConfirmingId(null)}
+//                         >
+//                             <button
+//                                 type="button"
+//                                 onClick={() => toggleIndex(index.id)}
+//                                 className="w-full flex items-center gap-2 px-3 py-2.5 text-left"
+//                             >
+//                                 {isIndexOpen ? (
+//                                     <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+//                                 ) : (
+//                                     <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+//                                 )}
+//                                 {isIndexOpen ? (
+//                                     <FolderOpen className="w-4 h-4 text-primary-200 shrink-0" />
+//                                 ) : (
+//                                     <Folder className="w-4 h-4 text-primary-200 shrink-0" />
+//                                 )}
+//                                 <span className="text-sm font-medium text-textColor-300 truncate">
+//                                     {index.label}
+//                                 </span>
+//                                 <span className="ml-auto text-xs text-slate-500">
+//                                     {indexSources.length}
+//                                 </span>
+//                             </button>
+
+//                             {confirmingId === index.id && (
+//                                 <button
+//                                     type="button"
+//                                     aria-label={`Delete ${index.label}`}
+//                                     onClick={() => handleDelete(index.id)}
+//                                     className="mr-2 rounded p-1.5 hover:bg-red-200"
+//                                 >
+//                                     <Trash2 className="w-4 h-4 text-red-400" />
+//                                 </button>
+//                             )}
+//                         </div>
+
+//                         {isIndexOpen && (
+//                             <div className="pl-6 pb-2">
+//                                 {indexSources.length === 0 && (
+//                                     <p className="px-3 py-2 text-xs italic text-slate-500">
+//                                         No assets in this folder
+//                                     </p>
+//                                 )}
+
+//                                 {FORMATS.map((format) => {
+//                                     const formatSources = sourcesForFormat(
+//                                         indexSources,
+//                                         format.value
+//                                     );
+//                                     if (formatSources.length === 0) return null;
+
+//                                     const key = `${index.id}:${format.value}`;
+//                                     const isFormatOpen = !!openFormats[key];
+//                                     const Icon = FORMAT_ICONS[format.value] || Layers;
+
+//                                     return (
+//                                         <div key={format.value}>
+//                                             <button
+//                                                 type="button"
+//                                                 onClick={() => toggleFormat(index.id, format.value)}
+//                                                 className="w-full flex items-center gap-2 rounded px-3 py-2 text-left hover:bg-slate-200/60 transition-colors"
+//                                             >
+//                                                 {isFormatOpen ? (
+//                                                     <ChevronDown className="w-3.5 h-3.5 text-primary-200 shrink-0" />
+//                                                 ) : (
+//                                                     <ChevronRight className="w-3.5 h-3.5 text-primary-200 shrink-0" />
+//                                                 )}
+//                                                 <Icon className="w-3.5 h-3.5 text-primary-200 shrink-0" />
+//                                                 <span className="text-sm text-textColor-300">
+//                                                     {format.label}
+//                                                 </span>
+//                                                 <span className="ml-auto text-xs text-slate-500">
+//                                                     {formatSources.length}
+//                                                 </span>
+//                                             </button>
+
+//                                             {isFormatOpen && (
+//                                                 <div className="grid [grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))] gap-2 py-2 pl-6 pr-2">
+//                                                     {formatSources.map((source) => (
+//                                                         <MediaCard
+//                                                             key={source.source_id}
+//                                                             source={source}
+//                                                             onOpen={onThumbnailClick}
+//                                                             onToggle={handleCheckboxChange}
+//                                                             onUpdate={openSourceUpdate}
+//                                                             onDelete={deleteResource}
+//                                                             isDeleting={isDeleting}
+//                                                             isProjectReadOnly={isProjectReadOnly}
+//                                                         />
+//                                                     ))}
+//                                                 </div>
+//                                             )}
+//                                         </div>
+//                                     );
+//                                 })}
+//                             </div>
+//                         )}
+//                     </div>
+//                 );
+//             })}
+//         </div>
+//     );
+// }
+
+
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
     ChevronRight,
     ChevronDown,
@@ -28,8 +218,6 @@ const FORMAT_ICONS = {
 };
 
 export default function AssetCollection({
-    onThumbnailClick,
-    handleCheckboxChange,
     openSourceUpdate,
     deleteResource,
     isDeleting,
@@ -39,7 +227,9 @@ export default function AssetCollection({
 
     const {
         categoryOptions,
-        knowledgeBase
+        knowledgeBase,
+        onThumbnailClick,
+        handleCheckboxChange
     } = useContext(MainContext);
 
     const indexes = categoryOptions.filter(item => item.value !== "all");
@@ -47,6 +237,57 @@ export default function AssetCollection({
     const [openIndexes, setOpenIndexes] = useState({});
     const [openFormats, setOpenFormats] = useState({});
     const [confirmingId, setConfirmingId] = useState(null);
+    const autoOpenedUploads = useRef(new Set());
+
+    useEffect(() => {
+        const uploadingSources = knowledgeBase.filter((source) => source.progress !== undefined);
+        const activeUploadKeys = new Set(uploadingSources.map((source) =>
+            `${source.index_id ?? source.category}:${source.index ?? source.source_path}`
+        ));
+        const newlyUploading = uploadingSources.filter((source) => {
+            const key = `${source.index_id ?? source.category}:${source.index ?? source.source_path}`;
+            if (autoOpenedUploads.current.has(key)) return false;
+            autoOpenedUploads.current.add(key);
+            return true;
+        });
+
+        autoOpenedUploads.current.forEach((key) => {
+            if (!activeUploadKeys.has(key)) autoOpenedUploads.current.delete(key);
+        });
+
+        if (newlyUploading.length === 0) return;
+
+        const indexesToOpen = new Set();
+        const formatsToOpen = new Set();
+
+        newlyUploading.forEach((source) => {
+            const index = indexes.find((item) =>
+                source.index_id === item.id ||
+                source.category?.includes(item.value) ||
+                source.category === item.value
+            );
+            if (!index) return;
+
+            indexesToOpen.add(index.id);
+            const format = FORMATS.some((item) => item.value === source.file_type && item.value !== "all")
+                ? source.file_type
+                : "all";
+            formatsToOpen.add(`${index.id}:${format}`);
+        });
+
+        if (indexesToOpen.size > 0) {
+            setOpenIndexes((previous) => ({
+                ...previous,
+                ...Object.fromEntries([...indexesToOpen].map((id) => [id, true]))
+            }));
+        }
+        if (formatsToOpen.size > 0) {
+            setOpenFormats((previous) => ({
+                ...previous,
+                ...Object.fromEntries([...formatsToOpen].map((key) => [key, true]))
+            }));
+        }
+    }, [knowledgeBase, indexes]);
 
     const toggleIndex = (id) =>
         setOpenIndexes((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -65,6 +306,7 @@ export default function AssetCollection({
         formatValue === "all"
             ? indexSources
             : indexSources.filter((s) => s.file_type === formatValue);
+
 
     const handleDelete = async (index) => {
         await onDeleteIndex?.(index);
@@ -123,7 +365,7 @@ export default function AssetCollection({
                             <div className="pl-6 pb-2">
                                 {indexSources.length === 0 && (
                                     <p className="px-3 py-2 text-xs italic text-slate-500">
-                                        No assets in this folder
+                                        No sources in this folder
                                     </p>
                                 )}
 
