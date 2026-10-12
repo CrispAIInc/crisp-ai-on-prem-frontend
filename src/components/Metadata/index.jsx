@@ -28,6 +28,19 @@ const TAB_LABELS = {
     faqs: "FAQs"
 };
 
+/** Default pane when opening metadata; tab bar order stays defined by TAB_SETS (Search first where present). */
+export function getDefaultMetadataActiveTab(sourceType) {
+    const tabIds = TAB_SETS[sourceType] ?? TAB_SETS.video;
+
+    if (sourceType === "video") {
+        return tabIds.includes("transcription") ? "transcription" : tabIds[0];
+    }
+
+    if (tabIds.includes("transcription")) return "transcription";
+    if (tabIds.includes("summary")) return "summary";
+    return tabIds[0];
+}
+
 export default function Metadata({
     query,
     onQueryChange,
@@ -52,7 +65,7 @@ export default function Metadata({
 
     const availableTabIds = TAB_SETS[sourceType] ?? TAB_SETS.video;
     const tabs = availableTabIds.map((id) => ({ id, label: TAB_LABELS[id] }));
-    const [internalTab, setInternalTab] = useState(sourceType === "video" ? tabs[1].id : tabs[0].id);
+    const [internalTab, setInternalTab] = useState(() => getDefaultMetadataActiveTab(sourceType));
     const activeTab = controlledActiveTab ?? internalTab;
 
     const setActiveTab = (nextTab) => {
@@ -64,9 +77,9 @@ export default function Metadata({
         setInternalTab(nextTab);
     };
 
-    // Reset to the first available tab if the source (and its tab set) changes
+    // Reset to the default tab if the current tab is not in this source's tab set
     useEffect(() => {
-        const nextTab = availableTabIds[0];
+        const nextTab = getDefaultMetadataActiveTab(sourceType);
 
         if (!availableTabIds.includes(activeTab)) {
             if (onTabChange) {
@@ -76,7 +89,7 @@ export default function Metadata({
 
             setInternalTab(nextTab);
         }
-    }, [activeTab, availableTabIds, onTabChange]);
+    }, [activeTab, availableTabIds, onTabChange, sourceType]);
 
     return (
         <div className={`h-full min-h-0 flex flex-col gap-3.5 overflow-hidden ${className}`}>
@@ -165,6 +178,8 @@ export default function Metadata({
 function SearchPane({ query: queryProp, onQueryChange }) {
     const {
         currentResource,
+        selectedCategory,
+        selectedFormat,
         setDiscoveredSources,
         setShowSearchModal,
         knowledgeBase,

@@ -4,7 +4,6 @@ import {
   Download,
   FileText,
   X,
-  CirclePlay
 } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
@@ -13,15 +12,14 @@ import "react-pdf/dist/Page/TextLayer.css";
 import makeApiRequest from "../../api";
 import { MainContext } from "../../contexts/mainContext.jsx";
 import { SettingsContext } from '../../contexts/settingsContext.jsx';
-import useMediaUrls from '../../hooks/useMediaUrls.js';
+import useFirebase from '../../hooks/useFirebase.js';
 import { flattenMetadata, timeToSeconds } from '../../utils.js';
 import BaseHeading from '../BaseHeading/index.jsx';
 import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
 import ImageViewer from "../ImageViewer";
-import Metadata from '../Metadata/index.jsx';
+import Metadata, { getDefaultMetadataActiveTab } from '../Metadata/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import { ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
-import VideoStack from '../VideoStack/index.jsx';
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
@@ -45,16 +43,17 @@ const MetadataPanel = ({ workspaceContainer }) => {
     analyticsActiveTab,
     enrichActiveTab,
     currentAssets,
-    onThumbnailClick
   } = useContext(MainContext);
 
 
   const { generalSettings: { video_autoplay, video_loop } } = useContext(SettingsContext);
 
-  const { getPublicUrl } = useMediaUrls();
+  const { getPublicUrl } = useFirebase();
 
   const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item?.source_id === currentResource?.source_id));
-  const [metadataActiveTab, setMetadataActiveTab] = useState("search");
+  const [metadataActiveTab, setMetadataActiveTab] = useState(() =>
+    getDefaultMetadataActiveTab(currentResource?.file_type ?? "video")
+  );
 
   // const [generatedResource, setGeneratedResource] = useState(null);
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
@@ -111,7 +110,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
 
         const updatedResource = {
           ...currentResource,
-          ...generatedResources?.find(item => item?.source_id === currentResource?.source_id)
+          ...generatedResources?.find(item => item.source_id === currentResource.source_id)
         };
 
         // Update the currentResource state
@@ -128,7 +127,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   useEffect(() => {
     if (!currentResource) return;
 
-    setMetadataActiveTab("search");
+    setMetadataActiveTab(getDefaultMetadataActiveTab(currentResource.file_type ?? "video"));
   }, [currentResource?.source_id]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -380,23 +379,21 @@ const MetadataPanel = ({ workspaceContainer }) => {
     <div className={`max-w-4xl mx-auto ${currentAssets.length > 0 && 'flex flex-col gap-2'}`} ref={metadataPanelContainer}>
 
       {currentResource?.file_type === "video" && (
-        <>
-          <div className="relative">
-            <CustomVideoPlayer
-              sourcePublicUrl={sourcePublicUrl}
-              resourceURL={resourceURL}
-              video_autoplay={video_autoplay}
-              video_loop={video_loop}
-              title={currentResource?.source_path}
-              chapters={translatedResource?.chapters?.content || []}
-              highlights={translatedResource?.highlights?.content || []}
-              onReady={() => setIsPlayerReady(true)}
-              onDuration={() => setHasDuration(true)}
-              playerRef={player}
-              onClose={onClose}
-            />
-          </div>
-        </>
+        <div className="relative">
+          <CustomVideoPlayer
+            sourcePublicUrl={sourcePublicUrl}
+            resourceURL={resourceURL}
+            video_autoplay={video_autoplay}
+            video_loop={video_loop}
+            title={currentResource?.source_path}
+            chapters={translatedResource?.chapters?.content || []}
+            highlights={translatedResource?.highlights?.content || []}
+            onReady={() => setIsPlayerReady(true)}
+            onDuration={() => setHasDuration(true)}
+            playerRef={player}
+            onClose={onClose}
+          />
+        </div>
       )
       }
       {
