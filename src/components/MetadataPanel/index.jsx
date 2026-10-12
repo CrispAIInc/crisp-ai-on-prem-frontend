@@ -4,7 +4,6 @@ import {
   Download,
   FileText,
   X,
-  CirclePlay
 } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
@@ -18,10 +17,9 @@ import { flattenMetadata, timeToSeconds } from '../../utils.js';
 import BaseHeading from '../BaseHeading/index.jsx';
 import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
 import ImageViewer from "../ImageViewer";
-import Metadata from '../Metadata/index.jsx';
+import Metadata, { getDefaultMetadataActiveTab } from '../Metadata/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
 import { ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
-import VideoStack from '../../VideoStack/index.jsx';
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
@@ -54,7 +52,9 @@ const MetadataPanel = ({ workspaceContainer }) => {
   const { getPublicUrl } = useFirebase();
 
   const [translatedResource, setTranslatedResource] = useState(generatedResources?.find((item) => item?.source_id === currentResource?.source_id));
-  const [metadataActiveTab, setMetadataActiveTab] = useState("search");
+  const [metadataActiveTab, setMetadataActiveTab] = useState(() =>
+    getDefaultMetadataActiveTab(currentResource?.file_type ?? "video")
+  );
 
   // const [generatedResource, setGeneratedResource] = useState(null);
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
@@ -128,7 +128,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   useEffect(() => {
     if (!currentResource) return;
 
-    setMetadataActiveTab("search");
+    setMetadataActiveTab(getDefaultMetadataActiveTab(currentResource.file_type ?? "video"));
   }, [currentResource?.source_id]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
