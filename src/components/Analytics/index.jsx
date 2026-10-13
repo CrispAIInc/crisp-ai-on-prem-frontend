@@ -398,7 +398,7 @@ function TimeSegmentPane({
                     type="button"
                     disabled={!canGenerate}
                     onClick={generateTimeSegmentDescription}
-                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold gradient-primary text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                     <Sparkles size={14} className={`${isGeneratingTimeSegment && "animate-customPulse"}`} />
                     <span className={`${isGeneratingTimeSegment && "animate-customPulse"}`}>
@@ -544,7 +544,7 @@ function FindMomentsPane({
                     type="button"
                     disabled={!canGenerate}
                     onClick={generateMoment}
-                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold gradient-primary text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                     <Sparkles size={14} className={`${isGeneratingMoments && "animate-customPulse"}`} />
                     <span className={`${isGeneratingMoments && "animate-customPulse"}`}>
