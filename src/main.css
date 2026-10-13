@@ -4,11 +4,15 @@
 
 @layer utilities {
   .text-gradient-x {
-    background-image: linear-gradient(to right, #A694F3, #755BEA);
+    background-image: linear-gradient(to right, #a694f3, #755bea);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
+  }
+
+  .gradient-primary {
+    @apply bg-gradient-to-br from-primary-200 to-primary-300;
   }
 
   .graph-modal {

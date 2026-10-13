@@ -81,7 +81,7 @@ const ProjectsPage = ({ projects, setProjects, setCurrentProject }) => {
                             ]}
                         />}
 
-                        {viewMode === "list" && <button className="px-4 py-2 font-semibold text-white border rounded-full bg-gradient-to-br from-primary-200 to-primary-300" onClick={() => setIsModalOpen(true)}>
+                        {viewMode === "list" && <button className="px-4 py-2 font-semibold text-white border rounded-full gradient-primary" onClick={() => setIsModalOpen(true)}>
                             New Project
                         </button>}
                     </div>

@@ -168,7 +168,7 @@ export default function ContextualMetadata({
                     type="button"
                     disabled={!canGenerate}
                     onClick={() => handleGenerateMetadata({ sourceIds: contextualMetadataSourceIds, context: contextualMetadataContext, selectedOptions, setSelectedOptions, verbosity: contextualMetadataVerbosity })}
-                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    className="w-full flex items-center justify-center gap-1.5 rounded-lg py-3 text-[13.5px] font-bold gradient-primary text-white text-xs hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                     <Sparkles size={14} className={`${isGeneratingMetadata && "animate-customPulse"}`} />
                     <span className={`${isGeneratingMetadata && "animate-customPulse"}`}>

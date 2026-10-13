@@ -129,7 +129,7 @@ const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme }) => {
                     type="button"
                     disabled={isCreateDisabled || isLoading}
                     onClick={handleSave}
-                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isCreateDisabled || isLoading ? (theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-textColor-100/25 text-gray-700') : 'bg-gradient-to-br from-primary-200 to-primary-300 text-white hover:opacity-90'} ${isCreateDisabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`flex items-center justify-center gap-2 rounded-md px-4 py-2 transition duration-150 ${isCreateDisabled || isLoading ? (theme === 'light' ? 'bg-gray-200 text-gray-400/50' : 'bg-textColor-100/25 text-gray-700') : 'gradient-primary text-white hover:opacity-90'} ${isCreateDisabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                     {isLoading ? <LoadingSpinner isSmall /> : <span className="font-medium">Create project</span>}
                 </button>

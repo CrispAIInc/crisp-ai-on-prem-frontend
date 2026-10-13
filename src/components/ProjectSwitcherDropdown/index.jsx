@@ -110,7 +110,7 @@ function ProjectSwitcherDropdown() {
             {showProjects && <div className={`absolute top-full left-0 w-full rounded-lg h-[30vh] z-50 flex flex-col flex-1 py-0 overflow-y-auto shadow-md bg-background_workspace p-1 mt-1`}>
                 <button
                     // className="flex items-center justify-center px-1 py-2 bg-red-400 text-white font-semibold text-center text-xs m-1 rounded-md"
-                    className={`select-none py-1.5 px-2 text-white text-sm rounded-lg bg-gradient-to-br from-primary-200 to-primary-300 transition duration-300 flex items-center justify-center w-full`}
+                    className={`select-none py-1.5 px-2 text-white text-sm rounded-lg gradient-primary transition duration-300 flex items-center justify-center w-full`}
                     onClick={() => setIsNewProjectModalOpen(true)}
                 >
                     <Plus size={16} />

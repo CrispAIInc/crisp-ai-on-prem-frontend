@@ -280,7 +280,7 @@ function SearchPane({ query: queryProp, onQueryChange }) {
                         type="button"
                         onClick={handleDiscover}
                         disabled={!canSearch}
-                        className={`shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-2.5 font-bold bg-gradient-to-br from-primary-200 to-primary-300 text-white hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed`}
+                        className={`shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-2.5 font-bold gradient-primary text-white hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed`}
                     >
                         <Search size={13} className={`${isSearching && 'animate-customPulse'}`} />
                         <span className={`text-xs font-bold ${isSearching && 'animate-customPulse'}`}>Search</span>
