@@ -3,6 +3,7 @@ import { MainContext } from '../../contexts/mainContext';
 import MetadataPanel from '../MetadataPanel';
 import EmptyWorkspace from '../EmptyWorkspace';
 import ShortsList from "../ShortsList";
+import BlogsList from "../BlogsList";
 import { MAIN_STUDIO_PANELS } from '../../globals';
 import TimeSegmentList from '../TimeSegmentList';
 import FindMomentsList from '../FindMomentsList';
@@ -15,16 +16,18 @@ import {
 function MainStudio({ panelWidth }) {
     const {
         currentResource,
-        workspaceContainer,
-        activeStudioPanel,
         currentAssets,
         onThumbnailClick,
+        workspaceContainer,
         activeTab,
+        activeStudioPanel
     } = useContext(MainContext);
 
     // Which panels can render without a currentResource (only Shorts, for now).
     const REQUIRES_ASSETS = {
         [MAIN_STUDIO_PANELS.SHORTS]: false,
+        [MAIN_STUDIO_PANELS.BLOGS]: false,
+        [MAIN_STUDIO_PANELS.DASHBOARDS]: false,
         [MAIN_STUDIO_PANELS.METADATA]: true,
         [MAIN_STUDIO_PANELS.TIME_SEGMENTS]: false,
         [MAIN_STUDIO_PANELS.FIND_MOMENTS]: false,
@@ -33,7 +36,6 @@ function MainStudio({ panelWidth }) {
 
     function renderStudioPanel() {
         const needsResource = REQUIRES_ASSETS[activeStudioPanel] ?? true;
-
         if (needsResource && !currentResource && currentAssets?.length === 0) return <EmptyWorkspace />;
 
         if (needsResource && currentResource) return <MetadataPanel
@@ -46,6 +48,12 @@ function MainStudio({ panelWidth }) {
         switch (activeStudioPanel) {
             case MAIN_STUDIO_PANELS.SHORTS:
                 return <ShortsList />;
+
+            case MAIN_STUDIO_PANELS.BLOGS:
+                return <BlogsList />;
+
+            case MAIN_STUDIO_PANELS.DASHBOARDS:
+                return <div className="h-full min-h-0" />;
 
             case (MAIN_STUDIO_PANELS.METADATA && currentResource):
                 return (
@@ -67,7 +75,9 @@ function MainStudio({ panelWidth }) {
                 return <BusinessIntelligenceList />;
 
             default:
-                return <EmptyWorkspace />;
+                return (
+                    <EmptyWorkspace />
+                );
         }
     }
 
@@ -93,7 +103,9 @@ function MainStudio({ panelWidth }) {
 
     return (
         <div ref={workspaceContainer} className="h-full min-h-0">
+
             {renderVideoStack()}
+
             {renderStudioPanel()}
         </div>
     );

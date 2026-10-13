@@ -13,7 +13,7 @@ import MetadataVerbosity from '../MetadataVerbosity';
 import SourcesDropdown from "../SourcesDropdown";
 
 
-export default function Shorts() {
+export default function Shorts({ embedded = false }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
     const {
@@ -77,16 +77,20 @@ export default function Shorts() {
         }
     }
 
-    return (
-        <div className="h-full  px-[18px] min-h-0 flex flex-col overflow-hidden bg-white">
-            <div className="pt-4 pb-3 border-b border-border shrink-0">
-                <div className="flex items-center justify-between gap-2">
-                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate Shorts</h2>
-                </div>
-                <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging Shorts in minutes.</p>
-            </div>
+    const horizontalPadding = embedded ? "px-[14px]" : "px-[18px]";
 
-            <div className="flex-1 min-h-0 overflow-y-auto">
+    return (
+        <div className="h-full min-h-0 flex flex-col overflow-hidden bg-white">
+            {!embedded && (
+                <div className={`${horizontalPadding} pt-4 pb-3 border-b border-border shrink-0`}>
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate Shorts</h2>
+                    </div>
+                    <p className="text-xs text-ink-secondary mt-0.5">Turn long-form content into engaging Shorts in minutes.</p>
+                </div>
+            )}
+
+            <div className={`flex-1 min-h-0 overflow-y-auto ${horizontalPadding} ${embedded ? "pt-3.5 pb-3" : ""}`}>
                 <Field label="Assets">
                     <SourcesDropdown
                         sources={videoSources}
@@ -130,7 +134,7 @@ export default function Shorts() {
                 </CollapsibleSection>
             </div>
 
-            <div className="py-3.5 border-t border-border shrink-0">
+            <div className={`${horizontalPadding} py-3.5 border-t border-border shrink-0`}>
                 <button
                     type="button"
                     disabled={!canGenerate}

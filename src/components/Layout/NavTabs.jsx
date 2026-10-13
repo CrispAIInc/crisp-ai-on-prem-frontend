@@ -3,7 +3,7 @@ import { Info } from "lucide-react";
 import { useContext } from 'react';
 import { Tooltip } from "react-tooltip";
 import { MainContext } from '../../contexts/mainContext.jsx';
-import { ANALYTICS_TABS, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
+import { ANALYTICS_TABS, CREATE_TABS, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
 
 /**
  * NavTabs - the primary section navigation, rendered directly
@@ -17,11 +17,13 @@ export default function NavTabs({ active = "media" }) {
     setActiveStudioPanel,
     setAnalyticsTab,
     enrichActiveTab,
+    createActiveTab,
     jsonEntities,
     setSelectedJsonEntity,
   } = useContext(MainContext);
 
   function handleNavClick(key, tab) {
+    console.log(key, tab);
     setActiveTab(key);
 
     if (key === "enrich") {
@@ -37,6 +39,17 @@ export default function NavTabs({ active = "media" }) {
         setSelectedJsonEntity(jsonEntities[0]);
       }
 
+    }
+
+    else if (key === "create") {
+      const createPanel =
+        createActiveTab === CREATE_TABS.BLOGS
+          ? MAIN_STUDIO_PANELS.BLOGS
+          : createActiveTab === CREATE_TABS.SHORTS
+            ? MAIN_STUDIO_PANELS.SHORTS
+            : MAIN_STUDIO_PANELS.DASHBOARDS;
+
+      setActiveStudioPanel(createPanel);
     }
 
     else {

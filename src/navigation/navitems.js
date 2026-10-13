@@ -3,9 +3,8 @@ import {
     Sparkles,
     MessageCircle,
     LineChart,
-    BookOpen,
     FolderOpen,
-    Clapperboard,
+    SquarePen,
 } from "lucide-react";
 
 /**
@@ -13,11 +12,10 @@ import {
  */
 import Media from "../components/Media";
 import Discovery from "../components/Discovery";
-import Shorts from "../components/Shorts";
 import Interaction from "../components/Interaction";
 import Analytics from "../components/Analytics";
 import Enrich from "../components/Enrich";
-import Blogs from "../components/Blogs";
+import Create from "../components/Create";
 
 
 export const NAV_ITEMS = [
@@ -25,7 +23,6 @@ export const NAV_ITEMS = [
     { key: "discovery", label: "Discover", icon: Search, component: Discovery },
     { key: "interaction", label: "Engage", icon: MessageCircle, component: Interaction },
     { key: "enrich", label: "Enrich", icon: Sparkles, component: Enrich, tab: "metadata" },
-    { key: "shorts", label: "Shorts", icon: Clapperboard, component: Shorts, tab: "shorts" },
+    { key: "create", label: "Create", icon: SquarePen, component: Create, tab: "blogs" },
     { key: "analytics", label: "Insights", icon: LineChart, component: Analytics, tab: "time-segments" },
-    { key: "blogs", label: "Blogs", icon: BookOpen, component: Blogs, disabled: true },
 ];

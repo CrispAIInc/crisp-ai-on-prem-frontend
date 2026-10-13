@@ -11,7 +11,7 @@ import { delay, generateRandomId, pick, sortArrayOfObjects, sortByDate } from '.
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
 import { NAV_ITEMS } from '../navigation/navitems.js';
-import { ANALYTICS_TABS, DEFAULT_TOTAL_PDF_PAGES, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../globals.js';
+import { ANALYTICS_TABS, CREATE_TABS, DEFAULT_TOTAL_PDF_PAGES, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../globals.js';
 
 export const MainContext = createContext({});
 
@@ -131,7 +131,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         intializeContent();
-    }, [currentProject?.project_id]);
+    }, [currentProject.project_id]);
 
     useEffect(() => {
         getIndexes();
@@ -258,6 +258,9 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // Enrich state - persists across tab switches
     const [enrichActiveTab, setEnrichActiveTab] = useState('metadata');
+
+    // Create state - persists across tab switches
+    const [createActiveTab, setCreateActiveTab] = useState(CREATE_TABS.SHORTS);
 
     // Analytics state - persists across tab switches
     const [analyticsActiveTab, setAnalyticsActiveTab] = useState('time-segments');
@@ -1264,7 +1267,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         }
 
         getChatHistory();
-    }, [currentProject?.project_id]);
+    }, [currentProject.project_id]);
 
     useEffect(() => {
         // if (Array.isArray(currentChat)) {
@@ -1378,6 +1381,17 @@ export default function MainProvider({ children, theme, setTheme }) {
                 enrichActiveTab === ENRICH_TABS.BUSINESS_INTELLIGENCE
                     ? MAIN_STUDIO_PANELS.BUSINESS_INTELLIGENCE
                     : MAIN_STUDIO_PANELS.METADATA
+            );
+            return;
+        }
+
+        if (activeTab === "create") {
+            setActiveStudioPanel(
+                createActiveTab === CREATE_TABS.BLOGS
+                    ? MAIN_STUDIO_PANELS.BLOGS
+                    : createActiveTab === CREATE_TABS.SHORTS
+                        ? MAIN_STUDIO_PANELS.SHORTS
+                        : MAIN_STUDIO_PANELS.DASHBOARDS
             );
             return;
         }
@@ -1496,7 +1510,7 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     useEffect(() => {
         interactionSessionIdRef.current = null;
-    }, [currentProject?.project_id]);
+    }, [currentProject.project_id]);
     // Hydrate interaction messages when switching chats, not when remounting the Interaction tab mid-stream.
     useEffect(() => {
         const sessionId = currentChat?.sessionId;
@@ -1523,9 +1537,10 @@ export default function MainProvider({ children, theme, setTheme }) {
 
 
     const [analyticsTab, setAnalyticsTab] = useState(ANALYTICS_TABS.TIME_SEGMENTS);
+    const [keys, setKeys] = useState([]);
     // create value object with all the states
     const value = {
-        currentAssets, setCurrentAssets,
+        keys, setKeys,
         isInfoTooltipOpenTimeSegment,
         setIsInfoTooltipOpenTimeSegment,
         formattedTimeSegment,
@@ -1627,6 +1642,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         currentResource,
         sourcesTobeCommited, setSourcesTobeCommited,
         setCurrentResource,
+        currentAssets, setCurrentAssets,
         noteReferences, setNoteReferences,
         resourceURL,
         setResourceURL,
@@ -1696,6 +1712,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         shortsTitle, setShortsTitle,
         shortsVerbosity, setShortsVerbosity,
         enrichActiveTab, setEnrichActiveTab,
+        createActiveTab, setCreateActiveTab,
         analyticsActiveTab, setAnalyticsActiveTab,
         analyticsSourceIds, setAnalyticsSourceIds,
         timeSegmentStart, setTimeSegmentStart,

@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import Field from '../Field';
 import SourcesDropdown from '../SourcesDropdown';
 import { MainContext } from '../../contexts/mainContext';
-import { DEFAULT_TOTAL_PDF_PAGES } from '../../globals';
+import { DEFAULT_TOTAL_PDF_PAGES, MAIN_STUDIO_PANELS } from '../../globals';
 import TimestampPicker from '../TimestampPicker';
 import PageNumbersPicker from '../PageNumbersPicker';
 import { ProjectContext } from '../../contexts/projectContext';
@@ -21,14 +21,15 @@ const STEPS = [
     "Generating blog content...",
     "Almost there..."
 ];
-function Blogs() {
+function Blogs({ embedded = false }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
 
     const {
         knowledgeBase,
         setSelectedBlog,
-        setBlogs
+        setBlogs,
+        setActiveStudioPanel,
     } = useContext(MainContext);
 
     const { generateMetadata } = useMetadata();
@@ -90,6 +91,7 @@ function Blogs() {
                 setStep(STEPS[3]);
                 setBlogs(prev => [...prev, newBlog]);
                 setSelectedBlog(newBlog);
+                setActiveStudioPanel(MAIN_STUDIO_PANELS.BLOGS);
                 // setShowBlogModal(true);
             } else {
                 throw new Error(message || "couldn't donwload the blog");
@@ -108,16 +110,20 @@ function Blogs() {
         }
     }
 
-    return (
-        <div className="h-full px-[14px] min-h-0 flex flex-col overflow-hidden bg-white">
-            <div className="pt-4 pb-3 border-b border-border shrink-0">
-                <div className="flex items-center justify-between gap-2">
-                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate Blogs</h2>
-                </div>
-                <p className="text-xs text-ink-secondary mt-0.5">Extract insights from your files and turn them into well-structured, publish-ready blogs.</p>
-            </div>
+    const horizontalPadding = embedded ? "px-[14px]" : "px-[14px]";
 
-            <div className="flex-1 min-h-0 mb-3 overflow-y-auto">
+    return (
+        <div className="h-full min-h-0 flex flex-col overflow-hidden bg-white">
+            {!embedded && (
+                <div className={`${horizontalPadding} pt-4 pb-3 border-b border-border shrink-0`}>
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate Blogs</h2>
+                    </div>
+                    <p className="text-xs text-ink-secondary mt-0.5">Extract insights from your files and turn them into well-structured, publish-ready blogs.</p>
+                </div>
+            )}
+
+            <div className={`flex-1 min-h-0 overflow-y-auto ${horizontalPadding} ${embedded ? "pt-3.5 pb-3 mb-0" : "mb-3"}`}>
                 <Field label="Sources">
                     <SourcesDropdown
                         sources={sources}
@@ -178,7 +184,7 @@ function Blogs() {
                 </Field>
             </div>
 
-            <div className="py-3.5 border-t border-border shrink-0">
+            <div className={`${horizontalPadding} py-3.5 border-t border-border shrink-0`}>
                 <button
                     type="button"
                     disabled={!canGenerate}

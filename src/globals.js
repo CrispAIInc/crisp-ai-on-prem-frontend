@@ -1,7 +1,4 @@
-export const ACCESS_TOKEN_KEY = 'accessToken';
-export const REFRESH_TOKEN_KEY = 'refreshToken';
-export const EXPIRES_AT_KEY = 'expiresAt';
-export const AUTH_TOKEN_CHANGED_EVENT = "auth-token-changed";
+export const TOKEN_NAME = "idToken";
 export const CURRENT_PROJECT_STORAGE_KEY = "current_project";
 export function clearStoredCurrentProject() {
     localStorage.removeItem(CURRENT_PROJECT_STORAGE_KEY);
@@ -42,6 +39,8 @@ export const REEL_VERBOSITY_OPTIONS = ["Short", "Medium", "Long"];
 export const MAIN_STUDIO_PANELS = {
     METADATA: "metadata",
     SHORTS: "shorts",
+    BLOGS: "blogs",
+    DASHBOARDS: "dashboards",
     TIME_SEGMENTS: "time-segments",
     FIND_MOMENTS: "find-moments",
     BUSINESS_INTELLIGENCE: "business-intelligence"
@@ -53,6 +52,11 @@ export const ANALYTICS_TABS = {
 export const ENRICH_TABS = {
     METADATA: "metadata",
     BUSINESS_INTELLIGENCE: "business-intelligence"
+};
+export const CREATE_TABS = {
+    BLOGS: "blogs",
+    SHORTS: "shorts",
+    DASHBOARDS: "dashboards",
 };
 
 export const FILE_TYPES = {
