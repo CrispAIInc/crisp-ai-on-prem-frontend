@@ -39,6 +39,8 @@ export const REEL_VERBOSITY_OPTIONS = ["Short", "Medium", "Long"];
 export const MAIN_STUDIO_PANELS = {
     METADATA: "metadata",
     SHORTS: "shorts",
+    BLOGS: "blogs",
+    DASHBOARDS: "dashboards",
     TIME_SEGMENTS: "time-segments",
     FIND_MOMENTS: "find-moments",
     BUSINESS_INTELLIGENCE: "business-intelligence"
@@ -50,6 +52,11 @@ export const ANALYTICS_TABS = {
 export const ENRICH_TABS = {
     METADATA: "metadata",
     BUSINESS_INTELLIGENCE: "business-intelligence"
+};
+export const CREATE_TABS = {
+    BLOGS: "blogs",
+    SHORTS: "shorts",
+    DASHBOARDS: "dashboards",
 };
 
 export const FILE_TYPES = {

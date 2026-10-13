@@ -11,7 +11,7 @@ import { delay, generateRandomId, pick, sortArrayOfObjects, sortByDate } from '.
 import { ProjectContext } from './projectContext';
 import useChat from '../hooks/useChat';
 import { NAV_ITEMS } from '../navigation/navitems.js';
-import { ANALYTICS_TABS, DEFAULT_TOTAL_PDF_PAGES, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../globals.js';
+import { ANALYTICS_TABS, CREATE_TABS, DEFAULT_TOTAL_PDF_PAGES, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../globals.js';
 
 export const MainContext = createContext({});
 
@@ -258,6 +258,9 @@ export default function MainProvider({ children, theme, setTheme }) {
 
     // Enrich state - persists across tab switches
     const [enrichActiveTab, setEnrichActiveTab] = useState('metadata');
+
+    // Create state - persists across tab switches
+    const [createActiveTab, setCreateActiveTab] = useState(CREATE_TABS.SHORTS);
 
     // Analytics state - persists across tab switches
     const [analyticsActiveTab, setAnalyticsActiveTab] = useState('time-segments');
@@ -1382,6 +1385,17 @@ export default function MainProvider({ children, theme, setTheme }) {
             return;
         }
 
+        if (activeTab === "create") {
+            setActiveStudioPanel(
+                createActiveTab === CREATE_TABS.BLOGS
+                    ? MAIN_STUDIO_PANELS.BLOGS
+                    : createActiveTab === CREATE_TABS.SHORTS
+                        ? MAIN_STUDIO_PANELS.SHORTS
+                        : MAIN_STUDIO_PANELS.DASHBOARDS
+            );
+            return;
+        }
+
         if (activeTab === "analytics") {
             setActiveStudioPanel(analyticsActiveTab);
             return;
@@ -1698,6 +1712,7 @@ export default function MainProvider({ children, theme, setTheme }) {
         shortsTitle, setShortsTitle,
         shortsVerbosity, setShortsVerbosity,
         enrichActiveTab, setEnrichActiveTab,
+        createActiveTab, setCreateActiveTab,
         analyticsActiveTab, setAnalyticsActiveTab,
         analyticsSourceIds, setAnalyticsSourceIds,
         timeSegmentStart, setTimeSegmentStart,

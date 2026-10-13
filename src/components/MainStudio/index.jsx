@@ -3,6 +3,7 @@ import { MainContext } from '../../contexts/mainContext';
 import MetadataPanel from '../MetadataPanel';
 import EmptyWorkspace from '../EmptyWorkspace';
 import ShortsList from "../ShortsList";
+import BlogsList from "../BlogsList";
 import { MAIN_STUDIO_PANELS } from '../../globals';
 import TimeSegmentList from '../TimeSegmentList';
 import FindMomentsList from '../FindMomentsList';
@@ -25,6 +26,8 @@ function MainStudio({ panelWidth }) {
     // Which panels can render without a currentResource (only Shorts, for now).
     const REQUIRES_ASSETS = {
         [MAIN_STUDIO_PANELS.SHORTS]: false,
+        [MAIN_STUDIO_PANELS.BLOGS]: false,
+        [MAIN_STUDIO_PANELS.DASHBOARDS]: false,
         [MAIN_STUDIO_PANELS.METADATA]: true,
         [MAIN_STUDIO_PANELS.TIME_SEGMENTS]: false,
         [MAIN_STUDIO_PANELS.FIND_MOMENTS]: false,
@@ -45,6 +48,12 @@ function MainStudio({ panelWidth }) {
         switch (activeStudioPanel) {
             case MAIN_STUDIO_PANELS.SHORTS:
                 return <ShortsList />;
+
+            case MAIN_STUDIO_PANELS.BLOGS:
+                return <BlogsList />;
+
+            case MAIN_STUDIO_PANELS.DASHBOARDS:
+                return <div className="h-full min-h-0" />;
 
             case (MAIN_STUDIO_PANELS.METADATA && currentResource):
                 return (
