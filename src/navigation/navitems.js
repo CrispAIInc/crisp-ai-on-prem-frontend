@@ -2,7 +2,7 @@ import {
     Search,
     Sparkles,
     MessageCircle,
-    LineChart,
+    ClockFading,
     FolderOpen,
     SquarePen,
 } from "lucide-react";
@@ -24,5 +24,5 @@ export const NAV_ITEMS = [
     { key: "interaction", label: "Engage", icon: MessageCircle, component: Interaction },
     { key: "enrich", label: "Enrich", icon: Sparkles, component: Enrich, tab: "metadata" },
     { key: "create", label: "Create", icon: SquarePen, component: Create, tab: "blogs" },
-    { key: "analytics", label: "Insights", icon: LineChart, component: Analytics, tab: "time-segments" },
+    { key: "analytics", label: "Insights", icon: ClockFading, component: Analytics, tab: "time-segments" },
 ];
