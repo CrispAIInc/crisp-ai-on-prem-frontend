@@ -35,10 +35,10 @@ function MainStudio({ panelWidth }) {
     };
 
     function renderStudioPanel() {
-        const needsResource = REQUIRES_ASSETS[activeStudioPanel] ?? true;
+        const needsResource = REQUIRES_ASSETS[activeStudioPanel] ?? false;
         if (needsResource && !currentResource && currentAssets?.length === 0) return <EmptyWorkspace />;
 
-        if (needsResource && currentResource) return <MetadataPanel
+        if (needsResource && currentResource !== null) return <MetadataPanel
             workspaceContainer={workspaceContainer}
             centerPanelRef={workspaceContainer}
             leftWidth={panelWidth}
@@ -55,7 +55,7 @@ function MainStudio({ panelWidth }) {
             case MAIN_STUDIO_PANELS.DASHBOARDS:
                 return <div className="h-full min-h-0" />;
 
-            case (MAIN_STUDIO_PANELS.METADATA && currentResource):
+            case (MAIN_STUDIO_PANELS.METADATA && currentResource !== null):
                 return (
                     <MetadataPanel
                         workspaceContainer={workspaceContainer}
