@@ -8,7 +8,7 @@ import { MAIN_STUDIO_PANELS } from '../../globals';
 import TimeSegmentList from '../TimeSegmentList';
 import FindMomentsList from '../FindMomentsList';
 import BusinessIntelligenceList from '../BusinessIntelligenceList';
-import VideoStack from '../../VideoStack';
+import VideoStack from '../VideoStack';
 import {
     CirclePlay
 } from "lucide-react";

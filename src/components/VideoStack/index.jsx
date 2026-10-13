@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { assetLength, getFileTypeLabel } from '../utils';
-import useFirebase from '../hooks/useFirebase';
+import { assetLength, getFileTypeLabel } from '../../utils';
+import useMediaUrls from '../../hooks/useMediaUrls';
 // 308k - 28k RUPIAH
 const CSS = `
 .vs-root { --vs-accent:#8b5cf6; --vs-bg:#16151d; --vs-card:#22212b; --vs-text:#f4f3f8; --vs-muted:#a9a7b8;
@@ -43,7 +43,7 @@ const CSS = `
 `;
 
 function Thumb({ video }) {
-    const { getPublicUrl } = useFirebase();
+    const { getPublicUrl } = useMediaUrls();
     const [publicThumbnailUrl, setPublicThumbnailUrl] = useState(null);
 
     useEffect(() => {
