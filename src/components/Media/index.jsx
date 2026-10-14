@@ -13,7 +13,6 @@ import FileUploaderModal from "../FileUploaderModal";
 import SourceExplorer from "../SourceExplorer";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
 import NoData from '../NoData/index.jsx';
-import AnimatedText from '../AnimatedText/index.jsx';
 
 const MEDIA_NAV = [
     { key: "ingest", label: "Ingest", icon: Upload },
@@ -111,7 +110,7 @@ export default function Media() {
     const [uploadStatus, setUploadStatus] = useState("idle"); // 'idle' | 'uploading' | 'success' | 'error'
 
     function handleProgressUpdate(data) {
-        setProgressUpdateCount(prev => prev + 1);
+
         const currentIndex = Number(data?.currentIndex ?? -1);
 
         // Update knowledgeBase (source of truth); displayedSources is derived from it
@@ -226,9 +225,9 @@ export default function Media() {
 
         socket.on('upload_error', (data) => {
             console.log('Upload error:', data);
-            setIsUploadFailed(true);
+
             setUploadStatus('error');
-            setuploadErrorMessage(data.error_message || 'Upload failed. Please try again.');
+
         });
 
         socket.on('upload_complete', (data) => {
@@ -236,7 +235,6 @@ export default function Media() {
             if (data.success) {
                 setUploadStatus('success');
                 setIsFileUploading(false);
-                setIsProgressStarted(false);
                 setKnowledgeBase((prev) => prev.map((source) => {
                     const sourceIndex = Number(source?.index ?? -1);
                     const completedIndex = Number(data?.currentIndex ?? -1);
@@ -247,7 +245,6 @@ export default function Media() {
                     return source;
                 }));
             } else {
-                setIsUploadFailed(true);
                 setUploadStatus('error');
             }
         });
@@ -563,14 +560,9 @@ export default function Media() {
     }
 
     return (
-        <div className="flex h-full min-h-0 max-w-[1400px] flex-col overflow-hidden mx-auto px-6 py-6 bg-white">
-            <div className="pb-3 border-b border-border shrink-0">
-                <h2 className="font-display text-[14.5px] font-semibold text-ink">Media assets</h2>
-                <p className="text-xs text-ink-secondary mt-0.5">Ingest and handle your uploaded assets here.</p>
-            </div>
-
+        <div className="flex h-full min-h-0 max-w-[1400px] flex-col overflow-hidden mx-auto px-6 py-6 !pt-2 bg-white">
             {/* Sub-navigation */}
-            <nav className="pt-3.5 flex items-center gap-6 border-b border-gray-100 mb-5  overflow-x-auto overflow-y-hidden">
+            <nav className="pt-3.5 flex items-center gap-6 border-b border-gray-100  overflow-x-auto overflow-y-hidden">
                 {MEDIA_NAV.map(({ key, label, icon: Icon }) => {
                     return (
                         <button
