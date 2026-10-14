@@ -533,11 +533,6 @@ const Interaction = () => {
 
     return (
         <div className="h-full px-[18px] min-h-0 flex flex-col overflow-hidden bg-white">
-            <div className="pt-4 pb-3 border-b border-border shrink-0">
-                <h2 className="font-display text-[14.5px] font-semibold text-ink">Crisp Wiz interaction</h2>
-                <p className="text-xs text-ink-secondary mt-0.5">Ask Crisp Wiz questions and interact with your content conversationally.</p>
-            </div>
-
             {messages?.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center text-center gap-2.5 px-6">
                     <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-ink-muted shrink-0">

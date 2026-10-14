@@ -42,15 +42,6 @@ export default function Enrich() {
 
     return (
         <div className="h-full px-[14px] min-h-0 flex flex-col overflow-hidden bg-white">
-            <div className="pt-4 pb-3 border-b border-border shrink-0">
-                <div className="flex items-center justify-between gap-2">
-                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Enrich</h2>
-                </div>
-                <p className="text-xs text-ink-secondary mt-0.5">
-                    Generate structured metadata and business intelligence from your assets.
-                </p>
-            </div>
-
             <nav className="pt-3.5 flex items-center gap-6 shrink-0 overflow-x-auto overflow-y-hidden">
                 {TABS.map(({ id, label, icon: Icon }) => {
                     const active = enrichActiveTab === id;

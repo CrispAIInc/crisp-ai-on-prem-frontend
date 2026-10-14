@@ -54,50 +54,42 @@ export default function Analytics() {
 
     return (
         <div className="h-full px-[14px] min-h-0 flex flex-col overflow-hidden bg-white">
-            <div className="pt-4 pb-3 border-b border-border shrink-0">
-                <div className="flex items-center justify-between gap-2">
-                    <h2 className="font-display text-[14.5px] font-semibold text-ink">Generate analytics</h2>
-                </div>
-                <p className="text-xs text-ink-secondary mt-0.5">Analyze content to identify important information, events, and insights, linked directly to the timestamp or page where they appear.</p>
-            </div>
-            <div className="flex-1 min-h-0 overflow-y-auto pb-3">
+            {/* Sub-navigation */}
+            <nav className="pt-3.5 flex items-center gap-6 overflow-x-auto overflow-y-hidden">
+                {TABS.map(({ id, label, icon: Icon }) => {
+                    const active = analyticsActiveTab === id;
 
-                {/* Sub-navigation */}
-                <nav className="pt-3.5 flex items-center gap-6 overflow-x-auto overflow-y-hidden">
-                    {TABS.map(({ id, label, icon: Icon }) => {
-                        const active = analyticsActiveTab === id;
+                    return (
+                        <button
+                            key={id}
+                            type="button"
+                            aria-current={active ? "page" : undefined}
+                            className={`flex items-center gap-2 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300 !border-b-primary-300" : "text-ink"
+                                } pb-3 border-b -mb-px transition-colors`}
+                            onClick={() => setAnalyticsActiveTab(id)}
+                        >
+                            <Icon size={14} strokeWidth={2} />
+                            {label}
+                        </button>
+                    );
+                })}
+            </nav>
 
-                        return (
-                            <button
-                                key={id}
-                                type="button"
-                                aria-current={active ? "page" : undefined}
-                                className={`flex items-center gap-2 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300 !border-b-primary-300" : "text-ink"
-                                    } pb-3 border-b -mb-px transition-colors`}
-                                onClick={() => setAnalyticsActiveTab(id)}
-                            >
-                                <Icon size={14} strokeWidth={2} />
-                                {label}
-                            </button>
-                        );
-                    })}
-                </nav>
+            <Field label="Assets">
+                <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
+            </Field>
 
-                <Field label="Assets">
-                    <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
-                </Field>
-
-                {analyticsActiveTab === TABS[0].id ? (
-                    <TimeSegmentPane
-                        sourceIds={analyticsSourceIds}
-                    />
-                ) : (
-                    <FindMomentsPane
-                        sourceIds={analyticsSourceIds}
-                    />
-                )}
-            </div>
+            {analyticsActiveTab === TABS[0].id ? (
+                <TimeSegmentPane
+                    sourceIds={analyticsSourceIds}
+                />
+            ) : (
+                <FindMomentsPane
+                    sourceIds={analyticsSourceIds}
+                />
+            )}
         </div>
+        </div >
     );
 }
 

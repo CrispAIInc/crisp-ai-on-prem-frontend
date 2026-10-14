@@ -109,12 +109,6 @@ export default function Discovery({
 
     return (
         <div className={`h-full min-h-0 flex flex-col overflow-hidden bg-white ${className}`}>
-            {/* Header */}
-            <div className="px-[18px] pt-4 pb-3 border-b border-border shrink-0">
-                <h2 className="font-display text-[14.5px] font-semibold text-ink">Search results</h2>
-                <p className="text-xs text-ink-secondary mt-0.5">Ranked matches across your workspace catalog.</p>
-            </div>
-
             {/* Search bar — index selection is optional, see indexOptions above */}
             <div className="px-[18px] pt-3.5 pb-3 shrink-0">
                 <IndexSearchBar
