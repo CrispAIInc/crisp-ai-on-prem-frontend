@@ -4,11 +4,6 @@ import { MainContext } from '../../contexts/mainContext.jsx';
 import { ANALYTICS_TABS, CREATE_TABS, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
 import AppTooltip from '../AppTooltip/index.jsx';
 
-/**
- * NavTabs - the primary section navigation, rendered directly
- * beneath the TopBar. Purely presentational aside from the
- * controlled `active` tab, so it can be reused on any page.
- */
 export default function NavTabs({ active = "media" }) {
 
   const {
