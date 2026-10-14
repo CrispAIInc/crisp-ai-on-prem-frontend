@@ -38,7 +38,6 @@ function CustomVideoPlayerSettings({
 
             {/* PLAYBACK SPEED */}
             <div className="px-2 pb-1.5">
-                {/* <div className="mb-1.5 text-[12px] text-white/70">Speed</div> */}
                 <BaseHeading text="Playback speed" className="mb-2" />
                 <div className="grid grid-cols-3 gap-1">
                     {
