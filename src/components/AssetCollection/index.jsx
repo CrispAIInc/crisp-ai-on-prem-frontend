@@ -44,7 +44,9 @@ export default function AssetCollection({
 
     const indexes = categoryOptions.filter(item => item.value !== "all");
 
-    const [openIndexes, setOpenIndexes] = useState({});
+    const [openIndexes, setOpenIndexes] = useState(indexes?.length > 0 ? {
+        [indexes[0].id]: true
+    } : {});
     const [openFormats, setOpenFormats] = useState({});
     const [confirmingId, setConfirmingId] = useState(null);
     const autoOpenedUploads = useRef(new Set());
