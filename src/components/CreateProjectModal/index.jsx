@@ -3,21 +3,41 @@ import makeApiRequest from '../../api';
 import Modal from 'react-bootstrap/Modal';
 import AddIcon from '@mui/icons-material/Add';
 import LoadingSpinner from '../LoadingSpinner';
+import { useNavigate } from 'react-router';
+import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from "../../contexts/toastContext";
 
 const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme }) => {
 
+    const navigate = useNavigate();
+
     const {
         setProjects,
         setCurrentProject
     } = useContext(ProjectContext);
+
+    const {
+        knowledgeBase,
+        currentChat
+    } = useContext(MainContext);
+
     const { notify } = useToast();
 
     const [newProjectName, setNewProjectName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [projectThumbnail] = useState(null);
     const isCreateDisabled = !newProjectName.trim();
+
+    async function exitProjectEndpoint() {
+        await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
+            sources: {
+                checked: knowledgeBase.filter(item => item.is_checked).map(item => item.source_path),
+                unchecked: knowledgeBase.filter(item => !item.is_checked).map(item => item.source_path),
+            },
+            chat: currentChat?.sessionId
+        }));
+    }
 
     const handleSave = async () => {
         try {
@@ -30,13 +50,15 @@ const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme }) => {
             formData.append("project_thumbnail", projectThumbnail);
             const { success, message, project } = await makeApiRequest(`/projects`, 'POST', formData, { 'Content-type': "multipart/form-data" });
             if (success) {
+                setProjects((prevProjects) => [project, ...prevProjects]);
+                await exitProjectEndpoint();
+                setCurrentProject(project);
                 notify({
                     variant: "success",
                     heading: "Project created successfully."
                 });
+                navigate(0);
                 hideProjectDrawer?.();
-                setProjects((prevProjects) => [project, ...prevProjects]);
-                setCurrentProject(project);
                 onHide();
             } else {
                 throw new Error(message);
