@@ -55,7 +55,7 @@ export default function BusinessIntelligenceDetails() {
     };
 
     const saveEntity = async () => {
-        const nextTitle = (entityTitleValue || selectedJsonEntity?.title)?.trim();
+        const nextTitle = entityTitleValue?.trim();
 
         if (nextTitle === undefined || nextTitle === null || nextTitle.length === 0) {
             notify({
@@ -76,7 +76,7 @@ export default function BusinessIntelligenceDetails() {
 
             setSelectedJsonEntity(updatedEntity);
 
-            const { success, message, graph_id } = await makeApiRequest("/graphs/save", 'POST', updatedEntity.graph);
+            const { success, message, graph_id } = await makeApiRequest("/graphs/save", 'POST', updatedEntity);
             if (success) {
                 setJsonEntities(prev => [...prev, { ...updatedEntity, graph_id }]);
                 setSelectedJsonEntity({ ...updatedEntity, graph_id });
