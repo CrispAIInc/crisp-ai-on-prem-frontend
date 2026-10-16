@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { MainContext } from '../../contexts/mainContext';
 
 import { Search, SearchX, Flame, Star } from "lucide-react";
@@ -29,6 +29,8 @@ export default function Discovery({
         setDiscoveryQuery,
         discoverySelectedIndexes,
         setDiscoverySelectedIndexes,
+        discoverySelectedFileTypes,
+        setDiscoverySelectedFileTypes,
         setShowSearchModal,
         knowledgeBase,
         isPlayerReady,
@@ -45,7 +47,7 @@ export default function Discovery({
 
     const hasSearched = discoveryTriggered;
 
-    const handleDiscover = async (q, indexes) => {
+    const handleDiscover = async (q, indexes, fileTypes) => {
         setDiscoveryTriggered(true);
         setDiscoveryLastQuery(q);
         setDiscoverySearchOutcome(null);
@@ -60,7 +62,8 @@ export default function Discovery({
                 indexes: indexes.map(item => {
                     let indexId = categoryOptions.find(idx => idx.value === item)?.id;
                     return indexId;
-                })
+                }),
+                file_types: fileTypes
             })
             );
 
@@ -117,6 +120,8 @@ export default function Discovery({
                     indexOptions={categoryOptions?.filter(item => item.value !== "all")}
                     selectedIndexes={discoverySelectedIndexes}
                     onSelectedIndexesChange={setDiscoverySelectedIndexes}
+                    selectedFileTypes={discoverySelectedFileTypes}
+                    onSelectedFileTypesChange={setDiscoverySelectedFileTypes}
                     onDiscover={handleDiscover}
                     isSearching={isDiscoverySearching}
                 />

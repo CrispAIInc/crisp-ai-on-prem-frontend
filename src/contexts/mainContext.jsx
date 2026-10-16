@@ -204,6 +204,7 @@ export default function MainProvider({ children, theme, setTheme }) {
     const [discoverySearchOutcome, setDiscoverySearchOutcome] = useState(null);
     const [discoveryQuery, setDiscoveryQuery] = useState("");
     const [discoverySelectedIndexes, setDiscoverySelectedIndexes] = useState([]);
+    const [discoverySelectedFileTypes, setDiscoverySelectedFileTypes] = useState([]);
     const [isDiscoverySearching, setIsDiscoverySearching] = useState(false);
     const [showSearchModal, setShowSearchModal] = useState(false);
     const [selectedNote, setSelectedNote] = useState({
@@ -1684,6 +1685,8 @@ export default function MainProvider({ children, theme, setTheme }) {
         setDiscoveryQuery,
         discoverySelectedIndexes,
         setDiscoverySelectedIndexes,
+        discoverySelectedFileTypes,
+        setDiscoverySelectedFileTypes,
         isDiscoverySearching,
         setIsDiscoverySearching,
         showSearchModal,
