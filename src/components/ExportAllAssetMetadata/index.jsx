@@ -181,7 +181,7 @@ export async function exportAssetMetadataToPDF(asset, options = {}) {
         if (!summary) return;
         sectionTitle('Executive Summary');
 
-        const trimmed = summary.length > 1400 ? `${summary.slice(0, 1400).trim()}…` : summary;
+        const trimmed = summary;
         const paragraphs = trimmed.split('\n').filter(Boolean);
 
         ensureSpace(6);
