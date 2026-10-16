@@ -246,7 +246,7 @@ function KeyFormModal({ mode, initial, onClose, onSubmit }) {
                         onClick={handleSubmit}
                         disabled={!canSubmit}
                         className={`rounded-xl px-3 py-2 text-sm font-medium transition-colors ${canSubmit
-                            ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)] text-white"
+                            ? "gradient-primary text-white"
                             : `cursor-not-allowed ${theme === "light" ? "bg-gray-200 text-gray-400" : "bg-textColor-200/30 text-textColor-100"}`}`}
                     >
                         {isEdit ? "Save" : "Create"}
