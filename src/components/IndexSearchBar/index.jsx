@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X, ChevronDown, Search } from "lucide-react";
+import { X, SlidersHorizontal, Search } from "lucide-react";
 import LoadingSpinner from '../LoadingSpinner';
 
 export default function IndexSearchBar({
@@ -100,7 +100,7 @@ export default function IndexSearchBar({
                             aria-expanded={dropdownOpen}
                             className="shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-ink-muted hover:bg-surface-alt hover:text-ink"
                         >
-                            <ChevronDown size={14} className={`transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+                            <SlidersHorizontal size={14} />
                         </button>
                     )}
                 </div>
