@@ -212,7 +212,7 @@ function ResultGroup({ label, icon: Icon = Star, tone = "default", count, cards 
 function StatePlaceholder({ title, description, animated = false, hasError = false }) {
     return (
         <div className="flex flex-col items-center justify-center text-center gap-2.5 h-full py-8 px-2">
-            <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-ink-muted shrink-0">
+            <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-ink-muted shrink-0 ${hasError ? 'bg-red-100 text-red-400' : 'bg-gray-100'}`}>
                 {
                     hasError ? (
                         <SearchX size={18} />
