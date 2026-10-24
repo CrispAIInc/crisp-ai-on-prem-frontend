@@ -1,18 +1,16 @@
+import { Clock, Info, Sparkles } from "lucide-react";
 import { useContext, useEffect } from "react";
-import { Sparkles, Info, Clock, Search, Check } from "lucide-react";
-import SourcesDropdown from "../SourcesDropdown";
-import { MainContext } from '../../contexts/mainContext';
-import SegmentDescription from '../SegmentDescription';
-import TimestampPicker from '../TimestampPicker';
-import { ProjectContext } from '../../contexts/projectContext';
-import { formatTime, toSeconds } from '../../utils';
 import makeApiRequest, { axiosInstance } from '../../api';
-import useAuth from '../../hooks/useAuth';
+import { MainContext } from '../../contexts/mainContext';
+import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from '../../contexts/toastContext';
-import LoadingSpinner from '../LoadingSpinner';
 import { MAIN_STUDIO_PANELS } from '../../globals';
-import Field from '../Field';
+import useAuth from '../../hooks/useAuth';
+import { formatTime, toSeconds } from '../../utils';
 import BaseHeading from '../BaseHeading';
+import Field from '../Field';
+import SourcesDropdown from "../SourcesDropdown";
+import TimestampPicker from '../TimestampPicker';
 
 const TABS = [
     { id: "time-segments", label: "Time segment description", icon: Sparkles, info: "Analyze a specific video time range and generate precise breakdown." },
@@ -89,7 +87,6 @@ export default function Analytics() {
                 />
             )}
         </div>
-        </div >
     );
 }
 
@@ -119,11 +116,9 @@ function TimeSegmentPane({
         setTimeSegmentFullLength,
         isGeneratingTimeSegment,
         setIsGeneratingTimeSegment,
-        timeSegmentResultsDescription,
         setTimeSegmentResultsDescription,
         isInfoTooltipOpenTimeSegment,
         setIsInfoTooltipOpenTimeSegment,
-        formattedTimeSegment,
         setFormattedTimeSegment,
         jsonInputTimeSegment,
         setJsonInputTimeSegment,
