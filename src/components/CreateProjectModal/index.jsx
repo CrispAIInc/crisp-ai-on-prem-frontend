@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import makeApiRequest from '../../api';
 import Modal from 'react-bootstrap/Modal';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,7 +8,7 @@ import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from "../../contexts/toastContext";
 
-const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme }) => {
+const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme, insideComponent = true }) => {
 
     const navigate = useNavigate();
 
@@ -24,16 +24,23 @@ const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme }) => {
 
     const { notify } = useToast();
 
+    const projectNameInputRef = useRef(null);
+
     const [newProjectName, setNewProjectName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [projectThumbnail] = useState(null);
     const isCreateDisabled = !newProjectName.trim();
 
+
+    useEffect(() => {
+        projectNameInputRef?.current?.focus();
+    }, []);
+
     async function exitProjectEndpoint() {
         await makeApiRequest('/exit-project', 'PUT', JSON.stringify({
             sources: {
-                checked: knowledgeBase.filter(item => item.is_checked).map(item => item.source_path),
-                unchecked: knowledgeBase.filter(item => !item.is_checked).map(item => item.source_path),
+                checked: knowledgeBase?.filter(item => item.is_checked)?.map(item => item.source_path),
+                unchecked: knowledgeBase?.filter(item => !item.is_checked)?.map(item => item.source_path),
             },
             chat: currentChat?.sessionId
         }));
@@ -51,7 +58,10 @@ const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme }) => {
             const { success, message, project } = await makeApiRequest(`/projects`, 'POST', formData, { 'Content-type': "multipart/form-data" });
             if (success) {
                 setProjects((prevProjects) => [project, ...prevProjects]);
-                await exitProjectEndpoint();
+                // save and exit current project if the creation was done inside the component
+                if (insideComponent) {
+                    await exitProjectEndpoint();
+                }
                 setCurrentProject(project);
                 notify({
                     variant: "success",
@@ -121,6 +131,7 @@ const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme }) => {
                             Project Name
                         </label>
                         <input
+                            ref={projectNameInputRef}
                             type="text"
                             name="indexName"
                             placeholder="Project name"

@@ -118,6 +118,7 @@ hover:shadow-purple-500/20 cursor-pointer`} onClick={() => setIsModalOpen(true)}
             {isModalOpen && <CreateProjectModal
                 show={isModalOpen}
                 onHide={() => setIsModalOpen(false)}
+                insideComponent={false}
             />}
         </div>
     );
