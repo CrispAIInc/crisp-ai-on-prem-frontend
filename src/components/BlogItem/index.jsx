@@ -1,3 +1,99 @@
+// import React, { useContext, useState } from 'react';
+// import ActionMenu from '../ActionMenu';
+// import LoadingSpinner from '../LoadingSpinner';
+// import { MainContext } from '../../contexts/mainContext';
+
+// import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+// import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+// import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+// import makeApiRequest from '../../api';
+// import { useToast } from '../../contexts/toastContext';
+// import BlogTitleUpdaterModal from '../BlogTitleUpdaterModal';
+
+// const BlogItem = ({ blog, onClick }) => {
+
+//     const {
+//         theme,
+//         setBlogs
+//     } = useContext(MainContext);
+
+//     const { notify } = useToast();
+
+//     const [isModalOpen, setIsModalOpen] = useState(false);
+//     const [isDeleting, setIsDeleting] = useState(false);
+//     const [showActionMenu, setShowActionMenu] = useState(false);
+
+//     const handleMouseEnterBlog = () => {
+//         setShowActionMenu(true);
+//     };
+
+//     const handleMouseLeaveBlog = () => {
+//         setShowActionMenu(false);
+//     };
+
+//     const handleDelete = async () => {
+//         setIsDeleting(true);
+//         try {
+//             const { success, message } = await makeApiRequest(`blog/${blog.blog_id}`, 'DELETE');
+//             if (success) {
+//                 setBlogs(prev => prev.filter(b => b.blog_id !== blog.blog_id));
+//                 notify({
+//                     variant: 'success',
+//                     heading: 'Blog deleted',
+//                 });
+//             }
+//             else {
+//                 throw new Error(message);
+//             }
+//         } catch (error) {
+//             console.error("Error deleting blog:", error.message);
+//             notify({
+//                 variant: 'error',
+//                 heading: 'Error deleting blog',
+//                 subheading: error.message || "An error occurred while deleting the blog. Please try again.",
+//             });
+//         } finally {
+//             setIsDeleting(false);
+//         }
+//     };
+
+//     return (
+//         <>
+//             <div key={blog.blog_id} className={`flex py-2 items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10'} ${!showActionMenu && 'pl-2'} transition-colors`} onMouseEnter={handleMouseEnterBlog} onMouseLeave={handleMouseLeaveBlog}>
+//                 {showActionMenu && (
+//                     <ActionMenu
+//                         actions={[
+//                             {
+//                                 label: "Edit title",
+//                                 icon: <EditOutlinedIcon />,
+//                                 onClick: (e) => {
+//                                     e.stopPropagation();
+//                                     setIsModalOpen(true);
+//                                 },
+//                             },
+//                             {
+//                                 label: "Delete",
+//                                 icon: isDeleting ? <LoadingSpinner isSmall /> : <DeleteOutlineOutlinedIcon />,
+//                                 onClick: () => handleDelete(),
+//                             },
+//                         ]}
+//                     />
+//                 )}
+//                 <ArticleOutlinedIcon className={`mr-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
+//                 <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(blog)}>{blog.title}</p>
+//             </div>
+
+//             {
+//                 isModalOpen && (
+//                     <BlogTitleUpdaterModal show={isModalOpen} onHide={() => setIsModalOpen(false)} blog={blog} />
+//                 )
+//             }
+//         </>
+//     );
+// };
+
+// export default BlogItem;
+
 import React, { useContext, useState } from 'react';
 import ActionMenu from '../ActionMenu';
 import LoadingSpinner from '../LoadingSpinner';
@@ -10,11 +106,13 @@ import makeApiRequest from '../../api';
 import { useToast } from '../../contexts/toastContext';
 import BlogTitleUpdaterModal from '../BlogTitleUpdaterModal';
 
-const BlogItem = ({ blog, onClick }) => {
+const BlogItem = ({ blog, onClick, active = false }) => {
 
     const {
         theme,
-        setBlogs
+        setBlogs,
+        selectedBlog,
+        setSelectedBlog
     } = useContext(MainContext);
 
     const { notify } = useToast();
@@ -37,6 +135,9 @@ const BlogItem = ({ blog, onClick }) => {
             const { success, message } = await makeApiRequest(`blog/${blog.blog_id}`, 'DELETE');
             if (success) {
                 setBlogs(prev => prev.filter(b => b.blog_id !== blog.blog_id));
+                if (selectedBlog?.blog_id === blog.blog_id) {
+                    setSelectedBlog(null);
+                }
                 notify({
                     variant: 'success',
                     heading: 'Blog deleted',
@@ -59,7 +160,7 @@ const BlogItem = ({ blog, onClick }) => {
 
     return (
         <>
-            <div key={blog.blog_id} className={`flex py-2 items-center rounded-md cursor-pointer ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10'} ${!showActionMenu && 'pl-2'} transition-colors`} onMouseEnter={handleMouseEnterBlog} onMouseLeave={handleMouseLeaveBlog}>
+            <div key={blog.blog_id} className={`flex py-2 items-center rounded-md cursor-pointer ${active ? 'bg-primary-100/40' : ''} ${theme === 'light' ? 'hover:bg-textColor-100/25' : 'hover:bg-light-hover-200/10'} ${!showActionMenu && 'pl-2'} transition-colors`} onMouseEnter={handleMouseEnterBlog} onMouseLeave={handleMouseLeaveBlog}>
                 {showActionMenu && (
                     <ActionMenu
                         actions={[
@@ -80,7 +181,14 @@ const BlogItem = ({ blog, onClick }) => {
                     />
                 )}
                 <ArticleOutlinedIcon className={`mr-2 ${theme === 'light' ? 'text-textColor-200' : 'text-textColor-100'}`} />
-                <p className={`${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'}`} onClick={() => onClick(blog)}>{blog.title}</p>
+                <button
+                    type="button"
+                    aria-current={active || blog.blog_id === selectedBlog?.blog_id ? "true" : undefined}
+                    className={`min-w-0 flex-1 truncate text-left ${theme === 'light' ? 'text-textColor-300' : 'text-textColor-100'} ${active || blog.blog_id === selectedBlog?.blog_id ? 'font-semibold' : ''}`}
+                    onClick={() => onClick(blog)}
+                >
+                    {blog.title}
+                </button>
             </div>
 
             {
