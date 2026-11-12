@@ -89,7 +89,7 @@ export default function SourcesDropdown({
                 type="button"
                 onClick={() => setOpen((v) => !v)}
                 aria-expanded={open}
-                className="w-full flex items-center justify-between gap-2 border border-border rounded-lg px-3 py-2.5 text-[12.5px] text-ink bg-surface hover:border-border-strong"
+                className="w-full flex items-center justify-between gap-2 border border-border rounded-lg p-2 text-[11px] text-ink bg-surface hover:border-border-strong"
             >
                 {selected.length === 0 ? (
                     <span className="text-ink-muted">{placeholder}</span>
