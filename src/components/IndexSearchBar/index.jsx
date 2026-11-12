@@ -16,7 +16,8 @@ export default function IndexSearchBar({
     selectedFileTypes: selectedFileTypesProp,
     onSelectedFileTypesChange,
     onDiscover,
-    isSearching
+    isSearching,
+    foundResult
 }) {
     const [internalQuery, setInternalQuery] = useState("");
     const [internalSelected, setInternalSelected] = useState([]);
@@ -30,6 +31,8 @@ export default function IndexSearchBar({
     const setSelectedIndexes = onSelectedIndexesChange ?? setInternalSelected;
     const selectedFileTypes = selectedFileTypesProp ?? internalSelectedFileTypes;
     const setSelectedFileTypes = onSelectedFileTypesChange ?? setInternalSelectedFileTypes;
+
+    const [hasResults, setHasResults] = useState(foundResult ?? false);
 
     const canDiscover = query.trim().length > 0 || selectedIndexes.length > 0 || selectedFileTypes.length > 0;
     const discover = () => onDiscover?.(query, selectedIndexes, selectedFileTypes);
@@ -102,17 +105,22 @@ export default function IndexSearchBar({
                 <button
                     type="button"
                     disabled={!canDiscover}
-                    onClick={discover}
+                    onClick={hasResults ? () => {
+                        setQuery('');
+                        setSelectedIndexes([]);
+                        setSelectedFileTypes([]);
+                        setHasResults(false);
+                    } : discover}
                     className="shrink-0 rounded-[10px] px-2 py-1 text-xs font-bold text-white bg-gradient-to-r from-primary-200 to-primary-300 hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
                 >
                     {
                         isSearching ? (
                             <LoadingSpinner isSmall />
-                        ) : (
+                        ) : !hasResults ? (
                             <Search size={13} />
-                        )
+                        ) : null
                     }
-                    Discover
+                    {hasResults ? "Clear" : "Discover"}
                 </button>
             </div>
 

@@ -124,6 +124,7 @@ export default function Discovery({
                     onSelectedFileTypesChange={setDiscoverySelectedFileTypes}
                     onDiscover={handleDiscover}
                     isSearching={isDiscoverySearching}
+                    foundResult={hasSearched && discoverySearchOutcome === "found"}
                 />
             </div>
 
