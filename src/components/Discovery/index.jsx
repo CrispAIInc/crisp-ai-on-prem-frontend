@@ -110,6 +110,13 @@ export default function Discovery({
         }
     };
 
+    function clearDiscoveryResults() {
+        setDiscoveredSources(null);
+        setDiscoverySearchOutcome(null);
+        setDiscoveryTriggered(false);
+        setDiscoveryLastQuery('');
+    }
+
     return (
         <div className={`h-full min-h-0 flex flex-col overflow-hidden bg-white ${className}`}>
             {/* Search bar — index selection is optional, see indexOptions above */}
@@ -125,6 +132,7 @@ export default function Discovery({
                     onDiscover={handleDiscover}
                     isSearching={isDiscoverySearching}
                     foundResult={hasSearched && discoverySearchOutcome === "found"}
+                    clearDiscoveryResults={clearDiscoveryResults}
                 />
             </div>
 

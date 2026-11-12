@@ -17,7 +17,8 @@ export default function IndexSearchBar({
     onSelectedFileTypesChange,
     onDiscover,
     isSearching,
-    foundResult
+    foundResult,
+    clearDiscoveryResults
 }) {
     const [internalQuery, setInternalQuery] = useState("");
     const [internalSelected, setInternalSelected] = useState([]);
@@ -110,6 +111,7 @@ export default function IndexSearchBar({
                         setSelectedIndexes([]);
                         setSelectedFileTypes([]);
                         setHasResults(false);
+                        clearDiscoveryResults();
                     } : discover}
                     className="shrink-0 rounded-[10px] px-2 py-1 text-xs font-bold text-white bg-gradient-to-r from-primary-200 to-primary-300 hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
                 >
