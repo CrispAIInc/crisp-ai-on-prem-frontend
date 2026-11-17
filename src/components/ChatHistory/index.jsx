@@ -175,7 +175,7 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef, sourceIds, s
                     </div>
                 ) : (
                     <SourcesDropdown
-                        isMultiple={false}
+                        // isMultiple={false}
                         sources={knowledgeBase}
                         selectedSourceIds={sourceIds}
                         onSelectedSourceIdsChange={setSourceIds}
