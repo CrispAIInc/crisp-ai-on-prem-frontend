@@ -17,7 +17,9 @@ export default function ChatInput({
     showCursor,
     isFetchingRefs,
     sourceIds,
-    setSourceIds
+    setSourceIds,
+    selectedIndexIds,
+    setSelectedIndexIds
 }) {
 
     const { isProjectReadOnly } = useContext(ProjectContext);
@@ -117,6 +119,8 @@ export default function ChatInput({
                     crispWizInputContainerRef={crispWizInputContainerRef}
                     sourceIds={sourceIds}
                     setSourceIds={setSourceIds}
+                    selectedIndexIds={selectedIndexIds}
+                    setSelectedIndexIds={setSelectedIndexIds}
                 />
             </div>
         </div>

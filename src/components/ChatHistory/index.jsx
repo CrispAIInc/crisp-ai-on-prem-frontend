@@ -12,7 +12,7 @@ import SourcesDropdown from '../SourcesDropdown';
 import { Check, ChevronDown } from 'lucide-react';
 import makeApiRequest from '../../api';
 
-function ChatHistory({ crispWizInputContainerRef, crispWizInputRef, sourceIds, setSourceIds }) {
+function ChatHistory({ crispWizInputContainerRef, crispWizInputRef, sourceIds, setSourceIds, selectedIndexIds, setSelectedIndexIds }) {
 
     const {
         knowledgeBase,
@@ -32,7 +32,6 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef, sourceIds, s
     // const [isHorizontalChatHistoryVisibile, setIsHorizontalChatHistoryVisibile] = useState(false);
     const [isChatHistoryPopupOpen, setIsChatHistoryPopupOpen] = useState(false);
     const [selectionMode, setSelectionMode] = useState('assets');
-    const [selectedIndexIds, setSelectedIndexIds] = useState([]);
     const [isIndexesDropdownOpen, setIsIndexesDropdownOpen] = useState(false);
     const keyboardArrowUpRef = useRef(null);
     const ChatHistoryPopupRef = useRef(null);
@@ -57,17 +56,6 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef, sourceIds, s
             : [...selectedIndexIds, indexId];
         setSelectedIndexIds(nextSelectedIndexIds);
         setSourceIds([]);
-        await handleIndexEmbeddings();
-    }
-
-    async function handleIndexEmbeddings() {
-        await makeApiRequest(
-            `/handle-embeddings`,
-            "POST",
-            JSON.stringify({
-                indexes: selectedIndexIds,
-            })
-        );
     }
 
     function changeSelectionMode(mode) {

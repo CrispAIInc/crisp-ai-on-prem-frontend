@@ -170,7 +170,7 @@ const Interaction = () => {
 
     // const [selectedLanguage, setSelectedLanguage] = useState("en"); // chat default language
 
-
+    const [selectedIndexIds, setSelectedIndexIds] = useState([]);
 
     const crispWizInputRef = useRef(null);
     const crispWizInputContainerRef = useRef(null);
@@ -254,7 +254,7 @@ const Interaction = () => {
 
         try {
             // add or remove embeddings from Vector store
-            if (sourceIds.length > 0) {
+            if (sourceIds.length > 0 || selectedIndexIds.length > 0) {
 
                 const sourcesUsed = knowledgeBase
                     .filter(({ source_id }) => sourceIds.includes(source_id))
@@ -268,12 +268,13 @@ const Interaction = () => {
                     "post",
                     JSON.stringify({
                         sources: sourcesUsed,
+                        indexes: selectedIndexIds
                     })
                 );
             }
 
             let sessionID = null; // Variable to store the session ID
-            const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${sourceIds.length > 0 ? false : true}`, {
+            const eventSource = new EventSourcePolyfill(`${API_ENDPOINT}/message/${encodeURIComponent(userMessage?.replace(/\n/g, ' '))}/${(sourceIds.length > 0 || selectedIndexIds.length > 0) ? false : true}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     SessionId: currentChat?.sessionId,
@@ -651,6 +652,8 @@ const Interaction = () => {
                             isFetchingRefs={isFetchingRefs}
                             sourceIds={sourceIds}
                             setSourceIds={setSourceIds}
+                            selectedIndexIds={selectedIndexIds}
+                            setSelectedIndexIds={setSelectedIndexIds}
                         />
                     </div>
                 </div>
