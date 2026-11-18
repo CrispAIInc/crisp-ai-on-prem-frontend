@@ -10,6 +10,7 @@ import Chip from '../Chip';
 import { ProjectContext } from '../../contexts/projectContext';
 import SourcesDropdown from '../SourcesDropdown';
 import { Check, ChevronDown } from 'lucide-react';
+import makeApiRequest from '../../api';
 
 function ChatHistory({ crispWizInputContainerRef, crispWizInputRef, sourceIds, setSourceIds }) {
 
@@ -50,12 +51,23 @@ function ChatHistory({ crispWizInputContainerRef, crispWizInputRef, sourceIds, s
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    function toggleIndex(indexId) {
+    async function toggleIndex(indexId) {
         const nextSelectedIndexIds = selectedIndexIds.includes(indexId)
             ? selectedIndexIds.filter(id => id !== indexId)
             : [...selectedIndexIds, indexId];
         setSelectedIndexIds(nextSelectedIndexIds);
         setSourceIds([]);
+        await handleIndexEmbeddings();
+    }
+
+    async function handleIndexEmbeddings() {
+        await makeApiRequest(
+            `/handle-embeddings`,
+            "POST",
+            JSON.stringify({
+                indexes: selectedIndexIds,
+            })
+        );
     }
 
     function changeSelectionMode(mode) {
