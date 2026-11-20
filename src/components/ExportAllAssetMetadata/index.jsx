@@ -1,5 +1,6 @@
 // import { jsPDF } from 'jspdf';
 import React, { useState } from 'react';
+import { jsPDF } from 'jspdf';
 import {
     FileDown
 } from "lucide-react";
