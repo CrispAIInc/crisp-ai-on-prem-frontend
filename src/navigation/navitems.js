@@ -2,7 +2,6 @@ import {
     Search,
     Sparkles,
     MessageCircle,
-    ClockFading,
     FolderOpen,
     SquarePen,
 } from "lucide-react";
@@ -12,9 +11,8 @@ import {
  */
 import Media from "../components/Media";
 import Discovery from "../components/Discovery";
-import Interaction from "../components/Interaction";
-import Analytics from "../components/Analytics";
 import Enrich from "../components/Enrich";
+import Engage from "../components/Engage";
 import Create from "../components/Create";
 
 
@@ -25,8 +23,7 @@ export const NAV_ITEMS = [
     {
         key: "discovery", label: "Discover", icon: Search, component: Discovery, description: "Ranked matches across your workspace catalog."
     },
-    { key: "interaction", label: "Corpus Interaction", icon: MessageCircle, component: Interaction, description: "Ask Crisp Wiz questions and interact with your content conversationally." },
+    { key: "engage", label: "Engage", icon: MessageCircle, component: Engage, description: "Interact with your content and analyze your assets." },
     { key: "enrich", label: "Enrich", icon: Sparkles, component: Enrich, tab: "metadata", description: "Generate structured metadata and business intelligence from your assets." },
     { key: "create", label: "Create", icon: SquarePen, component: Create, tab: "blogs", description: "Generate blogs, shorts, and dashboards from your assets." },
-    { key: "analytics", label: "Asset Interaction", icon: ClockFading, component: Analytics, tab: "time-segments", description: "Analyze content to identify important information, events, and insights, linked directly to the timestamp or page where they appear." },
 ];

@@ -56,6 +56,10 @@ export const ENRICH_TABS = {
     METADATA: "metadata",
     BUSINESS_INTELLIGENCE: "business-intelligence"
 };
+export const ENGAGE_TABS = {
+    CORPUS_INTERACTION: "corpus-interaction",
+    ASSET_INTERACTION: "asset-interaction"
+};
 export const CREATE_TABS = {
     BLOGS: "blogs",
     SHORTS: "shorts",

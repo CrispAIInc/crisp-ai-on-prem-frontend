@@ -3,7 +3,7 @@ import { Info } from "lucide-react";
 import { useContext } from 'react';
 import AppTooltip from '../AppTooltip/index.jsx';
 import { MainContext } from '../../contexts/mainContext.jsx';
-import { ANALYTICS_TABS, CREATE_TABS, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
+import { ANALYTICS_TABS, CREATE_TABS, ENGAGE_TABS, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
 
 export default function NavTabs({ active = "media" }) {
 
@@ -12,6 +12,8 @@ export default function NavTabs({ active = "media" }) {
     setActiveStudioPanel,
     setAnalyticsTab,
     enrichActiveTab,
+    engageActiveTab,
+    analyticsActiveTab,
     createActiveTab,
     jsonEntities,
     setSelectedJsonEntity,
@@ -34,6 +36,15 @@ export default function NavTabs({ active = "media" }) {
         setSelectedJsonEntity(jsonEntities[0]);
       }
 
+    }
+
+    else if (key === "engage") {
+      const engagePanel =
+        engageActiveTab === ENGAGE_TABS.ASSET_INTERACTION
+          ? analyticsActiveTab
+          : null;
+
+      setActiveStudioPanel(engagePanel);
     }
 
     else if (key === "create") {

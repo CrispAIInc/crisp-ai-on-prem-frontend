@@ -19,7 +19,7 @@ import CustomVideoPlayer from '../CustomVideoPlayer/index.jsx';
 import ImageViewer from "../ImageViewer";
 import Metadata, { getDefaultMetadataActiveTab } from '../Metadata/index.jsx';
 import MetadataSkeleton from '../Skeletons/MetadataSkeleton';
-import { ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
+import { ENGAGE_TABS, ENRICH_TABS, MAIN_STUDIO_PANELS } from '../../globals.js';
 
 const MetadataPanel = ({ workspaceContainer }) => {
   const {
@@ -41,6 +41,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     activeTab,
     setActiveStudioPanel,
     analyticsActiveTab,
+    engageActiveTab,
     enrichActiveTab,
     currentAssets,
   } = useContext(MainContext);
@@ -281,7 +282,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
   };
 
   const onClose = () => {
-    if (activeTab === "analytics") {
+    if (activeTab === "engage" && engageActiveTab === ENGAGE_TABS.ASSET_INTERACTION) {
       setActiveStudioPanel(analyticsActiveTab);
     } else if (activeTab === "enrich") {
       setActiveStudioPanel(
