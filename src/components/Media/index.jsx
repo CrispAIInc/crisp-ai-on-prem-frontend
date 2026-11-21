@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import socket from "../../config/socket";
-import { Upload, FolderOpen } from "lucide-react";
+import { Upload } from "lucide-react";
 import AddSourceModal from "../AddSourceModal";
 import FileUploaderModal from "../FileUploaderModal";
 import SourceExplorer from "../SourceExplorer";
@@ -18,7 +18,7 @@ import ConfirmationModal from '../ConfirmationModal/index.jsx';
 
 const MEDIA_NAV = [
     { key: "ingest", label: "Ingest", icon: Upload },
-    { key: "collection", label: "Collection", icon: FolderOpen },
+    // { key: "collection", label: "Collection", icon: FolderOpen },
 ];
 
 export default function Media() {
