@@ -7,8 +7,6 @@ import { useNavigate } from 'react-router';
 import { MainContext } from '../../contexts/mainContext';
 import { ProjectContext } from '../../contexts/projectContext';
 import { useToast } from "../../contexts/toastContext";
-import { useNavigate } from 'react-router';
-import { MainContext } from '../../contexts/mainContext';
 
 const CreateProjectModal = ({ show, onHide, hideProjectDrawer, theme, insideComponent = true }) => {
 

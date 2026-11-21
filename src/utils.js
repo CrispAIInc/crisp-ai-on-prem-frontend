@@ -621,14 +621,3 @@ export function formatDate(isoString) {
 export function getFileTypeLabel(fileType) {
     return FILE_TYPES[fileType];
 }
-
-export function assetLength(asset) {
-    switch (asset.file_type) {
-        case "video":
-            return formatDuration(asset.source_duration);
-        case "pdf":
-            return `${asset?.total_pages || 0} pages`;
-        default:
-            return null;
-    }
-}
