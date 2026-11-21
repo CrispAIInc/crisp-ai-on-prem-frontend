@@ -31,7 +31,7 @@ function CharacterCard({ character, source }) {
             <div className="flex items-center justify-between mb-1">
 
                 <div className="flex items-center gap-2">
-                    <div className={`w-6 h-6 rounded-full text-xs p-2 text-white flex items-center justify-center font-semibold ${theme === "light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"}`}>
+                    <div className={`w-6 h-6 rounded-full text-xs p-2 text-white flex items-center justify-center font-semibold gradient-primary`}>
                         {character?.character_name?.charAt(0)?.toLowerCase()}{character?.character_name?.split(' ')?.[1]?.charAt(0)?.toLowerCase()}
                     </div>
 

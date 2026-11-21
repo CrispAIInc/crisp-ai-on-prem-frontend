@@ -63,6 +63,7 @@ const ChatMessage = ({ text, refs, timestamps }) => {
                         })}
                     </ul>
                 )} */}
+
                 {refs?.videoLinks?.length > 0 && (
                     <ul className="flex flex-col gap-1 pl-1 text-sm min-w-0">
                         {refs.videoLinks.map((video, index) => (

@@ -110,14 +110,14 @@ function BlogViewerModal({ show, onHide }) {
                         </div>
                         <div className="flex gap-2 items-center">
                             <div title="Blog Details">
-                                <InfoIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer ${theme === " light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} right-5 top-10`} onClick={handleToggleBlogProps} />
+                                <InfoIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer gradient-primary right-5 top-10`} onClick={handleToggleBlogProps} />
                             </div>
                             <div title="Download" onClick={handleDownload}>
                                 {
                                     isDownloading ? (
                                         <LoadingSpinner isSmall />
                                     ) : (
-                                        <FileDownloadIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer ${theme === " light" ? "bg-[linear-gradient(90deg,#a99df2,#d992b1)]" : "bg-[linear-gradient(90deg,#755bea,#b76894)]"} right-5 top-10`} />
+                                        <FileDownloadIcon className={`p-2 z-50 !text-[28px] text-white rounded-full cursor-pointer gradient-primary right-5 top-10`} />
                                     )
                                 }
                             </div>

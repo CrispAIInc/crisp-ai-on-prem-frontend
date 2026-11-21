@@ -44,6 +44,7 @@ const MetadataPanel = ({ workspaceContainer }) => {
     engageActiveTab,
     enrichActiveTab,
     currentAssets,
+    onThumbnailClick
   } = useContext(MainContext);
 
 

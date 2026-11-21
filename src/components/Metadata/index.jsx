@@ -178,8 +178,6 @@ export default function Metadata({
 function SearchPane({ query: queryProp, onQueryChange }) {
     const {
         currentResource,
-        selectedCategory,
-        selectedFormat,
         setDiscoveredSources,
         setShowSearchModal,
         knowledgeBase,

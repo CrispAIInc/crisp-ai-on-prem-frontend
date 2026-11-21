@@ -99,6 +99,7 @@ export default function MediaCard({ source, onOpen, onToggle, onUpdate, onDelete
                     <Icon size={30} className="text-white/40" />
                 )}
 
+
                 {
                     source.file_type !== "img" && (
                         <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80">{assetLength(source)}</span>

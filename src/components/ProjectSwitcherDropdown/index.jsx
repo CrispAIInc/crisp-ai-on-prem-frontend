@@ -53,6 +53,7 @@ function ProjectSwitcherDropdown() {
             document.removeEventListener("keydown", handleKeyDown);
         };
     }, [showProjects]);
+
     const [wantedProjectId, setWantedProjectId] = useState(null);
     const [isSwitchingPending, setIsSwitchingPending] = useState(false);
 

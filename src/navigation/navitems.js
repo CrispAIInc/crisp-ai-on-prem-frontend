@@ -2,6 +2,7 @@ import {
     Search,
     Sparkles,
     MessageCircle,
+    ClockFading,
     FolderOpen,
     SquarePen,
 } from "lucide-react";
@@ -13,6 +14,8 @@ import Media from "../components/Media";
 import Discovery from "../components/Discovery";
 import Enrich from "../components/Enrich";
 import Engage from "../components/Engage";
+import Interaction from "../components/Interaction";
+import Analytics from "../components/Analytics";
 import Create from "../components/Create";
 
 

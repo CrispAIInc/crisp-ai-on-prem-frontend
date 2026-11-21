@@ -49,8 +49,6 @@ export default function CustomVideoPlayer({
     seekToHighlight
 }) {
 
-
-
     const internalRef = useRef(null);
     const containerRef = useRef(null);
     const settingsMenuRef = useRef(null);

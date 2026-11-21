@@ -1,5 +1,4 @@
 import { NAV_ITEMS } from "../../navigation/navitems.js";
-import { Info } from "lucide-react";
 import { useContext } from 'react';
 import AppTooltip from '../AppTooltip/index.jsx';
 import { MainContext } from '../../contexts/mainContext.jsx';
@@ -98,7 +97,7 @@ export default function NavTabs({ active = "media" }) {
                       data-tooltip-id={`nav-${key}-tooltip`}
                       data-tooltip-content={description}
                     >
-                      <Info size={13} strokeWidth={2} />
+                      <Icon size={13} strokeWidth={2} />
                     </span>
                   )}
                 </button>

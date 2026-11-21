@@ -479,8 +479,22 @@ export function sortByDate(array, dateKey = "created_at", order = "asc") {
     });
 }
 
+export function getFileTyleLabel(fileType) {
+    return FILE_TYPES[fileType];
+}
+
+export function assetLength(asset) {
+    switch (asset.file_type) {
+        case "video":
+            return formatDuration(asset.source_duration);
+        case "pdf":
+            return `${asset?.total_pages || 0} pages`;
+        default:
+            return null;
+    }
+}
+
 export const extractThumbnail = (file) => {
-    // const thumbnails = files.map((file) => {
     const type = file.type;
     const preview =
         type.startsWith('image/') || type.startsWith('video/')

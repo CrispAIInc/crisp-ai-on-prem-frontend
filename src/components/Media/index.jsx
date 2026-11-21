@@ -1,20 +1,18 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import socket from "../../config/socket";
 import { Upload } from "lucide-react";
-import AddSourceModal from "../AddSourceModal";
-import FileUploaderModal from "../FileUploaderModal";
-import SourceExplorer from "../SourceExplorer";
-import MediaCard from "../MediaCard";
-import { UpdateFilenameModal } from "../ContentSection";
+import { useContext, useEffect, useRef, useState } from "react";
+import makeApiRequest from "../../api";
+import socket from "../../config/socket";
 import { MainContext } from "../../contexts/mainContext.jsx";
 import { ProjectContext } from "../../contexts/projectContext.jsx";
 import { useToast } from "../../contexts/toastContext.jsx";
-import makeApiRequest from "../../api";
 import { extractThumbnail, generateRandomHash, getFileType } from "../../utils.js";
-import NoData from '../NoData/index.jsx';
+import AddSourceModal from "../AddSourceModal";
 import AssetCollection from '../AssetCollection/index.jsx';
-import AnimatedText from '../AnimatedText/index.jsx';
+import { UpdateFilenameModal } from "../ContentSection";
+import FileUploaderModal from "../FileUploaderModal";
+import SourceExplorer from "../SourceExplorer";
 import ConfirmationModal from '../ConfirmationModal/index.jsx';
+import NoData from '../NoData/index.jsx';
 
 const MEDIA_NAV = [
     { key: "ingest", label: "Ingest", icon: Upload },
@@ -26,7 +24,7 @@ export default function Media() {
         categoryOptions,
         formatOptions,
         currentResource,
-        displayedSources = [],
+        isKnowledgeBaseFetching,
         setShowMetadata,
         isDetailedMode,
         handleCheckboxChange,
@@ -46,7 +44,6 @@ export default function Media() {
         setFrameExtractionRate,
         setIsDetailedMode,
         setVideoCaptionContext,
-        isKnowledgeBaseFetching,
         setSelectedCategory,
         setCategoryOptions
     } = useContext(MainContext);
@@ -109,9 +106,11 @@ export default function Media() {
      * +++++++++++++ UPLOAD +++++++++++++++
      */
 
-    const [uploadStatus, setUploadStatus] = useState("idle");
+
+    const [uploadStatus, setUploadStatus] = useState("idle"); // 'idle' | 'uploading' | 'success' | 'error'
 
     function handleProgressUpdate(data) {
+
         const currentIndex = Number(data?.currentIndex ?? -1);
 
         // Update knowledgeBase (source of truth); displayedSources is derived from it
@@ -226,7 +225,9 @@ export default function Media() {
 
         socket.on('upload_error', (data) => {
             console.log('Upload error:', data);
+
             setUploadStatus('error');
+
         });
 
         socket.on('upload_complete', (data) => {
@@ -304,7 +305,7 @@ export default function Media() {
         try {
             setUploadStatus("uploading");
             setIsFileUploading(true);
-            setShowAddModal(false); // Reset progress update counter
+            setShowAddModal(false);
 
             const files = _files || Array.from(event.target.files);
             const processedFiles = files.map(file => file.name);
@@ -429,7 +430,6 @@ export default function Media() {
                 heading: "Oops!",
                 subheading: "Failed to upload new source. Please try again.",
             });
-
             setKnowledgeBase(prev => prev.filter(item => !('progress' in item)));
         } finally {
             disconnectSocket();
@@ -483,7 +483,7 @@ export default function Media() {
 
             notify({
                 variant: "success",
-                heading: "Source deleted successfully!",
+                heading: "Asset deleted successfully!",
             });
             if (items.find(i => i?.source_path === currentResource?.source_path)) {
                 setCurrentResource(null);
@@ -580,8 +580,6 @@ export default function Media() {
                 })}
             </nav>
 
-
-
             {isKnowledgeBaseFetching ? (
                 <NoData pulse={true} message="Preparing your knowledge base..." classes="mt-4" iconUrl="/data-processing.svg" />
             ) : knowledgeBase.length > 0 ? (
@@ -658,24 +656,6 @@ export default function Media() {
                     onUpdated={handleSourceUpdated}
                 />
             )}
-
-            {/* Card grid */}
-            <div className="min-h-0 flex-1 overflow-y-auto pr-1">
-                <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))]">
-                    {displayedSources.map((source) => (
-                        <MediaCard
-                            key={source.source_path}
-                            source={source}
-                            onOpen={onThumbnailClick}
-                            onToggle={handleCheckboxChange}
-                            onUpdate={openSourceUpdate}
-                            onDelete={deleteResource}
-                            isDeleting={isDeleting}
-                            isProjectReadOnly={isProjectReadOnly}
-                        />
-                    ))}
-                </div>
-            </div>
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import { Clock, Info, Sparkles } from "lucide-react";
+import { ClockFading, Info, Sparkles } from "lucide-react";
 import { useContext, useEffect } from "react";
 import makeApiRequest, { axiosInstance } from '../../api';
 import { MainContext } from '../../contexts/mainContext';
@@ -14,7 +14,7 @@ import TimestampPicker from '../TimestampPicker';
 
 const TABS = [
     { id: "time-segments", label: "Time segment description", icon: Sparkles, info: "Analyze a specific video time range and generate precise breakdown." },
-    { id: "find-moments", label: "Find moments", icon: Clock },
+    { id: "find-moments", label: "Find moments", icon: ClockFading },
 ];
 
 export default function Analytics() {
@@ -52,40 +52,43 @@ export default function Analytics() {
 
     return (
         <div className="h-full px-[14px] min-h-0 flex flex-col overflow-hidden bg-white">
-            {/* Sub-navigation */}
-            <nav className="pt-3.5 flex items-center gap-6 overflow-x-auto overflow-y-hidden">
-                {TABS.map(({ id, label, icon: Icon }) => {
-                    const active = analyticsActiveTab === id;
+            <div className="flex-1 min-h-0 overflow-y-auto pb-3">
 
-                    return (
-                        <button
-                            key={id}
-                            type="button"
-                            aria-current={active ? "page" : undefined}
-                            className={`flex items-center gap-2 text-[13px] font-semibold whitespace-nowrap ${active ? "text-primary-300 !border-b-primary-300" : "text-ink"
-                                } pb-3 border-b -mb-px transition-colors`}
-                            onClick={() => setAnalyticsActiveTab(id)}
-                        >
-                            <Icon size={14} strokeWidth={2} />
-                            {label}
-                        </button>
-                    );
-                })}
-            </nav>
+                {/* Sub-navigation */}
+                <nav className="pt-3.5 flex items-center gap-6 overflow-x-auto overflow-y-hidden">
+                    {TABS.map(({ id, label, icon: Icon }) => {
+                        const active = analyticsActiveTab === id;
 
-            <Field label="Assets">
-                <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
-            </Field>
+                        return (
+                            <button
+                                key={id}
+                                type="button"
+                                aria-current={active ? "page" : undefined}
+                                className={`flex items-center gap-2 text-[10px] font-semibold whitespace-nowrap ${active ? "text-primary-300 !border-b !border-b-primary-300" : "text-textColor-200"
+                                    } pb-3 transition-colors`}
+                                onClick={() => setAnalyticsActiveTab(id)}
+                            >
+                                <Icon size={14} strokeWidth={2} />
+                                {label}
+                            </button>
+                        );
+                    })}
+                </nav>
 
-            {analyticsActiveTab === TABS[0].id ? (
-                <TimeSegmentPane
-                    sourceIds={analyticsSourceIds}
-                />
-            ) : (
-                <FindMomentsPane
-                    sourceIds={analyticsSourceIds}
-                />
-            )}
+                <Field label="Assets">
+                    <SourcesDropdown isMultiple={false} sources={videoAssets} selectedSourceIds={analyticsSourceIds} onSelectedSourceIdsChange={setAnalyticsSourceIds} />
+                </Field>
+
+                {analyticsActiveTab === TABS[0].id ? (
+                    <TimeSegmentPane
+                        sourceIds={analyticsSourceIds}
+                    />
+                ) : (
+                    <FindMomentsPane
+                        sourceIds={analyticsSourceIds}
+                    />
+                )}
+            </div>
         </div>
     );
 }
@@ -116,9 +119,11 @@ function TimeSegmentPane({
         setTimeSegmentFullLength,
         isGeneratingTimeSegment,
         setIsGeneratingTimeSegment,
+        timeSegmentResultsDescription,
         setTimeSegmentResultsDescription,
         isInfoTooltipOpenTimeSegment,
         setIsInfoTooltipOpenTimeSegment,
+        formattedTimeSegment,
         setFormattedTimeSegment,
         jsonInputTimeSegment,
         setJsonInputTimeSegment,
