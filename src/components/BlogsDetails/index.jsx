@@ -3,12 +3,12 @@ import { renderAsync } from "docx-preview";
 import { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from "../../contexts/mainContext";
 import { useToast } from "../../contexts/toastContext";
-import useFirebase from "../../hooks/useFirebase";
+// import useFirebase from "../../hooks/useFirebase";
 import { formatReadableDate } from "../../utils";
 
 export default function BlogsDetails() {
     const { selectedBlog } = useContext(MainContext);
-    const { getPublicUrl } = useFirebase();
+    // const { getPublicUrl } = useFirebase();
     const { notify } = useToast();
     const viewerRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -28,12 +28,12 @@ export default function BlogsDetails() {
                     throw new Error("The generated blog document is unavailable.");
                 }
 
-                const publicUrl = await getPublicUrl(selectedBlog.blog_url);
-                if (!publicUrl) {
+                // const publicUrl = await getPublicUrl(selectedBlog.blog_url);
+                if (!selectedBlog.blog_url) {
                     throw new Error("Could not retrieve the blog document.");
                 }
 
-                const response = await fetch(publicUrl);
+                const response = await fetch(selectedBlog.blog_url);
                 if (!response.ok) {
                     throw new Error(`Could not load the blog document (${response.status}).`);
                 }
@@ -54,17 +54,17 @@ export default function BlogsDetails() {
         return () => {
             isCurrent = false;
         };
-    }, [getPublicUrl, selectedBlog?.blog_url, renderAttempt]);
+    }, [selectedBlog?.blog_url, renderAttempt]);
 
     async function handleDownload() {
         setIsDownloading(true);
         try {
-            const publicUrl = await getPublicUrl(selectedBlog.blog_url);
-            if (!publicUrl) {
+            // const publicUrl = await getPublicUrl(selectedBlog.blog_url);
+            if (!selectedBlog.blog_url) {
                 throw new Error("Could not retrieve the blog document.");
             }
 
-            const response = await fetch(publicUrl);
+            const response = await fetch(selectedBlog.blog_url);
             if (!response.ok) {
                 throw new Error(`Could not download the blog document (${response.status}).`);
             }
